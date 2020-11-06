@@ -1,9 +1,8 @@
-package com.bedmen.oddc.util;
+package util;
 
-import com.bedmen.oddc.Odyssey;
-import com.bedmen.oddc.items.ItemBase;
+import com.bedmen.odyssey.Odyssey;
 
-import net.minecraft.client.tutorial.Tutorial;
+import items.ItemBase;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -14,12 +13,11 @@ public class RegistryHandler {
 	
 	public static DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Odyssey.MOD_ID);
 	
-	public static void init()
-	{
+	public static void init() {
 		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
 	}
 	
-	//items
+	//Items
 	public static final RegistryObject<Item> RUBY = ITEMS.register("ruby", ItemBase::new);
 
 }
