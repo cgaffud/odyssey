@@ -1,5 +1,0 @@
-Args: "--inJar", "/Users/jeremybrennan/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.16.4-35.0.2/forge-1.16.4-35.0.2-injected.jar", "--outJar", "/Users/jeremybrennan/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.16.4-35.0.2_mapped_snapshot_20201028-1.16.3/forge-1.16.4-35.0.2_mapped_snapshot_20201028-1.16.3.jar", "--logFile", "accesstransform.log", "--atFile", "/Users/jeremybrennan/Documents/forgeProject/build/_atJar_5/parent_at.cfg"
-Classpath: /Users/jeremybrennan/.gradle/caches/forge_gradle/maven_downloader/net/minecraftforge/accesstransformers/1.0.5/accesstransformers-1.0.5-fatjar.jar
-WorkDir: /Users/jeremybrennan/Documents/forgeProject/build/_atJar_5
-Main: net.minecraftforge.accesstransformer.TransformerProcessor
-====================================
