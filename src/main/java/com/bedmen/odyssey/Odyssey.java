@@ -14,6 +14,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import util.RegistryHandler;
+import world.gen.ModOreGen;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,7 +38,7 @@ public class Odyssey
 
     private void setup(final FMLCommonSetupEvent event)
     {
-
+    	ModOreGen.registerOres();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) 
