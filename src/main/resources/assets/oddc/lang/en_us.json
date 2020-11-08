@@ -1,5 +1,10 @@
 {
   "item.oddc.ruby": "Ruby",
   "block.oddc.ruby_block": "Block of Ruby",
-  "block.oddc.ruby_ore": "Ruby Ore"
+  "block.oddc.ruby_ore": "Ruby Ore",
+  "item.oddc.ruby_sword": "Ruby Sword",
+  "item.oddc.ruby_pickaxe": "Ruby Pickaxe",
+  "item.oddc.ruby_axe": "Ruby Axe",
+  "item.oddc.ruby_shovel": "Ruby Shovel",
+  "item.oddc.ruby_hoe": "Ruby Hoe"
 }
