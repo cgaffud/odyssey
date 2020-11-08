@@ -37,7 +37,7 @@ public class RegistryHandler {
 	public static final RegistryObject<SwordItem> RUBY_SWORD = ITEMS.register("ruby_sword", () -> new SwordItem(ModItemTier.RUBY, 5, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)));
 	public static final RegistryObject<PickaxeItem> RUBY_PICKAXE = ITEMS.register("ruby_pickaxe", () -> new PickaxeItem(ModItemTier.RUBY, 4, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)));
 	public static final RegistryObject<AxeItem> RUBY_AXE = ITEMS.register("ruby_axe", () -> new AxeItem(ModItemTier.RUBY, 8, -3.1f, new Item.Properties().group(ItemGroup.TOOLS)));
-	public static final RegistryObject<ShovelItem> RUBY_SHOVEL = ITEMS.register("ruby_shovel", () -> new ShovelItem(ModItemTier.RUBY, 4, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+	public static final RegistryObject<ShovelItem> RUBY_SHOVEL = ITEMS.register("ruby_shovel", () -> new ShovelItem(ModItemTier.RUBY, 3.5f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)));
 	public static final RegistryObject<HoeItem> RUBY_HOE = ITEMS.register("ruby_hoe", () -> new HoeItem(ModItemTier.RUBY, 0, -1.0f, new Item.Properties().group(ItemGroup.TOOLS)));
 	
 	//Blocks
