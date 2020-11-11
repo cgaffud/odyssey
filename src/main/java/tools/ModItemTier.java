@@ -8,7 +8,7 @@ import util.RegistryHandler;
 
 public enum ModItemTier implements IItemTier{
 	
-	RUBY(2, 500, 7.0f, 0.0f, 14, () -> {
+	RUBY(2, 500, 7.0f, 0.5f, 14, () -> {
 		return Ingredient.fromItems(RegistryHandler.RUBY.get());
 	});
 	
