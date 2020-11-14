@@ -4,6 +4,8 @@ import com.bedmen.odyssey.Odyssey;
 
 import armor.ModArmorMaterial;
 import blocks.BlockItemBase;
+import blocks.FortunelessGoldOre;
+import blocks.FortunelessIronOre;
 import blocks.RubyBlock;
 import blocks.RubyOre;
 import items.ItemBase;
@@ -52,8 +54,12 @@ public class RegistryHandler {
 	//Blocks
 	public static final RegistryObject<Block> RUBY_BLOCK = BLOCKS.register("ruby_block", RubyBlock::new);
 	public static final RegistryObject<Block> RUBY_ORE = BLOCKS.register("ruby_ore", RubyOre::new);
+	public static final RegistryObject<Block> FORTUNELESS_IRON_ORE = BLOCKS.register("fortuneless_iron_ore", FortunelessIronOre::new);
+	public static final RegistryObject<Block> FORTUNELESS_GOLD_ORE = BLOCKS.register("fortuneless_gold_ore", FortunelessGoldOre::new);
 	
 	//Block Items
 	public static final RegistryObject<Item> RUBY_BLOCK_ITEM = ITEMS.register("ruby_block", () -> new BlockItemBase(RUBY_BLOCK.get()));
 	public static final RegistryObject<Item> RUBY_ORE_ITEM = ITEMS.register("ruby_ore", () -> new BlockItemBase(RUBY_ORE.get()));
+	public static final RegistryObject<Item> FORTUNELESS_IRON_ORE_ITEM = ITEMS.register("fortuneless_iron_ore", () -> new BlockItemBase(FORTUNELESS_IRON_ORE.get()));
+	public static final RegistryObject<Item> FORTUNELESS_GOLD_ORE_ITEM = ITEMS.register("fortuneless_gold_ore", () -> new BlockItemBase(FORTUNELESS_GOLD_ORE.get()));
 }

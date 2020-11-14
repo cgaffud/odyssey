@@ -11,7 +11,7 @@ import util.RegistryHandler;
 
 public enum ModArmorMaterial implements IArmorMaterial {
 	
-	RUBY("oddc:ruby", 25, new int[] {2,5,6,3}, 14, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC , 0, () -> {return Ingredient.fromItems(RegistryHandler.RUBY.get());});
+	RUBY("oddc:ruby", 25, new int[] {2,5,6,3}, 14, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND , 0, () -> {return Ingredient.fromItems(RegistryHandler.RUBY.get());});
 	
 	private static final int[] MAX_DAMAGE_ARRAY = new int[] {11, 16, 15, 13};
 	private final String name;

@@ -10,5 +10,8 @@
   "item.oddc.ruby_boots": "Ruby Boots",
   "item.oddc.ruby_leggings": "Ruby Leggings",
   "item.oddc.ruby_chestplate": "Ruby Chestplate",
-  "item.oddc.ruby_helmet": "Ruby Helmet"
+  "item.oddc.ruby_helmet": "Ruby Helmet",
+
+  "block.oddc.fortuneless_iron_ore": "Iron Ore",
+  "block.oddc.fortuneless_gold_ore": "Gold Ore"
 }
