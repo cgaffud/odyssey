@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "IXI",
+    "III"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:blast_furnace"
+    },
+    "I": {
+      "item": "minecraft:nether_brick"
+    }
+  },
+  "result": {
+    "item": "oddc:alloy_furnace"
+  }
+}

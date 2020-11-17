@@ -15,5 +15,8 @@
   "block.oddc.fortuneless_iron_ore": "Iron Ore",
   "block.oddc.fortuneless_gold_ore": "Gold Ore",
   "block.minecraft.iron_ore": "Natural Iron Ore",
-  "block.minecraft.gold_ore": "Natural Gold Ore"
+  "block.minecraft.gold_ore": "Natural Gold Ore",
+
+  "block.oddc.alloy_furnace": "Alloy Furnace",
+  "container.oddc.alloy_furnace": "Alloy Furnace"
 }

@@ -2,6 +2,7 @@ package com.bedmen.odyssey;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,6 +19,9 @@ import world.gen.ModOreGen;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import client.gui.AlloyFurnaceScreen;
+import container.AlloyFurnaceContainer;
 
 import java.util.stream.Collectors;
 
@@ -43,6 +47,6 @@ public class Odyssey
 
     private void doClientStuff(final FMLClientSetupEvent event) 
     {
-
+    	ScreenManager.registerFactory(RegistryHandler.ALLOY_FURNACE_CONTAINER.get(), AlloyFurnaceScreen::new);
     }
 }
