@@ -2,37 +2,30 @@ package container;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IRecipeHelperPopulator;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.FurnaceResultSlot;
-import net.minecraft.inventory.container.RecipeBookContainer;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.RecipeBookCategory;
 import net.minecraft.item.crafting.RecipeItemHelper;
-import net.minecraft.item.crafting.ServerRecipePlacerFurnace;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import recipes.AlloyRecipe;
-import recipes.ModRecipeBookCategory;
 import recipes.ModRecipeType;
 import tileentity.AlloyFurnaceTileEntity;
 import util.RegistryHandler;
 
-public class AlloyFurnaceContainer extends RecipeBookContainer<IInventory> {
+public class AlloyFurnaceContainer extends Container {
    private final IInventory furnaceInventory;
    private final IIntArray furnaceData;
    protected final World world;
    private final IRecipeType<AlloyRecipe> recipeType;
-   private final ModRecipeBookCategory category;
    
    public AlloyFurnaceContainer(int p_i241921_4_, PlayerInventory p_i241921_5_) {
 	      this(p_i241921_4_, p_i241921_5_, new Inventory(4), new IntArray(4));
@@ -41,7 +34,6 @@ public class AlloyFurnaceContainer extends RecipeBookContainer<IInventory> {
    public AlloyFurnaceContainer(int id, PlayerInventory playerInventory, IInventory furnaceInventory, IIntArray furnaceData) {
       super(RegistryHandler.ALLOY_FURNACE_CONTAINER.get(), id);
       this.recipeType = ModRecipeType.ALLOYING;
-      this.category = ModRecipeBookCategory.ALLOYING;
       assertInventorySize(furnaceInventory, 4);
       assertIntArraySize(furnaceData, 4);
       this.furnaceInventory = furnaceInventory;
@@ -50,7 +42,7 @@ public class AlloyFurnaceContainer extends RecipeBookContainer<IInventory> {
       this.addSlot(new Slot(furnaceInventory, 0, 47, 17));
       this.addSlot(new Slot(furnaceInventory, 1, 65, 17));
       this.addSlot(new ModFurnaceFuelSlot(this, furnaceInventory, 2, 56, 53));
-      this.addSlot(new FurnaceResultSlot(playerInventory.player, furnaceInventory, 3, 116, 35));
+      this.addSlot(new ModFurnaceResultSlot(playerInventory.player, furnaceInventory, 3, 116, 35));
 
       for(int i = 0; i < 3; ++i) {
          for(int j = 0; j < 9; ++j) {
@@ -74,10 +66,6 @@ public class AlloyFurnaceContainer extends RecipeBookContainer<IInventory> {
 
    public void clear() {
       this.furnaceInventory.clear();
-   }
-
-   public void func_217056_a(boolean p_217056_1_, IRecipe<?> p_217056_2_, ServerPlayerEntity player) {
-      (new ServerRecipePlacerFurnace<>(this)).place(player, (IRecipe<IInventory>) p_217056_2_, p_217056_1_);
    }
 
    public boolean matches(IRecipe<? super IInventory> recipeIn) {
@@ -125,14 +113,12 @@ public class AlloyFurnaceContainer extends RecipeBookContainer<IInventory> {
 
             slot.onSlotChange(itemstack1, itemstack);
          } else if (index != 1 && index != 0 && index != 2) {
-            if (this.hasRecipe(itemstack1)) {
-               if (!this.mergeItemStack(itemstack1, 0, 2, false)) {
-                  return ItemStack.EMPTY;
-               }
-            } else if (this.isFuel(itemstack1)) {
+            if (this.isFuel(itemstack1)) {
                if (!this.mergeItemStack(itemstack1, 2, 3, false)) {
                   return ItemStack.EMPTY;
                }
+            } else if (!this.mergeItemStack(itemstack1, 0, 2, false)) {
+                  return ItemStack.EMPTY;
             } else if (index >= 4 && index < 31) {
                if (!this.mergeItemStack(itemstack1, 31, 40, false)) {
                   return ItemStack.EMPTY;
@@ -188,10 +174,5 @@ public class AlloyFurnaceContainer extends RecipeBookContainer<IInventory> {
    @OnlyIn(Dist.CLIENT)
    public boolean isBurning() {
       return this.furnaceData.get(0) > 0;
-   }
-
-   @OnlyIn(Dist.CLIENT)
-   public RecipeBookCategory func_241850_m() {
-      return RecipeBookCategory.BLAST_FURNACE;
    }
 }

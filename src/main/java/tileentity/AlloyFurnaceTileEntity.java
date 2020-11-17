@@ -21,12 +21,10 @@ import net.minecraft.inventory.IRecipeHelperPopulator;
 import net.minecraft.inventory.IRecipeHolder;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.BlastFurnaceContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeItemHelper;
@@ -482,7 +480,7 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
 	      for(Entry<ResourceLocation> entry : this.recipes.object2IntEntrySet()) {
 	         world.getRecipeManager().getRecipe(entry.getKey()).ifPresent((recipe) -> {
 	            list.add(recipe);
-	            splitAndSpawnExperience(world, pos, entry.getIntValue(), ((AbstractCookingRecipe)recipe).getExperience());
+	            splitAndSpawnExperience(world, pos, entry.getIntValue(), ((AlloyRecipe)recipe).getExperience());
 	         });
 	      }
 
@@ -532,6 +530,7 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
 	    */
 	   @Override
 	   public void remove() {
+		  this.burnTime = 0;
 	      super.remove();
 	      for (int x = 0; x < handlers.length; x++)
 	        handlers[x].invalidate();
