@@ -1,22 +1,27 @@
 package util;
 
-import java.util.function.Supplier;
-
 import com.bedmen.odyssey.Odyssey;
 
 import armor.ModArmorMaterial;
 import blocks.AlloyFurnaceBlock;
 import blocks.BlockItemBase;
+import blocks.CarvedPumpkinBlock;
 import blocks.FortunelessGoldOre;
 import blocks.FortunelessIronOre;
 import blocks.RubyBlock;
 import blocks.RubyOre;
 import container.AlloyFurnaceContainer;
+import entities.RubyGolemEntity;
 import items.ItemBase;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.AxeItem;
@@ -26,16 +31,9 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.ShovelItem;
 import net.minecraft.item.SwordItem;
-import net.minecraft.item.crafting.BlastingRecipe;
-import net.minecraft.item.crafting.CookingRecipeSerializer;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.SpecialRecipeSerializer;
-import net.minecraft.tileentity.BlastFurnaceTileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Util;
-import net.minecraft.util.datafix.TypeReferences;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -43,22 +41,27 @@ import net.minecraftforge.registries.ForgeRegistries;
 import recipes.AlloyRecipe;
 import tileentity.AlloyFurnaceTileEntity;
 import tools.ModItemTier;
-import net.minecraftforge.common.extensions.IForgeContainerType;
 
 public class RegistryHandler {
 	
 	public static DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Odyssey.MOD_ID);
+	public static DeferredRegister<Item> ITEMS_VANILLA = DeferredRegister.create(ForgeRegistries.ITEMS, "minecraft");
 	public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Odyssey.MOD_ID);
+	public static DeferredRegister<Block> BLOCKS_VANILLA = DeferredRegister.create(ForgeRegistries.BLOCKS, "minecraft");
 	public static DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Odyssey.MOD_ID);
 	public static DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Odyssey.MOD_ID);
 	public static DeferredRegister<ContainerType<?>> CONTAINER_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, Odyssey.MOD_ID);
+	public static DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES , Odyssey.MOD_ID);
 	
 	public static void init() {
 		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		ITEMS_VANILLA.register(FMLJavaModLoadingContext.get().getModEventBus());
 		BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		BLOCKS_VANILLA.register(FMLJavaModLoadingContext.get().getModEventBus());
 		RECIPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		TILE_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		CONTAINER_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 	}
 	
 	//Items
@@ -83,6 +86,7 @@ public class RegistryHandler {
 	public static final RegistryObject<Block> FORTUNELESS_IRON_ORE = BLOCKS.register("fortuneless_iron_ore", FortunelessIronOre::new);
 	public static final RegistryObject<Block> FORTUNELESS_GOLD_ORE = BLOCKS.register("fortuneless_gold_ore", FortunelessGoldOre::new);
 	public static final RegistryObject<Block> ALLOY_FURNACE = BLOCKS.register("alloy_furnace", AlloyFurnaceBlock::new);
+	public static final RegistryObject<Block> CARVED_PUMPKIN = BLOCKS_VANILLA.register("carved_pumpkin", CarvedPumpkinBlock::new);
 	
 	//Block Items
 	public static final RegistryObject<Item> RUBY_BLOCK_ITEM = ITEMS.register("ruby_block", () -> new BlockItemBase(RUBY_BLOCK.get()));
@@ -90,6 +94,7 @@ public class RegistryHandler {
 	public static final RegistryObject<Item> FORTUNELESS_IRON_ORE_ITEM = ITEMS.register("fortuneless_iron_ore", () -> new BlockItemBase(FORTUNELESS_IRON_ORE.get()));
 	public static final RegistryObject<Item> FORTUNELESS_GOLD_ORE_ITEM = ITEMS.register("fortuneless_gold_ore", () -> new BlockItemBase(FORTUNELESS_GOLD_ORE.get()));
 	public static final RegistryObject<Item> ALLOY_FURNACE_ITEM = ITEMS.register("alloy_furnace", () -> new BlockItemBase(ALLOY_FURNACE.get()));
+	public static final RegistryObject<Item> CARVED_PUMPKIN_ITEM = ITEMS_VANILLA.register("carved_pumpkin", () -> new BlockItemBase(CARVED_PUMPKIN.get()));
 	
 	//Tile Entities
 	public static final RegistryObject<TileEntityType<AlloyFurnaceTileEntity>> ALLOY_FURNACE_TILE_ENTITY_TYPE = TILE_ENTITY_TYPES.register("alloy_furnace", () -> TileEntityType.Builder.create(AlloyFurnaceTileEntity::new, ALLOY_FURNACE.get()).build(null));
@@ -99,6 +104,9 @@ public class RegistryHandler {
 	
 	//Container Type
 	public static final RegistryObject<ContainerType<AlloyFurnaceContainer>> ALLOY_FURNACE_CONTAINER = CONTAINER_TYPES.register("alloy_furnace", () -> new ContainerType<AlloyFurnaceContainer>(AlloyFurnaceContainer::new));
+	
+	//Entity Type
+	public static final RegistryObject<EntityType<RubyGolemEntity>> RUBY_GOLEM = ENTITY_TYPES.register("ruby_golem", () -> EntityType.Builder.<RubyGolemEntity>create(RubyGolemEntity::new, EntityClassification.MISC).size(1.4f,2.7f).trackingRange(10).build(new ResourceLocation(Odyssey.MOD_ID, "ruby_golem").toString()));
 	
 	
 }

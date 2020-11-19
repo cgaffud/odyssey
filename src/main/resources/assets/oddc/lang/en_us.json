@@ -18,5 +18,7 @@
   "block.minecraft.gold_ore": "Natural Gold Ore",
 
   "block.oddc.alloy_furnace": "Alloy Furnace",
-  "container.oddc.alloy_furnace": "Alloy Furnace"
+  "container.oddc.alloy_furnace": "Alloy Furnace",
+
+  "entity.oddc.ruby_golem": "Ruby Golem"
 }
