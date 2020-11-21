@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "helmet",
+  "base": {
+    "item": "minecraft:iron_helmet"
+  },
+  "addition": {
+    "item": "oddc:ruby"
+  },
+  "result": {
+    "item": "oddc:ruby_helmet"
+  }
+}

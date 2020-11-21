@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "leggings",
+  "base": {
+    "item": "minecraft:iron_leggings"
+  },
+  "addition": {
+    "item": "oddc:ruby"
+  },
+  "result": {
+    "item": "oddc:ruby_leggings"
+  }
+}

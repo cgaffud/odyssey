@@ -10,7 +10,9 @@ import blocks.FortunelessGoldOre;
 import blocks.FortunelessIronOre;
 import blocks.RubyBlock;
 import blocks.RubyOre;
+import blocks.SmithingTableBlock;
 import container.AlloyFurnaceContainer;
+import container.NewSmithingTableContainer;
 import entities.RubyGolemEntity;
 import items.ItemBase;
 import net.minecraft.block.AbstractBlock;
@@ -39,6 +41,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import recipes.AlloyRecipe;
+import recipes.NewSmithingRecipe;
 import tileentity.AlloyFurnaceTileEntity;
 import tools.ModItemTier;
 
@@ -64,6 +67,12 @@ public class RegistryHandler {
 		ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 	}
 	
+	//Vanilla Overrides
+	public static final RegistryObject<Block> CARVED_PUMPKIN = BLOCKS_VANILLA.register("carved_pumpkin", CarvedPumpkinBlock::new);
+	public static final RegistryObject<Item> CARVED_PUMPKIN_ITEM = ITEMS_VANILLA.register("carved_pumpkin", () -> new BlockItemBase(CARVED_PUMPKIN.get()));
+	public static final RegistryObject<Block> SMITHING_TABLE = BLOCKS_VANILLA.register("smithing_table", SmithingTableBlock::new);
+	public static final RegistryObject<Item> SMITHING_TABLE_ITEM = ITEMS_VANILLA.register("smithing_table", () -> new BlockItemBase(SMITHING_TABLE.get()));
+	
 	//Items
 	public static final RegistryObject<Item> RUBY = ITEMS.register("ruby", ItemBase::new);
 	
@@ -86,7 +95,6 @@ public class RegistryHandler {
 	public static final RegistryObject<Block> FORTUNELESS_IRON_ORE = BLOCKS.register("fortuneless_iron_ore", FortunelessIronOre::new);
 	public static final RegistryObject<Block> FORTUNELESS_GOLD_ORE = BLOCKS.register("fortuneless_gold_ore", FortunelessGoldOre::new);
 	public static final RegistryObject<Block> ALLOY_FURNACE = BLOCKS.register("alloy_furnace", AlloyFurnaceBlock::new);
-	public static final RegistryObject<Block> CARVED_PUMPKIN = BLOCKS_VANILLA.register("carved_pumpkin", CarvedPumpkinBlock::new);
 	
 	//Block Items
 	public static final RegistryObject<Item> RUBY_BLOCK_ITEM = ITEMS.register("ruby_block", () -> new BlockItemBase(RUBY_BLOCK.get()));
@@ -94,16 +102,17 @@ public class RegistryHandler {
 	public static final RegistryObject<Item> FORTUNELESS_IRON_ORE_ITEM = ITEMS.register("fortuneless_iron_ore", () -> new BlockItemBase(FORTUNELESS_IRON_ORE.get()));
 	public static final RegistryObject<Item> FORTUNELESS_GOLD_ORE_ITEM = ITEMS.register("fortuneless_gold_ore", () -> new BlockItemBase(FORTUNELESS_GOLD_ORE.get()));
 	public static final RegistryObject<Item> ALLOY_FURNACE_ITEM = ITEMS.register("alloy_furnace", () -> new BlockItemBase(ALLOY_FURNACE.get()));
-	public static final RegistryObject<Item> CARVED_PUMPKIN_ITEM = ITEMS_VANILLA.register("carved_pumpkin", () -> new BlockItemBase(CARVED_PUMPKIN.get()));
 	
 	//Tile Entities
 	public static final RegistryObject<TileEntityType<AlloyFurnaceTileEntity>> ALLOY_FURNACE_TILE_ENTITY_TYPE = TILE_ENTITY_TYPES.register("alloy_furnace", () -> TileEntityType.Builder.create(AlloyFurnaceTileEntity::new, ALLOY_FURNACE.get()).build(null));
 	
 	//Recipe Type
 	public static final RegistryObject<IRecipeSerializer<AlloyRecipe>> ALLOYING = RECIPES.register("alloying", () -> new AlloyRecipe.Serializer());
+	public static final RegistryObject<IRecipeSerializer<NewSmithingRecipe>> NEW_SMITHING = RECIPES.register("new_smithing", () -> new NewSmithingRecipe.Serializer());
 	
 	//Container Type
 	public static final RegistryObject<ContainerType<AlloyFurnaceContainer>> ALLOY_FURNACE_CONTAINER = CONTAINER_TYPES.register("alloy_furnace", () -> new ContainerType<AlloyFurnaceContainer>(AlloyFurnaceContainer::new));
+	public static final RegistryObject<ContainerType<NewSmithingTableContainer>> SMITHING_TABLE_CONTAINER = CONTAINER_TYPES.register("new_smithing_table", () -> new ContainerType<NewSmithingTableContainer>(NewSmithingTableContainer::new));
 	
 	//Entity Type
 	public static final RegistryObject<EntityType<RubyGolemEntity>> RUBY_GOLEM = ENTITY_TYPES.register("ruby_golem", () -> EntityType.Builder.<RubyGolemEntity>create(RubyGolemEntity::new, EntityClassification.MISC).size(1.4f,2.7f).trackingRange(10).build(new ResourceLocation(Odyssey.MOD_ID, "ruby_golem").toString()));

@@ -13,7 +13,6 @@ import container.AlloyFurnaceContainer;
 
 @OnlyIn(Dist.CLIENT)
 public class AlloyFurnaceScreen extends ContainerScreen<AlloyFurnaceContainer> {
-   private boolean widthTooNarrowIn;
    private final ResourceLocation guiTexture;
 
    public AlloyFurnaceScreen(AlloyFurnaceContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {

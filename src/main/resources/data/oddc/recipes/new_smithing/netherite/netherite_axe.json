@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "axe",
+  "base": {
+    "item": "minecraft:diamond_axe"
+  },
+  "addition": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "item": "minecraft:netherite_axe"
+  }
+}

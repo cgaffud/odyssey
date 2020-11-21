@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "boots",
+  "base": {
+    "item": "minecraft:iron_boots"
+  },
+  "addition": {
+    "item": "oddc:ruby"
+  },
+  "result": {
+    "item": "oddc:ruby_boots"
+  }
+}

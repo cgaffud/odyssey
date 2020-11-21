@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "chestplate",
+  "base": {
+    "item": "minecraft:iron_chestplate"
+  },
+  "addition": {
+    "item": "oddc:ruby"
+  },
+  "result": {
+    "item": "oddc:ruby_chestplate"
+  }
+}

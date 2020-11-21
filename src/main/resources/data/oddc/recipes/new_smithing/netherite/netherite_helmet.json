@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "helmet",
+  "base": {
+    "item": "minecraft:diamond_helmet"
+  },
+  "addition": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "item": "minecraft:netherite_helmet"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "pickaxe",
+  "base": {
+    "item": "minecraft:iron_pickaxe"
+  },
+  "addition": {
+    "item": "oddc:ruby"
+  },
+  "result": {
+    "item": "oddc:ruby_pickaxe"
+  }
+}

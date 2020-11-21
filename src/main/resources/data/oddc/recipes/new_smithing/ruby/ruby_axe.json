@@ -1,5 +1,6 @@
 {
-  "type": "minecraft:smithing",
+  "type": "oddc:new_smithing",
+  "classification": "axe",
   "base": {
     "item": "minecraft:iron_axe"
   },

@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "hoe",
+  "base": {
+    "item": "minecraft:diamond_hoe"
+  },
+  "addition": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "item": "minecraft:netherite_hoe"
+  }
+}

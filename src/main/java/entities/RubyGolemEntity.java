@@ -24,7 +24,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -46,6 +45,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import util.RegistryHandler;
 
 public class RubyGolemEntity extends GolemEntity {
    protected static final DataParameter<Byte> PLAYER_CREATED = EntityDataManager.createKey(RubyGolemEntity.class, DataSerializers.BYTE);
@@ -74,7 +74,7 @@ public class RubyGolemEntity extends GolemEntity {
    }
 
    public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
-      return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 100.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D).createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 15.0D);
+      return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 150.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D).createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 20.0D);
    }
 
    /**
@@ -202,7 +202,7 @@ public class RubyGolemEntity extends GolemEntity {
    protected ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
       ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
       Item item = itemstack.getItem();
-      if (item != Items.IRON_INGOT) {
+      if (item != RegistryHandler.RUBY.get()) {
          return ActionResultType.PASS;
       } else {
          float f = this.getHealth();
