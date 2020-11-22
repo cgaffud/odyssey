@@ -17,14 +17,10 @@ public class ModFurnaceFuelSlot extends Slot {
     * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
     */
    public boolean isItemValid(ItemStack stack) {
-      return this.field_216939_a.isFuel(stack) || isBucket(stack);
+      return this.field_216939_a.isFuel(stack);
    }
 
    public int getItemStackLimit(ItemStack stack) {
-      return isBucket(stack) ? 1 : super.getItemStackLimit(stack);
-   }
-
-   public static boolean isBucket(ItemStack stack) {
-      return stack.getItem() == Items.BUCKET;
+      return super.getItemStackLimit(stack);
    }
 }

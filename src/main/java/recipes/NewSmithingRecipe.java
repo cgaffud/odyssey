@@ -33,11 +33,11 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
 	   static int MAX_HEIGHT = 3;
 	   protected final ResourceLocation id;
 	   protected final String group;
-	   protected final Ingredient base;
-	   protected final Ingredient addition;
+	   public final Ingredient base;
+	   public final Ingredient addition;
 	   protected final String classification;
 	   protected final ItemStack result;
-	   protected NonNullList<Ingredient> pattern;
+	   public NonNullList<Ingredient> pattern;
 	
 	   public NewSmithingRecipe(ResourceLocation idIn, String groupIn, Ingredient baseIn, Ingredient additionIn, String classificationIn, ItemStack resultIn) {
 		      this.id = idIn;

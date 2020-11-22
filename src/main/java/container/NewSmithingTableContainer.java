@@ -5,15 +5,24 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.HoeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.PickaxeItem;
+import net.minecraft.item.ShovelItem;
+import net.minecraft.item.SwordItem;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.SmithingRecipe;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import recipes.ModRecipeType;
 import recipes.NewSmithingRecipe;
@@ -47,10 +56,49 @@ public class NewSmithingTableContainer extends Container {
       this.player = playerInv.player;
       this.world = playerInv.player.world;
       this.recipeType = ModRecipeType.NEW_SMITHING;
-      this.addSlot(new Slot(this.inv, 0, 20, 35));
+	  NewSmithingTableContainer con = this;
+      Slot slot0 = this.addSlot(new Slot(this.inv, 0, 20, 35) {
+    	  public boolean isItemValid(ItemStack stack) {
+    		  List<NewSmithingRecipe> list = con.world.getRecipeManager().getRecipesForType(ModRecipeType.NEW_SMITHING);
+    		  for(int i1 = 0; i1 < list.size(); i1++) {
+    			  if(list.get(i1).base.test(stack)) {
+    				  return true;
+    			  }
+    		  }
+    		  return false;
+    		  }
+      });
+      
+      
       for(int i = 0; i < 3; i++) {
     	  for(int j = 0; j < 3; j++) {
-    		  this.addSlot(new Slot(this.inv, 1+j+i*3, 57+18*j, 17+18*i));
+    		  int k = j+i*3;
+    		  this.addSlot(new NewSmithingTableSlot(this.inv, 1+k, 57+18*j, 17+18*i) {
+    			  
+    			  public boolean shouldBeUsed() {
+			    	  List<NewSmithingRecipe> list = con.world.getRecipeManager().getRecipesForType(ModRecipeType.NEW_SMITHING);
+    			      if (slot0 != null && slot0.getHasStack()) {
+    			    	  for(int i1 = 0; i1 < list.size(); i1++) {
+    			    		  if(list.get(i1).base.test(slot0.getStack())) {
+    			    			  return !(list.get(i1).pattern.get(k) == Ingredient.EMPTY);
+    			    		  }
+    			    	  }
+    			      }
+    			      return false;
+    			  }
+    			  
+    	    	  public boolean isItemValid(ItemStack stack) {
+    	    		  List<NewSmithingRecipe> list = con.world.getRecipeManager().getRecipesForType(ModRecipeType.NEW_SMITHING);
+    	    		  for(int i1 = 0; i1 < list.size(); i1++) {
+    	    			  if(list.get(i1).base.test(slot0.getStack())) {
+        	    			  if(list.get(i1).addition.test(stack)) {
+        	    				  return this.shouldBeUsed();
+        	    			  }
+    	    			  }
+    	    		  }
+    	    		  return false;
+    	    		  }
+    		  });
     	  }
       }
       
@@ -59,7 +107,7 @@ public class NewSmithingTableContainer extends Container {
           * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
           */
          public boolean isItemValid(ItemStack stack) {
-            return false;
+        	 return false;
          }
 
          /**
