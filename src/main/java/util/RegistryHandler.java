@@ -34,12 +34,18 @@ import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.ShovelItem;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.EffectType;
+import net.minecraft.potion.Effects;
+import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import potions.ModEffect;
 import recipes.AlloyRecipe;
 import recipes.NewSmithingRecipe;
 import tileentity.AlloyFurnaceTileEntity;
@@ -55,6 +61,8 @@ public class RegistryHandler {
 	public static DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Odyssey.MOD_ID);
 	public static DeferredRegister<ContainerType<?>> CONTAINER_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, Odyssey.MOD_ID);
 	public static DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES , Odyssey.MOD_ID);
+	public static DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTION_TYPES , Odyssey.MOD_ID);
+	public static DeferredRegister<Effect> EFFECTS_VANILLA = DeferredRegister.create(ForgeRegistries.POTIONS , "minecraft");
 	
 	public static void init() {
 		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -65,6 +73,8 @@ public class RegistryHandler {
 		TILE_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		CONTAINER_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		POTIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		EFFECTS_VANILLA.register(FMLJavaModLoadingContext.get().getModEventBus());
 	}
 	
 	//Vanilla Overrides
@@ -117,5 +127,11 @@ public class RegistryHandler {
 	//Entity Type
 	public static final RegistryObject<EntityType<RubyGolemEntity>> RUBY_GOLEM = ENTITY_TYPES.register("ruby_golem", () -> EntityType.Builder.<RubyGolemEntity>create(RubyGolemEntity::new, EntityClassification.MISC).size(1.4f,2.7f).trackingRange(10).build(new ResourceLocation(Odyssey.MOD_ID, "ruby_golem").toString()));
 	
+	//Potions
+	public static final RegistryObject<Potion> DEFENSE = POTIONS.register("defense", () -> new Potion(new EffectInstance(Effects.RESISTANCE, 1800)));
+	public static final RegistryObject<Potion> LONG_DEFENSE = POTIONS.register("long_defense", () -> new Potion(new EffectInstance(Effects.RESISTANCE, 3600)));
+	
+	//Potion Effects
+	public static final RegistryObject<Effect> RESISTANCE = EFFECTS_VANILLA.register("resistance", () -> new ModEffect(EffectType.BENEFICIAL, 0));
 	
 }

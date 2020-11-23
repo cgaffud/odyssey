@@ -20,5 +20,14 @@
   "block.oddc.alloy_furnace": "Alloy Furnace",
   "container.oddc.alloy_furnace": "Alloy Furnace",
 
-  "entity.oddc.ruby_golem": "Ruby Golem"
+  "entity.oddc.ruby_golem": "Ruby Golem",
+
+  "item.minecraft.potion.effect.defense": "Potion of Defense",
+  "item.minecraft.potion.effect.long_defense": "Potion of Defense",
+  "item.minecraft.splash_potion.effect.defense": "Splash Potion of Defense",
+  "item.minecraft.splash_potion.effect.long_defense": "Splash Potion of Defense",
+  "item.minecraft.tipped_arrow.effect.defense": "Arrow of Defense",
+  "item.minecraft.tipped_arrow.effect.long_defense": "Arrow of Defense",
+  "item.minecraft.lingering_potion.effect.defense": "Lingering Potion of Defense",
+  "item.minecraft.lingering_potion.effect.long_defense": "Lingering Potion of Defense"
 }
