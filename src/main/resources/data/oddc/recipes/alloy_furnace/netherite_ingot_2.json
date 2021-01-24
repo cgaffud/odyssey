@@ -1,12 +1,12 @@
 {
   "type": "oddc:alloying",
   "ingredient1":
-    {
+  {
     "item": "minecraft:ancient_debris"
-    },
+  },
   "ingredient2":[
     {
-    "item": "minecraft:gold_ingot"
+      "item": "minecraft:gold_ingot"
     }
   ],
   "result": "minecraft:netherite_ingot",

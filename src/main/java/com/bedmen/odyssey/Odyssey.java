@@ -1,33 +1,37 @@
 package com.bedmen.odyssey;
 
+import com.bedmen.odyssey.client.gui.AlloyFurnaceScreen;
+import com.bedmen.odyssey.client.gui.NewSmithingTableScreen;
+import com.bedmen.odyssey.items.ModSpawnEggItem;
+import com.bedmen.odyssey.util.*;
+import com.bedmen.odyssey.client.gui.NewBeaconScreen;
+import com.bedmen.odyssey.client.renderer.NewBeaconTileEntityRenderer;
+import com.bedmen.odyssey.potions.ModPotions;
+import com.bedmen.odyssey.trades.ModTrades;
+import com.bedmen.odyssey.world.gen.ModOreGen;
+import com.bedmen.odyssey.world.spawn.ModBiomeEntitySpawn;
+import com.bedmen.odyssey.world.spawn.ModStructureEntitySpawn;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.item.Item;
+import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.PotionBrewing;
-import net.minecraft.potion.Potions;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import potions.ModPotions;
-import util.RegistryHandler;
-import world.gen.ModOreGen;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import client.entity.render.RubyGolemRenderer;
-import client.gui.AlloyFurnaceScreen;
-import client.gui.NewSmithingTableScreen;
-import entities.RubyGolemEntity;
-
 @Mod("oddc")
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Odyssey
 {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -36,26 +40,74 @@ public class Odyssey
     public Odyssey() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-        
-        RegistryHandler.init();
+
+        BlockRegistry.init();
+        ContainerRegistry.init();
+        EffectRegistry.init();
+        EnchantmentRegistry.init();
+        ItemRegistry.init();
+        PotionRegistry.init();
+        RecipeRegistry.init();
+        TileEntityTypeRegistry.init();
 
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void setup(final FMLCommonSetupEvent event)
     {
-    	ModOreGen.registerOres();
-    	ModPotions.addBrewingRecipes();
-    	
-    	DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(RegistryHandler.RUBY_GOLEM.get(), RubyGolemEntity.setCustomAttributes().create());
+        ModOreGen.registerOres();
+        ModBiomeEntitySpawn.registerSpawners();
+        ModStructureEntitySpawn.registerSpawners();
+        ModPotions.addBrewingRecipes();
+        ModTrades.addTrades();
+
+        ItemModelsProperties.registerProperty(Items.POTION, new ResourceLocation("type"),  (itemStack, world, entity) -> {
+            CompoundNBT compoundnbt = itemStack.getTag();
+            if(compoundnbt != null && compoundnbt.contains("Potion")){
+                String s = compoundnbt.get("Potion").getString();
+                if(s.contains("awkward")) return 3;
+                else if(s.contains("long")) return 1;
+                else if(s.contains("strong")) return 2;
+            }
+            return 0;
+        });
+
+        ItemModelsProperties.registerProperty(Items.SPLASH_POTION, new ResourceLocation("type"),  (itemStack, world, entity) -> {
+            CompoundNBT compoundnbt = itemStack.getTag();
+            if(compoundnbt != null && compoundnbt.contains("Potion")){
+                String s = compoundnbt.get("Potion").getString();
+                if(s.contains("awkward")) return 3;
+                else if(s.contains("long")) return 1;
+                else if(s.contains("strong")) return 2;
+            }
+            return 0;
+        });
+
+        ItemModelsProperties.registerProperty(Items.LINGERING_POTION, new ResourceLocation("type"),  (itemStack, world, entity) -> {
+            CompoundNBT compoundnbt = itemStack.getTag();
+            if(compoundnbt != null && compoundnbt.contains("Potion")){
+                String s = compoundnbt.get("Potion").getString();
+                if(s.contains("awkward")) return 3;
+                else if(s.contains("long")) return 1;
+                else if(s.contains("strong")) return 2;
+            }
+            return 0;
+        });
+
+        DeferredWorkQueue.runLater(() -> {
         });
     }
 
-    private void doClientStuff(final FMLClientSetupEvent event) 
+    private void doClientStuff(final FMLClientSetupEvent event)
     {
-    	ScreenManager.registerFactory(RegistryHandler.ALLOY_FURNACE_CONTAINER.get(), AlloyFurnaceScreen::new);
-    	ScreenManager.registerFactory(RegistryHandler.SMITHING_TABLE_CONTAINER.get(), NewSmithingTableScreen::new);
-    	RenderingRegistry.registerEntityRenderingHandler(RegistryHandler.RUBY_GOLEM.get(), RubyGolemRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), NewBeaconTileEntityRenderer::new);
+        ScreenManager.registerFactory(ContainerRegistry.BEACON.get(), NewBeaconScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.SMITHING_TABLE.get(), NewSmithingTableScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
+        ModSpawnEggItem.initSpawnEggs();
     }
 }

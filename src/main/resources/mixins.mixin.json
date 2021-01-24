@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "package": "com.bedmen.odyssey.mixin",
+  "refmap": "mixins.mixin.refmap.json",
+  "mixins": [
+    "MixinMinecraft",
+    "MixinBlockItem"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

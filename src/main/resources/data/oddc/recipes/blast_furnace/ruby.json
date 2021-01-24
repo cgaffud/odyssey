@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:blasting",
-  "ingredient": {
-    "item": "oddc:ruby_ore"
-  },
-  "result": "oddc:ruby",
-  "experience": 1.0,
-  "cookingtime": 100
-}
