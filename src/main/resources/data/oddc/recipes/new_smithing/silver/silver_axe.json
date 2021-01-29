@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "axe",
+  "base": {
+    "item": "minecraft:iron_axe"
+  },
+  "addition": {
+    "item": "oddc:silver_dust"
+  },
+  "result": {
+    "item": "oddc:silver_axe"
+  }
+}

@@ -6,7 +6,10 @@
   "refmap": "mixins.mixin.refmap.json",
   "mixins": [
     "MixinMinecraft",
-    "MixinBlockItem"
+    "MixinBlockItem",
+    "MixinItemColors",
+    "MixinPortalSize",
+    "MixinForgeHooks"
   ],
   "injectors": {
     "defaultRequire": 1

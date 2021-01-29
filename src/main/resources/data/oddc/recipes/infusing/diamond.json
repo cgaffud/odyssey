@@ -1,0 +1,19 @@
+{
+  "type": "oddc:infusing",
+  "lens": {
+    "item": "minecraft:light_blue_stained_glass_pane"
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "oddc:diamond_shard"
+    }
+  },
+  "result": {
+    "item": "minecraft:diamond"
+  }
+}

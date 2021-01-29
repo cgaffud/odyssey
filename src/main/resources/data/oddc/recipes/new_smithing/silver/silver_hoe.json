@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "hoe",
+  "base": {
+    "item": "minecraft:iron_hoe"
+  },
+  "addition": {
+    "item": "oddc:silver_dust"
+  },
+  "result": {
+    "item": "oddc:silver_hoe"
+  }
+}

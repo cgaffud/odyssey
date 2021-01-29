@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "chestplate",
+  "base": {
+    "item": "minecraft:iron_chestplate"
+  },
+  "addition": {
+    "item": "oddc:silver_dust"
+  },
+  "result": {
+    "item": "oddc:silver_chestplate"
+  }
+}

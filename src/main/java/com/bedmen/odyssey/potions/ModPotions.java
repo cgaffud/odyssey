@@ -6,17 +6,22 @@ import java.util.List;
 
 import com.bedmen.odyssey.util.ItemRegistry;
 import com.bedmen.odyssey.util.PotionRegistry;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionBrewing;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
+import net.minecraft.util.IItemProvider;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.client.renderer.color.ItemColors;
 
 public class ModPotions {
 
     private static Method addMixMethod;
     private static Method addContainerMethod;
     private static Method addContainerRecipeMethod;
+    private static java.util.Map<net.minecraftforge.registries.IRegistryDelegate<Item>, IItemColor> color;
     private static List brewing_list;
 
     private static void addMix(Potion start, Item ingredient, Potion result) {
@@ -61,6 +66,14 @@ public class ModPotions {
         }
     }
 
+    private static void addColorRegister(){
+        if(color == null) {
+            color = ObfuscationReflectionHelper.getPrivateValue(ItemColors.class, null, "colors");
+        }
+
+        color.put(ItemRegistry.BIG_POTION.get().delegate, ((stack, color) -> color > 0 ? -1 : PotionUtils.getColor(stack)));
+    }
+
     private static void removeMix(){
         if(brewing_list == null) {
             brewing_list = ObfuscationReflectionHelper.getPrivateValue(PotionBrewing.class, null, "POTION_TYPE_CONVERSIONS");
@@ -73,6 +86,7 @@ public class ModPotions {
 
     public static void addBrewingRecipes() {
         removeMix();
+        //addColorRegister();
 
         //Awkward Potion
         addMix(Potions.WATER, Items.NETHER_WART, Potions.AWKWARD);

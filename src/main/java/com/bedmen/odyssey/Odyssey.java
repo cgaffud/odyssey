@@ -1,10 +1,9 @@
 package com.bedmen.odyssey;
 
-import com.bedmen.odyssey.client.gui.AlloyFurnaceScreen;
-import com.bedmen.odyssey.client.gui.NewSmithingTableScreen;
+import com.bedmen.odyssey.client.gui.*;
+import com.bedmen.odyssey.client.renderer.NewEnchantmentTableTileEntityRenderer;
 import com.bedmen.odyssey.items.ModSpawnEggItem;
 import com.bedmen.odyssey.util.*;
-import com.bedmen.odyssey.client.gui.NewBeaconScreen;
 import com.bedmen.odyssey.client.renderer.NewBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.ModPotions;
 import com.bedmen.odyssey.trades.ModTrades;
@@ -12,6 +11,8 @@ import com.bedmen.odyssey.world.gen.ModOreGen;
 import com.bedmen.odyssey.world.spawn.ModBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.ModStructureEntitySpawn;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.Items;
@@ -101,9 +102,14 @@ public class Odyssey
     private void doClientStuff(final FMLClientSetupEvent event)
     {
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), NewBeaconTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), NewEnchantmentTableTileEntityRenderer::new);
         ScreenManager.registerFactory(ContainerRegistry.BEACON.get(), NewBeaconScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.SMITHING_TABLE.get(), NewSmithingTableScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.INFUSER.get(), InfuserScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.ENCHANTMENT.get(), NewEnchantmentScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
+        RenderTypeLookup.setRenderLayer(BlockRegistry.WARPING_FIRE.get(), RenderType.getCutout());
     }
 
     @SubscribeEvent

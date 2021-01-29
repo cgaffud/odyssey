@@ -91,19 +91,36 @@
   "item.minecraft.lingering_potion.effect.building_fatigue": "Lingering Potion of Building Fatigue",
   "item.minecraft.lingering_potion.effect.long_building_fatigue": "Lingering Potion of Building Fatigue",
 
+  "item.oddc.big_glass_bottle": "Big Glass Bottle",
+  "item.oddc.big_potion.effect.empty": "Big Potion",
+  "item.oddc.glass_shard": "Glass Shard",
+  "item.oddc.diamond_shard": "Diamond Shard",
+  
+  "item.oddc.silver_dust": "Silver Dust",
+  "item.oddc.silver_sword": "Silvered Sword",
+  "item.oddc.silver_pickaxe": "Silvered Pickaxe",
+  "item.oddc.silver_axe": "Silvered Axe",
+  "item.oddc.silver_shovel": "Silvered Shovel",
+  "item.oddc.silver_hoe": "Silvered Hoe",
+  "item.oddc.silver_boots": "Silvered Boots",
+  "item.oddc.silver_leggings": "Silvered Leggings",
+  "item.oddc.silver_chestplate": "Silvered Chestplate",
+  "item.oddc.silver_helmet": "Silvered Helmet",
+
   "effect.oddc.construction": "Construction",
   "effect.oddc.building_fatigue": "Building Fatigue",
 
   "container.minecraft.beacon": "Beacon",
   "container.oddc.alloy_furnace": "Alloy Furnace",
+  "container.oddc.infuser": "Infuser",
+  "container.oddc.bookshelf": "Bookshelf",
 
-  "enchantment.oddc.unusable": "Unusable",
+  "enchantment.oddc.warping": "Warping",
 
   "block.oddc.alloy_furnace": "Alloy Furnace",
+  "block.oddc.infuser": "Infuser",
   "block.oddc.fortuneless_iron_ore": "Iron Ore",
   "block.oddc.fortuneless_gold_ore": "Gold Ore",
   "block.minecraft.iron_ore": "Natural Iron Ore",
-  "block.minecraft.gold_ore": "Natural Gold Ore",
-
-  "item.oddc.glass_shard": "Glass Shard"
+  "block.minecraft.gold_ore": "Natural Gold Ore"
 }

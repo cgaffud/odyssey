@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "sword",
+  "base": {
+    "item": "minecraft:iron_sword"
+  },
+  "addition": {
+    "item": "oddc:silver_dust"
+  },
+  "result": {
+    "item": "oddc:silver_sword"
+  }
+}

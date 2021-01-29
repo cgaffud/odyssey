@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "shovel",
+  "base": {
+    "item": "minecraft:iron_shovel"
+  },
+  "addition": {
+    "item": "oddc:silver_dust"
+  },
+  "result": {
+    "item": "oddc:silver_shovel"
+  }
+}

@@ -16,18 +16,11 @@ import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class NewBeaconScreen extends ContainerScreen<NewBeaconContainer> {
-    private static final ResourceLocation BEACON_GUI_TEXTURES = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/beacon/beacon.png");
-    private static final ResourceLocation DIAMOND_TEXTURE = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/beacon/diamond_block.png");
-    private static final ResourceLocation[] NUMERAL_TEXTURES = {new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/beacon/one.png"),
-            new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/beacon/two.png")};
-    private static final ResourceLocation TWO_TEXTURE = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/beacon/diamond_block.png");
+    private static final ResourceLocation BEACON_GUI_TEXTURES = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/beacon.png");
     private static int redFlash1 = 0;
     private static int redFlash2 = 0;
     private static final int[] nonAmp = {12,13,14,15,16,18,24,28,33};
     private static Map<Integer, ResourceLocation> EFFECT_TEXTURES = new java.util.HashMap<>();
-
-
-            //new ResourceLocation("textures/mob_effect/speed.png"),};
 
     public NewBeaconScreen(final NewBeaconContainer container, PlayerInventory playerInventory, ITextComponent title) {
         super(container, playerInventory, title);
@@ -65,6 +58,8 @@ public class NewBeaconScreen extends ContainerScreen<NewBeaconContainer> {
             this.minecraft.getTextureManager().bindTexture(effect_texture);
             blit(matrixStack, i+115, j+16, 0, (float)0, (float)0, 18, 18, 18, 18);
 
+
+            this.minecraft.getTextureManager().bindTexture(this.BEACON_GUI_TEXTURES);
             int amp = this.container.getAmplifier();
             if(this.container.getBlocks() < 9 && amp > 0) amp = 0;
 
@@ -75,8 +70,7 @@ public class NewBeaconScreen extends ContainerScreen<NewBeaconContainer> {
             }
 
             if((amp == 0 || amp == 1) && b1) {
-                this.minecraft.getTextureManager().bindTexture(this.NUMERAL_TEXTURES[amp]);
-                blit(matrixStack, i+125, j+26, 0, (float)0, (float)0, 10, 10, 10, 10);
+                this.blit(matrixStack, i+125, j+26, 176, 16+10*amp, 10, 10);
             }
         }
 
@@ -92,11 +86,10 @@ public class NewBeaconScreen extends ContainerScreen<NewBeaconContainer> {
             this.redFlash2 = 16;
         }
 
-        this.minecraft.getTextureManager().bindTexture(this.DIAMOND_TEXTURE);
         for(int i1 = 0; i1 < 9; i1++){
             int x1 = i1 % 3;
             int y1 = i1 / 3;
-            if(this.container.getCompletion(i1) == 1) blit(matrixStack, i+46+x1*16, j+19+y1*16, 0, (float)0, (float)0, 16, 16, 16, 16);
+            if(this.container.getCompletion(i1) == 1) this.blit(matrixStack, i+46+x1*16, j+19+y1*16, 176, 0, 16, 16);
             else if(this.redFlash2 > 0){
                 flashRed(matrixStack,i+46+x1*16,j+19+y1*16, this.redFlash2);
             }

@@ -1,9 +1,7 @@
 package com.bedmen.odyssey.util;
 
-import com.bedmen.odyssey.container.AlloyFurnaceContainer;
-import com.bedmen.odyssey.container.NewBeaconContainer;
+import com.bedmen.odyssey.container.*;
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.container.NewSmithingTableContainer;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -21,4 +19,7 @@ public class ContainerRegistry {
     public static final RegistryObject<ContainerType<NewBeaconContainer>> BEACON = CONTAINER.register("beacon", () -> new ContainerType<NewBeaconContainer>(NewBeaconContainer::new));
     public static final RegistryObject<ContainerType<NewSmithingTableContainer>> SMITHING_TABLE = CONTAINER.register("smithing_table", () -> new ContainerType<NewSmithingTableContainer>(NewSmithingTableContainer::new));
     public static final RegistryObject<ContainerType<AlloyFurnaceContainer>> ALLOY_FURNACE = CONTAINER.register("alloy_furnace", () -> new ContainerType<AlloyFurnaceContainer>(AlloyFurnaceContainer::new));
+    public static final RegistryObject<ContainerType<InfuserContainer>> INFUSER = CONTAINER.register("infuser", () -> new ContainerType<InfuserContainer>(InfuserContainer::new));
+    public static final RegistryObject<ContainerType<NewEnchantmentContainer>> ENCHANTMENT = CONTAINER.register("enchantment", () -> new ContainerType<NewEnchantmentContainer>(NewEnchantmentContainer::new));
+    public static final RegistryObject<ContainerType<BookshelfContainer>> BOOKSHELF = CONTAINER.register("bookshelf", () -> new ContainerType<BookshelfContainer>(BookshelfContainer::new));
 }

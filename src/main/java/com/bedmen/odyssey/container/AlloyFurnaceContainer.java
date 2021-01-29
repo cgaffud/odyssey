@@ -12,7 +12,6 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.util.IIntArray;
@@ -42,7 +41,7 @@ public class AlloyFurnaceContainer extends Container {
         this.addSlot(new Slot(furnaceInventory, 0, 47, 17));
         this.addSlot(new Slot(furnaceInventory, 1, 65, 17));
         this.addSlot(new AlloyFurnaceFuelSlot(this, furnaceInventory, 2, 56, 53));
-        this.addSlot(new AlloyFurnaceResultSlot(playerInventory.player, furnaceInventory, 3, 116, 35));
+        this.addSlot(new ModFurnaceResultSlot(playerInventory.player, furnaceInventory, 3, 116, 35));
 
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {
@@ -62,26 +61,6 @@ public class AlloyFurnaceContainer extends Container {
             ((IRecipeHelperPopulator)this.furnaceInventory).fillStackedContents(itemHelperIn);
         }
 
-    }
-
-    public void clear() {
-        this.furnaceInventory.clear();
-    }
-
-    public boolean matches(IRecipe<? super IInventory> recipeIn) {
-        return recipeIn.matches(this.furnaceInventory, this.world);
-    }
-
-    public int getOutputSlot() {
-        return 3;
-    }
-
-    public int getWidth() {
-        return 2;
-    }
-
-    public int getHeight() {
-        return 1;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -107,7 +86,7 @@ public class AlloyFurnaceContainer extends Container {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
             if (index == 3) {
-                if (!this.mergeItemStack(itemstack1, 4, 39, true)) {
+                if (!this.mergeItemStack(itemstack1, 4, 40, true)) {
                     return ItemStack.EMPTY;
                 }
 
@@ -146,10 +125,6 @@ public class AlloyFurnaceContainer extends Container {
         return itemstack;
     }
 
-    protected boolean hasRecipe(ItemStack stack) {
-        return this.world.getRecipeManager().getRecipe((IRecipeType)this.recipeType, new Inventory(stack), this.world).isPresent();
-    }
-
     protected boolean isFuel(ItemStack stack) {
         return AlloyFurnaceTileEntity.isFuel(stack);
     }
@@ -168,7 +143,7 @@ public class AlloyFurnaceContainer extends Container {
             i = 200;
         }
 
-        return this.furnaceData.get(0) * 13 / i;
+        return Integer.min(12,this.furnaceData.get(0) * 13 / i);
     }
 
     @OnlyIn(Dist.CLIENT)
