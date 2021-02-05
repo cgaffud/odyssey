@@ -9,6 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -43,7 +44,13 @@ public class InfuserScreen extends ContainerScreen<InfuserContainer> {
         this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
 
         int l = this.container.getCookProgressionScaled();
-        this.blit(matrixStack, i + 89, j + 66, 176, 0, l + 1, 16);
+        l = MathHelper.clamp(l, 0, 30);
+        this.blit(matrixStack, i + 31, j + 28, 176, 0, 78-l, l);
+        this.blit(matrixStack, i + 31 + 78 - l, j + 28, 176 + 78 - l, 0, l, 78-l);
+        this.blit(matrixStack, i + 31, j + 28 + l, 176, l, l, 78-l);
+        this.blit(matrixStack, i + 31 + l, j + 28 + 78 - l, 176 + l, 78 - l, 78 - l, l);
+
+        if(this.container.hasLight()) this.blit(matrixStack, i + 71, j + 19, 176, 78, 58, 71);
     }
 
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {

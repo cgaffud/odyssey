@@ -1,17 +1,25 @@
 {
   "type": "oddc:infusing",
   "lens": {
-    "item": "minecraft:light_blue_stained_glass_pane"
+    "item": "minecraft:diamond"
   },
-  "pattern": [
-    "###",
-    "###",
-    "###"
-  ],
-  "key": {
-    "#": {
-      "item": "oddc:diamond_shard"
-    }
+  "ingredient1": {
+    "item": "oddc:diamond_shard"
+  },
+  "ingredient2": {
+    "item": "oddc:diamond_shard"
+  },
+  "ingredient3": {
+    "item": "oddc:diamond_shard"
+  },
+  "ingredient4": {
+    "item": "oddc:diamond_shard"
+  },
+  "ingredient5": {
+    "item": "oddc:diamond_shard"
+  },
+  "ingredient6": {
+    "item": "oddc:diamond_shard"
   },
   "result": {
     "item": "minecraft:diamond"

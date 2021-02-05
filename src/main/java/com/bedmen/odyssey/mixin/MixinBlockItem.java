@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(BlockItem.class)
-public class MixinBlockItem extends Item {
+public abstract class MixinBlockItem extends Item {
 
     public MixinBlockItem(Properties properties) {
         super(properties);

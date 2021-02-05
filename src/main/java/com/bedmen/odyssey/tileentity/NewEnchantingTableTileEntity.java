@@ -1,25 +1,21 @@
 package com.bedmen.odyssey.tileentity;
 
-import javax.annotation.Nullable;
-
 import com.bedmen.odyssey.container.NewEnchantmentContainer;
-import com.bedmen.odyssey.recipes.InfusingRecipe;
-import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.TileEntityTypeRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
@@ -28,13 +24,18 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+
+import java.util.Map;
 import java.util.Random;
 
-public class NewEnchantingTableTileEntity extends LockableTileEntity implements ISidedInventory, ITickableTileEntity {
+public class NewEnchantingTableTileEntity extends LockableTileEntity implements IInventory, ITickableTileEntity {
     private final int[] X_POS = {2,2,2,1,0,-1,-2,-2,-2,-2,-2,-1,0,1,2,2};
     private final int[] Z_POS = {0,1,2,2,2,2,2,1,0,-1,-2,-2,-2,-2,-2,-1};
     protected int[] enchantmentIds = new int[96];
     protected int[] levelNums = new int[96];
+    protected int enchantLevel = -1;
+    protected Enchantment enchant = null;
+    protected int enchantCost = -1;
     protected final IIntArray tableData1 = new IIntArray(){
 
         @Override
@@ -71,8 +72,29 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
             return 96;
         }
     };
-    protected NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
-    protected final IRecipeType<InfusingRecipe> recipeType;
+    protected final IIntArray enchantData = new IIntArray(){
+
+        @Override
+        public int get(int index) {
+            if(index == 0) return enchantLevel;
+            if(index == 1) return EnchantmentUtil.enchantmentToInt(enchant);
+            if(index == 2) return enchantCost;
+            return -1;
+        }
+
+        @Override
+        public void set(int index, int value) {
+            if(index == 0) enchantLevel = value;
+            else if(index == 1) enchant = EnchantmentUtil.intToEnchantment(value);
+            else if(index == 2) enchantCost = value;
+        }
+
+        @Override
+        public int size() {
+            return 3;
+        }
+    };
+    protected NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
     public int ticks;
     public float field_195523_f;
     public float field_195524_g;
@@ -87,7 +109,6 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
 
     public NewEnchantingTableTileEntity() {
         super(TileEntityTypeRegistry.ENCHANTING_TABLE.get());
-        this.recipeType = ModRecipeType.INFUSING;
     }
 
     public void read(BlockState state, CompoundNBT nbt) { //TODO: MARK
@@ -109,18 +130,12 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
             NonNullList<ItemStack> items = ((BookshelfTileEntity)tileEntity).getItems();
             for(int j = 0; j < 3; j++){
                 if(items.get(j).getItem() == Items.ENCHANTED_BOOK){
-                    ListNBT listNBT = EnchantedBookItem.getEnchantments(items.get(j));
-                    if(!listNBT.isEmpty()){
-                        String s = listNBT.get(0).toString();
-                        int index1 = s.indexOf("lvl:");
-                        int index2 = s.indexOf('s');
-                        int level = Integer.parseInt(s.substring(index1+4,index2));
-                        index1 = s.indexOf("id:\"");
-                        index2 = s.indexOf('\"', index1+4);
-                        String id = s.substring(index1+4,index2);
-
-                        tableData1.set(3*i+j+y*48, EnchantmentUtil.stringToInt(id));
+                    Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(items.get(j));
+                    for(Enchantment e : map.keySet()){
+                        int level = map.get(e);
+                        tableData1.set(3*i+j+y*48, EnchantmentUtil.enchantmentToInt(e));
                         tableData2.set(3*i+j+y*48,level);
+                        break;
                     }
                 } else if(items.get(j) == ItemStack.EMPTY){
                     tableData1.set(3*i+j+y*48,-1);
@@ -142,6 +157,8 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
             getEnchantments(0,i);
             getEnchantments(1,i);
         }
+
+        if(enchantLevel > -1  && enchant != null && enchantCost > -1) doEnchant();
 
         this.pageTurningSpeed = this.nextPageTurningSpeed;
         this.pageAngle = this.nextPageAngle;
@@ -198,25 +215,6 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
         this.field_195523_f += this.field_195526_i;
     }
 
-    @Override
-    public int[] getSlotsForFace(Direction side) {
-        return new int[0];
-    }
-
-    /**
-     * Returns true if automation can insert the given item in the given slot from the given side.
-     */
-    public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
-        return this.isItemValidForSlot(index, itemStackIn);
-    }
-
-    /**
-     * Returns true if automation can extract the given item in the given slot from the given side.
-     */
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        return direction == Direction.DOWN && index == 3;
-    }
-
     /**
      * Returns the number of slots in the inventory.
      */
@@ -266,7 +264,7 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
             stack.setCount(this.getInventoryStackLimit());
         }
 
-        if (index == 0 && !flag) {
+        if (!flag) {
             this.markDirty();
         }
 
@@ -295,48 +293,12 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
         this.items.clear();
     }
 
-    public void setRecipeUsed(@Nullable IRecipe<?> recipe) {
-    }
-
-    @Nullable
-    public IRecipe<?> getRecipeUsed() {
-        return null;
-    }
-
-    public void onCrafting(PlayerEntity player) {
-    }
-
-    public void fillStackedContents(RecipeItemHelper helper) {
-        for(ItemStack itemstack : this.items) {
-            helper.accountStack(itemstack);
-        }
-
-    }
-
-    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] handlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
-
-    @Override
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-        if (!this.removed && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == Direction.UP)
-                return handlers[0].cast();
-            else if (facing == Direction.DOWN)
-                return handlers[1].cast();
-            else
-                return handlers[2].cast();
-        }
-        return super.getCapability(capability, facing);
-    }
-
     /**
      * invalidates a tile entity
      */
     @Override
     public void remove() {
         super.remove();
-        for (int x = 0; x < handlers.length; x++)
-            handlers[x].invalidate();
     }
 
     protected ITextComponent getDefaultName() {
@@ -344,7 +306,18 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
     }
 
     protected Container createMenu(int id, PlayerInventory player) {
-        return new NewEnchantmentContainer(id, player, this, this.tableData1, this.tableData2);
+        return new NewEnchantmentContainer(id, player, this, this.tableData1, this.tableData2, this.enchantData);
     }
 
+    public void doEnchant() {
+        this.items.get(1).shrink(enchantCost);
+        ItemStack itemStack = this.items.get(0);
+        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
+        map.put(enchant, enchantLevel);
+        EnchantmentHelper.setEnchantments(map, itemStack);
+        this.enchantData.set(0,-1);
+        this.enchantData.set(1,-1);
+        this.enchantData.set(2,-1);
+        this.markDirty();
+    }
 }

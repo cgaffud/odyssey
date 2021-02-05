@@ -42,6 +42,7 @@ public class Odyssey
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
+        AttributeRegistry.init();
         BlockRegistry.init();
         ContainerRegistry.init();
         EffectRegistry.init();

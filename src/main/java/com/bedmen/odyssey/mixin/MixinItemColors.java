@@ -23,7 +23,7 @@ public abstract class MixinItemColors {
         ItemColors itemcolors = new ItemColors();
         itemcolors.register((stack, color) -> {
             return color > 0 ? -1 : ((IDyeableArmorItem)stack.getItem()).getColor(stack);
-        }, Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS, Items.LEATHER_HORSE_ARMOR);
+        }, ItemRegistry.LEATHER_HELMET.get(), ItemRegistry.LEATHER_CHESTPLATE.get(), ItemRegistry.LEATHER_LEGGINGS.get(), ItemRegistry.LEATHER_BOOTS.get(), Items.LEATHER_HORSE_ARMOR);
         itemcolors.register((stack, color) -> {
             return GrassColors.get(0.5D, 1.0D);
         }, Blocks.TALL_GRASS, Blocks.LARGE_FERN);

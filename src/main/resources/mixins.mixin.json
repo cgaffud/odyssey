@@ -9,7 +9,12 @@
     "MixinBlockItem",
     "MixinItemColors",
     "MixinPortalSize",
-    "MixinForgeHooks"
+    "MixinForgeHooks",
+    "MixinServerPlayNetHandler",
+    "MixinPlayerEntity",
+    "MixinForgeIngameGui",
+    "MixinAttributes",
+    "MixinCombatRules"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,288 +1,100 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.tools.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.INBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class EnchantmentUtil {
     private static final int[] SWORD_ENCHANTS = {12,13,14,15,16,17,18};
     private static final int[] AXE_ENCHANTS = {12,13,14,19,20,22};
     private static final int[] TOOL_ENCHANTS = {19,20,22};
-    private static final int[] HELMET_ENCHANTS = {0,1,3,4,5,6,7,10};
-    private static final int[] CHESTPLATE_ENCHANTS = {0,1,3,4,7,10};
-    private static final int[] LEGGINGS_ENCHANTS = {0,1,3,4,7,10};
-    private static final int[] BOOTS_ENCHANTS = {0,1,2,3,4,7,8,9,10,11};
+    private static final int[] HELMET_ENCHANTS = {0,5,6,10};
+    private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10};
+    private static final int[] LEGGINGS_ENCHANTS = {0,3,8,10};
+    private static final int[] BOOTS_ENCHANTS = {0,2,9,10,11};
     private static final int[] BOW_ENCHANTS = {23,24,25,26};
     private static final int[] CROSSBOW_ENCHANTS = {33,34,35};
     private static final int[] TRIDENT_ENCHANTS = {29,30,31,32};
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
     private static final int[] FLINT_AND_STEEL_ENCHANTS = {38};
 
-    public static int stringToInt(String s){
-        switch(s){
-            case "minecraft:protection":
-                return 0;
-            case "minecraft:fire_protection":
-                return 1;
-            case "minecraft:feather_falling":
-                return 2;
-            case "minecraft:blast_protection":
-                return 3;
-            case "minecraft:projectile_protection":
-                return 4;
-            case "minecraft:respiration":
-                return 5;
-            case "minecraft:aqua_affinity":
-                return 6;
-            case "minecraft:thorns":
-                return 7;
-            case "minecraft:depth_strider":
-                return 8;
-            case "minecraft:frost_walker":
-                return 9;
-            case "minecraft:binding_curse":
-                return 10;
-            case "minecraft:soul_speed":
-                return 11;
-            case "minecraft:sharpness":
-                return 12;
-            case "minecraft:smite":
-                return 13;
-            case "minecraft:bane_of_arthropods":
-                return 14;
-            case "minecraft:knockback":
-                return 15;
-            case "minecraft:fire_aspect":
-                return 16;
-            case "minecraft:looting":
-                return 17;
-            case "minecraft:sweeping":
-                return 18;
-            case "minecraft:efficiency":
-                return 19;
-            case "minecraft:silk_touch":
-                return 20;
-            case "minecraft:unbreaking":
-                return 21;
-            case "minecraft:fortune":
-                return 22;
-            case "minecraft:power":
-                return 23;
-            case "minecraft:punch":
-                return 24;
-            case "minecraft:flame":
-                return 25;
-            case "minecraft:infinity":
-                return 26;
-            case "minecraft:luck_of_the_sea":
-                return 27;
-            case "minecraft:lure":
-                return 28;
-            case "minecraft:loyalty":
-                return 29;
-            case "minecraft:impaling":
-                return 30;
-            case "minecraft:riptide":
-                return 31;
-            case "minecraft:channeling":
-                return 32;
-            case "minecraft:multishot":
-                return 33;
-            case "minecraft:quick_charge":
-                return 34;
-            case "minecraft:piercing":
-                return 35;
-            case "minecraft:mending":
-                return 36;
-            case "minecraft:vanishing_curse":
-                return 37;
-            case "oddc:warping":
-                return 38;
-            default:
-                return -1;
-        }
+    private static final Enchantment[] enchantments = {Enchantments.PROTECTION, Enchantments.FIRE_PROTECTION, Enchantments.FEATHER_FALLING, Enchantments.BLAST_PROTECTION, Enchantments.PROJECTILE_PROTECTION, Enchantments.RESPIRATION, Enchantments.AQUA_AFFINITY, Enchantments.THORNS, Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, Enchantments.BINDING_CURSE, Enchantments.SOUL_SPEED, Enchantments.SHARPNESS, Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING, Enchantments.SWEEPING, Enchantments.EFFICIENCY, Enchantments.SILK_TOUCH, Enchantments.UNBREAKING, Enchantments.FORTUNE, Enchantments.POWER, Enchantments.PUNCH, Enchantments.FLAME, Enchantments.INFINITY, Enchantments.LUCK_OF_THE_SEA, Enchantments.LURE, Enchantments.LOYALTY, Enchantments.IMPALING, Enchantments.RIPTIDE, Enchantments.CHANNELING, Enchantments.MULTISHOT, Enchantments.QUICK_CHARGE, Enchantments.PIERCING, Enchantments.MENDING, Enchantments.VANISHING_CURSE, EnchantmentRegistry.WARPING.get()};
+    private static Map<Enchantment, Integer> integerMap = new HashMap<>();
+
+    public static void init(){
+        integerMap.put(Enchantments.PROTECTION, 0);
+        integerMap.put(Enchantments.FIRE_PROTECTION, 1);
+        integerMap.put(Enchantments.FEATHER_FALLING, 2);
+        integerMap.put(Enchantments.BLAST_PROTECTION, 3);
+        integerMap.put(Enchantments.PROJECTILE_PROTECTION, 4);
+        integerMap.put(Enchantments.RESPIRATION, 5);
+        integerMap.put(Enchantments.AQUA_AFFINITY, 6);
+        integerMap.put(Enchantments.THORNS, 7);
+        integerMap.put(Enchantments.DEPTH_STRIDER, 8);
+        integerMap.put(Enchantments.FROST_WALKER, 9);
+        integerMap.put(Enchantments.BINDING_CURSE, 10);
+        integerMap.put(Enchantments.SOUL_SPEED, 11);
+        integerMap.put(Enchantments.SHARPNESS, 12);
+        integerMap.put(Enchantments.SMITE, 13);
+        integerMap.put(Enchantments.BANE_OF_ARTHROPODS, 14);
+        integerMap.put(Enchantments.KNOCKBACK, 15);
+        integerMap.put(Enchantments.FIRE_ASPECT, 16);
+        integerMap.put(Enchantments.LOOTING, 17);
+        integerMap.put(Enchantments.SWEEPING, 18);
+        integerMap.put(Enchantments.EFFICIENCY, 19);
+        integerMap.put(Enchantments.SILK_TOUCH, 20);
+        integerMap.put(Enchantments.UNBREAKING, 21);
+        integerMap.put(Enchantments.FORTUNE, 22);
+        integerMap.put(Enchantments.POWER, 23);
+        integerMap.put(Enchantments.PUNCH, 24);
+        integerMap.put(Enchantments.FLAME, 25);
+        integerMap.put(Enchantments.INFINITY, 26);
+        integerMap.put(Enchantments.LUCK_OF_THE_SEA, 27);
+        integerMap.put(Enchantments.LURE, 28);
+        integerMap.put(Enchantments.LOYALTY, 29);
+        integerMap.put(Enchantments.IMPALING, 30);
+        integerMap.put(Enchantments.RIPTIDE, 31);
+        integerMap.put(Enchantments.CHANNELING, 32);
+        integerMap.put(Enchantments.MULTISHOT, 33);
+        integerMap.put(Enchantments.QUICK_CHARGE, 34);
+        integerMap.put(Enchantments.PIERCING, 35);
+        integerMap.put(Enchantments.MENDING, 36);
+        integerMap.put(Enchantments.VANISHING_CURSE, 37);
+        integerMap.put(EnchantmentRegistry.WARPING.get(), 38);
     }
 
-    public static Enchantment stringToEnchantment(String s){
-        switch(s){
-            case "minecraft:protection":
-                return Enchantments.PROTECTION;
-            case "minecraft:fire_protection":
-                return Enchantments.FIRE_PROTECTION;
-            case "minecraft:feather_falling":
-                return Enchantments.FEATHER_FALLING;
-            case "minecraft:blast_protection":
-                return Enchantments.BLAST_PROTECTION;
-            case "minecraft:projectile_protection":
-                return Enchantments.PROJECTILE_PROTECTION;
-            case "minecraft:respiration":
-                return Enchantments.RESPIRATION;
-            case "minecraft:aqua_affinity":
-                return Enchantments.AQUA_AFFINITY;
-            case "minecraft:thorns":
-                return Enchantments.THORNS;
-            case "minecraft:depth_strider":
-                return Enchantments.DEPTH_STRIDER;
-            case "minecraft:frost_walker":
-                return Enchantments.FROST_WALKER;
-            case "minecraft:binding_curse":
-                return Enchantments.BINDING_CURSE;
-            case "minecraft:soul_speed":
-                return Enchantments.SOUL_SPEED;
-            case "minecraft:sharpness":
-                return Enchantments.SHARPNESS;
-            case "minecraft:smite":
-                return Enchantments.SMITE;
-            case "minecraft:bane_of_arthropods":
-                return Enchantments.BANE_OF_ARTHROPODS;
-            case "minecraft:knockback":
-                return Enchantments.KNOCKBACK;
-            case "minecraft:fire_aspect":
-                return Enchantments.FIRE_ASPECT;
-            case "minecraft:looting":
-                return Enchantments.LOOTING;
-            case "minecraft:sweeping":
-                return Enchantments.SWEEPING;
-            case "minecraft:efficiency":
-                return Enchantments.EFFICIENCY;
-            case "minecraft:silk_touch":
-                return Enchantments.SILK_TOUCH;
-            case "minecraft:unbreaking":
-                return Enchantments.UNBREAKING;
-            case "minecraft:fortune":
-                return Enchantments.FORTUNE;
-            case "minecraft:power":
-                return Enchantments.POWER;
-            case "minecraft:punch":
-                return Enchantments.PUNCH;
-            case "minecraft:flame":
-                return Enchantments.FLAME;
-            case "minecraft:infinity":
-                return Enchantments.INFINITY;
-            case "minecraft:luck_of_the_sea":
-                return Enchantments.LUCK_OF_THE_SEA;
-            case "minecraft:lure":
-                return Enchantments.LURE;
-            case "minecraft:loyalty":
-                return Enchantments.LOYALTY;
-            case "minecraft:impaling":
-                return Enchantments.IMPALING;
-            case "minecraft:riptide":
-                return Enchantments.RIPTIDE;
-            case "minecraft:channeling":
-                return Enchantments.CHANNELING;
-            case "minecraft:multishot":
-                return Enchantments.MULTISHOT;
-            case "minecraft:quick_charge":
-                return Enchantments.QUICK_CHARGE;
-            case "minecraft:piercing":
-                return Enchantments.PIERCING;
-            case "minecraft:mending":
-                return Enchantments.MENDING;
-            case "minecraft:vanishing_curse":
-                return Enchantments.VANISHING_CURSE;
-            case "oddc:warping":
-                return EnchantmentRegistry.WARPING.get();
-            default:
-                return null;
-        }
+    public static Enchantment intToEnchantment(int i){
+        if(i < 0 || i >= enchantments.length) return null;
+        return enchantments[i];
     }
 
-    public static String intToString(int i){
-        switch(i){
-            case 0:
-                return "minecraft:protection";
-            case 1:
-                return "minecraft:fire_protection";
-            case 2:
-                return "minecraft:feather_falling";
-            case 3:
-                return "minecraft:blast_protection";
-            case 4:
-                return "minecraft:projectile_protection";
-            case 5:
-                return "minecraft:respiration";
-            case 6:
-                return "minecraft:aqua_affinity";
-            case 7:
-                return "minecraft:thorns";
-            case 8:
-                return "minecraft:depth_strider";
-            case 9:
-                return "minecraft:frost_walker";
-            case 10:
-                return "minecraft:binding_curse";
-            case 11:
-                return "minecraft:soul_speed";
-            case 12:
-                return "minecraft:sharpness";
-            case 13:
-                return "minecraft:smite";
-            case 14:
-                return "minecraft:bane_of_arthropods";
-            case 15:
-                return "minecraft:knockback";
-            case 16:
-                return "minecraft:fire_aspect";
-            case 17:
-                return "minecraft:looting";
-            case 18:
-                return "minecraft:sweeping";
-            case 19:
-                return "minecraft:efficiency";
-            case 20:
-                return "minecraft:silk_touch";
-            case 21:
-                return "minecraft:unbreaking";
-            case 22:
-                return "minecraft:fortune";
-            case 23:
-                return "minecraft:power";
-            case 24:
-                return "minecraft:punch";
-            case 25:
-                return "minecraft:flame";
-            case 26:
-                return "minecraft:infinity";
-            case 27:
-                return "minecraft:luck_of_the_sea";
-            case 28:
-                return "minecraft:lure";
-            case 29:
-                return "minecraft:loyalty";
-            case 30:
-                return "minecraft:impaling";
-            case 31:
-                return "minecraft:riptide";
-            case 32:
-                return "minecraft:channeling";
-            case 33:
-                return "minecraft:multishot";
-            case 34:
-                return "minecraft:quick_charge";
-            case 35:
-                return "minecraft:piercing";
-            case 36:
-                return "minecraft:mending";
-            case 37:
-                return "minecraft:vanishing_curse";
-            case 38:
-                return "oddc:warping";
-            default:
-                return "";
-        }
-
-    }
-
-    public static ItemStack stringToItem(String s){
-        if(s.equals("minecraft:feather_falling")) return Items.FEATHER.getDefaultInstance();
-        else return Items.FLINT.getDefaultInstance();
+    public static int enchantmentToInt(Enchantment e){
+        if(integerMap.size() == 0) init();
+        if(integerMap.containsKey(e)) return integerMap.get(e);
+        return -1;
     }
 
     public static boolean canBeApplied(ItemStack itemStack, int id){
-        if(itemStack == ItemStack.EMPTY) return false;
+        if(id == -1 || itemStack == ItemStack.EMPTY) return false;
         Item item = itemStack.getItem();
         if(!item.isEnchantable(itemStack)) return false;
         if(id == 21 || id == 36 || id == 37) return true; //Unbreaking, Mending, and Vanishing
@@ -316,5 +128,51 @@ public class EnchantmentUtil {
             if(i == id) return true;
         }
         return false;
+    }
+
+    public static Enchantment[] exclusiveWith(Enchantment e){
+        if(e == Enchantments.SHARPNESS) return new Enchantment[] {Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS};
+        if(e == Enchantments.SMITE) return new Enchantment[] {Enchantments.SHARPNESS, Enchantments.BANE_OF_ARTHROPODS};
+        if(e == Enchantments.BANE_OF_ARTHROPODS) return new Enchantment[] {Enchantments.SHARPNESS, Enchantments.SMITE};
+        if(e == Enchantments.FORTUNE) return new Enchantment[] {Enchantments.SILK_TOUCH};
+        if(e == Enchantments.SILK_TOUCH) return new Enchantment[] {Enchantments.FORTUNE};
+        if(e == Enchantments.CHANNELING) return new Enchantment[] {Enchantments.RIPTIDE};
+        if(e == Enchantments.LOYALTY) return new Enchantment[] {Enchantments.RIPTIDE};
+        if(e == Enchantments.RIPTIDE) return new Enchantment[] {Enchantments.CHANNELING, Enchantments.LOYALTY};
+        if(e == Enchantments.MENDING) return new Enchantment[] {Enchantments.INFINITY};
+        if(e == Enchantments.INFINITY) return new Enchantment[] {Enchantments.MENDING};
+        if(e == Enchantments.DEPTH_STRIDER) return new Enchantment[] {Enchantments.FROST_WALKER};
+        if(e == Enchantments.FROST_WALKER) return new Enchantment[] {Enchantments.DEPTH_STRIDER};
+        return new Enchantment[] {};
+    }
+
+    public static Enchantment deserializeEnchantment(@Nullable JsonElement json) {
+        String s = json.toString();
+        if(!(s.substring(0,16)).equals("{\"enchantment\":\"")) throw new JsonSyntaxException("Expecting Enchantment");
+        s = s.substring(16);
+        int index = s.indexOf('\"');
+        s = s.substring(0, index);
+
+        if(!Registry.ENCHANTMENT.containsKey(ResourceLocation.tryCreate(s))) throw new JsonSyntaxException("Couldn't find Enchantment");
+        return Registry.ENCHANTMENT.getOptional(ResourceLocation.tryCreate(s)).get();
+    }
+
+    public static int deserializeLevel(@Nullable JsonElement json) {
+        String s = json.toString();
+        if(!(s.substring(0,10)).equals("{\"level\":\"")) throw new JsonSyntaxException("Expecting Level");
+        s = s.substring(10);
+        int index = s.indexOf('\"');
+        s = s.substring(0, index);
+
+        return Integer.parseInt(s);
+    }
+
+    public static Enchantment readEnchantment(PacketBuffer buffer) {
+        int i = buffer.readVarInt();
+        return intToEnchantment(i);
+    }
+
+    public static void writeEnchantment(Enchantment e, PacketBuffer buffer) {
+        buffer.writeVarInt(enchantmentToInt(e));
     }
 }

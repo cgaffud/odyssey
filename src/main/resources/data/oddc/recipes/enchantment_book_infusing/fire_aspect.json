@@ -1,0 +1,30 @@
+{
+  "type": "oddc:enchanted_book_infusing",
+  "lens": {
+    "item": "minecraft:quartz"
+  },
+  "ingredient1": {
+    "item": "minecraft:blaze_rod"
+  },
+  "ingredient2": {
+    "item": "minecraft:blaze_rod"
+  },
+  "ingredient3": {
+    "item": "minecraft:blaze_rod"
+  },
+  "ingredient4": {
+    "item": "minecraft:blaze_rod"
+  },
+  "ingredient5": {
+    "item": "minecraft:blaze_rod"
+  },
+  "ingredient6": {
+    "item": "minecraft:blaze_rod"
+  },
+  "enchantment": {
+    "enchantment": "minecraft:fire_aspect"
+  },
+  "level": {
+    "level": "1"
+  }
+}

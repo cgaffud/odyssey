@@ -1,8 +1,11 @@
 package com.bedmen.odyssey.container;
 
 import com.bedmen.odyssey.client.gui.NewEnchantmentScreen;
+import com.bedmen.odyssey.tileentity.NewEnchantingTableTileEntity;
 import com.bedmen.odyssey.util.ContainerRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -11,6 +14,8 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.world.World;
@@ -18,38 +23,36 @@ import net.minecraft.world.World;
 import java.util.*;
 
 public class NewEnchantmentContainer extends Container {
-    private final IInventory inv;
+    public final IInventory inv;
     protected final World world;
     private final IIntArray tableData1;
     private final IIntArray tableData2;
-    private List<String> idList = new ArrayList<String>();
+    public final IIntArray enchantData;
+    private List<Enchantment> enchantmentList = new ArrayList<Enchantment>();
     private List<Integer> levelList = new ArrayList<Integer>();
+    private List<Integer> costList = new ArrayList<Integer>();
 
     public NewEnchantmentContainer(int p_i241921_4_, PlayerInventory p_i241921_5_) {
-        this(p_i241921_4_, p_i241921_5_, new Inventory(3), new IntArray(96), new IntArray(96));
+        this(p_i241921_4_, p_i241921_5_, new Inventory(2), new IntArray(96), new IntArray(96), new IntArray(3));
     }
 
-    public NewEnchantmentContainer(int id, PlayerInventory playerInventory, IInventory inv, IIntArray tableData1, IIntArray tableData2) {
+    public NewEnchantmentContainer(int id, PlayerInventory playerInventory, IInventory inv, IIntArray tableData1, IIntArray tableData2, IIntArray enchantData) {
         super(ContainerRegistry.ENCHANTMENT.get(), id);
-        assertInventorySize(inv, 3);
+        assertInventorySize(inv, 2);
         this.inv = inv;
         this.world = playerInventory.player.world;
         assertIntArraySize(tableData1, 96);
         assertIntArraySize(tableData2, 96);
+        assertIntArraySize(enchantData, 3);
         this.tableData1 = tableData1;
         this.tableData2 = tableData2;
-        NewEnchantmentContainer con = this;
-        Slot slot0 = this.addSlot(new Slot(this.inv, 0, 15, 27){
+        this.enchantData = enchantData;
+        this.addSlot(new Slot(this.inv, 0, 29, 23){
             public int getSlotStackLimit() {
                 return 1;
             }
         });
-        Slot slot1 = this.addSlot(new Slot(this.inv, 1, 35, 27){
-            public int getSlotStackLimit() {
-                return 1;
-            }
-        });
-        Slot slot2 = this.addSlot(new Slot(this.inv, 2, 35, 47) {
+        this.addSlot(new Slot(this.inv, 1, 41, 47) {
             public boolean isItemValid(ItemStack stack) {
                 return stack.getItem().equals(Items.LAPIS_LAZULI);
             }
@@ -67,6 +70,7 @@ public class NewEnchantmentContainer extends Container {
 
         this.trackIntArray(tableData1);
         this.trackIntArray(tableData2);
+        this.trackIntArray(enchantData);
     }
 
     /**
@@ -86,24 +90,24 @@ public class NewEnchantmentContainer extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            if (index >= 0 && index <= 2) {
-                if (!this.mergeItemStack(itemstack1, 3, 39, true)) {
+            if (index == 0 || index  == 1) {
+                if (!this.mergeItemStack(itemstack1, 2, 38, true)) {
                     return ItemStack.EMPTY;
                 }
 
                 slot.onSlotChange(itemstack1, itemstack);
-            } else if (index > 2) {
+            } else if (index > 1) {
                 if(itemstack1.getItem().equals(Items.LAPIS_LAZULI)){
-                    if (!this.mergeItemStack(itemstack1, 2, 3, false)) {
+                    if (!this.mergeItemStack(itemstack1, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 3 && index < 39) {
-                    if (!this.mergeItemStack(itemstack1, 0, 2, false)) {
+                else if (index >= 2 && index < 38) {
+                    if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
-            } else if (!this.mergeItemStack(itemstack1, 3, 39, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 2, 38, false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -124,39 +128,71 @@ public class NewEnchantmentContainer extends Container {
     }
 
     private void generateLists(){
-        this.idList = new ArrayList<String>();
+        this.enchantmentList = new ArrayList<Enchantment>();
         this.levelList = new ArrayList<Integer>();
-        Set<String> set = new HashSet<>();
+        this.costList = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<Integer>();
         ItemStack itemStack = this.inv.getStackInSlot(0);
+        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
 
         for(int i = 0; i < this.tableData1.size(); i++){
             int i1 = this.tableData1.get(i);
+            if(!EnchantmentUtil.canBeApplied(itemStack,i1)) continue;
             int i2 = this.tableData2.get(i);
-            if(i1 != -1 && !set.contains(i1+" "+i2) && EnchantmentUtil.canBeApplied(itemStack,i1)){
-                ItemStack itemStack1 = this.inv.getStackInSlot(1);
-                if(itemStack1.isEmpty()){
-                    set.add(i1+" "+i2);
-                    this.idList.add(EnchantmentUtil.intToString(i1));
-                    this.levelList.add(i2);
-                } else if(EnchantmentUtil.stringToItem(EnchantmentUtil.intToString(i1)).getItem() == itemStack1.getItem()){
-                    set.add(i1+" "+i2);
-                    this.idList.add(EnchantmentUtil.intToString(i1));
-                    this.levelList.add(i2);
+            int i3 = 32768*i1+i2;
+            if(list.contains(i3)) continue;
+            Enchantment e = EnchantmentUtil.intToEnchantment(i1);
+            boolean b = true;
+            if(map.containsKey(e) && map.get(e) >= i2) b = false;
+            else{
+                for(Enchantment e1 : EnchantmentUtil.exclusiveWith(e)){
+                    if(map.containsKey(e1)){
+                        b = false;
+                        break;
+                    }
                 }
             }
+            if(b)
+                list.add(i3);
+        }
+
+        list.sort(Integer::compare);
+        for(Integer i : list){
+            Enchantment e = EnchantmentUtil.intToEnchantment(i/32768);
+            this.enchantmentList.add(e);
+            int j = i%32768;
+            this.levelList.add(j);
+            if(map.containsKey(e)){
+                int k = map.get(e);
+                this.costList.add((j*j+j-k*k-k)/2);
+            }
+            else{
+                this.costList.add((j*j+j)/2);
+            }
+
         }
     }
 
     public int numPages(){
         this.generateLists();
-        return (this.idList.size() + NewEnchantmentScreen.ENCHANT_PER_PAGE - 1)/(NewEnchantmentScreen.ENCHANT_PER_PAGE);
+        return (this.enchantmentList.size() + NewEnchantmentScreen.ENCHANT_PER_PAGE - 1)/(NewEnchantmentScreen.ENCHANT_PER_PAGE);
     }
 
-    public List<String> getIdList(){
-        return this.idList;
+    public List<Enchantment> getEnchantmentList(){
+        return this.enchantmentList;
     }
 
     public List<Integer> getLevelList(){
         return this.levelList;
+    }
+
+    public List<Integer> getCostList(){
+        return this.costList;
+    }
+
+    public void doEnchant(int level, int id, int cost){
+        this.enchantData.set(0, level);
+        this.enchantData.set(1, id);
+        this.enchantData.set(2, cost);
     }
 }

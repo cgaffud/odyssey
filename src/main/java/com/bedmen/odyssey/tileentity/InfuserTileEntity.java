@@ -3,10 +3,13 @@ package com.bedmen.odyssey.tileentity;
 import javax.annotation.Nullable;
 
 import com.bedmen.odyssey.container.InfuserContainer;
+import com.bedmen.odyssey.recipes.EnchantedBookInfusingRecipe;
 import com.bedmen.odyssey.recipes.InfusingRecipe;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.util.TileEntityTypeRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IRecipeHelperPopulator;
@@ -15,6 +18,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeItemHelper;
@@ -26,8 +30,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class InfuserTileEntity extends LockableTileEntity implements ISidedInventory, IRecipeHolder, IRecipeHelperPopulator, ITickableTileEntity {
-    protected NonNullList<ItemStack> items = NonNullList.withSize(11, ItemStack.EMPTY);
+    protected NonNullList<ItemStack> items = NonNullList.withSize(8, ItemStack.EMPTY);
     private int cookTime;
     private int cookTimeTotal;
     protected final IIntArray infuserData = new IIntArray() {
@@ -37,6 +44,8 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
                     return InfuserTileEntity.this.cookTime;
                 case 1:
                     return InfuserTileEntity.this.cookTimeTotal;
+                case 2:
+                    return InfuserTileEntity.this.hasLight() ? 1 : 0;
                 default:
                     return 0;
             }
@@ -49,12 +58,15 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
                     break;
                 case 1:
                     InfuserTileEntity.this.cookTimeTotal = value;
+                    break;
+                case 2:
+                    break;
             }
 
         }
 
         public int size() {
-            return 2;
+            return 3;
         }
     };
     protected final IRecipeType<InfusingRecipe> recipeType;
@@ -91,14 +103,23 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
 
         if (!this.world.isRemote) {
             if (this.hasLight()) {
-                IRecipe<?> irecipe = this.world.getRecipeManager().getRecipe((IRecipeType<InfusingRecipe>)this.recipeType, this, this.world).orElse(null);
+                IRecipe<?> irecipe1 = this.world.getRecipeManager().getRecipe(this.recipeType, this, this.world).orElse(null);
+                IRecipe<?> irecipe2 = this.world.getRecipeManager().getRecipe(ModRecipeType.ENCHANTED_BOOK_INFUSING, this, this.world).orElse(null);
 
-                if (this.canInfuse(irecipe)) {
+                if (this.canInfuse1(irecipe1)) {
                     ++this.cookTime;
                     if (this.cookTime == this.cookTimeTotal) {
                         this.cookTime = 0;
                         this.cookTimeTotal = this.getCookTime();
-                        this.infuse(irecipe);
+                        this.infuse1(irecipe1);
+                        flag1 = true;
+                    }
+                } else if(this.canInfuse2(irecipe2)) {
+                    ++this.cookTime;
+                    if (this.cookTime == this.cookTimeTotal) {
+                        this.cookTime = 0;
+                        this.cookTimeTotal = this.getCookTime();
+                        this.infuse2(irecipe2);
                         flag1 = true;
                     }
                 } else {
@@ -112,13 +133,13 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
         if(flag1) this.markDirty();
     }
 
-    protected boolean canInfuse(@Nullable IRecipe<?> recipeIn) {
+    protected boolean canInfuse1(@Nullable IRecipe<?> recipeIn) {
         if (recipeIn != null) {
             ItemStack itemstack = recipeIn.getRecipeOutput();
             if (itemstack.isEmpty()) {
                 return false;
             } else {
-                ItemStack itemstack1 = this.items.get(10);
+                ItemStack itemstack1 = this.items.get(7);
                 if (itemstack1.isEmpty()) {
                     return true;
                 } else if (!itemstack1.isItemEqual(itemstack)) {
@@ -134,24 +155,36 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
         }
     }
 
-    private void infuse(@Nullable IRecipe<?> recipe) {
-        if (recipe != null && this.canInfuse(recipe)) {
+    protected boolean canInfuse2(@Nullable IRecipe<?> recipeIn) {
+        if (recipeIn != null) {
+            ItemStack itemstack = this.items.get(7);
+            if (itemstack.isEmpty()) {
+                return false;
+            } else {
+                int level = ((EnchantedBookInfusingRecipe)recipeIn).getLevel();
+                if(level <= 1 && (itemstack.getItem() != Items.BOOK || itemstack.getCount() > 1)) return false;
+                else if(level > 1 && itemstack.getItem() != Items.ENCHANTED_BOOK) return false;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void infuse1(@Nullable IRecipe<?> recipe) {
+        if (recipe != null && this.canInfuse1(recipe)) {
             ItemStack itemstack1 = this.items.get(1);
             ItemStack itemstack2 = this.items.get(2);
             ItemStack itemstack3 = this.items.get(3);
             ItemStack itemstack4 = this.items.get(4);
             ItemStack itemstack5 = this.items.get(5);
             ItemStack itemstack6 = this.items.get(6);
-            ItemStack itemstack7 = this.items.get(7);
-            ItemStack itemstack8 = this.items.get(8);
-            ItemStack itemstack9 = this.items.get(9);
             ItemStack itemstackRO = recipe.getRecipeOutput();
-            ItemStack itemstack10 = this.items.get(10);
+            ItemStack itemstack7 = this.items.get(7);
 
-            if (itemstack10.isEmpty()) {
-                this.items.set(10, itemstackRO.copy());
-            } else if (itemstack10.getItem() == itemstackRO.getItem()) {
-                itemstack10.grow(itemstackRO.getCount());
+            if (itemstack7.isEmpty()) {
+                this.items.set(7, itemstackRO.copy());
+            } else if (itemstack7.getItem() == itemstackRO.getItem()) {
+                itemstack7.grow(itemstackRO.getCount());
             }
 
             itemstack1.shrink(1);
@@ -160,9 +193,27 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
             itemstack4.shrink(1);
             itemstack5.shrink(1);
             itemstack6.shrink(1);
-            itemstack7.shrink(1);
-            itemstack8.shrink(1);
-            itemstack9.shrink(1);
+        }
+    }
+
+    private void infuse2(@Nullable IRecipe<?> recipe) {
+        if (recipe != null && this.canInfuse2(recipe)) {
+            ItemStack itemstack1 = this.items.get(1);
+            ItemStack itemstack2 = this.items.get(2);
+            ItemStack itemstack3 = this.items.get(3);
+            ItemStack itemstack4 = this.items.get(4);
+            ItemStack itemstack5 = this.items.get(5);
+            ItemStack itemstack6 = this.items.get(6);
+            ItemStack itemStackRO = recipe.getCraftingResult(null);
+
+            this.items.set(7, itemStackRO.copy());
+
+            itemstack1.shrink(1);
+            itemstack2.shrink(1);
+            itemstack3.shrink(1);
+            itemstack4.shrink(1);
+            itemstack5.shrink(1);
+            itemstack6.shrink(1);
         }
     }
 
@@ -238,7 +289,7 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
             stack.setCount(this.getInventoryStackLimit());
         }
 
-        if (index == 0 && !flag) {
+        if (index != 7 && !flag) {
             this.cookTimeTotal = this.getCookTime();
             this.cookTime = 0;
             this.markDirty();
@@ -320,5 +371,6 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
     protected Container createMenu(int id, PlayerInventory player) {
         return new InfuserContainer(id, player, this, this.infuserData);
     }
+
 
 }

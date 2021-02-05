@@ -2,6 +2,7 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.recipes.AlloyRecipe;
+import com.bedmen.odyssey.recipes.EnchantedBookInfusingRecipe;
 import com.bedmen.odyssey.recipes.InfusingRecipe;
 import com.bedmen.odyssey.recipes.NewSmithingRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -21,4 +22,5 @@ public class RecipeRegistry {
     public static final RegistryObject<IRecipeSerializer<NewSmithingRecipe>> NEW_SMITHING = RECIPES.register("new_smithing", () -> new NewSmithingRecipe.Serializer());
     public static final RegistryObject<IRecipeSerializer<AlloyRecipe>> ALLOYING = RECIPES.register("alloying", () -> new AlloyRecipe.Serializer());
     public static final RegistryObject<IRecipeSerializer<InfusingRecipe>> INFUSING = RECIPES.register("infusing", () -> new InfusingRecipe.Serializer());
+    public static final RegistryObject<IRecipeSerializer<EnchantedBookInfusingRecipe>> ENCHANTED_BOOK_INFUSING = RECIPES.register("enchanted_book_infusing", () -> new EnchantedBookInfusingRecipe.Serializer());
 }

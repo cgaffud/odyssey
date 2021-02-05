@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.recipes;
 
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.RecipeRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
@@ -9,12 +10,19 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.*;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
@@ -23,18 +31,20 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
-public class InfusingRecipe implements IRecipe<IInventory> {
+public class EnchantedBookInfusingRecipe implements IRecipe<IInventory> {
 
     private final Ingredient lens;
     private final NonNullList<Ingredient> recipeItems;
-    private final ItemStack recipeOutput;
+    private final Enchantment enchantment;
+    private final int level;
     private final ResourceLocation id;
 
-    public InfusingRecipe(ResourceLocation idIn, Ingredient lensIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn) {
+    public EnchantedBookInfusingRecipe(ResourceLocation idIn, Ingredient lensIn, NonNullList<Ingredient> recipeItemsIn, Enchantment enchantment, int level) {
         this.id = idIn;
         this.lens = lensIn;
         this.recipeItems = recipeItemsIn;
-        this.recipeOutput = recipeOutputIn;
+        this.enchantment = enchantment;
+        this.level = level;
     }
 
     public ResourceLocation getId() {
@@ -49,15 +59,27 @@ public class InfusingRecipe implements IRecipe<IInventory> {
         return this.recipeItems;
     }
 
+    public Enchantment getEnchantment() {
+        return this.enchantment;
+    }
+
+    public int getLevel() {
+        return this.level;
+    }
+
     public ItemStack getRecipeOutput(){
-        return this.recipeOutput;
+        return Items.ENCHANTED_BOOK.getDefaultInstance();
     }
 
     /**
      * Returns an Item that is the result of this recipe
      */
     public ItemStack getCraftingResult(IInventory inv) {
-        return this.getRecipeOutput().copy();
+        Map<Enchantment, Integer> map = new HashMap<>();
+        map.put(this.enchantment, this.level);
+        ItemStack itemStack = Items.ENCHANTED_BOOK.getDefaultInstance();
+        EnchantmentHelper.setEnchantments(map, itemStack);
+        return itemStack;
     }
 
     @Override
@@ -66,41 +88,40 @@ public class InfusingRecipe implements IRecipe<IInventory> {
     }
 
     public IRecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.INFUSING.get();
+        return RecipeRegistry.ENCHANTED_BOOK_INFUSING.get();
     }
 
     @Override
     public IRecipeType<?> getType() {
-        return ModRecipeType.INFUSING;
+        return ModRecipeType.ENCHANTED_BOOK_INFUSING;
     }
 
     /**
      * Used to check if a recipe matches current crafting inventory
      */
     public boolean matches(IInventory inv, World worldIn) {
-        if (!this.lens.test(inv.getStackInSlot(0))) return false;
-        for (int i = 0; i < 6; i++) {
-            if (!this.recipeItems.get(i).test(inv.getStackInSlot(i + 1))) return false;
+        if(!this.lens.test(inv.getStackInSlot(0))) return false;
+        for(int i = 0; i < 6; i++){
+            if(!this.recipeItems.get(i).test(inv.getStackInSlot(i+1))) return false;
+        }
+        ItemStack itemStack = inv.getStackInSlot(7);
+        if(this.level <= 1 && itemStack.getItem() != Items.BOOK) return false;
+        else if(this.level > 1){
+            if(itemStack.getItem() != Items.ENCHANTED_BOOK) return false;
+            Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
+            Set<Enchantment> set = map.keySet();
+            if(set.size() != 1) return false;
+            for(Enchantment e : set){
+                if(e != this.enchantment) return false;
+                if(map.get(e) != this.level - 1) return false;
+            }
         }
         return true;
     }
 
-    public static ItemStack deserializeItem(JsonObject object) {
-        String s = JSONUtils.getString(object, "item");
-        Item item = Registry.ITEM.getOptional(new ResourceLocation(s)).orElseThrow(() -> {
-            return new JsonSyntaxException("Unknown item '" + s + "'");
-        });
-        if (object.has("data")) {
-            throw new JsonParseException("Disallowed data tag found");
-        } else {
-            int i = JSONUtils.getInt(object, "count", 1);
-            return net.minecraftforge.common.crafting.CraftingHelper.getItemStack(object, true);
-        }
-    }
-
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>>  implements IRecipeSerializer<InfusingRecipe> {
-        public InfusingRecipe read(ResourceLocation recipeId, JsonObject json) {
-            JsonElement jsonelement1 = (JSONUtils.isJsonArray(json, "lens") ? JSONUtils.getJsonArray(json, "lens") : JSONUtils.getJsonObject(json, "lens"));
+    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>>  implements IRecipeSerializer<EnchantedBookInfusingRecipe> {
+        public EnchantedBookInfusingRecipe read(ResourceLocation recipeId, JsonObject json) {
+            JsonElement jsonelement1 =(JSONUtils.isJsonArray(json, "lens") ? JSONUtils.getJsonArray(json, "lens") : JSONUtils.getJsonObject(json, "lens"));
             Ingredient lens = Ingredient.deserialize(jsonelement1);
             JsonElement jsonelement2 = (JSONUtils.isJsonArray(json, "ingredient1") ? JSONUtils.getJsonArray(json, "ingredient1") : JSONUtils.getJsonObject(json, "ingredient1"));
             Ingredient in1 = Ingredient.deserialize(jsonelement2);
@@ -114,6 +135,10 @@ public class InfusingRecipe implements IRecipe<IInventory> {
             Ingredient in5 = Ingredient.deserialize(jsonelement6);
             JsonElement jsonelement7 = (JSONUtils.isJsonArray(json, "ingredient6") ? JSONUtils.getJsonArray(json, "ingredient6") : JSONUtils.getJsonObject(json, "ingredient6"));
             Ingredient in6 = Ingredient.deserialize(jsonelement7);
+            JsonElement jsonelement8 = (JSONUtils.isJsonArray(json, "enchantment") ? JSONUtils.getJsonArray(json, "enchantment") : JSONUtils.getJsonObject(json, "enchantment"));
+            Enchantment e = EnchantmentUtil.deserializeEnchantment(jsonelement8);
+            JsonElement jsonelement9 = (JSONUtils.isJsonArray(json, "level") ? JSONUtils.getJsonArray(json, "level") : JSONUtils.getJsonObject(json, "level"));
+            int i = EnchantmentUtil.deserializeLevel(jsonelement9);
 
             NonNullList<Ingredient> nonnulllist = NonNullList.withSize(6, Ingredient.EMPTY);
             nonnulllist.set(0, in1);
@@ -122,13 +147,10 @@ public class InfusingRecipe implements IRecipe<IInventory> {
             nonnulllist.set(3, in4);
             nonnulllist.set(4, in5);
             nonnulllist.set(5, in6);
-            ItemStack itemstack = InfusingRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-            return new InfusingRecipe(recipeId, lens, nonnulllist, itemstack);
+            return new EnchantedBookInfusingRecipe(recipeId, lens, nonnulllist, e, i);
         }
 
-        public InfusingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            System.out.println("banana");
-            System.out.println(buffer.toString());
+        public EnchantedBookInfusingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
             Ingredient lens = Ingredient.read(buffer);
             NonNullList<Ingredient> nonnulllist = NonNullList.withSize(6, Ingredient.EMPTY);
 
@@ -136,18 +158,21 @@ public class InfusingRecipe implements IRecipe<IInventory> {
                 nonnulllist.set(k, Ingredient.read(buffer));
             }
 
-            ItemStack itemstack = buffer.readItemStack();
-            return new InfusingRecipe(recipeId, lens, nonnulllist, itemstack);
+            Enchantment e = EnchantmentUtil.readEnchantment(buffer);
+            int i = buffer.readVarInt();
+
+            return new EnchantedBookInfusingRecipe(recipeId, lens, nonnulllist, e, i);
         }
 
-        public void write(PacketBuffer buffer, InfusingRecipe recipe) {
+        public void write(PacketBuffer buffer, EnchantedBookInfusingRecipe recipe) {
             recipe.lens.write(buffer);
 
             for(Ingredient ingredient : recipe.recipeItems) {
                 ingredient.write(buffer);
             }
 
-            buffer.writeItemStack(recipe.recipeOutput);
+            EnchantmentUtil.writeEnchantment(recipe.enchantment, buffer);
+            buffer.writeVarInt(recipe.level);
         }
     }
 }

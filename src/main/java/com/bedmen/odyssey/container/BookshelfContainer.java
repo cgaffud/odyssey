@@ -47,11 +47,6 @@ public class BookshelfContainer extends Container {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public int getSize() {
-        return 2;
-    }
-
     /**
      * Determines whether supplied player can use this container
      */
