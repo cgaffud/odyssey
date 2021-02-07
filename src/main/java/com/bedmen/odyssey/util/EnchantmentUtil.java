@@ -1,5 +1,8 @@
 package com.bedmen.odyssey.util;
 
+import com.bedmen.odyssey.items.NewBowItem;
+import com.bedmen.odyssey.items.NewCrossbowItem;
+import com.bedmen.odyssey.items.NewFlintAndSteelItem;
 import com.bedmen.odyssey.tools.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -115,11 +118,11 @@ public class EnchantmentUtil {
                     return false;
             }
         }
-        if(item instanceof BowItem) return check(BOW_ENCHANTS, id);
-        if(item instanceof CrossbowItem) return check(CROSSBOW_ENCHANTS, id);
+        if(item instanceof NewBowItem) return check(BOW_ENCHANTS, id);
+        if(item instanceof NewCrossbowItem) return check(CROSSBOW_ENCHANTS, id);
         if(item instanceof TridentItem) return check(TRIDENT_ENCHANTS, id);
         if(item instanceof FishingRodItem) return check(FISHING_ROD_ENCHANTS, id);
-        if(item instanceof FlintAndSteelItem) return check(FLINT_AND_STEEL_ENCHANTS, id);
+        if(item instanceof NewFlintAndSteelItem) return check(FLINT_AND_STEEL_ENCHANTS, id);
         return false;
     }
 

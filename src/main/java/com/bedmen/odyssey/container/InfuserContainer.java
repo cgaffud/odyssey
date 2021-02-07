@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.container;
 
+import com.bedmen.odyssey.container.slots.InfuserResultSlot;
 import com.bedmen.odyssey.recipes.EnchantedBookInfusingRecipe;
 import com.bedmen.odyssey.recipes.InfusingRecipe;
 import com.bedmen.odyssey.recipes.ModRecipeType;

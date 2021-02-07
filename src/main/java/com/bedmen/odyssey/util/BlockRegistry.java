@@ -26,6 +26,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> INFUSER = BLOCKS.register("infuser", InfuserBlock::new);
     public static final RegistryObject<Block> ENCHANTING_TABLE = BLOCKS_VANILLA.register("enchanting_table", NewEnchantingTableBlock::new);
     public static final RegistryObject<Block> BOOKSHELF = BLOCKS_VANILLA.register("bookshelf", BookshelfBlock::new);
+    public static final RegistryObject<Block> FLETCHING_TABLE = BLOCKS_VANILLA.register("fletching_table", NewFletchingTableBlock::new);
 
     public static final RegistryObject<Block> FORTUNELESS_IRON_ORE = BLOCKS.register("fortuneless_iron_ore", FortunelessIronOre::new);
     public static final RegistryObject<Block> FORTUNELESS_GOLD_ORE = BLOCKS.register("fortuneless_gold_ore", FortunelessGoldOre::new);

@@ -20,8 +20,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class NewSmithingRecipe implements IRecipe<IInventory>{
-    static int MAX_WIDTH = 3;
-    static int MAX_HEIGHT = 3;
     protected final ResourceLocation id;
     protected final String group;
     public final Ingredient base;
@@ -54,53 +52,75 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
 
     private NonNullList<Ingredient> makePattern(){
         NonNullList<Ingredient> pattern = NonNullList.withSize(9,Ingredient.EMPTY);
-        if(this.classification.equals("axe")) {
-            pattern.set(0, this.addition);
-            pattern.set(1, this.addition);
-            pattern.set(3, this.addition);
-        } else if(this.classification.equals("pickaxe")) {
-            pattern.set(0, this.addition);
-            pattern.set(1, this.addition);
-            pattern.set(2, this.addition);
-        } else if(this.classification.equals("hoe")) {
-            pattern.set(0, this.addition);
-            pattern.set(1, this.addition);
-        } else if(this.classification.equals("shovel")) {
-            pattern.set(1, this.addition);
-        } else if(this.classification.equals("sword")) {
-            pattern.set(1, this.addition);
-            pattern.set(4, this.addition);
-        } else if(this.classification.equals("boots")) {
-            pattern.set(3, this.addition);
-            pattern.set(5, this.addition);
-            pattern.set(6, this.addition);
-            pattern.set(8, this.addition);
-        } else if(this.classification.equals("leggings")) {
-            pattern.set(0, this.addition);
-            pattern.set(1, this.addition);
-            pattern.set(2, this.addition);
-            pattern.set(3, this.addition);
-            pattern.set(5, this.addition);
-            pattern.set(6, this.addition);
-            pattern.set(8, this.addition);
-        } else if(this.classification.equals("chestplate")) {
-            pattern.set(0, this.addition);
-            pattern.set(2, this.addition);
-            pattern.set(3, this.addition);
-            pattern.set(4, this.addition);
-            pattern.set(5, this.addition);
-            pattern.set(6, this.addition);
-            pattern.set(7, this.addition);
-            pattern.set(8, this.addition);
-        } else if(this.classification.equals("helmet")) {
-            pattern.set(0, this.addition);
-            pattern.set(1, this.addition);
-            pattern.set(2, this.addition);
-            pattern.set(3, this.addition);
-            pattern.set(5, this.addition);
-        } else {
-            return null;
-        }
+        switch(this.classification){
+            case "axe":
+                pattern.set(0, this.addition);
+                pattern.set(1, this.addition);
+                pattern.set(3, this.addition);
+                break;
+            case "pickaxe":
+                pattern.set(0, this.addition);
+                pattern.set(1, this.addition);
+                pattern.set(2, this.addition);
+                break;
+            case "hoe":
+                pattern.set(0, this.addition);
+                pattern.set(1, this.addition);
+                break;
+            case "shovel":
+                pattern.set(1, this.addition);
+                break;
+            case "sword":
+                pattern.set(1, this.addition);
+                pattern.set(4, this.addition);
+                break;
+            case "bow":
+                pattern.set(1, this.addition);
+                pattern.set(3, this.addition);
+                pattern.set(7, this.addition);
+                break;
+            case "crossbow":
+                pattern.set(0, this.addition);
+                pattern.set(1, this.addition);
+                pattern.set(2, this.addition);
+                pattern.set(4, this.addition);
+                pattern.set(7, this.addition);
+                break;
+            case "boots":
+                pattern.set(3, this.addition);
+                pattern.set(5, this.addition);
+                pattern.set(6, this.addition);
+                pattern.set(8, this.addition);
+                break;
+            case "leggings":
+                pattern.set(0, this.addition);
+                pattern.set(1, this.addition);
+                pattern.set(2, this.addition);
+                pattern.set(3, this.addition);
+                pattern.set(5, this.addition);
+                pattern.set(6, this.addition);
+                pattern.set(8, this.addition);
+                break;
+            case "chestplate":
+                pattern.set(0, this.addition);
+                pattern.set(2, this.addition);
+                pattern.set(3, this.addition);
+                pattern.set(4, this.addition);
+                pattern.set(5, this.addition);
+                pattern.set(6, this.addition);
+                pattern.set(7, this.addition);
+                pattern.set(8, this.addition);
+                break;
+            case "helmet":
+                pattern.set(0, this.addition);
+                pattern.set(1, this.addition);
+                pattern.set(2, this.addition);
+                pattern.set(3, this.addition);
+                pattern.set(5, this.addition);
+                break;
+            default:
+                return null;
+            }
         return pattern;
     }
 
@@ -160,9 +180,9 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
         public NewSmithingRecipe read(ResourceLocation recipeId, JsonObject json) {
             String s1 = JSONUtils.getString(json, "group", "");
             String s2 = JSONUtils.getString(json, "classification", "");
-            JsonElement jsonelement1 = (JsonElement)(JSONUtils.isJsonArray(json, "base") ? JSONUtils.getJsonArray(json, "base") : JSONUtils.getJsonObject(json, "base"));
+            JsonElement jsonelement1 = (JSONUtils.isJsonArray(json, "base") ? JSONUtils.getJsonArray(json, "base") : JSONUtils.getJsonObject(json, "base"));
             Ingredient base = Ingredient.deserialize(jsonelement1);
-            JsonElement jsonelement2 = (JsonElement)(JSONUtils.isJsonArray(json, "addition") ? JSONUtils.getJsonArray(json, "addition") : JSONUtils.getJsonObject(json, "addition"));
+            JsonElement jsonelement2 = (JSONUtils.isJsonArray(json, "addition") ? JSONUtils.getJsonArray(json, "addition") : JSONUtils.getJsonObject(json, "addition"));
             Ingredient addition = Ingredient.deserialize(jsonelement2);
             ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
             return new NewSmithingRecipe(recipeId, s1, base, addition, s2, itemstack);

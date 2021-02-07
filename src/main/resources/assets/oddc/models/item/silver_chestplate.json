@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "oddc:items/silver_chestplate"
+    "layer0": "oddc:item/silver_chestplate"
   }
 }

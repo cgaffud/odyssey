@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.container;
 
+import com.bedmen.odyssey.container.slots.NewSmithingTableSlot;
 import com.bedmen.odyssey.util.BlockRegistry;
 import com.bedmen.odyssey.util.ContainerRegistry;
 import com.bedmen.odyssey.recipes.ModRecipeType;
@@ -32,7 +33,7 @@ public class NewSmithingTableContainer extends Container {
             NewSmithingTableContainer.this.onCraftMatrixChanged(this);
         }
     };
-    protected final IWorldPosCallable wordlPos;
+    protected final IWorldPosCallable worldPos;
     protected final PlayerEntity player;
     private final World world;
     private NewSmithingRecipe recipe;
@@ -44,7 +45,7 @@ public class NewSmithingTableContainer extends Container {
 
     public NewSmithingTableContainer(int id, PlayerInventory playerInv, IWorldPosCallable worldPos) {
         super(ContainerRegistry.SMITHING_TABLE.get(), id);
-        this.wordlPos = worldPos;
+        this.worldPos = worldPos;
         this.player = playerInv.player;
         this.world = playerInv.player.world;
         this.recipeType = ModRecipeType.NEW_SMITHING;
@@ -142,7 +143,7 @@ public class NewSmithingTableContainer extends Container {
      */
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
-        this.wordlPos.consume((p_234647_2_, p_234647_3_) -> {
+        this.worldPos.consume((p_234647_2_, p_234647_3_) -> {
             this.clearContainer(playerIn, p_234647_2_, this.inv);
         });
     }
@@ -151,7 +152,7 @@ public class NewSmithingTableContainer extends Container {
      * Determines whether supplied player can use this container
      */
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return this.wordlPos.applyOrElse((p_234646_2_, p_234646_3_) -> {
+        return this.worldPos.applyOrElse((p_234646_2_, p_234646_3_) -> {
             return !this.func_230302_a_(p_234646_2_.getBlockState(p_234646_3_)) ? false : playerIn.getDistanceSq((double)p_234646_3_.getX() + 0.5D, (double)p_234646_3_.getY() + 0.5D, (double)p_234646_3_.getZ() + 0.5D) <= 64.0D;
         }, true);
     }
@@ -212,7 +213,7 @@ public class NewSmithingTableContainer extends Container {
         for(int i = 0; i < 10; i++) {
             this.shrinkSlot(i);
         }
-        this.wordlPos.consume((p_234653_0_, p_234653_1_) -> {
+        this.worldPos.consume((p_234653_0_, p_234653_1_) -> {
             p_234653_0_.playEvent(1044, p_234653_1_, 0);
         });
         return p_230301_2_;
@@ -240,13 +241,6 @@ public class NewSmithingTableContainer extends Container {
             this.resultInv.setInventorySlotContents(0, itemstack);
         }
 
-    }
-
-    protected boolean func_241210_a_(ItemStack p_241210_1_) {
-	      /*return this.recipeList.stream().anyMatch((p_241444_1_) -> {
-	         return p_241444_1_.isValidAdditionItem(p_241210_1_);
-	      });*/
-        return true;
     }
 
     /**

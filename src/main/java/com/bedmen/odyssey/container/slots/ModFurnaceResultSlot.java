@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.container;
+package com.bedmen.odyssey.container.slots;
 
 import com.bedmen.odyssey.tileentity.AlloyFurnaceTileEntity;
 import net.minecraft.entity.player.PlayerEntity;

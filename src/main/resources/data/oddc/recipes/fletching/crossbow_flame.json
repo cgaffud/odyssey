@@ -1,0 +1,12 @@
+{
+  "type": "oddc:fletching",
+  "base":[
+    {
+      "item": "oddc:netherite_crossbow"
+    }
+  ],
+  "addition": {
+    "item": "oddc:flame_string"
+  },
+  "stringType": "flame"
+}

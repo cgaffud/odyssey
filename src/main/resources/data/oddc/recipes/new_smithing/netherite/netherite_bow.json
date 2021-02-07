@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "bow",
+  "base": {
+    "item": "minecraft:bow"
+  },
+  "addition": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "item": "oddc:netherite_bow"
+  }
+}

@@ -31,6 +31,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> INFUSER = ITEMS.register("infuser", () -> new BlockItem(BlockRegistry.INFUSER.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
     public static final RegistryObject<Item> ENCHANTING_TABLE = ITEMS_VANILLA.register("enchanting_table", () -> new BlockItem(BlockRegistry.ENCHANTING_TABLE.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
     public static final RegistryObject<Item> BOOKSHELF = ITEMS_VANILLA.register("bookshelf", () -> new BlockItem(BlockRegistry.BOOKSHELF.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> FLETCHING_TABLE = ITEMS_VANILLA.register("fletching_table", () -> new BlockItem(BlockRegistry.FLETCHING_TABLE.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
     public static final RegistryObject<Item> FORTUNELESS_IRON_ORE = ITEMS.register("fortuneless_iron_ore", () -> new BlockItem(BlockRegistry.FORTUNELESS_IRON_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> FORTUNELESS_GOLD_ORE = ITEMS.register("fortuneless_gold_ore", () -> new BlockItem(BlockRegistry.FORTUNELESS_GOLD_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
 
@@ -44,6 +45,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FLINT_AND_STEEL = ITEMS_VANILLA.register("flint_and_steel", () -> new NewFlintAndSteelItem((new Item.Properties()).maxDamage(64).group(ItemGroup.TOOLS)));
     public static final RegistryObject<Item> DIAMOND_SHARD = ITEMS.register("diamond_shard", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> SILVER_DUST = ITEMS.register("silver_dust", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> SILVER_STRING = ITEMS.register("silver_string", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> FLAME_STRING = ITEMS.register("flame_string", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
 
     //Armor
     public static final RegistryObject<ArmorItem> LEATHER_HELMET = ITEMS_VANILLA.register("leather_helmet", () -> new DyeableArmorItem(ModArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
@@ -127,6 +130,13 @@ public class ItemRegistry {
     public static final RegistryObject<ModHoeItem> SILVER_HOE = ITEMS.register("silver_hoe", () -> new ModHoeItem(ModItemTier.SILVER, 4.0f, 2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
     public static final RegistryObject<ModHoeItem> DIAMOND_HOE = ITEMS_VANILLA.register("diamond_hoe", () -> new ModHoeItem(ModItemTier.DIAMOND, 5.0f, 2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
     public static final RegistryObject<ModHoeItem> NETHERITE_HOE = ITEMS_VANILLA.register("netherite_hoe", () -> new ModHoeItem(ModItemTier.NETHERITE, 6.0f, 2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+
+    //Bows
+    public static final RegistryObject<NewBowItem> BOW = ITEMS_VANILLA.register("bow", () -> new NewBowItem((new Item.Properties()).maxDamage(384).group(ItemGroup.COMBAT), 0.0D));
+    public static final RegistryObject<NewBowItem> NETHERITE_BOW = ITEMS.register("netherite_bow", () -> new NewBowItem((new Item.Properties()).maxDamage(1016).group(ItemGroup.COMBAT).isImmuneToFire(), 1.0D));
+    public static final RegistryObject<NewCrossbowItem> CROSSBOW = ITEMS_VANILLA.register("crossbow", () -> new NewCrossbowItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.COMBAT).maxDamage(326), 0.0D));
+    public static final RegistryObject<NewCrossbowItem> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new NewCrossbowItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.COMBAT).maxDamage(862).isImmuneToFire(), 1.0D));
+
 
     //Spawn Eggs
     //public static final RegistryObject<Item> NETHER_CREEPER_SPAWN_EGG = ITEMS.register("nether_creeper_spawn_egg", () -> new ModSpawnEggItem(EntityTypeRegistry.NETHER_CREEPER, 0x511515, 0xff7f27, (new Item.Properties()).group(ItemGroup.MISC)));

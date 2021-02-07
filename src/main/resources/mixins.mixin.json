@@ -14,7 +14,8 @@
     "MixinPlayerEntity",
     "MixinForgeIngameGui",
     "MixinAttributes",
-    "MixinCombatRules"
+    "MixinCombatRules",
+    "MixinItem"
   ],
   "injectors": {
     "defaultRequire": 1

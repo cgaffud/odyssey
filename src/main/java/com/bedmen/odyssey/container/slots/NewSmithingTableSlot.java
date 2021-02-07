@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.container;
+package com.bedmen.odyssey.container.slots;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;

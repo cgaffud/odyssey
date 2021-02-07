@@ -1,0 +1,15 @@
+{
+  "type": "oddc:fletching",
+  "base":[
+    {
+      "item": "minecraft:bow"
+    },
+    {
+      "item": "oddc:netherite_bow"
+    }
+  ],
+  "addition": {
+    "item": "oddc:silver_string"
+  },
+  "stringType": "silver"
+}

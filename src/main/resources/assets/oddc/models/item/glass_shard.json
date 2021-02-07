@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "oddc:items/glass_shard"
+    "layer0": "oddc:item/glass_shard"
   }
 }

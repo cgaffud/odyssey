@@ -3,7 +3,6 @@ package com.bedmen.odyssey.client.gui;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.container.InfuserContainer;
-import com.bedmen.odyssey.container.NewSmithingTableSlot;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;

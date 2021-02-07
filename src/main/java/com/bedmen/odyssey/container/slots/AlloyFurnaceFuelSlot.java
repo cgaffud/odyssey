@@ -1,5 +1,6 @@
-package com.bedmen.odyssey.container;
+package com.bedmen.odyssey.container.slots;
 
+import com.bedmen.odyssey.container.AlloyFurnaceContainer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;

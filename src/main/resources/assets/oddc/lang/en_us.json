@@ -95,6 +95,7 @@
   "item.oddc.big_potion.effect.empty": "Big Potion",
   "item.oddc.glass_shard": "Glass Shard",
   "item.oddc.diamond_shard": "Diamond Shard",
+  "item.oddc.flame_string": "Flame String",
   
   "item.oddc.silver_dust": "Silver Dust",
   "item.oddc.silver_sword": "Silvered Sword",
@@ -106,6 +107,10 @@
   "item.oddc.silver_leggings": "Silvered Leggings",
   "item.oddc.silver_chestplate": "Silvered Chestplate",
   "item.oddc.silver_helmet": "Silvered Helmet",
+  "item.oddc.silver_string": "Silver String",
+
+  "item.oddc.netherite_bow": "Netherite Bow",
+  "item.oddc.netherite_crossbow": "Netherite Crossbow",
 
   "effect.oddc.construction": "Construction",
   "effect.oddc.building_fatigue": "Building Fatigue",
@@ -114,6 +119,7 @@
   "container.oddc.alloy_furnace": "Alloy Furnace",
   "container.oddc.infuser": "Infuser",
   "container.oddc.bookshelf": "Bookshelf",
+  "container.oddc.restring": "Restring",
 
   "enchantment.oddc.warping": "Warping",
 

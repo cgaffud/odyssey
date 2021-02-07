@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "oddc:silver_dust"
+    }
+  ],
+  "result": {
+    "item": "oddc:silver_string"
+  }
+}

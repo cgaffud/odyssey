@@ -22,4 +22,5 @@ public class ContainerRegistry {
     public static final RegistryObject<ContainerType<InfuserContainer>> INFUSER = CONTAINER.register("infuser", () -> new ContainerType<InfuserContainer>(InfuserContainer::new));
     public static final RegistryObject<ContainerType<NewEnchantmentContainer>> ENCHANTMENT = CONTAINER.register("enchantment", () -> new ContainerType<NewEnchantmentContainer>(NewEnchantmentContainer::new));
     public static final RegistryObject<ContainerType<BookshelfContainer>> BOOKSHELF = CONTAINER.register("bookshelf", () -> new ContainerType<BookshelfContainer>(BookshelfContainer::new));
+    public static final RegistryObject<ContainerType<FletchingTableContainer>> FLETCHING_TABLE = CONTAINER.register("fletching_table", () -> new ContainerType<FletchingTableContainer>(FletchingTableContainer::new));
 }

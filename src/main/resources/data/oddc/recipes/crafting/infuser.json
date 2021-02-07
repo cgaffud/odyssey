@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "AAA",
-    "BBB",
+    " A ",
+    "CBC",
     "CCC"
   ],
   "key": {
     "A": {
-      "item": "oddc:silver_dust"
-    },
-    "B": {
       "item": "minecraft:glass_pane"
     },
+    "B": {
+      "item": "oddc:silver_dust"
+    },
     "C": {
-      "tag": "minecraft:planks"
+      "item": "minecraft:stone"
     }
   },
   "result": {

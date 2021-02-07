@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.container;
 
+import com.bedmen.odyssey.container.slots.AlloyFurnaceFuelSlot;
+import com.bedmen.odyssey.container.slots.ModFurnaceResultSlot;
 import com.bedmen.odyssey.recipes.AlloyRecipe;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.tileentity.AlloyFurnaceTileEntity;
@@ -125,7 +127,7 @@ public class AlloyFurnaceContainer extends Container {
         return itemstack;
     }
 
-    protected boolean isFuel(ItemStack stack) {
+    public boolean isFuel(ItemStack stack) {
         return AlloyFurnaceTileEntity.isFuel(stack);
     }
 

@@ -3,6 +3,8 @@ package com.bedmen.odyssey;
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.NewEnchantmentTableTileEntityRenderer;
 import com.bedmen.odyssey.items.ModSpawnEggItem;
+import com.bedmen.odyssey.items.NewBowItem;
+import com.bedmen.odyssey.items.NewCrossbowItem;
 import com.bedmen.odyssey.util.*;
 import com.bedmen.odyssey.client.renderer.NewBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.ModPotions;
@@ -13,12 +15,14 @@ import com.bedmen.odyssey.world.spawn.ModStructureEntitySpawn;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.data.ItemTagsProvider;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.data.ForgeItemTagsProvider;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -96,6 +100,16 @@ public class Odyssey
             return 0;
         });
 
+        NewBowItem.registerBaseProperties(ItemRegistry.BOW.get());
+        NewBowItem.registerStringTypeProperty(ItemRegistry.BOW.get());
+        NewBowItem.registerBaseProperties(ItemRegistry.NETHERITE_BOW.get());
+        NewBowItem.registerStringTypeProperty(ItemRegistry.NETHERITE_BOW.get());
+
+        NewCrossbowItem.registerBaseProperties(ItemRegistry.CROSSBOW.get());
+        NewCrossbowItem.registerStringTypeProperty(ItemRegistry.CROSSBOW.get());
+        NewCrossbowItem.registerBaseProperties(ItemRegistry.NETHERITE_CROSSBOW.get());
+        NewCrossbowItem.registerStringTypeProperty(ItemRegistry.NETHERITE_CROSSBOW.get());
+
         DeferredWorkQueue.runLater(() -> {
         });
     }
@@ -110,6 +124,7 @@ public class Odyssey
         ScreenManager.registerFactory(ContainerRegistry.INFUSER.get(), InfuserScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.ENCHANTMENT.get(), NewEnchantmentScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.FLETCHING_TABLE.get(), FletchingTableScreen::new);
         RenderTypeLookup.setRenderLayer(BlockRegistry.WARPING_FIRE.get(), RenderType.getCutout());
     }
 

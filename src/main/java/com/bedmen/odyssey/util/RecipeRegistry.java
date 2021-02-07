@@ -1,10 +1,7 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.recipes.AlloyRecipe;
-import com.bedmen.odyssey.recipes.EnchantedBookInfusingRecipe;
-import com.bedmen.odyssey.recipes.InfusingRecipe;
-import com.bedmen.odyssey.recipes.NewSmithingRecipe;
+import com.bedmen.odyssey.recipes.*;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -23,4 +20,5 @@ public class RecipeRegistry {
     public static final RegistryObject<IRecipeSerializer<AlloyRecipe>> ALLOYING = RECIPES.register("alloying", () -> new AlloyRecipe.Serializer());
     public static final RegistryObject<IRecipeSerializer<InfusingRecipe>> INFUSING = RECIPES.register("infusing", () -> new InfusingRecipe.Serializer());
     public static final RegistryObject<IRecipeSerializer<EnchantedBookInfusingRecipe>> ENCHANTED_BOOK_INFUSING = RECIPES.register("enchanted_book_infusing", () -> new EnchantedBookInfusingRecipe.Serializer());
+    public static final RegistryObject<IRecipeSerializer<FletchingRecipe>> FLETCHING = RECIPES.register("fletching", () -> new FletchingRecipe.Serializer());
 }

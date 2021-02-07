@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "oddc:items/big_glass_bottle"
+    "layer0": "oddc:item/big_glass_bottle"
   }
 }
