@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.util.BowUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Random;
@@ -64,19 +65,22 @@ public class NewCrossbowItem extends ShootableItem implements IVanishable {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         if (isCharged(itemstack)) {
-            fireProjectiles(worldIn, playerIn, handIn, itemstack, func_220013_l(itemstack), 1.0F);
+            float inaccuracy = EnchantmentUtil.getAccuracy(playerIn);
+            fireProjectiles(worldIn, playerIn, handIn, itemstack, getVelocity(itemstack), inaccuracy);
             setCharged(itemstack, false);
             return ActionResult.resultConsume(itemstack);
-        } else if (!playerIn.findAmmo(itemstack).isEmpty()) {
-            if (!isCharged(itemstack)) {
-                this.isLoadingStart = false;
-                this.isLoadingMiddle = false;
-                playerIn.setActiveHand(handIn);
-            }
-
-            return ActionResult.resultConsume(itemstack);
         } else {
-            return ActionResult.resultFail(itemstack);
+            if (!playerIn.findAmmo(itemstack).isEmpty()) {
+                if (!isCharged(itemstack)) {
+                    this.isLoadingStart = false;
+                    this.isLoadingMiddle = false;
+                    playerIn.setActiveHand(handIn);
+                }
+
+                return ActionResult.resultConsume(itemstack);
+            } else {
+                return ActionResult.resultFail(itemstack);
+            }
         }
     }
 
@@ -87,6 +91,7 @@ public class NewCrossbowItem extends ShootableItem implements IVanishable {
         int i = this.getUseDuration(stack) - timeLeft;
         float f = getCharge(i, stack);
         if (f >= 1.0F && !isCharged(stack) && hasAmmo(entityLiving, stack)) {
+            if(entityLiving instanceof PlayerEntity) BowUtil.consumeQuiverAmmo((PlayerEntity)entityLiving, stack);
             setCharged(stack, true);
             SoundCategory soundcategory = entityLiving instanceof PlayerEntity ? SoundCategory.PLAYERS : SoundCategory.HOSTILE;
             worldIn.playSound((PlayerEntity)null, entityLiving.getPosX(), entityLiving.getPosY(), entityLiving.getPosZ(), SoundEvents.ITEM_CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (random.nextFloat() * 0.5F + 1.0F) + 0.2F);
@@ -335,9 +340,7 @@ public class NewCrossbowItem extends ShootableItem implements IVanishable {
     public static int getChargeTime(ItemStack stack) {
         int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
         i = 25 - (13*i - i*i)/2;
-        System.out.println(i);
         i = (int)(i/BowUtil.getStringSpeedModifier(stack));
-        System.out.println(i);
         return i;
     }
 
@@ -394,7 +397,7 @@ public class NewCrossbowItem extends ShootableItem implements IVanishable {
         }
     }
 
-    private static float func_220013_l(ItemStack itemStack) {
+    private static float getVelocity(ItemStack itemStack) {
         return itemStack.getItem() instanceof NewCrossbowItem && hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.6F : 3.15F;
     }
 

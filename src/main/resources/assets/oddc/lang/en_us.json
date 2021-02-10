@@ -95,7 +95,11 @@
   "item.oddc.big_potion.effect.empty": "Big Potion",
   "item.oddc.glass_shard": "Glass Shard",
   "item.oddc.diamond_shard": "Diamond Shard",
-  "item.oddc.flame_string": "Flame String",
+  "item.oddc.flame_string": "Cheeto String",
+  "item.oddc.leather_quiver": "Leather Quiver",
+  "item.oddc.serpent_quiver": "Serpent Quiver",
+  "item.oddc.clover": "Clover",
+  "item.oddc.multicite": "Multicite",
   
   "item.oddc.silver_dust": "Silver Dust",
   "item.oddc.silver_sword": "Silvered Sword",
@@ -122,6 +126,7 @@
   "container.oddc.restring": "Restring",
 
   "enchantment.oddc.warping": "Warping",
+  "enchantment.oddc.accuracy": "Accuracy",
 
   "block.oddc.alloy_furnace": "Alloy Furnace",
   "block.oddc.infuser": "Infuser",

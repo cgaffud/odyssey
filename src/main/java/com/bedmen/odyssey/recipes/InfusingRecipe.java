@@ -9,6 +9,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -26,13 +28,15 @@ import net.minecraft.world.World;
 public class InfusingRecipe implements IRecipe<IInventory> {
 
     private final Ingredient lens;
+    private final Ingredient base;
     private final NonNullList<Ingredient> recipeItems;
     private final ItemStack recipeOutput;
     private final ResourceLocation id;
 
-    public InfusingRecipe(ResourceLocation idIn, Ingredient lensIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn) {
+    public InfusingRecipe(ResourceLocation idIn, Ingredient lensIn, Ingredient base, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn) {
         this.id = idIn;
         this.lens = lensIn;
+        this.base = base;
         this.recipeItems = recipeItemsIn;
         this.recipeOutput = recipeOutputIn;
     }
@@ -43,6 +47,10 @@ public class InfusingRecipe implements IRecipe<IInventory> {
 
     public Ingredient getLens() {
         return this.lens;
+    }
+
+    public Ingredient getBase() {
+        return this.base;
     }
 
     public NonNullList<Ingredient> getRecipeItems(){
@@ -79,9 +87,19 @@ public class InfusingRecipe implements IRecipe<IInventory> {
      */
     public boolean matches(IInventory inv, World worldIn) {
         if (!this.lens.test(inv.getStackInSlot(0))) return false;
+        Set<Integer> set = new HashSet<>();
         for (int i = 0; i < 6; i++) {
-            if (!this.recipeItems.get(i).test(inv.getStackInSlot(i + 1))) return false;
+            boolean b = false;
+            for (int j = 1; j <= 6; j++){
+                if (this.recipeItems.get(i).test(inv.getStackInSlot(j)) && !set.contains(j)){
+                    b = true;
+                    set.add(j);
+                    break;
+                }
+            }
+            if(!b) return false;
         }
+        if (!this.base.test(inv.getStackInSlot(7))) return false;
         return true;
     }
 
@@ -102,34 +120,25 @@ public class InfusingRecipe implements IRecipe<IInventory> {
         public InfusingRecipe read(ResourceLocation recipeId, JsonObject json) {
             JsonElement jsonelement1 = (JSONUtils.isJsonArray(json, "lens") ? JSONUtils.getJsonArray(json, "lens") : JSONUtils.getJsonObject(json, "lens"));
             Ingredient lens = Ingredient.deserialize(jsonelement1);
-            JsonElement jsonelement2 = (JSONUtils.isJsonArray(json, "ingredient1") ? JSONUtils.getJsonArray(json, "ingredient1") : JSONUtils.getJsonObject(json, "ingredient1"));
-            Ingredient in1 = Ingredient.deserialize(jsonelement2);
-            JsonElement jsonelement3 = (JSONUtils.isJsonArray(json, "ingredient2") ? JSONUtils.getJsonArray(json, "ingredient2") : JSONUtils.getJsonObject(json, "ingredient2"));
-            Ingredient in2 = Ingredient.deserialize(jsonelement3);
-            JsonElement jsonelement4 = (JSONUtils.isJsonArray(json, "ingredient3") ? JSONUtils.getJsonArray(json, "ingredient3") : JSONUtils.getJsonObject(json, "ingredient3"));
-            Ingredient in3 = Ingredient.deserialize(jsonelement4);
-            JsonElement jsonelement5 = (JSONUtils.isJsonArray(json, "ingredient4") ? JSONUtils.getJsonArray(json, "ingredient4") : JSONUtils.getJsonObject(json, "ingredient4"));
-            Ingredient in4 = Ingredient.deserialize(jsonelement5);
-            JsonElement jsonelement6 = (JSONUtils.isJsonArray(json, "ingredient5") ? JSONUtils.getJsonArray(json, "ingredient5") : JSONUtils.getJsonObject(json, "ingredient5"));
-            Ingredient in5 = Ingredient.deserialize(jsonelement6);
-            JsonElement jsonelement7 = (JSONUtils.isJsonArray(json, "ingredient6") ? JSONUtils.getJsonArray(json, "ingredient6") : JSONUtils.getJsonObject(json, "ingredient6"));
-            Ingredient in6 = Ingredient.deserialize(jsonelement7);
-
+            JsonElement jsonelementBase = (JSONUtils.isJsonArray(json, "base") ? JSONUtils.getJsonArray(json, "base") : JSONUtils.getJsonObject(json, "base"));
+            Ingredient base = Ingredient.deserialize(jsonelementBase);
+            int i = JSONUtils.getInt(json, "numingredients");
             NonNullList<Ingredient> nonnulllist = NonNullList.withSize(6, Ingredient.EMPTY);
-            nonnulllist.set(0, in1);
-            nonnulllist.set(1, in2);
-            nonnulllist.set(2, in3);
-            nonnulllist.set(3, in4);
-            nonnulllist.set(4, in5);
-            nonnulllist.set(5, in6);
+
+            for(int j = 1; j <= i; j++){
+                String s = "ingredient" + j;
+                JsonElement jsonelement = (JSONUtils.isJsonArray(json, s) ? JSONUtils.getJsonArray(json, s) : JSONUtils.getJsonObject(json, s));
+                Ingredient ingredient = Ingredient.deserialize(jsonelement);
+                nonnulllist.set(j-1, ingredient);
+            }
+
             ItemStack itemstack = InfusingRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-            return new InfusingRecipe(recipeId, lens, nonnulllist, itemstack);
+            return new InfusingRecipe(recipeId, lens, base, nonnulllist, itemstack);
         }
 
         public InfusingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            System.out.println("banana");
-            System.out.println(buffer.toString());
             Ingredient lens = Ingredient.read(buffer);
+            Ingredient base = Ingredient.read(buffer);
             NonNullList<Ingredient> nonnulllist = NonNullList.withSize(6, Ingredient.EMPTY);
 
             for(int k = 0; k < nonnulllist.size(); ++k) {
@@ -137,11 +146,12 @@ public class InfusingRecipe implements IRecipe<IInventory> {
             }
 
             ItemStack itemstack = buffer.readItemStack();
-            return new InfusingRecipe(recipeId, lens, nonnulllist, itemstack);
+            return new InfusingRecipe(recipeId, lens, base, nonnulllist, itemstack);
         }
 
         public void write(PacketBuffer buffer, InfusingRecipe recipe) {
             recipe.lens.write(buffer);
+            recipe.base.write(buffer);
 
             for(Ingredient ingredient : recipe.recipeItems) {
                 ingredient.write(buffer);

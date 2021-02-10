@@ -3,6 +3,7 @@ package com.bedmen.odyssey.items;
 import java.util.function.Predicate;
 
 import com.bedmen.odyssey.util.BowUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
@@ -30,6 +31,7 @@ public class NewBowItem extends ShootableItem implements IVanishable {
             PlayerEntity playerentity = (PlayerEntity)entityLiving;
             boolean flag = playerentity.abilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0;
             ItemStack itemstack = playerentity.findAmmo(stack);
+            BowUtil.consumeQuiverAmmo(playerentity, itemstack);
 
             int i = this.getUseDuration(stack) - timeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, worldIn, playerentity, i, !itemstack.isEmpty() || flag);
@@ -48,7 +50,8 @@ public class NewBowItem extends ShootableItem implements IVanishable {
                         ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
                         AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, itemstack, playerentity);
                         abstractarrowentity = customArrow(abstractarrowentity);
-                        abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+                        float inaccuracy = EnchantmentUtil.getAccuracy(entityLiving);
+                        abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, f * 3.0F, inaccuracy);
                         if (f == 1.0F) {
                             abstractarrowentity.setIsCritical(true);
                         }

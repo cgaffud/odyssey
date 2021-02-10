@@ -1,0 +1,18 @@
+{
+  "type": "oddc:enchanted_book_infusing",
+  "lens": {
+    "item": "minecraft:diamond"
+  },
+  "numingredients": 3,
+  "ingredient1": {
+    "item": "oddc:clover"
+  },
+  "ingredient2": {
+    "item": "minecraft:salmon"
+  },
+  "ingredient3": {
+    "item": "minecraft:nautilus_shell"
+  },
+  "enchantment": "minecraft:luck_of_the_sea",
+  "level": 1
+}

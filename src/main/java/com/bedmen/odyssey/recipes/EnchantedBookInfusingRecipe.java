@@ -12,6 +12,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -101,17 +102,26 @@ public class EnchantedBookInfusingRecipe implements IRecipe<IInventory> {
      */
     public boolean matches(IInventory inv, World worldIn) {
         if(!this.lens.test(inv.getStackInSlot(0))) return false;
-        for(int i = 0; i < 6; i++){
-            if(!this.recipeItems.get(i).test(inv.getStackInSlot(i+1))) return false;
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < 6; i++) {
+            boolean b = false;
+            for (int j = 1; j <= 6; j++){
+                if (this.recipeItems.get(i).test(inv.getStackInSlot(j)) && !set.contains(j)){
+                    b = true;
+                    set.add(j);
+                    break;
+                }
+            }
+            if(!b) return false;
         }
         ItemStack itemStack = inv.getStackInSlot(7);
         if(this.level <= 1 && itemStack.getItem() != Items.BOOK) return false;
         else if(this.level > 1){
             if(itemStack.getItem() != Items.ENCHANTED_BOOK) return false;
             Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
-            Set<Enchantment> set = map.keySet();
-            if(set.size() != 1) return false;
-            for(Enchantment e : set){
+            Set<Enchantment> set2 = map.keySet();
+            if(set2.size() != 1) return false;
+            for(Enchantment e : set2){
                 if(e != this.enchantment) return false;
                 if(map.get(e) != this.level - 1) return false;
             }
@@ -123,30 +133,19 @@ public class EnchantedBookInfusingRecipe implements IRecipe<IInventory> {
         public EnchantedBookInfusingRecipe read(ResourceLocation recipeId, JsonObject json) {
             JsonElement jsonelement1 =(JSONUtils.isJsonArray(json, "lens") ? JSONUtils.getJsonArray(json, "lens") : JSONUtils.getJsonObject(json, "lens"));
             Ingredient lens = Ingredient.deserialize(jsonelement1);
-            JsonElement jsonelement2 = (JSONUtils.isJsonArray(json, "ingredient1") ? JSONUtils.getJsonArray(json, "ingredient1") : JSONUtils.getJsonObject(json, "ingredient1"));
-            Ingredient in1 = Ingredient.deserialize(jsonelement2);
-            JsonElement jsonelement3 = (JSONUtils.isJsonArray(json, "ingredient2") ? JSONUtils.getJsonArray(json, "ingredient2") : JSONUtils.getJsonObject(json, "ingredient2"));
-            Ingredient in2 = Ingredient.deserialize(jsonelement3);
-            JsonElement jsonelement4 = (JSONUtils.isJsonArray(json, "ingredient3") ? JSONUtils.getJsonArray(json, "ingredient3") : JSONUtils.getJsonObject(json, "ingredient3"));
-            Ingredient in3 = Ingredient.deserialize(jsonelement4);
-            JsonElement jsonelement5 = (JSONUtils.isJsonArray(json, "ingredient4") ? JSONUtils.getJsonArray(json, "ingredient4") : JSONUtils.getJsonObject(json, "ingredient4"));
-            Ingredient in4 = Ingredient.deserialize(jsonelement5);
-            JsonElement jsonelement6 = (JSONUtils.isJsonArray(json, "ingredient5") ? JSONUtils.getJsonArray(json, "ingredient5") : JSONUtils.getJsonObject(json, "ingredient5"));
-            Ingredient in5 = Ingredient.deserialize(jsonelement6);
-            JsonElement jsonelement7 = (JSONUtils.isJsonArray(json, "ingredient6") ? JSONUtils.getJsonArray(json, "ingredient6") : JSONUtils.getJsonObject(json, "ingredient6"));
-            Ingredient in6 = Ingredient.deserialize(jsonelement7);
-            JsonElement jsonelement8 = (JSONUtils.isJsonArray(json, "enchantment") ? JSONUtils.getJsonArray(json, "enchantment") : JSONUtils.getJsonObject(json, "enchantment"));
-            Enchantment e = EnchantmentUtil.deserializeEnchantment(jsonelement8);
-            JsonElement jsonelement9 = (JSONUtils.isJsonArray(json, "level") ? JSONUtils.getJsonArray(json, "level") : JSONUtils.getJsonObject(json, "level"));
-            int i = EnchantmentUtil.deserializeLevel(jsonelement9);
-
+            int i = JSONUtils.getInt(json, "numingredients");
             NonNullList<Ingredient> nonnulllist = NonNullList.withSize(6, Ingredient.EMPTY);
-            nonnulllist.set(0, in1);
-            nonnulllist.set(1, in2);
-            nonnulllist.set(2, in3);
-            nonnulllist.set(3, in4);
-            nonnulllist.set(4, in5);
-            nonnulllist.set(5, in6);
+
+            for(int j = 1; j <= i; j++){
+                String s = "ingredient" + j;
+                JsonElement jsonelement = (JSONUtils.isJsonArray(json, s) ? JSONUtils.getJsonArray(json, s) : JSONUtils.getJsonObject(json, s));
+                Ingredient ingredient = Ingredient.deserialize(jsonelement);
+                nonnulllist.set(j-1, ingredient);
+            }
+
+            Enchantment e = EnchantmentUtil.deserializeEnchantment(JSONUtils.getString(json, "enchantment"));
+            i = JSONUtils.getInt(json, "level");
+
             return new EnchantedBookInfusingRecipe(recipeId, lens, nonnulllist, e, i);
         }
 

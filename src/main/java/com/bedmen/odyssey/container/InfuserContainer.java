@@ -12,6 +12,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
@@ -27,8 +28,8 @@ public class InfuserContainer extends Container {
     protected final World world;
     private final IRecipeType<InfusingRecipe> recipeType;
 
-    public InfuserContainer(int p_i241921_4_, PlayerInventory p_i241921_5_) {
-        this(p_i241921_4_, p_i241921_5_, new Inventory(11), new IntArray(3));
+    public InfuserContainer(int id, PlayerInventory playerInventory) {
+        this(id, playerInventory, new Inventory(11), new IntArray(3));
     }
 
     public InfuserContainer(int id, PlayerInventory playerInventory, IInventory inv, IIntArray infuserData) {
@@ -57,16 +58,34 @@ public class InfuserContainer extends Container {
                 }
                 return false;
             }
+
+            public int getSlotStackLimit(){
+                return 1;
+            }
         });
 
-        this.addSlot(new Slot(this.inv, 1, 62, 37));
-        this.addSlot(new Slot(this.inv, 2, 84, 48));
-        this.addSlot(new Slot(this.inv, 3, 84, 70));
-        this.addSlot(new Slot(this.inv, 4, 62, 81));
-        this.addSlot(new Slot(this.inv, 5, 40, 70));
-        this.addSlot(new Slot(this.inv, 6, 40, 48));
+        int[] xpos = {62,84,84,62,40,40};
+        int[] ypos = {37,48,70,81,70,48};
 
-        this.addSlot(new InfuserResultSlot(playerInventory.player, this.inv, 7, 62, 59));
+        for(int i = 0; i < 6; i++){
+            this.addSlot(new Slot(this.inv, i+1, xpos[i], ypos[i]){
+                public int getSlotStackLimit(){
+                    return 1;
+                }
+            });
+        }
+
+        this.addSlot(new InfuserResultSlot(playerInventory.player, this.inv, 7, 62, 59){
+            public boolean isItemValid(ItemStack stack) {
+                List<InfusingRecipe> list = con.world.getRecipeManager().getRecipesForType(ModRecipeType.INFUSING);
+                for(int i1 = 0; i1 < list.size(); i1++) {
+                    if(list.get(i1).getBase().test(stack)) {
+                        return true;
+                    }
+                }
+                return stack.getItem() == Items.BOOK || stack.getItem() == Items.ENCHANTED_BOOK;
+            }
+        });
 
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {
@@ -105,8 +124,8 @@ public class InfuserContainer extends Container {
 
                 slot.onSlotChange(itemstack1, itemstack);
             } else if (index > 7) {
-                if (index >= 8 && index < 44) {
-                    if (!this.mergeItemStack(itemstack1, 0, 7, false)) {
+                if (index < 44) {
+                    if (!this.mergeItemStack(itemstack1, 7, 8, false) && !this.mergeItemStack(itemstack1, 0, 7, false)) {
                         return ItemStack.EMPTY;
                     }
                 }

@@ -172,6 +172,8 @@ public class ModPotions {
         addMix(Potions.AWKWARD, Items.ROTTEN_FLESH, PotionRegistry.HUNGER.get());
         addMix(PotionRegistry.HUNGER.get(), Items.REDSTONE, PotionRegistry.LONG_HUNGER.get());
         addMix(PotionRegistry.HUNGER.get(), Items.QUARTZ, PotionRegistry.STRONG_HUNGER.get());
+        //Luck
+        addMix(Potions.AWKWARD, ItemRegistry.CLOVER.get(), Potions.LUCK);
     }
 
 }

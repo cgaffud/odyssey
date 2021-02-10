@@ -3,6 +3,9 @@
   "base":[
     {
       "item": "oddc:netherite_bow"
+    },
+    {
+      "item": "oddc:netherite_crossbow"
     }
   ],
   "addition": {

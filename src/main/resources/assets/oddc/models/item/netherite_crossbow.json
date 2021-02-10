@@ -31,35 +31,35 @@
       "predicate": {
         "pulling": 1
       },
-      "model": "oddc:item/netherite_crossbow_pulling_0"
+      "model": "oddc:item/netherite_crossbow_normal_pulling_0"
     },
     {
       "predicate": {
         "pulling": 1,
         "pull": 0.58
       },
-      "model": "oddc:item/netherite_crossbow_pulling_1"
+      "model": "oddc:item/netherite_crossbow_normal_pulling_1"
     },
     {
       "predicate": {
         "pulling": 1,
         "pull": 1.0
       },
-      "model": "oddc:item/netherite_crossbow_pulling_2"
+      "model": "oddc:item/netherite_crossbow_normal_pulling_2"
     },
     {
       "predicate": {
         "charged": 1
       },
 
-      "model": "oddc:item/netherite_crossbow_arrow"
+      "model": "oddc:item/netherite_crossbow_normal_arrow"
     },
     {
       "predicate": {
         "charged": 1,
         "firework": 1
       },
-      "model": "oddc:item/netherite_crossbow_firework"
+      "model": "oddc:item/netherite_crossbow_normal_firework"
     },
     {
       "predicate": {

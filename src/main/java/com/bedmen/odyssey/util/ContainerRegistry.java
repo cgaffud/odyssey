@@ -23,4 +23,8 @@ public class ContainerRegistry {
     public static final RegistryObject<ContainerType<NewEnchantmentContainer>> ENCHANTMENT = CONTAINER.register("enchantment", () -> new ContainerType<NewEnchantmentContainer>(NewEnchantmentContainer::new));
     public static final RegistryObject<ContainerType<BookshelfContainer>> BOOKSHELF = CONTAINER.register("bookshelf", () -> new ContainerType<BookshelfContainer>(BookshelfContainer::new));
     public static final RegistryObject<ContainerType<FletchingTableContainer>> FLETCHING_TABLE = CONTAINER.register("fletching_table", () -> new ContainerType<FletchingTableContainer>(FletchingTableContainer::new));
+    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER3 = CONTAINER.register("quiver3", () -> new ContainerType<QuiverContainer>(QuiverContainer::Quiver3));
+    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER5 = CONTAINER.register("quiver5", () -> new ContainerType<QuiverContainer>(QuiverContainer::Quiver5));
+    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER7 = CONTAINER.register("quiver7", () -> new ContainerType<QuiverContainer>(QuiverContainer::Quiver7));
+    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER9 = CONTAINER.register("quiver9", () -> new ContainerType<QuiverContainer>(QuiverContainer::Quiver9));
 }

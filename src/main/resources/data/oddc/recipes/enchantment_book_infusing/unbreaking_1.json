@@ -1,0 +1,27 @@
+{
+  "type": "oddc:enchanted_book_infusing",
+  "lens": {
+    "item": "minecraft:diamond"
+  },
+  "numingredients": 6,
+  "ingredient1": {
+    "item": "minecraft:obsidian"
+  },
+  "ingredient2": {
+    "item": "minecraft:obsidian"
+  },
+  "ingredient3": {
+    "item": "minecraft:obsidian"
+  },
+  "ingredient4": {
+    "item": "minecraft:obsidian"
+  },
+  "ingredient5": {
+    "item": "minecraft:obsidian"
+  },
+  "ingredient6": {
+    "item": "minecraft:obsidian"
+  },
+  "enchantment": "minecraft:unbreaking",
+  "level": 1
+}

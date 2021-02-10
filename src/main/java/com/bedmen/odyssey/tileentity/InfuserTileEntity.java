@@ -106,20 +106,20 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
                 IRecipe<?> irecipe1 = this.world.getRecipeManager().getRecipe(this.recipeType, this, this.world).orElse(null);
                 IRecipe<?> irecipe2 = this.world.getRecipeManager().getRecipe(ModRecipeType.ENCHANTED_BOOK_INFUSING, this, this.world).orElse(null);
 
-                if (this.canInfuse1(irecipe1)) {
+                if (this.canInfuse(irecipe1)) {
                     ++this.cookTime;
                     if (this.cookTime == this.cookTimeTotal) {
                         this.cookTime = 0;
                         this.cookTimeTotal = this.getCookTime();
-                        this.infuse1(irecipe1);
+                        this.infuse(irecipe1);
                         flag1 = true;
                     }
-                } else if(this.canInfuse2(irecipe2)) {
+                } else if(this.canInfuse(irecipe2)) {
                     ++this.cookTime;
                     if (this.cookTime == this.cookTimeTotal) {
                         this.cookTime = 0;
                         this.cookTimeTotal = this.getCookTime();
-                        this.infuse2(irecipe2);
+                        this.infuse(irecipe2);
                         flag1 = true;
                     }
                 } else {
@@ -133,80 +133,34 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
         if(flag1) this.markDirty();
     }
 
-    protected boolean canInfuse1(@Nullable IRecipe<?> recipeIn) {
-        if (recipeIn != null) {
-            ItemStack itemstack = recipeIn.getRecipeOutput();
-            if (itemstack.isEmpty()) {
-                return false;
-            } else {
-                ItemStack itemstack1 = this.items.get(7);
-                if (itemstack1.isEmpty()) {
-                    return true;
-                } else if (!itemstack1.isItemEqual(itemstack)) {
-                    return false;
-                } else if (itemstack1.getCount() + itemstack.getCount() <= this.getInventoryStackLimit() && itemstack1.getCount() + itemstack.getCount() <= itemstack1.getMaxStackSize()) { // Forge fix: make furnace respect stack sizes in furnace recipes
-                    return true;
-                } else {
-                    return itemstack1.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize(); // Forge fix: make furnace respect stack sizes in furnace recipes
-                }
-            }
-        } else {
-            return false;
-        }
-    }
-
-    protected boolean canInfuse2(@Nullable IRecipe<?> recipeIn) {
+    protected boolean canInfuse(@Nullable IRecipe<?> recipeIn) {
         if (recipeIn != null) {
             ItemStack itemstack = this.items.get(7);
-            if (itemstack.isEmpty()) {
-                return false;
-            } else {
+            if (itemstack.isEmpty()) return false;
+            else if(recipeIn instanceof InfusingRecipe){
+                return ((InfusingRecipe)recipeIn).getBase().test(itemstack);
+            } else if(recipeIn instanceof EnchantedBookInfusingRecipe) {
                 int level = ((EnchantedBookInfusingRecipe)recipeIn).getLevel();
                 if(level <= 1 && (itemstack.getItem() != Items.BOOK || itemstack.getCount() > 1)) return false;
                 else if(level > 1 && itemstack.getItem() != Items.ENCHANTED_BOOK) return false;
                 return true;
             }
+            return false;
         }
         return false;
     }
 
-    private void infuse1(@Nullable IRecipe<?> recipe) {
-        if (recipe != null && this.canInfuse1(recipe)) {
+    private void infuse(@Nullable IRecipe<?> recipe) {
+        if (recipe != null && this.canInfuse(recipe)) {
             ItemStack itemstack1 = this.items.get(1);
             ItemStack itemstack2 = this.items.get(2);
             ItemStack itemstack3 = this.items.get(3);
             ItemStack itemstack4 = this.items.get(4);
             ItemStack itemstack5 = this.items.get(5);
             ItemStack itemstack6 = this.items.get(6);
-            ItemStack itemstackRO = recipe.getRecipeOutput();
-            ItemStack itemstack7 = this.items.get(7);
+            ItemStack itemstackRO = recipe.getCraftingResult(null);
 
-            if (itemstack7.isEmpty()) {
-                this.items.set(7, itemstackRO.copy());
-            } else if (itemstack7.getItem() == itemstackRO.getItem()) {
-                itemstack7.grow(itemstackRO.getCount());
-            }
-
-            itemstack1.shrink(1);
-            itemstack2.shrink(1);
-            itemstack3.shrink(1);
-            itemstack4.shrink(1);
-            itemstack5.shrink(1);
-            itemstack6.shrink(1);
-        }
-    }
-
-    private void infuse2(@Nullable IRecipe<?> recipe) {
-        if (recipe != null && this.canInfuse2(recipe)) {
-            ItemStack itemstack1 = this.items.get(1);
-            ItemStack itemstack2 = this.items.get(2);
-            ItemStack itemstack3 = this.items.get(3);
-            ItemStack itemstack4 = this.items.get(4);
-            ItemStack itemstack5 = this.items.get(5);
-            ItemStack itemstack6 = this.items.get(6);
-            ItemStack itemStackRO = recipe.getCraftingResult(null);
-
-            this.items.set(7, itemStackRO.copy());
+            this.items.set(7, itemstackRO.copy());
 
             itemstack1.shrink(1);
             itemstack2.shrink(1);

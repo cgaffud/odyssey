@@ -3,6 +3,7 @@
   "lens": {
     "item": "minecraft:quartz"
   },
+  "numingredients": 6,
   "ingredient1": {
     "item": "minecraft:blaze_rod"
   },
@@ -21,10 +22,6 @@
   "ingredient6": {
     "item": "minecraft:blaze_rod"
   },
-  "enchantment": {
-    "enchantment": "minecraft:fire_aspect"
-  },
-  "level": {
-    "level": "1"
-  }
+  "enchantment": "minecraft:fire_aspect",
+  "level": 1
 }

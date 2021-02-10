@@ -10,6 +10,7 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
@@ -31,7 +32,7 @@ public class EnchantmentUtil {
     private static final int[] AXE_ENCHANTS = {12,13,14,19,20,22};
     private static final int[] TOOL_ENCHANTS = {19,20,22};
     private static final int[] HELMET_ENCHANTS = {0,5,6,10};
-    private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10};
+    private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10,39};
     private static final int[] LEGGINGS_ENCHANTS = {0,3,8,10};
     private static final int[] BOOTS_ENCHANTS = {0,2,9,10,11};
     private static final int[] BOW_ENCHANTS = {23,24,25,26};
@@ -40,7 +41,7 @@ public class EnchantmentUtil {
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
     private static final int[] FLINT_AND_STEEL_ENCHANTS = {38};
 
-    private static final Enchantment[] enchantments = {Enchantments.PROTECTION, Enchantments.FIRE_PROTECTION, Enchantments.FEATHER_FALLING, Enchantments.BLAST_PROTECTION, Enchantments.PROJECTILE_PROTECTION, Enchantments.RESPIRATION, Enchantments.AQUA_AFFINITY, Enchantments.THORNS, Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, Enchantments.BINDING_CURSE, Enchantments.SOUL_SPEED, Enchantments.SHARPNESS, Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING, Enchantments.SWEEPING, Enchantments.EFFICIENCY, Enchantments.SILK_TOUCH, Enchantments.UNBREAKING, Enchantments.FORTUNE, Enchantments.POWER, Enchantments.PUNCH, Enchantments.FLAME, Enchantments.INFINITY, Enchantments.LUCK_OF_THE_SEA, Enchantments.LURE, Enchantments.LOYALTY, Enchantments.IMPALING, Enchantments.RIPTIDE, Enchantments.CHANNELING, Enchantments.MULTISHOT, Enchantments.QUICK_CHARGE, Enchantments.PIERCING, Enchantments.MENDING, Enchantments.VANISHING_CURSE, EnchantmentRegistry.WARPING.get()};
+    private static final Enchantment[] enchantments = {Enchantments.PROTECTION, Enchantments.FIRE_PROTECTION, Enchantments.FEATHER_FALLING, Enchantments.BLAST_PROTECTION, Enchantments.PROJECTILE_PROTECTION, Enchantments.RESPIRATION, Enchantments.AQUA_AFFINITY, Enchantments.THORNS, Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, Enchantments.BINDING_CURSE, Enchantments.SOUL_SPEED, Enchantments.SHARPNESS, Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING, Enchantments.SWEEPING, Enchantments.EFFICIENCY, Enchantments.SILK_TOUCH, Enchantments.UNBREAKING, Enchantments.FORTUNE, Enchantments.POWER, Enchantments.PUNCH, Enchantments.FLAME, Enchantments.INFINITY, Enchantments.LUCK_OF_THE_SEA, Enchantments.LURE, Enchantments.LOYALTY, Enchantments.IMPALING, Enchantments.RIPTIDE, Enchantments.CHANNELING, Enchantments.MULTISHOT, Enchantments.QUICK_CHARGE, Enchantments.PIERCING, Enchantments.MENDING, Enchantments.VANISHING_CURSE, EnchantmentRegistry.WARPING.get(), EnchantmentRegistry.ACCURACY.get()};
     private static Map<Enchantment, Integer> integerMap = new HashMap<>();
 
     public static void init(){
@@ -83,6 +84,7 @@ public class EnchantmentUtil {
         integerMap.put(Enchantments.MENDING, 36);
         integerMap.put(Enchantments.VANISHING_CURSE, 37);
         integerMap.put(EnchantmentRegistry.WARPING.get(), 38);
+        integerMap.put(EnchantmentRegistry.ACCURACY.get(), 39);
     }
 
     public static Enchantment intToEnchantment(int i){
@@ -137,37 +139,30 @@ public class EnchantmentUtil {
         if(e == Enchantments.SHARPNESS) return new Enchantment[] {Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS};
         if(e == Enchantments.SMITE) return new Enchantment[] {Enchantments.SHARPNESS, Enchantments.BANE_OF_ARTHROPODS};
         if(e == Enchantments.BANE_OF_ARTHROPODS) return new Enchantment[] {Enchantments.SHARPNESS, Enchantments.SMITE};
+
         if(e == Enchantments.FORTUNE) return new Enchantment[] {Enchantments.SILK_TOUCH};
         if(e == Enchantments.SILK_TOUCH) return new Enchantment[] {Enchantments.FORTUNE};
+
         if(e == Enchantments.CHANNELING) return new Enchantment[] {Enchantments.RIPTIDE};
         if(e == Enchantments.LOYALTY) return new Enchantment[] {Enchantments.RIPTIDE};
         if(e == Enchantments.RIPTIDE) return new Enchantment[] {Enchantments.CHANNELING, Enchantments.LOYALTY};
+
         if(e == Enchantments.MENDING) return new Enchantment[] {Enchantments.INFINITY};
         if(e == Enchantments.INFINITY) return new Enchantment[] {Enchantments.MENDING};
+
         if(e == Enchantments.DEPTH_STRIDER) return new Enchantment[] {Enchantments.FROST_WALKER};
         if(e == Enchantments.FROST_WALKER) return new Enchantment[] {Enchantments.DEPTH_STRIDER};
+
+        if(e == Enchantments.THORNS) return new Enchantment[] {EnchantmentRegistry.ACCURACY.get()};
+        if(e == EnchantmentRegistry.ACCURACY.get()) return new Enchantment[] {Enchantments.THORNS};
+
         return new Enchantment[] {};
     }
 
-    public static Enchantment deserializeEnchantment(@Nullable JsonElement json) {
-        String s = json.toString();
-        if(!(s.substring(0,16)).equals("{\"enchantment\":\"")) throw new JsonSyntaxException("Expecting Enchantment");
-        s = s.substring(16);
-        int index = s.indexOf('\"');
-        s = s.substring(0, index);
+    public static Enchantment deserializeEnchantment(String s) {
 
         if(!Registry.ENCHANTMENT.containsKey(ResourceLocation.tryCreate(s))) throw new JsonSyntaxException("Couldn't find Enchantment");
         return Registry.ENCHANTMENT.getOptional(ResourceLocation.tryCreate(s)).get();
-    }
-
-    public static int deserializeLevel(@Nullable JsonElement json) {
-        String s = json.toString();
-        if(!(s.substring(0,10)).equals("{\"level\":\"")) throw new JsonSyntaxException("Expecting Level");
-        s = s.substring(10);
-        int index = s.indexOf('\"');
-        s = s.substring(0, index);
-
-        return Integer.parseInt(s);
     }
 
     public static Enchantment readEnchantment(PacketBuffer buffer) {
@@ -177,5 +172,10 @@ public class EnchantmentUtil {
 
     public static void writeEnchantment(Enchantment e, PacketBuffer buffer) {
         buffer.writeVarInt(enchantmentToInt(e));
+    }
+
+    public static float getAccuracy(LivingEntity entity){
+        int i = EnchantmentHelper.getMaxEnchantmentLevel(EnchantmentRegistry.ACCURACY.get(), entity);
+        return i > 0 ? 0.1f : 1.0f;
     }
 }

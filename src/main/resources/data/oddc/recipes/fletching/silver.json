@@ -6,6 +6,12 @@
     },
     {
       "item": "oddc:netherite_bow"
+    },
+    {
+      "item": "minecraft:crossbow"
+    },
+    {
+      "item": "oddc:netherite_crossbow"
     }
   ],
   "addition": {

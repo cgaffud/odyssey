@@ -2,9 +2,12 @@ package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.NewEnchantmentTableTileEntityRenderer;
+import com.bedmen.odyssey.client.renderer.entity.TrooperRenderer;
+import com.bedmen.odyssey.entity.TrooperEntity;
 import com.bedmen.odyssey.items.ModSpawnEggItem;
 import com.bedmen.odyssey.items.NewBowItem;
 import com.bedmen.odyssey.items.NewCrossbowItem;
+import com.bedmen.odyssey.items.NewPotionItem;
 import com.bedmen.odyssey.util.*;
 import com.bedmen.odyssey.client.renderer.NewBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.ModPotions;
@@ -17,6 +20,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.data.ItemTagsProvider;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -27,6 +31,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -51,6 +56,7 @@ public class Odyssey
         ContainerRegistry.init();
         EffectRegistry.init();
         EnchantmentRegistry.init();
+        EntityTypeRegistry.init();
         ItemRegistry.init();
         PotionRegistry.init();
         RecipeRegistry.init();
@@ -67,38 +73,9 @@ public class Odyssey
         ModPotions.addBrewingRecipes();
         ModTrades.addTrades();
 
-        ItemModelsProperties.registerProperty(Items.POTION, new ResourceLocation("type"),  (itemStack, world, entity) -> {
-            CompoundNBT compoundnbt = itemStack.getTag();
-            if(compoundnbt != null && compoundnbt.contains("Potion")){
-                String s = compoundnbt.get("Potion").getString();
-                if(s.contains("awkward")) return 3;
-                else if(s.contains("long")) return 1;
-                else if(s.contains("strong")) return 2;
-            }
-            return 0;
-        });
-
-        ItemModelsProperties.registerProperty(Items.SPLASH_POTION, new ResourceLocation("type"),  (itemStack, world, entity) -> {
-            CompoundNBT compoundnbt = itemStack.getTag();
-            if(compoundnbt != null && compoundnbt.contains("Potion")){
-                String s = compoundnbt.get("Potion").getString();
-                if(s.contains("awkward")) return 3;
-                else if(s.contains("long")) return 1;
-                else if(s.contains("strong")) return 2;
-            }
-            return 0;
-        });
-
-        ItemModelsProperties.registerProperty(Items.LINGERING_POTION, new ResourceLocation("type"),  (itemStack, world, entity) -> {
-            CompoundNBT compoundnbt = itemStack.getTag();
-            if(compoundnbt != null && compoundnbt.contains("Potion")){
-                String s = compoundnbt.get("Potion").getString();
-                if(s.contains("awkward")) return 3;
-                else if(s.contains("long")) return 1;
-                else if(s.contains("strong")) return 2;
-            }
-            return 0;
-        });
+        NewPotionItem.RegisterBaseProperties(ItemRegistry.POTION.get());
+        NewPotionItem.RegisterBaseProperties(ItemRegistry.SPLASH_POTION.get());
+        NewPotionItem.RegisterBaseProperties(ItemRegistry.LINGERING_POTION.get());
 
         NewBowItem.registerBaseProperties(ItemRegistry.BOW.get());
         NewBowItem.registerStringTypeProperty(ItemRegistry.BOW.get());
@@ -111,6 +88,7 @@ public class Odyssey
         NewCrossbowItem.registerStringTypeProperty(ItemRegistry.NETHERITE_CROSSBOW.get());
 
         DeferredWorkQueue.runLater(() -> {
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.TROOPER.get(), TrooperEntity.registerAttributes().create());
         });
     }
 
@@ -118,6 +96,7 @@ public class Odyssey
     {
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), NewBeaconTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), NewEnchantmentTableTileEntityRenderer::new);
+
         ScreenManager.registerFactory(ContainerRegistry.BEACON.get(), NewBeaconScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.SMITHING_TABLE.get(), NewSmithingTableScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
@@ -125,6 +104,13 @@ public class Odyssey
         ScreenManager.registerFactory(ContainerRegistry.ENCHANTMENT.get(), NewEnchantmentScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.FLETCHING_TABLE.get(), FletchingTableScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.QUIVER7.get(), QuiverScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.QUIVER9.get(), QuiverScreen::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TROOPER.get(), TrooperRenderer::new);
+
         RenderTypeLookup.setRenderLayer(BlockRegistry.WARPING_FIRE.get(), RenderType.getCutout());
     }
 

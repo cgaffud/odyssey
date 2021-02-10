@@ -8,15 +8,13 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DrinkHelper;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -134,4 +132,18 @@ public class NewPotionItem extends Item {
         }
 
     }
+
+    public static void RegisterBaseProperties(Item item){
+        ItemModelsProperties.registerProperty(item, new ResourceLocation("type"),  (itemStack, world, entity) -> {
+            CompoundNBT compoundnbt = itemStack.getTag();
+            if(compoundnbt != null && compoundnbt.contains("Potion")){
+                String s = compoundnbt.get("Potion").getString();
+                if(s.contains("awkward")) return 3;
+                else if(s.contains("long")) return 1;
+                else if(s.contains("strong")) return 2;
+            }
+            return 0;
+        });
+    }
+
 }

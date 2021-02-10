@@ -3,44 +3,124 @@
   "pools": [
     {
       "rolls": {
-        "min": 2.0,
-        "max": 6.0,
+        "min": 0.0,
+        "max": 1.0,
         "type": "minecraft:uniform"
       },
       "entries": [
         {
           "type": "minecraft:item",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1.0,
-                "max": 35.0,
-                "type": "minecraft:uniform"
-              }
-            }
-          ],
-          "name": "oddc:diamond_shard"
-        },
+          "name": "minecraft:crossbow"
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "min": 2.0,
+        "max": 3.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
         {
           "type": "minecraft:item",
-          "weight": 10,
+          "weight": 7,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
-                "min": 1.0,
+                "min": 3.0,
                 "max": 5.0,
                 "type": "minecraft:uniform"
               }
             }
           ],
-          "name": "minecraft:iron_ingot"
+          "name": "minecraft:wheat"
         },
         {
           "type": "minecraft:item",
-          "weight": 15,
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2.0,
+                "max": 5.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:potato"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3.0,
+                "max": 5.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:carrot"
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "min": 1.0,
+        "max": 3.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2.0,
+                "max": 3.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:dark_oak_log"
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "min": 2.0,
+        "max": 3.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "name": "minecraft:experience_bottle"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1.0,
+                "max": 6.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:string"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -51,84 +131,37 @@
               }
             }
           ],
-          "name": "minecraft:gold_ingot"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 15,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1.0,
-                "max": 3.0,
-                "type": "minecraft:uniform"
-              }
-            }
-          ],
-          "name": "minecraft:bamboo"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1.0,
-                "max": 3.0,
-                "type": "minecraft:uniform"
-              }
-            }
-          ],
-          "name": "minecraft:emerald"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 20,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 4.0,
-                "max": 6.0,
-                "type": "minecraft:uniform"
-              }
-            }
-          ],
-          "name": "minecraft:bone"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 16,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 3.0,
-                "max": 7.0,
-                "type": "minecraft:uniform"
-              }
-            }
-          ],
-          "name": "minecraft:rotten_flesh"
+          "name": "minecraft:arrow"
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:saddle"
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:tripwire_hook"
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_horse_armor"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:golden_horse_armor"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:diamond_horse_armor"
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:iron_ingot"
         }
       ]
     }
