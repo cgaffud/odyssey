@@ -84,7 +84,7 @@ public class NewSmithingTableContainer extends Container {
                         List<NewSmithingRecipe> list = con.world.getRecipeManager().getRecipesForType(ModRecipeType.NEW_SMITHING);
                         for(int i1 = 0; i1 < list.size(); i1++) {
                             if(list.get(i1).base.test(slot0.getStack())) {
-                                if(list.get(i1).addition.test(stack)) {
+                                if(list.get(i1).addition.test(stack) || list.get(i1).addition2.test(stack)) {
                                     return this.shouldBeUsed();
                                 }
                             }

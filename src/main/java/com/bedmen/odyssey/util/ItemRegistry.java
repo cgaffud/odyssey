@@ -49,6 +49,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FLAME_STRING = ITEMS.register("flame_string", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> CLOVER = ITEMS.register("clover", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> MULTICITE = ITEMS.register("multicite", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> SERPENT_SCALE = ITEMS.register("serpent_scale", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
 
     //Armor
     public static final RegistryObject<Item> LEATHER_HELMET = ITEMS_VANILLA.register("leather_helmet", () -> new DyeableArmorItem(ModArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
@@ -140,7 +141,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new NewCrossbowItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.COMBAT).maxDamage(862).isImmuneToFire(), 1.0D));
     public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.COMBAT), 3));
     public static final RegistryObject<Item> SERPENT_QUIVER = ITEMS.register("serpent_quiver", () -> new QuiverItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.COMBAT), 5));
-    public static final RegistryObject<Item> TRIDENT = ITEMS_VANILLA.register("trident", () -> new TridentItem((new Item.Properties()).maxDamage(250).group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> TRIDENT = ITEMS_VANILLA.register("trident", () -> new NewTridentItem((new Item.Properties()).maxDamage(250).group(ItemGroup.COMBAT), 9.0D));
+    public static final RegistryObject<Item> SERPENT_TRIDENT = ITEMS.register("serpent_trident", () -> new NewTridentItem((new Item.Properties()).maxDamage(750).group(ItemGroup.COMBAT), 11.0D));
 
 
     //Spawn Eggs

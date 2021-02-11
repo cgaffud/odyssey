@@ -1,5 +1,10 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.entity.projectile.AbstractTridentEntity;
+import com.bedmen.odyssey.entity.projectile.NewTridentEntity;
+import com.bedmen.odyssey.entity.projectile.SerpentTridentEntity;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.ItemRegistry;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
@@ -13,17 +18,13 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.UseAction;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -31,13 +32,16 @@ import net.minecraft.world.World;
 
 public class NewTridentItem extends Item implements IVanishable {
     private final Multimap<Attribute, AttributeModifier> tridentAttributes;
+    private final double damage;
 
-    public NewTridentItem(Item.Properties builderIn) {
+    public NewTridentItem(Item.Properties builderIn, double damage) {
         super(builderIn);
+        this.damage = damage;
         Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", 8.0D, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", this.damage - 1.0D, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", (double)-2.9F, AttributeModifier.Operation.ADDITION));
         this.tridentAttributes = builder.build();
+
     }
 
     public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
@@ -73,8 +77,13 @@ public class NewTridentItem extends Item implements IVanishable {
                             player.sendBreakAnimation(entityLiving.getActiveHand());
                         });
                         if (j == 0) {
-                            TridentEntity tridententity = new TridentEntity(worldIn, playerentity, stack);
-                            tridententity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, 2.5F + (float)j * 0.5F, 1.0F);
+                            AbstractTridentEntity tridententity;
+                            if(stack.getItem() == ItemRegistry.SERPENT_TRIDENT.get()) {
+                                tridententity = new SerpentTridentEntity(worldIn, playerentity, stack, this.damage);
+                            }
+                            else tridententity = new NewTridentEntity(worldIn, playerentity, stack, this.damage);
+                            float inaccuracy = EnchantmentUtil.getAccuracy(playerentity);
+                            tridententity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, 2.5F + (float)j * 0.5F, inaccuracy);
                             if (playerentity.abilities.isCreativeMode) {
                                 tridententity.pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                             }
@@ -175,5 +184,11 @@ public class NewTridentItem extends Item implements IVanishable {
      */
     public int getItemEnchantability() {
         return 1;
+    }
+
+    public static void registerBaseProperties(Item item){
+        ItemModelsProperties.registerProperty(item, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
+            return p_239419_2_ != null && p_239419_2_.isHandActive() && p_239419_2_.getActiveItemStack() == p_239419_0_ ? 1.0F : 0.0F;
+        });
     }
 }

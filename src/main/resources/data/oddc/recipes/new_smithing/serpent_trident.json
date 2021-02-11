@@ -1,0 +1,16 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "trident",
+  "base": {
+    "item": "minecraft:trident"
+  },
+  "addition1": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "addition2": {
+    "item": "oddc:serpent_scale"
+  },
+  "result": {
+    "item": "oddc:serpent_trident"
+  }
+}

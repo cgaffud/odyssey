@@ -16,7 +16,9 @@
     "MixinAttributes",
     "MixinCombatRules",
     "MixinItem",
-    "MixinItemRenderer"
+    "MixinItemRenderer",
+    "MixinItemStackTileEntityRenderer",
+    "MixinClientPlayNetHandler"
   ],
   "injectors": {
     "defaultRequire": 1

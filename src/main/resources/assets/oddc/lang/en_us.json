@@ -100,6 +100,7 @@
   "item.oddc.serpent_quiver": "Serpent Quiver",
   "item.oddc.clover": "Clover",
   "item.oddc.multicite": "Multicite",
+  "item.oddc.serpent_scale": "Serpent Scale",
   
   "item.oddc.silver_dust": "Silver Dust",
   "item.oddc.silver_sword": "Silvered Sword",
@@ -115,6 +116,7 @@
 
   "item.oddc.netherite_bow": "Netherite Bow",
   "item.oddc.netherite_crossbow": "Netherite Crossbow",
+  "item.oddc.serpent_trident": "Serpent Trident",
 
   "effect.oddc.construction": "Construction",
   "effect.oddc.building_fatigue": "Building Fatigue",

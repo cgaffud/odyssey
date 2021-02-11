@@ -2,12 +2,10 @@ package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.NewEnchantmentTableTileEntityRenderer;
+import com.bedmen.odyssey.client.renderer.entity.NewTridentRenderer;
 import com.bedmen.odyssey.client.renderer.entity.TrooperRenderer;
 import com.bedmen.odyssey.entity.TrooperEntity;
-import com.bedmen.odyssey.items.ModSpawnEggItem;
-import com.bedmen.odyssey.items.NewBowItem;
-import com.bedmen.odyssey.items.NewCrossbowItem;
-import com.bedmen.odyssey.items.NewPotionItem;
+import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.util.*;
 import com.bedmen.odyssey.client.renderer.NewBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.ModPotions;
@@ -87,6 +85,9 @@ public class Odyssey
         NewCrossbowItem.registerBaseProperties(ItemRegistry.NETHERITE_CROSSBOW.get());
         NewCrossbowItem.registerStringTypeProperty(ItemRegistry.NETHERITE_CROSSBOW.get());
 
+        NewTridentItem.registerBaseProperties(ItemRegistry.TRIDENT.get());
+        NewTridentItem.registerBaseProperties(ItemRegistry.SERPENT_TRIDENT.get());
+
         DeferredWorkQueue.runLater(() -> {
             GlobalEntityTypeAttributes.put(EntityTypeRegistry.TROOPER.get(), TrooperEntity.registerAttributes().create());
         });
@@ -110,6 +111,9 @@ public class Odyssey
         ScreenManager.registerFactory(ContainerRegistry.QUIVER9.get(), QuiverScreen::new);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TROOPER.get(), TrooperRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.NEW_TRIDENT.get(), NewTridentRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.SERPENT_TRIDENT.get(), NewTridentRenderer::new);
 
         RenderTypeLookup.setRenderLayer(BlockRegistry.WARPING_FIRE.get(), RenderType.getCutout());
     }

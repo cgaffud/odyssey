@@ -24,6 +24,7 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
     protected final String group;
     public final Ingredient base;
     public final Ingredient addition;
+    public final Ingredient addition2;
     protected final String classification;
     protected final ItemStack result;
     public NonNullList<Ingredient> pattern;
@@ -33,6 +34,18 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
         this.group = groupIn;
         this.base = baseIn;
         this.addition = additionIn;
+        this.addition2 = null;
+        this.classification = classificationIn;
+        this.result = resultIn;
+        this.pattern = makePattern();
+    }
+
+    public NewSmithingRecipe(ResourceLocation idIn, String groupIn, Ingredient baseIn, Ingredient additionIn, Ingredient additionIn2, String classificationIn, ItemStack resultIn) {
+        this.id = idIn;
+        this.group = groupIn;
+        this.base = baseIn;
+        this.addition = additionIn;
+        this.addition2 = additionIn2;
         this.classification = classificationIn;
         this.result = resultIn;
         this.pattern = makePattern();
@@ -85,6 +98,29 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
                 pattern.set(2, this.addition);
                 pattern.set(4, this.addition);
                 pattern.set(7, this.addition);
+                break;
+            case "quiver":
+                pattern.set(0, this.addition);
+                pattern.set(2, this.addition);
+                pattern.set(3, this.addition);
+                pattern.set(5, this.addition);
+                pattern.set(7, this.addition);
+                break;
+            case "trident":
+                pattern.set(1, this.addition2);
+                pattern.set(2, this.addition2);
+                pattern.set(4, this.addition);
+                pattern.set(5, this.addition2);
+                pattern.set(6, this.addition);
+                break;
+            case "shield":
+                pattern.set(0, this.addition2);
+                pattern.set(1, this.addition);
+                pattern.set(2, this.addition2);
+                pattern.set(3, this.addition2);
+                pattern.set(4, this.addition2);
+                pattern.set(5, this.addition2);
+                pattern.set(7, this.addition2);
                 break;
             case "boots":
                 pattern.set(3, this.addition);
@@ -182,10 +218,19 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
             String s2 = JSONUtils.getString(json, "classification", "");
             JsonElement jsonelement1 = (JSONUtils.isJsonArray(json, "base") ? JSONUtils.getJsonArray(json, "base") : JSONUtils.getJsonObject(json, "base"));
             Ingredient base = Ingredient.deserialize(jsonelement1);
-            JsonElement jsonelement2 = (JSONUtils.isJsonArray(json, "addition") ? JSONUtils.getJsonArray(json, "addition") : JSONUtils.getJsonObject(json, "addition"));
-            Ingredient addition = Ingredient.deserialize(jsonelement2);
-            ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-            return new NewSmithingRecipe(recipeId, s1, base, addition, s2, itemstack);
+            if(NewSmithingRecipe.hasTwoAdditions(s2)){
+                JsonElement jsonelement2 = (JSONUtils.isJsonArray(json, "addition1") ? JSONUtils.getJsonArray(json, "addition1") : JSONUtils.getJsonObject(json, "addition1"));
+                Ingredient addition1 = Ingredient.deserialize(jsonelement2);
+                JsonElement jsonelement3 = (JSONUtils.isJsonArray(json, "addition2") ? JSONUtils.getJsonArray(json, "addition2") : JSONUtils.getJsonObject(json, "addition2"));
+                Ingredient addition2 = Ingredient.deserialize(jsonelement3);
+                ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+                return new NewSmithingRecipe(recipeId, s1, base, addition1, addition2, s2, itemstack);
+            } else {
+                JsonElement jsonelement2 = (JSONUtils.isJsonArray(json, "addition") ? JSONUtils.getJsonArray(json, "addition") : JSONUtils.getJsonObject(json, "addition"));
+                Ingredient addition = Ingredient.deserialize(jsonelement2);
+                ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+                return new NewSmithingRecipe(recipeId, s1, base, addition, s2, itemstack);
+            }
         }
 
         public NewSmithingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
@@ -204,5 +249,9 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
             recipe.addition.write(buffer);
             buffer.writeItemStack(recipe.result);
         }
+    }
+
+    public static boolean hasTwoAdditions(String s){
+        return s.equals("trident") || s.equals("shield");
     }
 }

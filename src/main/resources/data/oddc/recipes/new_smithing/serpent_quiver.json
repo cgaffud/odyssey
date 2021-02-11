@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "quiver",
+  "base": {
+    "item": "oddc:leather_quiver"
+  },
+  "addition": {
+    "item": "oddc:serpent_scale"
+  },
+  "result": {
+    "item": "oddc:serpent_quiver"
+  }
+}
