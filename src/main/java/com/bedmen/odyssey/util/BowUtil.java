@@ -6,40 +6,41 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.function.Predicate;
 
 public class BowUtil {
 
-    public static float getStringSpeedModifier(ItemStack stack){
-        CompoundNBT compoundnbt = stack.getTag();
+    public static String getStringType(ItemStack itemStack){
+        CompoundNBT compoundnbt = itemStack.getTag();
         if(compoundnbt != null && compoundnbt.contains("StringType")){
-            String s = compoundnbt.get("StringType").getString();
-            switch(s){
-                case "silver":
-                    return 1.25f;
-                default:
-                    return 1.0f;
-            }
+            return compoundnbt.get("StringType").getString();
         }
-        return 1.0f;
+        return "normal";
     }
 
-    public static boolean flameString(ItemStack stack){
-        CompoundNBT compoundnbt = stack.getTag();
-        if(compoundnbt != null && compoundnbt.contains("StringType")){
-            String s = compoundnbt.get("StringType").getString();
-            switch(s){
-                case "flame":
-                    return true;
-                default:
-                    return false;
-            }
+    public static float getStringSpeedModifier(ItemStack itemStack){
+        switch(getStringType(itemStack)){
+            case "silver":
+                return 1.25f;
+            default:
+                return 1.0f;
         }
-        return false;
+    }
+
+    public static boolean flameString(ItemStack itemStack){
+        switch(getStringType(itemStack)){
+            case "flame":
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static void consumeQuiverAmmo(PlayerEntity playerEntity, ItemStack ammo){
@@ -70,4 +71,8 @@ public class BowUtil {
         }
     }
 
+    public static ITextComponent getTranslationComponent(String s) {
+        TranslationTextComponent translationTextComponent = new TranslationTextComponent("item.oddc.bowstringtype."+s);;
+        return (new TranslationTextComponent("item.oddc.bowstring")).appendString(" ").append(translationTextComponent);
+    }
 }

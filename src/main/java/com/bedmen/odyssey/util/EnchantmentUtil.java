@@ -1,10 +1,7 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.entity.projectile.AbstractTridentEntity;
-import com.bedmen.odyssey.items.NewBowItem;
-import com.bedmen.odyssey.items.NewCrossbowItem;
-import com.bedmen.odyssey.items.NewFlintAndSteelItem;
-import com.bedmen.odyssey.items.NewTridentItem;
+import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.tools.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -42,8 +39,9 @@ public class EnchantmentUtil {
     private static final int[] TRIDENT_ENCHANTS = {29,30,31,32};
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
     private static final int[] FLINT_AND_STEEL_ENCHANTS = {38};
+    private static final int[] SHIELD_ENCHANTS = {40,41};
 
-    private static final Enchantment[] enchantments = {Enchantments.PROTECTION, Enchantments.FIRE_PROTECTION, Enchantments.FEATHER_FALLING, Enchantments.BLAST_PROTECTION, Enchantments.PROJECTILE_PROTECTION, Enchantments.RESPIRATION, Enchantments.AQUA_AFFINITY, Enchantments.THORNS, Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, Enchantments.BINDING_CURSE, Enchantments.SOUL_SPEED, Enchantments.SHARPNESS, Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING, Enchantments.SWEEPING, Enchantments.EFFICIENCY, Enchantments.SILK_TOUCH, Enchantments.UNBREAKING, Enchantments.FORTUNE, Enchantments.POWER, Enchantments.PUNCH, Enchantments.FLAME, Enchantments.INFINITY, Enchantments.LUCK_OF_THE_SEA, Enchantments.LURE, Enchantments.LOYALTY, Enchantments.IMPALING, Enchantments.RIPTIDE, Enchantments.CHANNELING, Enchantments.MULTISHOT, Enchantments.QUICK_CHARGE, Enchantments.PIERCING, Enchantments.MENDING, Enchantments.VANISHING_CURSE, EnchantmentRegistry.WARPING.get(), EnchantmentRegistry.ACCURACY.get()};
+    private static final Enchantment[] enchantments = {Enchantments.PROTECTION, Enchantments.FIRE_PROTECTION, Enchantments.FEATHER_FALLING, Enchantments.BLAST_PROTECTION, Enchantments.PROJECTILE_PROTECTION, Enchantments.RESPIRATION, Enchantments.AQUA_AFFINITY, Enchantments.THORNS, Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, Enchantments.BINDING_CURSE, Enchantments.SOUL_SPEED, Enchantments.SHARPNESS, Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING, Enchantments.SWEEPING, Enchantments.EFFICIENCY, Enchantments.SILK_TOUCH, Enchantments.UNBREAKING, Enchantments.FORTUNE, Enchantments.POWER, Enchantments.PUNCH, Enchantments.FLAME, Enchantments.INFINITY, Enchantments.LUCK_OF_THE_SEA, Enchantments.LURE, Enchantments.LOYALTY, Enchantments.IMPALING, Enchantments.RIPTIDE, Enchantments.CHANNELING, Enchantments.MULTISHOT, Enchantments.QUICK_CHARGE, Enchantments.PIERCING, Enchantments.MENDING, Enchantments.VANISHING_CURSE, EnchantmentRegistry.WARPING.get(), EnchantmentRegistry.ACCURACY.get(), EnchantmentRegistry.BLOCKING.get(), EnchantmentRegistry.RECOVERY.get()};
     private static Map<Enchantment, Integer> integerMap = new HashMap<>();
 
     public static void init(){
@@ -87,6 +85,8 @@ public class EnchantmentUtil {
         integerMap.put(Enchantments.VANISHING_CURSE, 37);
         integerMap.put(EnchantmentRegistry.WARPING.get(), 38);
         integerMap.put(EnchantmentRegistry.ACCURACY.get(), 39);
+        integerMap.put(EnchantmentRegistry.BLOCKING.get(), 40);
+        integerMap.put(EnchantmentRegistry.RECOVERY.get(), 41);
     }
 
     public static Enchantment intToEnchantment(int i){
@@ -127,6 +127,7 @@ public class EnchantmentUtil {
         if(item instanceof NewTridentItem) return check(TRIDENT_ENCHANTS, id);
         if(item instanceof FishingRodItem) return check(FISHING_ROD_ENCHANTS, id);
         if(item instanceof NewFlintAndSteelItem) return check(FLINT_AND_STEEL_ENCHANTS, id);
+        if(item instanceof NewShieldItem) return check(SHIELD_ENCHANTS, id);
         return false;
     }
 
@@ -179,5 +180,15 @@ public class EnchantmentUtil {
     public static float getAccuracy(LivingEntity entity){
         int i = EnchantmentHelper.getMaxEnchantmentLevel(EnchantmentRegistry.ACCURACY.get(), entity);
         return i > 0 ? 0.1f : 1.0f;
+    }
+
+    public static float getBlocking(LivingEntity entity){
+        int i = EnchantmentHelper.getMaxEnchantmentLevel(EnchantmentRegistry.BLOCKING.get(), entity);
+        return 1.0f + 0.25f * i;
+    }
+
+    public static int getRecovery(LivingEntity entity){
+        int i = EnchantmentHelper.getMaxEnchantmentLevel(EnchantmentRegistry.RECOVERY.get(), entity);
+        return 100 - 40 * i;
     }
 }

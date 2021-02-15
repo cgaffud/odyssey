@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "oddc:item/silver_axe"
+    "layer0": "oddc:item/sterling_silver_hoe"
   }
 }

@@ -1,8 +1,10 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerAbilities;
@@ -14,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.CooldownTracker;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -31,6 +34,8 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     public PlayerInventory inventory;
     @Shadow
     public PlayerAbilities abilities;
+    @Shadow
+    public CooldownTracker getCooldownTracker() {return null;}
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
@@ -91,5 +96,20 @@ public abstract class MixinPlayerEntity extends LivingEntity {
                 return this.abilities.isCreativeMode ? new ItemStack(Items.ARROW) : ItemStack.EMPTY;
             }
         }
+    }
+
+    public void disableShield(boolean p_190777_1_) {
+        float f = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
+        if (p_190777_1_) {
+            f += 0.75F;
+        }
+
+        if (this.rand.nextFloat() < f) {
+            this.getCooldownTracker().setCooldown(ItemRegistry.SHIELD.get(), EnchantmentUtil.getRecovery(this));
+            this.getCooldownTracker().setCooldown(ItemRegistry.SERPENT_SHIELD.get(), EnchantmentUtil.getRecovery(this));
+            this.resetActiveHand();
+            this.world.setEntityState(this, (byte)30);
+        }
+
     }
 }

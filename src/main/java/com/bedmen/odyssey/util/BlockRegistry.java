@@ -4,6 +4,8 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.blocks.*;
 import net.minecraft.block.*;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -30,6 +32,8 @@ public class BlockRegistry {
 
     public static final RegistryObject<Block> FORTUNELESS_IRON_ORE = BLOCKS.register("fortuneless_iron_ore", FortunelessIronOre::new);
     public static final RegistryObject<Block> FORTUNELESS_GOLD_ORE = BLOCKS.register("fortuneless_gold_ore", FortunelessGoldOre::new);
+    public static final RegistryObject<Block> STERLING_SILVER_BLOCK = BLOCKS.register("sterling_silver_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON, MaterialColor.GRAY).setRequiresTool().harvestLevel(2).hardnessAndResistance(4.0F, 6.0F).sound(SoundType.METAL)));
+    public static final RegistryObject<Block> SILVER_BLOCK = BLOCKS.register("silver_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON, MaterialColor.LIGHT_GRAY).setRequiresTool().harvestLevel(2).hardnessAndResistance(3.0F, 6.0F).sound(SoundType.METAL)));
 
     public static final RegistryObject<Block> WARPING_FIRE = BLOCKS.register("warping_fire", WarpingFireBlock::new);
 }

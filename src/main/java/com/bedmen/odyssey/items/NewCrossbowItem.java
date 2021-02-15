@@ -393,8 +393,9 @@ public class NewCrossbowItem extends ShootableItem implements IVanishable {
                     tooltip.addAll(list1);
                 }
             }
-
         }
+        String s = BowUtil.getStringType(stack);
+        tooltip.add(BowUtil.getTranslationComponent(s));
     }
 
     private static float getVelocity(ItemStack itemStack) {

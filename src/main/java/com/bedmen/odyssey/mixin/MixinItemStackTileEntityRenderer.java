@@ -1,7 +1,10 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.model.NewTridentModel;
+import com.bedmen.odyssey.items.NewShieldItem;
 import com.bedmen.odyssey.items.NewTridentItem;
+import com.bedmen.odyssey.util.ItemRegistry;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -13,6 +16,7 @@ import net.minecraft.client.renderer.entity.model.ShieldModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.RenderMaterial;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.BannerTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.SkullTileEntityRenderer;
@@ -22,6 +26,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -104,11 +109,18 @@ public abstract class MixinItemStackTileEntityRenderer {
                 TileEntityRendererDispatcher.instance.renderItem(tileentity, matrixStack, buffer, combinedLight, combinedOverlay);
             }
         } else {
-            if (item == Items.SHIELD) {
+            if (item instanceof NewShieldItem) {
                 boolean flag = stack.getChildTag("BlockEntityTag") != null;
                 matrixStack.push();
                 matrixStack.scale(1.0F, -1.0F, -1.0F);
-                RenderMaterial rendermaterial = flag ? ModelBakery.LOCATION_SHIELD_BASE : ModelBakery.LOCATION_SHIELD_NO_PATTERN;
+                RenderMaterial rendermaterial;
+                if(item == ItemRegistry.SERPENT_SHIELD.get()){
+                    rendermaterial = flag ?  Odyssey.SERPENT_SHIELD_BASE : Odyssey.SERPENT_SHIELD_BASE_NOPATTERN;
+                }
+
+                else {
+                    rendermaterial = flag ? ModelBakery.LOCATION_SHIELD_BASE : ModelBakery.LOCATION_SHIELD_NO_PATTERN;
+                }
                 IVertexBuilder ivertexbuilder = rendermaterial.getSprite().wrapBuffer(ItemRenderer.getEntityGlintVertexBuilder(buffer, this.modelShield.getRenderType(rendermaterial.getAtlasLocation()), true, stack.hasEffect()));
                 this.modelShield.func_228294_b_().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
                 if (flag) {

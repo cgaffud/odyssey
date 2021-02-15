@@ -6,6 +6,7 @@ import com.bedmen.odyssey.client.renderer.entity.NewTridentRenderer;
 import com.bedmen.odyssey.client.renderer.entity.TrooperRenderer;
 import com.bedmen.odyssey.entity.TrooperEntity;
 import com.bedmen.odyssey.items.*;
+import com.bedmen.odyssey.mixin.MixinItemStackTileEntityRenderer;
 import com.bedmen.odyssey.util.*;
 import com.bedmen.odyssey.client.renderer.NewBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.ModPotions;
@@ -16,12 +17,16 @@ import com.bedmen.odyssey.world.spawn.ModStructureEntitySpawn;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.model.RenderMaterial;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.data.ItemTagsProvider;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.PotionBrewing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ForgeItemTagsProvider;
@@ -31,6 +36,7 @@ import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -38,12 +44,16 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Set;
+
 @Mod("oddc")
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Odyssey
 {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "oddc";
+    public static final RenderMaterial SERPENT_SHIELD_BASE = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(Odyssey.MOD_ID, "entity/serpent_shield_base")));
+    public static final RenderMaterial SERPENT_SHIELD_BASE_NOPATTERN = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(Odyssey.MOD_ID,"entity/serpent_shield_base_nopattern")));
 
     public Odyssey() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -71,6 +81,10 @@ public class Odyssey
         ModPotions.addBrewingRecipes();
         ModTrades.addTrades();
 
+        Set<RenderMaterial>  LOCATIONS_BUILTIN_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(ModelBakery.class, null, "LOCATIONS_BUILTIN_TEXTURES");
+        LOCATIONS_BUILTIN_TEXTURES.add(SERPENT_SHIELD_BASE);
+        LOCATIONS_BUILTIN_TEXTURES.add(SERPENT_SHIELD_BASE_NOPATTERN);
+
         NewPotionItem.RegisterBaseProperties(ItemRegistry.POTION.get());
         NewPotionItem.RegisterBaseProperties(ItemRegistry.SPLASH_POTION.get());
         NewPotionItem.RegisterBaseProperties(ItemRegistry.LINGERING_POTION.get());
@@ -87,6 +101,9 @@ public class Odyssey
 
         NewTridentItem.registerBaseProperties(ItemRegistry.TRIDENT.get());
         NewTridentItem.registerBaseProperties(ItemRegistry.SERPENT_TRIDENT.get());
+
+        NewShieldItem.registerBaseProperties(ItemRegistry.SHIELD.get());
+        NewShieldItem.registerBaseProperties(ItemRegistry.SERPENT_SHIELD.get());
 
         DeferredWorkQueue.runLater(() -> {
             GlobalEntityTypeAttributes.put(EntityTypeRegistry.TROOPER.get(), TrooperEntity.registerAttributes().create());

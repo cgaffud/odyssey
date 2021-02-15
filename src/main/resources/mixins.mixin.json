@@ -18,7 +18,11 @@
     "MixinItem",
     "MixinItemRenderer",
     "MixinItemStackTileEntityRenderer",
-    "MixinClientPlayNetHandler"
+    "MixinClientPlayNetHandler",
+    "MixinMobEntity",
+    "MixinIForgeItem",
+    "MixinShieldRecipes",
+    "MixinLivingEntity"
   ],
   "injectors": {
     "defaultRequire": 1

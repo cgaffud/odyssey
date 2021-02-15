@@ -1,9 +1,12 @@
 package com.bedmen.odyssey.items;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.google.common.collect.Lists;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
@@ -14,7 +17,15 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
 
 public class NewBowItem extends ShootableItem implements IVanishable {
     private final double baseDamage;
@@ -52,9 +63,9 @@ public class NewBowItem extends ShootableItem implements IVanishable {
                         abstractarrowentity = customArrow(abstractarrowentity);
                         float inaccuracy = EnchantmentUtil.getAccuracy(entityLiving);
                         abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, f * 3.0F, inaccuracy);
-                        if (f == 1.0F) {
-                            abstractarrowentity.setIsCritical(true);
-                        }
+                        //if (f == 1.0F) {
+                        //    abstractarrowentity.setIsCritical(true);
+                        //}
 
                         abstractarrowentity.setDamage(abstractarrowentity.getDamage() + this.baseDamage);
                         int j = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack);
@@ -104,7 +115,6 @@ public class NewBowItem extends ShootableItem implements IVanishable {
         if (f > 1.0F) {
             f = 1.0F;
         }
-
         return f;
     }
 
@@ -185,5 +195,14 @@ public class NewBowItem extends ShootableItem implements IVanishable {
             }
             return 0;
         });
+    }
+
+    /**
+     * allows items to add custom lines of information to the mouseover description
+     */
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        String s = BowUtil.getStringType(stack);
+        tooltip.add(BowUtil.getTranslationComponent(s));
     }
 }
