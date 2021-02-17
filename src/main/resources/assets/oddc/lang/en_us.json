@@ -100,6 +100,7 @@
   "item.oddc.clover": "Clover",
   "item.oddc.multicite": "Multicite",
   "item.oddc.copper_ingot": "Copper Ingot",
+  "item.oddc.ruby": "Ruby",
 
   "item.oddc.silver_nugget": "Silver Nugget",
   "item.oddc.silver_ingot": "Silver Ingot",
@@ -166,6 +167,8 @@
   "block.oddc.fortuneless_gold_ore": "Gold Ore",
   "block.minecraft.iron_ore": "Natural Iron Ore",
   "block.minecraft.gold_ore": "Natural Gold Ore",
+  "block.oddc.natural_silver_ore": "Natural Silver Ore",
+  "block.oddc.fortuneless_silver_ore": "Silver Ore",
   "block.oddc.silver_block": "Block of Silver",
   "block.oddc.sterling_silver_block": "Block of Sterling Silver",
   "block.oddc.leather_pile": "Leather Pile"

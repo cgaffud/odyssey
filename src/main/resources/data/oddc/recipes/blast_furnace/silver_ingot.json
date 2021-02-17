@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient":[
+    {
+      "item": "oddc:natural_silver_ore"
+    },
+    {
+      "item": "oddc:fortuneless_silver_ore"
+    }
+  ],
+  "result": "oddc:silver_ingot",
+  "experience": 1.0,
+  "cookingtime": 100
+}

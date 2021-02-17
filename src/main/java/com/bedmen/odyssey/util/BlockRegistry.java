@@ -31,10 +31,12 @@ public class BlockRegistry {
     public static final RegistryObject<Block> BOOKSHELF = BLOCKS_VANILLA.register("bookshelf", BookshelfBlock::new);
     public static final RegistryObject<Block> FLETCHING_TABLE = BLOCKS_VANILLA.register("fletching_table", NewFletchingTableBlock::new);
 
-    public static final RegistryObject<Block> FORTUNELESS_IRON_ORE = BLOCKS.register("fortuneless_iron_ore", FortunelessIronOre::new);
-    public static final RegistryObject<Block> FORTUNELESS_GOLD_ORE = BLOCKS.register("fortuneless_gold_ore", FortunelessGoldOre::new);
-    public static final RegistryObject<Block> STERLING_SILVER_BLOCK = BLOCKS.register("sterling_silver_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON, MaterialColor.GRAY).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(4.0F, 6.0F).sound(SoundType.METAL)));
+    public static final RegistryObject<Block> FORTUNELESS_IRON_ORE = BLOCKS.register("fortuneless_iron_ore", () -> new OreBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(3.0F, 3.0F).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> FORTUNELESS_GOLD_ORE = BLOCKS.register("fortuneless_gold_ore", () -> new OreBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(3.0F, 3.0F).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> NATURAL_SILVER_ORE = BLOCKS.register("natural_silver_ore", () -> new OreBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(3.0F, 3.0F).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> FORTUNELESS_SILVER_ORE = BLOCKS.register("fortuneless_silver_ore", () -> new OreBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(3.0F, 3.0F).sound(SoundType.STONE)));
     public static final RegistryObject<Block> SILVER_BLOCK = BLOCKS.register("silver_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON, MaterialColor.LIGHT_GRAY).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(3.0F, 6.0F).sound(SoundType.METAL)));
+    public static final RegistryObject<Block> STERLING_SILVER_BLOCK = BLOCKS.register("sterling_silver_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON, MaterialColor.GRAY).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(4.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> LEATHER_PILE = BLOCKS.register("leather_pile", () -> new Block(AbstractBlock.Properties.create((new Material.Builder(MaterialColor.BROWN)).build(), MaterialColor.BROWN).harvestTool(ToolType.HOE).hardnessAndResistance(1.0F, 1.0F).sound(SoundType.CLOTH)));
 
     public static final RegistryObject<Block> WARPING_FIRE = BLOCKS.register("warping_fire", WarpingFireBlock::new);

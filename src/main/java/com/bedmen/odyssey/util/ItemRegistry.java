@@ -35,8 +35,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FLETCHING_TABLE = ITEMS_VANILLA.register("fletching_table", () -> new BlockItem(BlockRegistry.FLETCHING_TABLE.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
     public static final RegistryObject<Item> FORTUNELESS_IRON_ORE = ITEMS.register("fortuneless_iron_ore", () -> new BlockItem(BlockRegistry.FORTUNELESS_IRON_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> FORTUNELESS_GOLD_ORE = ITEMS.register("fortuneless_gold_ore", () -> new BlockItem(BlockRegistry.FORTUNELESS_GOLD_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> STERLING_SILVER_BLOCK = ITEMS.register("sterling_silver_block", () -> new BlockItem(BlockRegistry.STERLING_SILVER_BLOCK.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> NATURAL_SILVER_ORE = ITEMS.register("natural_silver_ore", () -> new BlockItem(BlockRegistry.NATURAL_SILVER_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> FORTUNELESS_SILVER_ORE = ITEMS.register("fortuneless_silver_ore", () -> new BlockItem(BlockRegistry.FORTUNELESS_SILVER_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> SILVER_BLOCK = ITEMS.register("silver_block", () -> new BlockItem(BlockRegistry.SILVER_BLOCK.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> STERLING_SILVER_BLOCK = ITEMS.register("sterling_silver_block", () -> new BlockItem(BlockRegistry.STERLING_SILVER_BLOCK.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> LEATHER_PILE = ITEMS.register("leather_pile", () -> new BlockItem(BlockRegistry.LEATHER_PILE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
 
     //Items
@@ -58,6 +60,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CLOVER = ITEMS.register("clover", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> MULTICITE = ITEMS.register("multicite", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> SERPENT_SCALE = ITEMS.register("serpent_scale", () -> new Item((new Item.Properties()).isImmuneToFire().group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> RUBY = ITEMS.register("ruby", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)));
 
     //Armor
     public static final RegistryObject<Item> LEATHER_HELMET = ITEMS_VANILLA.register("leather_helmet", () -> new DyeableArmorItem(ModArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));

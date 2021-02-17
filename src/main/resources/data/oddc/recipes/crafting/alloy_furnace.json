@@ -1,16 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "III",
-    "IXI",
-    "III"
+    "SRS",
+    "SBS",
+    "SSS"
   ],
   "key": {
-    "X": {
+    "B": {
       "item": "minecraft:blast_furnace"
     },
-    "I": {
-      "item": "minecraft:nether_brick"
+    "S": {
+      "item": "oddc:silver_ingot"
+    },
+    "R": {
+      "item": "oddc:ruby"
     }
   },
   "result": {
