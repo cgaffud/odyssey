@@ -101,23 +101,25 @@
   "item.oddc.multicite": "Multicite",
   "item.oddc.copper_ingot": "Copper Ingot",
 
+  "item.oddc.silver_nugget": "Silver Nugget",
   "item.oddc.silver_ingot": "Silver Ingot",
+  "item.oddc.sterling_silver_nugget": "Sterling Silver Nugget",
   "item.oddc.sterling_silver_ingot": "Sterling Silver Ingot",
-  "item.oddc.silver_dust": "Silver Dust",
   "item.oddc.sterling_silver_sword": "Sterling Silver Sword",
   "item.oddc.sterling_silver_pickaxe": "Sterling Silver Pickaxe",
   "item.oddc.sterling_silver_axe": "Sterling Silver Axe",
   "item.oddc.sterling_silver_shovel": "Sterling Silver Shovel",
   "item.oddc.sterling_silver_hoe": "Sterling Silver Hoe",
-  "item.oddc.silver_boots": "Silvered Boots",
-  "item.oddc.silver_leggings": "Silvered Leggings",
-  "item.oddc.silver_chestplate": "Silvered Chestplate",
-  "item.oddc.silver_helmet": "Silvered Helmet",
+  "item.oddc.sterling_silver_boots": "Sterling Silver Boots",
+  "item.oddc.sterling_silver_leggings": "Sterling Silver Leggings",
+  "item.oddc.sterling_silver_chestplate": "Sterling Silver Chestplate",
+  "item.oddc.sterling_silver_helmet": "Sterling Silver Helmet",
   "item.oddc.silver_string": "Silver String",
 
   "item.oddc.serpent_scale": "Leviathan Scale",
   "item.oddc.netherite_bow": "Netherite Bow",
   "item.oddc.netherite_crossbow": "Netherite Crossbow",
+  "item.oddc.netherite_horse_armor": "Netherite Horse Armor",
   "item.oddc.serpent_trident": "Leviathan Trident",
   "item.oddc.serpent_quiver": "Leviathan Quiver",
   "item.oddc.serpent_shield": "Leviathan Shield",
@@ -165,5 +167,6 @@
   "block.minecraft.iron_ore": "Natural Iron Ore",
   "block.minecraft.gold_ore": "Natural Gold Ore",
   "block.oddc.silver_block": "Block of Silver",
-  "block.oddc.sterling_silver_block": "Block of Sterling Silver"
+  "block.oddc.sterling_silver_block": "Block of Sterling Silver",
+  "block.oddc.leather_pile": "Leather Pile"
 }

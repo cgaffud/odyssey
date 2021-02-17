@@ -154,6 +154,14 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
                 pattern.set(3, this.addition);
                 pattern.set(5, this.addition);
                 break;
+            case "horse_armor":
+                pattern.set(2, this.addition);
+                pattern.set(3, this.addition2);
+                pattern.set(4, this.addition2);
+                pattern.set(5, this.addition2);
+                pattern.set(6, this.addition);
+                pattern.set(8, this.addition);
+                break;
             default:
                 return null;
             }
@@ -252,6 +260,6 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
     }
 
     public static boolean hasTwoAdditions(String s){
-        return s.equals("trident") || s.equals("shield");
+        return s.equals("trident") || s.equals("shield") || s.equals("horse_armor");
     }
 }

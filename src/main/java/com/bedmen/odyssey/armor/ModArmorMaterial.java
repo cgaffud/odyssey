@@ -18,7 +18,7 @@ public enum ModArmorMaterial implements IArmorMaterial {
     CHAIN("chainmail", 15, new int[]{3, 6, 7, 4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN, 0.0F, 0.0F, () -> { return Ingredient.fromItems(Items.IRON_INGOT); }),
     IRON("iron", 15, new int[]{4,7, 8, 5}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> { return Ingredient.fromItems(Items.IRON_INGOT); }),
     GOLD("gold", 7, new int[]{5, 8, 9, 6}, 25, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 0.0F, 0.0F, () -> { return Ingredient.fromItems(Items.GOLD_INGOT); }),
-    SILVER("oddc:silver", 20, new int[] {5,9,10,6}, 14, SoundEvents.ITEM_ARMOR_EQUIP_IRON , 0.0f, 0.0f, () -> {return Ingredient.fromItems(ItemRegistry.SILVER_DUST.get());}),
+    STERLING_SILVER("oddc:sterling_silver", 20, new int[] {5,9,10,6}, 14, SoundEvents.ITEM_ARMOR_EQUIP_IRON , 0.0f, 0.0f, () -> {return Ingredient.fromItems(ItemRegistry.STERLING_SILVER_INGOT.get());}),
     DIAMOND("diamond", 33, new int[]{7, 12, 13, 8}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F, 0.0F, () -> { return Ingredient.fromItems(Items.DIAMOND); }),
     NETHERITE("netherite", 37, new int[]{7, 13, 15, 9}, 15, SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, 0.0F, 0.1F, () -> { return Ingredient.fromItems(Items.NETHERITE_INGOT); });
 

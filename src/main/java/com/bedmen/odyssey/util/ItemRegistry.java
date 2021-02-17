@@ -37,6 +37,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FORTUNELESS_GOLD_ORE = ITEMS.register("fortuneless_gold_ore", () -> new BlockItem(BlockRegistry.FORTUNELESS_GOLD_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> STERLING_SILVER_BLOCK = ITEMS.register("sterling_silver_block", () -> new BlockItem(BlockRegistry.STERLING_SILVER_BLOCK.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> SILVER_BLOCK = ITEMS.register("silver_block", () -> new BlockItem(BlockRegistry.SILVER_BLOCK.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> LEATHER_PILE = ITEMS.register("leather_pile", () -> new BlockItem(BlockRegistry.LEATHER_PILE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
 
     //Items
     public static final RegistryObject<Item> POTION = ITEMS_VANILLA.register("potion", () -> new NewPotionItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.BREWING)));
@@ -47,21 +48,23 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BIG_POTION = ITEMS.register("big_potion", () -> new BigPotionItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.BREWING)));
     public static final RegistryObject<Item> FLINT_AND_STEEL = ITEMS_VANILLA.register("flint_and_steel", () -> new NewFlintAndSteelItem((new Item.Properties()).maxDamage(64).group(ItemGroup.TOOLS)));
     public static final RegistryObject<Item> DIAMOND_SHARD = ITEMS.register("diamond_shard", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> SILVER_DUST = ITEMS.register("silver_dust", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> COPPER_INGOT = ITEMS.register("copper_ingot", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> SILVER_NUGGET = ITEMS.register("silver_nugget", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> SILVER_INGOT = ITEMS.register("silver_ingot", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> STERLING_SILVER_NUGGET = ITEMS.register("sterling_silver_nugget", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_INGOT = ITEMS.register("sterling_silver_ingot", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> SILVER_STRING = ITEMS.register("silver_string", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> FLAME_STRING = ITEMS.register("flame_string", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> CLOVER = ITEMS.register("clover", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> MULTICITE = ITEMS.register("multicite", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> SERPENT_SCALE = ITEMS.register("serpent_scale", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> SERPENT_SCALE = ITEMS.register("serpent_scale", () -> new Item((new Item.Properties()).isImmuneToFire().group(ItemGroup.MATERIALS)));
 
     //Armor
     public static final RegistryObject<Item> LEATHER_HELMET = ITEMS_VANILLA.register("leather_helmet", () -> new DyeableArmorItem(ModArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> LEATHER_CHESTPLATE = ITEMS_VANILLA.register("leather_chestplate", () -> new DyeableArmorItem(ModArmorMaterial.LEATHER, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> LEATHER_LEGGINGS = ITEMS_VANILLA.register("leather_leggings", () -> new DyeableArmorItem(ModArmorMaterial.LEATHER, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> LEATHER_BOOTS = ITEMS_VANILLA.register("leather_boots", () -> new DyeableArmorItem(ModArmorMaterial.LEATHER, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> LEATHER_HORSE_ARMOR = ITEMS_VANILLA.register("leather_horse_armor", () -> new DyeableHorseArmorItem(10, "leather", (new Item.Properties()).maxStackSize(1).group(ItemGroup.MISC)));
 
     public static final RegistryObject<Item> CHAINMAIL_HELMET = ITEMS_VANILLA.register("chainmail_helmet", () -> new ArmorItem(ModArmorMaterial.CHAIN, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> CHAINMAIL_CHESTPLATE = ITEMS_VANILLA.register("chainmail_chestplate", () -> new ArmorItem(ModArmorMaterial.CHAIN, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
@@ -72,73 +75,77 @@ public class ItemRegistry {
     public static final RegistryObject<Item> IRON_CHESTPLATE = ITEMS_VANILLA.register("iron_chestplate", () -> new ArmorItem(ModArmorMaterial.IRON, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> IRON_LEGGINGS = ITEMS_VANILLA.register("iron_leggings", () -> new ArmorItem(ModArmorMaterial.IRON, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> IRON_BOOTS = ITEMS_VANILLA.register("iron_boots", () -> new ArmorItem(ModArmorMaterial.IRON, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> IRON_HORSE_ARMOR = ITEMS_VANILLA.register("iron_horse_armor", () -> new HorseArmorItem(24, "iron", (new Item.Properties()).maxStackSize(1).group(ItemGroup.MISC)));
 
     public static final RegistryObject<Item> GOLDEN_HELMET = ITEMS_VANILLA.register("golden_helmet", () -> new ArmorItem(ModArmorMaterial.GOLD, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> GOLDEN_CHESTPLATE = ITEMS_VANILLA.register("golden_chestplate", () -> new ArmorItem(ModArmorMaterial.GOLD, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> GOLDEN_LEGGINGS = ITEMS_VANILLA.register("golden_leggings", () -> new ArmorItem(ModArmorMaterial.GOLD, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> GOLDEN_BOOTS = ITEMS_VANILLA.register("golden_boots", () -> new ArmorItem(ModArmorMaterial.GOLD, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> GOLDEN_HORSE_ARMOR = ITEMS_VANILLA.register("golden_horse_armor", () -> new HorseArmorItem(28, "gold", (new Item.Properties()).maxStackSize(1).group(ItemGroup.MISC)));
     
-    public static final RegistryObject<Item> SILVER_HELMET = ITEMS.register("silver_helmet", () -> new ArmorItem(ModArmorMaterial.SILVER, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<Item> SILVER_CHESTPLATE = ITEMS.register("silver_chestplate", () -> new ArmorItem(ModArmorMaterial.SILVER, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<Item> SILVER_LEGGINGS = ITEMS.register("silver_leggings", () -> new ArmorItem(ModArmorMaterial.SILVER, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<Item> SILVER_BOOTS = ITEMS.register("silver_boots", () -> new ArmorItem(ModArmorMaterial.SILVER, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> SILVER_HELMET = ITEMS.register("sterling_silver_helmet", () -> new ArmorItem(ModArmorMaterial.STERLING_SILVER, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> SILVER_CHESTPLATE = ITEMS.register("sterling_silver_chestplate", () -> new ArmorItem(ModArmorMaterial.STERLING_SILVER, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> SILVER_LEGGINGS = ITEMS.register("sterling_silver_leggings", () -> new ArmorItem(ModArmorMaterial.STERLING_SILVER, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> SILVER_BOOTS = ITEMS.register("sterling_silver_boots", () -> new ArmorItem(ModArmorMaterial.STERLING_SILVER, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
 
     public static final RegistryObject<Item> DIAMOND_HELMET = ITEMS_VANILLA.register("diamond_helmet", () -> new ArmorItem(ModArmorMaterial.DIAMOND, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> DIAMOND_CHESTPLATE = ITEMS_VANILLA.register("diamond_chestplate", () -> new ArmorItem(ModArmorMaterial.DIAMOND, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> DIAMOND_LEGGINGS = ITEMS_VANILLA.register("diamond_leggings", () -> new ArmorItem(ModArmorMaterial.DIAMOND, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> DIAMOND_BOOTS = ITEMS_VANILLA.register("diamond_boots", () -> new ArmorItem(ModArmorMaterial.DIAMOND, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> DIAMOND_HORSE_ARMOR = ITEMS_VANILLA.register("diamond_horse_armor", () -> new HorseArmorItem(40, "diamond", (new Item.Properties()).maxStackSize(1).group(ItemGroup.MISC)));
 
     public static final RegistryObject<Item> NETHERITE_HELMET = ITEMS_VANILLA.register("netherite_helmet", () -> new ArmorItem(ModArmorMaterial.NETHERITE, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> NETHERITE_CHESTPLATE = ITEMS_VANILLA.register("netherite_chestplate", () -> new ArmorItem(ModArmorMaterial.NETHERITE, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> NETHERITE_LEGGINGS = ITEMS_VANILLA.register("netherite_leggings", () -> new ArmorItem(ModArmorMaterial.NETHERITE, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> NETHERITE_BOOTS = ITEMS_VANILLA.register("netherite_boots", () -> new ArmorItem(ModArmorMaterial.NETHERITE, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> NETHERITE_HORSE_ARMOR = ITEMS.register("netherite_horse_armor", () -> new HorseArmorItem(44, "netherite", (new Item.Properties()).maxStackSize(1).isImmuneToFire().group(ItemGroup.MISC)));
 
     //Tools
 
     //Swords
-    public static final RegistryObject<Item> WOODEN_SWORD = ITEMS_VANILLA.register("wooden_sword", () -> new ModSwordItem(ModItemTier.WOOD, 4.0f, 1.6f, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<Item> STONE_SWORD = ITEMS_VANILLA.register("stone_sword", () -> new ModSwordItem(ModItemTier.STONE, 5.0f, 1.6f, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<Item> IRON_SWORD = ITEMS_VANILLA.register("iron_sword", () -> new ModSwordItem(ModItemTier.IRON, 6.0f, 1.6f, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<Item> GOLDEN_SWORD = ITEMS_VANILLA.register("golden_sword", () -> new ModSwordItem(ModItemTier.GOLD, 4.5f, 2.4f, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<Item> STERLING_SILVER_SWORD = ITEMS.register("sterling_silver_sword", () -> new ModSwordItem(ModItemTier.SILVER, 7.0f, 1.6f, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<Item> DIAMOND_SWORD = ITEMS_VANILLA.register("diamond_sword", () -> new ModSwordItem(ModItemTier.DIAMOND, 8.0f, 1.6f, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<Item> NETHERITE_SWORD = ITEMS_VANILLA.register("netherite_sword", () -> new ModSwordItem(ModItemTier.NETHERITE, 9.0f, 1.6f, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> WOODEN_SWORD = ITEMS_VANILLA.register("wooden_sword", () -> new SwordItem(ModItemTier.WOOD, 4, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> STONE_SWORD = ITEMS_VANILLA.register("stone_sword", () -> new SwordItem(ModItemTier.STONE, 5, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> IRON_SWORD = ITEMS_VANILLA.register("iron_sword", () -> new SwordItem(ModItemTier.IRON, 6, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> GOLDEN_SWORD = ITEMS_VANILLA.register("golden_sword", () -> new SwordItem(ModItemTier.GOLD, 5, -1.6f, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> STERLING_SILVER_SWORD = ITEMS.register("sterling_silver_sword", () -> new SwordItem(ModItemTier.STERLING_SILVER, 7, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> DIAMOND_SWORD = ITEMS_VANILLA.register("diamond_sword", () -> new SwordItem(ModItemTier.DIAMOND, 8, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> NETHERITE_SWORD = ITEMS_VANILLA.register("netherite_sword", () -> new SwordItem(ModItemTier.NETHERITE, 9, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)));
 
     //Axes
-    public static final RegistryObject<Item> WOODEN_AXE = ITEMS_VANILLA.register("wooden_axe", () -> new ModAxeItem(ModItemTier.WOOD, 6.0f, 1.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> STONE_AXE = ITEMS_VANILLA.register("stone_axe", () -> new ModAxeItem(ModItemTier.STONE, 7.0f, 1.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> IRON_AXE = ITEMS_VANILLA.register("iron_axe", () -> new ModAxeItem(ModItemTier.IRON, 8.0f, 1.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> GOLDEN_AXE = ITEMS_VANILLA.register("golden_axe", () -> new ModAxeItem(ModItemTier.GOLD, 6.0f, 1.5f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> STERLING_SILVER_AXE = ITEMS.register("sterling_silver_axe", () -> new ModAxeItem(ModItemTier.SILVER, 9.0f, 1.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> DIAMOND_AXE = ITEMS_VANILLA.register("diamond_axe", () -> new ModAxeItem(ModItemTier.DIAMOND, 10.5f, 1.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> NETHERITE_AXE = ITEMS_VANILLA.register("netherite_axe", () -> new ModAxeItem(ModItemTier.NETHERITE, 12.0f, 1.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> WOODEN_AXE = ITEMS_VANILLA.register("wooden_axe", () -> new AxeItem(ModItemTier.WOOD, 6.0f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> STONE_AXE = ITEMS_VANILLA.register("stone_axe", () -> new AxeItem(ModItemTier.STONE, 7.0f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> IRON_AXE = ITEMS_VANILLA.register("iron_axe", () -> new AxeItem(ModItemTier.IRON, 8.0f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> GOLDEN_AXE = ITEMS_VANILLA.register("golden_axe", () -> new AxeItem(ModItemTier.GOLD, 7.0f, -2.5f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> STERLING_SILVER_AXE = ITEMS.register("sterling_silver_axe", () -> new AxeItem(ModItemTier.STERLING_SILVER, 9.0f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> DIAMOND_AXE = ITEMS_VANILLA.register("diamond_axe", () -> new AxeItem(ModItemTier.DIAMOND, 10.5f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> NETHERITE_AXE = ITEMS_VANILLA.register("netherite_axe", () -> new AxeItem(ModItemTier.NETHERITE, 12.0f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)));
 
     //Pickaxes
-    public static final RegistryObject<Item> WOODEN_PICKAXE = ITEMS_VANILLA.register("wooden_pickaxe", () -> new ModPickaxeItem(ModItemTier.WOOD, 2.0f, 1.2f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> STONE_PICKAXE = ITEMS_VANILLA.register("stone_pickaxe", () -> new ModPickaxeItem(ModItemTier.STONE, 3.0f, 1.2f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> IRON_PICKAXE = ITEMS_VANILLA.register("iron_pickaxe", () -> new ModPickaxeItem(ModItemTier.IRON, 4.0f, 1.2f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> GOLDEN_PICKAXE = ITEMS_VANILLA.register("golden_pickaxe", () -> new ModPickaxeItem(ModItemTier.GOLD, 3.0f, 1.8f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> STERLING_SILVER_PICKAXE = ITEMS.register("sterling_silver_pickaxe", () -> new ModPickaxeItem(ModItemTier.SILVER, 5.0f, 1.2f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> DIAMOND_PICKAXE = ITEMS_VANILLA.register("diamond_pickaxe", () -> new ModPickaxeItem(ModItemTier.DIAMOND, 6.0f, 1.2f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> NETHERITE_PICKAXE = ITEMS_VANILLA.register("netherite_pickaxe", () -> new ModPickaxeItem(ModItemTier.NETHERITE, 7.0f, 1.2f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> WOODEN_PICKAXE = ITEMS_VANILLA.register("wooden_pickaxe", () -> new PickaxeItem(ModItemTier.WOOD, 2, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> STONE_PICKAXE = ITEMS_VANILLA.register("stone_pickaxe", () -> new PickaxeItem(ModItemTier.STONE, 3, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> IRON_PICKAXE = ITEMS_VANILLA.register("iron_pickaxe", () -> new PickaxeItem(ModItemTier.IRON, 4, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> GOLDEN_PICKAXE = ITEMS_VANILLA.register("golden_pickaxe", () -> new PickaxeItem(ModItemTier.GOLD, 3, -2.2f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> STERLING_SILVER_PICKAXE = ITEMS.register("sterling_silver_pickaxe", () -> new PickaxeItem(ModItemTier.STERLING_SILVER, 5, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> DIAMOND_PICKAXE = ITEMS_VANILLA.register("diamond_pickaxe", () -> new PickaxeItem(ModItemTier.DIAMOND, 6, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> NETHERITE_PICKAXE = ITEMS_VANILLA.register("netherite_pickaxe", () -> new PickaxeItem(ModItemTier.NETHERITE, 7, -2.8f, new Item.Properties().group(ItemGroup.TOOLS)));
 
     //Shovels
-    public static final RegistryObject<Item> WOODEN_SHOVEL = ITEMS_VANILLA.register("wooden_shovel", () -> new ModShovelItem(ModItemTier.WOOD, 1.5f, 1.4f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> STONE_SHOVEL = ITEMS_VANILLA.register("stone_shovel", () -> new ModShovelItem(ModItemTier.STONE, 2.5f, 1.4f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> IRON_SHOVEL = ITEMS_VANILLA.register("iron_shovel", () -> new ModShovelItem(ModItemTier.IRON, 3.5f, 1.4f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> GOLDEN_SHOVEL = ITEMS_VANILLA.register("golden_shovel", () -> new ModShovelItem(ModItemTier.GOLD, 2.75f, 2.1f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> STERLING_SILVER_SHOVEL = ITEMS.register("sterling_silver_shovel", () -> new ModShovelItem(ModItemTier.SILVER, 4.5f, 1.4f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> DIAMOND_SHOVEL = ITEMS_VANILLA.register("diamond_shovel", () -> new ModShovelItem(ModItemTier.DIAMOND, 5.5f, 1.4f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> NETHERITE_SHOVEL = ITEMS_VANILLA.register("netherite_shovel", () -> new ModShovelItem(ModItemTier.NETHERITE, 6.5f, 1.4f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> WOODEN_SHOVEL = ITEMS_VANILLA.register("wooden_shovel", () -> new ShovelItem(ModItemTier.WOOD, 1.5f, -2.6f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> STONE_SHOVEL = ITEMS_VANILLA.register("stone_shovel", () -> new ShovelItem(ModItemTier.STONE, 2.5f, -2.6f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> IRON_SHOVEL = ITEMS_VANILLA.register("iron_shovel", () -> new ShovelItem(ModItemTier.IRON, 3.5f, -2.6f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> GOLDEN_SHOVEL = ITEMS_VANILLA.register("golden_shovel", () -> new ShovelItem(ModItemTier.GOLD, 2.5f, -1.9f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> STERLING_SILVER_SHOVEL = ITEMS.register("sterling_silver_shovel", () -> new ShovelItem(ModItemTier.STERLING_SILVER, 4.5f, -2.6f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> DIAMOND_SHOVEL = ITEMS_VANILLA.register("diamond_shovel", () -> new ShovelItem(ModItemTier.DIAMOND, 5.5f, -2.6f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> NETHERITE_SHOVEL = ITEMS_VANILLA.register("netherite_shovel", () -> new ShovelItem(ModItemTier.NETHERITE, 6.5f, -2.6f, new Item.Properties().group(ItemGroup.TOOLS)));
 
     //Hoes
-    public static final RegistryObject<Item> WOODEN_HOE = ITEMS_VANILLA.register("wooden_hoe", () -> new ModHoeItem(ModItemTier.WOOD, 1.0f, 2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> STONE_HOE = ITEMS_VANILLA.register("stone_hoe", () -> new ModHoeItem(ModItemTier.STONE, 2.0f, 2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> IRON_HOE = ITEMS_VANILLA.register("iron_hoe", () -> new ModHoeItem(ModItemTier.IRON, 3.0f, 2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> GOLDEN_HOE = ITEMS_VANILLA.register("golden_hoe", () -> new ModHoeItem(ModItemTier.GOLD, 2.25f, 3.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> STERLING_SILVER_HOE = ITEMS.register("sterling_silver_hoe", () -> new ModHoeItem(ModItemTier.SILVER, 4.0f, 2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> DIAMOND_HOE = ITEMS_VANILLA.register("diamond_hoe", () -> new ModHoeItem(ModItemTier.DIAMOND, 5.0f, 2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
-    public static final RegistryObject<Item> NETHERITE_HOE = ITEMS_VANILLA.register("netherite_hoe", () -> new ModHoeItem(ModItemTier.NETHERITE, 6.0f, 2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> WOODEN_HOE = ITEMS_VANILLA.register("wooden_hoe", () -> new HoeItem(ModItemTier.WOOD, 1, -2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> STONE_HOE = ITEMS_VANILLA.register("stone_hoe", () -> new HoeItem(ModItemTier.STONE, 2, -2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> IRON_HOE = ITEMS_VANILLA.register("iron_hoe", () -> new HoeItem(ModItemTier.IRON, 3, -2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> GOLDEN_HOE = ITEMS_VANILLA.register("golden_hoe", () -> new HoeItem(ModItemTier.GOLD, 2, -1.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> STERLING_SILVER_HOE = ITEMS.register("sterling_silver_hoe", () -> new HoeItem(ModItemTier.STERLING_SILVER, 4, -2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> DIAMOND_HOE = ITEMS_VANILLA.register("diamond_hoe", () -> new HoeItem(ModItemTier.DIAMOND, 5, -2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
+    public static final RegistryObject<Item> NETHERITE_HOE = ITEMS_VANILLA.register("netherite_hoe", () -> new HoeItem(ModItemTier.NETHERITE, 6, -2.0f, new Item.Properties().group(ItemGroup.TOOLS)));
 
     //Bows/Quivers/Tridents
     public static final RegistryObject<Item> BOW = ITEMS_VANILLA.register("bow", () -> new NewBowItem((new Item.Properties()).maxDamage(384).group(ItemGroup.COMBAT), 0.5D));
@@ -146,13 +153,13 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CROSSBOW = ITEMS_VANILLA.register("crossbow", () -> new NewCrossbowItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.COMBAT).maxDamage(326), 0.5D));
     public static final RegistryObject<Item> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new NewCrossbowItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.COMBAT).maxDamage(862).isImmuneToFire(), 1.0D));
     public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.COMBAT), 3));
-    public static final RegistryObject<Item> SERPENT_QUIVER = ITEMS.register("serpent_quiver", () -> new QuiverItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.COMBAT), 5));
+    public static final RegistryObject<Item> SERPENT_QUIVER = ITEMS.register("serpent_quiver", () -> new QuiverItem((new Item.Properties()).maxStackSize(1).isImmuneToFire().group(ItemGroup.COMBAT), 5));
     public static final RegistryObject<Item> TRIDENT = ITEMS_VANILLA.register("trident", () -> new NewTridentItem((new Item.Properties()).maxDamage(250).group(ItemGroup.COMBAT), 9.0D));
     public static final RegistryObject<Item> SERPENT_TRIDENT = ITEMS.register("serpent_trident", () -> new NewTridentItem((new Item.Properties()).maxDamage(750).isImmuneToFire().group(ItemGroup.COMBAT), 11.0D));
 
     //Shields
     public static final RegistryObject<Item> SHIELD = ITEMS_VANILLA.register("shield", () -> new NewShieldItem((new Item.Properties()).maxDamage(336).group(ItemGroup.COMBAT), 5.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(Items.OAK_PLANKS); nonNullList.add(Items.BIRCH_PLANKS); nonNullList.add(Items.SPRUCE_PLANKS); nonNullList.add(Items.DARK_OAK_PLANKS); nonNullList.add(Items.JUNGLE_PLANKS); nonNullList.add(Items.ACACIA_PLANKS); return nonNullList;}));
-    public static final RegistryObject<Item> SERPENT_SHIELD = ITEMS.register("serpent_shield", () -> new NewShieldItem((new Item.Properties()).maxDamage(1000).group(ItemGroup.COMBAT), 10.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(SERPENT_SCALE.get()); return nonNullList;}));
+    public static final RegistryObject<Item> SERPENT_SHIELD = ITEMS.register("serpent_shield", () -> new NewShieldItem((new Item.Properties()).maxDamage(1000).isImmuneToFire().group(ItemGroup.COMBAT), 10.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(SERPENT_SCALE.get()); return nonNullList;}));
 
 
     //Spawn Eggs

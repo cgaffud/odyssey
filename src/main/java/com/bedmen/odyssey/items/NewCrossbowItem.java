@@ -35,7 +35,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class NewCrossbowItem extends ShootableItem implements IVanishable {
+public class NewCrossbowItem extends CrossbowItem implements IVanishable {
     /** Set to {@code true} when the crossbow is 20% charged. */
     private boolean isLoadingStart = false;
     /** Set to {@code true} when the crossbow is 50% charged. */

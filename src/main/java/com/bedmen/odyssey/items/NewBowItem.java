@@ -27,7 +27,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-public class NewBowItem extends ShootableItem implements IVanishable {
+public class NewBowItem extends BowItem implements IVanishable {
     private final double baseDamage;
     public NewBowItem(Item.Properties builder, double baseDamage) {
         super(builder);

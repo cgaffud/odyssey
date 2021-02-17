@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  A",
+    "XXX",
+    "A A"
+  ],
+  "key": {
+    "X": {
+      "item": "oddc:leather_pile"
+    },
+    "A": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "minecraft:leather_horse_armor"
+  }
+}

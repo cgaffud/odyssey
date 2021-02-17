@@ -1,40 +1,28 @@
 package com.bedmen.odyssey.util;
 
-import com.bedmen.odyssey.entity.projectile.AbstractTridentEntity;
 import com.bedmen.odyssey.items.*;
-import com.bedmen.odyssey.tools.*;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.INBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class EnchantmentUtil {
-    private static final int[] SWORD_ENCHANTS = {12,13,14,15,16,17,18};
+    private static final int[] SWORD_ENCHANTS = {12,13,14,15,17,18};
     private static final int[] AXE_ENCHANTS = {12,13,14,19,20,22};
     private static final int[] TOOL_ENCHANTS = {19,20,22};
     private static final int[] HELMET_ENCHANTS = {0,5,6,10};
     private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10,39};
     private static final int[] LEGGINGS_ENCHANTS = {0,3,8,10};
     private static final int[] BOOTS_ENCHANTS = {0,2,9,10,11};
-    private static final int[] BOW_ENCHANTS = {23,24,25,26};
+    private static final int[] BOW_ENCHANTS = {23,24,26};
     private static final int[] CROSSBOW_ENCHANTS = {33,34,35};
     private static final int[] TRIDENT_ENCHANTS = {29,30,31,32};
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
@@ -105,9 +93,9 @@ public class EnchantmentUtil {
         Item item = itemStack.getItem();
         if(!item.isEnchantable(itemStack)) return false;
         if(id == 21 || id == 36 || id == 37) return true; //Unbreaking, Mending, and Vanishing
-        if(item instanceof ModSwordItem) return check(SWORD_ENCHANTS, id);
-        if(item instanceof ModAxeItem) return check(AXE_ENCHANTS, id);
-        if(item instanceof ModPickaxeItem || item instanceof ModShovelItem || item instanceof ModHoeItem) return check(TOOL_ENCHANTS, id);
+        if(item instanceof SwordItem) return check(SWORD_ENCHANTS, id);
+        if(item instanceof AxeItem) return check(AXE_ENCHANTS, id);
+        if(item instanceof PickaxeItem || item instanceof ShovelItem || item instanceof HoeItem) return check(TOOL_ENCHANTS, id);
         if(item instanceof ArmorItem){
             switch(((ArmorItem)item).getEquipmentSlot()){
                 case FEET:
