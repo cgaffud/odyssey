@@ -92,6 +92,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SILVER_CHESTPLATE = ITEMS.register("sterling_silver_chestplate", () -> new ArmorItem(ModArmorMaterial.STERLING_SILVER, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> SILVER_LEGGINGS = ITEMS.register("sterling_silver_leggings", () -> new ArmorItem(ModArmorMaterial.STERLING_SILVER, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> SILVER_BOOTS = ITEMS.register("sterling_silver_boots", () -> new ArmorItem(ModArmorMaterial.STERLING_SILVER, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> STERLING_SILVER_HORSE_ARMOR = ITEMS.register("sterling_silver_horse_armor", () -> new HorseArmorItem(30, "sterling_silver", (new Item.Properties()).maxStackSize(1).group(ItemGroup.MISC)));
 
     public static final RegistryObject<Item> DIAMOND_HELMET = ITEMS_VANILLA.register("diamond_helmet", () -> new ArmorItem(ModArmorMaterial.DIAMOND, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> DIAMOND_CHESTPLATE = ITEMS_VANILLA.register("diamond_chestplate", () -> new ArmorItem(ModArmorMaterial.DIAMOND, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
