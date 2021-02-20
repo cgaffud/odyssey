@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "oddc:block/silver_ore"
+    "all": "oddc:block/copper_ore"
   }
 }

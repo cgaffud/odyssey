@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "oddc:block/fortuneless_silver_ore" }
+    "": { "model": "oddc:block/silver_ore" }
   }
 }

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient":[
+    {
+      "item": "oddc:natural_copper_ore"
+    },
+    {
+      "item": "oddc:fortuneless_copper_ore"
+    }
+  ],
+  "result": "oddc:copper_ingot",
+  "experience": 1.0,
+  "cookingtime": 200
+}

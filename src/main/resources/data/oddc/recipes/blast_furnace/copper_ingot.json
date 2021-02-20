@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient":[
+    {
+      "item": "oddc:natural_copper_ore"
+    },
+    {
+      "item": "oddc:fortuneless_copper_ore"
+    }
+  ],
+  "result": "oddc:copper_ingot",
+  "experience": 0.7,
+  "cookingtime": 100
+}
