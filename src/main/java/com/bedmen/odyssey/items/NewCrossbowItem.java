@@ -395,7 +395,9 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
             }
         }
         String s = BowUtil.getStringType(stack);
-        tooltip.add(BowUtil.getTranslationComponent(s));
+        if(!s.equals("normal")){
+            tooltip.add(BowUtil.getTranslationComponent(s));
+        }
     }
 
     private static float getVelocity(ItemStack itemStack) {

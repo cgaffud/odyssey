@@ -101,6 +101,7 @@
   "item.oddc.multicite": "Multicite",
   "item.oddc.copper_ingot": "Copper Ingot",
   "item.oddc.ruby": "Ruby",
+  "item.oddc.sapphire": "Sapphire",
 
   "item.oddc.silver_nugget": "Silver Nugget",
   "item.oddc.silver_ingot": "Silver Ingot",
@@ -143,11 +144,6 @@
   "item.oddc.serpent_shield.gray": "Gray Leviathan Shield",
   "item.oddc.serpent_shield.black": "Black Leviathan Shield",
 
-  "item.oddc.bowstring": "String Type:",
-  "item.oddc.bowstringtype.normal": "Normal",
-  "item.oddc.bowstringtype.silver": "Silver",
-  "item.oddc.bowstringtype.flame": "Flame",
-
   "effect.oddc.construction": "Construction",
   "effect.oddc.building_fatigue": "Building Fatigue",
 
@@ -174,5 +170,7 @@
   "block.oddc.fortuneless_silver_ore": "Silver Ore",
   "block.oddc.silver_block": "Block of Silver",
   "block.oddc.sterling_silver_block": "Block of Sterling Silver",
-  "block.oddc.leather_pile": "Leather Pile"
+  "block.oddc.leather_pile": "Leather Pile",
+
+  "item.oddc.lens": "Lens"
 }

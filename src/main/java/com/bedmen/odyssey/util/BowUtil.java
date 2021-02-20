@@ -11,6 +11,7 @@ import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.function.Predicate;
@@ -72,7 +73,13 @@ public class BowUtil {
     }
 
     public static ITextComponent getTranslationComponent(String s) {
-        TranslationTextComponent translationTextComponent = new TranslationTextComponent("item.oddc.bowstringtype."+s);;
-        return (new TranslationTextComponent("item.oddc.bowstring")).appendString(" ").append(translationTextComponent);
+        switch(s){
+            case "silver":
+                return (new TranslationTextComponent(ItemRegistry.SILVER_STRING.get().getTranslationKey())).mergeStyle(TextFormatting.GRAY);
+            case "flame":
+                return (new TranslationTextComponent(ItemRegistry.FLAME_STRING.get().getTranslationKey())).mergeStyle(TextFormatting.GRAY);
+            default:
+                return (new TranslationTextComponent(Items.STRING.getTranslationKey())).mergeStyle(TextFormatting.GRAY);
+        }
     }
 }

@@ -203,6 +203,8 @@ public class NewBowItem extends BowItem implements IVanishable {
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         String s = BowUtil.getStringType(stack);
-        tooltip.add(BowUtil.getTranslationComponent(s));
+        if(!s.equals("normal")){
+            tooltip.add(BowUtil.getTranslationComponent(s));
+        }
     }
 }
