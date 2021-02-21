@@ -2,7 +2,9 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.NewShieldItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.google.common.base.Objects;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -11,19 +13,25 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity{
@@ -88,6 +96,50 @@ public abstract class MixinLivingEntity extends Entity{
     private long lastDamageStamp;
     @Shadow
     protected ItemStack activeItemStack;
+    @Shadow
+    public float prevSwingProgress;
+    @Shadow
+    public float swingProgress;
+    @Shadow
+    public Optional<BlockPos> getBedPosition() {return null;}
+    @Shadow
+    private void setSleepingPosition(BlockPos p_213370_1_) {}
+    @Shadow
+    public boolean getMovementSpeed() {return false;}
+    @Shadow
+    protected void addSprintingEffect() {}
+    @Shadow
+    public boolean canBreatheUnderwater() {return false;}
+    @Shadow
+    protected int decreaseAirSupply(int air) {return 0;}
+    @Shadow
+    protected int determineNextAir(int currentAir) {return 0;}
+    @Shadow
+    private BlockPos prevBlockpos;
+    @Shadow
+    protected void frostWalk(BlockPos pos) {}
+    @Shadow
+    protected void onDeathUpdate() {}
+    @Shadow
+    private LivingEntity lastAttackedEntity;
+    @Shadow
+    private LivingEntity revengeTarget;
+    @Shadow
+    private int revengeTimer;
+    @Shadow
+    protected void updatePotionEffects() {}
+    @Shadow
+    public float prevRotationYawHead;
+    @Shadow
+    public float rotationYawHead;
+    @Shadow
+    public float renderYawOffset;
+    @Shadow
+    public float prevRenderYawOffset;
+    @Shadow
+    protected float movedDistance;
+    @Shadow
+    protected float prevMovedDistance;
 
     public boolean attackEntityFrom(DamageSource source, float amount) {
         if (!net.minecraftforge.common.ForgeHooks.onLivingAttack((LivingEntity)(Entity)this, source, amount)) return false;
@@ -247,6 +299,116 @@ public abstract class MixinLivingEntity extends Entity{
 
             return flag2;
         }
+    }
+
+    public void baseTick() {
+        this.prevSwingProgress = this.swingProgress;
+        if (this.firstUpdate) {
+            this.getBedPosition().ifPresent(this::setSleepingPosition);
+        }
+
+        if (this.getMovementSpeed()) {
+            this.addSprintingEffect();
+        }
+
+        super.baseTick();
+        this.world.getProfiler().startSection("livingEntityBaseTick");
+        boolean flag = ((LivingEntity)(Object)this) instanceof PlayerEntity;
+        if (this.isAlive()) {
+            if (this.isEntityInsideOpaqueBlock()) {
+                this.attackEntityFrom(DamageSource.IN_WALL, 1.0F);
+            } else if (flag && !this.world.getWorldBorder().contains(this.getBoundingBox())) {
+                double d0 = this.world.getWorldBorder().getClosestDistance(this) + this.world.getWorldBorder().getDamageBuffer();
+                if (d0 < 0.0D) {
+                    double d1 = this.world.getWorldBorder().getDamagePerBlock();
+                    if (d1 > 0.0D) {
+                        this.attackEntityFrom(DamageSource.IN_WALL, (float)Math.max(1, MathHelper.floor(-d0 * d1)));
+                    }
+                }
+            }
+        }
+
+        if (this.isImmuneToFire() || this.world.isRemote) {
+            this.extinguish();
+        }
+
+        boolean flag1 = flag && ((PlayerEntity)(Object)this).abilities.disableDamage;
+        if (this.isAlive()) {
+            if ((this.areEyesInFluid(FluidTags.WATER) || this.areEyesInFluid(FluidTags.LAVA)) && !this.world.getBlockState(new BlockPos(this.getPosX(), this.getPosYEye(), this.getPosZ())).isIn(Blocks.BUBBLE_COLUMN)) {
+                if (!this.canBreatheUnderwater() && !EffectUtils.canBreatheUnderwater((LivingEntity)(Object)this) && !flag1) {
+                    this.setAir(this.decreaseAirSupply(this.getAir()));
+                    if (this.getAir() == -20) {
+                        this.setAir(0);
+                        Vector3d vector3d = this.getMotion();
+
+                        for(int i = 0; i < 8; ++i) {
+                            double d2 = this.rand.nextDouble() - this.rand.nextDouble();
+                            double d3 = this.rand.nextDouble() - this.rand.nextDouble();
+                            double d4 = this.rand.nextDouble() - this.rand.nextDouble();
+                            this.world.addParticle(ParticleTypes.BUBBLE, this.getPosX() + d2, this.getPosY() + d3, this.getPosZ() + d4, vector3d.x, vector3d.y, vector3d.z);
+                        }
+
+                        this.attackEntityFrom(DamageSource.DROWN, 2.0F);
+                    }
+                }
+
+                if (!this.world.isRemote && this.isPassenger() && this.getRidingEntity() != null && !this.getRidingEntity().canBeRiddenInWater(this)) {
+                    this.stopRiding();
+                }
+            } else if (this.getAir() < this.getMaxAir()) {
+                this.setAir(this.determineNextAir(this.getAir()));
+            }
+
+            if (!this.world.isRemote) {
+                BlockPos blockpos = this.getPosition();
+                if (!Objects.equal(this.prevBlockpos, blockpos)) {
+                    this.prevBlockpos = blockpos;
+                    this.frostWalk(blockpos);
+                }
+            }
+        }
+
+        if (this.isAlive() && this.isInWaterRainOrBubbleColumn()) {
+            this.extinguish();
+        }
+
+        if (this.hurtTime > 0) {
+            --this.hurtTime;
+        }
+
+        if (this.hurtResistantTime > 0 && !(((LivingEntity)(Object)this) instanceof ServerPlayerEntity)) {
+            --this.hurtResistantTime;
+        }
+
+        if (this.getShouldBeDead()) {
+            this.onDeathUpdate();
+        }
+
+        if (this.recentlyHit > 0) {
+            --this.recentlyHit;
+        } else {
+            this.attackingPlayer = null;
+        }
+
+        if (this.lastAttackedEntity != null && !this.lastAttackedEntity.isAlive()) {
+            this.lastAttackedEntity = null;
+        }
+
+        if (this.revengeTarget != null) {
+            if (!this.revengeTarget.isAlive()) {
+                this.setRevengeTarget((LivingEntity)null);
+            } else if (this.ticksExisted - this.revengeTimer > 100) {
+                this.setRevengeTarget((LivingEntity)null);
+            }
+        }
+
+        this.updatePotionEffects();
+        this.prevMovedDistance = this.movedDistance;
+        this.prevRenderYawOffset = this.renderYawOffset;
+        this.prevRotationYawHead = this.rotationYawHead;
+        this.prevRotationYaw = this.rotationYaw;
+        this.prevRotationPitch = this.rotationPitch;
+        this.world.getProfiler().endSection();
     }
 
 }
