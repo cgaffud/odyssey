@@ -24,7 +24,7 @@
                   }
                 }
               ],
-              "name": "oddc:natural_silver_ore"
+              "name": "oddc:silver_ore"
             },
             {
               "type": "minecraft:item",
@@ -38,7 +38,7 @@
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "oddc:fortuneless_silver_ore"
+              "name": "oddc:raw_silver"
             }
           ]
         }

@@ -2,10 +2,10 @@
   "type": "minecraft:smelting",
   "ingredient":[
     {
-      "item": "oddc:natural_silver_ore"
+      "item": "oddc:silver_ore"
     },
     {
-      "item": "oddc:fortuneless_silver_ore"
+      "item": "oddc:raw_silver"
     }
   ],
   "result": "oddc:silver_ingot",

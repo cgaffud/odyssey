@@ -1,7 +1,7 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "item": "oddc:fortuneless_gold_ore"
+      "item": "oddc:raw_gold"
   },
   "result": "minecraft:gold_ingot",
   "experience": 1.0,

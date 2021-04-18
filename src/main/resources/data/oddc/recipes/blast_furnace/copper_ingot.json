@@ -2,10 +2,10 @@
   "type": "minecraft:blasting",
   "ingredient":[
     {
-      "item": "oddc:natural_copper_ore"
+      "item": "oddc:copper_ore"
     },
     {
-      "item": "oddc:fortuneless_copper_ore"
+      "item": "oddc:raw_copper"
     }
   ],
   "result": "oddc:copper_ingot",

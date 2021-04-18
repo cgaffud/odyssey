@@ -38,7 +38,7 @@
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "oddc:fortuneless_gold_ore"
+              "name": "oddc:raw_gold"
             }
           ]
         }

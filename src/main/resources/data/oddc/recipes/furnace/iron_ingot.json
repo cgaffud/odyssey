@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "item": "oddc:fortuneless_iron_ore"
+    "item": "oddc:raw_iron"
   },
   "result": "minecraft:iron_ingot",
   "experience": 0.7,

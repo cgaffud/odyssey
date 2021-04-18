@@ -33,12 +33,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ENCHANTING_TABLE = ITEMS_VANILLA.register("enchanting_table", () -> new BlockItem(BlockRegistry.ENCHANTING_TABLE.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
     public static final RegistryObject<Item> BOOKSHELF = ITEMS_VANILLA.register("bookshelf", () -> new BlockItem(BlockRegistry.BOOKSHELF.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> FLETCHING_TABLE = ITEMS_VANILLA.register("fletching_table", () -> new BlockItem(BlockRegistry.FLETCHING_TABLE.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
-    public static final RegistryObject<Item> NATURAL_COPPER_ORE = ITEMS.register("natural_copper_ore", () -> new BlockItem(BlockRegistry.NATURAL_COPPER_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> FORTUNELESS_COPPER_ORE = ITEMS.register("fortuneless_copper_ore", () -> new BlockItem(BlockRegistry.FORTUNELESS_COPPER_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> FORTUNELESS_IRON_ORE = ITEMS.register("fortuneless_iron_ore", () -> new BlockItem(BlockRegistry.FORTUNELESS_IRON_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> FORTUNELESS_GOLD_ORE = ITEMS.register("fortuneless_gold_ore", () -> new BlockItem(BlockRegistry.FORTUNELESS_GOLD_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> NATURAL_SILVER_ORE = ITEMS.register("natural_silver_ore", () -> new BlockItem(BlockRegistry.NATURAL_SILVER_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> FORTUNELESS_SILVER_ORE = ITEMS.register("fortuneless_silver_ore", () -> new BlockItem(BlockRegistry.FORTUNELESS_SILVER_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> COPPER_ORE = ITEMS.register("copper_ore", () -> new BlockItem(BlockRegistry.COPPER_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> SILVER_ORE = ITEMS.register("silver_ore", () -> new BlockItem(BlockRegistry.SILVER_ORE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> SILVER_BLOCK = ITEMS.register("silver_block", () -> new BlockItem(BlockRegistry.SILVER_BLOCK.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> STERLING_SILVER_BLOCK = ITEMS.register("sterling_silver_block", () -> new BlockItem(BlockRegistry.STERLING_SILVER_BLOCK.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> LEATHER_PILE = ITEMS.register("leather_pile", () -> new BlockItem(BlockRegistry.LEATHER_PILE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
@@ -52,6 +48,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BIG_POTION = ITEMS.register("big_potion", () -> new BigPotionItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.BREWING)));
     public static final RegistryObject<Item> FLINT_AND_STEEL = ITEMS_VANILLA.register("flint_and_steel", () -> new NewFlintAndSteelItem((new Item.Properties()).maxDamage(64).group(ItemGroup.TOOLS)));
     public static final RegistryObject<Item> DIAMOND_SHARD = ITEMS.register("diamond_shard", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> RAW_IRON = ITEMS.register("raw_iron", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> RAW_COPPER = ITEMS.register("raw_copper", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> RAW_GOLD = ITEMS.register("raw_gold", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> RAW_SILVER = ITEMS.register("raw_silver", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> COPPER_INGOT = ITEMS.register("copper_ingot", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> SILVER_NUGGET = ITEMS.register("silver_nugget", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> SILVER_INGOT = ITEMS.register("silver_ingot", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
