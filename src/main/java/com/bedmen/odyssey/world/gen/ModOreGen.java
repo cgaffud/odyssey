@@ -1,12 +1,16 @@
 package com.bedmen.odyssey.world.gen;
 
+import com.bedmen.odyssey.util.BlockRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.Features;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.world.gen.feature.template.BlockMatchRuleTest;
+import net.minecraft.world.gen.feature.template.RuleTest;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -17,10 +21,12 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class ModOreGen {
 
-   // public static ConfiguredFeature<?, ?> RUBY_ORE_FEATURE;
+    public static ConfiguredFeature<?, ?> SILVER_ORE_FEATURE;
+    public static final RuleTest SAND_RULE = new BlockMatchRuleTest(Blocks.SAND);
+    // OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD for generating in stone
 
     public static void registerOres() {
-        //RUBY_ORE_FEATURE = oreGen(64, 9, 20, BlockRegistry.RUBY_ORE);
+        SILVER_ORE_FEATURE = oreGen(128, 100, 20, BlockRegistry.SILVER_ORE, SAND_RULE);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -35,15 +41,15 @@ public class ModOreGen {
 
         } else {
             //Overworld Ore
-            if(event.getCategory() == Biome.Category.DESERT) {
-                //gen.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, RUBY_ORE_FEATURE);
+            if(event.getCategory() == Biome.Category.BEACH) {
+                //gen.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SILVER_ORE_FEATURE);
             }
         }
 
     }
 
-    private static ConfiguredFeature<?, ?> oreGen(int max_y, int size, int count, RegistryObject<Block> oreBlock){
-        return Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, oreBlock.get().getDefaultState(), size)).range(max_y).square().func_242731_b(count);
+    private static ConfiguredFeature<?, ?> oreGen(int max_y, int size, int count, RegistryObject<Block> oreBlock, RuleTest rule){
+        return Feature.ORE.withConfiguration(new OreFeatureConfig(rule, oreBlock.get().getDefaultState(), size)).range(max_y).square().func_242731_b(count);
     }
 
 }

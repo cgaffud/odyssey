@@ -3,7 +3,7 @@
   "pattern": [
     "SRS",
     "SBS",
-    "SSS"
+    "XXX"
   ],
   "key": {
     "B": {
@@ -11,6 +11,9 @@
     },
     "S": {
       "item": "oddc:silver_ingot"
+    },
+    "X": {
+      "item": "minecraft:smooth_stone"
     },
     "R": {
       "item": "oddc:ruby"
