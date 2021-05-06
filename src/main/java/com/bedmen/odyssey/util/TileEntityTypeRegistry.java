@@ -23,5 +23,6 @@ public class TileEntityTypeRegistry {
     public static final RegistryObject<TileEntityType<InfuserTileEntity>> INFUSER = TILE_ENTITY_TYPES.register("infuser", () -> TileEntityType.Builder.create(InfuserTileEntity::new, BlockRegistry.INFUSER.get()).build(null));
     public static final RegistryObject<TileEntityType<NewEnchantingTableTileEntity>> ENCHANTING_TABLE = TILE_ENTITY_TYPES.register("enchanting_table", () -> TileEntityType.Builder.create(NewEnchantingTableTileEntity::new, BlockRegistry.ENCHANTING_TABLE.get()).build(null));
     public static final RegistryObject<TileEntityType<BookshelfTileEntity>> BOOKSHELF = TILE_ENTITY_TYPES.register("bookshelf", () -> TileEntityType.Builder.create(BookshelfTileEntity::new, BlockRegistry.BOOKSHELF.get()).build(null));
+    public static final RegistryObject<TileEntityType<RecycleFurnaceTileEntity>> RECYCLE_FURNACE = TILE_ENTITY_TYPES.register("recycle_furnace", () -> TileEntityType.Builder.create(RecycleFurnaceTileEntity::new, BlockRegistry.RECYCLE_FURNACE.get()).build(null));
 
 }

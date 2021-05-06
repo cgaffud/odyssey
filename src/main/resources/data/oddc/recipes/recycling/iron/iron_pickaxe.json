@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient":
+  {
+    "item": "minecraft:iron_pickaxe"
+  },
+  "nugget": "minecraft:iron_nugget",
+  "count": 27,
+  "ingot": "minecraft:iron_ingot",
+  "experience": 0.1,
+  "cookingtime": 100
+}

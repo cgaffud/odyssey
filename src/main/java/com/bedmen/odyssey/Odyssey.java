@@ -122,6 +122,7 @@ public class Odyssey
         ScreenManager.registerFactory(ContainerRegistry.ENCHANTMENT.get(), NewEnchantmentScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.FLETCHING_TABLE.get(), FletchingTableScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.QUIVER7.get(), QuiverScreen::new);

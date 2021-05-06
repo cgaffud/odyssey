@@ -1,20 +1,15 @@
 package com.bedmen.odyssey.tileentity;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
-import com.bedmen.odyssey.blocks.AlloyFurnaceBlock;
-import com.bedmen.odyssey.container.AlloyFurnaceContainer;
-import com.bedmen.odyssey.recipes.AlloyRecipe;
+import com.bedmen.odyssey.blocks.RecycleFurnaceBlock;
+import com.bedmen.odyssey.container.RecycleFurnaceContainer;
 import com.bedmen.odyssey.recipes.ModRecipeType;
+import com.bedmen.odyssey.recipes.RecycleRecipe;
+import com.bedmen.odyssey.util.ItemRegistry;
 import com.bedmen.odyssey.util.TileEntityTypeRegistry;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ExperienceOrbEntity;
@@ -36,23 +31,21 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SharedConstants;
-import net.minecraft.util.Util;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISidedInventory, IRecipeHolder, IRecipeHelperPopulator, ITickableTileEntity {
-    private static final int[] SLOTS_UP = new int[]{0,1};
-    private static final int[] SLOTS_DOWN = new int[]{3};
-    private static final int[] SLOTS_HORIZONTAL = new int[]{2};
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+
+public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISidedInventory, IRecipeHolder, IRecipeHelperPopulator, ITickableTileEntity {
+    private static final int[] SLOTS_UP = new int[]{0};
+    private static final int[] SLOTS_DOWN = new int[]{2,3};
+    private static final int[] SLOTS_HORIZONTAL = new int[]{1};
     protected NonNullList<ItemStack> items = NonNullList.withSize(4, ItemStack.EMPTY);
     private int burnTime;
     private int recipesUsed;
@@ -62,13 +55,13 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
         public int get(int index) {
             switch(index) {
                 case 0:
-                    return AlloyFurnaceTileEntity.this.burnTime;
+                    return RecycleFurnaceTileEntity.this.burnTime;
                 case 1:
-                    return AlloyFurnaceTileEntity.this.recipesUsed;
+                    return RecycleFurnaceTileEntity.this.recipesUsed;
                 case 2:
-                    return AlloyFurnaceTileEntity.this.cookTime;
+                    return RecycleFurnaceTileEntity.this.cookTime;
                 case 3:
-                    return AlloyFurnaceTileEntity.this.cookTimeTotal;
+                    return RecycleFurnaceTileEntity.this.cookTimeTotal;
                 default:
                     return 0;
             }
@@ -77,16 +70,16 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
         public void set(int index, int value) {
             switch(index) {
                 case 0:
-                    AlloyFurnaceTileEntity.this.burnTime = value;
+                    RecycleFurnaceTileEntity.this.burnTime = value;
                     break;
                 case 1:
-                    AlloyFurnaceTileEntity.this.recipesUsed = value;
+                    RecycleFurnaceTileEntity.this.recipesUsed = value;
                     break;
                 case 2:
-                    AlloyFurnaceTileEntity.this.cookTime = value;
+                    RecycleFurnaceTileEntity.this.cookTime = value;
                     break;
                 case 3:
-                    AlloyFurnaceTileEntity.this.cookTimeTotal = value;
+                    RecycleFurnaceTileEntity.this.cookTimeTotal = value;
             }
 
         }
@@ -96,11 +89,11 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
         }
     };
     private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
-    protected final IRecipeType<AlloyRecipe> recipeType;
+    protected final IRecipeType<RecycleRecipe> recipeType;
 
-    public AlloyFurnaceTileEntity() {
-        super(TileEntityTypeRegistry.ALLOY_FURNACE.get());
-        this.recipeType = ModRecipeType.ALLOYING;
+    public RecycleFurnaceTileEntity() {
+        super(TileEntityTypeRegistry.RECYCLE_FURNACE.get());
+        this.recipeType = ModRecipeType.RECYCLING;
     }
 
     @Deprecated //Forge - get burn times by calling ForgeHooks#getBurnTime(ItemStack)
@@ -235,22 +228,22 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
         }
 
         if (!this.world.isRemote) {
-            ItemStack itemstack = this.items.get(2);
-            if (this.isBurning() || !itemstack.isEmpty() && !this.items.get(0).isEmpty() && !this.items.get(1).isEmpty()) {
-                IRecipe<?> irecipe = this.world.getRecipeManager().getRecipe((IRecipeType<AlloyRecipe>)this.recipeType, this, this.world).orElse(null);
+            ItemStack itemstack = this.items.get(1);
+            if (this.isBurning() || !itemstack.isEmpty() && !this.items.get(0).isEmpty()) {
+                IRecipe<?> irecipe = this.world.getRecipeManager().getRecipe((IRecipeType<RecycleRecipe>)this.recipeType, this, this.world).orElse(null);
                 if (!this.isBurning() && this.canSmelt(irecipe)) {
                     this.burnTime = this.getBurnTime(itemstack);
                     this.recipesUsed = this.burnTime;
                     if (this.isBurning()) {
                         flag1 = true;
                         if (itemstack.hasContainerItem())
-                            this.items.set(2, itemstack.getContainerItem());
+                            this.items.set(1, itemstack.getContainerItem());
                         else
                         if (!itemstack.isEmpty()) {
                             Item item = itemstack.getItem();
                             itemstack.shrink(1);
                             if (itemstack.isEmpty()) {
-                                this.items.set(2, itemstack.getContainerItem());
+                                this.items.set(1, itemstack.getContainerItem());
                             }
                         }
                     }
@@ -273,7 +266,7 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
 
             if (flag != this.isBurning()) {
                 flag1 = true;
-                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(AlloyFurnaceBlock.LIT, Boolean.valueOf(this.isBurning())), 3);
+                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(RecycleFurnaceBlock.LIT, Boolean.valueOf(this.isBurning())), 3);
             }
         }
 
@@ -284,21 +277,38 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
     }
 
     protected boolean canSmelt(@Nullable IRecipe<?> recipeIn) {
-        if (!this.items.get(0).isEmpty() && !this.items.get(1).isEmpty() && recipeIn != null) {
+        RecycleRecipe recycleRecipe = (RecycleRecipe)recipeIn;
+        if (!this.items.get(0).isEmpty() && recipeIn != null) {
             ItemStack itemstack = recipeIn.getRecipeOutput();
+            int n = recycleRecipe.getRecipeOutputCount(this);
+            ItemStack itemstackIngot = recycleRecipe.getRecipeOutputIngot();
             if (itemstack.isEmpty()) {
                 return false;
             } else {
-                ItemStack itemstack1 = this.items.get(3);
+                ItemStack itemstack1 = this.items.get(2);
+                ItemStack itemstack2  = this.items.get(3);
                 if (itemstack1.isEmpty()) {
-                    return true;
+                    if(itemstack2.isEmpty()) {
+                        return n <= 10*64;
+                    }
+                    if (!itemstack2.isItemEqual(itemstackIngot)){
+                        return n <= 64;
+                    }
+                    return n <= 9*(64-itemstack2.getCount()) + 64;
                 } else if (!itemstack1.isItemEqual(itemstack)) {
+                    if (n % 9 == 0) {
+                        if (itemstack2.isEmpty())
+                            return n <= 9 * 64;
+                        if (!itemstack2.isItemEqual(itemstackIngot))
+                            return false;
+                        return n <= 9 * (64 - itemstack2.getCount());
+                    }
                     return false;
-                } else if (itemstack1.getCount() + itemstack.getCount() <= this.getInventoryStackLimit() && itemstack1.getCount() + itemstack.getCount() <= itemstack1.getMaxStackSize()) { // Forge fix: make furnace respect stack sizes in furnace recipes
+                } else if(n + itemstack1.getCount() <= 64)
                     return true;
-                } else {
-                    return itemstack1.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize(); // Forge fix: make furnace respect stack sizes in furnace recipes
-                }
+                else if(!itemstack2.isItemEqual(itemstackIngot))
+                    return false;
+                return n <= 10*64 - itemstack1.getCount() - itemstack2.getCount() * 9;
             }
         } else {
             return false;
@@ -307,23 +317,62 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
 
     private void smelt(@Nullable IRecipe<?> recipe) {
         if (recipe != null && this.canSmelt(recipe)) {
-            ItemStack itemstacka = this.items.get(0);
-            ItemStack itemstackb = this.items.get(1);
-            ItemStack itemstack1 = recipe.getRecipeOutput();
-            ItemStack itemstack2 = this.items.get(3);
-            if (itemstack2.isEmpty()) {
-                this.items.set(3, itemstack1.copy());
-            } else if (itemstack2.getItem() == itemstack1.getItem()) {
-                itemstack2.grow(itemstack1.getCount());
+            RecycleRecipe recycleRecipe = (RecycleRecipe)recipe;
+            ItemStack itemstack = this.items.get(0);
+            ItemStack itemstackOut = recipe.getRecipeOutput();
+            ItemStack itemstack1 = this.items.get(2);
+            ItemStack itemstack2  = this.items.get(3);
+            int n = recycleRecipe.getRecipeOutputCount(this);
+            ItemStack itemstackIngot = recycleRecipe.getRecipeOutputIngot();
+
+            if(itemstack2.isEmpty() && n >= 9){
+                this.items.set(3, itemstackIngot.copy());
+                itemstack2  = this.items.get(3);
+                n -= 9;
+            }
+            if(itemstack2.isItemEqual(itemstackIngot) && n >= 9){
+                int a = Integer.min(64-itemstack2.getCount(), n / 9);
+                itemstack2.grow(a);
+                n -= 9*a;
+            }
+            if(itemstack1.isEmpty() && n >= 1){
+                this.items.set(2, itemstackOut.copy());
+                itemstack1 = this.items.get(2);
+                n -= 1;
+            }
+            if(itemstack1.isItemEqual(itemstackOut) && n >= 1){
+                itemstack1.grow(n);
             }
 
             if (!this.world.isRemote) {
                 this.setRecipeUsed(recipe);
             }
 
-            itemstacka.shrink(1);
-            itemstackb.shrink(1);
+            itemstack.shrink(1);
+
+            if(pair(itemstack1.getItem(),itemstack2.getItem())){
+                while(itemstack1.getCount() >= 9 && itemstack2.getCount() < 64){
+                    itemstack1.shrink(9);
+                    itemstack2.grow(1);
+                }
+            }
         }
+    }
+
+    private boolean pair(Item item1, Item item2){
+        if(item1 == ItemRegistry.COPPER_NUGGET.get() && item2 == ItemRegistry.COPPER_INGOT.get())
+            return true;
+        if(item1 == Items.IRON_NUGGET && item2 == Items.IRON_INGOT)
+            return true;
+        if(item1 == Items.GOLD_NUGGET && item2 == Items.GOLD_INGOT)
+            return true;
+        if(item1 == ItemRegistry.SILVER_NUGGET.get() && item2 == ItemRegistry.SILVER_INGOT.get())
+            return true;
+        if(item1 == ItemRegistry.STERLING_SILVER_NUGGET.get() && item2 == ItemRegistry.STERLING_SILVER_INGOT.get())
+            return true;
+        if(item1 == ItemRegistry.NETHERITE_NUGGET.get() && item2 == Items.NETHERITE_INGOT)
+            return true;
+        return false;
     }
 
     protected int getBurnTime(ItemStack fuel) {
@@ -336,7 +385,7 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
     }
 
     protected int getCookTime() {
-        return this.world.getRecipeManager().getRecipe((IRecipeType<AlloyRecipe>)this.recipeType, this, this.world).map(AlloyRecipe::getCookTime).orElse(200);
+        return this.world.getRecipeManager().getRecipe((IRecipeType<RecycleRecipe>)this.recipeType, this, this.world).map(RecycleRecipe::getCookTime).orElse(100);
     }
 
     public static boolean isFuel(ItemStack stack) {
@@ -362,7 +411,7 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
      * Returns true if automation can extract the given item in the given slot from the given side.
      */
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        return direction == Direction.DOWN && index == 3;
+        return direction == Direction.DOWN && (index == 3 || index == 2);
     }
 
     /**
@@ -438,9 +487,9 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
      * guis use Slot.isItemValid
      */
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        if (index == 3) {
+        if (index > 1) {
             return false;
-        } else if (index != 2) {
+        } else if (index != 1) {
             return true;
         } else {
             return isFuel(stack);
@@ -479,7 +528,7 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
         for(Entry<ResourceLocation> entry : this.recipes.object2IntEntrySet()) {
             world.getRecipeManager().getRecipe(entry.getKey()).ifPresent((recipe) -> {
                 list.add(recipe);
-                splitAndSpawnExperience(world, pos, entry.getIntValue(), ((AlloyRecipe)recipe).getExperience());
+                splitAndSpawnExperience(world, pos, entry.getIntValue(), ((RecycleRecipe)recipe).getExperience());
             });
         }
 
@@ -536,11 +585,11 @@ public class AlloyFurnaceTileEntity extends LockableTileEntity implements ISided
     }
 
     protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("container.oddc.alloy_furnace");
+        return new TranslationTextComponent("container.oddc.recycle_furnace");
     }
 
     protected Container createMenu(int id, PlayerInventory player) {
-        return new AlloyFurnaceContainer(id, player, this, this.furnaceData);
+        return new RecycleFurnaceContainer(id, player, this, this.furnaceData);
     }
 
 }

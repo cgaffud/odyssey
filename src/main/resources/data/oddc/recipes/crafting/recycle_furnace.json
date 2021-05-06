@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CBC",
+    "XXX"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:blast_furnace"
+    },
+    "C": {
+      "item": "oddc:copper_ingot"
+    },
+    "X": {
+      "item": "minecraft:polished_granite"
+    }
+  },
+  "result": {
+    "item": "oddc:recycle_furnace"
+  }
+}

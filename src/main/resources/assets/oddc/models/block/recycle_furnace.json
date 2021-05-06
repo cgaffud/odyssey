@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "oddc:block/recycle_furnace_top",
+    "front": "oddc:block/recycle_furnace_front",
+    "side": "oddc:block/recycle_furnace_side"
+  }
+}

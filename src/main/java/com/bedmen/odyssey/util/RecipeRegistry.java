@@ -21,4 +21,5 @@ public class RecipeRegistry {
     public static final RegistryObject<IRecipeSerializer<InfusingRecipe>> INFUSING = RECIPES.register("infusing", () -> new InfusingRecipe.Serializer());
     public static final RegistryObject<IRecipeSerializer<EnchantedBookInfusingRecipe>> ENCHANTED_BOOK_INFUSING = RECIPES.register("enchanted_book_infusing", () -> new EnchantedBookInfusingRecipe.Serializer());
     public static final RegistryObject<IRecipeSerializer<FletchingRecipe>> FLETCHING = RECIPES.register("fletching", () -> new FletchingRecipe.Serializer());
+    public static final RegistryObject<IRecipeSerializer<RecycleRecipe>> RECYCLING = RECIPES.register("recycling", () -> new RecycleRecipe.Serializer());
 }
