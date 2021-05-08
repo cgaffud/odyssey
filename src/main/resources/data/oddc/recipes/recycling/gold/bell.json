@@ -2,9 +2,9 @@
   "type": "oddc:recycling",
   "ingredient":
   {
-    "item": "minecraft:iron_pickaxe"
+    "item": "minecraft:bell"
   },
-  "nugget": "minecraft:iron_nugget",
+  "nugget": "minecraft:gold_nugget",
   "nuggetCount": 0,
   "ingotCount": 3,
   "experience": 0.1,

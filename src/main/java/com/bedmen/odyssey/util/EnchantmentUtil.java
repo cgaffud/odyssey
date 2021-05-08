@@ -29,7 +29,48 @@ public class EnchantmentUtil {
     private static final int[] FLINT_AND_STEEL_ENCHANTS = {38};
     private static final int[] SHIELD_ENCHANTS = {40,41};
 
-    private static final Enchantment[] enchantments = {Enchantments.PROTECTION, Enchantments.FIRE_PROTECTION, Enchantments.FEATHER_FALLING, Enchantments.BLAST_PROTECTION, Enchantments.PROJECTILE_PROTECTION, Enchantments.RESPIRATION, Enchantments.AQUA_AFFINITY, Enchantments.THORNS, Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, Enchantments.BINDING_CURSE, Enchantments.SOUL_SPEED, Enchantments.SHARPNESS, Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING, Enchantments.SWEEPING, Enchantments.EFFICIENCY, Enchantments.SILK_TOUCH, Enchantments.UNBREAKING, Enchantments.FORTUNE, Enchantments.POWER, Enchantments.PUNCH, Enchantments.FLAME, Enchantments.INFINITY, Enchantments.LUCK_OF_THE_SEA, Enchantments.LURE, Enchantments.LOYALTY, Enchantments.IMPALING, Enchantments.RIPTIDE, Enchantments.CHANNELING, Enchantments.MULTISHOT, Enchantments.QUICK_CHARGE, Enchantments.PIERCING, Enchantments.MENDING, Enchantments.VANISHING_CURSE, EnchantmentRegistry.WARPING.get(), EnchantmentRegistry.ACCURACY.get(), EnchantmentRegistry.BLOCKING.get(), EnchantmentRegistry.RECOVERY.get()};
+    private static final Enchantment[] enchantments = {Enchantments.PROTECTION,
+            Enchantments.FIRE_PROTECTION,
+            Enchantments.FEATHER_FALLING,
+            Enchantments.BLAST_PROTECTION,
+            Enchantments.PROJECTILE_PROTECTION,
+            Enchantments.RESPIRATION,
+            Enchantments.AQUA_AFFINITY,
+            Enchantments.THORNS,
+            Enchantments.DEPTH_STRIDER,
+            Enchantments.FROST_WALKER,
+            Enchantments.BINDING_CURSE,
+            Enchantments.SOUL_SPEED,
+            Enchantments.SHARPNESS,
+            Enchantments.SMITE,
+            Enchantments.BANE_OF_ARTHROPODS,
+            Enchantments.KNOCKBACK,
+            Enchantments.FIRE_ASPECT,
+            Enchantments.LOOTING,
+            Enchantments.SWEEPING,
+            Enchantments.EFFICIENCY,
+            Enchantments.SILK_TOUCH,
+            Enchantments.UNBREAKING,
+            Enchantments.FORTUNE,
+            Enchantments.POWER,
+            Enchantments.PUNCH,
+            Enchantments.FLAME,
+            Enchantments.INFINITY,
+            Enchantments.LUCK_OF_THE_SEA,
+            Enchantments.LURE,
+            Enchantments.LOYALTY,
+            Enchantments.IMPALING,
+            Enchantments.RIPTIDE,
+            Enchantments.CHANNELING,
+            Enchantments.MULTISHOT,
+            Enchantments.QUICK_CHARGE,
+            Enchantments.PIERCING,
+            Enchantments.MENDING,
+            Enchantments.VANISHING_CURSE,
+            EnchantmentRegistry.WARPING.get(),
+            EnchantmentRegistry.ACCURACY.get(),
+            EnchantmentRegistry.BLOCKING.get(),
+            EnchantmentRegistry.RECOVERY.get()};
     private static Map<Enchantment, Integer> integerMap = new HashMap<>();
 
     public static void init(){
@@ -83,7 +124,6 @@ public class EnchantmentUtil {
     }
 
     public static int enchantmentToInt(Enchantment e){
-        if(integerMap.size() == 0) init();
         if(integerMap.containsKey(e)) return integerMap.get(e);
         return -1;
     }

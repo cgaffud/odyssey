@@ -2,9 +2,9 @@
   "type": "oddc:recycling",
   "ingredient":
   {
-    "item": "minecraft:iron_pickaxe"
+    "item": "oddc:sterling_silver_axe"
   },
-  "nugget": "minecraft:iron_nugget",
+  "nugget": "oddc:sterling_silver_nugget",
   "nuggetCount": 0,
   "ingotCount": 3,
   "experience": 0.1,

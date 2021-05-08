@@ -2,6 +2,7 @@ package com.bedmen.odyssey.recipes;
 
 import com.bedmen.odyssey.util.ItemRegistry;
 import com.bedmen.odyssey.util.RecipeRegistry;
+import com.bedmen.odyssey.util.RecycleUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
@@ -22,18 +23,22 @@ public class RecycleRecipe implements IRecipe<IInventory> {
     protected final Ingredient ingredient;
     protected final ItemStack nugget;
     protected final ItemStack ingot;
+    protected final int nuggetCount;
+    protected final int ingotCount;
     protected final int count;
     protected final float experience;
     protected final int cookTime;
     protected final double penalty = 2.0/3.0;
 
-    public RecycleRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, ItemStack nuggetIn, ItemStack ingotIn, int countIn, float experienceIn, int cookTimeIn) {
+    public RecycleRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, ItemStack nuggetIn, int nuggetCountIn, int ingotCountIn, float experienceIn, int cookTimeIn) {
         this.id = idIn;
         this.group = groupIn;
         this.ingredient = ingredientIn;
         this.nugget = nuggetIn;
-        this.ingot = ingotIn;
-        this.count = countIn;
+        this.ingot = RecycleUtil.getIngot(nuggetIn);
+        this.nuggetCount = nuggetCountIn;
+        this.ingotCount = ingotCountIn;
+        this.count = nuggetCountIn + ingotCountIn * 9;
         this.experience = experienceIn;
         this.cookTime = cookTimeIn;
     }
@@ -140,39 +145,29 @@ public class RecycleRecipe implements IRecipe<IInventory> {
                     return new IllegalStateException("Item: " + s1 + " does not exist");
                 }));
             }
-            int count = JSONUtils.getInt(json, "count");
-            if (!json.has("ingot")) throw new com.google.gson.JsonSyntaxException("Missing result, expected to find a string or object");
-            ItemStack ingot;
-            if (json.get("ingot").isJsonObject()) ingot = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "ingot"));
-            else {
-                String s1 = JSONUtils.getString(json, "ingot");
-                ResourceLocation resourcelocation = new ResourceLocation(s1);
-                ingot = new ItemStack(Registry.ITEM.getOptional(resourcelocation).orElseThrow(() -> {
-                    return new IllegalStateException("Item: " + s1 + " does not exist");
-                }));
-            }
+            int nuggetCount = JSONUtils.getInt(json, "nuggetCount");
+            int ingotCount = JSONUtils.getInt(json, "ingotCount");
             float f = JSONUtils.getFloat(json, "experience", 0.0F);
             int i = JSONUtils.getInt(json, "cookingtime", 200);
-            return new RecycleRecipe(recipeId, s, ingredient, nugget, ingot, count, f, i);
+            return new RecycleRecipe(recipeId, s, ingredient, nugget, nuggetCount, ingotCount, f, i);
         }
 
         public RecycleRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
             String s = buffer.readString(32767);
             Ingredient ingredient= Ingredient.read(buffer);
             ItemStack nugget = buffer.readItemStack();
-            int count = buffer.readVarInt();
-            ItemStack ingot = buffer.readItemStack();
+            int nuggetCount = buffer.readVarInt();
+            int ingotCount = buffer.readVarInt();
             float f = buffer.readFloat();
             int i = buffer.readVarInt();
-            return new RecycleRecipe(recipeId, s, ingredient, nugget, ingot, count, f, i);
+            return new RecycleRecipe(recipeId, s, ingredient, nugget, nuggetCount, ingotCount, f, i);
         }
 
         public void write(PacketBuffer buffer, RecycleRecipe recipe) {
             buffer.writeString(recipe.group);
             recipe.ingredient.write(buffer);
-            buffer.writeItemStack(recipe.nugget);
-            buffer.writeVarInt(recipe.count);
-            buffer.writeItemStack(recipe.ingot);
+            buffer.writeItemStack(recipe.nugget);            buffer.writeVarInt(recipe.nuggetCount);
+            buffer.writeVarInt(recipe.ingotCount);
             buffer.writeFloat(recipe.experience);
             buffer.writeVarInt(recipe.cookTime);
         }

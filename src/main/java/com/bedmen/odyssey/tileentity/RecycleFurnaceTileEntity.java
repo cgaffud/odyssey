@@ -5,6 +5,7 @@ import com.bedmen.odyssey.container.RecycleFurnaceContainer;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.recipes.RecycleRecipe;
 import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.util.RecycleUtil;
 import com.bedmen.odyssey.util.TileEntityTypeRegistry;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -317,30 +318,30 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
 
     private void smelt(@Nullable IRecipe<?> recipe) {
         if (recipe != null && this.canSmelt(recipe)) {
-            RecycleRecipe recycleRecipe = (RecycleRecipe)recipe;
+            RecycleRecipe recycleRecipe = (RecycleRecipe) recipe;
             ItemStack itemstack = this.items.get(0);
             ItemStack itemstackOut = recipe.getRecipeOutput();
             ItemStack itemstack1 = this.items.get(2);
-            ItemStack itemstack2  = this.items.get(3);
+            ItemStack itemstack2 = this.items.get(3);
             int n = recycleRecipe.getRecipeOutputCount(this);
             ItemStack itemstackIngot = recycleRecipe.getRecipeOutputIngot();
 
-            if(itemstack2.isEmpty() && n >= 9){
+            if (itemstack2.isEmpty() && n >= 9) {
                 this.items.set(3, itemstackIngot.copy());
-                itemstack2  = this.items.get(3);
+                itemstack2 = this.items.get(3);
                 n -= 9;
             }
-            if(itemstack2.isItemEqual(itemstackIngot) && n >= 9){
-                int a = Integer.min(64-itemstack2.getCount(), n / 9);
+            if (itemstack2.isItemEqual(itemstackIngot) && n >= 9) {
+                int a = Integer.min(64 - itemstack2.getCount(), n / 9);
                 itemstack2.grow(a);
-                n -= 9*a;
+                n -= 9 * a;
             }
-            if(itemstack1.isEmpty() && n >= 1){
+            if (itemstack1.isEmpty() && n >= 1) {
                 this.items.set(2, itemstackOut.copy());
                 itemstack1 = this.items.get(2);
                 n -= 1;
             }
-            if(itemstack1.isItemEqual(itemstackOut) && n >= 1){
+            if (itemstack1.isItemEqual(itemstackOut) && n >= 1) {
                 itemstack1.grow(n);
             }
 
@@ -350,29 +351,13 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
 
             itemstack.shrink(1);
 
-            if(pair(itemstack1.getItem(),itemstack2.getItem())){
-                while(itemstack1.getCount() >= 9 && itemstack2.getCount() < 64){
+            if (RecycleUtil.pair(itemstack1.getItem(), itemstack2.getItem())) {
+                while (itemstack1.getCount() >= 9 && itemstack2.getCount() < 64) {
                     itemstack1.shrink(9);
                     itemstack2.grow(1);
                 }
             }
         }
-    }
-
-    private boolean pair(Item item1, Item item2){
-        if(item1 == ItemRegistry.COPPER_NUGGET.get() && item2 == ItemRegistry.COPPER_INGOT.get())
-            return true;
-        if(item1 == Items.IRON_NUGGET && item2 == Items.IRON_INGOT)
-            return true;
-        if(item1 == Items.GOLD_NUGGET && item2 == Items.GOLD_INGOT)
-            return true;
-        if(item1 == ItemRegistry.SILVER_NUGGET.get() && item2 == ItemRegistry.SILVER_INGOT.get())
-            return true;
-        if(item1 == ItemRegistry.STERLING_SILVER_NUGGET.get() && item2 == ItemRegistry.STERLING_SILVER_INGOT.get())
-            return true;
-        if(item1 == ItemRegistry.NETHERITE_NUGGET.get() && item2 == Items.NETHERITE_INGOT)
-            return true;
-        return false;
     }
 
     protected int getBurnTime(ItemStack fuel) {

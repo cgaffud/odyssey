@@ -2,10 +2,10 @@
   "type": "oddc:recycling",
   "ingredient":
   {
-    "item": "minecraft:iron_pickaxe"
+    "item": "minecraft:chainmail_helmet"
   },
   "nugget": "minecraft:iron_nugget",
-  "nuggetCount": 0,
+  "nuggetCount": 3,
   "ingotCount": 3,
   "experience": 0.1,
   "cookingtime": 100

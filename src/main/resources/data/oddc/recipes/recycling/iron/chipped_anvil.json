@@ -2,11 +2,11 @@
   "type": "oddc:recycling",
   "ingredient":
   {
-    "item": "minecraft:iron_pickaxe"
+    "item": "minecraft:chipped_anvil"
   },
   "nugget": "minecraft:iron_nugget",
-  "nuggetCount": 0,
-  "ingotCount": 3,
+  "nuggetCount": 6,
+  "ingotCount": 20,
   "experience": 0.1,
   "cookingtime": 100
 }

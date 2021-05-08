@@ -2,7 +2,7 @@
   "type": "oddc:recycling",
   "ingredient":
   {
-    "item": "minecraft:iron_pickaxe"
+    "item": "minecraft:iron_axe"
   },
   "nugget": "minecraft:iron_nugget",
   "nuggetCount": 0,

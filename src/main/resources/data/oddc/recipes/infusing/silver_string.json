@@ -1,7 +1,7 @@
 {
   "type": "oddc:infusing",
   "lens": {
-    "item": "minecraft:diamond"
+    "item": "oddc:sapphire"
   },
   "base": {
     "item": "minecraft:string"

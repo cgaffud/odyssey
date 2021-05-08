@@ -2,11 +2,11 @@
   "type": "oddc:recycling",
   "ingredient":
   {
-    "item": "minecraft:clock"
+    "item": "minecraft:glistering_melon_slice"
   },
   "nugget": "minecraft:gold_nugget",
-  "nuggetCount": 0,
-  "ingotCount": 4,
+  "nuggetCount": 8,
+  "ingotCount": 0,
   "experience": 0.1,
   "cookingtime": 100
 }

@@ -80,6 +80,7 @@ public class Odyssey
         ModStructureEntitySpawn.registerSpawners();
         ModPotions.addBrewingRecipes();
         ModTrades.addTrades();
+        EnchantmentUtil.init();
 
         Set<RenderMaterial>  LOCATIONS_BUILTIN_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(ModelBakery.class, null, "LOCATIONS_BUILTIN_TEXTURES");
         LOCATIONS_BUILTIN_TEXTURES.add(SERPENT_SHIELD_BASE);
