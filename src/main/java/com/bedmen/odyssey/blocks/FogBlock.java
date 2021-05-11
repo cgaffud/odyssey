@@ -2,6 +2,7 @@ package com.bedmen.odyssey.blocks;
 
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityType;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -15,7 +16,7 @@ public class FogBlock extends AbstractGlassBlock {
     public static final IntegerProperty ALPHA = BlockStateProperties.LEVEL_1_8;
 
     public FogBlock() {
-        super(AbstractBlock.Properties.create(Material.AIR).doesNotBlockMovement().setAir().noDrops());
+        super(AbstractBlock.Properties.create(Material.AIR).doesNotBlockMovement().noDrops());
         this.setDefaultState(this.stateContainer.getBaseState().with(ALPHA, Integer.valueOf(1)));
     }
 
@@ -25,5 +26,13 @@ public class FogBlock extends AbstractGlassBlock {
 
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return VoxelShapes.empty();
+    }
+
+    private static boolean isntSolid(BlockState state, IBlockReader reader, BlockPos pos) {
+        return false;
+    }
+
+    private static Boolean neverAllowSpawn(BlockState state, IBlockReader reader, BlockPos pos, EntityType<?> entity) {
+        return (boolean)false;
     }
 }
