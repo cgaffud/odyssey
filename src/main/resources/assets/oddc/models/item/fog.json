@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "oddc:item/fog"
+  },
+  "overrides": [
+    { "predicate": { "level": 1 }, "model": "oddc:item/fog/fog1" },
+    { "predicate": { "level": 2 }, "model": "oddc:item/fog/fog2" },
+    { "predicate": { "level": 3 }, "model": "oddc:item/fog/fog3" },
+    { "predicate": { "level": 4 }, "model": "oddc:item/fog/fog4" },
+    { "predicate": { "level": 5 }, "model": "oddc:item/fog/fog5" },
+    { "predicate": { "level": 6 }, "model": "oddc:item/fog/fog6" },
+    { "predicate": { "level": 7 }, "model": "oddc:item/fog/fog7" },
+    { "predicate": { "level": 8 }, "model": "oddc:item/fog/fog8" }
+  ]
+}

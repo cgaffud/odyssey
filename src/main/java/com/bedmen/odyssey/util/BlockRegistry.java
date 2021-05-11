@@ -39,4 +39,5 @@ public class BlockRegistry {
     public static final RegistryObject<Block> LEATHER_PILE = BLOCKS.register("leather_pile", () -> new Block(AbstractBlock.Properties.create((new Material.Builder(MaterialColor.BROWN)).build(), MaterialColor.BROWN).harvestTool(ToolType.HOE).hardnessAndResistance(1.0F, 1.0F).sound(SoundType.CLOTH)));
 
     public static final RegistryObject<Block> WARPING_FIRE = BLOCKS.register("warping_fire", WarpingFireBlock::new);
+    public static final RegistryObject<Block> FOG = BLOCKS.register("fog", FogBlock::new);
 }

@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "level=1": {
+      "model": "oddc:block/fog/fog1"
+    },
+    "level=2": {
+      "model": "oddc:block/fog/fog2"
+    },
+    "level=3": {
+      "model": "oddc:block/fog/fog3"
+    },
+    "level=4": {
+      "model": "oddc:block/fog/fog4"
+    },
+    "level=5": {
+      "model": "oddc:block/fog/fog5"
+    },
+    "level=6": {
+      "model": "oddc:block/fog/fog6"
+    },
+    "level=7": {
+      "model": "oddc:block/fog/fog7"
+    },
+    "level=8": {
+      "model": "oddc:block/fog/fog8"
+    }
+  }
+}
