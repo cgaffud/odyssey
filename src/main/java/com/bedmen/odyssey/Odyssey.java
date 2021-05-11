@@ -74,8 +74,7 @@ public class Odyssey
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
+    private void setup(final FMLCommonSetupEvent event) {
         ModOreGen.registerOres();
         ModBiomeEntitySpawn.registerSpawners();
         ModStructureEntitySpawn.registerSpawners();
@@ -83,7 +82,7 @@ public class Odyssey
         ModTrades.addTrades();
         EnchantmentUtil.init();
 
-        Set<RenderMaterial>  LOCATIONS_BUILTIN_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(ModelBakery.class, null, "LOCATIONS_BUILTIN_TEXTURES");
+        Set<RenderMaterial> LOCATIONS_BUILTIN_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(ModelBakery.class, null, "LOCATIONS_BUILTIN_TEXTURES");
         LOCATIONS_BUILTIN_TEXTURES.add(SERPENT_SHIELD_BASE);
         LOCATIONS_BUILTIN_TEXTURES.add(SERPENT_SHIELD_BASE_NOPATTERN);
 
@@ -106,29 +105,6 @@ public class Odyssey
 
         NewShieldItem.registerBaseProperties(ItemRegistry.SHIELD.get());
         NewShieldItem.registerBaseProperties(ItemRegistry.SERPENT_SHIELD.get());
-
-        ItemModelsProperties.registerProperty(ItemRegistry.FOG.get(), new ResourceLocation("level"),  (itemStack, world, entity) -> {
-            CompoundNBT compoundnbt = itemStack.getTag();
-            if(compoundnbt != null && compoundnbt.contains("BlockStateTag")) {
-                String s = compoundnbt.get("BlockStateTag").getString();
-                switch(s){
-                    case "{level:\"1\"}": return 1;
-                    case "{level:\"2\"}": return 2;
-                    case "{level:\"3\"}": return 3;
-                    case "{level:\"4\"}": return 4;
-                    case "{level:\"5\"}": return 5;
-                    case "{level:\"6\"}": return 6;
-                    case "{level:\"7\"}": return 7;
-                    case "{level:\"8\"}": return 8;
-                }
-                System.out.println(s);
-            }
-            return 0;
-        });
-
-        DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(EntityTypeRegistry.TROOPER.get(), TrooperEntity.registerAttributes().create());
-        });
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)
@@ -155,7 +131,14 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.SERPENT_TRIDENT.get(), NewTridentRenderer::new);
 
         RenderTypeLookup.setRenderLayer(BlockRegistry.WARPING_FIRE.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG1.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG2.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG3.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG4.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG5.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG6.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG7.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG8.get(), RenderType.getTranslucent());
     }
 
     @SubscribeEvent

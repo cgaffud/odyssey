@@ -39,7 +39,15 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SILVER_BLOCK = ITEMS.register("silver_block", () -> new BlockItem(BlockRegistry.SILVER_BLOCK.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> STERLING_SILVER_BLOCK = ITEMS.register("sterling_silver_block", () -> new BlockItem(BlockRegistry.STERLING_SILVER_BLOCK.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> LEATHER_PILE = ITEMS.register("leather_pile", () -> new BlockItem(BlockRegistry.LEATHER_PILE.get(), (new Item.Properties()).group(ItemGroup.BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> FOG = ITEMS.register("fog", () -> new BlockItem(BlockRegistry.FOG.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
+
+    public static final RegistryObject<Item> FOG1 = ITEMS.register("fog1", () -> new BlockItem(BlockRegistry.FOG1.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
+    public static final RegistryObject<Item> FOG2 = ITEMS.register("fog2", () -> new BlockItem(BlockRegistry.FOG2.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
+    public static final RegistryObject<Item> FOG3 = ITEMS.register("fog3", () -> new BlockItem(BlockRegistry.FOG3.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
+    public static final RegistryObject<Item> FOG4 = ITEMS.register("fog4", () -> new BlockItem(BlockRegistry.FOG4.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
+    public static final RegistryObject<Item> FOG5 = ITEMS.register("fog5", () -> new BlockItem(BlockRegistry.FOG5.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
+    public static final RegistryObject<Item> FOG6 = ITEMS.register("fog6", () -> new BlockItem(BlockRegistry.FOG6.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
+    public static final RegistryObject<Item> FOG7 = ITEMS.register("fog7", () -> new BlockItem(BlockRegistry.FOG7.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
+    public static final RegistryObject<Item> FOG8 = ITEMS.register("fog8", () -> new BlockItem(BlockRegistry.FOG8.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
 
     //Items
     public static final RegistryObject<Item> POTION = ITEMS_VANILLA.register("potion", () -> new NewPotionItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.BREWING)));

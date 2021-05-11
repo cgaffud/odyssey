@@ -81,7 +81,14 @@
   "block.oddc.silver_block": "Block of Silver",
   "block.oddc.sterling_silver_block": "Block of Sterling Silver",
   "block.oddc.leather_pile": "Leather Pile",
-  "block.oddc.fog": "Fog",
+  "block.oddc.fog1": "Fog 1",
+  "block.oddc.fog2": "Fog 2",
+  "block.oddc.fog3": "Fog 3",
+  "block.oddc.fog4": "Fog 4",
+  "block.oddc.fog5": "Fog 5",
+  "block.oddc.fog6": "Fog 6",
+  "block.oddc.fog7": "Fog 7",
+  "block.oddc.fog8": "Fog 8",
 
   "item.oddc.lens": "Lens",
 
