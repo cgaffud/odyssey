@@ -22,7 +22,8 @@
     "MixinMobEntity",
     "MixinIForgeItem",
     "MixinShieldRecipes",
-    "MixinLivingEntity"
+    "MixinLivingEntity",
+    "MixinFogRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -14,6 +14,7 @@ import com.bedmen.odyssey.trades.ModTrades;
 import com.bedmen.odyssey.world.gen.ModOreGen;
 import com.bedmen.odyssey.world.spawn.ModBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.ModStructureEntitySpawn;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -28,6 +29,8 @@ import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.PotionBrewing;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ForgeItemTagsProvider;
@@ -105,6 +108,7 @@ public class Odyssey
 
         NewShieldItem.registerBaseProperties(ItemRegistry.SHIELD.get());
         NewShieldItem.registerBaseProperties(ItemRegistry.SERPENT_SHIELD.get());
+
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)
