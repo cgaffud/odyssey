@@ -18,6 +18,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
@@ -78,11 +79,11 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             } else {
                 NonNullList<ItemStack> offhand = this.inventory.offHandInventory;
                 for (ItemStack itemstack1 : offhand) {
-                    if (itemstack1.getItem() instanceof QuiverItem) {
-
+                    Item item = itemstack1.getItem();
+                    if (item instanceof QuiverItem) {
                         CompoundNBT compoundNBT = itemstack1.getOrCreateTag();
                         if (compoundNBT.contains("Items", 9)) {
-                            NonNullList<ItemStack> nonnulllist = NonNullList.withSize(3, ItemStack.EMPTY);
+                            NonNullList<ItemStack> nonnulllist = NonNullList.withSize(((QuiverItem) item).getSize(), ItemStack.EMPTY);
                             ItemStackHelper.loadAllItems(compoundNBT, nonnulllist);
                             for (int j = 0; j < nonnulllist.size(); j++) {
                                 ItemStack itemstack2 = nonnulllist.get(j);

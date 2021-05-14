@@ -14,6 +14,7 @@
   "item.oddc.copper_ingot": "Copper Ingot",
   "item.oddc.ruby": "Ruby",
   "item.oddc.sapphire": "Sapphire",
+  "item.oddc.pearl": "Pearl",
 
   //Silver and Sterling Silver
   "item.oddc.silver_nugget": "Silver Nugget",
@@ -33,17 +34,18 @@
   "item.oddc.sterling_silver_horse_armor": "Sterling Silver Horse Armor",
   "item.oddc.silver_string": "Silver String",
 
-  //Nether Tier
+  //Nether
   "item.oddc.netherite_nugget": "Netherite Nugget",
-  "item.oddc.serpent_scale": "Leviathan Scale",
   "item.oddc.netherite_bow": "Netherite Bow",
   "item.oddc.netherite_crossbow": "Netherite Crossbow",
   "item.oddc.netherite_horse_armor": "Netherite Horse Armor",
+  "item.oddc.hallowed_gold_ingot": "Hallowed Gold Ingot",
+
+  //Leviathan
+  "item.oddc.serpent_scale": "Leviathan Scale",
   "item.oddc.serpent_trident": "Leviathan Trident",
   "item.oddc.serpent_quiver": "Leviathan Quiver",
   "item.oddc.serpent_shield": "Leviathan Shield",
-
-  //Leviathan Shield
   "item.oddc.serpent_shield.red": "Red Leviathan Shield",
   "item.oddc.serpent_shield.brown": "Brown Leviathan Shield",
   "item.oddc.serpent_shield.orange": "Orange Leviathan Shield",

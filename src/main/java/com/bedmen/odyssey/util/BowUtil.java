@@ -52,7 +52,7 @@ public class BowUtil {
             if (item instanceof QuiverItem) {
                 CompoundNBT compoundNBT = itemstack1.getOrCreateTag();
                 if (compoundNBT.contains("Items", 9)) {
-                    NonNullList<ItemStack> nonnulllist = NonNullList.withSize( ((QuiverItem) item).getSize(), ItemStack.EMPTY);
+                    NonNullList<ItemStack> nonnulllist = NonNullList.withSize(((QuiverItem) item).getSize(), ItemStack.EMPTY);
                     ItemStackHelper.loadAllItems(compoundNBT, nonnulllist);
                     for(int j = 0; j < nonnulllist.size(); j++){
                         ItemStack itemstack2 = nonnulllist.get(j);

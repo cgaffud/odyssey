@@ -1,7 +1,7 @@
 {
   "type": "oddc:enchanted_book_infusing",
   "lens": {
-    "item": "minecraft:diamond"
+    "item": "oddc:sapphire"
   },
   "numingredients": 6,
   "ingredient1": {
