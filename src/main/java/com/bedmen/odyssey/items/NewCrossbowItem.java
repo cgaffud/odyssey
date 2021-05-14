@@ -91,7 +91,6 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
         int i = this.getUseDuration(stack) - timeLeft;
         float f = getCharge(i, stack);
         if (f >= 1.0F && !isCharged(stack) && hasAmmo(entityLiving, stack)) {
-            if(entityLiving instanceof PlayerEntity) BowUtil.consumeQuiverAmmo((PlayerEntity)entityLiving, stack);
             setCharged(stack, true);
             SoundCategory soundcategory = entityLiving instanceof PlayerEntity ? SoundCategory.PLAYERS : SoundCategory.HOSTILE;
             worldIn.playSound((PlayerEntity)null, entityLiving.getPosX(), entityLiving.getPosY(), entityLiving.getPosZ(), SoundEvents.ITEM_CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (random.nextFloat() * 0.5F + 1.0F) + 0.2F);
@@ -124,22 +123,28 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
         return true;
     }
 
-    private static boolean func_220023_a(LivingEntity p_220023_0_, ItemStack stack, ItemStack p_220023_2_, boolean p_220023_3_, boolean p_220023_4_) {
-        if (p_220023_2_.isEmpty()) {
+    private static boolean func_220023_a(LivingEntity livingEntity, ItemStack crossbow, ItemStack ammo, boolean multishotArrow, boolean inCreative) {
+        if (ammo.isEmpty()) {
             return false;
         } else {
-            boolean flag = p_220023_4_ && p_220023_2_.getItem() instanceof ArrowItem;
+            boolean flag = inCreative && ammo.getItem() instanceof ArrowItem;
             ItemStack itemstack;
-            if (!flag && !p_220023_4_ && !p_220023_3_) {
-                itemstack = p_220023_2_.split(1);
-                if (p_220023_2_.isEmpty() && p_220023_0_ instanceof PlayerEntity) {
-                    ((PlayerEntity)p_220023_0_).inventory.deleteStack(p_220023_2_);
+            if (!flag && !inCreative && !multishotArrow) {
+                boolean quiverFlag = false;
+                if(livingEntity instanceof PlayerEntity){
+                    quiverFlag = BowUtil.consumeQuiverAmmo((PlayerEntity)livingEntity,ammo);
+                }
+                itemstack = ammo.split(1);
+                if(!quiverFlag) {
+                    if (ammo.isEmpty() && livingEntity instanceof PlayerEntity) {
+                        ((PlayerEntity) livingEntity).inventory.deleteStack(ammo);
+                    }
                 }
             } else {
-                itemstack = p_220023_2_.copy();
+                itemstack = ammo.copy();
             }
 
-            addChargedProjectile(stack, itemstack);
+            addChargedProjectile(crossbow, itemstack);
             return true;
         }
     }

@@ -44,7 +44,7 @@ public class BowUtil {
         }
     }
 
-    public static void consumeQuiverAmmo(PlayerEntity playerEntity, ItemStack ammo){
+    public static boolean consumeQuiverAmmo(PlayerEntity playerEntity, ItemStack ammo){
         NonNullList<ItemStack> offhand = playerEntity.inventory.offHandInventory;
 
         for(ItemStack itemstack1 : offhand) {
@@ -59,17 +59,17 @@ public class BowUtil {
                         if (ammo.getItem() == itemstack2.getItem()) {
                             itemstack2.shrink(1);
                             nonnulllist.set(j, itemstack2.copy());
-
                             ItemStack itemstack3 = itemstack1.copy();
-                            ItemStackHelper.saveAllItems(compoundNBT, nonnulllist, false);
+                            ItemStackHelper.saveAllItems(compoundNBT, nonnulllist, true);
                             itemstack3.setTag(compoundNBT);
                             offhand.set(0, itemstack3);
-                            return;
+                            return true;
                         }
                     }
                 }
             }
         }
+        return false;
     }
 
     public static ITextComponent getTranslationComponent(String s) {
