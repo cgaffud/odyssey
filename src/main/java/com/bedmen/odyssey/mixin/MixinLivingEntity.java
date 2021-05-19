@@ -2,6 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.NewShieldItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.ItemRegistry;
 import com.google.common.base.Objects;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Blocks;
@@ -15,14 +16,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -140,6 +139,10 @@ public abstract class MixinLivingEntity extends Entity{
     protected float movedDistance;
     @Shadow
     protected float prevMovedDistance;
+    @Shadow
+    public EffectInstance getActivePotionEffect(Effect potionIn) {return null;}
+    @Shadow
+    private NonNullList<ItemStack> armorArray;
 
     public boolean attackEntityFrom(DamageSource source, float amount) {
         if (!net.minecraftforge.common.ForgeHooks.onLivingAttack((LivingEntity)(Entity)this, source, amount)) return false;
@@ -409,6 +412,19 @@ public abstract class MixinLivingEntity extends Entity{
         this.prevRotationYaw = this.rotationYaw;
         this.prevRotationPitch = this.rotationPitch;
         this.world.getProfiler().endSection();
+    }
+
+    private ItemStack getArmorInSlot(EquipmentSlotType slot) {
+        return this.armorArray.get(slot.getIndex());
+    }
+
+    protected int calculateFallDamage(float distance, float damageMultiplier) {
+        EffectInstance effectinstance = this.getActivePotionEffect(Effects.JUMP_BOOST);
+        if(this.getArmorInSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.ZEPHYR_BOOTS.get()){
+            damageMultiplier *= .5;
+        }
+        float f = effectinstance == null ? 0.0F : (float)(effectinstance.getAmplifier() + 1);
+        return MathHelper.ceil((distance - 3.0F - f) * damageMultiplier);
     }
 
 }

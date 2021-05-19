@@ -16,6 +16,7 @@
   "item.oddc.sapphire": "Sapphire",
   "item.oddc.pearl": "Pearl",
   "item.oddc.feather_bundle": "Feather Bundle",
+  "item.oddc.zephyr_boots": "Zephyr Boots",
 
   //Silver and Sterling Silver
   "item.oddc.silver_nugget": "Silver Nugget",
@@ -64,6 +65,7 @@
   "item.oddc.serpent_shield.gray": "Gray Leviathan Shield",
   "item.oddc.serpent_shield.black": "Black Leviathan Shield",
 
+  //Containers
   "container.minecraft.beacon": "Beacon",
   "container.oddc.alloy_furnace": "Alloy Furnace",
   "container.oddc.recycle_furnace": "Recycling Furnace",
@@ -71,11 +73,13 @@
   "container.oddc.bookshelf": "Bookshelf",
   "container.oddc.restring": "Restring",
 
+  //Enchantments
   "enchantment.oddc.warping": "Warping",
   "enchantment.oddc.accuracy": "Accuracy",
   "enchantment.oddc.blocking": "Blocking",
   "enchantment.oddc.recovery": "Recovery",
 
+  //Blocks
   "block.oddc.alloy_furnace": "Alloy Furnace",
   "block.oddc.recycle_furnace": "Recycling Furnace",
   "block.oddc.infuser": "Infuser",

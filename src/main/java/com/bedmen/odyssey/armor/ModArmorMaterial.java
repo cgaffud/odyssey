@@ -12,7 +12,8 @@ import net.minecraft.util.SoundEvents;
 
 public enum ModArmorMaterial implements IArmorMaterial {
 
-    TURTLE("turtle", 25, new int[]{2, 5, 6, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_TURTLE, 0.0F, 0.0F, () -> { return Ingredient.fromItems(Items.SCUTE); }),
+    TURTLE("turtle", 25, new int[]{0,0,0,6}, 9, SoundEvents.ITEM_ARMOR_EQUIP_TURTLE, 0.0F, 0.0F, () -> { return Ingredient.fromItems(Items.SCUTE); }),
+    ZEPHYR("zephyr", 10, new int[]{5,0,0,0}, 9, SoundEvents.ITEM_ARMOR_EQUIP_ELYTRA, 0.0F, 0.0F, () -> { return Ingredient.fromItems(Items.PHANTOM_MEMBRANE); }),
 
     LEATHER("leather", 5, new int[]{2, 3, 3, 2}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, () -> { return Ingredient.fromItems(Items.LEATHER);}),
     CHAIN("chainmail", 15, new int[]{3, 6, 7, 4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN, 0.0F, 0.0F, () -> { return Ingredient.fromItems(Items.IRON_INGOT); }),
