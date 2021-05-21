@@ -2,19 +2,15 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.items.QuiverItem;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-
-import java.util.function.Predicate;
 
 public class BowUtil {
 
@@ -75,9 +71,9 @@ public class BowUtil {
     public static ITextComponent getTranslationComponent(String s) {
         switch(s){
             case "silver":
-                return (new TranslationTextComponent(ItemRegistry.SILVER_STRING.get().getTranslationKey())).mergeStyle(TextFormatting.GRAY);
+                return (new TranslationTextComponent(ItemRegistry.SILVER_STRING.get().getTranslationKey())).mergeStyle(TextFormatting.WHITE);
             case "flame":
-                return (new TranslationTextComponent(ItemRegistry.FLAME_STRING.get().getTranslationKey())).mergeStyle(TextFormatting.GRAY);
+                return (new TranslationTextComponent(ItemRegistry.FLAME_STRING.get().getTranslationKey())).mergeStyle(TextFormatting.RED);
             default:
                 return (new TranslationTextComponent(Items.STRING.getTranslationKey())).mergeStyle(TextFormatting.GRAY);
         }

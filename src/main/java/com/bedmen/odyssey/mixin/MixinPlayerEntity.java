@@ -18,18 +18,25 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.CooldownTracker;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -47,6 +54,36 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     public PlayerAbilities abilities;
     @Shadow
     public CooldownTracker getCooldownTracker() {return null;}
+    @Shadow
+    public int xpCooldown;
+    @Shadow
+    private int sleepTimer;
+    @Shadow
+    public Container openContainer;
+    @Shadow
+    protected boolean updateEyesInWaterPlayer() {return false;}
+    @Shadow
+    private void updateCape() {}
+    @Shadow
+    public void addStat(ResourceLocation stat) {}
+    @Shadow
+    public void closeScreen() {}
+    @Shadow
+    private CooldownTracker cooldownTracker;
+    @Shadow
+    public void stopSleepInBed(boolean p_225652_1_, boolean p_225652_2_) {}
+    @Shadow
+    private void updateTurtleHelmet() {}
+    @Shadow
+    private ItemStack itemStackMainHand;
+    @Shadow
+    protected void updatePose() {}
+    @Shadow
+    public void resetCooldown() {}
+    @Shadow
+    protected FoodStats foodStats;
+    @Shadow
+    public PlayerContainer container;
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
@@ -122,5 +159,107 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             this.world.setEntityState(this, (byte)30);
         }
 
+    }
+
+    public void tick() {
+        net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPreTick(toPlayerEntity(this));
+        this.noClip = this.isSpectator();
+        if (this.isSpectator()) {
+            this.onGround = false;
+        }
+
+        if(!(this.abilities.isCreativeMode || this.isSpectator()) && this.world.getDimensionType().isUltrawarm()){
+            boolean fireFlag = true;
+            for(ItemStack stack : this.getArmorInventoryList()){
+                if(stack.getItem() == ItemRegistry.FROZEN_CHESTPLATE.get()){
+                    fireFlag = false;
+                    break;
+                }
+                if (!stack.isEmpty()) {
+                    ListNBT listnbt = stack.getEnchantmentTagList();
+                    for(int i = 0; i < listnbt.size(); ++i) {
+                        String s = listnbt.getCompound(i).getString("id");
+                        System.out.println(s);
+                        if(s.equals("minecraft:fire_protection")){
+                            fireFlag = false;
+                            break;
+                        }
+                    }
+
+                }
+            }
+            if(fireFlag)
+                this.setFire(1);
+        }
+
+        if (this.xpCooldown > 0) {
+            --this.xpCooldown;
+        }
+
+        if (this.isSleeping()) {
+            ++this.sleepTimer;
+            if (this.sleepTimer > 100) {
+                this.sleepTimer = 100;
+            }
+
+            if (!this.world.isRemote && !net.minecraftforge.event.ForgeEventFactory.fireSleepingTimeCheck(toPlayerEntity(this), getBedPosition())) {
+                this.stopSleepInBed(false, true);
+            }
+        } else if (this.sleepTimer > 0) {
+            ++this.sleepTimer;
+            if (this.sleepTimer >= 110) {
+                this.sleepTimer = 0;
+            }
+        }
+
+        this.updateEyesInWaterPlayer();
+        super.tick();
+        if (!this.world.isRemote && this.openContainer != null && !this.openContainer.canInteractWith(toPlayerEntity(this))) {
+            this.closeScreen();
+            this.openContainer = this.container;
+        }
+
+        this.updateCape();
+        if (!this.world.isRemote) {
+            this.foodStats.tick(toPlayerEntity(this));
+            this.addStat(Stats.PLAY_ONE_MINUTE);
+            if (this.isAlive()) {
+                this.addStat(Stats.TIME_SINCE_DEATH);
+            }
+
+            if (this.isDiscrete()) {
+                this.addStat(Stats.SNEAK_TIME);
+            }
+
+            if (!this.isSleeping()) {
+                this.addStat(Stats.TIME_SINCE_REST);
+            }
+        }
+
+        int i = 29999999;
+        double d0 = MathHelper.clamp(this.getPosX(), -2.9999999E7D, 2.9999999E7D);
+        double d1 = MathHelper.clamp(this.getPosZ(), -2.9999999E7D, 2.9999999E7D);
+        if (d0 != this.getPosX() || d1 != this.getPosZ()) {
+            this.setPosition(d0, this.getPosY(), d1);
+        }
+
+        ++this.ticksSinceLastSwing;
+        ItemStack itemstack = this.getHeldItemMainhand();
+        if (!ItemStack.areItemStacksEqual(this.itemStackMainHand, itemstack)) {
+            if (!ItemStack.areItemsEqualIgnoreDurability(this.itemStackMainHand, itemstack)) {
+                this.resetCooldown();
+            }
+
+            this.itemStackMainHand = itemstack.copy();
+        }
+
+        this.updateTurtleHelmet();
+        this.cooldownTracker.tick();
+        this.updatePose();
+        net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(toPlayerEntity(this));
+    }
+
+    private PlayerEntity toPlayerEntity(MixinPlayerEntity mixinPlayerEntity){
+        return (PlayerEntity)(Object)mixinPlayerEntity;
     }
 }
