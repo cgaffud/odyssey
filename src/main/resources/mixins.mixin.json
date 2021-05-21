@@ -23,7 +23,8 @@
     "MixinIForgeItem",
     "MixinShieldRecipes",
     "MixinLivingEntity",
-    "MixinFogRenderer"
+    "MixinFogRenderer",
+    "MixinEnchantmentHelper"
   ],
   "injectors": {
     "defaultRequire": 1

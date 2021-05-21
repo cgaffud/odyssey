@@ -5,23 +5,23 @@
   },
   "numingredients": 6,
   "ingredient1": {
-    "item": "minecraft:obsidian"
+    "item": "minecraft:turtle_helmet"
   },
   "ingredient2": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:pearl"
   },
   "ingredient3": {
-    "item": "minecraft:obsidian"
+    "item": "minecraft:pufferfish"
   },
   "ingredient4": {
-    "item": "minecraft:obsidian"
+    "item": "minecraft:pufferfish"
   },
   "ingredient5": {
-    "item": "minecraft:diamond"
+    "item": "minecraft:pufferfish"
   },
   "ingredient6": {
-    "item": "minecraft:diamond"
+    "item": "minecraft:pufferfish"
   },
-  "enchantment": "minecraft:unbreaking",
+  "enchantment": "minecraft:respiration",
   "level": 1
 }

@@ -139,10 +139,6 @@ public abstract class MixinLivingEntity extends Entity{
     protected float movedDistance;
     @Shadow
     protected float prevMovedDistance;
-    @Shadow
-    public EffectInstance getActivePotionEffect(Effect potionIn) {return null;}
-    @Shadow
-    private NonNullList<ItemStack> armorArray;
 
     public boolean attackEntityFrom(DamageSource source, float amount) {
         if (!net.minecraftforge.common.ForgeHooks.onLivingAttack((LivingEntity)(Entity)this, source, amount)) return false;
@@ -412,19 +408,6 @@ public abstract class MixinLivingEntity extends Entity{
         this.prevRotationYaw = this.rotationYaw;
         this.prevRotationPitch = this.rotationPitch;
         this.world.getProfiler().endSection();
-    }
-
-    private ItemStack getArmorInSlot(EquipmentSlotType slot) {
-        return this.armorArray.get(slot.getIndex());
-    }
-
-    protected int calculateFallDamage(float distance, float damageMultiplier) {
-        EffectInstance effectinstance = this.getActivePotionEffect(Effects.JUMP_BOOST);
-        if(this.getArmorInSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.ZEPHYR_BOOTS.get()){
-            damageMultiplier *= .5;
-        }
-        float f = effectinstance == null ? 0.0F : (float)(effectinstance.getAmplifier() + 1);
-        return MathHelper.ceil((distance - 3.0F - f) * damageMultiplier);
     }
 
 }

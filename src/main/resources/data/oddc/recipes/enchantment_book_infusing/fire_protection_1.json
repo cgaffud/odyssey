@@ -5,23 +5,23 @@
   },
   "numingredients": 6,
   "ingredient1": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:frozen_chestplate"
   },
   "ingredient2": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:pearl"
   },
   "ingredient3": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:frozen_shard"
   },
   "ingredient4": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:frozen_shard"
   },
   "ingredient5": {
-    "item": "minecraft:diamond"
+    "item": "oddc:frozen_shard"
   },
   "ingredient6": {
-    "item": "minecraft:diamond"
+    "item": "oddc:frozen_shard"
   },
-  "enchantment": "minecraft:unbreaking",
+  "enchantment": "minecraft:fire_protection",
   "level": 1
 }

@@ -5,23 +5,23 @@
   },
   "numingredients": 6,
   "ingredient1": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:zephyr_boots"
   },
   "ingredient2": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:pearl"
   },
   "ingredient3": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:feather_bundle"
   },
   "ingredient4": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:feather_bundle"
   },
   "ingredient5": {
-    "item": "minecraft:diamond"
+    "item": "oddc:feather_bundle"
   },
   "ingredient6": {
-    "item": "minecraft:diamond"
+    "item": "oddc:feather_bundle"
   },
-  "enchantment": "minecraft:unbreaking",
+  "enchantment": "minecraft:feather_falling",
   "level": 1
 }

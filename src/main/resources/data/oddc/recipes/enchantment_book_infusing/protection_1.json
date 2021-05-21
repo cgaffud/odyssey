@@ -5,16 +5,16 @@
   },
   "numingredients": 6,
   "ingredient1": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:pearl"
   },
   "ingredient2": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:pearl"
   },
   "ingredient3": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:pearl"
   },
   "ingredient4": {
-    "item": "minecraft:obsidian"
+    "item": "oddc:pearl"
   },
   "ingredient5": {
     "item": "minecraft:diamond"
@@ -22,6 +22,6 @@
   "ingredient6": {
     "item": "minecraft:diamond"
   },
-  "enchantment": "minecraft:unbreaking",
+  "enchantment": "minecraft:protection",
   "level": 1
 }
