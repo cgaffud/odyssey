@@ -38,8 +38,6 @@ public class BlockRegistry {
     public static final RegistryObject<Block> STERLING_SILVER_BLOCK = BLOCKS.register("sterling_silver_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON, MaterialColor.GRAY).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(4.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> LEATHER_PILE = BLOCKS.register("leather_pile", () -> new Block(AbstractBlock.Properties.create((new Material.Builder(MaterialColor.BROWN)).build(), MaterialColor.BROWN).harvestTool(ToolType.HOE).hardnessAndResistance(1.0F, 1.0F).sound(SoundType.CLOTH)));
 
-    public static final RegistryObject<Block> WARPING_FIRE = BLOCKS.register("warping_fire", WarpingFireBlock::new);
-
     public static final RegistryObject<Block> FOG1 = BLOCKS.register("fog1", FogBlock::new);
     public static final RegistryObject<Block> FOG2 = BLOCKS.register("fog2", FogBlock::new);
     public static final RegistryObject<Block> FOG3 = BLOCKS.register("fog3", FogBlock::new);

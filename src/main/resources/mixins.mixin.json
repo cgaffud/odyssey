@@ -8,7 +8,6 @@
     "MixinMinecraft",
     "MixinBlockItem",
     "MixinItemColors",
-    "MixinPortalSize",
     "MixinForgeHooks",
     "MixinServerPlayNetHandler",
     "MixinPlayerEntity",

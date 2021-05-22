@@ -134,7 +134,6 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.NEW_TRIDENT.get(), NewTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.SERPENT_TRIDENT.get(), NewTridentRenderer::new);
 
-        RenderTypeLookup.setRenderLayer(BlockRegistry.WARPING_FIRE.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG1.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG2.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG3.get(), RenderType.getTranslucent());

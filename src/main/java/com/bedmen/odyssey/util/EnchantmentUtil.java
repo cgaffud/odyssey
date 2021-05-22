@@ -26,7 +26,6 @@ public class EnchantmentUtil {
     private static final int[] CROSSBOW_ENCHANTS = {33,34,35};
     private static final int[] TRIDENT_ENCHANTS = {29,30,31,32};
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
-    private static final int[] FLINT_AND_STEEL_ENCHANTS = {38};
     private static final int[] SHIELD_ENCHANTS = {40,41};
 
     private static final Enchantment[] enchantments = {Enchantments.PROTECTION,
@@ -67,7 +66,6 @@ public class EnchantmentUtil {
             Enchantments.PIERCING,
             Enchantments.MENDING,
             Enchantments.VANISHING_CURSE,
-            EnchantmentRegistry.WARPING.get(),
             EnchantmentRegistry.ACCURACY.get(),
             EnchantmentRegistry.BLOCKING.get(),
             EnchantmentRegistry.RECOVERY.get()};
@@ -112,10 +110,9 @@ public class EnchantmentUtil {
         integerMap.put(Enchantments.PIERCING, 35);
         integerMap.put(Enchantments.MENDING, 36);
         integerMap.put(Enchantments.VANISHING_CURSE, 37);
-        integerMap.put(EnchantmentRegistry.WARPING.get(), 38);
-        integerMap.put(EnchantmentRegistry.ACCURACY.get(), 39);
-        integerMap.put(EnchantmentRegistry.BLOCKING.get(), 40);
-        integerMap.put(EnchantmentRegistry.RECOVERY.get(), 41);
+        integerMap.put(EnchantmentRegistry.ACCURACY.get(), 38);
+        integerMap.put(EnchantmentRegistry.BLOCKING.get(), 39);
+        integerMap.put(EnchantmentRegistry.RECOVERY.get(), 40);
     }
 
     public static Enchantment intToEnchantment(int i){
@@ -154,7 +151,6 @@ public class EnchantmentUtil {
         if(item instanceof NewCrossbowItem) return check(CROSSBOW_ENCHANTS, id);
         if(item instanceof NewTridentItem) return check(TRIDENT_ENCHANTS, id);
         if(item instanceof FishingRodItem) return check(FISHING_ROD_ENCHANTS, id);
-        if(item instanceof NewFlintAndSteelItem) return check(FLINT_AND_STEEL_ENCHANTS, id);
         if(item instanceof NewShieldItem) return check(SHIELD_ENCHANTS, id);
         return false;
     }

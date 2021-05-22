@@ -56,7 +56,6 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GLASS_SHARD = ITEMS.register("glass_shard", () -> new Item((new Item.Properties()).group(ItemGroup.BREWING)));
     public static final RegistryObject<Item> BIG_GLASS_BOTTLE = ITEMS.register("big_glass_bottle", () -> new BigGlassBottleItem((new Item.Properties()).group(ItemGroup.BREWING)));
     public static final RegistryObject<Item> BIG_POTION = ITEMS.register("big_potion", () -> new BigPotionItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.BREWING)));
-    public static final RegistryObject<Item> FLINT_AND_STEEL = ITEMS_VANILLA.register("flint_and_steel", () -> new NewFlintAndSteelItem((new Item.Properties()).maxDamage(64).group(ItemGroup.TOOLS)));
     public static final RegistryObject<Item> DIAMOND_SHARD = ITEMS.register("diamond_shard", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> RAW_IRON = ITEMS.register("raw_iron", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> RAW_COPPER = ITEMS.register("raw_copper", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
