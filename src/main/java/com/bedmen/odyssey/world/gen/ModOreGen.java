@@ -21,12 +21,12 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class ModOreGen {
 
-    public static ConfiguredFeature<?, ?> SILVER_ORE_FEATURE;
-    public static final RuleTest SAND_RULE = new BlockMatchRuleTest(Blocks.SAND);
+    public static ConfiguredFeature<?, ?> SAPPHIRE_ORE_FEATURE;
+    public static final RuleTest PACKED_ICE_RULE = new BlockMatchRuleTest(Blocks.PACKED_ICE);
     // OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD for generating in stone
 
     public static void registerOres() {
-        SILVER_ORE_FEATURE = oreGen(128, 100, 20, BlockRegistry.SILVER_ORE, SAND_RULE);
+        SAPPHIRE_ORE_FEATURE = oreGen(128, 20, 20, BlockRegistry.SAPPHIRE_ORE, PACKED_ICE_RULE);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -41,8 +41,8 @@ public class ModOreGen {
 
         } else {
             //Overworld Ore
-            if(event.getCategory() == Biome.Category.BEACH) {
-                //gen.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SILVER_ORE_FEATURE);
+            if(event.getCategory() == Biome.Category.) {
+                gen.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SAPPHIRE_ORE_FEATURE);
             }
         }
 

@@ -37,6 +37,8 @@ public class BlockRegistry {
     public static final RegistryObject<Block> SILVER_BLOCK = BLOCKS.register("silver_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON, MaterialColor.LIGHT_GRAY).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(3.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> STERLING_SILVER_BLOCK = BLOCKS.register("sterling_silver_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON, MaterialColor.GRAY).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(4.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> LEATHER_PILE = BLOCKS.register("leather_pile", () -> new Block(AbstractBlock.Properties.create((new Material.Builder(MaterialColor.BROWN)).build(), MaterialColor.BROWN).harvestTool(ToolType.HOE).hardnessAndResistance(1.0F, 1.0F).sound(SoundType.CLOTH)));
+    public static final RegistryObject<Block> RUBY_ORE = BLOCKS.register("ruby_ore", () -> new OreBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(3).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(3.0F, 3.0F).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> SAPPHIRE_ORE = BLOCKS.register("sapphire_ore", () -> new OreBlock(AbstractBlock.Properties.create(Material.PACKED_ICE).harvestLevel(3).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(0.5F, 0.5F).sound(SoundType.GLASS)));
 
     public static final RegistryObject<Block> FOG1 = BLOCKS.register("fog1", FogBlock::new);
     public static final RegistryObject<Block> FOG2 = BLOCKS.register("fog2", FogBlock::new);
