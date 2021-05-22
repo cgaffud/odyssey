@@ -139,6 +139,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> DIAMOND_SWORD = ITEMS_VANILLA.register("diamond_sword", () -> new SwordItem(ModItemTier.DIAMOND, 8, -2.4f, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> NETHERITE_SWORD = ITEMS_VANILLA.register("netherite_sword", () -> new SwordItem(ModItemTier.NETHERITE, 9, -2.4f, new Item.Properties().isImmuneToFire().group(ItemGroup.COMBAT)));
 
+    public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new HammerItem(ModItemTier.COPPER, 8, -3.2f, new Item.Properties().group(ItemGroup.COMBAT)));
+
     //Axes
     public static final RegistryObject<Item> WOODEN_AXE = ITEMS_VANILLA.register("wooden_axe", () -> new AxeItem(ModItemTier.WOOD, 6.0f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)));
     public static final RegistryObject<Item> STONE_AXE = ITEMS_VANILLA.register("stone_axe", () -> new AxeItem(ModItemTier.STONE, 7.0f, -3.0f, new Item.Properties().group(ItemGroup.TOOLS)));

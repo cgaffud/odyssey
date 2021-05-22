@@ -10,6 +10,8 @@ import net.minecraft.tags.ItemTags;
 
 public enum ModItemTier implements IItemTier{
 
+    COPPER(0, 250, 2.0F, -1.0F, 15, () -> { return Ingredient.fromItems(ItemRegistry.COPPER_INGOT.get()); }),
+
     WOOD(0, 59, 2.0F, -1.0F, 15, () -> { return Ingredient.fromTag(ItemTags.PLANKS); }),
     STONE(1, 131, 4.0F, -1.0F, 5, () -> { return Ingredient.fromTag(ItemTags.STONE_TOOL_MATERIALS); }),
     IRON(2, 250, 6.0F, -1.0F, 14, () -> { return Ingredient.fromItems(Items.IRON_INGOT); }),
