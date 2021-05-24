@@ -52,6 +52,11 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FOG8 = ITEMS.register("fog8", () -> new BlockItem(BlockRegistry.FOG8.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
 
     //Items
+    public static final RegistryObject<Item> EMERALD_BIT = ITEMS.register("emerald_bit", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> EMERALD_SHARD = ITEMS.register("emerald_shard", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> EMERALD_FRAGMENT = ITEMS.register("emerald_fragment", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> EMERALD_PIECE = ITEMS.register("emerald_piece", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+
     public static final RegistryObject<Item> POTION = ITEMS_VANILLA.register("potion", () -> new NewPotionItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.BREWING)));
     public static final RegistryObject<Item> SPLASH_POTION = ITEMS_VANILLA.register("splash_potion", () -> new NewSplashPotionItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.BREWING)));
     public static final RegistryObject<Item> LINGERING_POTION = ITEMS_VANILLA.register("lingering_potion", () -> new NewLingeringPotionItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.BREWING)));

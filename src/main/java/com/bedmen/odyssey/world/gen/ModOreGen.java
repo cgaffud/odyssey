@@ -41,7 +41,7 @@ public class ModOreGen {
 
         } else {
             //Overworld Ore
-            if(event.getCategory() == Biome.Category.) {
+            if(event.getCategory() == Biome.Category.ICY) {
                 gen.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SAPPHIRE_ORE_FEATURE);
             }
         }

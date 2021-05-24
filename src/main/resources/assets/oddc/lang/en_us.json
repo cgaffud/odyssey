@@ -23,6 +23,13 @@
   "item.oddc.frozen_chestplate": "Frozen Chestplate",
   "item.oddc.copper_hammer": "Copper Hammer",
 
+  //Emerald
+  "item.oddc.emerald_bit": "Emerald Bit",
+  "item.oddc.emerald_shard": "Emerald Shard",
+  "item.oddc.emerald_fragment": "Emerald Fragment",
+  "item.oddc.emerald_piece": "Emerald Piece",
+
+
   //Silver and Sterling Silver
   "item.oddc.silver_nugget": "Silver Nugget",
   "item.oddc.raw_silver": "Raw Silver",
