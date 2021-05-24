@@ -3,10 +3,9 @@ package com.bedmen.odyssey;
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.NewEnchantmentTableTileEntityRenderer;
 import com.bedmen.odyssey.client.renderer.entity.NewTridentRenderer;
-import com.bedmen.odyssey.client.renderer.entity.TrooperRenderer;
-import com.bedmen.odyssey.entity.TrooperEntity;
+import com.bedmen.odyssey.client.renderer.entity.WerewolfRenderer;
+import com.bedmen.odyssey.entity.monster.WerewolfEntity;
 import com.bedmen.odyssey.items.*;
-import com.bedmen.odyssey.mixin.MixinItemStackTileEntityRenderer;
 import com.bedmen.odyssey.util.*;
 import com.bedmen.odyssey.client.renderer.NewBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.ModPotions;
@@ -14,26 +13,19 @@ import com.bedmen.odyssey.trades.ModTrades;
 import com.bedmen.odyssey.world.gen.ModOreGen;
 import com.bedmen.odyssey.world.spawn.ModBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.ModStructureEntitySpawn;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.data.ItemTagsProvider;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.PotionBrewing;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.data.ForgeItemTagsProvider;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -109,6 +101,11 @@ public class Odyssey
         NewShieldItem.registerBaseProperties(ItemRegistry.SHIELD.get());
         NewShieldItem.registerBaseProperties(ItemRegistry.SERPENT_SHIELD.get());
 
+        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.WEREWOLF.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, WerewolfEntity::predicate);
+
+        DeferredWorkQueue.runLater(() -> {
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.WEREWOLF.get(), WerewolfEntity.func_234233_eS_().create());
+        });
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)
@@ -129,7 +126,7 @@ public class Odyssey
         ScreenManager.registerFactory(ContainerRegistry.QUIVER7.get(), QuiverScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.QUIVER9.get(), QuiverScreen::new);
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TROOPER.get(), TrooperRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEREWOLF.get(), WerewolfRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.NEW_TRIDENT.get(), NewTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.SERPENT_TRIDENT.get(), NewTridentRenderer::new);

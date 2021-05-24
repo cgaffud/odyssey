@@ -52,6 +52,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FOG8 = ITEMS.register("fog8", () -> new BlockItem(BlockRegistry.FOG8.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
 
     //Items
+
+    //Emeralds
     public static final RegistryObject<Item> EMERALD_BIT = ITEMS.register("emerald_bit", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> EMERALD_SHARD = ITEMS.register("emerald_shard", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> EMERALD_FRAGMENT = ITEMS.register("emerald_fragment", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
@@ -87,6 +89,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FEATHER_BUNDLE = ITEMS.register("feather_bundle", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> FROZEN_SHARD = ITEMS.register("frozen_shard", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> FROZEN_HEART = ITEMS.register("frozen_heart", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> WEREWOLF_CLAW = ITEMS.register("werewolf_claw", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
 
     //Armor
     public static final RegistryObject<Item> TURTLE_HELMET = ITEMS_VANILLA.register("turtle_helmet", () -> new ArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));

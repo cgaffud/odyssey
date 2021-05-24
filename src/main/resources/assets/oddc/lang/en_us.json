@@ -22,6 +22,7 @@
   "item.oddc.frozen_heart": "Frozen Heart",
   "item.oddc.frozen_chestplate": "Frozen Chestplate",
   "item.oddc.copper_hammer": "Copper Hammer",
+  "item.oddc.werewolf_claw": "Werewolf Claw",
 
   //Emerald
   "item.oddc.emerald_bit": "Emerald Bit",
@@ -111,6 +112,9 @@
   "block.oddc.fog8": "Fog 8",
 
   "item.oddc.lens": "Lens",
+
+  //Entities
+  "entity.oddc.werewolf": "Werewolf",
 
 
   //Potions
