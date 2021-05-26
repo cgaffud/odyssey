@@ -43,7 +43,7 @@ public class ModTrades {
 
     private static void removeTrades(){
         if(trade_list == null) {
-            trade_list = ObfuscationReflectionHelper.getPrivateValue(VillagerTrades.class, null, "VILLAGER_DEFAULT_TRADES");
+            trade_list = ObfuscationReflectionHelper.getPrivateValue(VillagerTrades.class, null, "TRADES");
         }
 
         trade_list.remove(VillagerProfession.FARMER);
@@ -151,7 +151,7 @@ public class ModTrades {
 
         public MerchantOffer getOffer(Entity trader, Random rand) {
             int i = 5 + rand.nextInt(15);
-            ItemStack itemstack = EnchantmentHelper.addRandomEnchantment(rand, new ItemStack(this.sellingStack.getItem()), i, false);
+            ItemStack itemstack = EnchantmentHelper.enchantItem(rand, new ItemStack(this.sellingStack.getItem()), i, false);
             int j = Math.min(this.emeraldCount + i, 64);
             ItemStack itemstack1 = new ItemStack(Items.EMERALD, j);
             return new MerchantOffer(itemstack1, itemstack, this.maxUses, this.xpValue, this.priceMultiplier);

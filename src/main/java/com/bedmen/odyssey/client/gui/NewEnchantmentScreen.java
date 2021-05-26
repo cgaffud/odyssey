@@ -37,7 +37,7 @@ public class NewEnchantmentScreen extends ContainerScreen<NewEnchantmentContaine
     private ChangeEnchantPageButton buttonPreviousPage;
     private EnchantButton[] enchantButtons = new EnchantButton[5];
     private int currPage = 1;
-    private int numPages = this.container.numPages();
+    private int numPages = this.menu.numPages();
     public static final int ENCHANT_PER_PAGE = 5;
     public List<Enchantment> enchantmentList;
     public List<Integer> levelList;
@@ -46,17 +46,17 @@ public class NewEnchantmentScreen extends ContainerScreen<NewEnchantmentContaine
 
     public NewEnchantmentScreen(NewEnchantmentContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
-        this.xSize = 176;
-        this.ySize = 166;
+        this.imageWidth = 176;
+        this.imageHeight = 166;
     }
 
     public void init() {
         super.init();
         this.addChangePageButtons();
         this.addEnchantButtons();
-        this.enchantmentList = this.container.getEnchantmentList();
-        this.levelList = this.container.getLevelList();
-        this.costList = this.container.getCostList();
+        this.enchantmentList = this.menu.getEnchantmentList();
+        this.levelList = this.menu.getLevelList();
+        this.costList = this.menu.getCostList();
         this.size = this.enchantmentList.size();
     }
 
@@ -67,84 +67,84 @@ public class NewEnchantmentScreen extends ContainerScreen<NewEnchantmentContaine
         for(int i = 0; i < ENCHANT_PER_PAGE; i++){
             if(this.numPages <= 0) this.enchantButtons[i].visible = false;
             else if (this.size <= index(i)) this.enchantButtons[i].visible = false;
-            else if ((this.container.inventorySlots.get(1).getStack().getCount() < this.costList.get(index(i)) || playerInventory.player.experienceLevel < this.levelList.get(index(i))*10) && !playerInventory.player.isCreative()) this.enchantButtons[i].visible = false;
+            else if ((this.menu.slots.get(1).getItem().getCount() < this.costList.get(index(i)) || inventory.player.experienceLevel < this.levelList.get(index(i))*10) && !inventory.player.isCreative()) this.enchantButtons[i].visible = false;
             else this.enchantButtons[i].visible = true;
 
             if(this.enchantButtons[i].visible) this.enchantButtons[i].renderButton(matrixStack, mouseX, mouseY, partialTicks);
         }
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        this.renderTooltip(matrixStack, mouseX, mouseY);
 
         for(int i = 0; i < ENCHANT_PER_PAGE; i++) {
-            if (this.isPointInRegion(72, 18 + 10*i, 96, 10, mouseX, mouseY) && index(i) < this.size) {
+            if (this.isHovering(72, 18 + 10*i, 96, 10, mouseX, mouseY) && index(i) < this.size) {
                 List<ITextComponent> list = Lists.newArrayList();
                 int level = this.levelList.get(index(i));
-                int experienceLevel = playerInventory.player.experienceLevel;
+                int experienceLevel = inventory.player.experienceLevel;
                 int cost = this.costList.get(index(i));
-                if(experienceLevel < level*10 && !playerInventory.player.isCreative()){
-                    list.add((new TranslationTextComponent("container.enchant.level.requirement", level*10)).mergeStyle(TextFormatting.RED));
+                if(experienceLevel < level*10 && !inventory.player.isCreative()){
+                    list.add((new TranslationTextComponent("container.enchant.level.requirement", level*10)).withStyle(TextFormatting.RED));
                 }
-                if(experienceLevel < cost && !playerInventory.player.isCreative()){
+                if(experienceLevel < cost && !inventory.player.isCreative()){
                     if(cost == 1){
-                        list.add((new TranslationTextComponent("container.enchant.level.one")).mergeStyle(TextFormatting.RED));
+                        list.add((new TranslationTextComponent("container.enchant.level.one")).withStyle(TextFormatting.RED));
                     }
                     else{
-                        list.add((new TranslationTextComponent("container.enchant.level.many", cost)).mergeStyle(TextFormatting.RED));
+                        list.add((new TranslationTextComponent("container.enchant.level.many", cost)).withStyle(TextFormatting.RED));
                     }
                 }
-                if(this.container.inventorySlots.get(1).getStack().getCount() < cost && !playerInventory.player.isCreative()){
-                    list.add((new TranslationTextComponent("container.enchant.lapis.many", cost)).mergeStyle(TextFormatting.RED));
+                if(this.menu.slots.get(1).getItem().getCount() < cost && !inventory.player.isCreative()){
+                    list.add((new TranslationTextComponent("container.enchant.lapis.many", cost)).withStyle(TextFormatting.RED));
                 }
-                this.func_243308_b(matrixStack, list, mouseX, mouseY);
+                this.renderComponentTooltip(matrixStack, list, mouseX, mouseY);
                 break;
             }
         }
     }
 
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(this.GUI_TEXTURE);
-        int i = this.guiLeft;
-        int j = this.guiTop;
-        this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(this.GUI_TEXTURE);
+        int i = this.leftPos;
+        int j = this.topPos;
+        this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     protected void renderPageText(MatrixStack matrixStack) {
         ITextComponent pageText =  new TranslationTextComponent("book.pageIndicator", this.currPage, Math.max(this.numPages, 1));
-        int pageTextX = 120 - (this.font.getStringPropertyWidth(pageText) / 2);
-        this.font.func_243248_b(matrixStack, pageText, (float)pageTextX, (float)(this.playerInventoryTitleY), 0x404040);
+        int pageTextX = 120 - (this.font.width(pageText) / 2);
+        this.font.draw(matrixStack, pageText, (float)pageTextX, (float)(this.inventoryLabelY), 0x404040);
     }
 
     protected void renderEnchantmentText(MatrixStack matrixStack) {
         for(int i = 0; i < ENCHANT_PER_PAGE && this.size > ENCHANT_PER_PAGE * this.currPage-ENCHANT_PER_PAGE+i; i++){
             Enchantment e = this.enchantmentList.get(ENCHANT_PER_PAGE * this.currPage-ENCHANT_PER_PAGE+i);
-            String s = e.getName();
+            String s = e.getDescriptionId();
             IFormattableTextComponent enchantmentText =  new TranslationTextComponent(s);
-            if(e.getMaxLevel() > 1) enchantmentText.appendString(" ").append(new TranslationTextComponent("enchantment.level." + this.levelList.get(index(i))));
+            if(e.getMaxLevel() > 1) enchantmentText.append(" ").append(new TranslationTextComponent("enchantment.level." + this.levelList.get(index(i))));
             float scale = (1.0f/1.5f);
-            float x1 = 124.0f - ((float)(this.font.getStringPropertyWidth(enchantmentText)) / 2.0f * scale);
+            float x1 = 124.0f - ((float)(this.font.width(enchantmentText)) / 2.0f * scale);
 
-            GlStateManager.pushMatrix();
-            GlStateManager.scalef(scale, scale, 1.0f);
-            GlStateManager.translatef(x1*(1.0f/scale), (20.5f+10*i)*(1.0f/scale), 0.0f);
-            if(!this.enchantButtons[i].visible) this.font.func_243248_b(matrixStack, enchantmentText, 0, 0, 0x000000);
-            else if(this.enchantButtons[i].isHovered()) this.font.func_243248_b(matrixStack, enchantmentText, 0, 0, 0xe0ca9f);
-            else  this.font.func_243248_b(matrixStack, enchantmentText, 0, 0, 0x404040);
-            GlStateManager.popMatrix();
+            GlStateManager._pushMatrix();
+            GlStateManager._scalef(scale, scale, 1.0f);
+            GlStateManager._translatef(x1*(1.0f/scale), (20.5f+10*i)*(1.0f/scale), 0.0f);
+            if(!this.enchantButtons[i].visible) this.font.draw(matrixStack, enchantmentText, 0, 0, 0x000000);
+            else if(this.enchantButtons[i].isHovered()) this.font.draw(matrixStack, enchantmentText, 0, 0, 0xe0ca9f);
+            else  this.font.draw(matrixStack, enchantmentText, 0, 0, 0x404040);
+            GlStateManager._popMatrix();
 
             s = ""+this.levelList.get(index(i))*10;
-            GlStateManager.pushMatrix();
-            GlStateManager.scalef(scale, scale, 1.0f);
-            GlStateManager.translatef((80.0f-(this.font.getStringWidth(s)/2.0f))*(1.0f/scale), (20.5f+10*i)*(1.0f/scale), 0.0f);
-            if(!this.enchantButtons[i].visible) this.font.drawStringWithShadow(matrixStack, s, 0, 0, 0x408010);
-            else this.font.drawStringWithShadow(matrixStack, s, 0, 0, 0x80FF20);
-            GlStateManager.popMatrix();
+            GlStateManager._pushMatrix();
+            GlStateManager._scalef(scale, scale, 1.0f);
+            GlStateManager._translatef((80.0f-(this.font.width(s)/2.0f))*(1.0f/scale), (20.5f+10*i)*(1.0f/scale), 0.0f);
+            if(!this.enchantButtons[i].visible) this.font.drawShadow(matrixStack, s, 0, 0, 0x408010);
+            else this.font.drawShadow(matrixStack, s, 0, 0, 0x80FF20);
+            GlStateManager._popMatrix();
         }
     }
 
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        this.font.func_243248_b(matrixStack, this.title, (float)this.titleX, (float)this.titleY, 4210752);
-        this.font.func_243248_b(matrixStack, this.playerInventory.getDisplayName(), (float)this.playerInventoryTitleX, (float)this.playerInventoryTitleY, 4210752);
+    protected void renderLabels(MatrixStack matrixStack, int x, int y) {
+        this.font.draw(matrixStack, this.title, (float)this.titleLabelX, (float)this.titleLabelY, 4210752);
+        this.font.draw(matrixStack, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
         if(this.numPages > 0) {
             renderPageText(matrixStack);
             renderEnchantmentText(matrixStack);
@@ -154,17 +154,17 @@ public class NewEnchantmentScreen extends ContainerScreen<NewEnchantmentContaine
             if(this.enchantButtons[i].isHovered() && this.enchantButtons[i].visible){
                 int j = 17;
                 int k = 47;
-                this.minecraft.getTextureManager().bindTexture(this.GUI_TEXTURE);
+                this.minecraft.getTextureManager().bind(this.GUI_TEXTURE);
                 this.blit(matrixStack, j, k, 96, 166, 16, 16);
                 this.blit(matrixStack, j+6, k+8, -11+11*this.costList.get(index(i)), 186, 11, 9);
             }
         }
     }
     protected void addChangePageButtons() {
-        int i = this.guiLeft+116;
-        int j = this.guiTop;
-        this.buttonNextPage = this.addButton(new ChangeEnchantPageButton(i + 41, j+this.playerInventoryTitleY, true, (p_214159_1_) -> { this.nextPage(); }));
-        this.buttonPreviousPage = this.addButton(new ChangeEnchantPageButton(i - 41, j+this.playerInventoryTitleY, false, (p_214158_1_) -> { this.previousPage(); }));
+        int i = this.leftPos+116;
+        int j = this.topPos;
+        this.buttonNextPage = this.addButton(new ChangeEnchantPageButton(i + 41, j+this.inventoryLabelY, true, (p_214159_1_) -> { this.nextPage(); }));
+        this.buttonPreviousPage = this.addButton(new ChangeEnchantPageButton(i - 41, j+this.inventoryLabelY, false, (p_214158_1_) -> { this.previousPage(); }));
         this.updateButtons();
     }
 
@@ -194,10 +194,10 @@ public class NewEnchantmentScreen extends ContainerScreen<NewEnchantmentContaine
     }
 
     public void tick(){
-        this.numPages = this.container.numPages();
-        this.enchantmentList = this.container.getEnchantmentList();
-        this.levelList = this.container.getLevelList();
-        this.costList = this.container.getCostList();
+        this.numPages = this.menu.numPages();
+        this.enchantmentList = this.menu.getEnchantmentList();
+        this.levelList = this.menu.getLevelList();
+        this.costList = this.menu.getCostList();
         this.size = this.enchantmentList.size();
         if(this.currPage > this.numPages) this.currPage = this.numPages;
         if(this.numPages == 0) this.currPage = 1;
@@ -205,8 +205,8 @@ public class NewEnchantmentScreen extends ContainerScreen<NewEnchantmentContaine
     }
 
     protected void addEnchantButtons() {
-        int i = this.guiLeft+72;
-        int j = this.guiTop+18;
+        int i = this.leftPos+72;
+        int j = this.topPos+18;
         for(int k = 0; k < ENCHANT_PER_PAGE; k++){
             int finalK = k;
             this.enchantButtons[k] = this.addButton(new EnchantButton(i, j+k*10, (p_214159_1_) -> { addEnchantment(finalK); }));
@@ -218,13 +218,13 @@ public class NewEnchantmentScreen extends ContainerScreen<NewEnchantmentContaine
         int level = this.levelList.get(index(k));
         int cost = this.costList.get(index(k));
         Enchantment e = this.enchantmentList.get(index(k));
-        PlayerEntity player = playerInventory.player;
-        boolean b1 = this.container.inventorySlots.get(1).getStack().getCount() >= cost || player.isCreative();
+        PlayerEntity player = inventory.player;
+        boolean b1 = this.menu.slots.get(1).getItem().getCount() >= cost || player.isCreative();
         boolean b2 = player.experienceLevel >= level*10 || player.isCreative();
         if(b1 && b2){
-            NewEnchantmentScreen.this.minecraft.getConnection().sendPacket(new CUpdateEnchantPacket(level, EnchantmentUtil.enchantmentToInt(e), cost));
-            this.playerInventory.player.onEnchant(ItemStack.EMPTY, cost);
-            this.minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0f));
+            NewEnchantmentScreen.this.minecraft.getConnection().send(new CUpdateEnchantPacket(level, EnchantmentUtil.enchantmentToInt(e), cost));
+            this.inventory.player.onEnchantmentPerformed(ItemStack.EMPTY, cost);
+            this.minecraft.getSoundManager().play(SimpleSound.forUI(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0f));
         }
     }
 

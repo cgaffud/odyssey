@@ -44,21 +44,21 @@ public abstract class MixinItemStackTileEntityRenderer {
     @Shadow
     private ConduitTileEntity conduit;
     @Shadow
-    private ChestTileEntity chestBasic;
+    private ChestTileEntity chest;
     @Shadow
     private EnderChestTileEntity enderChest;
     @Shadow
-    private ChestTileEntity chestTrap;
+    private ChestTileEntity trappedChest;
     @Shadow
-    private static ShulkerBoxTileEntity SHULKER_BOX;
+    private static ShulkerBoxTileEntity DEFAULT_SHULKER_BOX;
     @Shadow
     private static ShulkerBoxTileEntity[] SHULKER_BOXES;
     @Shadow
-    private ShieldModel modelShield;
+    private ShieldModel shieldModel;
 
     private final NewTridentModel newtrident = new NewTridentModel();
 
-    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         Item item = stack.getItem();
         if (item instanceof BlockItem) {
             Block block = ((BlockItem)item).getBlock();
@@ -70,17 +70,17 @@ public abstract class MixinItemStackTileEntityRenderer {
                         gameprofile = NBTUtil.readGameProfile(compoundnbt.getCompound("SkullOwner"));
                     } else if (compoundnbt.contains("SkullOwner", 8) && !StringUtils.isBlank(compoundnbt.getString("SkullOwner"))) {
                         GameProfile gameprofile1 = new GameProfile((UUID)null, compoundnbt.getString("SkullOwner"));
-                        gameprofile = SkullTileEntity.updateGameProfile(gameprofile1);
+                        gameprofile = SkullTileEntity.updateGameprofile(gameprofile1);
                         compoundnbt.remove("SkullOwner");
                         compoundnbt.put("SkullOwner", NBTUtil.writeGameProfile(new CompoundNBT(), gameprofile));
                     }
                 }
 
-                SkullTileEntityRenderer.render((Direction)null, 180.0F, ((AbstractSkullBlock)block).getSkullType(), gameprofile, 0.0F, matrixStack, buffer, combinedLight);
+                SkullTileEntityRenderer.renderSkull((Direction)null, 180.0F, ((AbstractSkullBlock)block).getType(), gameprofile, 0.0F, matrixStack, buffer, combinedLight);
             } else {
                 TileEntity tileentity;
                 if (block instanceof AbstractBannerBlock) {
-                    this.banner.loadFromItemStack(stack, ((AbstractBannerBlock)block).getColor());
+                    this.banner.fromItem(stack, ((AbstractBannerBlock)block).getColor());
                     tileentity = this.banner;
                 } else if (block instanceof BedBlock) {
                     this.bed.setColor(((BedBlock)block).getColor());
@@ -88,11 +88,11 @@ public abstract class MixinItemStackTileEntityRenderer {
                 } else if (block == Blocks.CONDUIT) {
                     tileentity = this.conduit;
                 } else if (block == Blocks.CHEST) {
-                    tileentity = this.chestBasic;
+                    tileentity = this.chest;
                 } else if (block == Blocks.ENDER_CHEST) {
                     tileentity = this.enderChest;
                 } else if (block == Blocks.TRAPPED_CHEST) {
-                    tileentity = this.chestTrap;
+                    tileentity = this.trappedChest;
                 } else {
                     if (!(block instanceof ShulkerBoxBlock)) {
                         return;
@@ -100,7 +100,7 @@ public abstract class MixinItemStackTileEntityRenderer {
 
                     DyeColor dyecolor = ShulkerBoxBlock.getColorFromItem(item);
                     if (dyecolor == null) {
-                        tileentity = SHULKER_BOX;
+                        tileentity = DEFAULT_SHULKER_BOX;
                     } else {
                         tileentity = SHULKER_BOXES[dyecolor.getId()];
                     }
@@ -110,8 +110,8 @@ public abstract class MixinItemStackTileEntityRenderer {
             }
         } else {
             if (item instanceof NewShieldItem) {
-                boolean flag = stack.getChildTag("BlockEntityTag") != null;
-                matrixStack.push();
+                boolean flag = stack.getTagElement("BlockEntityTag") != null;
+                matrixStack.pushPose();
                 matrixStack.scale(1.0F, -1.0F, -1.0F);
                 RenderMaterial rendermaterial;
                 if(item == ItemRegistry.SERPENT_SHIELD.get()){
@@ -119,24 +119,24 @@ public abstract class MixinItemStackTileEntityRenderer {
                 }
 
                 else {
-                    rendermaterial = flag ? ModelBakery.LOCATION_SHIELD_BASE : ModelBakery.LOCATION_SHIELD_NO_PATTERN;
+                    rendermaterial = flag ? ModelBakery.SHIELD_BASE : ModelBakery.NO_PATTERN_SHIELD;
                 }
-                IVertexBuilder ivertexbuilder = rendermaterial.getSprite().wrapBuffer(ItemRenderer.getEntityGlintVertexBuilder(buffer, this.modelShield.getRenderType(rendermaterial.getAtlasLocation()), true, stack.hasEffect()));
-                this.modelShield.func_228294_b_().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+                IVertexBuilder ivertexbuilder = rendermaterial.sprite().wrap(ItemRenderer.getFoilBufferDirect(buffer, this.shieldModel.renderType(rendermaterial.atlasLocation()), true, stack.hasFoil()));
+                this.shieldModel.handle().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
                 if (flag) {
-                    List<Pair<BannerPattern, DyeColor>> list = BannerTileEntity.getPatternColorData(ShieldItem.getColor(stack), BannerTileEntity.getPatternData(stack));
-                    BannerTileEntityRenderer.func_241717_a_(matrixStack, buffer, combinedLight, combinedOverlay, this.modelShield.func_228293_a_(), rendermaterial, false, list, stack.hasEffect());
+                    List<Pair<BannerPattern, DyeColor>> list = BannerTileEntity.createPatterns(ShieldItem.getColor(stack), BannerTileEntity.getItemPatterns(stack));
+                    BannerTileEntityRenderer.renderPatterns(matrixStack, buffer, combinedLight, combinedOverlay, this.shieldModel.plate(), rendermaterial, false, list, stack.hasFoil());
                 } else {
-                    this.modelShield.func_228293_a_().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+                    this.shieldModel.plate().render(matrixStack, ivertexbuilder, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
                 }
 
-                matrixStack.pop();
+                matrixStack.popPose();
             } else if (item instanceof NewTridentItem) {
-                matrixStack.push();
+                matrixStack.pushPose();
                 matrixStack.scale(1.0F, -1.0F, -1.0F);
-                IVertexBuilder ivertexbuilder1 = ItemRenderer.getEntityGlintVertexBuilder(buffer, this.newtrident.getRenderType(NewTridentModel.getTridentTexture(item)), false, stack.hasEffect());
-                this.newtrident.render(matrixStack, ivertexbuilder1, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
-                matrixStack.pop();
+                IVertexBuilder ivertexbuilder1 = ItemRenderer.getFoilBufferDirect(buffer, this.newtrident.renderType(NewTridentModel.getTridentTexture(item)), false, stack.hasFoil());
+                this.newtrident.renderToBuffer(matrixStack, ivertexbuilder1, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+                matrixStack.popPose();
             }
 
         }

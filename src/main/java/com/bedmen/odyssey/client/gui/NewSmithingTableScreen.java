@@ -25,22 +25,22 @@ public class NewSmithingTableScreen extends ContainerScreen<NewSmithingTableCont
 
     public void init() {
         super.init();
-        this.titleX = (this.xSize - this.font.getStringPropertyWidth(this.title)) / 2;
+        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        this.renderTooltip(matrixStack, mouseX, mouseY);
     }
 
     protected void drawBoxes(MatrixStack matrixStack) {
         for(int i1 = 1; i1 < 10; ++i1) {
-            NewSmithingTableSlot slot = (NewSmithingTableSlot)this.container.inventorySlots.get(i1);
+            NewSmithingTableSlot slot = (NewSmithingTableSlot)this.menu.slots.get(i1);
             if (!slot.shouldBeUsed()) {
                 RenderSystem.disableDepthTest();
-                int j1 = slot.xPos+this.guiLeft-1;
-                int k1 = slot.yPos+((this.height - this.ySize) / 2)-1;
+                int j1 = slot.x+this.leftPos-1;
+                int k1 = slot.y+((this.height - this.imageHeight) / 2)-1;
                 RenderSystem.colorMask(true, true, true, false);
                 int slotColor = -1060714810;
                 this.fillGradient(matrixStack, j1, k1, j1 + 18, k1 + 18, slotColor, slotColor);
@@ -50,12 +50,12 @@ public class NewSmithingTableScreen extends ContainerScreen<NewSmithingTableCont
         }
     }
 
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(this.guiTexture);
-        int i = this.guiLeft;
-        int j = (this.height - this.ySize) / 2;
-        this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(this.guiTexture);
+        int i = this.leftPos;
+        int j = (this.height - this.imageHeight) / 2;
+        this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
         this.drawBoxes(matrixStack);
     }
 }

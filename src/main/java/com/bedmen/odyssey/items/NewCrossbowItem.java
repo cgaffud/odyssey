@@ -47,39 +47,39 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
         this.baseDamage = baseDamage;
     }
 
-    public Predicate<ItemStack> getAmmoPredicate() {
-        return ARROWS_OR_FIREWORKS;
+    public Predicate<ItemStack> getSupportedHeldProjectiles() {
+        return ARROW_OR_FIREWORK;
     }
 
     /**
      * Get the predicate to match ammunition when searching the player's inventory, not their main/offhand
      */
-    public Predicate<ItemStack> getInventoryAmmoPredicate() {
-        return ARROWS;
+    public Predicate<ItemStack> getAllSupportedProjectiles() {
+        return ARROW_ONLY;
     }
 
     /**
      * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
      * {@link #onItemUse}.
      */
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
         if (isCharged(itemstack)) {
             float inaccuracy = EnchantmentUtil.getAccuracy(playerIn);
             fireProjectiles(worldIn, playerIn, handIn, itemstack, getVelocity(itemstack), inaccuracy);
             setCharged(itemstack, false);
-            return ActionResult.resultConsume(itemstack);
+            return ActionResult.consume(itemstack);
         } else {
-            if (!playerIn.findAmmo(itemstack).isEmpty()) {
+            if (!playerIn.getProjectile(itemstack).isEmpty()) {
                 if (!isCharged(itemstack)) {
                     this.isLoadingStart = false;
                     this.isLoadingMiddle = false;
-                    playerIn.setActiveHand(handIn);
+                    playerIn.startUsingItem(handIn);
                 }
 
-                return ActionResult.resultConsume(itemstack);
+                return ActionResult.consume(itemstack);
             } else {
-                return ActionResult.resultFail(itemstack);
+                return ActionResult.fail(itemstack);
             }
         }
     }
@@ -87,22 +87,22 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
     /**
      * Called when the player stops using an Item (stops holding the right mouse button).
      */
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
+    public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
         int i = this.getUseDuration(stack) - timeLeft;
         float f = getCharge(i, stack);
         if (f >= 1.0F && !isCharged(stack) && hasAmmo(entityLiving, stack)) {
             setCharged(stack, true);
             SoundCategory soundcategory = entityLiving instanceof PlayerEntity ? SoundCategory.PLAYERS : SoundCategory.HOSTILE;
-            worldIn.playSound((PlayerEntity)null, entityLiving.getPosX(), entityLiving.getPosY(), entityLiving.getPosZ(), SoundEvents.ITEM_CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (random.nextFloat() * 0.5F + 1.0F) + 0.2F);
+            worldIn.playSound((PlayerEntity)null, entityLiving.getX(), entityLiving.getY(), entityLiving.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (random.nextFloat() * 0.5F + 1.0F) + 0.2F);
         }
 
     }
 
     private static boolean hasAmmo(LivingEntity entityIn, ItemStack stack) {
-        int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.MULTISHOT, stack);
+        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack);
         int j = i == 0 ? 1 : 3;
-        boolean flag = entityIn instanceof PlayerEntity && ((PlayerEntity)entityIn).abilities.isCreativeMode;
-        ItemStack itemstack = entityIn.findAmmo(stack);
+        boolean flag = entityIn instanceof PlayerEntity && ((PlayerEntity)entityIn).abilities.instabuild;
+        ItemStack itemstack = entityIn.getProjectile(stack);
         ItemStack itemstack1 = itemstack.copy();
 
         for(int k = 0; k < j; ++k) {
@@ -115,7 +115,7 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
                 itemstack1 = itemstack.copy();
             }
 
-            if (!func_220023_a(entityIn, stack, itemstack, k > 0, flag)) {
+            if (!loadProjectile(entityIn, stack, itemstack, k > 0, flag)) {
                 return false;
             }
         }
@@ -123,7 +123,7 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
         return true;
     }
 
-    private static boolean func_220023_a(LivingEntity livingEntity, ItemStack crossbow, ItemStack ammo, boolean multishotArrow, boolean inCreative) {
+    private static boolean loadProjectile(LivingEntity livingEntity, ItemStack crossbow, ItemStack ammo, boolean multishotArrow, boolean inCreative) {
         if (ammo.isEmpty()) {
             return false;
         } else {
@@ -137,7 +137,7 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
                 itemstack = ammo.split(1);
                 if(!quiverFlag) {
                     if (ammo.isEmpty() && livingEntity instanceof PlayerEntity) {
-                        ((PlayerEntity) livingEntity).inventory.deleteStack(ammo);
+                        ((PlayerEntity) livingEntity).inventory.removeItem(ammo);
                     }
                 }
             } else {
@@ -169,7 +169,7 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
         }
 
         CompoundNBT compoundnbt1 = new CompoundNBT();
-        projectile.write(compoundnbt1);
+        projectile.save(compoundnbt1);
         listnbt.add(compoundnbt1);
         compoundnbt.put("ChargedProjectiles", listnbt);
     }
@@ -182,7 +182,7 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
             if (listnbt != null) {
                 for(int i = 0; i < listnbt.size(); ++i) {
                     CompoundNBT compoundnbt1 = listnbt.getCompound(i);
-                    list.add(ItemStack.read(compoundnbt1));
+                    list.add(ItemStack.of(compoundnbt1));
                 }
             }
         }
@@ -207,37 +207,37 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
     }
 
     private static void fireProjectile(World worldIn, LivingEntity shooter, Hand handIn, ItemStack crossbow, ItemStack projectile, float soundPitch, boolean isCreativeMode, float velocity, float inaccuracy, float projectileAngle) {
-        if (!worldIn.isRemote) {
+        if (!worldIn.isClientSide) {
             boolean flag = projectile.getItem() == Items.FIREWORK_ROCKET;
             ProjectileEntity projectileentity;
             if (flag) {
-                projectileentity = new FireworkRocketEntity(worldIn, projectile, shooter, shooter.getPosX(), shooter.getPosYEye() - (double)0.15F, shooter.getPosZ(), true);
+                projectileentity = new FireworkRocketEntity(worldIn, projectile, shooter, shooter.getX(), shooter.getEyeY() - (double)0.15F, shooter.getZ(), true);
             } else {
                 projectileentity = createArrow(worldIn, shooter, crossbow, projectile);
-                ((AbstractArrowEntity)projectileentity).setDamage(((AbstractArrowEntity)projectileentity).getDamage()+(((NewCrossbowItem)(crossbow.getItem()))).getBaseDamage());
-                if(BowUtil.flameString(crossbow)) projectileentity.setFire(100);
+                ((AbstractArrowEntity)projectileentity).setBaseDamage(((AbstractArrowEntity)projectileentity).getBaseDamage()+(((NewCrossbowItem)(crossbow.getItem()))).getBaseDamage());
+                if(BowUtil.flameString(crossbow)) projectileentity.setSecondsOnFire(100);
                 if (isCreativeMode || projectileAngle != 0.0F) {
-                    ((AbstractArrowEntity)projectileentity).pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                    ((AbstractArrowEntity)projectileentity).pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                 }
             }
 
             if (shooter instanceof ICrossbowUser) {
                 ICrossbowUser icrossbowuser = (ICrossbowUser)shooter;
-                icrossbowuser.func_230284_a_(icrossbowuser.getAttackTarget(), crossbow, projectileentity, projectileAngle);
+                icrossbowuser.shootCrossbowProjectile(icrossbowuser.getTarget(), crossbow, projectileentity, projectileAngle);
             } else {
                 Vector3d vector3d1 = shooter.getUpVector(1.0F);
                 Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), projectileAngle, true);
-                Vector3d vector3d = shooter.getLook(1.0F);
+                Vector3d vector3d = shooter.getViewVector(1.0F);
                 Vector3f vector3f = new Vector3f(vector3d);
                 vector3f.transform(quaternion);
-                projectileentity.shoot((double)vector3f.getX(), (double)vector3f.getY(), (double)vector3f.getZ(), velocity, inaccuracy);
+                projectileentity.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), velocity, inaccuracy);
             }
 
-            crossbow.damageItem(flag ? 3 : 1, shooter, (p_220017_1_) -> {
-                p_220017_1_.sendBreakAnimation(handIn);
+            crossbow.hurtAndBreak(flag ? 3 : 1, shooter, (p_220017_1_) -> {
+                p_220017_1_.broadcastBreakEvent(handIn);
             });
-            worldIn.addEntity(projectileentity);
-            worldIn.playSound((PlayerEntity)null, shooter.getPosX(), shooter.getPosY(), shooter.getPosZ(), SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1.0F, soundPitch);
+            worldIn.addFreshEntity(projectileentity);
+            worldIn.playSound((PlayerEntity)null, shooter.getX(), shooter.getY(), shooter.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1.0F, soundPitch);
         }
     }
 
@@ -245,12 +245,12 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
         ArrowItem arrowitem = (ArrowItem)(ammo.getItem() instanceof ArrowItem ? ammo.getItem() : Items.ARROW);
         AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, ammo, shooter);
         if (shooter instanceof PlayerEntity) {
-            abstractarrowentity.setIsCritical(true);
+            abstractarrowentity.setCritArrow(true);
         }
 
-        abstractarrowentity.setHitSound(SoundEvents.ITEM_CROSSBOW_HIT);
+        abstractarrowentity.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractarrowentity.setShotFromCrossbow(true);
-        int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.PIERCING, crossbow);
+        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, crossbow);
         if (i > 0) {
             abstractarrowentity.setPierceLevel((byte)i);
         }
@@ -260,11 +260,11 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
 
     public static void fireProjectiles(World worldIn, LivingEntity shooter, Hand handIn, ItemStack stack, float velocityIn, float inaccuracyIn) {
         List<ItemStack> list = getChargedProjectiles(stack);
-        float[] afloat = getRandomSoundPitches(shooter.getRNG());
+        float[] afloat = getRandomSoundPitches(shooter.getRandom());
 
         for(int i = 0; i < list.size(); ++i) {
             ItemStack itemstack = list.get(i);
-            boolean flag = shooter instanceof PlayerEntity && ((PlayerEntity)shooter).abilities.isCreativeMode;
+            boolean flag = shooter instanceof PlayerEntity && ((PlayerEntity)shooter).abilities.instabuild;
             if (!itemstack.isEmpty()) {
                 if (i == 0) {
                     fireProjectile(worldIn, shooter, handIn, stack, itemstack, afloat[i], flag, velocityIn, inaccuracyIn, 0.0F);
@@ -295,11 +295,11 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
     private static void fireProjectilesAfter(World worldIn, LivingEntity shooter, ItemStack stack) {
         if (shooter instanceof ServerPlayerEntity) {
             ServerPlayerEntity serverplayerentity = (ServerPlayerEntity)shooter;
-            if (!worldIn.isRemote) {
-                CriteriaTriggers.SHOT_CROSSBOW.test(serverplayerentity, stack);
+            if (!worldIn.isClientSide) {
+                CriteriaTriggers.SHOT_CROSSBOW.trigger(serverplayerentity, stack);
             }
 
-            serverplayerentity.addStat(Stats.ITEM_USED.get(stack.getItem()));
+            serverplayerentity.awardStat(Stats.ITEM_USED.get(stack.getItem()));
         }
 
         clearProjectiles(stack);
@@ -308,11 +308,11 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
     /**
      * Called as the item is being used by an entity.
      */
-    public void onUse(World worldIn, LivingEntity livingEntityIn, ItemStack stack, int count) {
-        if (!worldIn.isRemote) {
-            int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
+    public void onUseTick(World worldIn, LivingEntity livingEntityIn, ItemStack stack, int count) {
+        if (!worldIn.isClientSide) {
+            int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
             SoundEvent soundevent = this.getSoundEvent(i);
-            SoundEvent soundevent1 = i == 0 ? SoundEvents.ITEM_CROSSBOW_LOADING_MIDDLE : null;
+            SoundEvent soundevent1 = i == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
             float f = (float)(stack.getUseDuration() - count) / (float)getChargeTime(stack);
             if (f < 0.2F) {
                 this.isLoadingStart = false;
@@ -321,12 +321,12 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
 
             if (f >= 0.2F && !this.isLoadingStart) {
                 this.isLoadingStart = true;
-                worldIn.playSound((PlayerEntity)null, livingEntityIn.getPosX(), livingEntityIn.getPosY(), livingEntityIn.getPosZ(), soundevent, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                worldIn.playSound((PlayerEntity)null, livingEntityIn.getX(), livingEntityIn.getY(), livingEntityIn.getZ(), soundevent, SoundCategory.PLAYERS, 0.5F, 1.0F);
             }
 
             if (f >= 0.5F && soundevent1 != null && !this.isLoadingMiddle) {
                 this.isLoadingMiddle = true;
-                worldIn.playSound((PlayerEntity)null, livingEntityIn.getPosX(), livingEntityIn.getPosY(), livingEntityIn.getPosZ(), soundevent1, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                worldIn.playSound((PlayerEntity)null, livingEntityIn.getX(), livingEntityIn.getY(), livingEntityIn.getZ(), soundevent1, SoundCategory.PLAYERS, 0.5F, 1.0F);
             }
         }
 
@@ -343,7 +343,7 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
      * The time the crossbow must be used to reload it
      */
     public static int getChargeTime(ItemStack stack) {
-        int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
+        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
         i = 25 - (13*i - i*i)/2;
         i = (int)(i/BowUtil.getStringSpeedModifier(stack));
         return i;
@@ -352,20 +352,20 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.CROSSBOW;
     }
 
     private SoundEvent getSoundEvent(int enchantmentLevel) {
         switch(enchantmentLevel) {
             case 1:
-                return SoundEvents.ITEM_CROSSBOW_QUICK_CHARGE_1;
+                return SoundEvents.CROSSBOW_QUICK_CHARGE_1;
             case 2:
-                return SoundEvents.ITEM_CROSSBOW_QUICK_CHARGE_2;
+                return SoundEvents.CROSSBOW_QUICK_CHARGE_2;
             case 3:
-                return SoundEvents.ITEM_CROSSBOW_QUICK_CHARGE_3;
+                return SoundEvents.CROSSBOW_QUICK_CHARGE_3;
             default:
-                return SoundEvents.ITEM_CROSSBOW_LOADING_START;
+                return SoundEvents.CROSSBOW_LOADING_START;
         }
     }
 
@@ -382,17 +382,17 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
      * allows items to add custom lines of information to the mouseover description
      */
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         List<ItemStack> list = getChargedProjectiles(stack);
         if (isCharged(stack) && !list.isEmpty()) {
             ItemStack itemstack = list.get(0);
-            tooltip.add((new TranslationTextComponent("item.minecraft.crossbow.projectile")).appendString(" ").append(itemstack.getTextComponent()));
+            tooltip.add((new TranslationTextComponent("item.minecraft.crossbow.projectile")).append(" ").append(itemstack.getDisplayName()));
             if (flagIn.isAdvanced() && itemstack.getItem() == Items.FIREWORK_ROCKET) {
                 List<ITextComponent> list1 = Lists.newArrayList();
-                Items.FIREWORK_ROCKET.addInformation(itemstack, worldIn, list1, flagIn);
+                Items.FIREWORK_ROCKET.appendHoverText(itemstack, worldIn, list1, flagIn);
                 if (!list1.isEmpty()) {
                     for(int i = 0; i < list1.size(); ++i) {
-                        list1.set(i, (new StringTextComponent("  ")).append(list1.get(i)).mergeStyle(TextFormatting.GRAY));
+                        list1.set(i, (new StringTextComponent("  ")).append(list1.get(i)).withStyle(TextFormatting.GRAY));
                     }
 
                     tooltip.addAll(list1);
@@ -409,7 +409,7 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
         return itemStack.getItem() instanceof NewCrossbowItem && hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.6F : 3.15F;
     }
 
-    public int func_230305_d_() {
+    public int getDefaultProjectileRange() {
         return 8;
     }
 
@@ -418,29 +418,29 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
     }
 
     public static void registerBaseProperties(Item item){
-        ItemModelsProperties.registerProperty(item, new ResourceLocation("pull"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(item, new ResourceLocation("pull"), (itemStack, world, entity) -> {
             if (entity == null) {
                 return 0.0F;
             } else {
-                return NewCrossbowItem.isCharged(itemStack) ? 0.0F : (float)(itemStack.getUseDuration() - entity.getItemInUseCount()) / (float)NewCrossbowItem.getChargeTime(itemStack);
+                return NewCrossbowItem.isCharged(itemStack) ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / (float)NewCrossbowItem.getChargeTime(itemStack);
             }
         });
-        ItemModelsProperties.registerProperty(item, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
-            return entity != null && entity.isHandActive() && entity.getActiveItemStack() == itemStack && !NewCrossbowItem.isCharged(itemStack) ? 1.0F : 0.0F;
+        ItemModelsProperties.register(item, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
+            return entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack && !NewCrossbowItem.isCharged(itemStack) ? 1.0F : 0.0F;
         });
-        ItemModelsProperties.registerProperty(item, new ResourceLocation("charged"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(item, new ResourceLocation("charged"), (itemStack, world, entity) -> {
             return entity != null && NewCrossbowItem.isCharged(itemStack) ? 1.0F : 0.0F;
         });
-        ItemModelsProperties.registerProperty(item, new ResourceLocation("firework"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(item, new ResourceLocation("firework"), (itemStack, world, entity) -> {
             return entity != null && NewCrossbowItem.isCharged(itemStack) && NewCrossbowItem.hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.0F : 0.0F;
         });
     }
 
     public static void registerStringTypeProperty(Item item){
-        ItemModelsProperties.registerProperty(item, new ResourceLocation("stringtype"),  (itemStack, world, entity) -> {
+        ItemModelsProperties.register(item, new ResourceLocation("stringtype"),  (itemStack, world, entity) -> {
             CompoundNBT compoundnbt = itemStack.getTag();
             if(compoundnbt != null && compoundnbt.contains("StringType")){
-                String s = compoundnbt.get("StringType").getString();
+                String s = compoundnbt.get("StringType").getAsString();
                 switch(s){
                     case "flame":
                         return 2;

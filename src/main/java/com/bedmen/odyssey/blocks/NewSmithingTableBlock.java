@@ -23,21 +23,21 @@ public class NewSmithingTableBlock extends CraftingTableBlock {
     private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.upgrade");
 
     public NewSmithingTableBlock() {
-        super(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD));
+        super(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD));
     }
 
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
+    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
         return new SimpleNamedContainerProvider((id, inventory, player) -> {
-            return new NewSmithingTableContainer(id, inventory, IWorldPosCallable.of(worldIn, pos));
+            return new NewSmithingTableContainer(id, inventory, IWorldPosCallable.create(worldIn, pos));
         }, CONTAINER_NAME);
     }
 
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (worldIn.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            player.openContainer(state.getContainer(worldIn, pos));
-            player.addStat(Stats.field_232864_aE_);
+            player.openMenu(state.getMenuProvider(worldIn, pos));
+            player.awardStat(Stats.INTERACT_WITH_SMITHING_TABLE);
             return ActionResultType.CONSUME;
         }
     }

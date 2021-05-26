@@ -20,9 +20,9 @@ public abstract class MixinServerPlayNetHandler implements INewServerPlayNetHand
     public ServerPlayerEntity player;
 
     public void processUpdateEnchant(CUpdateEnchantPacket packetIn) {
-        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.player.getServerWorld());
-        if (this.player.openContainer instanceof NewEnchantmentContainer) {
-            ((NewEnchantmentContainer)this.player.openContainer).doEnchant(packetIn.getLevel(), packetIn.getId(), packetIn.getCost());
+        PacketThreadUtil.ensureRunningOnSameThread(packetIn, this, this.player.getLevel());
+        if (this.player.containerMenu instanceof NewEnchantmentContainer) {
+            ((NewEnchantmentContainer)this.player.containerMenu).doEnchant(packetIn.getLevel(), packetIn.getId(), packetIn.getCost());
         }
 
     }

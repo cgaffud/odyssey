@@ -42,14 +42,14 @@ public class ModOreGen {
         } else {
             //Overworld Ore
             if(event.getCategory() == Biome.Category.ICY) {
-                gen.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SAPPHIRE_ORE_FEATURE);
+                gen.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SAPPHIRE_ORE_FEATURE);
             }
         }
 
     }
 
     private static ConfiguredFeature<?, ?> oreGen(int max_y, int size, int count, RegistryObject<Block> oreBlock, RuleTest rule){
-        return Feature.ORE.withConfiguration(new OreFeatureConfig(rule, oreBlock.get().getDefaultState(), size)).range(max_y).square().func_242731_b(count);
+        return Feature.ORE.configured(new OreFeatureConfig(rule, oreBlock.get().defaultBlockState(), size)).range(max_y).squared().count(count);
     }
 
 }

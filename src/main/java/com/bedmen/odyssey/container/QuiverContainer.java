@@ -25,7 +25,7 @@ public class QuiverContainer extends Container {
     protected final PlayerEntity player;
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public boolean stillValid(PlayerEntity playerIn) {
         return true;
     }
 
@@ -54,7 +54,7 @@ public class QuiverContainer extends Container {
 
         for(int k = 0; k < this.size; ++k) {
             this.addSlot(new Slot(inv, k, 89 + k * 18 - this.size * 9, 34){
-                public boolean isItemValid(ItemStack stack) {
+                public boolean mayPlace(ItemStack stack) {
                     if(stack.getItem() instanceof ArrowItem) return true;
                     if(stack.getItem() instanceof SpectralArrowItem) return true;
                     if(stack.getItem() instanceof TippedArrowItem) return true;
@@ -69,7 +69,7 @@ public class QuiverContainer extends Container {
             NonNullList<ItemStack> nonnulllist = NonNullList.withSize(this.size, ItemStack.EMPTY);
             ItemStackHelper.loadAllItems(compoundNBT, nonnulllist);
             for(int i = 0; i < this.size; i++) {
-                this.inv.setInventorySlotContents(i, nonnulllist.get(i));
+                this.inv.setItem(i, nonnulllist.get(i));
             }
         }
 
@@ -81,53 +81,53 @@ public class QuiverContainer extends Container {
 
         for(int k = 0; k < 9; ++k) {
             this.addSlot(new Slot(playerInv, k, 8 + k * 18, 142){
-                public boolean canTakeStack(PlayerEntity playerIn) {
-                    return !(getStack().getItem() instanceof QuiverItem);
+                public boolean mayPickup(PlayerEntity playerIn) {
+                    return !(getItem().getItem() instanceof QuiverItem);
                 }
             });
         }
     }
 
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        ItemStack itemStack1 = this.player.getHeldItemMainhand();
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        ItemStack itemStack1 = this.player.getMainHandItem();
         boolean flag = false;
         if(!(itemStack1.getItem() instanceof QuiverItem)){
-            itemStack1 = this.player.getHeldItemOffhand();
+            itemStack1 = this.player.getOffhandItem();
             flag = true;
         }
         CompoundNBT compoundNBT =  itemStack1.getOrCreateTag();
         compoundNBT.remove("Items");
         NonNullList<ItemStack> list = NonNullList.withSize(this.size, ItemStack.EMPTY);
         for(int i = 0; i < this.size; i++){
-            list.set(i, this.inv.getStackInSlot(i));
+            list.set(i, this.inv.getItem(i));
         }
         ItemStackHelper.saveAllItems(compoundNBT, list, false);
         itemStack1.setTag(compoundNBT);
-        if(flag) playerIn.setItemStackToSlot(EquipmentSlotType.OFFHAND, itemStack1);
-        else playerIn.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemStack1);
+        if(flag) playerIn.setItemSlot(EquipmentSlotType.OFFHAND, itemStack1);
+        else playerIn.setItemSlot(EquipmentSlotType.MAINHAND, itemStack1);
     }
 
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index >= this.size) {
                 if (index < this.size+36) {
-                    if (!this.mergeItemStack(itemstack1, 0, this.size, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 0, this.size, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
-            } else if (!this.mergeItemStack(itemstack1, this.size, this.size+36, true)) {
+            } else if (!this.moveItemStackTo(itemstack1, this.size, this.size+36, true)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (itemstack1.getCount() == itemstack.getCount()) {

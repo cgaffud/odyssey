@@ -50,8 +50,8 @@ public class Odyssey
 {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "oddc";
-    public static final RenderMaterial SERPENT_SHIELD_BASE = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(Odyssey.MOD_ID, "entity/serpent_shield_base")));
-    public static final RenderMaterial SERPENT_SHIELD_BASE_NOPATTERN = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(Odyssey.MOD_ID,"entity/serpent_shield_base_nopattern")));
+    public static final RenderMaterial SERPENT_SHIELD_BASE = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID, "entity/serpent_shield_base")));
+    public static final RenderMaterial SERPENT_SHIELD_BASE_NOPATTERN = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID,"entity/serpent_shield_base_nopattern")));
 
     public Odyssey() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -79,7 +79,7 @@ public class Odyssey
         ModTrades.addTrades();
         EnchantmentUtil.init();
 
-        Set<RenderMaterial> LOCATIONS_BUILTIN_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(ModelBakery.class, null, "LOCATIONS_BUILTIN_TEXTURES");
+        Set<RenderMaterial> LOCATIONS_BUILTIN_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(ModelBakery.class, null, "UNREFERENCED_TEXTURES");
         LOCATIONS_BUILTIN_TEXTURES.add(SERPENT_SHIELD_BASE);
         LOCATIONS_BUILTIN_TEXTURES.add(SERPENT_SHIELD_BASE_NOPATTERN);
 
@@ -107,8 +107,8 @@ public class Odyssey
         EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::predicate);
 
         DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(EntityTypeRegistry.WEREWOLF.get(), WerewolfEntity.attributes().create());
-            GlobalEntityTypeAttributes.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.attributes().create());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.WEREWOLF.get(), WerewolfEntity.attributes().build());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.attributes().build());
         });
     }
 
@@ -117,18 +117,18 @@ public class Odyssey
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), NewBeaconTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), NewEnchantmentTableTileEntityRenderer::new);
 
-        ScreenManager.registerFactory(ContainerRegistry.BEACON.get(), NewBeaconScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.SMITHING_TABLE.get(), NewSmithingTableScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.INFUSER.get(), InfuserScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.ENCHANTMENT.get(), NewEnchantmentScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.FLETCHING_TABLE.get(), FletchingTableScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.QUIVER7.get(), QuiverScreen::new);
-        ScreenManager.registerFactory(ContainerRegistry.QUIVER9.get(), QuiverScreen::new);
+        ScreenManager.register(ContainerRegistry.BEACON.get(), NewBeaconScreen::new);
+        ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), NewSmithingTableScreen::new);
+        ScreenManager.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
+        ScreenManager.register(ContainerRegistry.INFUSER.get(), InfuserScreen::new);
+        ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), NewEnchantmentScreen::new);
+        ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
+        ScreenManager.register(ContainerRegistry.FLETCHING_TABLE.get(), FletchingTableScreen::new);
+        ScreenManager.register(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);
+        ScreenManager.register(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
+        ScreenManager.register(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);
+        ScreenManager.register(ContainerRegistry.QUIVER7.get(), QuiverScreen::new);
+        ScreenManager.register(ContainerRegistry.QUIVER9.get(), QuiverScreen::new);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEREWOLF.get(), WerewolfRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
@@ -136,14 +136,14 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.NEW_TRIDENT.get(), NewTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.SERPENT_TRIDENT.get(), NewTridentRenderer::new);
 
-        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG1.get(), RenderType.getTranslucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG2.get(), RenderType.getTranslucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG3.get(), RenderType.getTranslucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG4.get(), RenderType.getTranslucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG5.get(), RenderType.getTranslucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG6.get(), RenderType.getTranslucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG7.get(), RenderType.getTranslucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG8.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG1.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG2.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG3.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG4.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG5.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG6.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG7.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FOG8.get(), RenderType.translucent());
     }
 
     @SubscribeEvent

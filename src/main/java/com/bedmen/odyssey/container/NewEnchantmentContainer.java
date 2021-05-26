@@ -38,22 +38,22 @@ public class NewEnchantmentContainer extends Container {
 
     public NewEnchantmentContainer(int id, PlayerInventory playerInventory, IInventory inv, IIntArray tableData1, IIntArray tableData2, IIntArray enchantData) {
         super(ContainerRegistry.ENCHANTMENT.get(), id);
-        assertInventorySize(inv, 2);
+        checkContainerSize(inv, 2);
         this.inv = inv;
-        this.world = playerInventory.player.world;
-        assertIntArraySize(tableData1, 96);
-        assertIntArraySize(tableData2, 96);
-        assertIntArraySize(enchantData, 3);
+        this.world = playerInventory.player.level;
+        checkContainerDataCount(tableData1, 96);
+        checkContainerDataCount(tableData2, 96);
+        checkContainerDataCount(enchantData, 3);
         this.tableData1 = tableData1;
         this.tableData2 = tableData2;
         this.enchantData = enchantData;
         this.addSlot(new Slot(this.inv, 0, 29, 23){
-            public int getSlotStackLimit() {
+            public int getMaxStackSize() {
                 return 1;
             }
         });
         this.addSlot(new Slot(this.inv, 1, 41, 47) {
-            public boolean isItemValid(ItemStack stack) {
+            public boolean mayPlace(ItemStack stack) {
                 return stack.getItem().equals(Items.LAPIS_LAZULI);
             }
         });
@@ -68,53 +68,53 @@ public class NewEnchantmentContainer extends Container {
             this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
 
-        this.trackIntArray(tableData1);
-        this.trackIntArray(tableData2);
-        this.trackIntArray(enchantData);
+        this.addDataSlots(tableData1);
+        this.addDataSlots(tableData2);
+        this.addDataSlots(enchantData);
     }
 
     /**
      * Determines whether supplied player can use this container
      */
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return this.inv.isUsableByPlayer(playerIn);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return this.inv.stillValid(playerIn);
     }
 
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index == 0 || index  == 1) {
-                if (!this.mergeItemStack(itemstack1, 2, 38, true)) {
+                if (!this.moveItemStackTo(itemstack1, 2, 38, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onSlotChange(itemstack1, itemstack);
+                slot.onQuickCraft(itemstack1, itemstack);
             } else if (index > 1) {
                 if(itemstack1.getItem().equals(Items.LAPIS_LAZULI)){
-                    if (!this.mergeItemStack(itemstack1, 1, 2, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (index >= 2 && index < 38) {
-                    if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
-            } else if (!this.mergeItemStack(itemstack1, 2, 38, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 2, 38, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (itemstack1.getCount() == itemstack.getCount()) {
@@ -132,10 +132,10 @@ public class NewEnchantmentContainer extends Container {
         this.levelList = new ArrayList<Integer>();
         this.costList = new ArrayList<Integer>();
         List<Integer> list = new ArrayList<Integer>();
-        ItemStack itemStack = this.inv.getStackInSlot(0);
+        ItemStack itemStack = this.inv.getItem(0);
         Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
 
-        for(int i = 0; i < this.tableData1.size(); i++){
+        for(int i = 0; i < this.tableData1.getCount(); i++){
             int i1 = this.tableData1.get(i);
             if(!EnchantmentUtil.canBeApplied(itemStack,i1)) continue;
             int i2 = this.tableData2.get(i);

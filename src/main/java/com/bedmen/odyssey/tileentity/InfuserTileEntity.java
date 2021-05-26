@@ -65,7 +65,7 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
 
         }
 
-        public int size() {
+        public int getCount() {
             return 3;
         }
     };
@@ -77,21 +77,21 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
     }
 
     private boolean hasLight() {
-        if(this.world == null) return false;
-        else return this.world.getLightSubtracted(this.pos.add(0,1,0), 0) >= 15;
+        if(this.level == null) return false;
+        else return this.level.getRawBrightness(this.worldPosition.offset(0,1,0), 0) >= 15;
     }
 
-    public void read(BlockState state, CompoundNBT nbt) { //TODO: MARK
-        super.read(state, nbt);
-        this.items = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+    public void load(BlockState state, CompoundNBT nbt) { //TODO: MARK
+        super.load(state, nbt);
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(nbt, this.items);
         this.cookTime = nbt.getInt("CookTime");
         this.cookTimeTotal = nbt.getInt("CookTimeTotal");
 
     }
 
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.putInt("CookTime", this.cookTime);
         compound.putInt("CookTimeTotal", this.cookTimeTotal);
         ItemStackHelper.saveAllItems(compound, this.items);
@@ -101,10 +101,10 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
     public void tick() {
         boolean flag1 = false;
 
-        if (!this.world.isRemote) {
+        if (!this.level.isClientSide) {
             if (this.hasLight()) {
-                IRecipe<?> irecipe1 = this.world.getRecipeManager().getRecipe(this.recipeType, this, this.world).orElse(null);
-                IRecipe<?> irecipe2 = this.world.getRecipeManager().getRecipe(ModRecipeType.ENCHANTED_BOOK_INFUSING, this, this.world).orElse(null);
+                IRecipe<?> irecipe1 = this.level.getRecipeManager().getRecipeFor(this.recipeType, this, this.level).orElse(null);
+                IRecipe<?> irecipe2 = this.level.getRecipeManager().getRecipeFor(ModRecipeType.ENCHANTED_BOOK_INFUSING, this, this.level).orElse(null);
 
                 if (this.canInfuse(irecipe1)) {
                     ++this.cookTime;
@@ -130,7 +130,7 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
             }
         }
 
-        if(flag1) this.markDirty();
+        if(flag1) this.setChanged();
     }
 
     protected boolean canInfuse(@Nullable IRecipe<?> recipeIn) {
@@ -158,7 +158,7 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
             ItemStack itemstack4 = this.items.get(4);
             ItemStack itemstack5 = this.items.get(5);
             ItemStack itemstack6 = this.items.get(6);
-            ItemStack itemstackRO = recipe.getCraftingResult(null);
+            ItemStack itemstackRO = recipe.assemble(null);
 
             this.items.set(7, itemstackRO.copy());
 
@@ -183,21 +183,21 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
     /**
      * Returns true if automation can insert the given item in the given slot from the given side.
      */
-    public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
-        return this.isItemValidForSlot(index, itemStackIn);
+    public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+        return this.canPlaceItem(index, itemStackIn);
     }
 
     /**
      * Returns true if automation can extract the given item in the given slot from the given side.
      */
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return direction == Direction.DOWN && index == 3;
     }
 
     /**
      * Returns the number of slots in the inventory.
      */
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return this.items.size();
     }
 
@@ -214,39 +214,39 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
     /**
      * Returns the stack in the given slot.
      */
-    public ItemStack getStackInSlot(int index) {
+    public ItemStack getItem(int index) {
         return this.items.get(index);
     }
 
     /**
      * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
      */
-    public ItemStack decrStackSize(int index, int count) {
-        return ItemStackHelper.getAndSplit(this.items, index, count);
+    public ItemStack removeItem(int index, int count) {
+        return ItemStackHelper.removeItem(this.items, index, count);
     }
 
     /**
      * Removes a stack from the given slot and returns it.
      */
-    public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.getAndRemove(this.items, index);
+    public ItemStack removeItemNoUpdate(int index) {
+        return ItemStackHelper.takeItem(this.items, index);
     }
 
     /**
      * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
      */
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public void setItem(int index, ItemStack stack) {
         ItemStack itemstack = this.items.get(index);
-        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
+        boolean flag = !stack.isEmpty() && stack.sameItem(itemstack) && ItemStack.tagMatches(stack, itemstack);
         this.items.set(index, stack);
-        if (stack.getCount() > this.getInventoryStackLimit()) {
-            stack.setCount(this.getInventoryStackLimit());
+        if (stack.getCount() > this.getMaxStackSize()) {
+            stack.setCount(this.getMaxStackSize());
         }
 
         if (index != 7 && !flag) {
             this.cookTimeTotal = this.getCookTime();
             this.cookTime = 0;
-            this.markDirty();
+            this.setChanged();
         }
 
     }
@@ -254,11 +254,11 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
     /**
      * Don't rename this method to canInteractWith due to conflicts with Container
      */
-    public boolean isUsableByPlayer(PlayerEntity player) {
-        if (this.world.getTileEntity(this.pos) != this) {
+    public boolean stillValid(PlayerEntity player) {
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
         } else {
-            return player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
+            return player.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) <= 64.0D;
         }
     }
 
@@ -266,11 +266,11 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot. For
      * guis use Slot.isItemValid
      */
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         return false;
     }
 
-    public void clear() {
+    public void clearContent() {
         this.items.clear();
     }
 
@@ -282,7 +282,7 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
         return null;
     }
 
-    public void onCrafting(PlayerEntity player) {
+    public void awardUsedRecipes(PlayerEntity player) {
     }
 
     public void fillStackedContents(RecipeItemHelper helper) {
@@ -297,7 +297,7 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
 
     @Override
     public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-        if (!this.removed && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!this.remove && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (facing == Direction.UP)
                 return handlers[0].cast();
             else if (facing == Direction.DOWN)
@@ -312,8 +312,8 @@ public class InfuserTileEntity extends LockableTileEntity implements ISidedInven
      * invalidates a tile entity
      */
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
         for (int x = 0; x < handlers.length; x++)
             handlers[x].invalidate();
     }

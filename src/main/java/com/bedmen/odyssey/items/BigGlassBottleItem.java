@@ -22,25 +22,25 @@ public class BigGlassBottleItem extends Item {
      * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
      * {@link #onItemUse}.
      */
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
+        RayTraceResult raytraceresult = getPlayerPOVHitResult(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
         if (raytraceresult.getType() == RayTraceResult.Type.MISS) {
-            return ActionResult.resultPass(itemstack);
+            return ActionResult.pass(itemstack);
         } else {
             if (raytraceresult.getType() == RayTraceResult.Type.BLOCK) {
-                BlockPos blockpos = ((BlockRayTraceResult)raytraceresult).getPos();
-                if (!worldIn.isBlockModifiable(playerIn, blockpos)) {
-                    return ActionResult.resultPass(itemstack);
+                BlockPos blockpos = ((BlockRayTraceResult)raytraceresult).getBlockPos();
+                if (!worldIn.mayInteract(playerIn, blockpos)) {
+                    return ActionResult.pass(itemstack);
                 }
             }
 
-            return ActionResult.resultPass(itemstack);
+            return ActionResult.pass(itemstack);
         }
     }
 
     protected ItemStack turnBottleIntoItem(ItemStack bottleStack, PlayerEntity player, ItemStack stack) {
-        player.addStat(Stats.ITEM_USED.get(this));
-        return DrinkHelper.fill(bottleStack, player, stack);
+        player.awardStat(Stats.ITEM_USED.get(this));
+        return DrinkHelper.createFilledResult(bottleStack, player, stack);
     }
 }

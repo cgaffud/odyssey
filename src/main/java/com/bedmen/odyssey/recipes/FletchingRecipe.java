@@ -33,24 +33,24 @@ public class FletchingRecipe implements IRecipe<IInventory>{
     }
 
     public boolean matches(IInventory inv, World worldIn) {
-        ItemStack itemStack = inv.getStackInSlot(0);
+        ItemStack itemStack = inv.getItem(0);
         if(!this.base.test(itemStack)) {
             return false;
         }
         CompoundNBT compoundnbt = itemStack.getTag();
         if(compoundnbt != null && compoundnbt.contains("StringType")){
-            if((compoundnbt.get("StringType").getString()).equals(this.stringType)) return false;
+            if((compoundnbt.get("StringType").getAsString()).equals(this.stringType)) return false;
         }
 
         for(int i = 0; i < 3; i++) {
-            if(!this.addition.test(inv.getStackInSlot(i+1))) return false;
+            if(!this.addition.test(inv.getItem(i+1))) return false;
         }
         return true;
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
-        ItemStack itemstack = inv.getStackInSlot(0);
+    public ItemStack assemble(IInventory inv) {
+        ItemStack itemstack = inv.getItem(0);
         ItemStack itemstack1 = itemstack.copy();
         CompoundNBT compoundnbt = itemstack.getTag();
         if (compoundnbt != null) {
@@ -63,12 +63,12 @@ public class FletchingRecipe implements IRecipe<IInventory>{
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return ItemStack.EMPTY;
     }
 
@@ -90,7 +90,7 @@ public class FletchingRecipe implements IRecipe<IInventory>{
         return ModRecipeType.FLETCHING;
     }
 
-    public ItemStack getIcon() {
+    public ItemStack getToastSymbol() {
         return new ItemStack(BlockRegistry.FLETCHING_TABLE.get());
     }
 
@@ -100,26 +100,26 @@ public class FletchingRecipe implements IRecipe<IInventory>{
     }
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FletchingRecipe> {
-        public FletchingRecipe read(ResourceLocation recipeId, JsonObject json) {
-            JsonElement jsonelement1 = (JSONUtils.isJsonArray(json, "base") ? JSONUtils.getJsonArray(json, "base") : JSONUtils.getJsonObject(json, "base"));
-            Ingredient base = Ingredient.deserialize(jsonelement1);
-            JsonElement jsonelement2 = (JSONUtils.isJsonArray(json, "addition") ? JSONUtils.getJsonArray(json, "addition") : JSONUtils.getJsonObject(json, "addition"));
-            Ingredient addition = Ingredient.deserialize(jsonelement2);
-            String s1 = JSONUtils.getString(json, "stringType", "");
+        public FletchingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            JsonElement jsonelement1 = (JSONUtils.isArrayNode(json, "base") ? JSONUtils.getAsJsonArray(json, "base") : JSONUtils.getAsJsonObject(json, "base"));
+            Ingredient base = Ingredient.fromJson(jsonelement1);
+            JsonElement jsonelement2 = (JSONUtils.isArrayNode(json, "addition") ? JSONUtils.getAsJsonArray(json, "addition") : JSONUtils.getAsJsonObject(json, "addition"));
+            Ingredient addition = Ingredient.fromJson(jsonelement2);
+            String s1 = JSONUtils.getAsString(json, "stringType", "");
             return new FletchingRecipe(recipeId, base, addition, s1);
         }
 
-        public FletchingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            Ingredient base = Ingredient.read(buffer);
-            Ingredient addition = Ingredient.read(buffer);
-            String s1 = buffer.readString(32767);
+        public FletchingRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+            Ingredient base = Ingredient.fromNetwork(buffer);
+            Ingredient addition = Ingredient.fromNetwork(buffer);
+            String s1 = buffer.readUtf(32767);
             return new FletchingRecipe(recipeId, base, addition, s1);
         }
 
-        public void write(PacketBuffer buffer, FletchingRecipe recipe) {
-            recipe.base.write(buffer);
-            recipe.addition.write(buffer);
-            buffer.writeString(recipe.stringType);
+        public void toNetwork(PacketBuffer buffer, FletchingRecipe recipe) {
+            recipe.base.toNetwork(buffer);
+            recipe.addition.toNetwork(buffer);
+            buffer.writeUtf(recipe.stringType);
         }
     }
 }

@@ -31,41 +31,40 @@ import javax.annotation.Nullable;
 public abstract class MixinItemRenderer{
 
     @Shadow
-    private ItemModelMesher itemModelMesher;
+    private ItemModelMesher itemModelShaper;
+    @Shadow
+    public static IVertexBuilder getCompassFoilBufferDirect(IRenderTypeBuffer buffer, RenderType renderType, MatrixStack.Entry matrixEntry) {return null;}
+    @Shadow
+    public static IVertexBuilder getCompassFoilBuffer(IRenderTypeBuffer buffer, RenderType renderType, MatrixStack.Entry matrixEntry) {return null;}
+    @Shadow
+    public static IVertexBuilder getFoilBufferDirect(IRenderTypeBuffer buffer, RenderType renderType, boolean noEntity, boolean withGlint) {return null;}
+    @Shadow
+    public static IVertexBuilder getFoilBuffer(IRenderTypeBuffer bufferIn, RenderType renderTypeIn, boolean isItemIn, boolean glintIn) {return null;}
+    @Shadow
+    public void renderModelLists(IBakedModel modelIn, ItemStack stack, int combinedLightIn, int combinedOverlayIn, MatrixStack matrixStackIn, IVertexBuilder bufferIn) {}
 
-    @Shadow
-    public static IVertexBuilder getDirectGlintVertexBuilder(IRenderTypeBuffer buffer, RenderType renderType, MatrixStack.Entry matrixEntry) {return null;}
-    @Shadow
-    public static IVertexBuilder getGlintVertexBuilder(IRenderTypeBuffer buffer, RenderType renderType, MatrixStack.Entry matrixEntry) {return null;}
-    @Shadow
-    public static IVertexBuilder getEntityGlintVertexBuilder(IRenderTypeBuffer buffer, RenderType renderType, boolean noEntity, boolean withGlint) {return null;}
-    @Shadow
-    public static IVertexBuilder getBuffer(IRenderTypeBuffer bufferIn, RenderType renderTypeIn, boolean isItemIn, boolean glintIn) {return null;}
-    @Shadow
-    public void renderModel(IBakedModel modelIn, ItemStack stack, int combinedLightIn, int combinedOverlayIn, MatrixStack matrixStackIn, IVertexBuilder bufferIn) {}
-
-    public void renderItem(@Nullable LivingEntity livingEntityIn, ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean leftHand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, @Nullable World worldIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(@Nullable LivingEntity livingEntityIn, ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean leftHand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, @Nullable World worldIn, int combinedLightIn, int combinedOverlayIn) {
         if (!itemStackIn.isEmpty() && !(itemStackIn.getItem() instanceof QuiverItem && leftHand)) {
-            IBakedModel ibakedmodel = this.getItemModelWithOverrides(itemStackIn, worldIn, livingEntityIn);
-            this.renderItem(itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, ibakedmodel);
+            IBakedModel ibakedmodel = this.getModel(itemStackIn, worldIn, livingEntityIn);
+            this.render(itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, ibakedmodel);
         }
     }
 
-    public void renderItem(ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean leftHand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn, IBakedModel modelIn) {
+    public void render(ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean leftHand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn, IBakedModel modelIn) {
         if (!itemStackIn.isEmpty()) {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             boolean flag = transformTypeIn == ItemCameraTransforms.TransformType.GUI || transformTypeIn == ItemCameraTransforms.TransformType.GROUND || transformTypeIn == ItemCameraTransforms.TransformType.FIXED;
             if (itemStackIn.getItem() == ItemRegistry.TRIDENT.get() && flag) {
-                modelIn = this.itemModelMesher.getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
+                modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
             } else if(itemStackIn.getItem() == ItemRegistry.SERPENT_TRIDENT.get() && flag) {
-                modelIn = this.itemModelMesher.getModelManager().getModel(new ModelResourceLocation("oddc:serpent_trident#inventory"));
+                modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("oddc:serpent_trident#inventory"));
             }
 
             modelIn = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStackIn, modelIn, transformTypeIn, leftHand);
             matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
-            if (!modelIn.isBuiltInRenderer() && (!(itemStackIn.getItem() instanceof NewTridentItem) || flag)) {
+            if (!modelIn.isCustomRenderer() && (!(itemStackIn.getItem() instanceof NewTridentItem) || flag)) {
                 boolean flag1;
-                if (transformTypeIn != ItemCameraTransforms.TransformType.GUI && !transformTypeIn.isFirstPerson() && itemStackIn.getItem() instanceof BlockItem) {
+                if (transformTypeIn != ItemCameraTransforms.TransformType.GUI && !transformTypeIn.firstPerson() && itemStackIn.getItem() instanceof BlockItem) {
                     Block block = ((BlockItem)itemStackIn.getItem()).getBlock();
                     flag1 = !(block instanceof BreakableBlock) && !(block instanceof StainedGlassPaneBlock);
                 } else {
@@ -73,52 +72,52 @@ public abstract class MixinItemRenderer{
                 }
                 if (modelIn.isLayered()) { net.minecraftforge.client.ForgeHooksClient.drawItemLayered(getIR(this), modelIn, itemStackIn, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, flag1); }
                 else {
-                    RenderType rendertype = RenderTypeLookup.func_239219_a_(itemStackIn, flag1);
+                    RenderType rendertype = RenderTypeLookup.getRenderType(itemStackIn, flag1);
                     IVertexBuilder ivertexbuilder;
-                    if (itemStackIn.getItem() == Items.COMPASS && itemStackIn.hasEffect()) {
-                        matrixStackIn.push();
-                        MatrixStack.Entry matrixstack$entry = matrixStackIn.getLast();
+                    if (itemStackIn.getItem() == Items.COMPASS && itemStackIn.hasFoil()) {
+                        matrixStackIn.pushPose();
+                        MatrixStack.Entry matrixstack$entry = matrixStackIn.last();
                         if (transformTypeIn == ItemCameraTransforms.TransformType.GUI) {
-                            matrixstack$entry.getMatrix().mul(0.5F);
-                        } else if (transformTypeIn.isFirstPerson()) {
-                            matrixstack$entry.getMatrix().mul(0.75F);
+                            matrixstack$entry.pose().multiply(0.5F);
+                        } else if (transformTypeIn.firstPerson()) {
+                            matrixstack$entry.pose().multiply(0.75F);
                         }
 
                         if (flag1) {
-                            ivertexbuilder = getDirectGlintVertexBuilder(bufferIn, rendertype, matrixstack$entry);
+                            ivertexbuilder = getCompassFoilBufferDirect(bufferIn, rendertype, matrixstack$entry);
                         } else {
-                            ivertexbuilder = getGlintVertexBuilder(bufferIn, rendertype, matrixstack$entry);
+                            ivertexbuilder = getCompassFoilBuffer(bufferIn, rendertype, matrixstack$entry);
                         }
 
-                        matrixStackIn.pop();
+                        matrixStackIn.popPose();
                     } else if (flag1) {
-                        ivertexbuilder = getEntityGlintVertexBuilder(bufferIn, rendertype, true, itemStackIn.hasEffect());
+                        ivertexbuilder = getFoilBufferDirect(bufferIn, rendertype, true, itemStackIn.hasFoil());
                     } else {
-                        ivertexbuilder = getBuffer(bufferIn, rendertype, true, itemStackIn.hasEffect());
+                        ivertexbuilder = getFoilBuffer(bufferIn, rendertype, true, itemStackIn.hasFoil());
                     }
 
-                    this.renderModel(modelIn, itemStackIn, combinedLightIn, combinedOverlayIn, matrixStackIn, ivertexbuilder);
+                    this.renderModelLists(modelIn, itemStackIn, combinedLightIn, combinedOverlayIn, matrixStackIn, ivertexbuilder);
                 }
             } else {
-                itemStackIn.getItem().getItemStackTileEntityRenderer().func_239207_a_(itemStackIn, transformTypeIn, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+                itemStackIn.getItem().getItemStackTileEntityRenderer().renderByItem(itemStackIn, transformTypeIn, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
             }
 
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
     }
 
-    public IBakedModel getItemModelWithOverrides(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entitylivingbaseIn) {
+    public IBakedModel getModel(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entitylivingbaseIn) {
         Item item = stack.getItem();
         IBakedModel ibakedmodel;
         if (item instanceof NewTridentItem) {
-            ibakedmodel = this.itemModelMesher.getModelManager().getModel(new ModelResourceLocation("minecraft:trident_in_hand#inventory"));
+            ibakedmodel = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("minecraft:trident_in_hand#inventory"));
         } else {
-            ibakedmodel = this.itemModelMesher.getItemModel(stack);
+            ibakedmodel = this.itemModelShaper.getItemModel(stack);
         }
 
         ClientWorld clientworld = worldIn instanceof ClientWorld ? (ClientWorld)worldIn : null;
-        IBakedModel ibakedmodel1 = ibakedmodel.getOverrides().getOverrideModel(ibakedmodel, stack, clientworld, entitylivingbaseIn);
-        return ibakedmodel1 == null ? this.itemModelMesher.getModelManager().getMissingModel() : ibakedmodel1;
+        IBakedModel ibakedmodel1 = ibakedmodel.getOverrides().resolve(ibakedmodel, stack, clientworld, entitylivingbaseIn);
+        return ibakedmodel1 == null ? this.itemModelShaper.getModelManager().getMissingModel() : ibakedmodel1;
     }
 
     public ItemRenderer getIR(Object o){

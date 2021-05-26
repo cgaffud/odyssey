@@ -22,19 +22,19 @@ public class WerewolfRenderer extends MobRenderer<WerewolfEntity, WerewolfModel<
     /**
      * Defines what float the third param in setRotationAngles of ModelBase is
      */
-    protected float handleRotationFloat(WerewolfEntity livingBase, float partialTicks) {
+    protected float getBob(WerewolfEntity livingBase, float partialTicks) {
         return livingBase.getTailRotation();
     }
 
     public void render(WerewolfEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         if (entityIn.isWolfWet()) {
             float f = entityIn.getShadingWhileWet(partialTicks);
-            this.entityModel.setTint(f, f, f);
+            this.model.setColor(f, f, f);
         }
 
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         if (entityIn.isWolfWet()) {
-            this.entityModel.setTint(1.0F, 1.0F, 1.0F);
+            this.model.setColor(1.0F, 1.0F, 1.0F);
         }
 
     }
@@ -42,7 +42,7 @@ public class WerewolfRenderer extends MobRenderer<WerewolfEntity, WerewolfModel<
     /**
      * Returns the location of an entity's texture.
      */
-    public ResourceLocation getEntityTexture(WerewolfEntity entity) {
+    public ResourceLocation getTextureLocation(WerewolfEntity entity) {
         return ANGRY_WOLF_TEXTURES;
     }
 }

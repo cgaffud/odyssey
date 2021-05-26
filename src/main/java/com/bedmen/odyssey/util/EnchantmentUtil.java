@@ -28,9 +28,9 @@ public class EnchantmentUtil {
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
     private static final int[] SHIELD_ENCHANTS = {40,41};
 
-    private static final Enchantment[] enchantments = {Enchantments.PROTECTION,
+    private static final Enchantment[] enchantments = {Enchantments.ALL_DAMAGE_PROTECTION,
             Enchantments.FIRE_PROTECTION,
-            Enchantments.FEATHER_FALLING,
+            Enchantments.FALL_PROTECTION,
             Enchantments.BLAST_PROTECTION,
             Enchantments.PROJECTILE_PROTECTION,
             Enchantments.RESPIRATION,
@@ -45,18 +45,18 @@ public class EnchantmentUtil {
             Enchantments.BANE_OF_ARTHROPODS,
             Enchantments.KNOCKBACK,
             Enchantments.FIRE_ASPECT,
-            Enchantments.LOOTING,
-            Enchantments.SWEEPING,
-            Enchantments.EFFICIENCY,
+            Enchantments.MOB_LOOTING,
+            Enchantments.SWEEPING_EDGE,
+            Enchantments.BLOCK_EFFICIENCY,
             Enchantments.SILK_TOUCH,
             Enchantments.UNBREAKING,
-            Enchantments.FORTUNE,
-            Enchantments.POWER,
-            Enchantments.PUNCH,
-            Enchantments.FLAME,
-            Enchantments.INFINITY,
-            Enchantments.LUCK_OF_THE_SEA,
-            Enchantments.LURE,
+            Enchantments.BLOCK_FORTUNE,
+            Enchantments.POWER_ARROWS,
+            Enchantments.PUNCH_ARROWS,
+            Enchantments.FLAMING_ARROWS,
+            Enchantments.INFINITY_ARROWS,
+            Enchantments.FISHING_LUCK,
+            Enchantments.FISHING_SPEED,
             Enchantments.LOYALTY,
             Enchantments.IMPALING,
             Enchantments.RIPTIDE,
@@ -72,9 +72,9 @@ public class EnchantmentUtil {
     private static Map<Enchantment, Integer> integerMap = new HashMap<>();
 
     public static void init(){
-        integerMap.put(Enchantments.PROTECTION, 0);
+        integerMap.put(Enchantments.ALL_DAMAGE_PROTECTION, 0);
         integerMap.put(Enchantments.FIRE_PROTECTION, 1);
-        integerMap.put(Enchantments.FEATHER_FALLING, 2);
+        integerMap.put(Enchantments.FALL_PROTECTION, 2);
         integerMap.put(Enchantments.BLAST_PROTECTION, 3);
         integerMap.put(Enchantments.PROJECTILE_PROTECTION, 4);
         integerMap.put(Enchantments.RESPIRATION, 5);
@@ -89,18 +89,18 @@ public class EnchantmentUtil {
         integerMap.put(Enchantments.BANE_OF_ARTHROPODS, 14);
         integerMap.put(Enchantments.KNOCKBACK, 15);
         integerMap.put(Enchantments.FIRE_ASPECT, 16);
-        integerMap.put(Enchantments.LOOTING, 17);
-        integerMap.put(Enchantments.SWEEPING, 18);
-        integerMap.put(Enchantments.EFFICIENCY, 19);
+        integerMap.put(Enchantments.MOB_LOOTING, 17);
+        integerMap.put(Enchantments.SWEEPING_EDGE, 18);
+        integerMap.put(Enchantments.BLOCK_EFFICIENCY, 19);
         integerMap.put(Enchantments.SILK_TOUCH, 20);
         integerMap.put(Enchantments.UNBREAKING, 21);
-        integerMap.put(Enchantments.FORTUNE, 22);
-        integerMap.put(Enchantments.POWER, 23);
-        integerMap.put(Enchantments.PUNCH, 24);
-        integerMap.put(Enchantments.FLAME, 25);
-        integerMap.put(Enchantments.INFINITY, 26);
-        integerMap.put(Enchantments.LUCK_OF_THE_SEA, 27);
-        integerMap.put(Enchantments.LURE, 28);
+        integerMap.put(Enchantments.BLOCK_FORTUNE, 22);
+        integerMap.put(Enchantments.POWER_ARROWS, 23);
+        integerMap.put(Enchantments.PUNCH_ARROWS, 24);
+        integerMap.put(Enchantments.FLAMING_ARROWS, 25);
+        integerMap.put(Enchantments.INFINITY_ARROWS, 26);
+        integerMap.put(Enchantments.FISHING_LUCK, 27);
+        integerMap.put(Enchantments.FISHING_SPEED, 28);
         integerMap.put(Enchantments.LOYALTY, 29);
         integerMap.put(Enchantments.IMPALING, 30);
         integerMap.put(Enchantments.RIPTIDE, 31);
@@ -134,7 +134,7 @@ public class EnchantmentUtil {
         if(item instanceof AxeItem) return check(AXE_ENCHANTS, id);
         if(item instanceof PickaxeItem || item instanceof ShovelItem || item instanceof HoeItem) return check(TOOL_ENCHANTS, id);
         if(item instanceof ArmorItem){
-            switch(((ArmorItem)item).getEquipmentSlot()){
+            switch(((ArmorItem)item).getSlot()){
                 case FEET:
                     return check(BOOTS_ENCHANTS, id);
                 case CHEST:
@@ -167,15 +167,15 @@ public class EnchantmentUtil {
         if(e == Enchantments.SMITE) return new Enchantment[] {Enchantments.SHARPNESS, Enchantments.BANE_OF_ARTHROPODS};
         if(e == Enchantments.BANE_OF_ARTHROPODS) return new Enchantment[] {Enchantments.SHARPNESS, Enchantments.SMITE};
 
-        if(e == Enchantments.FORTUNE) return new Enchantment[] {Enchantments.SILK_TOUCH};
-        if(e == Enchantments.SILK_TOUCH) return new Enchantment[] {Enchantments.FORTUNE};
+        if(e == Enchantments.BLOCK_FORTUNE) return new Enchantment[] {Enchantments.SILK_TOUCH};
+        if(e == Enchantments.SILK_TOUCH) return new Enchantment[] {Enchantments.BLOCK_FORTUNE};
 
         if(e == Enchantments.CHANNELING) return new Enchantment[] {Enchantments.RIPTIDE};
         if(e == Enchantments.LOYALTY) return new Enchantment[] {Enchantments.RIPTIDE};
         if(e == Enchantments.RIPTIDE) return new Enchantment[] {Enchantments.CHANNELING, Enchantments.LOYALTY};
 
-        if(e == Enchantments.MENDING) return new Enchantment[] {Enchantments.INFINITY};
-        if(e == Enchantments.INFINITY) return new Enchantment[] {Enchantments.MENDING};
+        if(e == Enchantments.MENDING) return new Enchantment[] {Enchantments.INFINITY_ARROWS};
+        if(e == Enchantments.INFINITY_ARROWS) return new Enchantment[] {Enchantments.MENDING};
 
         if(e == Enchantments.DEPTH_STRIDER) return new Enchantment[] {Enchantments.FROST_WALKER};
         if(e == Enchantments.FROST_WALKER) return new Enchantment[] {Enchantments.DEPTH_STRIDER};
@@ -188,8 +188,8 @@ public class EnchantmentUtil {
 
     public static Enchantment deserializeEnchantment(String s) {
 
-        if(!Registry.ENCHANTMENT.containsKey(ResourceLocation.tryCreate(s))) throw new JsonSyntaxException("Couldn't find Enchantment");
-        return Registry.ENCHANTMENT.getOptional(ResourceLocation.tryCreate(s)).get();
+        if(!Registry.ENCHANTMENT.containsKey(ResourceLocation.tryParse(s))) throw new JsonSyntaxException("Couldn't find Enchantment");
+        return Registry.ENCHANTMENT.getOptional(ResourceLocation.tryParse(s)).get();
     }
 
     public static Enchantment readEnchantment(PacketBuffer buffer) {
@@ -202,17 +202,17 @@ public class EnchantmentUtil {
     }
 
     public static float getAccuracy(LivingEntity entity){
-        int i = EnchantmentHelper.getMaxEnchantmentLevel(EnchantmentRegistry.ACCURACY.get(), entity);
+        int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.ACCURACY.get(), entity);
         return i > 0 ? 0.1f : 1.0f;
     }
 
     public static float getBlocking(LivingEntity entity){
-        int i = EnchantmentHelper.getMaxEnchantmentLevel(EnchantmentRegistry.BLOCKING.get(), entity);
+        int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.BLOCKING.get(), entity);
         return 1.0f + 0.25f * i;
     }
 
     public static int getRecovery(LivingEntity entity){
-        int i = EnchantmentHelper.getMaxEnchantmentLevel(EnchantmentRegistry.RECOVERY.get(), entity);
+        int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.RECOVERY.get(), entity);
         return 100 - 40 * i;
     }
 }

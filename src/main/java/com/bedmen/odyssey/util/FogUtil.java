@@ -11,12 +11,12 @@ import net.minecraft.util.math.BlockPos;
 public class FogUtil {
 
     public static int inFog(PlayerEntity playerEntity) {
-        double d0 = playerEntity.getPosYEye() - (double)0.11111111F;
-        BlockPos blockpos = new BlockPos(playerEntity.getPosX(), d0, playerEntity.getPosZ());
-        BlockState blockState = playerEntity.world.getBlockState(blockpos);
+        double d0 = playerEntity.getEyeY() - (double)0.11111111F;
+        BlockPos blockpos = new BlockPos(playerEntity.getX(), d0, playerEntity.getZ());
+        BlockState blockState = playerEntity.level.getBlockState(blockpos);
         Block block = blockState.getBlock();
-        ITag<Block> tag = BlockTags.getCollection().get(new ResourceLocation("oddc:fog"));
-        if(block.isIn(tag)){
+        ITag<Block> tag = BlockTags.getAllTags().getTag(new ResourceLocation("oddc:fog"));
+        if(block.is(tag)){
             double d1 = (double)((float)blockpos.getY() + 1);
             if (d1 > d0) {
                 return fogToInt(block);

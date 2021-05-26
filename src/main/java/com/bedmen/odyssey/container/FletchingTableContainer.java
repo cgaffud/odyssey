@@ -30,9 +30,9 @@ public class FletchingTableContainer extends Container {
          * For tile entities, ensures the chunk containing the tile entity is saved to disk later - the game won't think
          * it hasn't changed and skip it.
          */
-        public void markDirty() {
-            super.markDirty();
-            FletchingTableContainer.this.onCraftMatrixChanged(this);
+        public void setChanged() {
+            super.setChanged();
+            FletchingTableContainer.this.slotsChanged(this);
         }
     };
     protected final IWorldPosCallable worldPos;
@@ -42,19 +42,19 @@ public class FletchingTableContainer extends Container {
     private final IRecipeType<FletchingRecipe> recipeType;
 
     public FletchingTableContainer(int id, PlayerInventory playerInv) {
-        this(id,playerInv,IWorldPosCallable.DUMMY);
+        this(id,playerInv,IWorldPosCallable.NULL);
     }
 
     public FletchingTableContainer(int id, PlayerInventory playerInv, IWorldPosCallable worldPos) {
         super(ContainerRegistry.FLETCHING_TABLE.get(), id);
         this.worldPos = worldPos;
         this.player = playerInv.player;
-        this.world = playerInv.player.world;
+        this.world = playerInv.player.level;
         this.recipeType = ModRecipeType.FLETCHING;
         FletchingTableContainer con = this;
         Slot slot0 = this.addSlot(new Slot(this.inv, 0, 20, 35) {
-            public boolean isItemValid(ItemStack stack) {
-                List<FletchingRecipe> list = con.world.getRecipeManager().getRecipesForType(ModRecipeType.FLETCHING);
+            public boolean mayPlace(ItemStack stack) {
+                List<FletchingRecipe> list = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.FLETCHING);
                 for(int i1 = 0; i1 < list.size(); i1++) {
                     if(list.get(i1).base.test(stack)) {
                         return true;
@@ -68,8 +68,8 @@ public class FletchingTableContainer extends Container {
         for(int i = 0; i < 3; i++) {
             this.addSlot(new Slot(this.inv, 1+i, 57+18*i, 53-18*i) {
 
-                public boolean isItemValid(ItemStack stack) {
-                    List<FletchingRecipe> list = con.world.getRecipeManager().getRecipesForType(ModRecipeType.FLETCHING);
+                public boolean mayPlace(ItemStack stack) {
+                    List<FletchingRecipe> list = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.FLETCHING);
                     for(int i1 = 0; i1 < list.size(); i1++) {
                         if(list.get(i1).addition.test(stack)) {
                             return true;
@@ -84,19 +84,19 @@ public class FletchingTableContainer extends Container {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
-            public boolean isItemValid(ItemStack stack) {
+            public boolean mayPlace(ItemStack stack) {
                 return false;
             }
 
             /**
              * Return whether this slot's stack can be taken from this slot.
              */
-            public boolean canTakeStack(PlayerEntity playerIn) {
-                return FletchingTableContainer.this.func_230303_b_(playerIn, this.getHasStack());
+            public boolean mayPickup(PlayerEntity playerIn) {
+                return FletchingTableContainer.this.mayPickup(playerIn, this.hasItem());
             }
 
             public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
-                return FletchingTableContainer.this.func_230301_a_(thePlayer, stack);
+                return FletchingTableContainer.this.onTake(thePlayer, stack);
             }
         });
 
@@ -115,8 +115,8 @@ public class FletchingTableContainer extends Container {
     /**
      * Callback for when the crafting matrix is changed.
      */
-    public void onCraftMatrixChanged(IInventory inventoryIn) {
-        super.onCraftMatrixChanged(inventoryIn);
+    public void slotsChanged(IInventory inventoryIn) {
+        super.slotsChanged(inventoryIn);
         if (inventoryIn == this.inv) {
             this.updateRepairOutput();
         }
@@ -126,9 +126,9 @@ public class FletchingTableContainer extends Container {
     /**
      * Called when the container is closed.
      */
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        this.worldPos.consume((p_234647_2_, p_234647_3_) -> {
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        this.worldPos.execute((p_234647_2_, p_234647_3_) -> {
             this.clearContainer(playerIn, p_234647_2_, this.inv);
         });
     }
@@ -136,9 +136,9 @@ public class FletchingTableContainer extends Container {
     /**
      * Determines whether supplied player can use this container
      */
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return this.worldPos.applyOrElse((p_234646_2_, p_234646_3_) -> {
-            return !this.func_230302_a_(p_234646_2_.getBlockState(p_234646_3_)) ? false : playerIn.getDistanceSq((double)p_234646_3_.getX() + 0.5D, (double)p_234646_3_.getY() + 0.5D, (double)p_234646_3_.getZ() + 0.5D) <= 64.0D;
+    public boolean stillValid(PlayerEntity playerIn) {
+        return this.worldPos.evaluate((p_234646_2_, p_234646_3_) -> {
+            return !this.isValidBlock(p_234646_2_.getBlockState(p_234646_3_)) ? false : playerIn.distanceToSqr((double)p_234646_3_.getX() + 0.5D, (double)p_234646_3_.getY() + 0.5D, (double)p_234646_3_.getZ() + 0.5D) <= 64.0D;
         }, true);
     }
 
@@ -146,32 +146,32 @@ public class FletchingTableContainer extends Container {
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index == 4) {
-                if (!this.mergeItemStack(itemstack1, 5, 41, true)) {
+                if (!this.moveItemStackTo(itemstack1, 5, 41, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onSlotChange(itemstack1, itemstack);
+                slot.onQuickCraft(itemstack1, itemstack);
             } else if (index > 4) {
                 if (index >= 5 && index < 41) {
-                    if (!this.mergeItemStack(itemstack1, 0, 4, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 0, 4, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
-            } else if (!this.mergeItemStack(itemstack1, 5, 41, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 5, 41, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (itemstack1.getCount() == itemstack.getCount()) {
@@ -184,44 +184,44 @@ public class FletchingTableContainer extends Container {
         return itemstack;
     }
 
-    protected boolean func_230302_a_(BlockState p_230302_1_) {
-        return p_230302_1_.isIn(BlockRegistry.FLETCHING_TABLE.get());
+    protected boolean isValidBlock(BlockState p_230302_1_) {
+        return p_230302_1_.is(BlockRegistry.FLETCHING_TABLE.get());
     }
 
-    protected boolean func_230303_b_(PlayerEntity p_230303_1_, boolean p_230303_2_) {
+    protected boolean mayPickup(PlayerEntity p_230303_1_, boolean p_230303_2_) {
         return this.recipe != null && this.recipe.matches(this.inv, this.world);
     }
 
-    protected ItemStack func_230301_a_(PlayerEntity p_230301_1_, ItemStack p_230301_2_) {
-        p_230301_2_.onCrafting(p_230301_1_.world, p_230301_1_, p_230301_2_.getCount());
-        this.resultInv.onCrafting(p_230301_1_);
+    protected ItemStack onTake(PlayerEntity p_230301_1_, ItemStack p_230301_2_) {
+        p_230301_2_.onCraftedBy(p_230301_1_.level, p_230301_1_, p_230301_2_.getCount());
+        this.resultInv.awardUsedRecipes(p_230301_1_);
         for(int i = 0; i < 4; i++) {
             this.shrinkSlot(i);
         }
-        this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_ARROW_HIT, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+        this.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_HIT, SoundCategory.BLOCKS, 1.0F, this.world.random.nextFloat() * 0.1F + 0.9F);
         return p_230301_2_;
     }
 
     private void shrinkSlot(int index) {
-        ItemStack itemstack = this.inv.getStackInSlot(index);
-        if(!Ingredient.EMPTY.test(inv.getStackInSlot(index))) {
+        ItemStack itemstack = this.inv.getItem(index);
+        if(!Ingredient.EMPTY.test(inv.getItem(index))) {
             itemstack.shrink(1);
         }
-        this.inv.setInventorySlotContents(index, itemstack);
+        this.inv.setItem(index, itemstack);
     }
 
     /**
      * called when the Anvil Input Slot changes, calculates the new result and puts it in the output slot
      */
     public void updateRepairOutput() {
-        List<FletchingRecipe> list = this.world.getRecipeManager().getRecipes(this.recipeType, this.inv, this.world);
+        List<FletchingRecipe> list = this.world.getRecipeManager().getRecipesFor(this.recipeType, this.inv, this.world);
         if (list.isEmpty()) {
-            this.resultInv.setInventorySlotContents(0, ItemStack.EMPTY);
+            this.resultInv.setItem(0, ItemStack.EMPTY);
         } else {
             this.recipe = list.get(0);
-            ItemStack itemstack = this.recipe.getCraftingResult(this.inv);
+            ItemStack itemstack = this.recipe.assemble(this.inv);
             this.resultInv.setRecipeUsed(this.recipe);
-            this.resultInv.setInventorySlotContents(0, itemstack);
+            this.resultInv.setItem(0, itemstack);
 
         }
     }
@@ -230,7 +230,7 @@ public class FletchingTableContainer extends Container {
      * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in is
      * null for the initial slot that was double-clicked.
      */
-    public boolean canMergeSlot(ItemStack stack, Slot slotIn) {
-        return slotIn.inventory != this.resultInv && super.canMergeSlot(stack, slotIn);
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
+        return slotIn.container != this.resultInv && super.canTakeItemForPickAll(stack, slotIn);
     }
 }

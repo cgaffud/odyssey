@@ -26,22 +26,22 @@ public class QuiverScreen extends ContainerScreen<QuiverContainer> {
 
     public void init() {
         super.init();
-        this.titleX = (this.xSize - this.font.getStringPropertyWidth(this.title)) / 2;
+        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        this.renderTooltip(matrixStack, mouseX, mouseY);
     }
 
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(this.guiTexture);
-        int i = this.guiLeft;
-        int j = (this.height - this.ySize) / 2;
-        this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
-        int size = this.container.getSize();
+        this.minecraft.getTextureManager().bind(this.guiTexture);
+        int i = this.leftPos;
+        int j = (this.height - this.imageHeight) / 2;
+        this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        int size = this.menu.getSize();
         for(int k = 0; k < size; k++){
             this.blit(matrixStack, i + 88 + k * 18 - size * 9, j + 33, 176, 0, 18, 18);
         }

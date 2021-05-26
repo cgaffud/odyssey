@@ -11,7 +11,7 @@ public abstract class MixinAttributes {
 
     private static Attribute register(String id, Attribute attribute) {
         if(id.equals("generic.armor")){
-            return Registry.register(Registry.ATTRIBUTE, id, (new RangedAttribute("attribute.name.generic.armor", 0.0D, 0.0D, 120.0D)).setShouldWatch(true));
+            return Registry.register(Registry.ATTRIBUTE, id, (new RangedAttribute("attribute.name.generic.armor", 0.0D, 0.0D, 120.0D)).setSyncable(true));
         }
         return Registry.register(Registry.ATTRIBUTE, id, attribute);
     }

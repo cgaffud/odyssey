@@ -35,22 +35,22 @@ public class InfuserContainer extends Container {
     public InfuserContainer(int id, PlayerInventory playerInventory, IInventory inv, IIntArray infuserData) {
         super(ContainerRegistry.INFUSER.get(), id);
         this.recipeType = ModRecipeType.INFUSING;
-        assertInventorySize(inv, 8);
-        assertIntArraySize(infuserData, 3);
+        checkContainerSize(inv, 8);
+        checkContainerDataCount(infuserData, 3);
         this.inv = inv;
         this.infuserData = infuserData;
-        this.world = playerInventory.player.world;
+        this.world = playerInventory.player.level;
         InfuserContainer con = this;
 
         this.addSlot(new Slot(this.inv, 0, 121, 18) {
-            public boolean isItemValid(ItemStack stack) {
-                List<InfusingRecipe> list = con.world.getRecipeManager().getRecipesForType(ModRecipeType.INFUSING);
+            public boolean mayPlace(ItemStack stack) {
+                List<InfusingRecipe> list = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.INFUSING);
                 for(int i1 = 0; i1 < list.size(); i1++) {
                     if(list.get(i1).getLens().test(stack)) {
                         return true;
                     }
                 }
-                List<EnchantedBookInfusingRecipe> list1 = con.world.getRecipeManager().getRecipesForType(ModRecipeType.ENCHANTED_BOOK_INFUSING);
+                List<EnchantedBookInfusingRecipe> list1 = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.ENCHANTED_BOOK_INFUSING);
                 for(int i1 = 0; i1 < list1.size(); i1++) {
                     if(list1.get(i1).getLens().test(stack)) {
                         return true;
@@ -59,7 +59,7 @@ public class InfuserContainer extends Container {
                 return false;
             }
 
-            public int getSlotStackLimit(){
+            public int getMaxStackSize(){
                 return 1;
             }
         });
@@ -69,15 +69,15 @@ public class InfuserContainer extends Container {
 
         for(int i = 0; i < 6; i++){
             this.addSlot(new Slot(this.inv, i+1, xpos[i], ypos[i]){
-                public int getSlotStackLimit(){
+                public int getMaxStackSize(){
                     return 1;
                 }
             });
         }
 
         this.addSlot(new InfuserResultSlot(playerInventory.player, this.inv, 7, 62, 59){
-            public boolean isItemValid(ItemStack stack) {
-                List<InfusingRecipe> list = con.world.getRecipeManager().getRecipesForType(ModRecipeType.INFUSING);
+            public boolean mayPlace(ItemStack stack) {
+                List<InfusingRecipe> list = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.INFUSING);
                 for(int i1 = 0; i1 < list.size(); i1++) {
                     if(list.get(i1).getBase().test(stack)) {
                         return true;
@@ -97,46 +97,46 @@ public class InfuserContainer extends Container {
             this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 174));
         }
 
-        this.trackIntArray(infuserData);
+        this.addDataSlots(infuserData);
     }
 
     /**
      * Determines whether supplied player can use this container
      */
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return this.inv.isUsableByPlayer(playerIn);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return this.inv.stillValid(playerIn);
     }
 
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index == 7) {
-                if (!this.mergeItemStack(itemstack1, 8, 44, true)) {
+                if (!this.moveItemStackTo(itemstack1, 8, 44, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onSlotChange(itemstack1, itemstack);
+                slot.onQuickCraft(itemstack1, itemstack);
             } else if (index > 7) {
                 if (index < 44) {
-                    if (!this.mergeItemStack(itemstack1, 7, 8, false) && !this.mergeItemStack(itemstack1, 0, 7, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 7, 8, false) && !this.moveItemStackTo(itemstack1, 0, 7, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
-            } else if (!this.mergeItemStack(itemstack1, 8, 44, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 8, 44, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (itemstack1.getCount() == itemstack.getCount()) {

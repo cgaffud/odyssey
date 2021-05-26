@@ -21,7 +21,7 @@ public class EnchantButton extends Button {
 
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bindTexture(NewEnchantmentScreen.GUI_TEXTURE);
+        Minecraft.getInstance().getTextureManager().bind(NewEnchantmentScreen.GUI_TEXTURE);
         int i = 0;
         int j = 166;
         if (this.isHovered()) {

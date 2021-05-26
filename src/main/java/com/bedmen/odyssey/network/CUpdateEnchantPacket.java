@@ -25,7 +25,7 @@ public class CUpdateEnchantPacket implements IPacket<INewServerPlayNetHandler> {
     /**
      * Reads the raw packet data from the data stream.
      */
-    public void readPacketData(PacketBuffer buf) throws IOException {
+    public void read(PacketBuffer buf) throws IOException {
         this.level = buf.readVarInt();
         this.id = buf.readVarInt();
         this.cost = buf.readVarInt();
@@ -34,7 +34,7 @@ public class CUpdateEnchantPacket implements IPacket<INewServerPlayNetHandler> {
     /**
      * Writes the raw packet data to the data stream.
      */
-    public void writePacketData(PacketBuffer buf) throws IOException {
+    public void write(PacketBuffer buf) throws IOException {
         buf.writeVarInt(this.level);
         buf.writeVarInt(this.id);
         buf.writeVarInt(this.cost);
@@ -43,7 +43,7 @@ public class CUpdateEnchantPacket implements IPacket<INewServerPlayNetHandler> {
     /**
      * Passes this Packet on to the NetHandler for processing.
      */
-    public void processPacket(INewServerPlayNetHandler handler) {
+    public void handle(INewServerPlayNetHandler handler) {
         handler.processUpdateEnchant(this);
     }
 

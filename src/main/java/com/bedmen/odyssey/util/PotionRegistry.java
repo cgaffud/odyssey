@@ -20,13 +20,13 @@ public class PotionRegistry {
         POTIONS_VANILLA.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<Potion> HASTE = POTIONS.register("haste", () -> new Potion(new EffectInstance(Effects.HASTE, 3600)));
-    public static final RegistryObject<Potion> LONG_HASTE = POTIONS.register("long_haste", () -> new Potion(new EffectInstance(Effects.HASTE, 7200)));
-    public static final RegistryObject<Potion> STRONG_HASTE = POTIONS.register("strong_haste", () -> new Potion(new EffectInstance(Effects.HASTE, 1800,1)));
+    public static final RegistryObject<Potion> HASTE = POTIONS.register("haste", () -> new Potion(new EffectInstance(Effects.DIG_SPEED, 3600)));
+    public static final RegistryObject<Potion> LONG_HASTE = POTIONS.register("long_haste", () -> new Potion(new EffectInstance(Effects.DIG_SPEED, 7200)));
+    public static final RegistryObject<Potion> STRONG_HASTE = POTIONS.register("strong_haste", () -> new Potion(new EffectInstance(Effects.DIG_SPEED, 1800,1)));
 
-    public static final RegistryObject<Potion> MINING_FATIGUE = POTIONS.register("mining_fatigue", () -> new Potion(new EffectInstance(Effects.MINING_FATIGUE, 1800)));
-    public static final RegistryObject<Potion> LONG_MINING_FATIGUE = POTIONS.register("long_mining_fatigue", () -> new Potion(new EffectInstance(Effects.MINING_FATIGUE, 3600)));
-    public static final RegistryObject<Potion> STRONG_MINING_FATIGUE = POTIONS.register("strong_mining_fatigue", () -> new Potion(new EffectInstance(Effects.MINING_FATIGUE, 900,1)));
+    public static final RegistryObject<Potion> MINING_FATIGUE = POTIONS.register("mining_fatigue", () -> new Potion(new EffectInstance(Effects.DIG_SLOWDOWN, 1800)));
+    public static final RegistryObject<Potion> LONG_MINING_FATIGUE = POTIONS.register("long_mining_fatigue", () -> new Potion(new EffectInstance(Effects.DIG_SLOWDOWN, 3600)));
+    public static final RegistryObject<Potion> STRONG_MINING_FATIGUE = POTIONS.register("strong_mining_fatigue", () -> new Potion(new EffectInstance(Effects.DIG_SLOWDOWN, 900,1)));
 
     public static final RegistryObject<Potion> GLOW = POTIONS.register("glow", () -> new Potion(new EffectInstance(Effects.GLOWING, 1800)));
     public static final RegistryObject<Potion> LONG_GLOW = POTIONS.register("long_glow", () -> new Potion(new EffectInstance(Effects.GLOWING, 3600)));
@@ -51,12 +51,12 @@ public class PotionRegistry {
 
     public static final RegistryObject<Potion> LONG_NIGHT_VISION = POTIONS_VANILLA.register("long_night_vision", () -> new Potion("night_vision", new EffectInstance(Effects.NIGHT_VISION, 7200)));
     public static final RegistryObject<Potion> LONG_INVISIBILITY = POTIONS_VANILLA.register("long_invisibility", () -> new Potion("invisibility", new EffectInstance(Effects.INVISIBILITY, 7200)));
-    public static final RegistryObject<Potion> LONG_LEAPING = POTIONS_VANILLA.register("long_leaping", () -> new Potion("leaping", new EffectInstance(Effects.JUMP_BOOST, 7200)));
+    public static final RegistryObject<Potion> LONG_LEAPING = POTIONS_VANILLA.register("long_leaping", () -> new Potion("leaping", new EffectInstance(Effects.JUMP, 7200)));
     public static final RegistryObject<Potion> LONG_FIRE_RESISTANCE = POTIONS_VANILLA.register("long_fire_resistance", () -> new Potion("fire_resistance", new EffectInstance(Effects.FIRE_RESISTANCE, 7200)));
-    public static final RegistryObject<Potion> LONG_SWIFTNESS = POTIONS_VANILLA.register("long_swiftness", () -> new Potion("swiftness", new EffectInstance(Effects.SPEED, 7200)));
-    public static final RegistryObject<Potion> LONG_SLOWNESS = POTIONS_VANILLA.register("long_slowness", () -> new Potion("slowness", new EffectInstance(Effects.SLOWNESS, 3600)));
+    public static final RegistryObject<Potion> LONG_SWIFTNESS = POTIONS_VANILLA.register("long_swiftness", () -> new Potion("swiftness", new EffectInstance(Effects.MOVEMENT_SPEED, 7200)));
+    public static final RegistryObject<Potion> LONG_SLOWNESS = POTIONS_VANILLA.register("long_slowness", () -> new Potion("slowness", new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 3600)));
     public static final RegistryObject<Potion> LONG_WATER_BREATHING = POTIONS_VANILLA.register("long_water_breathing", () -> new Potion("water_breathing", new EffectInstance(Effects.WATER_BREATHING, 7200)));
-    public static final RegistryObject<Potion> LONG_STRENGTH = POTIONS_VANILLA.register("long_strength", () -> new Potion("strength", new EffectInstance(Effects.STRENGTH, 7200)));
+    public static final RegistryObject<Potion> LONG_STRENGTH = POTIONS_VANILLA.register("long_strength", () -> new Potion("strength", new EffectInstance(Effects.DAMAGE_BOOST, 7200)));
     public static final RegistryObject<Potion> LONG_WEAKNESS = POTIONS_VANILLA.register("long_weakness", () -> new Potion("weakness", new EffectInstance(Effects.WEAKNESS, 3600)));
     public static final RegistryObject<Potion> LONG_SLOW_FALLING = POTIONS_VANILLA.register("long_slow_falling", () -> new Potion("slow_falling", new EffectInstance(Effects.SLOW_FALLING, 3600)));
 }

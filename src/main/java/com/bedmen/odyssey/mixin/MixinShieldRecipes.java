@@ -18,8 +18,8 @@ public abstract class MixinShieldRecipes {
         ItemStack itemstack = ItemStack.EMPTY;
         ItemStack itemstack1 = ItemStack.EMPTY;
 
-        for(int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack itemstack2 = inv.getStackInSlot(i);
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack itemstack2 = inv.getItem(i);
             if (!itemstack2.isEmpty()) {
                 if (itemstack2.getItem() instanceof BannerItem) {
                     if (!itemstack1.isEmpty()) {
@@ -36,7 +36,7 @@ public abstract class MixinShieldRecipes {
                         return false;
                     }
 
-                    if (itemstack2.getChildTag("BlockEntityTag") != null) {
+                    if (itemstack2.getTagElement("BlockEntityTag") != null) {
                         return false;
                     }
 
@@ -48,12 +48,12 @@ public abstract class MixinShieldRecipes {
         return !itemstack.isEmpty() && !itemstack1.isEmpty();
     }
 
-    public ItemStack getCraftingResult(CraftingInventory inv) {
+    public ItemStack assemble(CraftingInventory inv) {
         ItemStack itemstack = ItemStack.EMPTY;
         ItemStack itemstack1 = ItemStack.EMPTY;
 
-        for(int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack itemstack2 = inv.getStackInSlot(i);
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack itemstack2 = inv.getItem(i);
             if (!itemstack2.isEmpty()) {
                 if (itemstack2.getItem() instanceof BannerItem) {
                     itemstack = itemstack2;
@@ -66,10 +66,10 @@ public abstract class MixinShieldRecipes {
         if (itemstack1.isEmpty()) {
             return itemstack1;
         } else {
-            CompoundNBT compoundnbt = itemstack.getChildTag("BlockEntityTag");
+            CompoundNBT compoundnbt = itemstack.getTagElement("BlockEntityTag");
             CompoundNBT compoundnbt1 = compoundnbt == null ? new CompoundNBT() : compoundnbt.copy();
             compoundnbt1.putInt("Base", ((BannerItem)itemstack.getItem()).getColor().getId());
-            itemstack1.setTagInfo("BlockEntityTag", compoundnbt1);
+            itemstack1.addTagElement("BlockEntityTag", compoundnbt1);
             return itemstack1;
         }
     }

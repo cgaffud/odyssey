@@ -22,77 +22,77 @@ import org.apache.logging.log4j.Logger;
 public class MixinMinecraft {
 
     @Shadow
-    public PlayerController playerController;
+    public PlayerController gameMode;
     @Shadow
-    private int rightClickDelayTimer;
+    private int rightClickDelay;
     @Shadow
     public ClientPlayerEntity player;
     @Shadow
-    public RayTraceResult objectMouseOver;
+    public RayTraceResult hitResult;
     @Shadow
     private static Logger LOGGER;
     @Shadow
-    public GameSettings gameSettings;
+    public GameSettings options;
     @Shadow
     public GameRenderer gameRenderer;
     @Shadow
-    public ClientWorld world;
+    public ClientWorld level;
 
     //@Inject(method = "rightClickMouse", at = @At(value = "HEAD"))
     //private void startClient(CallbackInfo ci) {
     //    System.out.println("TemplateClient Working!");
     //}
 
-    private void rightClickMouse() {
-        if (!this.playerController.getIsHittingBlock()) {
-            int rightClickDelayTimer = 4;
-            if(player.isPotionActive(EffectRegistry.CONSTRUCTION.get())){
-                int amplifier = player.getActivePotionEffect(EffectRegistry.CONSTRUCTION.get()).getAmplifier();
-                if(amplifier == 0) rightClickDelayTimer = 2;
-                else if(amplifier == 1) rightClickDelayTimer = 1;
+    private void startUseItem() {
+        if (!this.gameMode.isDestroying()) {
+            int rightClickDelay = 4;
+            if(player.hasEffect(EffectRegistry.CONSTRUCTION.get())){
+                int amplifier = player.getEffect(EffectRegistry.CONSTRUCTION.get()).getAmplifier();
+                if(amplifier == 0) rightClickDelay = 2;
+                else if(amplifier == 1) rightClickDelay = 1;
             }
-            this.rightClickDelayTimer = rightClickDelayTimer;
-            if (!this.player.isRowingBoat()) {
-                if (this.objectMouseOver == null) {
+            this.rightClickDelay = rightClickDelay;
+            if (!this.player.isHandsBusy()) {
+                if (this.hitResult == null) {
                     LOGGER.warn("Null returned as 'hitResult', this shouldn't happen!");
                 }
 
                 for(Hand hand : Hand.values()) {
-                    net.minecraftforge.client.event.InputEvent.ClickInputEvent inputEvent = net.minecraftforge.client.ForgeHooksClient.onClickInput(1, this.gameSettings.keyBindUseItem, hand);
+                    net.minecraftforge.client.event.InputEvent.ClickInputEvent inputEvent = net.minecraftforge.client.ForgeHooksClient.onClickInput(1, this.options.keyUse, hand);
                     if (inputEvent.isCanceled()) {
-                        if (inputEvent.shouldSwingHand()) this.player.swingArm(hand);
+                        if (inputEvent.shouldSwingHand()) this.player.swing(hand);
                         return;
                     }
-                    ItemStack itemstack = this.player.getHeldItem(hand);
-                    if (this.objectMouseOver != null) {
-                        switch(this.objectMouseOver.getType()) {
+                    ItemStack itemstack = this.player.getItemInHand(hand);
+                    if (this.hitResult != null) {
+                        switch(this.hitResult.getType()) {
                             case ENTITY:
-                                EntityRayTraceResult entityraytraceresult = (EntityRayTraceResult)this.objectMouseOver;
+                                EntityRayTraceResult entityraytraceresult = (EntityRayTraceResult)this.hitResult;
                                 Entity entity = entityraytraceresult.getEntity();
-                                ActionResultType actionresulttype = this.playerController.interactWithEntity(this.player, entity, entityraytraceresult, hand);
-                                if (!actionresulttype.isSuccessOrConsume()) {
-                                    actionresulttype = this.playerController.interactWithEntity(this.player, entity, hand);
+                                ActionResultType actionresulttype = this.gameMode.interactAt(this.player, entity, entityraytraceresult, hand);
+                                if (!actionresulttype.consumesAction()) {
+                                    actionresulttype = this.gameMode.interact(this.player, entity, hand);
                                 }
 
-                                if (actionresulttype.isSuccessOrConsume()) {
-                                    if (actionresulttype.isSuccess()) {
+                                if (actionresulttype.consumesAction()) {
+                                    if (actionresulttype.shouldSwing()) {
                                         if (inputEvent.shouldSwingHand())
-                                            this.player.swingArm(hand);
+                                            this.player.swing(hand);
                                     }
 
                                     return;
                                 }
                                 break;
                             case BLOCK:
-                                BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)this.objectMouseOver;
+                                BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)this.hitResult;
                                 int i = itemstack.getCount();
-                                ActionResultType actionresulttype1 = this.playerController.func_217292_a(this.player, this.world, hand, blockraytraceresult);
-                                if (actionresulttype1.isSuccessOrConsume()) {
-                                    if (actionresulttype1.isSuccess()) {
+                                ActionResultType actionresulttype1 = this.gameMode.useItemOn(this.player, this.level, hand, blockraytraceresult);
+                                if (actionresulttype1.consumesAction()) {
+                                    if (actionresulttype1.shouldSwing()) {
                                         if (inputEvent.shouldSwingHand())
-                                            this.player.swingArm(hand);
-                                        if (!itemstack.isEmpty() && (itemstack.getCount() != i || this.playerController.isInCreativeMode())) {
-                                            this.gameRenderer.itemRenderer.resetEquippedProgress(hand);
+                                            this.player.swing(hand);
+                                        if (!itemstack.isEmpty() && (itemstack.getCount() != i || this.gameMode.hasInfiniteItems())) {
+                                            this.gameRenderer.itemInHandRenderer.itemUsed(hand);
                                         }
                                     }
 
@@ -105,17 +105,17 @@ public class MixinMinecraft {
                         }
                     }
 
-                    if (itemstack.isEmpty() && (this.objectMouseOver == null || this.objectMouseOver.getType() == RayTraceResult.Type.MISS))
+                    if (itemstack.isEmpty() && (this.hitResult == null || this.hitResult.getType() == RayTraceResult.Type.MISS))
                         net.minecraftforge.common.ForgeHooks.onEmptyClick(this.player, hand);
 
                     if (!itemstack.isEmpty()) {
-                        ActionResultType actionresulttype2 = this.playerController.processRightClick(this.player, this.world, hand);
-                        if (actionresulttype2.isSuccessOrConsume()) {
-                            if (actionresulttype2.isSuccess()) {
-                                this.player.swingArm(hand);
+                        ActionResultType actionresulttype2 = this.gameMode.useItem(this.player, this.level, hand);
+                        if (actionresulttype2.consumesAction()) {
+                            if (actionresulttype2.shouldSwing()) {
+                                this.player.swing(hand);
                             }
 
-                            this.gameRenderer.itemRenderer.resetEquippedProgress(hand);
+                            this.gameRenderer.itemInHandRenderer.itemUsed(hand);
                             return;
                         }
                     }

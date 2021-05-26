@@ -27,43 +27,43 @@ public class NewPotionItem extends Item {
     }
 
     public ItemStack getDefaultInstance() {
-        return PotionUtils.addPotionToItemStack(super.getDefaultInstance(), Potions.WATER);
+        return PotionUtils.setPotion(super.getDefaultInstance(), Potions.WATER);
     }
 
     /**
      * Called when the player finishes using this Item (E.g. finishes eating.). Not called when the player stops using
      * the Item before the action is complete.
      */
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         PlayerEntity playerentity = entityLiving instanceof PlayerEntity ? (PlayerEntity)entityLiving : null;
         if (playerentity instanceof ServerPlayerEntity) {
             CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity)playerentity, stack);
         }
 
-        if (!worldIn.isRemote) {
-            for(EffectInstance effectinstance : PotionUtils.getEffectsFromStack(stack)) {
-                if (effectinstance.getPotion().isInstant()) {
-                    effectinstance.getPotion().affectEntity(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
+        if (!worldIn.isClientSide) {
+            for(EffectInstance effectinstance : PotionUtils.getMobEffects(stack)) {
+                if (effectinstance.getEffect().isInstantenous()) {
+                    effectinstance.getEffect().applyInstantenousEffect(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
                 } else {
-                    entityLiving.addPotionEffect(new EffectInstance(effectinstance));
+                    entityLiving.addEffect(new EffectInstance(effectinstance));
                 }
             }
         }
 
         if (playerentity != null) {
-            playerentity.addStat(Stats.ITEM_USED.get(this));
-            if (!playerentity.abilities.isCreativeMode) {
+            playerentity.awardStat(Stats.ITEM_USED.get(this));
+            if (!playerentity.abilities.instabuild) {
                 stack.shrink(1);
             }
         }
 
-        if (playerentity == null || !playerentity.abilities.isCreativeMode) {
+        if (playerentity == null || !playerentity.abilities.instabuild) {
             if (stack.isEmpty()) {
                 return new ItemStack(Items.GLASS_BOTTLE);
             }
 
             if (playerentity != null) {
-                playerentity.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+                playerentity.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
             }
         }
 
@@ -80,7 +80,7 @@ public class NewPotionItem extends Item {
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.DRINK;
     }
 
@@ -88,23 +88,23 @@ public class NewPotionItem extends Item {
      * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
      * {@link #onItemUse}.
      */
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        return DrinkHelper.startDrinking(worldIn, playerIn, handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        return DrinkHelper.useDrink(worldIn, playerIn, handIn);
     }
 
     /**
      * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have
      * different names based on their damage or NBT.
      */
-    public String getTranslationKey(ItemStack stack) {
-        return PotionUtils.getPotionFromItem(stack).getNamePrefixed(this.getTranslationKey() + ".effect.");
+    public String getDescriptionId(ItemStack stack) {
+        return PotionUtils.getPotion(stack).getName(this.getDescriptionId() + ".effect.");
     }
 
     /**
      * allows items to add custom lines of information to the mouseover description
      */
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         PotionUtils.addPotionTooltip(stack, tooltip, 1.0F);
     }
 
@@ -115,18 +115,18 @@ public class NewPotionItem extends Item {
      * Note that if you override this method, you generally want to also call the super version (on {@link Item}) to get
      * the glint for enchanted items. Of course, that is unnecessary if the overwritten version always returns true.
      */
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return false;
     }
 
     /**
      * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
      */
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.isInGroup(group)) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        if (this.allowdedIn(group)) {
             for(Potion potion : Registry.POTION) {
                 if (potion != Potions.EMPTY) {
-                    items.add(PotionUtils.addPotionToItemStack(new ItemStack(this), potion));
+                    items.add(PotionUtils.setPotion(new ItemStack(this), potion));
                 }
             }
         }
@@ -134,10 +134,10 @@ public class NewPotionItem extends Item {
     }
 
     public static void RegisterBaseProperties(Item item){
-        ItemModelsProperties.registerProperty(item, new ResourceLocation("type"),  (itemStack, world, entity) -> {
+        ItemModelsProperties.register(item, new ResourceLocation("type"),  (itemStack, world, entity) -> {
             CompoundNBT compoundnbt = itemStack.getTag();
             if(compoundnbt != null && compoundnbt.contains("Potion")){
-                String s = compoundnbt.get("Potion").getString();
+                String s = compoundnbt.get("Potion").getAsString();
                 if(s.contains("awkward")) return 3;
                 else if(s.contains("long")) return 1;
                 else if(s.contains("strong")) return 2;

@@ -24,36 +24,36 @@ import net.minecraft.world.server.ServerWorld;
 public class BookshelfBlock extends ContainerBlock {
 
     public BookshelfBlock() {
-        super(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(1.5F).sound(SoundType.WOOD));
+        super(AbstractBlock.Properties.of(Material.WOOD).strength(1.5F).sound(SoundType.WOOD));
     }
 
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (worldIn.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof BookshelfTileEntity) {
-                player.openContainer((BookshelfTileEntity)tileentity);
+                player.openMenu((BookshelfTileEntity)tileentity);
             }
 
             return ActionResultType.CONSUME;
         }
     }
 
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.isIn(newState.getBlock())) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof IInventory) {
-                InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory)tileentity);
-                worldIn.updateComparatorOutputLevel(pos, this);
+                InventoryHelper.dropContents(worldIn, pos, (IInventory)tileentity);
+                worldIn.updateNeighbourForOutputSignal(pos, this);
             }
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof BookshelfTileEntity) {
             ((BookshelfTileEntity)tileentity).bookShelfTick();
         }
@@ -61,7 +61,7 @@ public class BookshelfBlock extends ContainerBlock {
     }
 
     @Nullable
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
         return new BookshelfTileEntity();
     }
 
@@ -70,18 +70,18 @@ public class BookshelfBlock extends ContainerBlock {
      * LIQUID for vanilla liquids, INVISIBLE to skip all rendering
      * @deprecated call via IBlockState#getRenderType() whenever possible. Implementing/overriding is fine.
      */
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     /**
      * Called by ItemBlocks after a block is set in the world, to allow post-place logic
      */
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof BookshelfTileEntity) {
-                ((BookshelfTileEntity)tileentity).setCustomName(stack.getDisplayName());
+                ((BookshelfTileEntity)tileentity).setCustomName(stack.getHoverName());
             }
         }
 
@@ -91,7 +91,7 @@ public class BookshelfBlock extends ContainerBlock {
      * @deprecated call via IBlockState#hasComparatorInputOverride() whenever possible. Implementing/overriding
      * is fine.
      */
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
@@ -99,7 +99,7 @@ public class BookshelfBlock extends ContainerBlock {
      * @deprecated call via IBlockState#getComparatorInputOverride(World,BlockPos) whenever possible.
      * Implementing/overriding is fine.
      */
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-        return Container.calcRedstone(worldIn.getTileEntity(pos));
+    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+        return Container.getRedstoneSignalFromBlockEntity(worldIn.getBlockEntity(pos));
     }
 }

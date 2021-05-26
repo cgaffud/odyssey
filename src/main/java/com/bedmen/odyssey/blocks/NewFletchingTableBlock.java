@@ -22,21 +22,21 @@ public class NewFletchingTableBlock extends CraftingTableBlock {
     private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.oddc.restring");
 
     public NewFletchingTableBlock() {
-        super(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD));
+        super(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD));
     }
 
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (worldIn.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            player.openContainer(state.getContainer(worldIn, pos));
+            player.openMenu(state.getMenuProvider(worldIn, pos));
             return ActionResultType.CONSUME;
         }
     }
 
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
+    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
         return new SimpleNamedContainerProvider((id, inventory, player) -> {
-            return new FletchingTableContainer(id, inventory, IWorldPosCallable.of(worldIn, pos));
+            return new FletchingTableContainer(id, inventory, IWorldPosCallable.create(worldIn, pos));
         }, CONTAINER_NAME);
     }
 }

@@ -15,11 +15,11 @@ public class AccuracyEnchantment extends Enchantment{
     /**
      * Returns the minimal value of enchantability needed on the enchantment level passed.
      */
-    public int getMinEnchantability(int enchantmentLevel) {
+    public int getMinCost(int enchantmentLevel) {
         return 1;
     }
 
-    public int getMaxEnchantability(int enchantmentLevel) {
+    public int getMaxCost(int enchantmentLevel) {
         return 50;
     }
 
@@ -30,7 +30,7 @@ public class AccuracyEnchantment extends Enchantment{
         return 1;
     }
 
-    public boolean isTreasureEnchantment() {
+    public boolean isTreasureOnly() {
         return false;
     }
 

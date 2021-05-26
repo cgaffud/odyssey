@@ -29,19 +29,19 @@ public class NewTridentRenderer extends EntityRenderer<AbstractTridentEntity> {
    }
 
    public void render(AbstractTridentEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-      matrixStackIn.push();
-      matrixStackIn.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, entityIn.prevRotationYaw, entityIn.rotationYaw) - 90.0F));
-      matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, entityIn.prevRotationPitch, entityIn.rotationPitch) + 90.0F));
-      IVertexBuilder ivertexbuilder = net.minecraft.client.renderer.ItemRenderer.getEntityGlintVertexBuilder(bufferIn, this.tridentModel.getRenderType(getEntityTexture(entityIn)), false, entityIn.func_226572_w_());
-      this.tridentModel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-      matrixStackIn.pop();
+      matrixStackIn.pushPose();
+      matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, entityIn.yRotO, entityIn.yRot) - 90.0F));
+      matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, entityIn.xRotO, entityIn.xRot) + 90.0F));
+      IVertexBuilder ivertexbuilder = net.minecraft.client.renderer.ItemRenderer.getFoilBufferDirect(bufferIn, this.tridentModel.renderType(getTextureLocation(entityIn)), false, entityIn.isFoil());
+      this.tridentModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+      matrixStackIn.popPose();
       super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
    }
 
    /**
     * Returns the location of an entity's texture.
     */
-   public ResourceLocation getEntityTexture(AbstractTridentEntity entity) {
+   public ResourceLocation getTextureLocation(AbstractTridentEntity entity) {
       Item item = entity.getItem();
       if(item == ItemRegistry.SERPENT_TRIDENT.get()) return SERPENT_TRIDENT;
       return TRIDENT;

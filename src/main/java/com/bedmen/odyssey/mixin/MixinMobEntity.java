@@ -22,16 +22,16 @@ public abstract class MixinMobEntity extends Entity{
         super(entityTypeIn, worldIn);
     }
 
-    private void func_233655_a_(PlayerEntity player, ItemStack mainhand, ItemStack activePlayerStack) {
+    private void maybeDisableShield(PlayerEntity player, ItemStack mainhand, ItemStack activePlayerStack) {
         if (!mainhand.isEmpty() && !activePlayerStack.isEmpty() && (mainhand.getItem() instanceof AxeItem) && (activePlayerStack.getItem() instanceof NewShieldItem)){
-            float f = 0.25F + (float)EnchantmentHelper.getEfficiencyModifier(getMobEntity(this)) * 0.05F;
-            if (this.rand.nextFloat() < f) {
+            float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(getMobEntity(this)) * 0.05F;
+            if (this.random.nextFloat() < f) {
                 if(activePlayerStack.getItem() instanceof NewShieldItem || activePlayerStack.getItem() instanceof ShieldItem){
                     int ticks = EnchantmentUtil.getRecovery(player);
-                    player.getCooldownTracker().setCooldown(Items.SHIELD, ticks);
-                    player.getCooldownTracker().setCooldown(ItemRegistry.SERPENT_SHIELD.get(), ticks);
+                    player.getCooldowns().addCooldown(Items.SHIELD, ticks);
+                    player.getCooldowns().addCooldown(ItemRegistry.SERPENT_SHIELD.get(), ticks);
                 }
-                this.world.setEntityState(player, (byte)30);
+                this.level.broadcastEntityEvent(player, (byte)30);
             }
         }
     }

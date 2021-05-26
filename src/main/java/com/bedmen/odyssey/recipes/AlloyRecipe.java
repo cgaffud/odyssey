@@ -42,22 +42,22 @@ public class AlloyRecipe implements IRecipe<IInventory> {
      * Used to check if a recipe matches current crafting inventory
      */
     public boolean matches(IInventory inv, World worldIn) {
-        boolean match1 = this.ingredient1.test(inv.getStackInSlot(0)) && this.ingredient2.test(inv.getStackInSlot(1));
-        boolean match2 = this.ingredient1.test(inv.getStackInSlot(1)) && this.ingredient2.test(inv.getStackInSlot(0));
+        boolean match1 = this.ingredient1.test(inv.getItem(0)) && this.ingredient2.test(inv.getItem(1));
+        boolean match2 = this.ingredient1.test(inv.getItem(1)) && this.ingredient2.test(inv.getItem(0));
         return match1 || match2;
     }
 
     /**
      * Returns an Item that is the result of this recipe
      */
-    public ItemStack getCraftingResult(IInventory inv) {
+    public ItemStack assemble(IInventory inv) {
         return this.result.copy();
     }
 
     /**
      * Used to determine if this recipe can fit in a grid of the given width/height
      */
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
@@ -79,7 +79,7 @@ public class AlloyRecipe implements IRecipe<IInventory> {
      * Get the result of this recipe, usually for display purposes (e.g. recipe book). If your recipe has more than one
      * possible result (e.g. it's dynamic and depends on its inputs), then return an empty stack.
      */
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return this.result;
     }
 
@@ -105,7 +105,7 @@ public class AlloyRecipe implements IRecipe<IInventory> {
         return ModRecipeType.ALLOYING;
     }
 
-    public ItemStack getIcon() {
+    public ItemStack getToastSymbol() {
         return new ItemStack(ItemRegistry.ALLOY_FURNACE.get());
     }
 
@@ -115,43 +115,43 @@ public class AlloyRecipe implements IRecipe<IInventory> {
     }
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AlloyRecipe> {
-        public AlloyRecipe read(ResourceLocation recipeId, JsonObject json) {
-            String s = JSONUtils.getString(json, "group", "");
-            JsonElement jsonelement1 = (JsonElement)(JSONUtils.isJsonArray(json, "ingredient1") ? JSONUtils.getJsonArray(json, "ingredient1") : JSONUtils.getJsonObject(json, "ingredient1"));
-            Ingredient ingredient1 = Ingredient.deserialize(jsonelement1);
-            JsonElement jsonelement2 = (JsonElement)(JSONUtils.isJsonArray(json, "ingredient2") ? JSONUtils.getJsonArray(json, "ingredient2") : JSONUtils.getJsonObject(json, "ingredient2"));
-            Ingredient ingredient2 = Ingredient.deserialize(jsonelement2);
+        public AlloyRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            String s = JSONUtils.getAsString(json, "group", "");
+            JsonElement jsonelement1 = (JsonElement)(JSONUtils.isArrayNode(json, "ingredient1") ? JSONUtils.getAsJsonArray(json, "ingredient1") : JSONUtils.getAsJsonObject(json, "ingredient1"));
+            Ingredient ingredient1 = Ingredient.fromJson(jsonelement1);
+            JsonElement jsonelement2 = (JsonElement)(JSONUtils.isArrayNode(json, "ingredient2") ? JSONUtils.getAsJsonArray(json, "ingredient2") : JSONUtils.getAsJsonObject(json, "ingredient2"));
+            Ingredient ingredient2 = Ingredient.fromJson(jsonelement2);
             //Forge: Check if primitive string to keep vanilla or a object which can contain a count field.
             if (!json.has("result")) throw new com.google.gson.JsonSyntaxException("Missing result, expected to find a string or object");
             ItemStack itemstack;
-            if (json.get("result").isJsonObject()) itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+            if (json.get("result").isJsonObject()) itemstack = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
             else {
-                String s1 = JSONUtils.getString(json, "result");
+                String s1 = JSONUtils.getAsString(json, "result");
                 ResourceLocation resourcelocation = new ResourceLocation(s1);
                 itemstack = new ItemStack(Registry.ITEM.getOptional(resourcelocation).orElseThrow(() -> {
                     return new IllegalStateException("Item: " + s1 + " does not exist");
                 }));
             }
-            float f = JSONUtils.getFloat(json, "experience", 0.0F);
-            int i = JSONUtils.getInt(json, "cookingtime", 200);
+            float f = JSONUtils.getAsFloat(json, "experience", 0.0F);
+            int i = JSONUtils.getAsInt(json, "cookingtime", 200);
             return new AlloyRecipe(recipeId, s, ingredient1, ingredient2, itemstack, f, i);
         }
 
-        public AlloyRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            String s = buffer.readString(32767);
-            Ingredient ingredient1 = Ingredient.read(buffer);
-            Ingredient ingredient2 = Ingredient.read(buffer);
-            ItemStack itemstack = buffer.readItemStack();
+        public AlloyRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+            String s = buffer.readUtf(32767);
+            Ingredient ingredient1 = Ingredient.fromNetwork(buffer);
+            Ingredient ingredient2 = Ingredient.fromNetwork(buffer);
+            ItemStack itemstack = buffer.readItem();
             float f = buffer.readFloat();
             int i = buffer.readVarInt();
             return new AlloyRecipe(recipeId, s, ingredient1, ingredient2, itemstack, f, i);
         }
 
-        public void write(PacketBuffer buffer, AlloyRecipe recipe) {
-            buffer.writeString(recipe.group);
-            recipe.ingredient1.write(buffer);
-            recipe.ingredient2.write(buffer);
-            buffer.writeItemStack(recipe.result);
+        public void toNetwork(PacketBuffer buffer, AlloyRecipe recipe) {
+            buffer.writeUtf(recipe.group);
+            recipe.ingredient1.toNetwork(buffer);
+            recipe.ingredient2.toNetwork(buffer);
+            buffer.writeItem(recipe.result);
             buffer.writeFloat(recipe.experience);
             buffer.writeVarInt(recipe.cookTime);
         }

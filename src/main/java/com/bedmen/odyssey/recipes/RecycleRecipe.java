@@ -47,20 +47,20 @@ public class RecycleRecipe implements IRecipe<IInventory> {
      * Used to check if a recipe matches current crafting inventory
      */
     public boolean matches(IInventory inv, World worldIn) {
-        return this.ingredient.test(inv.getStackInSlot(0));
+        return this.ingredient.test(inv.getItem(0));
     }
 
     /**
      * Returns an Item that is the result of this recipe
      */
-    public ItemStack getCraftingResult(IInventory inv) {
+    public ItemStack assemble(IInventory inv) {
         return this.nugget.copy();
     }
 
     /**
      * Used to determine if this recipe can fit in a grid of the given width/height
      */
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
@@ -81,16 +81,16 @@ public class RecycleRecipe implements IRecipe<IInventory> {
      * Get the result of this recipe, usually for display purposes (e.g. recipe book). If your recipe has more than one
      * possible result (e.g. it's dynamic and depends on its inputs), then return an empty stack.
      */
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return this.nugget;
     }
 
     public int getRecipeOutputCount(IInventory inv) {
-        ItemStack stack = inv.getStackInSlot(0);
+        ItemStack stack = inv.getItem(0);
         double d = this.count * this.penalty;
-        if(stack.isDamageable()){
+        if(stack.isDamageableItem()){
             int maxdamage = stack.getItem().getMaxDamage(stack);
-            int health = maxdamage - stack.getDamage();
+            int health = maxdamage - stack.getDamageValue();
             d *= ((double)health)/((double)maxdamage);
         }
         return Integer.max((int)d,1);
@@ -120,7 +120,7 @@ public class RecycleRecipe implements IRecipe<IInventory> {
         return ModRecipeType.RECYCLING;
     }
 
-    public ItemStack getIcon() {
+    public ItemStack getToastSymbol() {
         return new ItemStack(ItemRegistry.RECYCLE_FURNACE.get());
     }
 
@@ -130,32 +130,32 @@ public class RecycleRecipe implements IRecipe<IInventory> {
     }
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<RecycleRecipe> {
-        public RecycleRecipe read(ResourceLocation recipeId, JsonObject json) {
-            String s = JSONUtils.getString(json, "group", "");
-            JsonElement jsonelement1 = (JsonElement)(JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient") : JSONUtils.getJsonObject(json, "ingredient"));
-            Ingredient ingredient = Ingredient.deserialize(jsonelement1);
+        public RecycleRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            String s = JSONUtils.getAsString(json, "group", "");
+            JsonElement jsonelement1 = (JsonElement)(JSONUtils.isArrayNode(json, "ingredient") ? JSONUtils.getAsJsonArray(json, "ingredient") : JSONUtils.getAsJsonObject(json, "ingredient"));
+            Ingredient ingredient = Ingredient.fromJson(jsonelement1);
             //Forge: Check if primitive string to keep vanilla or a object which can contain a count field.
             if (!json.has("nugget")) throw new com.google.gson.JsonSyntaxException("Missing result, expected to find a string or object");
             ItemStack nugget;
-            if (json.get("nugget").isJsonObject()) nugget = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "nugget"));
+            if (json.get("nugget").isJsonObject()) nugget = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "nugget"));
             else {
-                String s1 = JSONUtils.getString(json, "nugget");
+                String s1 = JSONUtils.getAsString(json, "nugget");
                 ResourceLocation resourcelocation = new ResourceLocation(s1);
                 nugget = new ItemStack(Registry.ITEM.getOptional(resourcelocation).orElseThrow(() -> {
                     return new IllegalStateException("Item: " + s1 + " does not exist");
                 }));
             }
-            int nuggetCount = JSONUtils.getInt(json, "nuggetCount");
-            int ingotCount = JSONUtils.getInt(json, "ingotCount");
-            float f = JSONUtils.getFloat(json, "experience", 0.0F);
-            int i = JSONUtils.getInt(json, "cookingtime", 200);
+            int nuggetCount = JSONUtils.getAsInt(json, "nuggetCount");
+            int ingotCount = JSONUtils.getAsInt(json, "ingotCount");
+            float f = JSONUtils.getAsFloat(json, "experience", 0.0F);
+            int i = JSONUtils.getAsInt(json, "cookingtime", 200);
             return new RecycleRecipe(recipeId, s, ingredient, nugget, nuggetCount, ingotCount, f, i);
         }
 
-        public RecycleRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            String s = buffer.readString(32767);
-            Ingredient ingredient= Ingredient.read(buffer);
-            ItemStack nugget = buffer.readItemStack();
+        public RecycleRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+            String s = buffer.readUtf(32767);
+            Ingredient ingredient= Ingredient.fromNetwork(buffer);
+            ItemStack nugget = buffer.readItem();
             int nuggetCount = buffer.readVarInt();
             int ingotCount = buffer.readVarInt();
             float f = buffer.readFloat();
@@ -163,10 +163,10 @@ public class RecycleRecipe implements IRecipe<IInventory> {
             return new RecycleRecipe(recipeId, s, ingredient, nugget, nuggetCount, ingotCount, f, i);
         }
 
-        public void write(PacketBuffer buffer, RecycleRecipe recipe) {
-            buffer.writeString(recipe.group);
-            recipe.ingredient.write(buffer);
-            buffer.writeItemStack(recipe.nugget);            buffer.writeVarInt(recipe.nuggetCount);
+        public void toNetwork(PacketBuffer buffer, RecycleRecipe recipe) {
+            buffer.writeUtf(recipe.group);
+            recipe.ingredient.toNetwork(buffer);
+            buffer.writeItem(recipe.nugget);            buffer.writeVarInt(recipe.nuggetCount);
             buffer.writeVarInt(recipe.ingotCount);
             buffer.writeFloat(recipe.experience);
             buffer.writeVarInt(recipe.cookTime);

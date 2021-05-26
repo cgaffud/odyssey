@@ -56,22 +56,22 @@ public class ArctihornEntity extends MonsterWaterEntity {
 
     public ArctihornEntity(EntityType<? extends ArctihornEntity> type, World worldIn) {
         super(type, worldIn);
-        this.experienceValue = 10;
-        this.rand.setSeed((long)this.getEntityId());
-        this.rotationVelocity = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
+        this.xpReward = 10;
+        this.random.setSeed((long)this.getId());
+        this.rotationVelocity = 1.0F / (this.random.nextFloat() + 1.0F) * 0.2F;
     }
 
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new ArctihornEntity.MoveToTarget(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(3, new ArctihornEntity.MoveRandomGoal(this));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp());
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers());
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PolarBearEntity.class, true));
     }
 
     public static AttributeModifierMap.MutableAttribute attributes() {
-        return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 40.0D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D);
+        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 40.0D).add(Attributes.ATTACK_DAMAGE, 5.0D);
     }
 
     protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
@@ -79,15 +79,15 @@ public class ArctihornEntity extends MonsterWaterEntity {
     }
 
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_SQUID_AMBIENT;
+        return SoundEvents.SQUID_AMBIENT;
     }
 
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_SQUID_HURT;
+        return SoundEvents.SQUID_HURT;
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_SQUID_DEATH;
+        return SoundEvents.SQUID_DEATH;
     }
 
     /**
@@ -97,7 +97,7 @@ public class ArctihornEntity extends MonsterWaterEntity {
         return 0.4F;
     }
 
-    protected boolean canTriggerWalking() {
+    protected boolean isMovementNoisy() {
         return false;
     }
 
@@ -105,27 +105,27 @@ public class ArctihornEntity extends MonsterWaterEntity {
      * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
      * use this to react to sunlight and start to burn.
      */
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
         this.prevSquidPitch = this.squidPitch;
         this.prevSquidYaw = this.squidYaw;
         this.prevSquidRotation = this.squidRotation;
         this.lastTentacleAngle = this.tentacleAngle;
         this.squidRotation += this.rotationVelocity;
         if ((double)this.squidRotation > (Math.PI * 2D)) {
-            if (this.world.isRemote) {
+            if (this.level.isClientSide) {
                 this.squidRotation = ((float)Math.PI * 2F);
             } else {
                 this.squidRotation = (float)((double)this.squidRotation - (Math.PI * 2D));
-                if (this.rand.nextInt(10) == 0) {
-                    this.rotationVelocity = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
+                if (this.random.nextInt(10) == 0) {
+                    this.rotationVelocity = 1.0F / (this.random.nextFloat() + 1.0F) * 0.2F;
                 }
 
-                this.world.setEntityState(this, (byte)19);
+                this.level.broadcastEntityEvent(this, (byte)19);
             }
         }
 
-        if (this.isInWaterOrBubbleColumn()) {
+        if (this.isInWaterOrBubble()) {
             if (this.squidRotation < (float)Math.PI) {
                 float f = this.squidRotation / (float)Math.PI;
                 this.tentacleAngle = MathHelper.sin(f * f * (float)Math.PI) * (float)Math.PI * 0.25F;
@@ -141,27 +141,27 @@ public class ArctihornEntity extends MonsterWaterEntity {
                 this.rotateSpeed *= 0.99F;
             }
 
-            if (!this.world.isRemote) {
-                this.setMotion((double)(this.randomMotionVecX * this.randomMotionSpeed), (double)(this.randomMotionVecY * this.randomMotionSpeed), (double)(this.randomMotionVecZ * this.randomMotionSpeed));
+            if (!this.level.isClientSide) {
+                this.setDeltaMovement((double)(this.randomMotionVecX * this.randomMotionSpeed), (double)(this.randomMotionVecY * this.randomMotionSpeed), (double)(this.randomMotionVecZ * this.randomMotionSpeed));
             }
 
-            Vector3d vector3d = this.getMotion();
-            float f1 = MathHelper.sqrt(horizontalMag(vector3d));
-            this.renderYawOffset += (-((float)MathHelper.atan2(vector3d.x, vector3d.z)) * (180F / (float)Math.PI) - this.renderYawOffset) * 0.1F;
-            this.rotationYaw = this.renderYawOffset;
+            Vector3d vector3d = this.getDeltaMovement();
+            float f1 = MathHelper.sqrt(getHorizontalDistanceSqr(vector3d));
+            this.yBodyRot += (-((float)MathHelper.atan2(vector3d.x, vector3d.z)) * (180F / (float)Math.PI) - this.yBodyRot) * 0.1F;
+            this.yRot = this.yBodyRot;
             this.squidYaw = (float)((double)this.squidYaw + Math.PI * (double)this.rotateSpeed * 1.5D);
             this.squidPitch += (-((float)MathHelper.atan2((double)f1, vector3d.y)) * (180F / (float)Math.PI) - this.squidPitch) * 0.1F;
         } else {
             this.tentacleAngle = MathHelper.abs(MathHelper.sin(this.squidRotation)) * (float)Math.PI * 0.25F;
-            if (!this.world.isRemote) {
-                double d0 = this.getMotion().y;
-                if (this.isPotionActive(Effects.LEVITATION)) {
-                    d0 = 0.05D * (double)(this.getActivePotionEffect(Effects.LEVITATION).getAmplifier() + 1);
-                } else if (!this.hasNoGravity()) {
+            if (!this.level.isClientSide) {
+                double d0 = this.getDeltaMovement().y;
+                if (this.hasEffect(Effects.LEVITATION)) {
+                    d0 = 0.05D * (double)(this.getEffect(Effects.LEVITATION).getAmplifier() + 1);
+                } else if (!this.isNoGravity()) {
                     d0 -= 0.08D;
                 }
 
-                this.setMotion(0.0D, d0 * (double)0.98F, 0.0D);
+                this.setDeltaMovement(0.0D, d0 * (double)0.98F, 0.0D);
             }
 
             this.squidPitch = (float)((double)this.squidPitch + (double)(-90.0F - this.squidPitch) * 0.02D);
@@ -172,23 +172,23 @@ public class ArctihornEntity extends MonsterWaterEntity {
     /**
      * Called when the entity is attacked.
      */
-    public boolean attackEntityFrom(DamageSource source, float amount) {
-        return super.attackEntityFrom(source, amount) && this.getRevengeTarget() != null;
+    public boolean hurt(DamageSource source, float amount) {
+        return super.hurt(source, amount) && this.getLastHurtByMob() != null;
     }
 
     public void travel(Vector3d travelVector) {
-        this.move(MoverType.SELF, this.getMotion());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
     /**
      * Handler for {@link World#setEntityState}
      */
     @OnlyIn(Dist.CLIENT)
-    public void handleStatusUpdate(byte id) {
+    public void handleEntityEvent(byte id) {
         if (id == 19) {
             this.squidRotation = 0.0F;
         } else {
-            super.handleStatusUpdate(id);
+            super.handleEntityEvent(id);
         }
 
     }
@@ -218,21 +218,21 @@ public class ArctihornEntity extends MonsterWaterEntity {
          * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
          * method as well.
          */
-        public boolean shouldExecute() {
-            return this.squid.getAttackTarget() == null;
+        public boolean canUse() {
+            return this.squid.getTarget() == null;
         }
 
         /**
          * Keep ticking a continuous task that has already been started
          */
         public void tick() {
-            int i = this.squid.getIdleTime();
+            int i = this.squid.getNoActionTime();
             if (i > 100) {
                 this.squid.setMovementVector(0.0F, 0.0F, 0.0F);
-            } else if (this.squid.getRNG().nextInt(50) == 0 || !this.squid.inWater || !this.squid.hasMovementVector()) {
-                float f = this.squid.getRNG().nextFloat() * ((float)Math.PI * 2F);
+            } else if (this.squid.getRandom().nextInt(50) == 0 || !this.squid.wasTouchingWater || !this.squid.hasMovementVector()) {
+                float f = this.squid.getRandom().nextFloat() * ((float)Math.PI * 2F);
                 float f1 = MathHelper.cos(f) * 0.2F;
-                float f2 = -0.1F + this.squid.getRNG().nextFloat() * 0.2F;
+                float f2 = -0.1F + this.squid.getRandom().nextFloat() * 0.2F;
                 float f3 = MathHelper.sin(f) * 0.2F;
                 this.squid.setMovementVector(f1, f2, f3);
             }
@@ -252,8 +252,8 @@ public class ArctihornEntity extends MonsterWaterEntity {
          * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
          * method as well.
          */
-        public boolean shouldExecute() {
-            this.target = this.squid.getAttackTarget();
+        public boolean canUse() {
+            this.target = this.squid.getTarget();
             return this.target != null;
         }
 
@@ -261,12 +261,12 @@ public class ArctihornEntity extends MonsterWaterEntity {
          * Keep ticking a continuous task that has already been started
          */
         public void tick() {
-            int i = this.squid.getIdleTime();
+            int i = this.squid.getNoActionTime();
             if (i > 100) {
                 this.squid.setMovementVector(0.0F, 0.0F, 0.0F);
-            } else if (this.squid.getRNG().nextInt(10) == 0 || !this.squid.inWater || !this.squid.hasMovementVector()) {
-                Vector3d vector3d1 = new Vector3d(this.target.getPosX() - this.squid.getPosX(), this.target.getPosY() - this.squid.getPosY(), this.target.getPosZ() - this.squid.getPosZ());
-                if (vector3d1.lengthSquared() > 1.0E-7D) {
+            } else if (this.squid.getRandom().nextInt(10) == 0 || !this.squid.wasTouchingWater || !this.squid.hasMovementVector()) {
+                Vector3d vector3d1 = new Vector3d(this.target.getX() - this.squid.getX(), this.target.getY() - this.squid.getY(), this.target.getZ() - this.squid.getZ());
+                if (vector3d1.lengthSqr() > 1.0E-7D) {
                     vector3d1 = vector3d1.normalize().scale(0.4D);
                 }
                 this.squid.setMovementVector((float)vector3d1.x, (float)vector3d1.y, (float)vector3d1.z);

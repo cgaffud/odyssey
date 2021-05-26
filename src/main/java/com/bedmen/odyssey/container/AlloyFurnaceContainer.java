@@ -35,11 +35,11 @@ public class AlloyFurnaceContainer extends Container {
     public AlloyFurnaceContainer(int id, PlayerInventory playerInventory, IInventory furnaceInventory, IIntArray furnaceData) {
         super(ContainerRegistry.ALLOY_FURNACE.get(), id);
         this.recipeType = ModRecipeType.ALLOYING;
-        assertInventorySize(furnaceInventory, 4);
-        assertIntArraySize(furnaceData, 4);
+        checkContainerSize(furnaceInventory, 4);
+        checkContainerDataCount(furnaceData, 4);
         this.furnaceInventory = furnaceInventory;
         this.furnaceData = furnaceData;
-        this.world = playerInventory.player.world;
+        this.world = playerInventory.player.level;
         this.addSlot(new Slot(furnaceInventory, 0, 47, 17));
         this.addSlot(new Slot(furnaceInventory, 1, 65, 17));
         this.addSlot(new AlloyFurnaceFuelSlot(this, furnaceInventory, 2, 56, 53));
@@ -55,7 +55,7 @@ public class AlloyFurnaceContainer extends Container {
             this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
 
-        this.trackIntArray(furnaceData);
+        this.addDataSlots(furnaceData);
     }
 
     public void fillStackedContents(RecipeItemHelper itemHelperIn) {
@@ -73,48 +73,48 @@ public class AlloyFurnaceContainer extends Container {
     /**
      * Determines whether supplied player can use this container
      */
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return this.furnaceInventory.isUsableByPlayer(playerIn);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return this.furnaceInventory.stillValid(playerIn);
     }
 
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index == 3) {
-                if (!this.mergeItemStack(itemstack1, 4, 40, true)) {
+                if (!this.moveItemStackTo(itemstack1, 4, 40, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onSlotChange(itemstack1, itemstack);
+                slot.onQuickCraft(itemstack1, itemstack);
             } else if (index != 1 && index != 0 && index != 2) {
                 if (this.isFuel(itemstack1)) {
-                    if (!this.mergeItemStack(itemstack1, 2, 3, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 2, 3, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!this.mergeItemStack(itemstack1, 0, 2, false)) {
+                } else if (!this.moveItemStackTo(itemstack1, 0, 2, false)) {
                     return ItemStack.EMPTY;
                 } else if (index >= 4 && index < 31) {
-                    if (!this.mergeItemStack(itemstack1, 31, 40, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 31, 40, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (index >= 31 && index < 40 && !this.mergeItemStack(itemstack1, 4, 30, false)) {
+                } else if (index >= 31 && index < 40 && !this.moveItemStackTo(itemstack1, 4, 30, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 4, 40, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 4, 40, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (itemstack1.getCount() == itemstack.getCount()) {

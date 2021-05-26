@@ -39,12 +39,12 @@ public class WerewolfEntity extends MonsterEntity {
     private boolean isShaking;
     private float timeWolfIsShaking;
     private float prevTimeWolfIsShaking;
-    private static final RangedInteger field_234230_bG_ = TickRangeConverter.convertRange(20, 39);
-    private UUID field_234231_bH_;
+    private static final RangedInteger PERSISTENT_ANGER_TIME = TickRangeConverter.rangeOfSeconds(20, 39);
+    private UUID persistentAngerTarget;
 
     public WerewolfEntity(EntityType<? extends WerewolfEntity> type, World worldIn) {
         super(type, worldIn);
-        this.experienceValue = 5;
+        this.xpReward = 5;
     }
 
     protected void registerGoals() {
@@ -54,47 +54,47 @@ public class WerewolfEntity extends MonsterEntity {
         this.goalSelector.addGoal(4, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp());
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers());
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
     }
 
     public static AttributeModifierMap.MutableAttribute attributes() {
-        return MonsterEntity.func_234295_eP_().createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.35F).createMutableAttribute(Attributes.MAX_HEALTH, 12.0D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D);
+        return MonsterEntity.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, (double)0.35F).add(Attributes.MAX_HEALTH, 12.0D).add(Attributes.ATTACK_DAMAGE, 4.0D);
     }
 
-    protected void registerData() {
-        super.registerData();
+    protected void defineSynchedData() {
+        super.defineSynchedData();
     }
 
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
-        this.playSound(SoundEvents.ENTITY_WOLF_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.WOLF_STEP, 0.15F, 1.0F);
     }
 
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
     }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
     }
 
-    public CreatureAttribute getCreatureAttribute() {
+    public CreatureAttribute getMobType() {
         return CreatureAttribute.UNDEAD;
     }
 
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_WOLF_GROWL;
+        return SoundEvents.WOLF_GROWL;
     }
 
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_WOLF_HURT;
+        return SoundEvents.WOLF_HURT;
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_WOLF_DEATH;
+        return SoundEvents.WOLF_DEATH;
     }
 
     /**
@@ -108,19 +108,19 @@ public class WerewolfEntity extends MonsterEntity {
      * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
      * use this to react to sunlight and start to burn.
      */
-    public void livingTick() {
+    public void aiStep() {
         if (this.isAlive()) {
-            boolean flag = this.shouldBurnInDay() && this.isInDaylight();
+            boolean flag = this.shouldBurnInDay() && this.isSunBurnTick();
             if (flag) {
-                this.setFire(8);
+                this.setSecondsOnFire(8);
             }
         }
-        super.livingTick();
-        if (!this.world.isRemote && this.isWet && !this.isShaking && !this.hasPath() && this.onGround) {
+        super.aiStep();
+        if (!this.level.isClientSide && this.isWet && !this.isShaking && !this.isPathFinding() && this.onGround) {
             this.isShaking = true;
             this.timeWolfIsShaking = 0.0F;
             this.prevTimeWolfIsShaking = 0.0F;
-            this.world.setEntityState(this, (byte)8);
+            this.level.broadcastEntityEvent(this, (byte)8);
         }
 
     }
@@ -138,15 +138,15 @@ public class WerewolfEntity extends MonsterEntity {
             this.headRotationCourseOld = this.headRotationCourse;
             this.headRotationCourse += (0.0F - this.headRotationCourse) * 0.4F;
 
-            if (this.isInWaterRainOrBubbleColumn()) {
+            if (this.isInWaterRainOrBubble()) {
                 this.isWet = true;
-                if (this.isShaking && !this.world.isRemote) {
-                    this.world.setEntityState(this, (byte)56);
-                    this.func_242326_eZ();
+                if (this.isShaking && !this.level.isClientSide) {
+                    this.level.broadcastEntityEvent(this, (byte)56);
+                    this.cancelShake();
                 }
             } else if ((this.isWet || this.isShaking) && this.isShaking) {
                 if (this.timeWolfIsShaking == 0.0F) {
-                    this.playSound(SoundEvents.ENTITY_WOLF_SHAKE, this.getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+                    this.playSound(SoundEvents.WOLF_SHAKE, this.getSoundVolume(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 }
 
                 this.prevTimeWolfIsShaking = this.timeWolfIsShaking;
@@ -159,14 +159,14 @@ public class WerewolfEntity extends MonsterEntity {
                 }
 
                 if (this.timeWolfIsShaking > 0.4F) {
-                    float f = (float)this.getPosY();
+                    float f = (float)this.getY();
                     int i = (int)(MathHelper.sin((this.timeWolfIsShaking - 0.4F) * (float)Math.PI) * 7.0F);
-                    Vector3d vector3d = this.getMotion();
+                    Vector3d vector3d = this.getDeltaMovement();
 
                     for(int j = 0; j < i; ++j) {
-                        float f1 = (this.rand.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.5F;
-                        float f2 = (this.rand.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.5F;
-                        this.world.addParticle(ParticleTypes.SPLASH, this.getPosX() + (double)f1, (double)(f + 0.8F), this.getPosZ() + (double)f2, vector3d.x, vector3d.y, vector3d.z);
+                        float f1 = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
+                        float f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
+                        this.level.addParticle(ParticleTypes.SPLASH, this.getX() + (double)f1, (double)(f + 0.8F), this.getZ() + (double)f2, vector3d.x, vector3d.y, vector3d.z);
                     }
                 }
             }
@@ -174,7 +174,7 @@ public class WerewolfEntity extends MonsterEntity {
         }
     }
 
-    private void func_242326_eZ() {
+    private void cancelShake() {
         this.isShaking = false;
         this.timeWolfIsShaking = 0.0F;
         this.prevTimeWolfIsShaking = 0.0F;
@@ -183,12 +183,12 @@ public class WerewolfEntity extends MonsterEntity {
     /**
      * Called when the mob's health reaches 0.
      */
-    public void onDeath(DamageSource cause) {
+    public void die(DamageSource cause) {
         this.isWet = false;
         this.isShaking = false;
         this.prevTimeWolfIsShaking = 0.0F;
         this.timeWolfIsShaking = 0.0F;
-        super.onDeath(cause);
+        super.die(cause);
     }
 
     /**
@@ -231,23 +231,23 @@ public class WerewolfEntity extends MonsterEntity {
     /**
      * Called when the entity is attacked.
      */
-    public boolean attackEntityFrom(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         if (this.isInvulnerableTo(source)) {
             return false;
         } else {
-            Entity entity = source.getTrueSource();
+            Entity entity = source.getEntity();
             if (entity != null && !(entity instanceof PlayerEntity) && !(entity instanceof AbstractArrowEntity)) {
                 amount = (amount + 1.0F) / 2.0F;
             }
 
-            return super.attackEntityFrom(source, amount);
+            return super.hurt(source, amount);
         }
     }
 
-    public boolean attackEntityAsMob(Entity entityIn) {
-        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+    public boolean doHurtTarget(Entity entityIn) {
+        boolean flag = entityIn.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
         if (flag) {
-            this.applyEnchantments(this, entityIn);
+            this.doEnchantDamageEffects(this, entityIn);
         }
 
         return flag;
@@ -257,15 +257,15 @@ public class WerewolfEntity extends MonsterEntity {
      * Handler for {@link World#setEntityState}
      */
     @OnlyIn(Dist.CLIENT)
-    public void handleStatusUpdate(byte id) {
+    public void handleEntityEvent(byte id) {
         if (id == 8) {
             this.isShaking = true;
             this.timeWolfIsShaking = 0.0F;
             this.prevTimeWolfIsShaking = 0.0F;
         } else if (id == 56) {
-            this.func_242326_eZ();
+            this.cancelShake();
         } else {
-            super.handleStatusUpdate(id);
+            super.handleEntityEvent(id);
         }
 
     }
@@ -278,13 +278,13 @@ public class WerewolfEntity extends MonsterEntity {
     /**
      * Will return how many at most can spawn in a chunk at once.
      */
-    public int getMaxSpawnedInChunk() {
+    public int getMaxSpawnClusterSize() {
         return 8;
     }
 
     @OnlyIn(Dist.CLIENT)
-    public Vector3d func_241205_ce_() {
-        return new Vector3d(0.0D, (double)(0.6F * this.getEyeHeight()), (double)(this.getWidth() * 0.4F));
+    public Vector3d getLeashOffset() {
+        return new Vector3d(0.0D, (double)(0.6F * this.getEyeHeight()), (double)(this.getBbWidth() * 0.4F));
     }
 
     public static boolean predicate(EntityType<? extends CreatureEntity> type, IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn){

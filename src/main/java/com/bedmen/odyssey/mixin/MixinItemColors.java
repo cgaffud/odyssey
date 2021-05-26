@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 public abstract class MixinItemColors {
 
     @Overwrite
-    public static ItemColors init(BlockColors colors) {
+    public static ItemColors createDefault(BlockColors colors) {
         ItemColors itemcolors = new ItemColors();
         itemcolors.register((stack, color) -> {
             return color > 0 ? -1 : ((IDyeableArmorItem)stack.getItem()).getColor(stack);
@@ -31,7 +31,7 @@ public abstract class MixinItemColors {
             if (color != 1) {
                 return -1;
             } else {
-                CompoundNBT compoundnbt = stack.getChildTag("Explosion");
+                CompoundNBT compoundnbt = stack.getTagElement("Explosion");
                 int[] aint = compoundnbt != null && compoundnbt.contains("Colors", 11) ? compoundnbt.getIntArray("Colors") : null;
                 if (aint != null && aint.length != 0) {
                     if (aint.length == 1) {
@@ -65,14 +65,14 @@ public abstract class MixinItemColors {
             return color > 0 ? -1 : BigPotionItem.getColor(stack);
         }, ItemRegistry.BIG_POTION.get());
 
-        for(SpawnEggItem spawneggitem : SpawnEggItem.getEggs()) {
+        for(SpawnEggItem spawneggitem : SpawnEggItem.eggs()) {
             itemcolors.register((stack, color) -> {
                 return spawneggitem.getColor(color);
             }, spawneggitem);
         }
 
         itemcolors.register((stack, color) -> {
-            BlockState blockstate = ((BlockItem)stack.getItem()).getBlock().getDefaultState();
+            BlockState blockstate = ((BlockItem)stack.getItem()).getBlock().defaultBlockState();
             return colors.getColor(blockstate, (IBlockDisplayReader)null, (BlockPos)null, color);
         }, Blocks.GRASS_BLOCK, Blocks.GRASS, Blocks.FERN, Blocks.VINE, Blocks.OAK_LEAVES, Blocks.SPRUCE_LEAVES, Blocks.BIRCH_LEAVES, Blocks.JUNGLE_LEAVES, Blocks.ACACIA_LEAVES, Blocks.DARK_OAK_LEAVES, Blocks.LILY_PAD);
         itemcolors.register((stack, color) -> {

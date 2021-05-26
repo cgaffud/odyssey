@@ -19,7 +19,7 @@ public class NewTridentModel extends Model {
     private final ModelRenderer modelRenderer = new ModelRenderer(32, 32, 0, 6);
 
     public NewTridentModel() {
-        super(RenderType::getEntitySolid);
+        super(RenderType::entitySolid);
         this.modelRenderer.addBox(-0.5F, 2.0F, -0.5F, 1.0F, 25.0F, 1.0F, 0.0F);
         ModelRenderer modelrenderer = new ModelRenderer(32, 32, 4, 0);
         modelrenderer.addBox(-1.5F, 0.0F, -0.5F, 3.0F, 2.0F, 1.0F);
@@ -36,7 +36,7 @@ public class NewTridentModel extends Model {
         this.modelRenderer.addChild(modelrenderer3);
     }
 
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 

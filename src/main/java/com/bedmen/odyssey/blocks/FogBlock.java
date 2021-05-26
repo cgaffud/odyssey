@@ -12,7 +12,7 @@ import net.minecraft.world.IBlockReader;
 public class FogBlock extends AbstractGlassBlock {
 
     public FogBlock() {
-        super(AbstractBlock.Properties.create(Material.AIR).doesNotBlockMovement().noDrops());
+        super(AbstractBlock.Properties.of(Material.AIR).noCollission().noDrops());
     }
 
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {

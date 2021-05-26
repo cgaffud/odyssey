@@ -26,14 +26,14 @@ public class NewBeaconContainer extends Container {
          * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot. For
          * guis use Slot.isItemValid
          */
-        public boolean isItemValidForSlot(int index, ItemStack stack) {
-            return stack.getItem().isIn(ItemTags.BEACON_PAYMENT_ITEMS);
+        public boolean canPlaceItem(int index, ItemStack stack) {
+            return stack.getItem().is(ItemTags.BEACON_PAYMENT_ITEMS);
         }
 
         /**
          * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended.
          */
-        public int getInventoryStackLimit() {
+        public int getMaxStackSize() {
             return 1;
         }
     };
@@ -44,17 +44,17 @@ public class NewBeaconContainer extends Container {
     private boolean completionError2;
 
     public NewBeaconContainer(int id, IInventory p_i50099_2_) {
-        this(id, p_i50099_2_, new IntArray(11), IWorldPosCallable.DUMMY);
+        this(id, p_i50099_2_, new IntArray(11), IWorldPosCallable.NULL);
     }
 
     public NewBeaconContainer(int id, IInventory inventory, IIntArray beaconInfo, IWorldPosCallable worldPosCallable) {
         super(ContainerRegistry.BEACON.get(), id);
-        assertIntArraySize(beaconInfo, 11);
+        checkContainerDataCount(beaconInfo, 11);
         this.beaconInfo = beaconInfo;
         this.worldPosCallable = worldPosCallable;
         this.beaconSlot = new NewBeaconContainer.BeaconSlot(this, this.tileBeacon, 0, 116, 54);
         this.addSlot(this.beaconSlot);
-        this.trackIntArray(beaconInfo);
+        this.addDataSlots(beaconInfo);
 
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {
@@ -73,12 +73,12 @@ public class NewBeaconContainer extends Container {
     /**
      * Called when the container is closed.
      */
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        if (!playerIn.world.isRemote) {
-            ItemStack itemstack = this.beaconSlot.decrStackSize(this.beaconSlot.getSlotStackLimit());
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        if (!playerIn.level.isClientSide) {
+            ItemStack itemstack = this.beaconSlot.remove(this.beaconSlot.getMaxStackSize());
             if (!itemstack.isEmpty()) {
-                playerIn.dropItem(itemstack, false);
+                playerIn.drop(itemstack, false);
             }
 
         }
@@ -87,49 +87,49 @@ public class NewBeaconContainer extends Container {
     /**
      * Determines whether supplied player can use this container
      */
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(this.worldPosCallable, playerIn, Blocks.BEACON);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return stillValid(this.worldPosCallable, playerIn, Blocks.BEACON);
     }
 
-    public void updateProgressBar(int id, int data) {
-        super.updateProgressBar(id, data);
-        this.detectAndSendChanges();
+    public void setData(int id, int data) {
+        super.setData(id, data);
+        this.broadcastChanges();
     }
 
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index == 0) {
-                if (!this.mergeItemStack(itemstack1, 1, 37, true)) {
+                if (!this.moveItemStackTo(itemstack1, 1, 37, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onSlotChange(itemstack1, itemstack);
-            } else if (this.mergeItemStack(itemstack1, 0, 1, false)) { //Forge Fix Shift Clicking in beacons with stacks larger then 1.
+                slot.onQuickCraft(itemstack1, itemstack);
+            } else if (this.moveItemStackTo(itemstack1, 0, 1, false)) { //Forge Fix Shift Clicking in beacons with stacks larger then 1.
                 return ItemStack.EMPTY;
             } else if (index >= 1 && index < 28) {
-                if (!this.mergeItemStack(itemstack1, 28, 37, false)) {
+                if (!this.moveItemStackTo(itemstack1, 28, 37, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index >= 28 && index < 37) {
-                if (!this.mergeItemStack(itemstack1, 1, 28, false)) {
+                if (!this.moveItemStackTo(itemstack1, 1, 28, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 1, 37, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 1, 37, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (itemstack1.getCount() == itemstack.getCount()) {
@@ -166,8 +166,8 @@ public class NewBeaconContainer extends Container {
         if (e != null && i != -1) {
             this.beaconInfo.set(9, Effect.getId(e));
             this.beaconInfo.set(10, i);
-            this.beaconSlot.decrStackSize(1);
-            this.tileBeacon.setInventorySlotContents(0,Items.GLASS_BOTTLE.getDefaultInstance());
+            this.beaconSlot.remove(1);
+            this.tileBeacon.setItem(0,Items.GLASS_BOTTLE.getDefaultInstance());
         }
     }
 
@@ -196,8 +196,8 @@ public class NewBeaconContainer extends Container {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public boolean func_216970_h() {
-        return !this.tileBeacon.getStackInSlot(0).isEmpty();
+    public boolean hasPayment() {
+        return !this.tileBeacon.getItem(0).isEmpty();
     }
 
     class BeaconSlot extends Slot {
@@ -211,17 +211,17 @@ public class NewBeaconContainer extends Container {
         /**
          * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
          */
-        public boolean isItemValid(ItemStack stack) {
+        public boolean mayPlace(ItemStack stack) {
             if(stack.getItem().equals(Items.POTION)){
-                EffectInstance effectInstance = effectListToEffect(PotionUtils.getEffectsFromStack(stack));
+                EffectInstance effectInstance = effectListToEffect(PotionUtils.getMobEffects(stack));
                 if(effectInstance == null) return false;
-                else if(effectInstance.getPotion().equals(Effects.INSTANT_DAMAGE)) return false;
-                else if(effectInstance.getPotion().equals(Effects.INSTANT_HEALTH)) return false;
+                else if(effectInstance.getEffect().equals(Effects.HARM)) return false;
+                else if(effectInstance.getEffect().equals(Effects.HEAL)) return false;
                 else if(beacon.getCompletion(4) == 0) {
                     beacon.setCompletionError1(true);
                     return false;
                 }
-                else if(effectInstance.getPotion().equals(Effects.RESISTANCE)){
+                else if(effectInstance.getEffect().equals(Effects.DAMAGE_RESISTANCE)){
                     if(effectInstance.getAmplifier() == 2 || beacon.getBlocks() == 9) return true;
                     else{
                         beacon.setCompletionError2(true);
@@ -241,33 +241,33 @@ public class NewBeaconContainer extends Container {
          * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1 in the
          * case of armor slots)
          */
-        public int getSlotStackLimit() {
+        public int getMaxStackSize() {
             return 1;
         }
 
         public Effect getEffect(){
-            ItemStack stack = this.getStack();
+            ItemStack stack = this.getItem();
             if(stack != null && stack.getItem().equals(Items.POTION)){
-                EffectInstance e = effectListToEffect(PotionUtils.getEffectsFromStack(this.getStack()));
-                return e.getPotion();
+                EffectInstance e = effectListToEffect(PotionUtils.getMobEffects(this.getItem()));
+                return e.getEffect();
             }
             return null;
         }
 
         public int getAmplifier(){
-            ItemStack stack = this.getStack();
+            ItemStack stack = this.getItem();
             if(stack != null && stack.getItem().equals(Items.POTION)){
-                EffectInstance e = effectListToEffect(PotionUtils.getEffectsFromStack(this.getStack()));
-                if(e.getPotion().equals(Effects.RESISTANCE)) return e.getAmplifier()-2;
-                if(e.getPotion().equals(Effects.SLOWNESS) && e.getAmplifier() == 3) return 1;
-                if(e.getPotion().equals(Effects.LEVITATION) && e.getAmplifier() == 3) return 1;
+                EffectInstance e = effectListToEffect(PotionUtils.getMobEffects(this.getItem()));
+                if(e.getEffect().equals(Effects.DAMAGE_RESISTANCE)) return e.getAmplifier()-2;
+                if(e.getEffect().equals(Effects.MOVEMENT_SLOWDOWN) && e.getAmplifier() == 3) return 1;
+                if(e.getEffect().equals(Effects.LEVITATION) && e.getAmplifier() == 3) return 1;
                 return e.getAmplifier();
             }
             return -1;
         }
 
-        public void onSlotChanged() {
-            super.onSlotChanged();
+        public void setChanged() {
+            super.setChanged();
             setEffect();
         }
 

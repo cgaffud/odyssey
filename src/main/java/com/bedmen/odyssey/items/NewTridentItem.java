@@ -38,20 +38,20 @@ public class NewTridentItem extends Item implements IVanishable {
         super(builderIn);
         this.damage = damage;
         Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", this.damage - 1.0D, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", (double)-2.9F, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", this.damage - 1.0D, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", (double)-2.9F, AttributeModifier.Operation.ADDITION));
         this.tridentAttributes = builder.build();
 
     }
 
-    public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+    public boolean canAttackBlock(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
         return !player.isCreative();
     }
 
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.SPEAR;
     }
 
@@ -65,16 +65,16 @@ public class NewTridentItem extends Item implements IVanishable {
     /**
      * Called when the player stops using an Item (stops holding the right mouse button).
      */
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
+    public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerentity = (PlayerEntity)entityLiving;
             int i = this.getUseDuration(stack) - timeLeft;
             if (i >= 10) {
-                int j = EnchantmentHelper.getRiptideModifier(stack);
-                if (j <= 0 || playerentity.isWet()) {
-                    if (!worldIn.isRemote) {
-                        stack.damageItem(1, playerentity, (player) -> {
-                            player.sendBreakAnimation(entityLiving.getActiveHand());
+                int j = EnchantmentHelper.getRiptide(stack);
+                if (j <= 0 || playerentity.isInWaterOrRain()) {
+                    if (!worldIn.isClientSide) {
+                        stack.hurtAndBreak(1, playerentity, (player) -> {
+                            player.broadcastBreakEvent(entityLiving.getUsedItemHand());
                         });
                         if (j == 0) {
                             AbstractTridentEntity tridententity;
@@ -83,23 +83,23 @@ public class NewTridentItem extends Item implements IVanishable {
                             }
                             else tridententity = new NewTridentEntity(worldIn, playerentity, stack, this.damage);
                             float inaccuracy = EnchantmentUtil.getAccuracy(playerentity);
-                            tridententity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, 2.5F + (float)j * 0.5F, inaccuracy);
-                            if (playerentity.abilities.isCreativeMode) {
-                                tridententity.pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                            tridententity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, 2.5F + (float)j * 0.5F, inaccuracy);
+                            if (playerentity.abilities.instabuild) {
+                                tridententity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                             }
 
-                            worldIn.addEntity(tridententity);
-                            worldIn.playMovingSound((PlayerEntity)null, tridententity, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
-                            if (!playerentity.abilities.isCreativeMode) {
-                                playerentity.inventory.deleteStack(stack);
+                            worldIn.addFreshEntity(tridententity);
+                            worldIn.playSound((PlayerEntity)null, tridententity, SoundEvents.TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                            if (!playerentity.abilities.instabuild) {
+                                playerentity.inventory.removeItem(stack);
                             }
                         }
                     }
 
-                    playerentity.addStat(Stats.ITEM_USED.get(this));
+                    playerentity.awardStat(Stats.ITEM_USED.get(this));
                     if (j > 0) {
-                        float f7 = playerentity.rotationYaw;
-                        float f = playerentity.rotationPitch;
+                        float f7 = playerentity.yRot;
+                        float f = playerentity.xRot;
                         float f1 = -MathHelper.sin(f7 * ((float)Math.PI / 180F)) * MathHelper.cos(f * ((float)Math.PI / 180F));
                         float f2 = -MathHelper.sin(f * ((float)Math.PI / 180F));
                         float f3 = MathHelper.cos(f7 * ((float)Math.PI / 180F)) * MathHelper.cos(f * ((float)Math.PI / 180F));
@@ -108,8 +108,8 @@ public class NewTridentItem extends Item implements IVanishable {
                         f1 = f1 * (f5 / f4);
                         f2 = f2 * (f5 / f4);
                         f3 = f3 * (f5 / f4);
-                        playerentity.addVelocity((double)f1, (double)f2, (double)f3);
-                        playerentity.startSpinAttack(20);
+                        playerentity.push((double)f1, (double)f2, (double)f3);
+                        playerentity.startAutoSpinAttack(20);
                         if (playerentity.isOnGround()) {
                             float f6 = 1.1999999F;
                             playerentity.move(MoverType.SELF, new Vector3d(0.0D, (double)1.1999999F, 0.0D));
@@ -117,14 +117,14 @@ public class NewTridentItem extends Item implements IVanishable {
 
                         SoundEvent soundevent;
                         if (j >= 3) {
-                            soundevent = SoundEvents.ITEM_TRIDENT_RIPTIDE_3;
+                            soundevent = SoundEvents.TRIDENT_RIPTIDE_3;
                         } else if (j == 2) {
-                            soundevent = SoundEvents.ITEM_TRIDENT_RIPTIDE_2;
+                            soundevent = SoundEvents.TRIDENT_RIPTIDE_2;
                         } else {
-                            soundevent = SoundEvents.ITEM_TRIDENT_RIPTIDE_1;
+                            soundevent = SoundEvents.TRIDENT_RIPTIDE_1;
                         }
 
-                        worldIn.playMovingSound((PlayerEntity)null, playerentity, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        worldIn.playSound((PlayerEntity)null, playerentity, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
                     }
 
                 }
@@ -136,15 +136,15 @@ public class NewTridentItem extends Item implements IVanishable {
      * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
      * {@link #onItemUse}.
      */
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        if (itemstack.getDamage() >= itemstack.getMaxDamage() - 1) {
-            return ActionResult.resultFail(itemstack);
-        } else if (EnchantmentHelper.getRiptideModifier(itemstack) > 0 && !playerIn.isWet()) {
-            return ActionResult.resultFail(itemstack);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
+        if (itemstack.getDamageValue() >= itemstack.getMaxDamage() - 1) {
+            return ActionResult.fail(itemstack);
+        } else if (EnchantmentHelper.getRiptide(itemstack) > 0 && !playerIn.isInWaterOrRain()) {
+            return ActionResult.fail(itemstack);
         } else {
-            playerIn.setActiveHand(handIn);
-            return ActionResult.resultConsume(itemstack);
+            playerIn.startUsingItem(handIn);
+            return ActionResult.consume(itemstack);
         }
     }
 
@@ -152,9 +152,9 @@ public class NewTridentItem extends Item implements IVanishable {
      * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
      * the damage on the stack.
      */
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.damageItem(1, attacker, (entity) -> {
-            entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        stack.hurtAndBreak(1, attacker, (entity) -> {
+            entity.broadcastBreakEvent(EquipmentSlotType.MAINHAND);
         });
         return true;
     }
@@ -162,10 +162,10 @@ public class NewTridentItem extends Item implements IVanishable {
     /**
      * Called when a Block is destroyed using this Item. Return true to trigger the "Use Item" statistic.
      */
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
-        if ((double)state.getBlockHardness(worldIn, pos) != 0.0D) {
-            stack.damageItem(2, entityLiving, (entity) -> {
-                entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
+    public boolean mineBlock(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+        if ((double)state.getDestroySpeed(worldIn, pos) != 0.0D) {
+            stack.hurtAndBreak(2, entityLiving, (entity) -> {
+                entity.broadcastBreakEvent(EquipmentSlotType.MAINHAND);
             });
         }
 
@@ -175,20 +175,20 @@ public class NewTridentItem extends Item implements IVanishable {
     /**
      * Gets a map of item attribute modifiers, used by ItemSword to increase hit damage.
      */
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
-        return equipmentSlot == EquipmentSlotType.MAINHAND ? this.tridentAttributes : super.getAttributeModifiers(equipmentSlot);
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType equipmentSlot) {
+        return equipmentSlot == EquipmentSlotType.MAINHAND ? this.tridentAttributes : super.getDefaultAttributeModifiers(equipmentSlot);
     }
 
     /**
      * Return the enchantability factor of the item, most of the time is based on material.
      */
-    public int getItemEnchantability() {
+    public int getEnchantmentValue() {
         return 1;
     }
 
     public static void registerBaseProperties(Item item){
-        ItemModelsProperties.registerProperty(item, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
-            return p_239419_2_ != null && p_239419_2_.isHandActive() && p_239419_2_.getActiveItemStack() == p_239419_0_ ? 1.0F : 0.0F;
+        ItemModelsProperties.register(item, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
+            return p_239419_2_ != null && p_239419_2_.isUsingItem() && p_239419_2_.getUseItem() == p_239419_0_ ? 1.0F : 0.0F;
         });
     }
 }

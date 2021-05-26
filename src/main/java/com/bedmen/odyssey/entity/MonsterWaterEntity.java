@@ -12,37 +12,37 @@ import net.minecraft.world.World;
 public abstract class MonsterWaterEntity extends MonsterEntity {
     protected MonsterWaterEntity(EntityType<? extends MonsterWaterEntity> type, World p_i48565_2_) {
         super(type, p_i48565_2_);
-        this.setPathPriority(PathNodeType.WATER, 0.0F);
+        this.setPathfindingMalus(PathNodeType.WATER, 0.0F);
     }
 
     public boolean canBreatheUnderwater() {
         return true;
     }
 
-    public CreatureAttribute getCreatureAttribute() {
+    public CreatureAttribute getMobType() {
         return CreatureAttribute.WATER;
     }
 
-    public boolean isNotColliding(IWorldReader worldIn) {
-        return worldIn.checkNoEntityCollision(this);
+    public boolean checkSpawnObstruction(IWorldReader worldIn) {
+        return worldIn.isUnobstructed(this);
     }
 
     /**
      * Get number of ticks, at least during which the living entity will be silent.
      */
-    public int getTalkInterval() {
+    public int getAmbientSoundInterval() {
         return 120;
     }
 
     protected void updateAir(int p_209207_1_) {
-        if (this.isAlive() && !this.isInWaterOrBubbleColumn()) {
-            this.setAir(p_209207_1_ - 1);
-            if (this.getAir() == -20) {
-                this.setAir(0);
-                this.attackEntityFrom(DamageSource.DROWN, 2.0F);
+        if (this.isAlive() && !this.isInWaterOrBubble()) {
+            this.setAirSupply(p_209207_1_ - 1);
+            if (this.getAirSupply() == -20) {
+                this.setAirSupply(0);
+                this.hurt(DamageSource.DROWN, 2.0F);
             }
         } else {
-            this.setAir(300);
+            this.setAirSupply(300);
         }
 
     }
@@ -51,16 +51,16 @@ public abstract class MonsterWaterEntity extends MonsterEntity {
      * Gets called every tick from main Entity class
      */
     public void baseTick() {
-        int i = this.getAir();
+        int i = this.getAirSupply();
         super.baseTick();
         this.updateAir(i);
     }
 
-    public boolean isPushedByWater() {
+    public boolean isPushedByFluid() {
         return false;
     }
 
-    public boolean canBeLeashedTo(PlayerEntity player) {
+    public boolean canBeLeashed(PlayerEntity player) {
         return false;
     }
 }

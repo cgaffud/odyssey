@@ -85,7 +85,7 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
 
         }
 
-        public int size() {
+        public int getCount() {
             return 4;
         }
     };
@@ -168,7 +168,7 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
     }
 
     private static void addItemTagBurnTime(Map<Item, Integer> map, ITag<Item> itemTag, int burnTimeIn) {
-        for(Item item : itemTag.getAllElements()) {
+        for(Item item : itemTag.getValues()) {
             if (!isNonFlammable(item)) {
                 map.put(item, burnTimeIn);
             }
@@ -179,8 +179,8 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
     private static void addItemBurnTime(Map<Item, Integer> map, IItemProvider itemProvider, int burnTimeIn) {
         Item item = itemProvider.asItem();
         if (isNonFlammable(item)) {
-            if (SharedConstants.developmentMode) {
-                throw (IllegalStateException)Util.pauseDevMode(new IllegalStateException("A developer tried to explicitly make fire resistant item " + item.getDisplayName((ItemStack)null).getString() + " a furnace fuel. That will not work!"));
+            if (SharedConstants.IS_RUNNING_IN_IDE) {
+                throw (IllegalStateException)Util.pauseInIde(new IllegalStateException("A developer tried to explicitly make fire resistant item " + item.getName((ItemStack)null).getString() + " a furnace fuel. That will not work!"));
             }
         } else {
             map.put(item, burnTimeIn);
@@ -191,9 +191,9 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
         return this.burnTime > 0;
     }
 
-    public void read(BlockState state, CompoundNBT nbt) { //TODO: MARK
-        super.read(state, nbt);
-        this.items = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+    public void load(BlockState state, CompoundNBT nbt) { //TODO: MARK
+        super.load(state, nbt);
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(nbt, this.items);
         this.burnTime = nbt.getInt("BurnTime");
         this.cookTime = nbt.getInt("CookTime");
@@ -201,14 +201,14 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
         this.recipesUsed = this.getBurnTime(this.items.get(2));
         CompoundNBT compoundnbt = nbt.getCompound("RecipesUsed");
 
-        for(String s : compoundnbt.keySet()) {
+        for(String s : compoundnbt.getAllKeys()) {
             this.recipes.put(new ResourceLocation(s), compoundnbt.getInt(s));
         }
 
     }
 
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.putInt("BurnTime", this.burnTime);
         compound.putInt("CookTime", this.cookTime);
         compound.putInt("CookTimeTotal", this.cookTimeTotal);
@@ -228,10 +228,10 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
             --this.burnTime;
         }
 
-        if (!this.world.isRemote) {
+        if (!this.level.isClientSide) {
             ItemStack itemstack = this.items.get(1);
             if (this.isBurning() || !itemstack.isEmpty() && !this.items.get(0).isEmpty()) {
-                IRecipe<?> irecipe = this.world.getRecipeManager().getRecipe((IRecipeType<RecycleRecipe>)this.recipeType, this, this.world).orElse(null);
+                IRecipe<?> irecipe = this.level.getRecipeManager().getRecipeFor((IRecipeType<RecycleRecipe>)this.recipeType, this, this.level).orElse(null);
                 if (!this.isBurning() && this.canSmelt(irecipe)) {
                     this.burnTime = this.getBurnTime(itemstack);
                     this.recipesUsed = this.burnTime;
@@ -267,12 +267,12 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
 
             if (flag != this.isBurning()) {
                 flag1 = true;
-                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(RecycleFurnaceBlock.LIT, Boolean.valueOf(this.isBurning())), 3);
+                this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(RecycleFurnaceBlock.LIT, Boolean.valueOf(this.isBurning())), 3);
             }
         }
 
         if (flag1) {
-            this.markDirty();
+            this.setChanged();
         }
 
     }
@@ -280,7 +280,7 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
     protected boolean canSmelt(@Nullable IRecipe<?> recipeIn) {
         RecycleRecipe recycleRecipe = (RecycleRecipe)recipeIn;
         if (!this.items.get(0).isEmpty() && recipeIn != null) {
-            ItemStack itemstack = recipeIn.getRecipeOutput();
+            ItemStack itemstack = recipeIn.getResultItem();
             int n = recycleRecipe.getRecipeOutputCount(this);
             ItemStack itemstackIngot = recycleRecipe.getRecipeOutputIngot();
             if (itemstack.isEmpty()) {
@@ -292,22 +292,22 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
                     if(itemstack2.isEmpty()) {
                         return n <= 10*64;
                     }
-                    if (!itemstack2.isItemEqual(itemstackIngot)){
+                    if (!itemstack2.sameItem(itemstackIngot)){
                         return n <= 64;
                     }
                     return n <= 9*(64-itemstack2.getCount()) + 64;
-                } else if (!itemstack1.isItemEqual(itemstack)) {
+                } else if (!itemstack1.sameItem(itemstack)) {
                     if (n % 9 == 0) {
                         if (itemstack2.isEmpty())
                             return n <= 9 * 64;
-                        if (!itemstack2.isItemEqual(itemstackIngot))
+                        if (!itemstack2.sameItem(itemstackIngot))
                             return false;
                         return n <= 9 * (64 - itemstack2.getCount());
                     }
                     return false;
                 } else if(n + itemstack1.getCount() <= 64)
                     return true;
-                else if(!itemstack2.isItemEqual(itemstackIngot))
+                else if(!itemstack2.sameItem(itemstackIngot))
                     return false;
                 return n <= 10*64 - itemstack1.getCount() - itemstack2.getCount() * 9;
             }
@@ -320,7 +320,7 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
         if (recipe != null && this.canSmelt(recipe)) {
             RecycleRecipe recycleRecipe = (RecycleRecipe) recipe;
             ItemStack itemstack = this.items.get(0);
-            ItemStack itemstackOut = recipe.getRecipeOutput();
+            ItemStack itemstackOut = recipe.getResultItem();
             ItemStack itemstack1 = this.items.get(2);
             ItemStack itemstack2 = this.items.get(3);
             int n = recycleRecipe.getRecipeOutputCount(this);
@@ -331,7 +331,7 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
                 itemstack2 = this.items.get(3);
                 n -= 9;
             }
-            if (itemstack2.isItemEqual(itemstackIngot) && n >= 9) {
+            if (itemstack2.sameItem(itemstackIngot) && n >= 9) {
                 int a = Integer.min(64 - itemstack2.getCount(), n / 9);
                 itemstack2.grow(a);
                 n -= 9 * a;
@@ -341,11 +341,11 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
                 itemstack1 = this.items.get(2);
                 n -= 1;
             }
-            if (itemstack1.isItemEqual(itemstackOut) && n >= 1) {
+            if (itemstack1.sameItem(itemstackOut) && n >= 1) {
                 itemstack1.grow(n);
             }
 
-            if (!this.world.isRemote) {
+            if (!this.level.isClientSide) {
                 this.setRecipeUsed(recipe);
             }
 
@@ -370,7 +370,7 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
     }
 
     protected int getCookTime() {
-        return this.world.getRecipeManager().getRecipe((IRecipeType<RecycleRecipe>)this.recipeType, this, this.world).map(RecycleRecipe::getCookTime).orElse(100);
+        return this.level.getRecipeManager().getRecipeFor((IRecipeType<RecycleRecipe>)this.recipeType, this, this.level).map(RecycleRecipe::getCookTime).orElse(100);
     }
 
     public static boolean isFuel(ItemStack stack) {
@@ -388,21 +388,21 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
     /**
      * Returns true if automation can insert the given item in the given slot from the given side.
      */
-    public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
-        return this.isItemValidForSlot(index, itemStackIn);
+    public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+        return this.canPlaceItem(index, itemStackIn);
     }
 
     /**
      * Returns true if automation can extract the given item in the given slot from the given side.
      */
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return direction == Direction.DOWN && (index == 3 || index == 2);
     }
 
     /**
      * Returns the number of slots in the inventory.
      */
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return this.items.size();
     }
 
@@ -419,39 +419,39 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
     /**
      * Returns the stack in the given slot.
      */
-    public ItemStack getStackInSlot(int index) {
+    public ItemStack getItem(int index) {
         return this.items.get(index);
     }
 
     /**
      * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
      */
-    public ItemStack decrStackSize(int index, int count) {
-        return ItemStackHelper.getAndSplit(this.items, index, count);
+    public ItemStack removeItem(int index, int count) {
+        return ItemStackHelper.removeItem(this.items, index, count);
     }
 
     /**
      * Removes a stack from the given slot and returns it.
      */
-    public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.getAndRemove(this.items, index);
+    public ItemStack removeItemNoUpdate(int index) {
+        return ItemStackHelper.takeItem(this.items, index);
     }
 
     /**
      * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
      */
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public void setItem(int index, ItemStack stack) {
         ItemStack itemstack = this.items.get(index);
-        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
+        boolean flag = !stack.isEmpty() && stack.sameItem(itemstack) && ItemStack.tagMatches(stack, itemstack);
         this.items.set(index, stack);
-        if (stack.getCount() > this.getInventoryStackLimit()) {
-            stack.setCount(this.getInventoryStackLimit());
+        if (stack.getCount() > this.getMaxStackSize()) {
+            stack.setCount(this.getMaxStackSize());
         }
 
         if (index == 0 && !flag) {
             this.cookTimeTotal = this.getCookTime();
             this.cookTime = 0;
-            this.markDirty();
+            this.setChanged();
         }
 
     }
@@ -459,11 +459,11 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
     /**
      * Don't rename this method to canInteractWith due to conflicts with Container
      */
-    public boolean isUsableByPlayer(PlayerEntity player) {
-        if (this.world.getTileEntity(this.pos) != this) {
+    public boolean stillValid(PlayerEntity player) {
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
         } else {
-            return player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
+            return player.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) <= 64.0D;
         }
     }
 
@@ -471,7 +471,7 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot. For
      * guis use Slot.isItemValid
      */
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         if (index > 1) {
             return false;
         } else if (index != 1) {
@@ -481,7 +481,7 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
         }
     }
 
-    public void clear() {
+    public void clearContent() {
         this.items.clear();
     }
 
@@ -498,12 +498,12 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
         return null;
     }
 
-    public void onCrafting(PlayerEntity player) {
+    public void awardUsedRecipes(PlayerEntity player) {
     }
 
     public void unlockRecipes(PlayerEntity player) {
-        List<IRecipe<?>> list = this.grantStoredRecipeExperience(player.world, player.getPositionVec());
-        player.unlockRecipes(list);
+        List<IRecipe<?>> list = this.grantStoredRecipeExperience(player.level, player.position());
+        player.awardRecipes(list);
         this.recipes.clear();
     }
 
@@ -511,7 +511,7 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
         List<IRecipe<?>> list = Lists.newArrayList();
 
         for(Entry<ResourceLocation> entry : this.recipes.object2IntEntrySet()) {
-            world.getRecipeManager().getRecipe(entry.getKey()).ifPresent((recipe) -> {
+            world.getRecipeManager().byKey(entry.getKey()).ifPresent((recipe) -> {
                 list.add(recipe);
                 splitAndSpawnExperience(world, pos, entry.getIntValue(), ((RecycleRecipe)recipe).getExperience());
             });
@@ -528,9 +528,9 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
         }
 
         while(i > 0) {
-            int j = ExperienceOrbEntity.getXPSplit(i);
+            int j = ExperienceOrbEntity.getExperienceValue(i);
             i -= j;
-            world.addEntity(new ExperienceOrbEntity(world, pos.x, pos.y, pos.z, j));
+            world.addFreshEntity(new ExperienceOrbEntity(world, pos.x, pos.y, pos.z, j));
         }
 
     }
@@ -547,7 +547,7 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
 
     @Override
     public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-        if (!this.removed && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!this.remove && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (facing == Direction.UP)
                 return handlers[0].cast();
             else if (facing == Direction.DOWN)
@@ -562,9 +562,9 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
      * invalidates a tile entity
      */
     @Override
-    public void remove() {
+    public void setRemoved() {
         this.burnTime = 0;
-        super.remove();
+        super.setRemoved();
         for (int x = 0; x < handlers.length; x++)
             handlers[x].invalidate();
     }

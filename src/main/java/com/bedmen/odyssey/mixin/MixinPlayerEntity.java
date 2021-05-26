@@ -53,43 +53,44 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     @Shadow
     public PlayerAbilities abilities;
     @Shadow
-    public CooldownTracker getCooldownTracker() {return null;}
+    public CooldownTracker getCooldowns() {return null;}
     @Shadow
-    public int xpCooldown;
+    public int takeXpDelay;
     @Shadow
-    private int sleepTimer;
-    @Shadow
-    public Container openContainer;
-    @Shadow
-    protected boolean updateEyesInWaterPlayer() {return false;}
-    @Shadow
-    private void updateCape() {}
-    @Shadow
-    public void addStat(ResourceLocation stat) {}
-    @Shadow
-    public void closeScreen() {}
-    @Shadow
-    private CooldownTracker cooldownTracker;
+    private int sleepCounter;
     @Shadow
     public void stopSleepInBed(boolean p_225652_1_, boolean p_225652_2_) {}
     @Shadow
-    private void updateTurtleHelmet() {}
+    protected boolean updateIsUnderwater() {return false;}
     @Shadow
-    private ItemStack itemStackMainHand;
+    public Container containerMenu;
     @Shadow
-    protected void updatePose() {}
+    public void closeContainer() {}
     @Shadow
-    public void resetCooldown() {}
+    public PlayerContainer inventoryMenu;
     @Shadow
-    protected FoodStats foodStats;
+    private void moveCloak() {}
     @Shadow
-    public PlayerContainer container;
+    protected FoodStats foodData;
+    @Shadow
+    public void awardStat(ResourceLocation p_195066_1_) {}
+    @Shadow
+    private ItemStack lastItemInMainHand;
+    @Shadow
+    public void resetAttackStrengthTicker() {}
+    @Shadow
+    private void turtleHelmetTick() {}
+    @Shadow
+    private CooldownTracker cooldowns;
+    @Shadow
+    protected void updatePlayerPose() {}
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
-    public int xpBarCap() {
+    //Remade the amount of xp needed up to level 50 because oddc has lvl 50 enchants
+    public int getXpNeededForNextLevel() {
         if (this.experienceLevel >= 50) {
             return 304 + (this.experienceLevel - 49) * 12;
         } else if (this.experienceLevel >= 40) {
@@ -105,16 +106,17 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         }
     }
 
-    public ItemStack findAmmo(ItemStack shootable) {
+    //Allows for ammo to be found from quivers
+    public ItemStack getProjectile(ItemStack shootable) {
         if (!(shootable.getItem() instanceof ShootableItem)) {
             return ItemStack.EMPTY;
         } else {
-            Predicate<ItemStack> predicate = ((ShootableItem)shootable.getItem()).getAmmoPredicate();
-            ItemStack itemstack = ShootableItem.getHeldAmmo(this, predicate);
+            Predicate<ItemStack> predicate = ((ShootableItem)shootable.getItem()).getSupportedHeldProjectiles();
+            ItemStack itemstack = ShootableItem.getHeldProjectile(this, predicate);
             if (!itemstack.isEmpty()) {
                 return itemstack;
             } else {
-                NonNullList<ItemStack> offhand = this.inventory.offHandInventory;
+                NonNullList<ItemStack> offhand = this.inventory.offhand;
                 for (ItemStack itemstack1 : offhand) {
                     Item item = itemstack1.getItem();
                     if (item instanceof QuiverItem) {
@@ -132,51 +134,53 @@ public abstract class MixinPlayerEntity extends LivingEntity {
                     }
                 }
 
-                predicate = ((ShootableItem)shootable.getItem()).getInventoryAmmoPredicate();
+                predicate = ((ShootableItem)shootable.getItem()).getAllSupportedProjectiles();
 
-                for(int i = 0; i < this.inventory.getSizeInventory(); ++i) {
-                    ItemStack itemstack1 = this.inventory.getStackInSlot(i);
+                for(int i = 0; i < this.inventory.getContainerSize(); ++i) {
+                    ItemStack itemstack1 = this.inventory.getItem(i);
                     if (predicate.test(itemstack1)) {
                         return itemstack1;
                     }
                 }
 
-                return this.abilities.isCreativeMode ? new ItemStack(Items.ARROW) : ItemStack.EMPTY;
+                return this.abilities.instabuild ? new ItemStack(Items.ARROW) : ItemStack.EMPTY;
             }
         }
     }
 
+    //Disables both kinds of shields
     public void disableShield(boolean p_190777_1_) {
-        float f = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
+        float f = 0.25F + (float) EnchantmentHelper.getBlockEfficiency(this) * 0.05F;
         if (p_190777_1_) {
             f += 0.75F;
         }
 
-        if (this.rand.nextFloat() < f) {
-            this.getCooldownTracker().setCooldown(ItemRegistry.SHIELD.get(), EnchantmentUtil.getRecovery(this));
-            this.getCooldownTracker().setCooldown(ItemRegistry.SERPENT_SHIELD.get(), EnchantmentUtil.getRecovery(this));
-            this.resetActiveHand();
-            this.world.setEntityState(this, (byte)30);
+        if (this.random.nextFloat() < f) {
+            this.getCooldowns().addCooldown(ItemRegistry.SHIELD.get(), EnchantmentUtil.getRecovery(this));
+            this.getCooldowns().addCooldown(ItemRegistry.SERPENT_SHIELD.get(), EnchantmentUtil.getRecovery(this));
+            this.stopUsingItem();
+            this.level.broadcastEntityEvent(this, (byte)30);
         }
 
     }
 
+    //Sets player on fire unless they have fire protection or an arctic chestplate
     public void tick() {
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPreTick(toPlayerEntity(this));
-        this.noClip = this.isSpectator();
+        this.noPhysics = this.isSpectator();
         if (this.isSpectator()) {
             this.onGround = false;
         }
 
-        if(!(this.abilities.isCreativeMode || this.isSpectator()) && this.world.getDimensionType().isUltrawarm()){
+        if(!(this.abilities.instabuild || this.isSpectator()) && this.level.dimensionType().ultraWarm()){
             boolean fireFlag = true;
-            for(ItemStack stack : this.getArmorInventoryList()){
+            for(ItemStack stack : this.getArmorSlots()){
                 if(stack.getItem() == ItemRegistry.ARCTIC_CHESTPLATE.get()){
                     fireFlag = false;
                     break;
                 }
                 if (!stack.isEmpty()) {
-                    ListNBT listnbt = stack.getEnchantmentTagList();
+                    ListNBT listnbt = stack.getEnchantmentTags();
                     for(int i = 0; i < listnbt.size(); ++i) {
                         String s = listnbt.getCompound(i).getString("id");
                         System.out.println(s);
@@ -189,73 +193,73 @@ public abstract class MixinPlayerEntity extends LivingEntity {
                 }
             }
             if(fireFlag)
-                this.setFire(1);
+                this.setSecondsOnFire(1);
         }
 
-        if (this.xpCooldown > 0) {
-            --this.xpCooldown;
+        if (this.takeXpDelay > 0) {
+            --this.takeXpDelay;
         }
 
         if (this.isSleeping()) {
-            ++this.sleepTimer;
-            if (this.sleepTimer > 100) {
-                this.sleepTimer = 100;
+            ++this.sleepCounter;
+            if (this.sleepCounter > 100) {
+                this.sleepCounter = 100;
             }
 
-            if (!this.world.isRemote && !net.minecraftforge.event.ForgeEventFactory.fireSleepingTimeCheck(toPlayerEntity(this), getBedPosition())) {
+            if (!this.level.isClientSide && !net.minecraftforge.event.ForgeEventFactory.fireSleepingTimeCheck(toPlayerEntity(this), getSleepingPos())) {
                 this.stopSleepInBed(false, true);
             }
-        } else if (this.sleepTimer > 0) {
-            ++this.sleepTimer;
-            if (this.sleepTimer >= 110) {
-                this.sleepTimer = 0;
+        } else if (this.sleepCounter > 0) {
+            ++this.sleepCounter;
+            if (this.sleepCounter >= 110) {
+                this.sleepCounter = 0;
             }
         }
 
-        this.updateEyesInWaterPlayer();
+        this.updateIsUnderwater();
         super.tick();
-        if (!this.world.isRemote && this.openContainer != null && !this.openContainer.canInteractWith(toPlayerEntity(this))) {
-            this.closeScreen();
-            this.openContainer = this.container;
+        if (!this.level.isClientSide && this.containerMenu != null && !this.containerMenu.stillValid(toPlayerEntity(this))) {
+            this.closeContainer();
+            this.containerMenu = this.inventoryMenu;
         }
 
-        this.updateCape();
-        if (!this.world.isRemote) {
-            this.foodStats.tick(toPlayerEntity(this));
-            this.addStat(Stats.PLAY_ONE_MINUTE);
+        this.moveCloak();
+        if (!this.level.isClientSide) {
+            this.foodData.tick(toPlayerEntity(this));
+            this.awardStat(Stats.PLAY_ONE_MINUTE);
             if (this.isAlive()) {
-                this.addStat(Stats.TIME_SINCE_DEATH);
+                this.awardStat(Stats.TIME_SINCE_DEATH);
             }
 
             if (this.isDiscrete()) {
-                this.addStat(Stats.SNEAK_TIME);
+                this.awardStat(Stats.CROUCH_TIME);
             }
 
             if (!this.isSleeping()) {
-                this.addStat(Stats.TIME_SINCE_REST);
+                this.awardStat(Stats.TIME_SINCE_REST);
             }
         }
 
         int i = 29999999;
-        double d0 = MathHelper.clamp(this.getPosX(), -2.9999999E7D, 2.9999999E7D);
-        double d1 = MathHelper.clamp(this.getPosZ(), -2.9999999E7D, 2.9999999E7D);
-        if (d0 != this.getPosX() || d1 != this.getPosZ()) {
-            this.setPosition(d0, this.getPosY(), d1);
+        double d0 = MathHelper.clamp(this.getX(), -2.9999999E7D, 2.9999999E7D);
+        double d1 = MathHelper.clamp(this.getZ(), -2.9999999E7D, 2.9999999E7D);
+        if (d0 != this.getX() || d1 != this.getZ()) {
+            this.setPos(d0, this.getY(), d1);
         }
 
-        ++this.ticksSinceLastSwing;
-        ItemStack itemstack = this.getHeldItemMainhand();
-        if (!ItemStack.areItemStacksEqual(this.itemStackMainHand, itemstack)) {
-            if (!ItemStack.areItemsEqualIgnoreDurability(this.itemStackMainHand, itemstack)) {
-                this.resetCooldown();
+        ++this.attackStrengthTicker;
+        ItemStack itemstack = this.getMainHandItem();
+        if (!ItemStack.matches(this.lastItemInMainHand, itemstack)) {
+            if (!ItemStack.isSameIgnoreDurability(this.lastItemInMainHand, itemstack)) {
+                this.resetAttackStrengthTicker();
             }
 
-            this.itemStackMainHand = itemstack.copy();
+            this.lastItemInMainHand = itemstack.copy();
         }
 
-        this.updateTurtleHelmet();
-        this.cooldownTracker.tick();
-        this.updatePose();
+        this.turtleHelmetTick();
+        this.cooldowns.tick();
+        this.updatePlayerPose();
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(toPlayerEntity(this));
     }
 

@@ -50,7 +50,7 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
         }
 
         @Override
-        public int size() {
+        public int getCount() {
             return 96;
         }
     };
@@ -68,7 +68,7 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
         }
 
         @Override
-        public int size() {
+        public int getCount() {
             return 96;
         }
     };
@@ -90,42 +90,42 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
         }
 
         @Override
-        public int size() {
+        public int getCount() {
             return 3;
         }
     };
     protected NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
     public int ticks;
-    public float field_195523_f;
-    public float field_195524_g;
-    public float field_195525_h;
-    public float field_195526_i;
+    public float flip;
+    public float oFlip;
+    public float flipT;
+    public float flipA;
     public float nextPageTurningSpeed;
     public float pageTurningSpeed;
     public float nextPageAngle;
     public float pageAngle;
-    public float field_195531_n;
+    public float tRot;
     private static final Random random = new Random();
 
     public NewEnchantingTableTileEntity() {
         super(TileEntityTypeRegistry.ENCHANTING_TABLE.get());
     }
 
-    public void read(BlockState state, CompoundNBT nbt) { //TODO: MARK
-        super.read(state, nbt);
-        this.items = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+    public void load(BlockState state, CompoundNBT nbt) { //TODO: MARK
+        super.load(state, nbt);
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(nbt, this.items);
 
     }
 
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         ItemStackHelper.saveAllItems(compound, this.items);
         return compound;
     }
 
     private void getEnchantments(int y, int i){
-        TileEntity tileEntity = world.getTileEntity(this.pos.add(this.X_POS[i],y,this.Z_POS[i]));
+        TileEntity tileEntity = level.getBlockEntity(this.worldPosition.offset(this.X_POS[i],y,this.Z_POS[i]));
         if(tileEntity instanceof BookshelfTileEntity){
             NonNullList<ItemStack> items = ((BookshelfTileEntity)tileEntity).getItems();
             for(int j = 0; j < 3; j++){
@@ -162,21 +162,21 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
 
         this.pageTurningSpeed = this.nextPageTurningSpeed;
         this.pageAngle = this.nextPageAngle;
-        PlayerEntity playerentity = this.world.getClosestPlayer((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D, 3.0D, false);
+        PlayerEntity playerentity = this.level.getNearestPlayer((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D, 3.0D, false);
         if (playerentity != null) {
-            double d0 = playerentity.getPosX() - ((double)this.pos.getX() + 0.5D);
-            double d1 = playerentity.getPosZ() - ((double)this.pos.getZ() + 0.5D);
-            this.field_195531_n = (float)MathHelper.atan2(d1, d0);
+            double d0 = playerentity.getX() - ((double)this.worldPosition.getX() + 0.5D);
+            double d1 = playerentity.getZ() - ((double)this.worldPosition.getZ() + 0.5D);
+            this.tRot = (float)MathHelper.atan2(d1, d0);
             this.nextPageTurningSpeed += 0.1F;
             if (this.nextPageTurningSpeed < 0.5F || random.nextInt(40) == 0) {
-                float f1 = this.field_195525_h;
+                float f1 = this.flipT;
 
                 do {
-                    this.field_195525_h += (float)(random.nextInt(4) - random.nextInt(4));
-                } while(f1 == this.field_195525_h);
+                    this.flipT += (float)(random.nextInt(4) - random.nextInt(4));
+                } while(f1 == this.flipT);
             }
         } else {
-            this.field_195531_n += 0.02F;
+            this.tRot += 0.02F;
             this.nextPageTurningSpeed -= 0.1F;
         }
 
@@ -188,16 +188,16 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
             this.nextPageAngle += ((float)Math.PI * 2F);
         }
 
-        while(this.field_195531_n >= (float)Math.PI) {
-            this.field_195531_n -= ((float)Math.PI * 2F);
+        while(this.tRot >= (float)Math.PI) {
+            this.tRot -= ((float)Math.PI * 2F);
         }
 
-        while(this.field_195531_n < -(float)Math.PI) {
-            this.field_195531_n += ((float)Math.PI * 2F);
+        while(this.tRot < -(float)Math.PI) {
+            this.tRot += ((float)Math.PI * 2F);
         }
 
         float f2;
-        for(f2 = this.field_195531_n - this.nextPageAngle; f2 >= (float)Math.PI; f2 -= ((float)Math.PI * 2F)) {
+        for(f2 = this.tRot - this.nextPageAngle; f2 >= (float)Math.PI; f2 -= ((float)Math.PI * 2F)) {
         }
 
         while(f2 < -(float)Math.PI) {
@@ -207,18 +207,18 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
         this.nextPageAngle += f2 * 0.4F;
         this.nextPageTurningSpeed = MathHelper.clamp(this.nextPageTurningSpeed, 0.0F, 1.0F);
         ++this.ticks;
-        this.field_195524_g = this.field_195523_f;
-        float f = (this.field_195525_h - this.field_195523_f) * 0.4F;
+        this.oFlip = this.flip;
+        float f = (this.flipT - this.flip) * 0.4F;
         float f3 = 0.2F;
         f = MathHelper.clamp(f, -0.2F, 0.2F);
-        this.field_195526_i += (f - this.field_195526_i) * 0.9F;
-        this.field_195523_f += this.field_195526_i;
+        this.flipA += (f - this.flipA) * 0.9F;
+        this.flip += this.flipA;
     }
 
     /**
      * Returns the number of slots in the inventory.
      */
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return this.items.size();
     }
 
@@ -235,37 +235,37 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
     /**
      * Returns the stack in the given slot.
      */
-    public ItemStack getStackInSlot(int index) {
+    public ItemStack getItem(int index) {
         return this.items.get(index);
     }
 
     /**
      * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
      */
-    public ItemStack decrStackSize(int index, int count) {
-        return ItemStackHelper.getAndSplit(this.items, index, count);
+    public ItemStack removeItem(int index, int count) {
+        return ItemStackHelper.removeItem(this.items, index, count);
     }
 
     /**
      * Removes a stack from the given slot and returns it.
      */
-    public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.getAndRemove(this.items, index);
+    public ItemStack removeItemNoUpdate(int index) {
+        return ItemStackHelper.takeItem(this.items, index);
     }
 
     /**
      * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
      */
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public void setItem(int index, ItemStack stack) {
         ItemStack itemstack = this.items.get(index);
-        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
+        boolean flag = !stack.isEmpty() && stack.sameItem(itemstack) && ItemStack.tagMatches(stack, itemstack);
         this.items.set(index, stack);
-        if (stack.getCount() > this.getInventoryStackLimit()) {
-            stack.setCount(this.getInventoryStackLimit());
+        if (stack.getCount() > this.getMaxStackSize()) {
+            stack.setCount(this.getMaxStackSize());
         }
 
         if (!flag) {
-            this.markDirty();
+            this.setChanged();
         }
 
     }
@@ -273,11 +273,11 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
     /**
      * Don't rename this method to canInteractWith due to conflicts with Container
      */
-    public boolean isUsableByPlayer(PlayerEntity player) {
-        if (this.world.getTileEntity(this.pos) != this) {
+    public boolean stillValid(PlayerEntity player) {
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
         } else {
-            return player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
+            return player.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) <= 64.0D;
         }
     }
 
@@ -285,11 +285,11 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot. For
      * guis use Slot.isItemValid
      */
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         return false;
     }
 
-    public void clear() {
+    public void clearContent() {
         this.items.clear();
     }
 
@@ -297,8 +297,8 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
      * invalidates a tile entity
      */
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
     }
 
     protected ITextComponent getDefaultName() {
@@ -318,6 +318,6 @@ public class NewEnchantingTableTileEntity extends LockableTileEntity implements 
         this.enchantData.set(0,-1);
         this.enchantData.set(1,-1);
         this.enchantData.set(2,-1);
-        this.markDirty();
+        this.setChanged();
     }
 }

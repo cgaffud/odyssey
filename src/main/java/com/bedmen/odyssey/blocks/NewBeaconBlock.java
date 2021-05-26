@@ -21,25 +21,25 @@ public class NewBeaconBlock extends ContainerBlock implements IBeaconBeamColorPr
 
     public NewBeaconBlock() {
 
-        super(AbstractBlock.Properties.create(Material.GLASS, MaterialColor.DIAMOND).hardnessAndResistance(3.0F).setLightLevel((state) -> { return 15; }).notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> {return false;}));
+        super(AbstractBlock.Properties.of(Material.GLASS, MaterialColor.DIAMOND).strength(3.0F).lightLevel((state) -> { return 15; }).noOcclusion().isRedstoneConductor((p_test_1_, p_test_2_, p_test_3_) -> {return false;}));
     }
 
     public DyeColor getColor() {
         return DyeColor.WHITE;
     }
 
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
         return new NewBeaconTileEntity();
     }
 
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (worldIn.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof NewBeaconTileEntity) {
-                player.openContainer((NewBeaconTileEntity)tileentity);
-                player.addStat(Stats.INTERACT_WITH_BEACON);
+                player.openMenu((NewBeaconTileEntity)tileentity);
+                player.awardStat(Stats.INTERACT_WITH_BEACON);
             }
 
             return ActionResultType.CONSUME;
@@ -51,18 +51,18 @@ public class NewBeaconBlock extends ContainerBlock implements IBeaconBeamColorPr
      * LIQUID for vanilla liquids, INVISIBLE to skip all rendering
      * @deprecated call via {@link IBlockState#getRenderType()} whenever possible. Implementing/overriding is fine.
      */
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     /**
      * Called by ItemBlocks after a block is set in the world, to allow post-place logic
      */
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof NewBeaconTileEntity) {
-                ((NewBeaconTileEntity)tileentity).setCustomName(stack.getDisplayName());
+                ((NewBeaconTileEntity)tileentity).setCustomName(stack.getHoverName());
             }
         }
 

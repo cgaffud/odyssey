@@ -27,7 +27,7 @@ public class NewBeaconTileEntityRenderer extends TileEntityRenderer<NewBeaconTil
     }
 
     public void render(NewBeaconTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        long i = tileEntityIn.getWorld().getGameTime();
+        long i = tileEntityIn.getLevel().getGameTime();
         List<NewBeaconTileEntity.BeamSegment> list = tileEntityIn.getBeamSegments();
         int j = 0;
 
@@ -45,7 +45,7 @@ public class NewBeaconTileEntityRenderer extends TileEntityRenderer<NewBeaconTil
 
     public static void renderBeamSegment(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, ResourceLocation textureLocation, float partialTicks, float textureScale, long totalWorldTime, int yOffset, int height, float[] colors, float beamRadius, float glowRadius) {
         int i = yOffset + height;
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         matrixStackIn.translate(0.5D, 0.0D, 0.5D);
         float f = (float)Math.floorMod(totalWorldTime, 40L) + partialTicks;
         float f1 = height < 0 ? f : -f;
@@ -53,8 +53,8 @@ public class NewBeaconTileEntityRenderer extends TileEntityRenderer<NewBeaconTil
         float f3 = colors[0];
         float f4 = colors[1];
         float f5 = colors[2];
-        matrixStackIn.push();
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f * 2.25F - 45.0F));
+        matrixStackIn.pushPose();
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f * 2.25F - 45.0F));
         float f6 = 0.0F;
         float f8 = 0.0F;
         float f9 = -beamRadius;
@@ -65,8 +65,8 @@ public class NewBeaconTileEntityRenderer extends TileEntityRenderer<NewBeaconTil
         float f14 = 1.0F;
         float f15 = -1.0F + f2;
         float f16 = (float)height * textureScale * (0.5F / beamRadius) + f15;
-        renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.getBeaconBeam(textureLocation, false)), f3, f4, f5, 1.0F, yOffset, i, 0.0F, beamRadius, beamRadius, 0.0F, f9, 0.0F, 0.0F, f12, 0.0F, 1.0F, f16, f15);
-        matrixStackIn.pop();
+        renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.beaconBeam(textureLocation, false)), f3, f4, f5, 1.0F, yOffset, i, 0.0F, beamRadius, beamRadius, 0.0F, f9, 0.0F, 0.0F, f12, 0.0F, 1.0F, f16, f15);
+        matrixStackIn.popPose();
         f6 = -glowRadius;
         float f7 = -glowRadius;
         f8 = -glowRadius;
@@ -75,14 +75,14 @@ public class NewBeaconTileEntityRenderer extends TileEntityRenderer<NewBeaconTil
         f14 = 1.0F;
         f15 = -1.0F + f2;
         f16 = (float)height * textureScale + f15;
-        renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.getBeaconBeam(textureLocation, true)), f3, f4, f5, 0.125F, yOffset, i, f6, f7, glowRadius, f8, f9, glowRadius, glowRadius, glowRadius, 0.0F, 1.0F, f16, f15);
-        matrixStackIn.pop();
+        renderPart(matrixStackIn, bufferIn.getBuffer(RenderType.beaconBeam(textureLocation, true)), f3, f4, f5, 0.125F, yOffset, i, f6, f7, glowRadius, f8, f9, glowRadius, glowRadius, glowRadius, 0.0F, 1.0F, f16, f15);
+        matrixStackIn.popPose();
     }
 
     private static void renderPart(MatrixStack matrixStackIn, IVertexBuilder bufferIn, float red, float green, float blue, float alpha, int yMin, int yMax, float p_228840_8_, float p_228840_9_, float p_228840_10_, float p_228840_11_, float p_228840_12_, float p_228840_13_, float p_228840_14_, float p_228840_15_, float u1, float u2, float v1, float v2) {
-        MatrixStack.Entry matrixstack$entry = matrixStackIn.getLast();
-        Matrix4f matrix4f = matrixstack$entry.getMatrix();
-        Matrix3f matrix3f = matrixstack$entry.getNormal();
+        MatrixStack.Entry matrixstack$entry = matrixStackIn.last();
+        Matrix4f matrix4f = matrixstack$entry.pose();
+        Matrix3f matrix3f = matrixstack$entry.normal();
         addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, yMin, yMax, p_228840_8_, p_228840_9_, p_228840_10_, p_228840_11_, u1, u2, v1, v2);
         addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, yMin, yMax, p_228840_14_, p_228840_15_, p_228840_12_, p_228840_13_, u1, u2, v1, v2);
         addQuad(matrix4f, matrix3f, bufferIn, red, green, blue, alpha, yMin, yMax, p_228840_10_, p_228840_11_, p_228840_14_, p_228840_15_, u1, u2, v1, v2);
@@ -97,10 +97,10 @@ public class NewBeaconTileEntityRenderer extends TileEntityRenderer<NewBeaconTil
     }
 
     private static void addVertex(Matrix4f matrixPos, Matrix3f matrixNormal, IVertexBuilder bufferIn, float red, float green, float blue, float alpha, int y, float x, float z, float texU, float texV) {
-        bufferIn.pos(matrixPos, x, (float)y, z).color(red, green, blue, alpha).tex(texU, texV).overlay(OverlayTexture.NO_OVERLAY).lightmap(15728880).normal(matrixNormal, 0.0F, 1.0F, 0.0F).endVertex();
+        bufferIn.vertex(matrixPos, x, (float)y, z).color(red, green, blue, alpha).uv(texU, texV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(matrixNormal, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
-    public boolean isGlobalRenderer(NewBeaconTileEntity te) {
+    public boolean shouldRenderOffScreen(NewBeaconTileEntity te) {
         return true;
     }
 }

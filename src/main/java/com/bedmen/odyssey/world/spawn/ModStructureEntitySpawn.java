@@ -21,7 +21,7 @@ public class ModStructureEntitySpawn {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void spawnMobs(StructureSpawnListGatherEvent event){
 
-        if(event.getStructure() == Structure.FORTRESS){
+        if(event.getStructure() == Structure.NETHER_BRIDGE){
             //event.addEntitySpawn(EntityClassification.MONSTER,WITHER_CREEPER_SPAWNER);
         }
     }

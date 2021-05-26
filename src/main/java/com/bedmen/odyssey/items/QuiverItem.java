@@ -12,6 +12,8 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 
+import net.minecraft.item.Item.Properties;
+
 public class QuiverItem extends Item {
     private final int size;
     public QuiverItem(Properties properties, int size) {
@@ -19,13 +21,13 @@ public class QuiverItem extends Item {
         this.size = size;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
 
-        if (!worldIn.isRemote) {
-            playerIn.openContainer(this.getContainer(itemstack));
+        if (!worldIn.isClientSide) {
+            playerIn.openMenu(this.getContainer(itemstack));
         }
-        return ActionResult.func_233538_a_(itemstack, worldIn.isRemote());
+        return ActionResult.sidedSuccess(itemstack, worldIn.isClientSide());
     }
 
     public INamedContainerProvider getContainer(ItemStack itemStack) {
@@ -45,7 +47,7 @@ public class QuiverItem extends Item {
         }
         return new SimpleNamedContainerProvider((id, inventory, player) -> {
             return new QuiverContainer(id, inventory, this.size, itemStack, type);
-        }, itemStack.getDisplayName());
+        }, itemStack.getHoverName());
     }
 
     public int getSize(){

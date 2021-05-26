@@ -1,17 +1,14 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.IngameGui;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.INBT;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.FoodStats;
@@ -50,13 +47,13 @@ public abstract class MixinForgeIngameGui extends IngameGui{
     protected void renderArmor(MatrixStack mStack, int width, int height)
     {
         if (pre(ARMOR, mStack)) return;
-        mc.getProfiler().startSection("armor");
+        minecraft.getProfiler().push("armor");
 
         RenderSystem.enableBlend();
         int left = width / 2 - 91;
         int top = height - left_height;
 
-        int level = mc.player.getTotalArmorValue();
+        int level = minecraft.player.getArmorValue();
         int j = 113;
         if(level > 40){
             level -= 40;
@@ -88,23 +85,23 @@ public abstract class MixinForgeIngameGui extends IngameGui{
         }
 
         RenderSystem.disableBlend();
-        mc.getProfiler().endSection();
+        minecraft.getProfiler().pop();
         post(ARMOR, mStack);
     }
 
     public void renderFood(int width, int height, MatrixStack mStack)
     {
         if (pre(FOOD, mStack)) return;
-        mc.getProfiler().startSection("food");
+        minecraft.getProfiler().push("food");
 
-        PlayerEntity player = (PlayerEntity)this.mc.getRenderViewEntity();
+        PlayerEntity player = (PlayerEntity)this.minecraft.getCameraEntity();
         RenderSystem.enableBlend();
         int left = width / 2 + 91;
         int top = height - right_height;
         right_height += 10;
         boolean unused = false;// Unused flag in vanilla, seems to be part of a 'fade out' mechanic
 
-        FoodStats stats = mc.player.getFoodStats();
+        FoodStats stats = minecraft.player.getFoodData();
         int level = stats.getFoodLevel();
 
         int y = top;
@@ -116,16 +113,16 @@ public abstract class MixinForgeIngameGui extends IngameGui{
             int icon = 16;
             byte background = 0;
 
-            if (mc.player.isPotionActive(Effects.HUNGER))
+            if (minecraft.player.hasEffect(Effects.HUNGER))
             {
                 icon += 36;
                 background = 13;
             }
             if (unused) background = 1; //Probably should be a += 1 but vanilla never uses this
 
-            if (player.getFoodStats().getSaturationLevel() <= 0.0F && ticks % (level * 3 + 1) == 0)
+            if (player.getFoodData().getSaturationLevel() <= 0.0F && tickCount % (level * 3 + 1) == 0)
             {
-                y = top + (rand.nextInt(3) - 1);
+                y = top + (random.nextInt(3) - 1);
             }
 
             blit(mStack, x, y, 16 + background * 9, 27, 9, 9);
@@ -140,10 +137,10 @@ public abstract class MixinForgeIngameGui extends IngameGui{
         level = 0;
         renderProt = false;
 
-        for(ItemStack itemStack : player.getArmorInventoryList()){
+        for(ItemStack itemStack : player.getArmorSlots()){
             Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
             for(Enchantment e : map.keySet()){
-                if(e == Enchantments.PROTECTION){
+                if(e == Enchantments.ALL_DAMAGE_PROTECTION){
                     level += map.get(e);
                 }
             }
@@ -179,23 +176,23 @@ public abstract class MixinForgeIngameGui extends IngameGui{
         }
 
         RenderSystem.disableBlend();
-        mc.getProfiler().endSection();
+        minecraft.getProfiler().pop();
         post(FOOD, mStack);
     }
 
     protected void renderAir(int width, int height, MatrixStack mStack)
     {
         if (pre(AIR, mStack)) return;
-        mc.getProfiler().startSection("air");
-        PlayerEntity player = (PlayerEntity)this.mc.getRenderViewEntity();
+        minecraft.getProfiler().push("air");
+        PlayerEntity player = (PlayerEntity)this.minecraft.getCameraEntity();
         RenderSystem.enableBlend();
         int left = width / 2 + 91;
         int top = height - right_height;
 
         if(renderProt) top -= 10;
 
-        int air = player.getAir();
-        if (player.areEyesInFluid(FluidTags.WATER) || air < 300)
+        int air = player.getAirSupply();
+        if (player.isEyeInFluid(FluidTags.WATER) || air < 300)
         {
             int full = MathHelper.ceil((double)(air - 2) * 10.0D / 300.0D);
             int partial = MathHelper.ceil((double)air * 10.0D / 300.0D) - full;
@@ -208,7 +205,7 @@ public abstract class MixinForgeIngameGui extends IngameGui{
         }
 
         RenderSystem.disableBlend();
-        mc.getProfiler().endSection();
+        minecraft.getProfiler().pop();
         post(AIR, mStack);
     }
 

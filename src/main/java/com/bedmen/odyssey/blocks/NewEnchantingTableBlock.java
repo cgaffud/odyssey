@@ -33,13 +33,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class NewEnchantingTableBlock extends Block implements ITileEntityProvider {
-    protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
+    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
 
     public NewEnchantingTableBlock() {
-        super(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.RED).setRequiresTool().hardnessAndResistance(5.0F, 1200.0F));
+        super(AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_RED).requiresCorrectToolForDrops().strength(5.0F, 1200.0F));
     }
 
-    public boolean isTransparent(BlockState state) {
+    public boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
 
@@ -64,9 +64,9 @@ public class NewEnchantingTableBlock extends Block implements ITileEntityProvide
 
                 if (rand.nextInt(16) == 0) {
                     for(int k = 0; k <= 1; ++k) {
-                        BlockPos blockpos = pos.add(i, k, j);
+                        BlockPos blockpos = pos.offset(i, k, j);
                         if (worldIn.getBlockState(blockpos).getEnchantPowerBonus(worldIn, blockpos) > 0) {
-                            if (!worldIn.isAirBlock(pos.add(i / 2, 0, j / 2))) {
+                            if (!worldIn.isEmptyBlock(pos.offset(i / 2, 0, j / 2))) {
                                 break;
                             }
 
@@ -84,21 +84,21 @@ public class NewEnchantingTableBlock extends Block implements ITileEntityProvide
      * LIQUID for vanilla liquids, INVISIBLE to skip all rendering
      * @deprecated call via IBlockState#getRenderType() whenever possible. Implementing/overriding is fine.
      */
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
         return new NewEnchantingTableTileEntity();
     }
 
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (worldIn.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof NewEnchantingTableTileEntity) {
-                player.openContainer((NewEnchantingTableTileEntity)tileentity);
+                player.openMenu((NewEnchantingTableTileEntity)tileentity);
             }
 
             return ActionResultType.CONSUME;
@@ -108,29 +108,29 @@ public class NewEnchantingTableBlock extends Block implements ITileEntityProvide
     /**
      * Called by ItemBlocks after a block is set in the world, to allow post-place logic
      */
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof NewEnchantingTableTileEntity) {
-                ((NewEnchantingTableTileEntity)tileentity).setCustomName(stack.getDisplayName());
+                ((NewEnchantingTableTileEntity)tileentity).setCustomName(stack.getHoverName());
             }
         }
 
     }
 
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
 
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.isIn(newState.getBlock())) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof NewEnchantingTableTileEntity) {
-                InventoryHelper.dropInventoryItems(worldIn, pos, (NewEnchantingTableTileEntity)tileentity);
-                worldIn.updateComparatorOutputLevel(pos, this);
+                InventoryHelper.dropContents(worldIn, pos, (NewEnchantingTableTileEntity)tileentity);
+                worldIn.updateNeighbourForOutputSignal(pos, this);
             }
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 }

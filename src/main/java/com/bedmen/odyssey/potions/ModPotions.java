@@ -76,7 +76,7 @@ public class ModPotions {
 
     private static void removeMix(){
         if(brewing_list == null) {
-            brewing_list = ObfuscationReflectionHelper.getPrivateValue(PotionBrewing.class, null, "POTION_TYPE_CONVERSIONS");
+            brewing_list = ObfuscationReflectionHelper.getPrivateValue(PotionBrewing.class, null, "POTION_MIXES");
         }
 
         while(!brewing_list.isEmpty()){

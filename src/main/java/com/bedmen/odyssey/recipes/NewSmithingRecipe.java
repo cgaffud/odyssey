@@ -52,11 +52,11 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
     }
 
     public boolean matches(IInventory inv, World worldIn) {
-        if(!this.base.test(inv.getStackInSlot(0))) {
+        if(!this.base.test(inv.getItem(0))) {
             return false;
         }
         for(int i = 0; i < 9; i++) {
-            if(!this.pattern.get(i).test(inv.getStackInSlot(i+1))) {
+            if(!this.pattern.get(i).test(inv.getItem(i+1))) {
                 return false;
             }
         }
@@ -169,9 +169,9 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
+    public ItemStack assemble(IInventory inv) {
         ItemStack itemstack = this.result.copy();
-        CompoundNBT compoundnbt = inv.getStackInSlot(0).getTag();
+        CompoundNBT compoundnbt = inv.getItem(0).getTag();
         if (compoundnbt != null) {
             itemstack.setTag(compoundnbt.copy());
         }
@@ -180,12 +180,12 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width >= 3 && height >= 3;
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return this.result;
     }
 
@@ -211,7 +211,7 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
         return ModRecipeType.NEW_SMITHING;
     }
 
-    public ItemStack getIcon() {
+    public ItemStack getToastSymbol() {
         return new ItemStack(BlockRegistry.SMITHING_TABLE.get());
     }
 
@@ -221,41 +221,41 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
     }
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<NewSmithingRecipe> {
-        public NewSmithingRecipe read(ResourceLocation recipeId, JsonObject json) {
-            String s1 = JSONUtils.getString(json, "group", "");
-            String s2 = JSONUtils.getString(json, "classification", "");
-            JsonElement jsonelement1 = (JSONUtils.isJsonArray(json, "base") ? JSONUtils.getJsonArray(json, "base") : JSONUtils.getJsonObject(json, "base"));
-            Ingredient base = Ingredient.deserialize(jsonelement1);
+        public NewSmithingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            String s1 = JSONUtils.getAsString(json, "group", "");
+            String s2 = JSONUtils.getAsString(json, "classification", "");
+            JsonElement jsonelement1 = (JSONUtils.isArrayNode(json, "base") ? JSONUtils.getAsJsonArray(json, "base") : JSONUtils.getAsJsonObject(json, "base"));
+            Ingredient base = Ingredient.fromJson(jsonelement1);
             if(NewSmithingRecipe.hasTwoAdditions(s2)){
-                JsonElement jsonelement2 = (JSONUtils.isJsonArray(json, "addition1") ? JSONUtils.getJsonArray(json, "addition1") : JSONUtils.getJsonObject(json, "addition1"));
-                Ingredient addition1 = Ingredient.deserialize(jsonelement2);
-                JsonElement jsonelement3 = (JSONUtils.isJsonArray(json, "addition2") ? JSONUtils.getJsonArray(json, "addition2") : JSONUtils.getJsonObject(json, "addition2"));
-                Ingredient addition2 = Ingredient.deserialize(jsonelement3);
-                ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+                JsonElement jsonelement2 = (JSONUtils.isArrayNode(json, "addition1") ? JSONUtils.getAsJsonArray(json, "addition1") : JSONUtils.getAsJsonObject(json, "addition1"));
+                Ingredient addition1 = Ingredient.fromJson(jsonelement2);
+                JsonElement jsonelement3 = (JSONUtils.isArrayNode(json, "addition2") ? JSONUtils.getAsJsonArray(json, "addition2") : JSONUtils.getAsJsonObject(json, "addition2"));
+                Ingredient addition2 = Ingredient.fromJson(jsonelement3);
+                ItemStack itemstack = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
                 return new NewSmithingRecipe(recipeId, s1, base, addition1, addition2, s2, itemstack);
             } else {
-                JsonElement jsonelement2 = (JSONUtils.isJsonArray(json, "addition") ? JSONUtils.getJsonArray(json, "addition") : JSONUtils.getJsonObject(json, "addition"));
-                Ingredient addition = Ingredient.deserialize(jsonelement2);
-                ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+                JsonElement jsonelement2 = (JSONUtils.isArrayNode(json, "addition") ? JSONUtils.getAsJsonArray(json, "addition") : JSONUtils.getAsJsonObject(json, "addition"));
+                Ingredient addition = Ingredient.fromJson(jsonelement2);
+                ItemStack itemstack = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
                 return new NewSmithingRecipe(recipeId, s1, base, addition, s2, itemstack);
             }
         }
 
-        public NewSmithingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            String s1 = buffer.readString(32767);
-            String s2 = buffer.readString(32767);
-            Ingredient base = Ingredient.read(buffer);
-            Ingredient addition = Ingredient.read(buffer);
-            ItemStack itemstack = buffer.readItemStack();
+        public NewSmithingRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+            String s1 = buffer.readUtf(32767);
+            String s2 = buffer.readUtf(32767);
+            Ingredient base = Ingredient.fromNetwork(buffer);
+            Ingredient addition = Ingredient.fromNetwork(buffer);
+            ItemStack itemstack = buffer.readItem();
             return new NewSmithingRecipe(recipeId, s1, base, addition, s2, itemstack);
         }
 
-        public void write(PacketBuffer buffer, NewSmithingRecipe recipe) {
-            buffer.writeString(recipe.group);
-            buffer.writeString(recipe.classification);
-            recipe.base.write(buffer);
-            recipe.addition.write(buffer);
-            buffer.writeItemStack(recipe.result);
+        public void toNetwork(PacketBuffer buffer, NewSmithingRecipe recipe) {
+            buffer.writeUtf(recipe.group);
+            buffer.writeUtf(recipe.classification);
+            recipe.base.toNetwork(buffer);
+            recipe.addition.toNetwork(buffer);
+            buffer.writeItem(recipe.result);
         }
     }
 

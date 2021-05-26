@@ -18,14 +18,14 @@ import org.spongepowered.asm.mixin.Overwrite;
 @Mixin(EnchantmentHelper.class)
 public abstract class MixinEnchantmentHelper {
 
-    private static void applyEnchantmentModifier2(MixinEnchantmentHelper.IEnchantmentVisitor modifier, ItemStack stack) {
+    private static void runIterationOnItem2(MixinEnchantmentHelper.IEnchantmentVisitor modifier, ItemStack stack) {
         if (!stack.isEmpty()) {
-            ListNBT listnbt = stack.getEnchantmentTagList();
+            ListNBT listnbt = stack.getEnchantmentTags();
 
             for(int i = 0; i < listnbt.size(); ++i) {
                 String s = listnbt.getCompound(i).getString("id");
                 int j = listnbt.getCompound(i).getInt("lvl");
-                Registry.ENCHANTMENT.getOptional(ResourceLocation.tryCreate(s)).ifPresent((enchantment) -> {
+                Registry.ENCHANTMENT.getOptional(ResourceLocation.tryParse(s)).ifPresent((enchantment) -> {
                     modifier.accept(enchantment, j);
                 });
             }
@@ -33,18 +33,18 @@ public abstract class MixinEnchantmentHelper {
         }
     }
 
-    private static void applyEnchantmentModifierArray2(MixinEnchantmentHelper.IEnchantmentVisitor modifier, Iterable<ItemStack> stacks) {
+    private static void runIterationOnInventory2(MixinEnchantmentHelper.IEnchantmentVisitor modifier, Iterable<ItemStack> stacks) {
         for(ItemStack itemstack : stacks) {
-            applyEnchantmentModifier2(modifier, itemstack);
+            runIterationOnItem2(modifier, itemstack);
         }
 
     }
 
     @Overwrite
-    public static int getEnchantmentModifierDamage(Iterable<ItemStack> stacks, DamageSource source) {
+    public static int getDamageProtection(Iterable<ItemStack> stacks, DamageSource source) {
         MutableInt mutableint = new MutableInt();
-        applyEnchantmentModifierArray2((enchantment, level) -> {
-            mutableint.add(enchantment.calcModifierDamage(level, source));
+        runIterationOnInventory2((p_212576_2_, p_212576_3_) -> {
+            mutableint.add(p_212576_2_.getDamageProtection(p_212576_3_, source));
         }, stacks);
         for(ItemStack itemStack : stacks){
             if(itemStack.getItem() == ItemRegistry.STURDY_LEGGINGS.get()){
@@ -53,24 +53,26 @@ public abstract class MixinEnchantmentHelper {
                 }
             }
             else if(itemStack.getItem() == ItemRegistry.ZEPHYR_BOOTS.get()){
-                if(source.damageType.equals("fall")){
+                if(source.msgId.equals("fall")){
                     mutableint.add(20);
                 }
             }
             else if(itemStack.getItem() == ItemRegistry.ARCTIC_CHESTPLATE.get()){
-                if(source.isFireDamage()){
+                if(source.isFire()){
                     mutableint.add(20);
                 }
             }
         }
         return mutableint.intValue();
     }
+    
+
 
     @Overwrite
-    public static float getModifierForCreature(ItemStack stack, CreatureAttribute creatureAttribute) {
+    public static float getDamageBonus(ItemStack stack, CreatureAttribute creatureAttribute) {
         MutableFloat mutablefloat = new MutableFloat();
-        applyEnchantmentModifier2((enchantment, level) -> {
-            mutablefloat.add(enchantment.calcDamageByCreature(level, creatureAttribute));
+        runIterationOnItem2((enchantment, level) -> {
+            mutablefloat.add(enchantment.getDamageBonus(level, creatureAttribute));
         }, stack);
         if(stack.getItem() instanceof HammerItem){
             if(creatureAttribute == CreatureAttribute.ARTHROPOD){

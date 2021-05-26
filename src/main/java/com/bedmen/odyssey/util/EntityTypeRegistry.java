@@ -25,11 +25,11 @@ public class EntityTypeRegistry {
     }
 
     //Mobs
-    public static final RegistryObject<EntityType<WerewolfEntity>> WEREWOLF = ENTITY_TYPE.register("werewolf", () -> EntityType.Builder.<WerewolfEntity>create(WerewolfEntity::new, ModBiomeEntitySpawn.WEREWOLF).size(0.6F, 0.85F).trackingRange(10).build(new ResourceLocation("werewolf").toString()));
-    public static final RegistryObject<EntityType<ArctihornEntity>> ARCTIHORN = ENTITY_TYPE.register("arctihorn", () -> EntityType.Builder.<ArctihornEntity>create(ArctihornEntity::new, EntityClassification.MONSTER).size(0.8F, 0.8F).trackingRange(12).build(new ResourceLocation("arctihorn").toString()));
+    public static final RegistryObject<EntityType<WerewolfEntity>> WEREWOLF = ENTITY_TYPE.register("werewolf", () -> EntityType.Builder.<WerewolfEntity>of(WerewolfEntity::new, ModBiomeEntitySpawn.WEREWOLF).sized(0.6F, 0.85F).clientTrackingRange(10).build(new ResourceLocation("werewolf").toString()));
+    public static final RegistryObject<EntityType<ArctihornEntity>> ARCTIHORN = ENTITY_TYPE.register("arctihorn", () -> EntityType.Builder.<ArctihornEntity>of(ArctihornEntity::new, EntityClassification.MONSTER).sized(0.8F, 0.8F).clientTrackingRange(12).build(new ResourceLocation("arctihorn").toString()));
 
     //Other
-    public static final RegistryObject<EntityType<NewTridentEntity>> NEW_TRIDENT = ENTITY_TYPE.register("new_trident", () -> EntityType.Builder.<NewTridentEntity>create(NewTridentEntity::new, EntityClassification.MISC).size(0.5f,0.5f).trackingRange(4).func_233608_b_(20).build(new ResourceLocation("new_trident").toString()));
-    public static final RegistryObject<EntityType<SerpentTridentEntity>> SERPENT_TRIDENT = ENTITY_TYPE.register("serpent_trident", () -> EntityType.Builder.<SerpentTridentEntity>create(SerpentTridentEntity::new, EntityClassification.MISC).size(0.5f,0.5f).trackingRange(4).func_233608_b_(20).build(new ResourceLocation("serpent_trident").toString()));
+    public static final RegistryObject<EntityType<NewTridentEntity>> NEW_TRIDENT = ENTITY_TYPE.register("new_trident", () -> EntityType.Builder.<NewTridentEntity>of(NewTridentEntity::new, EntityClassification.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("new_trident").toString()));
+    public static final RegistryObject<EntityType<SerpentTridentEntity>> SERPENT_TRIDENT = ENTITY_TYPE.register("serpent_trident", () -> EntityType.Builder.<SerpentTridentEntity>of(SerpentTridentEntity::new, EntityClassification.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("serpent_trident").toString()));
 
 }

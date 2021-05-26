@@ -24,29 +24,29 @@ public class NewShieldItem extends Item {
         super(builder);
         this.block = block;
         this.repairItems = repairItems.get();
-        DispenserBlock.registerDispenseBehavior(this, ArmorItem.DISPENSER_BEHAVIOR);
+        DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
     }
 
     /**
      * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have
      * different names based on their damage or NBT.
      */
-    public String getTranslationKey(ItemStack stack) {
-        return stack.getChildTag("BlockEntityTag") != null ? this.getTranslationKey() + '.' + getColor(stack).getTranslationKey() : super.getTranslationKey(stack);
+    public String getDescriptionId(ItemStack stack) {
+        return stack.getTagElement("BlockEntityTag") != null ? this.getDescriptionId() + '.' + getColor(stack).getName() : super.getDescriptionId(stack);
     }
 
     /**
      * allows items to add custom lines of information to the mouseover description
      */
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        BannerItem.appendHoverTextFromTileEntityTag(stack, tooltip);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
     }
 
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.BLOCK;
     }
 
@@ -61,29 +61,29 @@ public class NewShieldItem extends Item {
      * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
      * {@link #onItemUse}.
      */
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        playerIn.setActiveHand(handIn);
-        return ActionResult.resultConsume(itemstack);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
+        playerIn.startUsingItem(handIn);
+        return ActionResult.consume(itemstack);
     }
 
     /**
      * Return whether this item is repairable in an anvil.
      */
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         for(Item item : this.repairItems)
             if(repair.getItem() == item)
                 return true;
-        return super.getIsRepairable(toRepair, repair);
+        return super.isValidRepairItem(toRepair, repair);
     }
 
     public static DyeColor getColor(ItemStack stack) {
-        return DyeColor.byId(stack.getOrCreateChildTag("BlockEntityTag").getInt("Base"));
+        return DyeColor.byId(stack.getOrCreateTagElement("BlockEntityTag").getInt("Base"));
     }
 
     public static void registerBaseProperties(Item item){
-        ItemModelsProperties.registerProperty(item, new ResourceLocation("blocking"), (p_239421_0_, p_239421_1_, p_239421_2_) -> {
-            return p_239421_2_ != null && p_239421_2_.isHandActive() && p_239421_2_.getActiveItemStack() == p_239421_0_ ? 1.0F : 0.0F;
+        ItemModelsProperties.register(item, new ResourceLocation("blocking"), (p_239421_0_, p_239421_1_, p_239421_2_) -> {
+            return p_239421_2_ != null && p_239421_2_.isUsingItem() && p_239421_2_.getUseItem() == p_239421_0_ ? 1.0F : 0.0F;
         });
     }
 

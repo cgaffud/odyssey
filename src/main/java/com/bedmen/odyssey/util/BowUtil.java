@@ -17,7 +17,7 @@ public class BowUtil {
     public static String getStringType(ItemStack itemStack){
         CompoundNBT compoundnbt = itemStack.getTag();
         if(compoundnbt != null && compoundnbt.contains("StringType")){
-            return compoundnbt.get("StringType").getString();
+            return compoundnbt.get("StringType").getAsString();
         }
         return "normal";
     }
@@ -41,7 +41,7 @@ public class BowUtil {
     }
 
     public static boolean consumeQuiverAmmo(PlayerEntity playerEntity, ItemStack ammo){
-        NonNullList<ItemStack> offhand = playerEntity.inventory.offHandInventory;
+        NonNullList<ItemStack> offhand = playerEntity.inventory.offhand;
 
         for(ItemStack itemstack1 : offhand) {
             Item item = itemstack1.getItem();
@@ -71,11 +71,11 @@ public class BowUtil {
     public static ITextComponent getTranslationComponent(String s) {
         switch(s){
             case "silver":
-                return (new TranslationTextComponent(ItemRegistry.SILVER_STRING.get().getTranslationKey())).mergeStyle(TextFormatting.WHITE);
+                return (new TranslationTextComponent(ItemRegistry.SILVER_STRING.get().getDescriptionId())).withStyle(TextFormatting.WHITE);
             case "flame":
-                return (new TranslationTextComponent(ItemRegistry.FLAME_STRING.get().getTranslationKey())).mergeStyle(TextFormatting.RED);
+                return (new TranslationTextComponent(ItemRegistry.FLAME_STRING.get().getDescriptionId())).withStyle(TextFormatting.RED);
             default:
-                return (new TranslationTextComponent(Items.STRING.getTranslationKey())).mergeStyle(TextFormatting.GRAY);
+                return (new TranslationTextComponent(Items.STRING.getDescriptionId())).withStyle(TextFormatting.GRAY);
         }
     }
 }

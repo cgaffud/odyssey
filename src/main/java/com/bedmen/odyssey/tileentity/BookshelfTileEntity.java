@@ -29,19 +29,19 @@ public class BookshelfTileEntity extends LockableLootTileEntity {
         this(TileEntityTypeRegistry.BOOKSHELF.get());
     }
 
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
-        if (!this.checkLootAndWrite(compound)) {
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
+        if (!this.trySaveLootTable(compound)) {
             ItemStackHelper.saveAllItems(compound, this.items);
         }
 
         return compound;
     }
 
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
-        this.items = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        if (!this.checkLootAndRead(nbt)) {
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(nbt)) {
             ItemStackHelper.loadAllItems(nbt, this.items);
         }
 
@@ -50,7 +50,7 @@ public class BookshelfTileEntity extends LockableLootTileEntity {
     /**
      * Returns the number of slots in the inventory.
      */
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 3;
     }
 
@@ -70,7 +70,7 @@ public class BookshelfTileEntity extends LockableLootTileEntity {
         return new BookshelfContainer(id, player, this);
     }
 
-    public void openInventory(PlayerEntity player) {
+    public void startOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
             if (this.numPlayersUsing < 0) {
                 this.numPlayersUsing = 0;
@@ -84,27 +84,27 @@ public class BookshelfTileEntity extends LockableLootTileEntity {
     }
 
     private void scheduleTick() {
-        this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
+        this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
     }
 
     public void bookShelfTick() {
-        int i = this.pos.getX();
-        int j = this.pos.getY();
-        int k = this.pos.getZ();
-        this.numPlayersUsing = ChestTileEntity.calculatePlayersUsing(this.world, this, i, j, k);
+        int i = this.worldPosition.getX();
+        int j = this.worldPosition.getY();
+        int k = this.worldPosition.getZ();
+        this.numPlayersUsing = ChestTileEntity.getOpenCount(this.level, this, i, j, k);
         if (this.numPlayersUsing > 0) {
             this.scheduleTick();
         } else {
             BlockState blockstate = this.getBlockState();
-            if (!blockstate.isIn(BlockRegistry.BOOKSHELF.get())) {
-                this.remove();
+            if (!blockstate.is(BlockRegistry.BOOKSHELF.get())) {
+                this.setRemoved();
                 return;
             }
         }
 
     }
 
-    public void closeInventory(PlayerEntity player) {
+    public void stopOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
             --this.numPlayersUsing;
         }
