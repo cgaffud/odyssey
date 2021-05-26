@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.monster.FrostopodEntity;
+import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.WerewolfEntity;
 import com.bedmen.odyssey.entity.projectile.NewTridentEntity;
 import com.bedmen.odyssey.entity.projectile.SerpentTridentEntity;
@@ -26,7 +26,7 @@ public class EntityTypeRegistry {
 
     //Mobs
     public static final RegistryObject<EntityType<WerewolfEntity>> WEREWOLF = ENTITY_TYPE.register("werewolf", () -> EntityType.Builder.<WerewolfEntity>create(WerewolfEntity::new, ModBiomeEntitySpawn.WEREWOLF).size(0.6F, 0.85F).trackingRange(10).build(new ResourceLocation("werewolf").toString()));
-    public static final RegistryObject<EntityType<FrostopodEntity>> FROSTOPOD = ENTITY_TYPE.register("frostopod", () -> EntityType.Builder.<FrostopodEntity>create(FrostopodEntity::new, EntityClassification.MONSTER).size(0.8F, 0.8F).trackingRange(12).build(new ResourceLocation("frostopod").toString()));
+    public static final RegistryObject<EntityType<ArctihornEntity>> ARCTIHORN = ENTITY_TYPE.register("arctihorn", () -> EntityType.Builder.<ArctihornEntity>create(ArctihornEntity::new, EntityClassification.MONSTER).size(0.8F, 0.8F).trackingRange(12).build(new ResourceLocation("arctihorn").toString()));
 
     //Other
     public static final RegistryObject<EntityType<NewTridentEntity>> NEW_TRIDENT = ENTITY_TYPE.register("new_trident", () -> EntityType.Builder.<NewTridentEntity>create(NewTridentEntity::new, EntityClassification.MISC).size(0.5f,0.5f).trackingRange(4).func_233608_b_(20).build(new ResourceLocation("new_trident").toString()));

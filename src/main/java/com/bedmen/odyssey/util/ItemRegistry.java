@@ -87,14 +87,14 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_NUGGET = ITEMS.register("netherite_nugget", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> HALLOWED_GOLD_INGOT = ITEMS.register("hallowed_gold_ingot", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> FEATHER_BUNDLE = ITEMS.register("feather_bundle", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> FROZEN_SHARD = ITEMS.register("frozen_shard", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> FROZEN_HEART = ITEMS.register("frozen_heart", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> PERMAFROST_SHARD = ITEMS.register("permafrost_shard", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> ARCTIC_HEART = ITEMS.register("arctic_heart", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> WEREWOLF_CLAW = ITEMS.register("werewolf_claw", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> FROSTOPOD_HORN = ITEMS.register("frostopod_horn", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> ARCTIC_HORN = ITEMS.register("arctic_horn", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
 
     //Armor
     public static final RegistryObject<Item> TURTLE_HELMET = ITEMS_VANILLA.register("turtle_helmet", () -> new ArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<Item> FROZEN_CHESTPLATE = ITEMS.register("frozen_chestplate", () -> new ArmorItem(ModArmorMaterial.FROZEN, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> ARCTIC_CHESTPLATE = ITEMS.register("arctic_chestplate", () -> new ArmorItem(ModArmorMaterial.ARCTIC, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> STURDY_LEGGINGS = ITEMS.register("sturdy_leggings", () -> new ArmorItem(ModArmorMaterial.STURDY, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> ZEPHYR_BOOTS = ITEMS.register("zephyr_boots", () -> new ArmorItem(ModArmorMaterial.ZEPHYR, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
 

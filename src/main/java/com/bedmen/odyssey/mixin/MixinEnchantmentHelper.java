@@ -57,7 +57,7 @@ public abstract class MixinEnchantmentHelper {
                     mutableint.add(20);
                 }
             }
-            else if(itemStack.getItem() == ItemRegistry.FROZEN_CHESTPLATE.get()){
+            else if(itemStack.getItem() == ItemRegistry.ARCTIC_CHESTPLATE.get()){
                 if(source.isFireDamage()){
                     mutableint.add(20);
                 }

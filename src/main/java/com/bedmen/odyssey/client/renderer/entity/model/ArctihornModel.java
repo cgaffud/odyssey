@@ -11,14 +11,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class FrostopodModel<T extends Entity> extends SegmentedModel<T> {
+public class ArctihornModel<T extends Entity> extends SegmentedModel<T> {
     private final ModelRenderer body;
     private final ModelRenderer horn1;
     private final ModelRenderer horn2;
     private final ModelRenderer[] legs = new ModelRenderer[8];
     private final ImmutableList<ModelRenderer> field_228296_f_;
 
-    public FrostopodModel() {
+    public ArctihornModel() {
         this.textureWidth = 64;
         this.textureHeight = 64;
         this.body = new ModelRenderer(this, 0, 0);

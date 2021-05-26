@@ -171,7 +171,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         if(!(this.abilities.isCreativeMode || this.isSpectator()) && this.world.getDimensionType().isUltrawarm()){
             boolean fireFlag = true;
             for(ItemStack stack : this.getArmorInventoryList()){
-                if(stack.getItem() == ItemRegistry.FROZEN_CHESTPLATE.get()){
+                if(stack.getItem() == ItemRegistry.ARCTIC_CHESTPLATE.get()){
                     fireFlag = false;
                     break;
                 }

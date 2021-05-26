@@ -34,13 +34,6 @@ public abstract class MonsterWaterEntity extends MonsterEntity {
         return 120;
     }
 
-    /**
-     * Get the experience points the entity currently has.
-     */
-    protected int getExperiencePoints(PlayerEntity player) {
-        return 1 + this.world.rand.nextInt(3);
-    }
-
     protected void updateAir(int p_209207_1_) {
         if (this.isAlive() && !this.isInWaterOrBubbleColumn()) {
             this.setAir(p_209207_1_ - 1);

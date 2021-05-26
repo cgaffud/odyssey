@@ -44,6 +44,7 @@ public class WerewolfEntity extends MonsterEntity {
 
     public WerewolfEntity(EntityType<? extends WerewolfEntity> type, World worldIn) {
         super(type, worldIn);
+        this.experienceValue = 5;
     }
 
     protected void registerGoals() {

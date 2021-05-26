@@ -38,7 +38,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class FrostopodEntity extends MonsterWaterEntity {
+public class ArctihornEntity extends MonsterWaterEntity {
     public float squidPitch;
     public float prevSquidPitch;
     public float squidYaw;
@@ -54,16 +54,17 @@ public class FrostopodEntity extends MonsterWaterEntity {
     private float randomMotionVecY;
     private float randomMotionVecZ;
 
-    public FrostopodEntity(EntityType<? extends FrostopodEntity> type, World worldIn) {
+    public ArctihornEntity(EntityType<? extends ArctihornEntity> type, World worldIn) {
         super(type, worldIn);
+        this.experienceValue = 10;
         this.rand.setSeed((long)this.getEntityId());
         this.rotationVelocity = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
     }
 
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FrostopodEntity.MoveToTarget(this));
+        this.goalSelector.addGoal(1, new ArctihornEntity.MoveToTarget(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(3, new FrostopodEntity.MoveRandomGoal(this));
+        this.goalSelector.addGoal(3, new ArctihornEntity.MoveRandomGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp());
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PolarBearEntity.class, true));
@@ -202,14 +203,14 @@ public class FrostopodEntity extends MonsterWaterEntity {
         return this.randomMotionVecX != 0.0F || this.randomMotionVecY != 0.0F || this.randomMotionVecZ != 0.0F;
     }
 
-    public static boolean predicate(EntityType<FrostopodEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {
+    public static boolean predicate(EntityType<ArctihornEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {
         return pos.getY() < world.getSeaLevel();
     }
 
     class MoveRandomGoal extends Goal {
-        private final FrostopodEntity squid;
+        private final ArctihornEntity squid;
 
-        public MoveRandomGoal(FrostopodEntity p_i48823_2_) {
+        public MoveRandomGoal(ArctihornEntity p_i48823_2_) {
             this.squid = p_i48823_2_;
         }
 
@@ -240,10 +241,10 @@ public class FrostopodEntity extends MonsterWaterEntity {
     }
 
     class MoveToTarget extends Goal {
-        private final FrostopodEntity squid;
+        private final ArctihornEntity squid;
         private LivingEntity target;
 
-        public MoveToTarget(FrostopodEntity p_i48823_2_) {
+        public MoveToTarget(ArctihornEntity p_i48823_2_) {
             this.squid = p_i48823_2_;
         }
 

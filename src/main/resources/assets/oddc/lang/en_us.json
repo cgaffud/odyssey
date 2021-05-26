@@ -18,19 +18,18 @@
   "item.oddc.feather_bundle": "Feather Bundle",
   "item.oddc.zephyr_boots": "Zephyr Boots",
   "item.oddc.sturdy_leggings": "Sturdy Leggings",
-  "item.oddc.frozen_shard": "Frozen Shard",
-  "item.oddc.frozen_heart": "Frozen Heart",
-  "item.oddc.frozen_chestplate": "Frozen Chestplate",
+  "item.oddc.permafrost_shard": "Permafrost Shard",
+  "item.oddc.arctic_heart": "Heart of the Arctic",
+  "item.oddc.arctic_chestplate": "Arctic Chestplate",
   "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.werewolf_claw": "Werewolf Claw",
-  "item.oddc.frostopod_horn": "Frostopod Horn",
+  "item.oddc.arctic_horn": "Arctic Horn",
 
   //Emerald
   "item.oddc.emerald_bit": "Emerald Bit",
   "item.oddc.emerald_shard": "Emerald Shard",
   "item.oddc.emerald_fragment": "Emerald Fragment",
   "item.oddc.emerald_piece": "Emerald Piece",
-
 
   //Silver and Sterling Silver
   "item.oddc.silver_nugget": "Silver Nugget",

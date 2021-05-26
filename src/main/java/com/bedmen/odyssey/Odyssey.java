@@ -2,10 +2,10 @@ package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.NewEnchantmentTableTileEntityRenderer;
-import com.bedmen.odyssey.client.renderer.entity.FrostopodRenderer;
+import com.bedmen.odyssey.client.renderer.entity.ArctihornRenderer;
 import com.bedmen.odyssey.client.renderer.entity.NewTridentRenderer;
 import com.bedmen.odyssey.client.renderer.entity.WerewolfRenderer;
-import com.bedmen.odyssey.entity.monster.FrostopodEntity;
+import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.WerewolfEntity;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.util.*;
@@ -104,11 +104,11 @@ public class Odyssey
         NewShieldItem.registerBaseProperties(ItemRegistry.SERPENT_SHIELD.get());
 
         EntitySpawnPlacementRegistry.register(EntityTypeRegistry.WEREWOLF.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, WerewolfEntity::predicate);
-        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.FROSTOPOD.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, FrostopodEntity::predicate);
+        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::predicate);
 
         DeferredWorkQueue.runLater(() -> {
             GlobalEntityTypeAttributes.put(EntityTypeRegistry.WEREWOLF.get(), WerewolfEntity.attributes().create());
-            GlobalEntityTypeAttributes.put(EntityTypeRegistry.FROSTOPOD.get(), FrostopodEntity.attributes().create());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.attributes().create());
         });
     }
 
@@ -131,7 +131,7 @@ public class Odyssey
         ScreenManager.registerFactory(ContainerRegistry.QUIVER9.get(), QuiverScreen::new);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEREWOLF.get(), WerewolfRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.FROSTOPOD.get(), FrostopodRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.NEW_TRIDENT.get(), NewTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.SERPENT_TRIDENT.get(), NewTridentRenderer::new);

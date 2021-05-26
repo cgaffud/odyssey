@@ -7,13 +7,13 @@
   ],
   "key": {
     "X": {
-      "item": "oddc:frozen_shard"
+      "item": "oddc:arctic_horn"
     },
     "H": {
-      "item": "oddc:frozen_heart"
+      "item": "oddc:arctic_heart"
     }
   },
   "result": {
-    "item": "oddc:frozen_chestplate"
+    "item": "oddc:arctic_chestplate"
   }
 }
