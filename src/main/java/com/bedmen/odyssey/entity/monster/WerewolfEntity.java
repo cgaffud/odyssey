@@ -17,8 +17,6 @@ import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
@@ -59,8 +57,8 @@ public class WerewolfEntity extends MonsterEntity {
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
     }
 
-    public static AttributeModifierMap.MutableAttribute func_234233_eS_() {
-        return MonsterEntity.func_234295_eP_().createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.3F).createMutableAttribute(Attributes.MAX_HEALTH, 12.0D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D);
+    public static AttributeModifierMap.MutableAttribute attributes() {
+        return MonsterEntity.func_234295_eP_().createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.35F).createMutableAttribute(Attributes.MAX_HEALTH, 12.0D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D);
     }
 
     protected void registerData() {

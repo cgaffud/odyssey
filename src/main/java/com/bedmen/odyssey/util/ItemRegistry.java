@@ -90,6 +90,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FROZEN_SHARD = ITEMS.register("frozen_shard", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
     public static final RegistryObject<Item> FROZEN_HEART = ITEMS.register("frozen_heart", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> WEREWOLF_CLAW = ITEMS.register("werewolf_claw", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> FROSTOPOD_HORN = ITEMS.register("frostopod_horn", () -> new Item((new Item.Properties()).group(ItemGroup.MATERIALS)));
 
     //Armor
     public static final RegistryObject<Item> TURTLE_HELMET = ITEMS_VANILLA.register("turtle_helmet", () -> new ArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));

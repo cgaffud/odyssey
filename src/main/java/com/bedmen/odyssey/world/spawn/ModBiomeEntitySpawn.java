@@ -17,10 +17,12 @@ import java.util.List;
 public class ModBiomeEntitySpawn {
 
     public static MobSpawnInfo.Spawners WEREWOLF_SPANWER;
+    public static MobSpawnInfo.Spawners FROSTOPOD_SPAWNER;
     public static EntityClassification WEREWOLF =  EntityClassification.create("werewolf", "werewolf", 70, false, false, 128);
 
     public static void registerSpawners() {
         WEREWOLF_SPANWER = new MobSpawnInfo.Spawners(EntityTypeRegistry.WEREWOLF.get(), 100, 4, 8);
+        FROSTOPOD_SPAWNER = new MobSpawnInfo.Spawners(EntityTypeRegistry.FROSTOPOD.get(), 100, 1, 4);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -41,6 +43,12 @@ public class ModBiomeEntitySpawn {
 
         else {
             werewolfSpawns.add(WEREWOLF_SPANWER);
+            if(event.getName().toString().equals("minecraft:frozen_ocean")){
+                monsterSpawns.add(FROSTOPOD_SPAWNER);
+            }
+            if(event.getName().toString().equals("minecraft:deep_frozen_ocean")){
+                monsterSpawns.add(FROSTOPOD_SPAWNER);
+            }
         }
 
     }
