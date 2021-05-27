@@ -12,6 +12,7 @@ import com.bedmen.odyssey.util.*;
 import com.bedmen.odyssey.client.renderer.NewBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.ModPotions;
 import com.bedmen.odyssey.trades.ModTrades;
+import com.bedmen.odyssey.world.gen.ModFeatureGen;
 import com.bedmen.odyssey.world.gen.ModOreGen;
 import com.bedmen.odyssey.world.spawn.ModBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.ModStructureEntitySpawn;
@@ -63,6 +64,7 @@ public class Odyssey
         EffectRegistry.init();
         EnchantmentRegistry.init();
         EntityTypeRegistry.init();
+        FeatureRegistry.init();
         ItemRegistry.init();
         PotionRegistry.init();
         RecipeRegistry.init();
@@ -73,6 +75,7 @@ public class Odyssey
 
     private void setup(final FMLCommonSetupEvent event) {
         ModOreGen.registerOres();
+        ModFeatureGen.registerFeatures();
         ModBiomeEntitySpawn.registerSpawners();
         ModStructureEntitySpawn.registerSpawners();
         ModPotions.addBrewingRecipes();
