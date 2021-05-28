@@ -6,20 +6,34 @@ import net.minecraft.block.*;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.item.Item;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionBrewing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class BlockRegistry {
 
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS , Odyssey.MOD_ID);
     public static DeferredRegister<Block> BLOCKS_VANILLA = DeferredRegister.create(ForgeRegistries.BLOCKS , "minecraft");
 
+    private static Method leaves;
+
     public static void init() {
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         BLOCKS_VANILLA.register(FMLJavaModLoadingContext.get().getModEventBus());
+
+        leaves = ObfuscationReflectionHelper.findMethod(Blocks.class, "leaves");
+        leaves.setAccessible(true);
     }
 
     public static final RegistryObject<Block> BEACON = BLOCKS_VANILLA.register("beacon", NewBeaconBlock::new);
@@ -48,4 +62,18 @@ public class BlockRegistry {
     public static final RegistryObject<Block> FOG6 = BLOCKS.register("fog6", FogBlock::new);
     public static final RegistryObject<Block> FOG7 = BLOCKS.register("fog7", FogBlock::new);
     public static final RegistryObject<Block> FOG8 = BLOCKS.register("fog8", FogBlock::new);
+
+    // These shouldn't biomeblend I think
+    public static final RegistryObject<Block> AUTUMN_LEAVES_RED = BLOCKS.register("autumn_leaves_red", () -> standardLeafBlock());
+    public static final RegistryObject<Block> AUTUMN_LEAVES_ORANGE = BLOCKS.register("autumn_leaves_orange", () -> standardLeafBlock());
+
+
+    private static LeavesBlock standardLeafBlock() {
+        LeavesBlock leaf = null;
+        try { leaf = (LeavesBlock) leaves.invoke(null); }
+        catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e){
+            e.printStackTrace();
+        }
+        return leaf;
+    }
 }

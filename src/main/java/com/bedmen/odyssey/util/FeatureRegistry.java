@@ -2,9 +2,11 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.world.gen.feature.MegaIceSpikeFeature;
-import net.minecraft.world.gen.feature.Features;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.block.Blocks;
+import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
+import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
+import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -12,8 +14,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class FeatureRegistry {
 
-    public static DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES , Odyssey.MOD_ID);
-    public static DeferredRegister<Feature<?>> FEATURES_VANILLA = DeferredRegister.create(ForgeRegistries.FEATURES , "minecraft");
+    public static DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, Odyssey.MOD_ID);
+    public static DeferredRegister<Feature<?>> FEATURES_VANILLA = DeferredRegister.create(ForgeRegistries.FEATURES, "minecraft");
 
     public static void init() {
         FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
