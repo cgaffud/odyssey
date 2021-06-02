@@ -26,6 +26,7 @@ public class BlockRegistry {
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS , Odyssey.MOD_ID);
     public static DeferredRegister<Block> BLOCKS_VANILLA = DeferredRegister.create(ForgeRegistries.BLOCKS , "minecraft");
 
+
     private static Method leaves;
 
     public static void init() {

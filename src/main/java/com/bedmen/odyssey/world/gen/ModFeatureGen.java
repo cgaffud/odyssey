@@ -31,10 +31,8 @@ public class ModFeatureGen {
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> AUTUMN_TREE_RED;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> AUTUMN_TREE_ORANGE;
 
-    public static ConfiguredFeature<?,?> AUTUMN_FOREST;
-
     // Groups
-
+    public static ConfiguredFeature<?,?> AUTUMN_FOREST;
 
     public static void registerFeatures() {
         MEGA_ICE_SPIKE = featureGen(FeatureRegistry.MEGA_ICE_SPIKE);

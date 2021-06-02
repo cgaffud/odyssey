@@ -60,6 +60,7 @@ public class Odyssey
 
         AttributeRegistry.init();
         BlockRegistry.init();
+        BiomeRegistry.init();
         ContainerRegistry.init();
         EffectRegistry.init();
         EnchantmentRegistry.init();
