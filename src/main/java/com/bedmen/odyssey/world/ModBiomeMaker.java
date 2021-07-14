@@ -27,6 +27,8 @@ public class ModBiomeMaker {
 
         biomegenerationsettings$builder.addStructureStart(StructureFeatures.RUINED_PORTAL_STANDARD);
 
+        biomegenerationsettings$builder.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, ModFeatureGen.AUTUMN_FOREST);
+
         //Underground gen
         DefaultBiomeFeatures.addDefaultOverworldLandStructures(biomegenerationsettings$builder);
         DefaultBiomeFeatures.addDefaultCarvers(biomegenerationsettings$builder);
@@ -52,6 +54,6 @@ public class ModBiomeMaker {
                 .downfall(0.8F)
                 .specialEffects((new BiomeAmbience.Builder()).grassColorOverride(10783823).waterColor(4173284).waterFogColor(336947).fogColor(12642815).skyColor(calculateSkyColor(0.7F)).ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS).build())
                 .mobSpawnSettings(mobspawninfo$builder.build())
-                .generationSettings(biomegenerationsettings$builder.build()).build().setRegistryName("oddc","autumn_forest");
+                .generationSettings(biomegenerationsettings$builder.build()).build();
     }
 }
