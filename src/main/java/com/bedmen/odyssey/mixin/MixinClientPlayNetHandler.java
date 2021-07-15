@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.entity.projectile.NewTridentEntity;
+import com.bedmen.odyssey.entity.projectile.PermafrostIcicleEntity;
 import com.bedmen.odyssey.entity.projectile.SerpentTridentEntity;
 import com.bedmen.odyssey.util.EntityTypeRegistry;
 import net.minecraft.block.Block;
@@ -110,6 +111,8 @@ public abstract class MixinClientPlayNetHandler {
             entity = new SmallFireballEntity(this.level, d0, d1, d2, packetIn.getXa(), packetIn.getYa(), packetIn.getZa());
         } else if (entitytype == EntityType.WITHER_SKULL) {
             entity = new WitherSkullEntity(this.level, d0, d1, d2, packetIn.getXa(), packetIn.getYa(), packetIn.getZa());
+        } else if (entitytype == EntityTypeRegistry.PERMAFROST_ICICLE.get()) {
+            entity = new PermafrostIcicleEntity(this.level, d0, d1, d2, packetIn.getXa(), packetIn.getYa(), packetIn.getZa());
         } else if (entitytype == EntityType.SHULKER_BULLET) {
             entity = new ShulkerBulletEntity(this.level, d0, d1, d2, packetIn.getXa(), packetIn.getYa(), packetIn.getZa());
         } else if (entitytype == EntityType.EGG) {

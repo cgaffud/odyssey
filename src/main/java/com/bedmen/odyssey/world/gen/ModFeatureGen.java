@@ -35,7 +35,7 @@ public class ModFeatureGen {
         } else if (event.getCategory() == Biome.Category.THEEND) {
 
         } else {
-            if(event.getCategory() == Biome.Category.PLAINS) {
+            if(event.getName().toString().equals("minecraft:ice_spikes")) {
                 //gen.surfaceBuilder(ConfiguredSurfaceBuilders.ICE_SPIKES);
                 gen.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, MEGA_ICE_SPIKE);
             }

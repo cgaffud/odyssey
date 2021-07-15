@@ -4,6 +4,7 @@ import com.bedmen.odyssey.armor.ModArmorMaterial;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.tools.*;
+import net.minecraft.block.Blocks;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.Items; //Used as easy access to item registry
@@ -41,6 +42,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SILVER_BLOCK = ITEMS.register("silver_block", () -> new BlockItem(BlockRegistry.SILVER_BLOCK.get(), (new Item.Properties()).tab(ItemGroup.TAB_BUILDING_BLOCKS)));
     public static final RegistryObject<Item> STERLING_SILVER_BLOCK = ITEMS.register("sterling_silver_block", () -> new BlockItem(BlockRegistry.STERLING_SILVER_BLOCK.get(), (new Item.Properties()).tab(ItemGroup.TAB_BUILDING_BLOCKS)));
     public static final RegistryObject<Item> LEATHER_PILE = ITEMS.register("leather_pile", () -> new BlockItem(BlockRegistry.LEATHER_PILE.get(), (new Item.Properties()).tab(ItemGroup.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> PERMAFROST_CONDUIT = ITEMS.register("permafrost_conduit", () -> new BlockItem(BlockRegistry.PERMAFROST_CONDUIT.get(), (new Item.Properties()).tab(ItemGroup.TAB_MISC).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> PERMAFROST_ICE2 = ITEMS.register("permafrost_ice2",() -> new BlockItem(BlockRegistry.PERMAFROST_ICE2.get(), (new Item.Properties()).tab(ItemGroup.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> PERMAFROST_ICE4 = ITEMS.register("permafrost_ice4",() -> new BlockItem(BlockRegistry.PERMAFROST_ICE4.get(), (new Item.Properties()).tab(ItemGroup.TAB_BUILDING_BLOCKS)));
 
     public static final RegistryObject<Item> FOG1 = ITEMS.register("fog1", () -> new BlockItem(BlockRegistry.FOG1.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
     public static final RegistryObject<Item> FOG2 = ITEMS.register("fog2", () -> new BlockItem(BlockRegistry.FOG2.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));

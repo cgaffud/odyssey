@@ -1,15 +1,15 @@
 package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.gui.*;
-import com.bedmen.odyssey.client.renderer.NewEnchantmentTableTileEntityRenderer;
-import com.bedmen.odyssey.client.renderer.entity.ArctihornRenderer;
-import com.bedmen.odyssey.client.renderer.entity.NewTridentRenderer;
-import com.bedmen.odyssey.client.renderer.entity.WerewolfRenderer;
+import com.bedmen.odyssey.client.renderer.entity.*;
+import com.bedmen.odyssey.client.renderer.tileEntity.NewEnchantmentTableTileEntityRenderer;
+import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.WerewolfEntity;
+import com.bedmen.odyssey.entity.projectile.PermafrostIcicleEntity;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.util.*;
-import com.bedmen.odyssey.client.renderer.NewBeaconTileEntityRenderer;
+import com.bedmen.odyssey.client.renderer.tileEntity.NewBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.ModPotions;
 import com.bedmen.odyssey.trades.ModTrades;
 import com.bedmen.odyssey.world.gen.ModFeatureGen;
@@ -22,7 +22,6 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -58,6 +57,7 @@ public class Odyssey
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
+        //Deferred Registries
         AttributeRegistry.init();
         BlockRegistry.init();
         ContainerRegistry.init();
@@ -66,8 +66,10 @@ public class Odyssey
         EntityTypeRegistry.init();
         FeatureRegistry.init();
         ItemRegistry.init();
+        ParticleTypeRegistry.init();
         PotionRegistry.init();
         RecipeRegistry.init();
+        SoundEventRegistry.init();
         TileEntityTypeRegistry.init();
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -110,16 +112,20 @@ public class Odyssey
         EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::predicate);
 
         DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(EntityTypeRegistry.WEREWOLF.get(), WerewolfEntity.attributes().build());
-            GlobalEntityTypeAttributes.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.attributes().build());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.WEREWOLF.get(), WerewolfEntity.createAttributes().build());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
+
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
         });
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)
     {
+        //Tile Entities with animations
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), NewBeaconTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), NewEnchantmentTableTileEntityRenderer::new);
 
+        //Screens
         ScreenManager.register(ContainerRegistry.BEACON.get(), NewBeaconScreen::new);
         ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), NewSmithingTableScreen::new);
         ScreenManager.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
@@ -133,12 +139,19 @@ public class Odyssey
         ScreenManager.register(ContainerRegistry.QUIVER7.get(), QuiverScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER9.get(), QuiverScreen::new);
 
+        //Mobs
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEREWOLF.get(), WerewolfRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
 
+        //Bosses
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
+
+        //Projectiles
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.NEW_TRIDENT.get(), NewTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.SERPENT_TRIDENT.get(), NewTridentRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
 
+        //Render Types for Blocks
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG1.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG2.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG3.get(), RenderType.translucent());
@@ -147,6 +160,9 @@ public class Odyssey
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG6.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG7.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG8.get(), RenderType.translucent());
+
+        RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE2.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE4.get(), RenderType.translucent());
     }
 
     @SubscribeEvent

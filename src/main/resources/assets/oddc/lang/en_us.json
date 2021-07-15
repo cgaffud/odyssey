@@ -102,6 +102,11 @@
   "block.oddc.silver_block": "Block of Silver",
   "block.oddc.sterling_silver_block": "Block of Sterling Silver",
   "block.oddc.leather_pile": "Leather Pile",
+  "block.oddc.permafrost_conduit": "Permafrost Conduit",
+  "block.oddc.permafrost_ice2": "Permafrost Ice 2",
+  "block.oddc.permafrost_ice4": "Permafrost Ice 4",
+
+
   "block.oddc.fog1": "Fog 1",
   "block.oddc.fog2": "Fog 2",
   "block.oddc.fog3": "Fog 3",
@@ -115,6 +120,8 @@
 
   //Entities
   "entity.oddc.werewolf": "Werewolf",
+  "entity.oddc.arctihorn": "Arctihorn",
+  "entity.oddc.permafrost": "Permafrost",
 
 
   //Potions

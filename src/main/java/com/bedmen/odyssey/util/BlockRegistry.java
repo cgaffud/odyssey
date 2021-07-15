@@ -6,6 +6,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.entity.EntityType;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -48,4 +49,8 @@ public class BlockRegistry {
     public static final RegistryObject<Block> FOG6 = BLOCKS.register("fog6", FogBlock::new);
     public static final RegistryObject<Block> FOG7 = BLOCKS.register("fog7", FogBlock::new);
     public static final RegistryObject<Block> FOG8 = BLOCKS.register("fog8", FogBlock::new);
+
+    public static final RegistryObject<Block> PERMAFROST_CONDUIT = BLOCKS.register("permafrost_conduit", () -> new PermafrostConduitBlock(AbstractBlock.Properties.of(Material.GLASS, MaterialColor.DIAMOND).strength(3.0F).noOcclusion()));
+    public static final RegistryObject<Block> PERMAFROST_ICE4 = BLOCKS.register("permafrost_ice4", () -> new PermafrostIce4Block(AbstractBlock.Properties.of(Material.ICE).friction(0.98F).strength(0.5F).sound(SoundType.GLASS).noOcclusion()));
+    public static final RegistryObject<Block> PERMAFROST_ICE2 = BLOCKS.register("permafrost_ice2", () -> new PermafrostIce2Block(AbstractBlock.Properties.of(Material.ICE).friction(0.98F).strength(0.5F).sound(SoundType.GLASS).noOcclusion()));
 }

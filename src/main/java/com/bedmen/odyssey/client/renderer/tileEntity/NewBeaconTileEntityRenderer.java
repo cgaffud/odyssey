@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.client.renderer;
+package com.bedmen.odyssey.client.renderer.tileEntity;
 
 import com.bedmen.odyssey.tileentity.NewBeaconTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;

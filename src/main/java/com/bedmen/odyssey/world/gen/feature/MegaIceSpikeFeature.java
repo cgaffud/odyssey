@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.world.gen.feature;
 
+import com.bedmen.odyssey.util.BlockRegistry;
 import com.mojang.serialization.Codec;
 import java.util.Random;
 import net.minecraft.block.Block;
@@ -18,82 +19,87 @@ public class MegaIceSpikeFeature extends Feature<NoFeatureConfig> {
     }
 
     public boolean place(ISeedReader seedReader, ChunkGenerator chunkGenerator, Random random, BlockPos pos, NoFeatureConfig noFeatureConfig) {
-        while(seedReader.isEmptyBlock(pos) && pos.getY() > 2) {
+
+        if(random.nextInt(70) != 0)
+            return false;
+        while((seedReader.isEmptyBlock(pos) || seedReader.getBlockState(pos).getBlock() == Blocks.PACKED_ICE) && pos.getY() > 2) {
             pos = pos.below();
         }
 
-        if (false) {
-            return false;
-        } else {
-            pos = pos.above(random.nextInt(4));
-            int i = random.nextInt(4) + 7;
-            int j = i / 4 + random.nextInt(2);
-            if (j > 1 && random.nextInt(60) == 0) {
-                pos = pos.above(10 + random.nextInt(30));
-            }
-
-            for(int k = 0; k < i; ++k) {
-                float f = (1.0F - (float)k / (float)i) * (float)j;
-                int l = MathHelper.ceil(f);
-
-                for(int i1 = -l; i1 <= l; ++i1) {
-                    float f1 = (float)MathHelper.abs(i1) - 0.25F;
-
-                    for(int j1 = -l; j1 <= l; ++j1) {
-                        float f2 = (float)MathHelper.abs(j1) - 0.25F;
-                        if ((i1 == 0 && j1 == 0 || !(f1 * f1 + f2 * f2 > f * f)) && (i1 != -l && i1 != l && j1 != -l && j1 != l || !(random.nextFloat() > 0.75F))) {
-                            BlockState blockstate = seedReader.getBlockState(pos.offset(i1, k, j1));
-                            Block block = blockstate.getBlock();
-                            if (blockstate.isAir(seedReader, pos.offset(i1, k, j1)) || isDirt(block) || block == Blocks.SNOW_BLOCK || block == Blocks.ICE) {
-                                this.setBlock(seedReader, pos.offset(i1, k, j1), Blocks.PACKED_ICE.defaultBlockState());
-                            }
-
-                            if (k != 0 && l > 1) {
-                                blockstate = seedReader.getBlockState(pos.offset(i1, -k, j1));
-                                block = blockstate.getBlock();
-                                if (blockstate.isAir(seedReader, pos.offset(i1, -k, j1)) || isDirt(block) || block == Blocks.SNOW_BLOCK || block == Blocks.ICE) {
-                                    this.setBlock(seedReader, pos.offset(i1, -k, j1), Blocks.PACKED_ICE.defaultBlockState());
-                                }
-                            }
-                        }
+        int h = 50;
+        double a = 8.0d;
+        double b = 2.0d;
+        for(int y = 0; y <= h-3; y++){
+            double r = (b/a) * Math.sqrt(a*a+(y-(h/2.0d))*(y-(h/2.0d)));
+            for (int x = -1*((int)r)-1; x <= ((int)r)+1; x++){
+                for (int z = -1*((int)r)-1; z <= ((int)r)+1; z++){
+                    if(x*x + z*z < r*r){
+                        BlockPos pos2 = pos.offset(x,y,z);
+                        BlockState blockstate1 = seedReader.getBlockState(pos2);
+                        if(blockstate1.isAir(seedReader,pos2))
+                            this.setBlock(seedReader, pos2, Blocks.PACKED_ICE.defaultBlockState());
                     }
                 }
             }
-
-            int k1 = j - 1;
-            if (k1 < 0) {
-                k1 = 0;
-            } else if (k1 > 1) {
-                k1 = 1;
-            }
-
-            for(int l1 = -k1; l1 <= k1; ++l1) {
-                for(int i2 = -k1; i2 <= k1; ++i2) {
-                    BlockPos blockpos = pos.offset(l1, -1, i2);
-                    int j2 = 50;
-                    if (Math.abs(l1) == 1 && Math.abs(i2) == 1) {
-                        j2 = random.nextInt(5);
-                    }
-
-                    while(blockpos.getY() > 50) {
-                        BlockState blockstate1 = seedReader.getBlockState(blockpos);
-                        Block block1 = blockstate1.getBlock();
-                        if (!blockstate1.isAir(seedReader, blockpos) && !isDirt(block1) && block1 != Blocks.SNOW_BLOCK && block1 != Blocks.ICE && block1 != Blocks.PACKED_ICE) {
-                            break;
-                        }
-
-                        this.setBlock(seedReader, blockpos, Blocks.PACKED_ICE.defaultBlockState());
-                        blockpos = blockpos.below();
-                        --j2;
-                        if (j2 <= 0) {
-                            blockpos = blockpos.below(random.nextInt(5) + 1);
-                            j2 = random.nextInt(5);
-                        }
-                    }
-                }
-            }
-
-            return true;
         }
+
+        double r = 6.38d;
+        for (int x = -1*((int)r)-1; x <= ((int)r)+1; x++){
+            for (int y = -1*((int)r)-1; y <= ((int)r)+1; y++){
+                for (int z = -1*((int)r)-1; z <= ((int)r)+1; z++){
+                    int r2 = x*x + y*y + z*z;
+                    if(r2 < r*r){
+                        BlockPos pos2 = pos.offset(x,y,z);
+                        BlockState blockstate1 = seedReader.getBlockState(pos2);
+                        if(blockstate1.isAir(seedReader,pos2) || blockstate1.is(Blocks.WATER) || blockstate1.is(Blocks.SNOW) || blockstate1.is(Blocks.SNOW_BLOCK))
+                            this.setBlock(seedReader, pos2, Blocks.PACKED_ICE.defaultBlockState());
+                    }
+                }
+            }
+        }
+
+        pos = pos.above(h);
+
+        for (int x = -1*((int)r)-1; x <= ((int)r)+1; x++){
+            for (int y = -1*((int)r)-1; y <= ((int)r)+1; y++){
+                for (int z = -1*((int)r)-1; z <= ((int)r)+1; z++){
+                    int r2 = x*x + y*y + z*z;
+                    if(r2 < r*r && r2 > (r-1.5)*(r-1.5)){
+                        BlockPos pos2 = pos.offset(x,y,z);
+                        this.setBlock(seedReader, pos2, Blocks.ICE.defaultBlockState());
+                    } else if(r2 < (r-1.5)*(r-1.5)){
+                        BlockPos pos2 = pos.offset(x,y,z);
+                        this.setBlock(seedReader, pos2, Blocks.AIR.defaultBlockState());
+                    }
+                }
+            }
+        }
+
+        this.setBlock(seedReader, pos, BlockRegistry.PERMAFROST_CONDUIT.get().defaultBlockState());
+
+        this.setBlock(seedReader, pos.above(), BlockRegistry.PERMAFROST_ICE4.get().defaultBlockState());
+        this.setBlock(seedReader, pos.below(), BlockRegistry.PERMAFROST_ICE4.get().defaultBlockState());
+        this.setBlock(seedReader, pos.north(), BlockRegistry.PERMAFROST_ICE4.get().defaultBlockState());
+        this.setBlock(seedReader, pos.south(), BlockRegistry.PERMAFROST_ICE4.get().defaultBlockState());
+        this.setBlock(seedReader, pos.east(), BlockRegistry.PERMAFROST_ICE4.get().defaultBlockState());
+        this.setBlock(seedReader, pos.west(), BlockRegistry.PERMAFROST_ICE4.get().defaultBlockState());
+
+        this.setBlock(seedReader, pos.above().north(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+        this.setBlock(seedReader, pos.above().east(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+        this.setBlock(seedReader, pos.above().south(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+        this.setBlock(seedReader, pos.above().west(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+
+        this.setBlock(seedReader, pos.north().east(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+        this.setBlock(seedReader, pos.south().east(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+        this.setBlock(seedReader, pos.south().west(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+        this.setBlock(seedReader, pos.north().west(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+
+        this.setBlock(seedReader, pos.below().north(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+        this.setBlock(seedReader, pos.below().east(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+        this.setBlock(seedReader, pos.below().south(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+        this.setBlock(seedReader, pos.below().west(), BlockRegistry.PERMAFROST_ICE2.get().defaultBlockState());
+
+
+        return true;
     }
 }
