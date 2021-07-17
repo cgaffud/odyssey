@@ -66,14 +66,6 @@ public class ModPotions {
         }
     }
 
-    private static void addColorRegister(){
-        if(color == null) {
-            color = ObfuscationReflectionHelper.getPrivateValue(ItemColors.class, null, "colors");
-        }
-
-        color.put(ItemRegistry.BIG_POTION.get().delegate, ((stack, color) -> color > 0 ? -1 : PotionUtils.getColor(stack)));
-    }
-
     private static void removeMix(){
         if(brewing_list == null) {
             brewing_list = ObfuscationReflectionHelper.getPrivateValue(PotionBrewing.class, null, "POTION_MIXES");
@@ -139,7 +131,7 @@ public class ModPotions {
         addMix(Potions.AWKWARD, Items.GLOWSTONE_DUST, PotionRegistry.GLOW.get());
         addMix(PotionRegistry.GLOW.get(), Items.REDSTONE, PotionRegistry.LONG_GLOW.get());
         //Invisibility
-        addMix(Potions.AWKWARD, ItemRegistry.GLASS_SHARD.get(), Potions.INVISIBILITY);
+        addMix(Potions.AWKWARD, Items.GLASS, Potions.INVISIBILITY);
         addMix(Potions.INVISIBILITY, Items.REDSTONE, Potions.LONG_INVISIBILITY);
         //Night Vision
         addMix(Potions.AWKWARD, Items.GOLDEN_CARROT, Potions.NIGHT_VISION);
