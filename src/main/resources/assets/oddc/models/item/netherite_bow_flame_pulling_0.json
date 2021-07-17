@@ -1,7 +1,0 @@
-{
-  "parent": "oddc:item/netherite_bow",
-  "textures": {
-    "layer0": "oddc:item/bow/netherite_bow_pulling_0",
-    "layer1": "oddc:item/bow/flame_0"
-  }
-}

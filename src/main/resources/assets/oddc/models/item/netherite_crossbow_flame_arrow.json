@@ -1,7 +1,0 @@
-{
-    "parent": "item/crossbow",
-    "textures": {
-        "layer0": "oddc:item/crossbow/netherite_crossbow_arrow",
-        "layer1": "oddc:item/crossbow/flame_2"
-    }
-}

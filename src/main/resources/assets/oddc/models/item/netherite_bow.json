@@ -1,8 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "oddc:item/bow/netherite_bow",
-    "layer1": "oddc:item/bow/normal"
+    "layer0": "oddc:item/netherite_bow/bow"
   },
   "display": {
     "thirdperson_righthand": {
@@ -29,86 +28,23 @@
   "overrides": [
     {
       "predicate": {
-        "pulling": 1,
-        "stringtype": 0
+        "pulling": 1
       },
-      "model": "oddc:item/netherite_bow_normal_pulling_0"
+      "model": "oddc:item/netherite_bow_pulling_0"
     },
     {
       "predicate": {
         "pulling": 1,
-        "pull": 0.65,
-        "stringtype": 0
+        "pull": 0.65
       },
-      "model": "oddc:item/netherite_bow_normal_pulling_1"
+      "model": "oddc:item/netherite_bow_pulling_1"
     },
     {
       "predicate": {
         "pulling": 1,
-        "pull": 0.9,
-        "stringtype": 0
+        "pull": 0.9
       },
-      "model": "oddc:item/netherite_bow_normal_pulling_2"
-    },
-    {
-      "predicate": {
-        "pulling": 0,
-        "stringtype": 1
-      },
-      "model": "oddc:item/netherite_bow_silver"
-    },
-    {
-      "predicate": {
-        "pulling": 1,
-        "stringtype": 1
-      },
-      "model": "oddc:item/netherite_bow_silver_pulling_0"
-    },
-    {
-      "predicate": {
-        "pulling": 1,
-        "pull": 0.65,
-        "stringtype": 1
-      },
-      "model": "oddc:item/netherite_bow_silver_pulling_1"
-    },
-    {
-      "predicate": {
-        "pulling": 1,
-        "pull": 0.9,
-        "stringtype": 1
-      },
-      "model": "oddc:item/netherite_bow_silver_pulling_2"
-    },
-    {
-      "predicate": {
-        "pulling": 0,
-        "stringtype": 2
-      },
-      "model": "oddc:item/netherite_bow_flame"
-    },
-    {
-      "predicate": {
-        "pulling": 1,
-        "stringtype": 2
-      },
-      "model": "oddc:item/netherite_bow_flame_pulling_0"
-    },
-    {
-      "predicate": {
-        "pulling": 1,
-        "pull": 0.65,
-        "stringtype": 2
-      },
-      "model": "oddc:item/netherite_bow_flame_pulling_1"
-    },
-    {
-      "predicate": {
-        "pulling": 1,
-        "pull": 0.9,
-        "stringtype": 2
-      },
-      "model": "oddc:item/netherite_bow_flame_pulling_2"
+      "model": "oddc:item/netherite_bow_pulling_2"
     }
   ]
 }

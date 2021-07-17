@@ -46,7 +46,6 @@ public class NewBowItem extends BowItem implements IVanishable {
 
             int i = this.getUseDuration(stack) - timeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, worldIn, playerentity, i, !itemstack.isEmpty() || flag);
-            i = (int)(i* BowUtil.getStringSpeedModifier(stack));
             if (i < 0) return;
 
             if (!itemstack.isEmpty() || flag) {
@@ -78,7 +77,7 @@ public class NewBowItem extends BowItem implements IVanishable {
                             abstractarrowentity.setKnockback(k);
                         }
 
-                        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack) > 0 || BowUtil.flameString(stack)) {
+                        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack) > 0) {
                             abstractarrowentity.setSecondsOnFire(100);
                         }
 
@@ -171,40 +170,11 @@ public class NewBowItem extends BowItem implements IVanishable {
             if (entity == null) {
                 return 0.0F;
             } else {
-                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F * BowUtil.getStringSpeedModifier(itemStack);
+                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F;
             }
         });
         ItemModelsProperties.register(item, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
             return entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack ? 1.0F : 0.0F;
         });
-    }
-    
-    public static void registerStringTypeProperty(Item item) {
-        ItemModelsProperties.register(item, new ResourceLocation("stringtype"),  (itemStack, world, entity) -> {
-            CompoundNBT compoundnbt = itemStack.getTag();
-            if(compoundnbt != null && compoundnbt.contains("StringType")){
-                String s = compoundnbt.get("StringType").getAsString();
-                switch(s){
-                    case "flame":
-                        return 2;
-                    case "silver":
-                        return 1;
-                    default:
-                        return 0;
-                }
-            }
-            return 0;
-        });
-    }
-
-    /**
-     * allows items to add custom lines of information to the mouseover description
-     */
-    @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        String s = BowUtil.getStringType(stack);
-        if(!s.equals("normal")){
-            tooltip.add(BowUtil.getTranslationComponent(s));
-        }
     }
 }
