@@ -76,6 +76,12 @@ public abstract class MixinClientPlayNetHandler {
             if (entity3 != null) {
                 ((AbstractArrowEntity)entity).setOwner(entity3);
             }
+        } else if (entitytype == EntityType.TRIDENT) {
+            entity = new TridentEntity(this.level, d0, d1, d2);
+            Entity entity4 = this.level.getEntity(packetIn.getData());
+            if (entity4 != null) {
+                ((AbstractArrowEntity)entity).setOwner(entity4);
+            }
         } else if (entitytype == EntityTypeRegistry.NEW_TRIDENT.get()) {
             entity = new NewTridentEntity(this.level, d0, d1, d2);
             Entity entity4 = this.level.getEntity(packetIn.getData());

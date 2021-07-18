@@ -203,5 +203,10 @@
   "item.minecraft.tipped_arrow.effect.building_fatigue": "Arrow of Building Fatigue",
   "item.minecraft.tipped_arrow.effect.long_building_fatigue": "Arrow of Building Fatigue",
   "item.minecraft.lingering_potion.effect.building_fatigue": "Lingering Potion of Building Fatigue",
-  "item.minecraft.lingering_potion.effect.long_building_fatigue": "Lingering Potion of Building Fatigue"
+  "item.minecraft.lingering_potion.effect.long_building_fatigue": "Lingering Potion of Building Fatigue",
+
+  "item.minecraft.potion.effect.long_luck": "Potion of Luck",
+  "item.minecraft.splash_potion.effect.long_luck": "Splash Potion of Luck",
+  "item.minecraft.tipped_arrow.effect.long_luck": "Arrow of Luck",
+  "item.minecraft.lingering_potion.effect.long_luck": "Lingering Potion of Luck"
 }
