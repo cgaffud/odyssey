@@ -9,8 +9,6 @@ import net.minecraft.world.World;
 public interface ModRecipeType<T extends IRecipe<?>> {
     IRecipeType<AlloyRecipe> ALLOYING = register("alloying");
     IRecipeType<NewSmithingRecipe> NEW_SMITHING = register("new_smithing");
-    IRecipeType<InfusingRecipe> INFUSING = register("infusing");
-    IRecipeType<EnchantedBookInfusingRecipe> ENCHANTED_BOOK_INFUSING = register("enchanted_book_infusing");
     IRecipeType<RecycleRecipe> RECYCLING = register("recycling");
 
     static <T extends IRecipe<?>> IRecipeType<T> register(final String key) {

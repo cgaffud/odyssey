@@ -119,7 +119,6 @@ public class Odyssey
         ScreenManager.register(ContainerRegistry.BEACON.get(), NewBeaconScreen::new);
         ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), NewSmithingTableScreen::new);
         ScreenManager.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
-        ScreenManager.register(ContainerRegistry.INFUSER.get(), InfuserScreen::new);
         ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), NewEnchantmentScreen::new);
         ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
         ScreenManager.register(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);
