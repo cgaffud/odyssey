@@ -6,7 +6,6 @@
   },
     "overrides": [
         { "predicate": { "type": 1.0000000 }, "model": "item/lingering_potion_long" },
-        { "predicate": { "type": 2.0000000 }, "model": "item/lingering_potion_strong" },
-        { "predicate": { "type": 3.0000000 }, "model": "item/awkward_lingering_potion" }
+        { "predicate": { "type": 2.0000000 }, "model": "item/lingering_potion_strong" }
     ]
 }
