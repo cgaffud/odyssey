@@ -52,6 +52,6 @@ public class ModBiomeMaker {
                 .downfall(0.8F)
                 .specialEffects((new BiomeAmbience.Builder()).grassColorOverride(10783823).waterColor(4173284).waterFogColor(336947).fogColor(12642815).skyColor(calculateSkyColor(0.7F)).ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS).build())
                 .mobSpawnSettings(mobspawninfo$builder.build())
-                .generationSettings(biomegenerationsettings$builder.build()).build().setRegistryName("");
+                .generationSettings(biomegenerationsettings$builder.build()).build();
     }
 }

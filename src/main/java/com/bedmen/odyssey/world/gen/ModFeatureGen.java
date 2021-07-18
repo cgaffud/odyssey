@@ -2,10 +2,12 @@ package com.bedmen.odyssey.world.gen;
 
 import com.bedmen.odyssey.util.BlockRegistry;
 import com.bedmen.odyssey.util.FeatureRegistry;
+import com.bedmen.odyssey.world.gen.BiomeRegistry;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
@@ -51,7 +53,8 @@ public class ModFeatureGen {
         } else if (event.getCategory() == Biome.Category.THEEND) {
 
         } else {
-            if(event.getCategory() == Biome.Category.PLAINS) {
+
+            if(event.getName().toString().equals("oddc:autumn_forest")) {
                 //gen.surfaceBuilder(ConfiguredSurfaceBuilders.ICE_SPIKES);
                 gen.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AUTUMN_FOREST);
             }
