@@ -9,6 +9,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.potion.Potions;
 
 public class PotionRegistry {
 
@@ -48,6 +49,9 @@ public class PotionRegistry {
 
     public static final RegistryObject<Potion> BUILDING_FATIGUE = POTIONS.register("building_fatigue", () -> new Potion(new EffectInstance(EffectRegistry.BUILDING_FATIGUE.get(), 1800)));
     public static final RegistryObject<Potion> LONG_BUILDING_FATIGUE = POTIONS.register("long_building_fatigue", () -> new Potion(new EffectInstance(EffectRegistry.BUILDING_FATIGUE.get(), 3600)));
+
+    public static final RegistryObject<Potion> LUCK = POTIONS_VANILLA.register("luck", () -> new Potion(new EffectInstance(Effects.LUCK, 3600)));
+    public static final RegistryObject<Potion> LONG_LUCK = POTIONS.register("long_luck", () -> new Potion(new EffectInstance(Effects.LUCK, 7200)));
 
     public static final RegistryObject<Potion> LONG_NIGHT_VISION = POTIONS_VANILLA.register("long_night_vision", () -> new Potion("night_vision", new EffectInstance(Effects.NIGHT_VISION, 7200)));
     public static final RegistryObject<Potion> LONG_INVISIBILITY = POTIONS_VANILLA.register("long_invisibility", () -> new Potion("invisibility", new EffectInstance(Effects.INVISIBILITY, 7200)));

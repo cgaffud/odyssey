@@ -138,8 +138,7 @@ public class NewPotionItem extends Item {
             CompoundNBT compoundnbt = itemStack.getTag();
             if(compoundnbt != null && compoundnbt.contains("Potion")){
                 String s = compoundnbt.get("Potion").getAsString();
-                if(s.contains("awkward")) return 3;
-                else if(s.contains("long")) return 1;
+                if(s.contains("long")) return 1;
                 else if(s.contains("strong")) return 2;
             }
             return 0;

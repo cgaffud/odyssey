@@ -78,7 +78,6 @@ public class ModPotions {
 
     public static void addBrewingRecipes() {
         removeMix();
-        //addColorRegister();
 
         //Awkward Potion
         addMix(Potions.WATER, Items.NETHER_WART, Potions.AWKWARD);
@@ -166,6 +165,7 @@ public class ModPotions {
         addMix(PotionRegistry.HUNGER.get(), Items.QUARTZ, PotionRegistry.STRONG_HUNGER.get());
         //Luck
         addMix(Potions.AWKWARD, ItemRegistry.CLOVER.get(), Potions.LUCK);
+        addMix(Potions.LUCK, Items.REDSTONE, PotionRegistry.LONG_LUCK.get());
     }
 
 }
