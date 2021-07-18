@@ -14,32 +14,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class BowUtil {
 
-    public static String getStringType(ItemStack itemStack){
-        CompoundNBT compoundnbt = itemStack.getTag();
-        if(compoundnbt != null && compoundnbt.contains("StringType")){
-            return compoundnbt.get("StringType").getAsString();
-        }
-        return "normal";
-    }
-
-    public static float getStringSpeedModifier(ItemStack itemStack){
-        switch(getStringType(itemStack)){
-            case "silver":
-                return 1.25f;
-            default:
-                return 1.0f;
-        }
-    }
-
-    public static boolean flameString(ItemStack itemStack){
-        switch(getStringType(itemStack)){
-            case "flame":
-                return true;
-            default:
-                return false;
-        }
-    }
-
     public static boolean consumeQuiverAmmo(PlayerEntity playerEntity, ItemStack ammo){
         NonNullList<ItemStack> offhand = playerEntity.inventory.offhand;
 
@@ -66,16 +40,5 @@ public class BowUtil {
             }
         }
         return false;
-    }
-
-    public static ITextComponent getTranslationComponent(String s) {
-        switch(s){
-            case "silver":
-                return (new TranslationTextComponent(ItemRegistry.SILVER_STRING.get().getDescriptionId())).withStyle(TextFormatting.WHITE);
-            case "flame":
-                return (new TranslationTextComponent(ItemRegistry.FLAME_STRING.get().getDescriptionId())).withStyle(TextFormatting.RED);
-            default:
-                return (new TranslationTextComponent(Items.STRING.getDescriptionId())).withStyle(TextFormatting.GRAY);
-        }
     }
 }

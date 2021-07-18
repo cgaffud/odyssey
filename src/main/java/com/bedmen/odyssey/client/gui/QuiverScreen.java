@@ -2,9 +2,7 @@ package com.bedmen.odyssey.client.gui;
 
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.container.FletchingTableContainer;
 import com.bedmen.odyssey.container.QuiverContainer;
-import com.bedmen.odyssey.container.slots.NewSmithingTableSlot;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;

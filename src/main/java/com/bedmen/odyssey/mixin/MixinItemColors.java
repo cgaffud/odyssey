@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.items.BigPotionItem;
 import com.bedmen.odyssey.util.ItemRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -60,10 +59,6 @@ public abstract class MixinItemColors {
         itemcolors.register((stack, color) -> {
             return color > 0 ? -1 : PotionUtils.getColor(stack);
         }, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
-
-        itemcolors.register((stack, color) -> {
-            return color > 0 ? -1 : BigPotionItem.getColor(stack);
-        }, ItemRegistry.BIG_POTION.get());
 
         for(SpawnEggItem spawneggitem : SpawnEggItem.eggs()) {
             itemcolors.register((stack, color) -> {

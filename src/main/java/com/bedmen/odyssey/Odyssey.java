@@ -91,14 +91,10 @@ public class Odyssey
         NewPotionItem.RegisterBaseProperties(ItemRegistry.LINGERING_POTION.get());
 
         NewBowItem.registerBaseProperties(ItemRegistry.BOW.get());
-        NewBowItem.registerStringTypeProperty(ItemRegistry.BOW.get());
         NewBowItem.registerBaseProperties(ItemRegistry.NETHERITE_BOW.get());
-        NewBowItem.registerStringTypeProperty(ItemRegistry.NETHERITE_BOW.get());
 
         NewCrossbowItem.registerBaseProperties(ItemRegistry.CROSSBOW.get());
-        NewCrossbowItem.registerStringTypeProperty(ItemRegistry.CROSSBOW.get());
         NewCrossbowItem.registerBaseProperties(ItemRegistry.NETHERITE_CROSSBOW.get());
-        NewCrossbowItem.registerStringTypeProperty(ItemRegistry.NETHERITE_CROSSBOW.get());
 
         NewTridentItem.registerBaseProperties(ItemRegistry.TRIDENT.get());
         NewTridentItem.registerBaseProperties(ItemRegistry.SERPENT_TRIDENT.get());
@@ -123,10 +119,8 @@ public class Odyssey
         ScreenManager.register(ContainerRegistry.BEACON.get(), NewBeaconScreen::new);
         ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), NewSmithingTableScreen::new);
         ScreenManager.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
-        ScreenManager.register(ContainerRegistry.INFUSER.get(), InfuserScreen::new);
         ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), NewEnchantmentScreen::new);
         ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
-        ScreenManager.register(ContainerRegistry.FLETCHING_TABLE.get(), FletchingTableScreen::new);
         ScreenManager.register(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);

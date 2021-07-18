@@ -28,11 +28,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BEACON = ITEMS_VANILLA.register("beacon", () -> new BlockItem(BlockRegistry.BEACON.get(), (new Item.Properties()).tab(ItemGroup.TAB_MISC).rarity(Rarity.RARE)));
     public static final RegistryObject<Item> SMITHING_TABLE = ITEMS_VANILLA.register("smithing_table", () -> new BlockItem(BlockRegistry.SMITHING_TABLE.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
     public static final RegistryObject<Item> ALLOY_FURNACE = ITEMS.register("alloy_furnace", () -> new BlockItem(BlockRegistry.ALLOY_FURNACE.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> CAULDRON = ITEMS_VANILLA.register("cauldron", () -> new BlockItem(BlockRegistry.CAULDRON.get(), (new Item.Properties()).tab(ItemGroup.TAB_BREWING)));
-    public static final RegistryObject<Item> INFUSER = ITEMS.register("infuser", () -> new BlockItem(BlockRegistry.INFUSER.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
     public static final RegistryObject<Item> ENCHANTING_TABLE = ITEMS_VANILLA.register("enchanting_table", () -> new BlockItem(BlockRegistry.ENCHANTING_TABLE.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
     public static final RegistryObject<Item> BOOKSHELF = ITEMS_VANILLA.register("bookshelf", () -> new BlockItem(BlockRegistry.BOOKSHELF.get(), (new Item.Properties()).tab(ItemGroup.TAB_BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> FLETCHING_TABLE = ITEMS_VANILLA.register("fletching_table", () -> new BlockItem(BlockRegistry.FLETCHING_TABLE.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
     public static final RegistryObject<Item> RECYCLE_FURNACE = ITEMS.register("recycle_furnace", () -> new BlockItem(BlockRegistry.RECYCLE_FURNACE.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
     public static final RegistryObject<Item> COPPER_ORE = ITEMS.register("copper_ore", () -> new BlockItem(BlockRegistry.COPPER_ORE.get(), (new Item.Properties()).tab(ItemGroup.TAB_BUILDING_BLOCKS)));
     public static final RegistryObject<Item> SILVER_ORE = ITEMS.register("silver_ore", () -> new BlockItem(BlockRegistry.SILVER_ORE.get(), (new Item.Properties()).tab(ItemGroup.TAB_BUILDING_BLOCKS)));
@@ -62,9 +59,6 @@ public class ItemRegistry {
     public static final RegistryObject<Item> POTION = ITEMS_VANILLA.register("potion", () -> new NewPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
     public static final RegistryObject<Item> SPLASH_POTION = ITEMS_VANILLA.register("splash_potion", () -> new NewSplashPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
     public static final RegistryObject<Item> LINGERING_POTION = ITEMS_VANILLA.register("lingering_potion", () -> new NewLingeringPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
-    public static final RegistryObject<Item> GLASS_SHARD = ITEMS.register("glass_shard", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_BREWING)));
-    public static final RegistryObject<Item> BIG_GLASS_BOTTLE = ITEMS.register("big_glass_bottle", () -> new BigGlassBottleItem((new Item.Properties()).tab(ItemGroup.TAB_BREWING)));
-    public static final RegistryObject<Item> BIG_POTION = ITEMS.register("big_potion", () -> new BigPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
     public static final RegistryObject<Item> DIAMOND_SHARD = ITEMS.register("diamond_shard", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
     public static final RegistryObject<Item> RAW_IRON = ITEMS.register("raw_iron", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
     public static final RegistryObject<Item> RAW_COPPER = ITEMS.register("raw_copper", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
@@ -76,13 +70,11 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SILVER_INGOT = ITEMS.register("silver_ingot", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_NUGGET = ITEMS.register("sterling_silver_nugget", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_INGOT = ITEMS.register("sterling_silver_ingot", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
-    public static final RegistryObject<Item> SILVER_STRING = ITEMS.register("silver_string", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
-    public static final RegistryObject<Item> FLAME_STRING = ITEMS.register("flame_string", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
     public static final RegistryObject<Item> CLOVER = ITEMS.register("clover", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
     public static final RegistryObject<Item> PERIDOT = ITEMS.register("peridot", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
     public static final RegistryObject<Item> SERPENT_SCALE = ITEMS.register("serpent_scale", () -> new Item((new Item.Properties()).fireResistant().tab(ItemGroup.TAB_MATERIALS)));
-    public static final RegistryObject<Item> RUBY = ITEMS.register("ruby", () -> new LensItem((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS).rarity(Rarity.UNCOMMON)));
-    public static final RegistryObject<Item> SAPPHIRE = ITEMS.register("sapphire", () -> new LensItem((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> RUBY = ITEMS.register("ruby", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> SAPPHIRE = ITEMS.register("sapphire", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> PEARL = ITEMS.register("pearl", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
     public static final RegistryObject<Item> NETHERITE_NUGGET = ITEMS.register("netherite_nugget", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
     public static final RegistryObject<Item> HALLOWED_GOLD_INGOT = ITEMS.register("hallowed_gold_ingot", () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));

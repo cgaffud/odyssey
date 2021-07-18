@@ -215,7 +215,6 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
             } else {
                 projectileentity = createArrow(worldIn, shooter, crossbow, projectile);
                 ((AbstractArrowEntity)projectileentity).setBaseDamage(((AbstractArrowEntity)projectileentity).getBaseDamage()+(((NewCrossbowItem)(crossbow.getItem()))).getBaseDamage());
-                if(BowUtil.flameString(crossbow)) projectileentity.setSecondsOnFire(100);
                 if (isCreativeMode || projectileAngle != 0.0F) {
                     ((AbstractArrowEntity)projectileentity).pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                 }
@@ -345,7 +344,6 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
     public static int getChargeTime(ItemStack stack) {
         int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
         i = 25 - (13*i - i*i)/2;
-        i = (int)(i/BowUtil.getStringSpeedModifier(stack));
         return i;
     }
 
@@ -394,14 +392,9 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
                     for(int i = 0; i < list1.size(); ++i) {
                         list1.set(i, (new StringTextComponent("  ")).append(list1.get(i)).withStyle(TextFormatting.GRAY));
                     }
-
                     tooltip.addAll(list1);
                 }
             }
-        }
-        String s = BowUtil.getStringType(stack);
-        if(!s.equals("normal")){
-            tooltip.add(BowUtil.getTranslationComponent(s));
         }
     }
 
@@ -435,24 +428,5 @@ public class NewCrossbowItem extends CrossbowItem implements IVanishable {
             return entity != null && NewCrossbowItem.isCharged(itemStack) && NewCrossbowItem.hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.0F : 0.0F;
         });
     }
-
-    public static void registerStringTypeProperty(Item item){
-        ItemModelsProperties.register(item, new ResourceLocation("stringtype"),  (itemStack, world, entity) -> {
-            CompoundNBT compoundnbt = itemStack.getTag();
-            if(compoundnbt != null && compoundnbt.contains("StringType")){
-                String s = compoundnbt.get("StringType").getAsString();
-                switch(s){
-                    case "flame":
-                        return 2;
-                    case "silver":
-                        return 1;
-                    default:
-                        return 0;
-                }
-            }
-            return 0;
-        });
-    }
-
 
 }

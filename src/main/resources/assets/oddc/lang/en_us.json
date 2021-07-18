@@ -1,9 +1,5 @@
 {
-  "item.oddc.big_glass_bottle": "Big Glass Bottle",
-  "item.oddc.big_potion.effect.empty": "Big Potion",
-  "item.oddc.glass_shard": "Glass Shard",
   "item.oddc.diamond_shard": "Diamond Shard",
-  "item.oddc.flame_string": "Flame String",
   "item.oddc.leather_quiver": "Leather Quiver",
   "item.oddc.clover": "Clover",
   "item.oddc.peridot": "Peridot",
@@ -47,7 +43,6 @@
   "item.oddc.sterling_silver_chestplate": "Sterling Silver Chestplate",
   "item.oddc.sterling_silver_helmet": "Sterling Silver Helmet",
   "item.oddc.sterling_silver_horse_armor": "Sterling Silver Horse Armor",
-  "item.oddc.silver_string": "Silver String",
 
   //Nether
   "item.oddc.netherite_nugget": "Netherite Nugget",
@@ -82,9 +77,7 @@
   "container.minecraft.beacon": "Beacon",
   "container.oddc.alloy_furnace": "Alloy Furnace",
   "container.oddc.recycle_furnace": "Recycling Furnace",
-  "container.oddc.infuser": "Infuser",
   "container.oddc.bookshelf": "Bookshelf",
-  "container.oddc.restring": "Restring",
 
   //Enchantments
   "enchantment.oddc.accuracy": "Accuracy",
@@ -94,7 +87,6 @@
   //Blocks
   "block.oddc.alloy_furnace": "Alloy Furnace",
   "block.oddc.recycle_furnace": "Recycling Furnace",
-  "block.oddc.infuser": "Infuser",
   "block.oddc.copper_ore": "Copper Ore",
   "block.oddc.silver_ore": "Silver Ore",
   "block.oddc.ruby_ore": "Ruby Ore",
@@ -110,8 +102,6 @@
   "block.oddc.fog6": "Fog 6",
   "block.oddc.fog7": "Fog 7",
   "block.oddc.fog8": "Fog 8",
-
-  "item.oddc.lens": "Lens",
 
   //Entities
   "entity.oddc.werewolf": "Werewolf",

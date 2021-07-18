@@ -1,0 +1,6 @@
+{
+    "parent": "item/crossbow",
+    "textures": {
+        "layer0": "oddc:item/netherite_crossbow/pulling_2"
+    }
+}

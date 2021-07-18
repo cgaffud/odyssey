@@ -1,8 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "oddc:item/crossbow/netherite_crossbow_standby",
-    "layer1": "oddc:item/crossbow/normal"
+    "layer0": "oddc:item/netherite_crossbow/standby"
   },
   "display": {
     "thirdperson_righthand": {
@@ -31,123 +30,35 @@
       "predicate": {
         "pulling": 1
       },
-      "model": "oddc:item/netherite_crossbow_normal_pulling_0"
+      "model": "oddc:item/netherite_crossbow_pulling_0"
     },
     {
       "predicate": {
         "pulling": 1,
         "pull": 0.58
       },
-      "model": "oddc:item/netherite_crossbow_normal_pulling_1"
+      "model": "oddc:item/netherite_crossbow_pulling_1"
     },
     {
       "predicate": {
         "pulling": 1,
         "pull": 1.0
       },
-      "model": "oddc:item/netherite_crossbow_normal_pulling_2"
+      "model": "oddc:item/netherite_crossbow_pulling_2"
     },
     {
       "predicate": {
         "charged": 1
       },
 
-      "model": "oddc:item/netherite_crossbow_normal_arrow"
+      "model": "oddc:item/netherite_crossbow_arrow"
     },
     {
       "predicate": {
         "charged": 1,
         "firework": 1
       },
-      "model": "oddc:item/netherite_crossbow_normal_firework"
-    },
-    {
-      "predicate": {
-        "stringtype": 1
-      },
-      "model": "oddc:item/netherite_crossbow_silver"
-    },
-    {
-      "predicate": {
-        "stringtype": 1,
-        "pulling": 1
-      },
-      "model": "oddc:item/netherite_crossbow_silver_pulling_0"
-    },
-    {
-      "predicate": {
-        "stringtype": 1,
-        "pulling": 1,
-        "pull": 0.58
-      },
-      "model": "oddc:item/netherite_crossbow_silver_pulling_1"
-    },
-    {
-      "predicate": {
-        "stringtype": 1,
-        "pulling": 1,
-        "pull": 1.0
-      },
-      "model": "oddc:item/netherite_crossbow_silver_pulling_2"
-    },
-    {
-      "predicate": {
-        "stringtype": 1,
-        "charged": 1
-      },
-      "model": "oddc:item/netherite_crossbow_silver_arrow"
-    },
-    {
-      "predicate": {
-        "stringtype": 1,
-        "charged": 1,
-        "firework": 1
-      },
-      "model": "oddc:item/netherite_crossbow_silver_firework"
-    },
-    {
-      "predicate": {
-        "stringtype": 2
-      },
-      "model": "oddc:item/netherite_crossbow_flame"
-    },
-    {
-      "predicate": {
-        "stringtype": 2,
-        "pulling": 1
-      },
-      "model": "oddc:item/netherite_crossbow_flame_pulling_0"
-    },
-    {
-      "predicate": {
-        "stringtype": 2,
-        "pulling": 1,
-        "pull": 0.58
-      },
-      "model": "oddc:item/netherite_crossbow_flame_pulling_1"
-    },
-    {
-      "predicate": {
-        "stringtype": 2,
-        "pulling": 1,
-        "pull": 1.0
-      },
-      "model": "oddc:item/netherite_crossbow_flame_pulling_2"
-    },
-    {
-      "predicate": {
-        "stringtype": 2,
-        "charged": 1
-      },
-      "model": "oddc:item/netherite_crossbow_flame_arrow"
-    },
-    {
-      "predicate": {
-        "stringtype": 2,
-        "charged": 1,
-        "firework": 1
-      },
-      "model": "oddc:item/netherite_crossbow_flame_firework"
+      "model": "oddc:item/netherite_crossbow_firework"
     }
   ]
 }
