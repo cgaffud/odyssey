@@ -10,6 +10,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeMaker;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -26,20 +27,22 @@ public class BiomeRegistry {
         BIOMES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
+    public static void keyRegistry() {
+        register(AUTUMN_FOREST.get(), Type.FOREST, Type.HILLS, Type.COLD);
+    }
+
 
     public static final RegistryObject<Biome> AUTUMN_FOREST = BIOMES.register("autumn_forest", () -> BiomeMaker.theVoidBiome());
 
     //public static final Biome AUTUMN_FOREST = ModBiomeMaker.autumnForestBiome(0.1F, 0.2F);
 
-//    private static void register(Biome biome, String name, BiomeDictionary.Type... types){
-//        biome.setRegistryName(Odyssey.MOD_ID, name);
-//        ForgeRegistries.BIOMES.register(biome);
-//
-//        RegistryKey<Biome> key = RegistryKey.create(Registry.BIOME_REGISTRY, ForgeRegistries.BIOMES.getKey(biome));
-//
-//        BiomeDictionary.addTypes(key, types);
-//        BiomeManager.addAdditionalOverworldBiomes(key);
-//    }
+    private static void register(Biome biome, BiomeDictionary.Type... types){
+
+       RegistryKey<Biome> key = RegistryKey.create(Registry.BIOME_REGISTRY, ForgeRegistries.BIOMES.getKey(biome));
+
+       BiomeDictionary.addTypes(key, types);
+       BiomeManager.addAdditionalOverworldBiomes(key);
+    }
 //
 //    public static ResourceLocation location(String name) {
 //        return new ResourceLocation(Odyssey.MOD_ID, name);

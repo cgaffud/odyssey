@@ -79,7 +79,7 @@ public class Odyssey
 
     private void setup(final FMLCommonSetupEvent event) {
         ModOreGen.registerOres();
-        //BiomeRegistry.register();
+        BiomeRegistry.keyRegistry();
 
         ModBiomeEntitySpawn.registerSpawners();
         ModStructureEntitySpawn.registerSpawners();
