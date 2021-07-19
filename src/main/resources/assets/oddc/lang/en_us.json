@@ -83,6 +83,8 @@
   "enchantment.oddc.accuracy": "Accuracy",
   "enchantment.oddc.blocking": "Blocking",
   "enchantment.oddc.recovery": "Recovery",
+  "enchantment.oddc.unenchantable": "Unenchantable",
+  "enchantment.oddc.bleeding": "Bleeding",
 
   //Blocks
   "block.oddc.alloy_furnace": "Alloy Furnace",

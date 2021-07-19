@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.util.EffectRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
 import com.mojang.authlib.GameProfile;
@@ -26,6 +27,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
@@ -84,6 +86,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     private CooldownTracker cooldowns;
     @Shadow
     protected void updatePlayerPose() {}
+
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
@@ -164,7 +167,20 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     }
 
-    //Sets player on fire unless they have fire protection or an arctic chestplate
+    public boolean checkStackForEnch(ItemStack stack, String enchantment) {
+        if (!stack.isEmpty()) {
+            ListNBT listnbt = stack.getEnchantmentTags();
+            for (int i = 0; i < listnbt.size(); i++) {
+                String s = listnbt.getCompound(i).getString("id");
+                if (s.equals(enchantment)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
     public void tick() {
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPreTick(toPlayerEntity(this));
         this.noPhysics = this.isSpectator();
@@ -172,6 +188,18 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             this.onGround = false;
         }
 
+        if((this.tickCount % 50 == 0) && !(this.abilities.instabuild || this.isSpectator())) {
+            boolean bleedFlag = false;
+            bleedFlag |= checkStackForEnch(this.getMainHandItem(), "oddc:bleeding") ||
+                    checkStackForEnch(this.getOffhandItem(), "oddc:bleeding");
+            for(ItemStack stack : this.getArmorSlots())
+                bleedFlag |= checkStackForEnch(stack, "oddc:bleeding");
+
+            if (bleedFlag)
+                this.addEffect(new EffectInstance(EffectRegistry.BLEEDING.get(),1, 0, false, false, false));
+        }
+
+        //Sets player on fire unless they have fire protection or an arctic chestplate
         if(!(this.abilities.instabuild || this.isSpectator()) && this.level.dimensionType().ultraWarm()){
             boolean fireFlag = true;
             for(ItemStack stack : this.getArmorSlots()){
@@ -179,18 +207,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
                     fireFlag = false;
                     break;
                 }
-                if (!stack.isEmpty()) {
-                    ListNBT listnbt = stack.getEnchantmentTags();
-                    for(int i = 0; i < listnbt.size(); ++i) {
-                        String s = listnbt.getCompound(i).getString("id");
-                        System.out.println(s);
-                        if(s.equals("minecraft:fire_protection")){
-                            fireFlag = false;
-                            break;
-                        }
-                    }
-
-                }
+               fireFlag &= !checkStackForEnch(stack,"minecraft:fire_protection");
             }
             if(fireFlag)
                 this.setSecondsOnFire(1);

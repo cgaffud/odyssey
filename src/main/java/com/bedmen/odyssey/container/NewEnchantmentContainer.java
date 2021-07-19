@@ -3,6 +3,7 @@ package com.bedmen.odyssey.container;
 import com.bedmen.odyssey.client.gui.NewEnchantmentScreen;
 import com.bedmen.odyssey.tileentity.NewEnchantingTableTileEntity;
 import com.bedmen.odyssey.util.ContainerRegistry;
+import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -135,6 +136,8 @@ public class NewEnchantmentContainer extends Container {
         ItemStack itemStack = this.inv.getItem(0);
         Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
 
+        // Let's try this
+
         for(int i = 0; i < this.tableData1.getCount(); i++){
             int i1 = this.tableData1.get(i);
             if(!EnchantmentUtil.canBeApplied(itemStack,i1)) continue;
@@ -152,6 +155,7 @@ public class NewEnchantmentContainer extends Container {
                     }
                 }
             }
+            if (map.containsKey(EnchantmentRegistry.UNENCHANTABLE.get())) b = false;
             if(b)
                 list.add(i3);
         }

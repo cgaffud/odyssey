@@ -68,7 +68,9 @@ public class EnchantmentUtil {
             Enchantments.VANISHING_CURSE,
             EnchantmentRegistry.ACCURACY.get(),
             EnchantmentRegistry.BLOCKING.get(),
-            EnchantmentRegistry.RECOVERY.get()};
+            EnchantmentRegistry.RECOVERY.get(),
+            EnchantmentRegistry.UNENCHANTABLE.get(),
+            EnchantmentRegistry.BLEEDING.get()};
     private static Map<Enchantment, Integer> integerMap = new HashMap<>();
 
     public static void init(){
@@ -113,6 +115,8 @@ public class EnchantmentUtil {
         integerMap.put(EnchantmentRegistry.ACCURACY.get(), 38);
         integerMap.put(EnchantmentRegistry.BLOCKING.get(), 39);
         integerMap.put(EnchantmentRegistry.RECOVERY.get(), 40);
+        integerMap.put(EnchantmentRegistry.UNENCHANTABLE.get(), 41);
+        integerMap.put(EnchantmentRegistry.BLEEDING.get(), 42);
     }
 
     public static Enchantment intToEnchantment(int i){
