@@ -23,7 +23,7 @@ public class BleedingEnchantment extends Enchantment {
      * Returns the maximum level that the enchantment can have.
      */
     public int getMaxLevel() {
-        return 1;
+        return 3;
     }
 
     public boolean isTreasureOnly() {

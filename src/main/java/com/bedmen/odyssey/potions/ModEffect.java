@@ -18,7 +18,7 @@ public class ModEffect extends Effect{
     @Override
     public void applyEffectTick(LivingEntity livingEntity, int amplifier) {
         if (this == EffectRegistry.BLEEDING.get()){
-            livingEntity.hurt(DamageSource.MAGIC, 0.5F);
+            livingEntity.hurt(DamageSource.MAGIC, amplifier);
         }
     }
 

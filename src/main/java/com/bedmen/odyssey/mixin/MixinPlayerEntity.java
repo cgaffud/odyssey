@@ -2,11 +2,13 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.util.EffectRegistry;
+import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -43,6 +45,10 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 @Mixin(PlayerEntity.class)
@@ -167,6 +173,9 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     }
 
+
+    /** I'm not sure if this is needed in a method anymore but it helps.
+     * It also might be better to move this method to ItemStack or something */
     public boolean checkStackForEnch(ItemStack stack, String enchantment) {
         if (!stack.isEmpty()) {
             ListNBT listnbt = stack.getEnchantmentTags();
@@ -180,6 +189,18 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         return false;
     }
 
+    public int getLevelForEnch(ItemStack stack, Enchantment enchantment) {
+        if (!stack.isEmpty()) {
+            Map<Enchantment, Integer> enchToLevel = EnchantmentHelper.deserializeEnchantments(stack.getEnchantmentTags());
+            if (enchToLevel.containsKey(enchantment)) {
+                System.out.println("found");
+                return enchToLevel.get(enchantment);
+            }
+
+        }
+        return 0;
+    }
+
 
     public void tick() {
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPreTick(toPlayerEntity(this));
@@ -188,15 +209,21 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             this.onGround = false;
         }
 
-        if((this.tickCount % 50 == 0) && !(this.abilities.instabuild || this.isSpectator())) {
-            boolean bleedFlag = false;
-            bleedFlag |= checkStackForEnch(this.getMainHandItem(), "oddc:bleeding") ||
-                    checkStackForEnch(this.getOffhandItem(), "oddc:bleeding");
-            for(ItemStack stack : this.getArmorSlots())
-                bleedFlag |= checkStackForEnch(stack, "oddc:bleeding");
+        if((this.tickCount % 25 == 0) && !(this.abilities.instabuild || this.isSpectator())) {
+            List<Integer> bleedCheck = new ArrayList<Integer>();
+            Enchantment bleeding = EnchantmentRegistry.BLEEDING.get();
 
-            if (bleedFlag)
-                this.addEffect(new EffectInstance(EffectRegistry.BLEEDING.get(),1, 0, false, false, false));
+            bleedCheck.add(getLevelForEnch(this.getMainHandItem(), bleeding));
+            bleedCheck.add(getLevelForEnch(this.getOffhandItem(), bleeding));
+
+            for(ItemStack stack : this.getArmorSlots())
+                bleedCheck.add(getLevelForEnch(stack, bleeding));
+
+            int bleedLevel = Collections.max(bleedCheck)-1;
+            int bleedAmnt = Collections.frequency(bleedCheck,0);
+            System.out.println(bleedCheck.toString());
+            if (!(bleedLevel == -1) && (this.tickCount % (100 >> bleedLevel) == 0))
+                this.addEffect(new EffectInstance(EffectRegistry.BLEEDING.get(),1, 6-bleedAmnt, false, false, false));
         }
 
         //Sets player on fire unless they have fire protection or an arctic chestplate
