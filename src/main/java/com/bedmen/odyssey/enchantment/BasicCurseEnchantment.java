@@ -1,15 +1,14 @@
 package com.bedmen.odyssey.enchantment;
 
-import com.bedmen.odyssey.items.NewShieldItem;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ShieldItem;
 
-public class UnenchantableEnchantment extends Enchantment {
-    public UnenchantableEnchantment(Rarity rarity, EquipmentSlotType... slots) {
+public class BasicCurseEnchantment extends Enchantment {
+    private int maxLevel;
+    public BasicCurseEnchantment(Rarity rarity, int maxLevel, EquipmentSlotType... slots) {
         super(rarity, EnchantmentType.BREAKABLE, slots);
+        this.maxLevel = maxLevel;
     }
     /**
      * Returns the minimal value of enchantability needed on the enchantment level passed.
@@ -26,7 +25,7 @@ public class UnenchantableEnchantment extends Enchantment {
      * Returns the maximum level that the enchantment can have.
      */
     public int getMaxLevel() {
-        return 1;
+        return this.maxLevel;
     }
 
     public boolean isTreasureOnly() {
@@ -37,3 +36,4 @@ public class UnenchantableEnchantment extends Enchantment {
         return true;
     }
 }
+

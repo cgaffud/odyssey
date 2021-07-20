@@ -7,6 +7,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -70,7 +71,8 @@ public class EnchantmentUtil {
             EnchantmentRegistry.BLOCKING.get(),
             EnchantmentRegistry.RECOVERY.get(),
             EnchantmentRegistry.UNENCHANTABLE.get(),
-            EnchantmentRegistry.BLEEDING.get()};
+            EnchantmentRegistry.BLEEDING.get(),
+            EnchantmentRegistry.DROWNING.get()};
     private static Map<Enchantment, Integer> integerMap = new HashMap<>();
 
     public static void init(){
@@ -117,6 +119,7 @@ public class EnchantmentUtil {
         integerMap.put(EnchantmentRegistry.RECOVERY.get(), 40);
         integerMap.put(EnchantmentRegistry.UNENCHANTABLE.get(), 41);
         integerMap.put(EnchantmentRegistry.BLEEDING.get(), 42);
+        integerMap.put(EnchantmentRegistry.DROWNING.get(), 43);
     }
 
     public static Enchantment intToEnchantment(int i){
@@ -203,6 +206,31 @@ public class EnchantmentUtil {
 
     public static void writeEnchantment(Enchantment e, PacketBuffer buffer) {
         buffer.writeVarInt(enchantmentToInt(e));
+    }
+
+    public static boolean checkStackForEnch(ItemStack stack, String enchantment) {
+        if (!stack.isEmpty()) {
+            ListNBT listnbt = stack.getEnchantmentTags();
+            for (int i = 0; i < listnbt.size(); i++) {
+                String s = listnbt.getCompound(i).getString("id");
+                if (s.equals(enchantment)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static int getLvlForEnch(ItemStack stack, Enchantment enchantment) {
+        if (!stack.isEmpty()) {
+            Map<Enchantment, Integer> enchToLevel = EnchantmentHelper.deserializeEnchantments(stack.getEnchantmentTags());
+            if (enchToLevel.containsKey(enchantment)) {
+                System.out.println("found");
+                return enchToLevel.get(enchantment);
+            }
+
+        }
+        return 0;
     }
 
     public static float getAccuracy(LivingEntity entity){

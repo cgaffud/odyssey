@@ -141,6 +141,10 @@ public abstract class MixinLivingEntity extends Entity{
     protected float getVoicePitch() {return 0.0f;}
     @Shadow
     public void die(DamageSource p_70645_1_) {}
+    @Shadow
+    private final NonNullList<ItemStack> lastHandItemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
+    @Shadow
+    private final NonNullList<ItemStack> lastArmorItemStacks = NonNullList.withSize(4, ItemStack.EMPTY);
 
     public boolean hurt(DamageSource source, float amount) {
         if (!net.minecraftforge.common.ForgeHooks.onLivingAttack((LivingEntity)(Entity)this, source, amount)) return false;
@@ -337,7 +341,8 @@ public abstract class MixinLivingEntity extends Entity{
         boolean flag1 = flag && ((PlayerEntity) (Object) this).abilities.invulnerable;
         if (this.isAlive()) {
             //Checks if player is in lava too
-            if ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) {
+            boolean drowningCurse = this.hasDrowningCurse();
+            if (drowningCurse || ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN))) {
                 if (!this.canBreatheUnderwater() && !EffectUtils.hasWaterBreathing((LivingEntity) (Object) this) && !flag1) {
                     this.setAirSupply(this.decreaseAirSupply(this.getAirSupply()));
                     if (this.getAirSupply() == -20) {
@@ -412,6 +417,17 @@ public abstract class MixinLivingEntity extends Entity{
         this.yRotO = this.yRot;
         this.xRotO = this.xRot;
         this.level.getProfiler().pop();
+    }
+
+    private boolean hasDrowningCurse() {
+        boolean drowning = false;
+        for(ItemStack stack : lastHandItemStacks)
+            drowning |= EnchantmentUtil.checkStackForEnch(stack, "oddc:drowning");
+
+        for (ItemStack stack : lastArmorItemStacks)
+            drowning |= EnchantmentUtil.checkStackForEnch(stack, "oddc:drowning");
+
+        return drowning;
     }
 
 }

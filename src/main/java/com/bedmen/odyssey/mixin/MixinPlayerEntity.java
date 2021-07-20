@@ -5,21 +5,13 @@ import com.bedmen.odyssey.util.EffectRegistry;
 import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
-import com.mojang.authlib.GameProfile;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -28,19 +20,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ITag;
 import net.minecraft.util.CooldownTracker;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -176,30 +162,9 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     /** I'm not sure if this is needed in a method anymore but it helps.
      * It also might be better to move this method to ItemStack or something */
-    public boolean checkStackForEnch(ItemStack stack, String enchantment) {
-        if (!stack.isEmpty()) {
-            ListNBT listnbt = stack.getEnchantmentTags();
-            for (int i = 0; i < listnbt.size(); i++) {
-                String s = listnbt.getCompound(i).getString("id");
-                if (s.equals(enchantment)){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
-    public int getLevelForEnch(ItemStack stack, Enchantment enchantment) {
-        if (!stack.isEmpty()) {
-            Map<Enchantment, Integer> enchToLevel = EnchantmentHelper.deserializeEnchantments(stack.getEnchantmentTags());
-            if (enchToLevel.containsKey(enchantment)) {
-                System.out.println("found");
-                return enchToLevel.get(enchantment);
-            }
 
-        }
-        return 0;
-    }
+
 
 
     public void tick() {
@@ -213,11 +178,11 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             List<Integer> bleedCheck = new ArrayList<Integer>();
             Enchantment bleeding = EnchantmentRegistry.BLEEDING.get();
 
-            bleedCheck.add(getLevelForEnch(this.getMainHandItem(), bleeding));
-            bleedCheck.add(getLevelForEnch(this.getOffhandItem(), bleeding));
+            bleedCheck.add(EnchantmentUtil.getLvlForEnch(this.getMainHandItem(), bleeding));
+            bleedCheck.add(EnchantmentUtil.getLvlForEnch(this.getOffhandItem(), bleeding));
 
             for(ItemStack stack : this.getArmorSlots())
-                bleedCheck.add(getLevelForEnch(stack, bleeding));
+                bleedCheck.add(EnchantmentUtil.getLvlForEnch(stack, bleeding));
 
             int bleedLevel = Collections.max(bleedCheck)-1;
             int bleedAmnt = Collections.frequency(bleedCheck,0);
@@ -234,7 +199,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
                     fireFlag = false;
                     break;
                 }
-               fireFlag &= !checkStackForEnch(stack,"minecraft:fire_protection");
+               fireFlag &= !EnchantmentUtil.checkStackForEnch(stack,"minecraft:fire_protection");
             }
             if(fireFlag)
                 this.setSecondsOnFire(1);
@@ -306,6 +271,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         this.updatePlayerPose();
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(toPlayerEntity(this));
     }
+
 
     private PlayerEntity toPlayerEntity(MixinPlayerEntity mixinPlayerEntity){
         return (PlayerEntity)(Object)mixinPlayerEntity;

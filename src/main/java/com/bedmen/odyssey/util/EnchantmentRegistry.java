@@ -8,7 +8,6 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraft.enchantment.Enchantments;
 
 public class EnchantmentRegistry {
 
@@ -21,6 +20,7 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> ACCURACY = ENCHANTMENTS.register("accuracy", () -> new AccuracyEnchantment(Enchantment.Rarity.COMMON, EquipmentSlotType.CHEST));
     public static final RegistryObject<Enchantment> BLOCKING = ENCHANTMENTS.register("blocking", () -> new BlockingEnchantment(Enchantment.Rarity.COMMON, EquipmentSlotType.MAINHAND));
     public static final RegistryObject<Enchantment> RECOVERY = ENCHANTMENTS.register("recovery", () -> new RecoveryEnchantment(Enchantment.Rarity.COMMON, EquipmentSlotType.MAINHAND));
-    public static final RegistryObject<Enchantment> UNENCHANTABLE = ENCHANTMENTS.register("unenchantable", () -> new UnenchantableEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.values()));
-    public static final RegistryObject<Enchantment> BLEEDING = ENCHANTMENTS.register("bleeding", () -> new BleedingEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.values()));
+    public static final RegistryObject<Enchantment> UNENCHANTABLE = ENCHANTMENTS.register("unenchantable", () -> new BasicCurseEnchantment(Enchantment.Rarity.RARE, 1, EquipmentSlotType.values()));
+    public static final RegistryObject<Enchantment> BLEEDING = ENCHANTMENTS.register("bleeding", () -> new BasicCurseEnchantment(Enchantment.Rarity.RARE, 3, EquipmentSlotType.values()));
+    public static final RegistryObject<Enchantment> DROWNING = ENCHANTMENTS.register("drowning", () -> new BasicCurseEnchantment(Enchantment.Rarity.RARE, 1, EquipmentSlotType.values()));
 }
