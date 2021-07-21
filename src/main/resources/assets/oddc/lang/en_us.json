@@ -20,6 +20,7 @@
   "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.werewolf_claw": "Werewolf Claw",
   "item.oddc.arctic_horn": "Arctic Horn",
+  "item.oddc.bewitched_quill": "Bewitched Quill",
 
   //Emerald
   "item.oddc.emerald_bit": "Emerald Bit",
@@ -78,6 +79,7 @@
   "container.oddc.alloy_furnace": "Alloy Furnace",
   "container.oddc.recycle_furnace": "Recycling Furnace",
   "container.oddc.bookshelf": "Bookshelf",
+  "container.oddc.research_table": "Research",
 
   //Enchantments
   "enchantment.oddc.accuracy": "Accuracy",
@@ -87,6 +89,7 @@
   //Blocks
   "block.oddc.alloy_furnace": "Alloy Furnace",
   "block.oddc.recycle_furnace": "Recycling Furnace",
+  "block.oddc.research_table": "Research Table",
   "block.oddc.copper_ore": "Copper Ore",
   "block.oddc.silver_ore": "Silver Ore",
   "block.oddc.ruby_ore": "Ruby Ore",
@@ -105,6 +108,7 @@
 
   //Entities
   "entity.oddc.werewolf": "Werewolf",
+  "entity.oddc.arctihorn": "Arctihorn",
 
 
   //Potions

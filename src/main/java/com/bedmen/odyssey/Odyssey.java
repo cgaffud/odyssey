@@ -22,7 +22,6 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -122,6 +121,7 @@ public class Odyssey
         ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), NewEnchantmentScreen::new);
         ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
         ScreenManager.register(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);
+        ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER7.get(), QuiverScreen::new);

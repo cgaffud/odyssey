@@ -1,0 +1,9 @@
+{
+  "type": "oddc:research",
+  "numIngredients": 1,
+  "ingredient0": {
+    "item": "minecraft:turtle_helmet"
+  },
+  "enchantment": "minecraft:respiration",
+  "level": 1
+}
