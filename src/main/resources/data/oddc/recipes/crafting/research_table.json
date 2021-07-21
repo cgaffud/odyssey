@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "E B",
+    "LLL",
+    "S S"
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:glass_bottle"
+    },
+    "B": {
+      "item": "oddc:bewitched_quill"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "L": {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "result": {
+    "item": "oddc:research_table"
+  }
+}

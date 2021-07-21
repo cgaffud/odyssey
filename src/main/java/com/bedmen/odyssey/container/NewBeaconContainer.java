@@ -259,8 +259,8 @@ public class NewBeaconContainer extends Container {
             if(stack != null && stack.getItem().equals(Items.POTION)){
                 EffectInstance e = effectListToEffect(PotionUtils.getMobEffects(this.getItem()));
                 if(e.getEffect().equals(Effects.DAMAGE_RESISTANCE)) return e.getAmplifier()-2;
-                if(e.getEffect().equals(Effects.MOVEMENT_SLOWDOWN) && e.getAmplifier() == 3) return 1;
-                if(e.getEffect().equals(Effects.LEVITATION) && e.getAmplifier() == 3) return 1;
+                if(e.getEffect().equals(Effects.MOVEMENT_SLOWDOWN) && e.getAmplifier() > 1) return 1;
+                if(e.getEffect().equals(Effects.LEVITATION) && e.getAmplifier() > 1) return 1;
                 return e.getAmplifier();
             }
             return -1;

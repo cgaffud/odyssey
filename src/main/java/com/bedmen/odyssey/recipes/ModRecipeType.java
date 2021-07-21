@@ -10,6 +10,7 @@ public interface ModRecipeType<T extends IRecipe<?>> {
     IRecipeType<AlloyRecipe> ALLOYING = register("alloying");
     IRecipeType<NewSmithingRecipe> NEW_SMITHING = register("new_smithing");
     IRecipeType<RecycleRecipe> RECYCLING = register("recycling");
+    IRecipeType<ResearchRecipe> RESEARCH = register("research");
 
     static <T extends IRecipe<?>> IRecipeType<T> register(final String key) {
         return IRecipeType.register(key);
