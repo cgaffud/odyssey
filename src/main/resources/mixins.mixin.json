@@ -24,7 +24,8 @@
     "MixinLivingEntity",
     "MixinFogRenderer",
     "MixinEnchantmentHelper",
-    "MixinPotionUtils"
+    "MixinPotionUtils",
+    "MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

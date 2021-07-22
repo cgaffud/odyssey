@@ -141,6 +141,7 @@ public class Odyssey
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG6.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG7.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FOG8.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.RESEARCH_TABLE.get(), RenderType.cutout());
     }
 
     @SubscribeEvent

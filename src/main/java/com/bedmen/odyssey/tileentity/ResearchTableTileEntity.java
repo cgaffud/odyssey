@@ -121,8 +121,7 @@ public class ResearchTableTileEntity extends LockableTileEntity implements ITick
             ItemStack itemstack = recipe.getResultItem();
             BlockPos blockpos = this.getBlockPos();
             this.items.set(9, itemstack);
-            assert this.level != null;
-            this.level.playLocalSound(blockpos.getX(), blockpos.getY(), blockpos.getZ(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+            this.level.levelEvent(10000, blockpos, 0);
         }
     }
 
