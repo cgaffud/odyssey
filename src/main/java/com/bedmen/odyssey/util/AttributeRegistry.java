@@ -2,11 +2,8 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
 
-import com.bedmen.odyssey.potions.ModEffect;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -22,6 +19,6 @@ public class AttributeRegistry {
         ATTRIBUTES_VANILLA.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    //public static final RegistryObject<Attribute> ARMOR = ATTRIBUTES_VANILLA.register("generic.armor", () -> (new RangedAttribute("attribute.name.generic.armor", 0.0D, 0.0D, 120.0D)).setShouldWatch(true));
+    //public static final RegistryObject<Attribute> FALL_PROTECTION = ATTRIBUTES.register("generic.fall_protection", () -> (new RangedAttribute("attribute.name.generic.fall_protection", 0.0D, 0.0D, 1024.0D)).setSyncable(true));
 
 }

@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "chestplate",
+  "base": {
+    "item": "oddc:chicken_chestplate"
+  },
+  "addition": {
+    "item": "minecraft:phantom_membrane"
+  },
+  "result": {
+    "item": "oddc:zephyr_chestplate"
+  }
+}

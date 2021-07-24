@@ -1,19 +1,29 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.armor.ModArmorMaterial;
 import com.bedmen.odyssey.items.HammerItem;
+import com.bedmen.odyssey.items.EquipmentArmorItem;
 import com.bedmen.odyssey.util.ItemRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(EnchantmentHelper.class)
 public abstract class MixinEnchantmentHelper {
@@ -47,19 +57,17 @@ public abstract class MixinEnchantmentHelper {
             mutableint.add(p_212576_2_.getDamageProtection(p_212576_3_, source));
         }, stacks);
         for(ItemStack itemStack : stacks){
-            if(itemStack.getItem() == ItemRegistry.STURDY_LEGGINGS.get()){
-                if(source.isExplosion()){
-                    mutableint.add(20);
+            Item item = itemStack.getItem();
+            if(item instanceof EquipmentArmorItem){
+                EquipmentArmorItem equipmentArmorItem = (EquipmentArmorItem)item;
+                if(source == DamageSource.FALL){
+                    mutableint.add(equipmentArmorItem.getInnateEnchantmentLevel(Enchantments.FALL_PROTECTION)*5);
                 }
-            }
-            else if(itemStack.getItem() == ItemRegistry.ZEPHYR_BOOTS.get()){
-                if(source.msgId.equals("fall")){
-                    mutableint.add(20);
-                }
-            }
-            else if(itemStack.getItem() == ItemRegistry.ARCTIC_CHESTPLATE.get()){
                 if(source.isFire()){
-                    mutableint.add(20);
+                    mutableint.add(equipmentArmorItem.getInnateEnchantmentLevel(Enchantments.FIRE_PROTECTION)*5);
+                }
+                if(source.isExplosion()){
+                    mutableint.add(equipmentArmorItem.getInnateEnchantmentLevel(Enchantments.BLAST_PROTECTION)*5);
                 }
             }
         }
@@ -85,5 +93,47 @@ public abstract class MixinEnchantmentHelper {
     @FunctionalInterface
     interface IEnchantmentVisitor {
         void accept(Enchantment p_accept_1_, int p_accept_2_);
+    }
+
+    @Overwrite
+    public static int getEnchantmentLevel(Enchantment enchantment, LivingEntity p_185284_1_) {
+        Iterable<ItemStack> iterable = enchantment.getSlotItems(p_185284_1_).values();
+        if (iterable == null) {
+            return 0;
+        } else {
+            int i = 0;
+            for(ItemStack itemstack : iterable) {
+                i += getItemEnchantmentLevel(enchantment, itemstack);
+            }
+            return i;
+        }
+    }
+
+    @Overwrite
+    public static int getItemEnchantmentLevel(Enchantment enchantment, ItemStack itemstack) {
+        if (itemstack.isEmpty()) {
+            return 0;
+        } else {
+            int j = 0;
+            ResourceLocation resourcelocation = Registry.ENCHANTMENT.getKey(enchantment);
+            ListNBT listnbt = itemstack.getEnchantmentTags();
+
+            for(int i = 0; i < listnbt.size(); ++i) {
+                CompoundNBT compoundnbt = listnbt.getCompound(i);
+                ResourceLocation resourcelocation1 = ResourceLocation.tryParse(compoundnbt.getString("id"));
+                if (resourcelocation1 != null && resourcelocation1.equals(resourcelocation)) {
+                    j = MathHelper.clamp(compoundnbt.getInt("lvl"), 0, 255);
+                    break;
+                }
+            }
+
+            Item item = itemstack.getItem();
+            if(item instanceof EquipmentArmorItem){
+                EquipmentArmorItem equipmentArmorItem = (EquipmentArmorItem)item;
+                j += equipmentArmorItem.getInnateEnchantmentLevel(enchantment);
+            }
+
+            return j;
+        }
     }
 }

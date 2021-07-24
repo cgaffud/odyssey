@@ -25,7 +25,8 @@
     "MixinFogRenderer",
     "MixinEnchantmentHelper",
     "MixinPotionUtils",
-    "MixinWorldRenderer"
+    "MixinWorldRenderer",
+    "MixinProtectionEnchantment"
   ],
   "injectors": {
     "defaultRequire": 1

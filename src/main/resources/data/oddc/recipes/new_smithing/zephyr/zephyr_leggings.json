@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "leggings",
+  "base": {
+    "item": "oddc:chicken_leggings"
+  },
+  "addition": {
+    "item": "minecraft:phantom_membrane"
+  },
+  "result": {
+    "item": "oddc:zephyr_leggings"
+  }
+}
