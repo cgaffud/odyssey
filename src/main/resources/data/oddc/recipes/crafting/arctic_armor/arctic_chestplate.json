@@ -2,14 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "X X",
-    "XHX",
+    "XAX",
     "XXX"
   ],
   "key": {
     "X": {
-      "item": "oddc:arctic_horn"
+      "item": "oddc:permafrost_shard"
     },
-    "H": {
+    "A": {
       "item": "oddc:arctic_heart"
     }
   },
