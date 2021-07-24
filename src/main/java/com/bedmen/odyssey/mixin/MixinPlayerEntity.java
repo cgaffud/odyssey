@@ -183,7 +183,6 @@ public abstract class MixinPlayerEntity extends LivingEntity {
                     ListNBT listnbt = stack.getEnchantmentTags();
                     for(int i = 0; i < listnbt.size(); ++i) {
                         String s = listnbt.getCompound(i).getString("id");
-                        System.out.println(s);
                         if(s.equals("minecraft:fire_protection")){
                             fireFlag = false;
                             break;
@@ -257,7 +256,6 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             this.lastItemInMainHand = itemstack.copy();
         }
 
-        this.turtleHelmetTick();
         this.cooldowns.tick();
         this.updatePlayerPose();
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(toPlayerEntity(this));

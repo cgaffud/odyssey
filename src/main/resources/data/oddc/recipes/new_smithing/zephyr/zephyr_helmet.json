@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "helmet",
+  "base": {
+    "item": "oddc:chicken_helmet"
+  },
+  "addition": {
+    "item": "minecraft:phantom_membrane"
+  },
+  "result": {
+    "item": "oddc:zephyr_helmet"
+  }
+}

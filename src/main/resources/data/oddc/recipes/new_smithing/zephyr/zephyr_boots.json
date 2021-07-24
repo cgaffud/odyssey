@@ -1,0 +1,13 @@
+{
+  "type": "oddc:new_smithing",
+  "classification": "boots",
+  "base": {
+    "item": "oddc:chicken_boots"
+  },
+  "addition": {
+    "item": "minecraft:phantom_membrane"
+  },
+  "result": {
+    "item": "oddc:zephyr_boots"
+  }
+}

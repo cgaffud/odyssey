@@ -117,7 +117,7 @@ public class ResearchRecipe implements IRecipe<IInventory>{
             }
             String s = JSONUtils.getAsString(json, "enchantment", "");
             Enchantment e = EnchantmentUtil.deserializeEnchantment(s);
-            int level = JSONUtils.getAsInt(json, "numIngredients");
+            int level = JSONUtils.getAsInt(json, "level");
             return new ResearchRecipe(recipeId, set, e, level);
         }
 
