@@ -1,0 +1,18 @@
+{
+  "type": "oddc:research",
+  "numIngredients": 4,
+  "ingredient0": {
+    "item": "oddc:zephyr_helmet"
+  },
+  "ingredient1": {
+    "item": "oddc:zephyr_chestplate"
+  },
+  "ingredient2": {
+    "item": "oddc:zephyr_leggings"
+  },
+  "ingredient3": {
+    "item": "oddc:zephyr_boots"
+  },
+  "enchantment": "minecraft:feather_falling",
+  "level": 2
+}
