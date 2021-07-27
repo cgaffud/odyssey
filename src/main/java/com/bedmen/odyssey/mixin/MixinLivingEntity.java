@@ -357,7 +357,7 @@ public abstract class MixinLivingEntity extends Entity{
                     if ((drowningCurse && ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN))))
                         this.setAirSupply(this.decreaseAirSupply(this.getAirSupply()));
 
-                    if (this.getAirSupply() == -20) {
+                    if (this.getAirSupply() <= -20) {
                         this.setAirSupply(0);
                         Vector3d vector3d = this.getDeltaMovement();
 
