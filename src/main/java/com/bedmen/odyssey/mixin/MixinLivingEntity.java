@@ -1,11 +1,14 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.NewShieldItem;
+import com.bedmen.odyssey.util.EffectRegistry;
+import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
 import com.google.common.base.Objects;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Blocks;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -30,6 +33,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Mixin(LivingEntity.class)
@@ -141,6 +147,12 @@ public abstract class MixinLivingEntity extends Entity{
     protected float getVoicePitch() {return 0.0f;}
     @Shadow
     public void die(DamageSource p_70645_1_) {}
+    @Shadow
+    private final NonNullList<ItemStack> lastHandItemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
+    @Shadow
+    private final NonNullList<ItemStack> lastArmorItemStacks = NonNullList.withSize(4, ItemStack.EMPTY);
+    @Shadow
+    public boolean addEffect(EffectInstance e) {return false;}
 
     public boolean hurt(DamageSource source, float amount) {
         if (!net.minecraftforge.common.ForgeHooks.onLivingAttack((LivingEntity)(Entity)this, source, amount)) return false;
@@ -337,9 +349,14 @@ public abstract class MixinLivingEntity extends Entity{
         boolean flag1 = flag && ((PlayerEntity) (Object) this).abilities.invulnerable;
         if (this.isAlive()) {
             //Checks if player is in lava too
-            if ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) {
+            boolean drowningCurse = this.hasEnchantment("oddc:drowning");
+            if (drowningCurse || ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN))) {
                 if (!this.canBreatheUnderwater() && !EffectUtils.hasWaterBreathing((LivingEntity) (Object) this) && !flag1) {
                     this.setAirSupply(this.decreaseAirSupply(this.getAirSupply()));
+                    // Drowns extra if underwater
+                    if ((drowningCurse && ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN))))
+                        this.setAirSupply(this.decreaseAirSupply(this.getAirSupply()));
+
                     if (this.getAirSupply() == -20) {
                         this.setAirSupply(0);
                         Vector3d vector3d = this.getDeltaMovement();
@@ -368,6 +385,32 @@ public abstract class MixinLivingEntity extends Entity{
                     this.lastPos = blockpos;
                     this.onChangedBlock(blockpos);
                 }
+            }
+        }
+
+        if (!flag1) {
+            Enchantment heavy = EnchantmentRegistry.HEAVY.get();
+            List<Integer> heavyCheck = getEnchLvls(heavy);
+
+            int heavySum = 0;
+            for (int heavyLvl : heavyCheck) heavySum += heavyLvl;
+
+            if (heavySum > 10) heavySum = 10;
+
+            //int heavyLvl = Collections.max(heavyCheck);
+
+            if (heavySum != 0)
+                this.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 5, heavySum-1, true, true, true));
+
+            if (this.tickCount % 25 == 0) {
+                Enchantment bleeding = EnchantmentRegistry.BLEEDING.get();
+                List<Integer> bleedCheck = getEnchLvls(bleeding);
+
+                int bleedLevel = Collections.max(bleedCheck) - 1;
+                int bleedAmnt = Collections.frequency(bleedCheck, 0);
+
+                if ((bleedLevel != -1) && (this.tickCount % (100 >> bleedLevel) == 0))
+                    this.addEffect(new EffectInstance(EffectRegistry.BLEEDING.get(), 1, 6 - bleedAmnt, false, false, false));
             }
         }
 
@@ -412,6 +455,26 @@ public abstract class MixinLivingEntity extends Entity{
         this.yRotO = this.yRot;
         this.xRotO = this.xRot;
         this.level.getProfiler().pop();
+    }
+
+    private boolean hasEnchantment(String s) {
+        boolean drowning = false;
+        for(ItemStack stack : lastHandItemStacks)
+            drowning |= EnchantmentUtil.checkStackForEnch(stack, s);
+
+        for (ItemStack stack : lastArmorItemStacks)
+            drowning |= EnchantmentUtil.checkStackForEnch(stack, s);
+
+        return drowning;
+    }
+
+    private ArrayList<Integer> getEnchLvls(Enchantment e) {
+        ArrayList<Integer> lvls = new ArrayList<Integer>();
+        for(ItemStack stack : lastHandItemStacks)
+            lvls.add(EnchantmentUtil.getLvlForEnch(stack, e));
+        for(ItemStack stack : lastArmorItemStacks)
+            lvls.add(EnchantmentUtil.getLvlForEnch(stack, e));
+        return lvls;
     }
 
 }

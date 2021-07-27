@@ -1,22 +1,17 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.util.EffectRegistry;
+import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
-import com.mojang.authlib.GameProfile;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -25,22 +20,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ITag;
 import net.minecraft.util.CooldownTracker;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 @Mixin(PlayerEntity.class)
@@ -84,6 +78,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     private CooldownTracker cooldowns;
     @Shadow
     protected void updatePlayerPose() {}
+
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
@@ -164,7 +159,14 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     }
 
-    //Sets player on fire unless they have fire protection or an arctic chestplate
+
+    /** I'm not sure if this is needed in a method anymore but it helps.
+     * It also might be better to move this method to ItemStack or something */
+
+
+
+
+
     public void tick() {
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPreTick(toPlayerEntity(this));
         this.noPhysics = this.isSpectator();
@@ -172,6 +174,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             this.onGround = false;
         }
 
+        //Sets player on fire unless they have fire protection or an arctic chestplate
         if(!(this.abilities.instabuild || this.isSpectator()) && this.level.dimensionType().ultraWarm()){
             boolean fireFlag = true;
             for(ItemStack stack : this.getArmorSlots()){
@@ -179,17 +182,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
                     fireFlag = false;
                     break;
                 }
-                if (!stack.isEmpty()) {
-                    ListNBT listnbt = stack.getEnchantmentTags();
-                    for(int i = 0; i < listnbt.size(); ++i) {
-                        String s = listnbt.getCompound(i).getString("id");
-                        if(s.equals("minecraft:fire_protection")){
-                            fireFlag = false;
-                            break;
-                        }
-                    }
-
-                }
+               fireFlag &= !EnchantmentUtil.checkStackForEnch(stack,"minecraft:fire_protection");
             }
             if(fireFlag)
                 this.setSecondsOnFire(1);
@@ -260,6 +253,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         this.updatePlayerPose();
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(toPlayerEntity(this));
     }
+
 
     private PlayerEntity toPlayerEntity(MixinPlayerEntity mixinPlayerEntity){
         return (PlayerEntity)(Object)mixinPlayerEntity;
