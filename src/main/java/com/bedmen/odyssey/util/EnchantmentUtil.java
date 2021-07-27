@@ -72,7 +72,9 @@ public class EnchantmentUtil {
             EnchantmentRegistry.RECOVERY.get(),
             EnchantmentRegistry.UNENCHANTABLE.get(),
             EnchantmentRegistry.BLEEDING.get(),
-            EnchantmentRegistry.DROWNING.get()};
+            EnchantmentRegistry.DROWNING.get(),
+            EnchantmentRegistry.HEAVY.get(),
+            EnchantmentRegistry.VOLATILE.get()};
     private static Map<Enchantment, Integer> integerMap = new HashMap<>();
 
     public static void init(){
@@ -120,6 +122,8 @@ public class EnchantmentUtil {
         integerMap.put(EnchantmentRegistry.UNENCHANTABLE.get(), 41);
         integerMap.put(EnchantmentRegistry.BLEEDING.get(), 42);
         integerMap.put(EnchantmentRegistry.DROWNING.get(), 43);
+        integerMap.put(EnchantmentRegistry.HEAVY.get(), 44);
+        integerMap.put(EnchantmentRegistry.VOLATILE.get(), 45);
     }
 
     public static Enchantment intToEnchantment(int i){
@@ -224,11 +228,8 @@ public class EnchantmentUtil {
     public static int getLvlForEnch(ItemStack stack, Enchantment enchantment) {
         if (!stack.isEmpty()) {
             Map<Enchantment, Integer> enchToLevel = EnchantmentHelper.deserializeEnchantments(stack.getEnchantmentTags());
-            if (enchToLevel.containsKey(enchantment)) {
-                System.out.println("found");
+            if (enchToLevel.containsKey(enchantment))
                 return enchToLevel.get(enchantment);
-            }
-
         }
         return 0;
     }

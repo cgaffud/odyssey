@@ -174,23 +174,6 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             this.onGround = false;
         }
 
-        if((this.tickCount % 25 == 0) && !(this.abilities.instabuild || this.isSpectator())) {
-            List<Integer> bleedCheck = new ArrayList<Integer>();
-            Enchantment bleeding = EnchantmentRegistry.BLEEDING.get();
-
-            bleedCheck.add(EnchantmentUtil.getLvlForEnch(this.getMainHandItem(), bleeding));
-            bleedCheck.add(EnchantmentUtil.getLvlForEnch(this.getOffhandItem(), bleeding));
-
-            for(ItemStack stack : this.getArmorSlots())
-                bleedCheck.add(EnchantmentUtil.getLvlForEnch(stack, bleeding));
-
-            int bleedLevel = Collections.max(bleedCheck)-1;
-            int bleedAmnt = Collections.frequency(bleedCheck,0);
-            System.out.println(bleedCheck.toString());
-            if (!(bleedLevel == -1) && (this.tickCount % (100 >> bleedLevel) == 0))
-                this.addEffect(new EffectInstance(EffectRegistry.BLEEDING.get(),1, 6-bleedAmnt, false, false, false));
-        }
-
         //Sets player on fire unless they have fire protection or an arctic chestplate
         if(!(this.abilities.instabuild || this.isSpectator()) && this.level.dimensionType().ultraWarm()){
             boolean fireFlag = true;
