@@ -12,20 +12,47 @@
   "item.oddc.sapphire": "Sapphire",
   "item.oddc.pearl": "Pearl",
   "item.oddc.feather_bundle": "Feather Bundle",
-  "item.oddc.zephyr_boots": "Zephyr Boots",
-  "item.oddc.sturdy_leggings": "Sturdy Leggings",
   "item.oddc.permafrost_shard": "Permafrost Shard",
   "item.oddc.arctic_heart": "Heart of the Arctic",
-  "item.oddc.arctic_chestplate": "Arctic Chestplate",
   "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.werewolf_claw": "Werewolf Claw",
   "item.oddc.arctic_horn": "Arctic Horn",
+  "item.oddc.bewitched_quill": "Bewitched Quill",
 
   //Emerald
   "item.oddc.emerald_bit": "Emerald Bit",
   "item.oddc.emerald_shard": "Emerald Shard",
   "item.oddc.emerald_fragment": "Emerald Fragment",
   "item.oddc.emerald_piece": "Emerald Piece",
+
+  //Chicken Suit
+  "item.oddc.chicken_boots": "Feathered Boots",
+  "item.oddc.chicken_leggings": "Feathered Pants",
+  "item.oddc.chicken_chestplate": "Feathered Tunic",
+  "item.oddc.chicken_helmet": "Feathered Cap",
+
+  //Turtle Armor
+  "item.oddc.turtle_boots": "Turtle Boots",
+  "item.oddc.turtle_leggings": "Turtle Leggings",
+  "item.oddc.turtle_chestplate": "Turtle Chestplate",
+
+  //Reinforced Armor
+  "item.oddc.reinforced_boots": "Reinforced Boots",
+  "item.oddc.reinforced_leggings": "Reinforced Leggings",
+  "item.oddc.reinforced_chestplate": "Reinforced Chestplate",
+  "item.oddc.reinforced_helmet": "Reinforced Helmet",
+
+  //Arctic Armor
+  "item.oddc.arctic_boots": "Arctic Boots",
+  "item.oddc.arctic_leggings": "Arctic Leggings",
+  "item.oddc.arctic_chestplate": "Arctic Chestplate",
+  "item.oddc.arctic_helmet": "Arctic Helmet",
+
+  //Zephyr Suit
+  "item.oddc.zephyr_boots": "Zephyr Boots",
+  "item.oddc.zephyr_leggings": "Zephyr Pants",
+  "item.oddc.zephyr_chestplate": "Zephyr Tunic",
+  "item.oddc.zephyr_helmet": "Zephyr Cap",
 
   //Silver and Sterling Silver
   "item.oddc.silver_nugget": "Silver Nugget",
@@ -78,6 +105,7 @@
   "container.oddc.alloy_furnace": "Alloy Furnace",
   "container.oddc.recycle_furnace": "Recycling Furnace",
   "container.oddc.bookshelf": "Bookshelf",
+  "container.oddc.research_table": "Research",
 
   //Enchantments
   "enchantment.oddc.accuracy": "Accuracy",
@@ -91,6 +119,7 @@
   //Blocks
   "block.oddc.alloy_furnace": "Alloy Furnace",
   "block.oddc.recycle_furnace": "Recycling Furnace",
+  "block.oddc.research_table": "Research Table",
   "block.oddc.copper_ore": "Copper Ore",
   "block.oddc.silver_ore": "Silver Ore",
   "block.oddc.ruby_ore": "Ruby Ore",
@@ -109,6 +138,19 @@
 
   //Entities
   "entity.oddc.werewolf": "Werewolf",
+  "entity.oddc.arctihorn": "Arctihorn",
+
+  //Spawn Eggs
+  "item.oddc.werewolf_spawn_egg": "Werewolf Spawn Egg",
+  "item.oddc.arctihorn_spawn_egg": "Arctihorn Spawn Egg",
+
+  //ItemGroup (Creative Tab)
+  "itemGroup.oddc_building_blocks": "Odyssey Building Blocks",
+  "itemGroup.oddc_decoration_blocks": "Odyssey Decoration Blocks",
+  "itemGroup.oddc_materials": "Odyssey Materials",
+  "itemGroup.oddc_tools": "Odyssey Tools",
+  "itemGroup.oddc_combat": "Odyssey Combat",
+  "itemGroup.oddc_spawn_eggs": "Odyssey Spawn Eggs",
 
 
   //Potions

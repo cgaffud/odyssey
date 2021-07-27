@@ -19,4 +19,5 @@ public class RecipeRegistry {
     public static final RegistryObject<IRecipeSerializer<NewSmithingRecipe>> NEW_SMITHING = RECIPES.register("new_smithing", () -> new NewSmithingRecipe.Serializer());
     public static final RegistryObject<IRecipeSerializer<AlloyRecipe>> ALLOYING = RECIPES.register("alloying", () -> new AlloyRecipe.Serializer());
     public static final RegistryObject<IRecipeSerializer<RecycleRecipe>> RECYCLING = RECIPES.register("recycling", () -> new RecycleRecipe.Serializer());
+    public static final RegistryObject<IRecipeSerializer<ResearchRecipe>> RESEARCH = RECIPES.register("research", () -> new ResearchRecipe.Serializer());
 }

@@ -2,46 +2,50 @@ package com.bedmen.odyssey.armor;
 
 import java.util.function.Supplier;
 
+import com.bedmen.odyssey.items.EquipmentArmorItem;
 import com.bedmen.odyssey.util.ItemRegistry;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 
 public enum ModArmorMaterial implements IArmorMaterial {
 
-    TURTLE("turtle", 25, new int[]{0,0,0,6}, 9, SoundEvents.ARMOR_EQUIP_TURTLE, 0.0F, 0.0F, () -> { return Ingredient.of(Items.SCUTE); }),
-    ZEPHYR("zephyr", 10, new int[]{5,0,0,0}, 9, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0F, 0.0F, () -> { return Ingredient.of(Items.PHANTOM_MEMBRANE); }),
-    STURDY("sturdy", 25, new int[]{0,10,0,0}, 9, SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.1F, () -> { return Ingredient.of(Items.IRON_BLOCK); }),
-    ARCTIC("arctic", 20, new int[]{0,0,11,0}, 9, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, 0.0F, () -> { return Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()); }),
 
-    LEATHER("leather", 5, new int[]{2, 3, 3, 2}, 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, () -> { return Ingredient.of(Items.LEATHER);}),
-    CHAIN("chainmail", 15, new int[]{3, 6, 7, 4}, 12, SoundEvents.ARMOR_EQUIP_CHAIN, 0.0F, 0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
-    IRON("iron", 15, new int[]{4,7, 8, 5}, 9, SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
-    GOLD("gold", 7, new int[]{5, 8, 9, 6}, 25, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, 0.0F, () -> { return Ingredient.of(Items.GOLD_INGOT); }),
-    STERLING_SILVER("oddc:sterling_silver", 20, new int[] {5,9,10,6}, 14, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, 0.0f, () -> {return Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get());}),
-    DIAMOND("diamond", 33, new int[]{7, 12, 13, 8}, 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, 0.0F, () -> { return Ingredient.of(Items.DIAMOND); }),
-    NETHERITE("netherite", 37, new int[]{7, 13, 15, 9}, 15, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.0F, 0.1F, () -> { return Ingredient.of(Items.NETHERITE_INGOT); });
+
+
+
+    LEATHER("leather", 5, new int[]{2,3,3,2}, 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> { return Ingredient.of(Items.LEATHER);}),
+    CHICKEN("oddc:chicken", 4, new int[]{2,3,3,2}, 15, SoundEvents.CHICKEN_HURT, 0.0f, () -> { return Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get());}),
+    CHAIN("chainmail", 15, new int[]{3,6,7,4}, 12, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
+    IRON("iron", 15, new int[]{4,7,8,5}, 9, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
+    TURTLE("oddc:turtle", 25, new int[]{4,7,8,5}, 9, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, () -> { return Ingredient.of(Items.SCUTE); }),
+    GOLD("gold", 7, new int[]{5,8,9,6}, 25, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, () -> { return Ingredient.of(Items.GOLD_INGOT); }),
+    STERLING_SILVER("oddc:sterling_silver", 20, new int[]{5,9,10,6}, 14, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, () -> {return Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get());}),
+    REINFORCED("oddc:reinforced", 25, new int[]{6,10,11,7}, 9, SoundEvents.ARMOR_EQUIP_IRON, 0.1F, () -> { return Ingredient.of(Items.IRON_BLOCK); }),
+    DIAMOND("diamond", 33, new int[]{7,12,13,8}, 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(Items.DIAMOND); }),
+    ARCTIC("oddc:arctic", 20, new int[]{6,10,11,7}, 9, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()); }),
+    NETHERITE("netherite", 37, new int[]{7,13,15,9}, 15, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.1F, () -> { return Ingredient.of(Items.NETHERITE_INGOT); }),
+    ZEPHYR("oddc:zephyr", 10, new int[]{5,9,10,6}, 9, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0F, () -> { return Ingredient.of(Items.PHANTOM_MEMBRANE); });
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[] {11, 16, 15, 13};
     private final String name;
     private final int maxDamageFactor;
-    private final int[] damageReductionAmountArray;
+    private final int[] damageReductionArray;
     private final int enchantability;
     private final SoundEvent soundEvent;
     private final float toughness;
     private final float knockbackResistance;
     private final Supplier<Ingredient> repairMaterial;
 
-    ModArmorMaterial(String name, int maxDamageFactor, int[] damageReductionAmountArray, int enchantability, SoundEvent soundEvent, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial){
+    ModArmorMaterial(String name, int maxDamageFactor, int[] damageReductionArray, int enchantability, SoundEvent soundEvent, float knockbackResistance, Supplier<Ingredient> repairMaterial){
         this.name = name;
         this.maxDamageFactor = maxDamageFactor;
-        this.damageReductionAmountArray = damageReductionAmountArray;
+        this.damageReductionArray = damageReductionArray;
         this.enchantability = enchantability;
         this.soundEvent = soundEvent;
-        this.toughness = toughness;
+        this.toughness = 0;
         this.knockbackResistance = knockbackResistance;
         this.repairMaterial = repairMaterial;
     }
@@ -53,7 +57,7 @@ public enum ModArmorMaterial implements IArmorMaterial {
 
     @Override
     public int getDefenseForSlot(EquipmentSlotType slotIn) {
-        return this.damageReductionAmountArray[slotIn.getIndex()];
+        return this.damageReductionArray[slotIn.getIndex()];
     }
 
     @Override

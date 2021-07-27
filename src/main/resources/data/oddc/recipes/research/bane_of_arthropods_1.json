@@ -1,0 +1,9 @@
+{
+  "type": "oddc:research",
+  "numIngredients": 1,
+  "ingredient0": {
+    "item": "oddc:copper_hammer"
+  },
+  "enchantment": "minecraft:bane_of_arthropods",
+  "level": 1
+}

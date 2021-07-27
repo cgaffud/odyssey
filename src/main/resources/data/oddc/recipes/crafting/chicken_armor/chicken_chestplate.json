@@ -2,18 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "X X",
-    "XHX",
+    "XXX",
     "XXX"
   ],
   "key": {
     "X": {
-      "item": "oddc:arctic_horn"
-    },
-    "H": {
-      "item": "oddc:arctic_heart"
+      "item": "oddc:feather_bundle"
     }
   },
   "result": {
-    "item": "oddc:arctic_chestplate"
+    "item": "oddc:chicken_chestplate"
   }
 }

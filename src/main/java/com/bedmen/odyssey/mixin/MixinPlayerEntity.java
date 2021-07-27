@@ -249,7 +249,6 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             this.lastItemInMainHand = itemstack.copy();
         }
 
-        this.turtleHelmetTick();
         this.cooldowns.tick();
         this.updatePlayerPose();
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(toPlayerEntity(this));
