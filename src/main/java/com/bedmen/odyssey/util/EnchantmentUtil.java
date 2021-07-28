@@ -225,15 +225,6 @@ public class EnchantmentUtil {
         return false;
     }
 
-    public static int getLvlForEnch(ItemStack stack, Enchantment enchantment) {
-        if (!stack.isEmpty()) {
-            Map<Enchantment, Integer> enchToLevel = EnchantmentHelper.deserializeEnchantments(stack.getEnchantmentTags());
-            if (enchToLevel.containsKey(enchantment))
-                return enchToLevel.get(enchantment);
-        }
-        return 0;
-    }
-
     public static float getAccuracy(LivingEntity entity){
         int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.ACCURACY.get(), entity);
         return i > 0 ? 0.1f : 1.0f;

@@ -9,6 +9,7 @@ import com.google.common.base.Objects;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -153,6 +154,8 @@ public abstract class MixinLivingEntity extends Entity{
     private final NonNullList<ItemStack> lastArmorItemStacks = NonNullList.withSize(4, ItemStack.EMPTY);
     @Shadow
     public boolean addEffect(EffectInstance e) {return false;}
+    @Shadow
+    protected int fallFlyTicks;
 
     public boolean hurt(DamageSource source, float amount) {
         if (!net.minecraftforge.common.ForgeHooks.onLivingAttack((LivingEntity)(Entity)this, source, amount)) return false;
@@ -349,7 +352,7 @@ public abstract class MixinLivingEntity extends Entity{
         boolean flag1 = flag && ((PlayerEntity) (Object) this).abilities.invulnerable;
         if (this.isAlive()) {
             //Drowns extra with drowning curse
-            int drowningAmount = this.hasEnchantment("oddc:drowning") ? 1 : 0;
+            int drowningAmount = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DROWNING.get(), (LivingEntity)(Object)this);
             //Checks if player is in lava too
             drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
             if (drowningAmount > 0) {
@@ -390,28 +393,25 @@ public abstract class MixinLivingEntity extends Entity{
         }
 
         if (!flag1) {
-            Enchantment heavy = EnchantmentRegistry.HEAVY.get();
-            List<Integer> heavyCheck = getEnchLvls(heavy);
-
-            int heavySum = 0;
-            for (int heavyLvl : heavyCheck) heavySum += heavyLvl;
-
-            if (heavySum > 10) heavySum = 10;
-
-            //int heavyLvl = Collections.max(heavyCheck);
-
+            int heavySum = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.HEAVY.get(), (LivingEntity)(Object)this);
+            if (heavySum > 10)
+                heavySum = 10;
             if (heavySum != 0)
                 this.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 5, heavySum-1, true, true, true));
 
             if (this.tickCount % 25 == 0) {
                 Enchantment bleeding = EnchantmentRegistry.BLEEDING.get();
-                List<Integer> bleedCheck = getEnchLvls(bleeding);
-
-                int bleedLevel = Collections.max(bleedCheck) - 1;
-                int bleedAmnt = Collections.frequency(bleedCheck, 0);
-
-                if ((bleedLevel != -1) && (this.tickCount % (100 >> bleedLevel) == 0))
-                    this.addEffect(new EffectInstance(EffectRegistry.BLEEDING.get(), 1, 6 - bleedAmnt, false, false, false));
+                Iterable<ItemStack> iterable = bleeding.getSlotItems((LivingEntity)(Object)this).values();
+                List<Integer> bleedCheck = new ArrayList<>();
+                for(ItemStack itemstack : iterable) {
+                    bleedCheck.add(EnchantmentHelper.getItemEnchantmentLevel(bleeding, itemstack));
+                }
+                if(bleedCheck.size() > 0){
+                    int bleedLevel = Collections.max(bleedCheck) - 1;
+                    int bleedAmnt = Collections.frequency(bleedCheck, 0);
+                    if ((bleedLevel != -1) && (this.tickCount % (100 >> bleedLevel) == 0))
+                        this.addEffect(new EffectInstance(EffectRegistry.BLEEDING.get(), 1, 6 - bleedAmnt, false, false, false));
+                }
             }
         }
 
@@ -458,24 +458,17 @@ public abstract class MixinLivingEntity extends Entity{
         this.level.getProfiler().pop();
     }
 
-    private boolean hasEnchantment(String s) {
-        boolean drowning = false;
-        for(ItemStack stack : lastHandItemStacks)
-            drowning |= EnchantmentUtil.checkStackForEnch(stack, s);
-
-        for (ItemStack stack : lastArmorItemStacks)
-            drowning |= EnchantmentUtil.checkStackForEnch(stack, s);
-
-        return drowning;
-    }
-
-    private ArrayList<Integer> getEnchLvls(Enchantment e) {
-        ArrayList<Integer> lvls = new ArrayList<Integer>();
-        for(ItemStack stack : lastHandItemStacks)
-            lvls.add(EnchantmentUtil.getLvlForEnch(stack, e));
-        for(ItemStack stack : lastArmorItemStacks)
-            lvls.add(EnchantmentUtil.getLvlForEnch(stack, e));
-        return lvls;
+    private void updateFallFlying() {
+        boolean flag = this.getSharedFlag(7);
+        if (flag && !this.onGround && !this.isPassenger() && !this.hasEffect(Effects.LEVITATION)) {
+            ItemStack itemstack = this.getItemBySlot(EquipmentSlotType.CHEST);
+            flag = itemstack.canElytraFly((LivingEntity)(Object)this) && itemstack.elytraFlightTick((LivingEntity)(Object)this, this.fallFlyTicks);
+        } else {
+            flag = false;
+        }
+        if (!this.level.isClientSide) {
+            this.setSharedFlag(7, flag);
+        }
     }
 
 }

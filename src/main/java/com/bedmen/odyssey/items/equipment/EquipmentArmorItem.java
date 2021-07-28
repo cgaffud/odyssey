@@ -34,13 +34,33 @@ public class EquipmentArmorItem extends ArmorItem {
         UNFINISHED_EQUIPMENT.clear();
     }
 
-    public int getInnateEnchantmentLevel(Enchantment e) {
+    public static int getInnateEnchantmentLevel(Enchantment e, Item item) {
+        if(item instanceof EquipmentArmorItem){
+            EquipmentArmorItem equipmentArmorItem = (EquipmentArmorItem)item;
+            return equipmentArmorItem.getInnateEnchantmentLevelHelper(e);
+        }
+        return 0;
+    }
+
+    public int getInnateEnchantmentLevelHelper(Enchantment e) {
         if(e == EnchantmentRegistry.UNENCHANTABLE.get())
             return 1;
         Integer i = this.enchantmentMap.get(e);
         if(i == null)
             return 0;
         return i;
+    }
+
+    public Map<Enchantment, Integer> getInnateEnchantmentMapHelper(){
+        return this.enchantmentMap;
+    }
+
+    public static Map<Enchantment, Integer> getInnateEnchantmentMap(Item item) {
+        if(item instanceof EquipmentArmorItem){
+            EquipmentArmorItem equipmentArmorItem = (EquipmentArmorItem)item;
+            return equipmentArmorItem.getInnateEnchantmentMapHelper();
+        }
+        return new HashMap<>();
     }
 
     /**
