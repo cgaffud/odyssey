@@ -7,8 +7,10 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.DamageSource;
@@ -19,9 +21,15 @@ import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
+
+import java.util.Map;
 
 @Mixin(EnchantmentHelper.class)
 public abstract class MixinEnchantmentHelper {
+
+    @Shadow
+    public static Map<Enchantment, Integer> deserializeEnchantments(ListNBT p_226652_0_) {return null;}
 
     private static void runIterationOnItem2(MixinEnchantmentHelper.IEnchantmentVisitor modifier, ItemStack stack) {
         if (!stack.isEmpty()) {
@@ -53,17 +61,14 @@ public abstract class MixinEnchantmentHelper {
         }, stacks);
         for(ItemStack itemStack : stacks){
             Item item = itemStack.getItem();
-            if(item instanceof EquipmentArmorItem){
-                EquipmentArmorItem equipmentArmorItem = (EquipmentArmorItem)item;
-                if(source == DamageSource.FALL){
-                    mutableint.add(equipmentArmorItem.getInnateEnchantmentLevel(Enchantments.FALL_PROTECTION)*5);
-                }
-                if(source.isFire()){
-                    mutableint.add(equipmentArmorItem.getInnateEnchantmentLevel(Enchantments.FIRE_PROTECTION)*5);
-                }
-                if(source.isExplosion()){
-                    mutableint.add(equipmentArmorItem.getInnateEnchantmentLevel(Enchantments.BLAST_PROTECTION)*5);
-                }
+            if(source == DamageSource.FALL){
+                mutableint.add(EquipmentArmorItem.getInnateEnchantmentLevel(Enchantments.FALL_PROTECTION, item)*5);
+            }
+            else if(source.isFire()){
+                mutableint.add(EquipmentArmorItem.getInnateEnchantmentLevel(Enchantments.FIRE_PROTECTION, item)*5);
+            }
+            else if(source.isExplosion()){
+                mutableint.add(EquipmentArmorItem.getInnateEnchantmentLevel(Enchantments.BLAST_PROTECTION, item)*5);
             }
         }
         return mutableint.intValue();
@@ -122,13 +127,18 @@ public abstract class MixinEnchantmentHelper {
                 }
             }
 
-            Item item = itemstack.getItem();
-            if(item instanceof EquipmentArmorItem){
-                EquipmentArmorItem equipmentArmorItem = (EquipmentArmorItem)item;
-                j += equipmentArmorItem.getInnateEnchantmentLevel(enchantment);
-            }
+            j += EquipmentArmorItem.getInnateEnchantmentLevel(enchantment, itemstack.getItem());
 
             return j;
         }
+    }
+
+    @Overwrite
+    public static Map<Enchantment, Integer> getEnchantments(ItemStack itemStack) {
+        ListNBT listnbt = itemStack.getItem() == Items.ENCHANTED_BOOK ? EnchantedBookItem.getEnchantments(itemStack) : itemStack.getEnchantmentTags();
+        Map<Enchantment, Integer> map = deserializeEnchantments(listnbt);
+        Map<Enchantment, Integer> map2 = EquipmentArmorItem.getInnateEnchantmentMap(itemStack.getItem());
+        map.putAll(map2);
+        return map;
     }
 }
