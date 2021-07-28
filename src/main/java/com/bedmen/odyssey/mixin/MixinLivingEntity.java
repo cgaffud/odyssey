@@ -348,15 +348,16 @@ public abstract class MixinLivingEntity extends Entity{
 
         boolean flag1 = flag && ((PlayerEntity) (Object) this).abilities.invulnerable;
         if (this.isAlive()) {
+            //Drowns extra with drowning curse
+            int drowningAmount = this.hasEnchantment("oddc:drowning") ? 1 : 0;
             //Checks if player is in lava too
-            boolean drowningCurse = this.hasEnchantment("oddc:drowning");
-            if (drowningCurse || ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN))) {
+            drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
+            if (drowningAmount > 0) {
                 if (!this.canBreatheUnderwater() && !EffectUtils.hasWaterBreathing((LivingEntity) (Object) this) && !flag1) {
-                    this.setAirSupply(this.decreaseAirSupply(this.getAirSupply()));
-                    // Drowns extra if underwater
-                    if ((drowningCurse && ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN))))
-                        this.setAirSupply(this.decreaseAirSupply(this.getAirSupply()));
-
+                    int airsupply = this.getAirSupply();
+                    for(int i = 0; i < drowningAmount; i++)
+                        airsupply = this.decreaseAirSupply(airsupply);
+                    this.setAirSupply(airsupply);
                     if (this.getAirSupply() <= -20) {
                         this.setAirSupply(0);
                         Vector3d vector3d = this.getDeltaMovement();
@@ -375,7 +376,7 @@ public abstract class MixinLivingEntity extends Entity{
                 if (!this.level.isClientSide && this.isPassenger() && this.getVehicle() != null && !this.getVehicle().canBeRiddenInWater(this)) {
                     this.stopRiding();
                 }
-            } else if (this.getAirSupply() < this.getMaxAirSupply()) {
+            } else if (this.getAirSupply() < this.getMaxAirSupply() && !this.level.isClientSide) {
                 this.setAirSupply(this.increaseAirSupply(this.getAirSupply()));
             }
 

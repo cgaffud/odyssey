@@ -3,9 +3,8 @@ package com.bedmen.odyssey.util;
 import com.bedmen.odyssey.armor.ModArmorMaterial;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.tools.*;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.Items; //Used as easy access to item registry
@@ -15,8 +14,6 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.HashMap;
 
 public class ItemRegistry {
 
@@ -90,16 +87,6 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ARCTIC_HORN = ITEMS.register("arctic_horn", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS)));
     public static final RegistryObject<Item> BEWITCHED_QUILL = ITEMS.register("bewitched_quill", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS).rarity(Rarity.UNCOMMON)));
 
-    //Equipment Enchantment Arrays
-    public static final Enchantment[] FALLING_PROTECTION_ARRAY = new Enchantment[]{Enchantments.FALL_PROTECTION};
-    public static final Enchantment[] FIRE_PROTECTION_ARRAY = new Enchantment[]{Enchantments.FIRE_PROTECTION};
-    public static final Enchantment[] BLAST_PROTECTION_ARRAY = new Enchantment[]{Enchantments.BLAST_PROTECTION};
-    public static final Enchantment[] RESPIRATION_ARRAY = new Enchantment[]{Enchantments.RESPIRATION};
-    public static final Enchantment[] DEPTH_STRIDER_ARRAY = new Enchantment[]{Enchantments.DEPTH_STRIDER};
-    public static final Enchantment[] FROST_WALKER_ARRAY = new Enchantment[]{Enchantments.FROST_WALKER};
-    //Equipment Level Arrays
-    public static final int[] ARRAY_1 = new int[]{1};
-    public static final int[] ARRAY_2 = new int[]{2};
     //Armor
 
     public static final RegistryObject<Item> LEATHER_HELMET = ITEMS_VANILLA.register("leather_helmet", () -> new DyeableArmorItem(ModArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
@@ -108,10 +95,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> LEATHER_BOOTS = ITEMS_VANILLA.register("leather_boots", () -> new DyeableArmorItem(ModArmorMaterial.LEATHER, EquipmentSlotType.FEET, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> LEATHER_HORSE_ARMOR = ITEMS_VANILLA.register("leather_horse_armor", () -> new DyeableHorseArmorItem(10, "leather", (new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_MISC)));
 
-    public static final RegistryObject<Item> CHICKEN_HELMET = ITEMS.register("chicken_helmet", () -> new EquipmentArmorItem(ModArmorMaterial.CHICKEN, EquipmentSlotType.HEAD, FALLING_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> CHICKEN_CHESTPLATE = ITEMS.register("chicken_chestplate", () -> new EquipmentArmorItem(ModArmorMaterial.CHICKEN, EquipmentSlotType.CHEST, FALLING_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> CHICKEN_LEGGINGS = ITEMS.register("chicken_leggings", () -> new EquipmentArmorItem(ModArmorMaterial.CHICKEN, EquipmentSlotType.LEGS, FALLING_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> CHICKEN_BOOTS = ITEMS.register("chicken_boots", () -> new EquipmentArmorItem(ModArmorMaterial.CHICKEN, EquipmentSlotType.FEET, FALLING_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> CHICKEN_HELMET = ITEMS.register("chicken_helmet", () -> new ChickenArmorItem(ModArmorMaterial.CHICKEN, EquipmentSlotType.HEAD, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> CHICKEN_CHESTPLATE = ITEMS.register("chicken_chestplate", () -> new ChickenArmorItem(ModArmorMaterial.CHICKEN, EquipmentSlotType.CHEST, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> CHICKEN_LEGGINGS = ITEMS.register("chicken_leggings", () -> new ChickenArmorItem(ModArmorMaterial.CHICKEN, EquipmentSlotType.LEGS, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> CHICKEN_BOOTS = ITEMS.register("chicken_boots", () -> new ChickenArmorItem(ModArmorMaterial.CHICKEN, EquipmentSlotType.FEET, new Item.Properties().tab(Odyssey.COMBAT)));
 
     public static final RegistryObject<Item> CHAINMAIL_HELMET = ITEMS_VANILLA.register("chainmail_helmet", () -> new ArmorItem(ModArmorMaterial.CHAIN, EquipmentSlotType.HEAD, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> CHAINMAIL_CHESTPLATE = ITEMS_VANILLA.register("chainmail_chestplate", () -> new ArmorItem(ModArmorMaterial.CHAIN, EquipmentSlotType.CHEST, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
@@ -124,10 +111,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> IRON_BOOTS = ITEMS_VANILLA.register("iron_boots", () -> new ArmorItem(ModArmorMaterial.IRON, EquipmentSlotType.FEET, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> IRON_HORSE_ARMOR = ITEMS_VANILLA.register("iron_horse_armor", () -> new HorseArmorItem(24, "iron", (new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_MISC)));
 
-    public static final RegistryObject<Item> TURTLE_HELMET = ITEMS_VANILLA.register("turtle_helmet", () -> new EquipmentArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.HEAD, RESPIRATION_ARRAY, ARRAY_1, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
-    public static final RegistryObject<Item> TURTLE_CHESTPLATE = ITEMS.register("turtle_chestplate", () -> new EquipmentArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.CHEST, RESPIRATION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> TURTLE_LEGGINGS = ITEMS.register("turtle_leggings", () -> new EquipmentArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.LEGS, DEPTH_STRIDER_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> TURTLE_BOOTS = ITEMS.register("turtle_boots", () -> new EquipmentArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.FEET, DEPTH_STRIDER_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> TURTLE_HELMET = ITEMS_VANILLA.register("turtle_helmet", () -> new UpperTurtleArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.HEAD, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
+    public static final RegistryObject<Item> TURTLE_CHESTPLATE = ITEMS.register("turtle_chestplate", () -> new UpperTurtleArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.CHEST, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> TURTLE_LEGGINGS = ITEMS.register("turtle_leggings", () -> new LowerTurtleArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.LEGS, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> TURTLE_BOOTS = ITEMS.register("turtle_boots", () -> new LowerTurtleArmorItem(ModArmorMaterial.TURTLE, EquipmentSlotType.FEET, new Item.Properties().tab(Odyssey.COMBAT)));
 
     public static final RegistryObject<Item> GOLDEN_HELMET = ITEMS_VANILLA.register("golden_helmet", () -> new ArmorItem(ModArmorMaterial.GOLD, EquipmentSlotType.HEAD, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> GOLDEN_CHESTPLATE = ITEMS_VANILLA.register("golden_chestplate", () -> new ArmorItem(ModArmorMaterial.GOLD, EquipmentSlotType.CHEST, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
@@ -141,10 +128,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_BOOTS = ITEMS.register("sterling_silver_boots", () -> new ArmorItem(ModArmorMaterial.STERLING_SILVER, EquipmentSlotType.FEET, new Item.Properties().tab(Odyssey.COMBAT)));
     public static final RegistryObject<Item> STERLING_SILVER_HORSE_ARMOR = ITEMS.register("sterling_silver_horse_armor", () -> new HorseArmorItem(30, "sterling_silver", (new Item.Properties()).stacksTo(1).tab(Odyssey.COMBAT)));
 
-    public static final RegistryObject<Item> REINFORCED_HELMET = ITEMS.register("reinforced_helmet", () -> new EquipmentArmorItem(ModArmorMaterial.REINFORCED, EquipmentSlotType.HEAD, BLAST_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> REINFORCED_CHESTPLATE = ITEMS.register("reinforced_chestplate", () -> new EquipmentArmorItem(ModArmorMaterial.REINFORCED, EquipmentSlotType.CHEST, BLAST_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> REINFORCED_LEGGINGS = ITEMS.register("reinforced_leggings", () -> new EquipmentArmorItem(ModArmorMaterial.REINFORCED, EquipmentSlotType.LEGS, BLAST_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> REINFORCED_BOOTS = ITEMS.register("reinforced_boots", () -> new EquipmentArmorItem(ModArmorMaterial.REINFORCED, EquipmentSlotType.FEET, BLAST_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> REINFORCED_HELMET = ITEMS.register("reinforced_helmet", () -> new ReinforcedArmorItem(ModArmorMaterial.REINFORCED, EquipmentSlotType.HEAD, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> REINFORCED_CHESTPLATE = ITEMS.register("reinforced_chestplate", () -> new ReinforcedArmorItem(ModArmorMaterial.REINFORCED, EquipmentSlotType.CHEST, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> REINFORCED_LEGGINGS = ITEMS.register("reinforced_leggings", () -> new ReinforcedArmorItem(ModArmorMaterial.REINFORCED, EquipmentSlotType.LEGS, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> REINFORCED_BOOTS = ITEMS.register("reinforced_boots", () -> new ReinforcedArmorItem(ModArmorMaterial.REINFORCED, EquipmentSlotType.FEET, new Item.Properties().tab(Odyssey.COMBAT)));
 
     public static final RegistryObject<Item> DIAMOND_HELMET = ITEMS_VANILLA.register("diamond_helmet", () -> new ArmorItem(ModArmorMaterial.DIAMOND, EquipmentSlotType.HEAD, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> DIAMOND_CHESTPLATE = ITEMS_VANILLA.register("diamond_chestplate", () -> new ArmorItem(ModArmorMaterial.DIAMOND, EquipmentSlotType.CHEST, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
@@ -152,10 +139,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> DIAMOND_BOOTS = ITEMS_VANILLA.register("diamond_boots", () -> new ArmorItem(ModArmorMaterial.DIAMOND, EquipmentSlotType.FEET, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> DIAMOND_HORSE_ARMOR = ITEMS_VANILLA.register("diamond_horse_armor", () -> new HorseArmorItem(40, "diamond", (new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_MISC)));
 
-    public static final RegistryObject<Item> ARCTIC_HELMET = ITEMS.register("arctic_helmet", () -> new EquipmentArmorItem(ModArmorMaterial.ARCTIC, EquipmentSlotType.HEAD, FIRE_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> ARCTIC_CHESTPLATE = ITEMS.register("arctic_chestplate", () -> new EquipmentArmorItem(ModArmorMaterial.ARCTIC, EquipmentSlotType.CHEST, FIRE_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> ARCTIC_LEGGINGS = ITEMS.register("arctic_leggings", () -> new EquipmentArmorItem(ModArmorMaterial.ARCTIC, EquipmentSlotType.LEGS, FIRE_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> ARCTIC_BOOTS = ITEMS.register("arctic_boots", () -> new EquipmentArmorItem(ModArmorMaterial.ARCTIC, EquipmentSlotType.FEET, FIRE_PROTECTION_ARRAY, ARRAY_1, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> ARCTIC_HELMET = ITEMS.register("arctic_helmet", () -> new ArcticArmorItem(ModArmorMaterial.ARCTIC, EquipmentSlotType.HEAD, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> ARCTIC_CHESTPLATE = ITEMS.register("arctic_chestplate", () -> new ArcticArmorItem(ModArmorMaterial.ARCTIC, EquipmentSlotType.CHEST, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> ARCTIC_LEGGINGS = ITEMS.register("arctic_leggings", () -> new ArcticArmorItem(ModArmorMaterial.ARCTIC, EquipmentSlotType.LEGS, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> ARCTIC_BOOTS = ITEMS.register("arctic_boots", () -> new ArcticArmorItem(ModArmorMaterial.ARCTIC, EquipmentSlotType.FEET, new Item.Properties().tab(Odyssey.COMBAT)));
 
     public static final RegistryObject<Item> NETHERITE_HELMET = ITEMS_VANILLA.register("netherite_helmet", () -> new ArmorItem(ModArmorMaterial.NETHERITE, EquipmentSlotType.HEAD, new Item.Properties().fireResistant().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> NETHERITE_CHESTPLATE = ITEMS_VANILLA.register("netherite_chestplate", () -> new ArmorItem(ModArmorMaterial.NETHERITE, EquipmentSlotType.CHEST, new Item.Properties().fireResistant().tab(ItemGroup.TAB_COMBAT)));
@@ -163,10 +150,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_BOOTS = ITEMS_VANILLA.register("netherite_boots", () -> new ArmorItem(ModArmorMaterial.NETHERITE, EquipmentSlotType.FEET, new Item.Properties().fireResistant().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> NETHERITE_HORSE_ARMOR = ITEMS.register("netherite_horse_armor", () -> new HorseArmorItem(44, "netherite", (new Item.Properties()).stacksTo(1).fireResistant().tab(Odyssey.COMBAT)));
 
-    public static final RegistryObject<Item> ZEPHYR_HELMET = ITEMS.register("zephyr_helmet", () -> new EquipmentArmorItem(ModArmorMaterial.ZEPHYR, EquipmentSlotType.HEAD, FALLING_PROTECTION_ARRAY, ARRAY_2, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> ZEPHYR_CHESTPLATE = ITEMS.register("zephyr_chestplate", () -> new EquipmentArmorItem(ModArmorMaterial.ZEPHYR, EquipmentSlotType.CHEST, FALLING_PROTECTION_ARRAY, ARRAY_2, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> ZEPHYR_LEGGINGS = ITEMS.register("zephyr_leggings", () -> new EquipmentArmorItem(ModArmorMaterial.ZEPHYR, EquipmentSlotType.LEGS, FALLING_PROTECTION_ARRAY, ARRAY_2, new Item.Properties().tab(Odyssey.COMBAT)));
-    public static final RegistryObject<Item> ZEPHYR_BOOTS = ITEMS.register("zephyr_boots", () -> new EquipmentArmorItem(ModArmorMaterial.ZEPHYR, EquipmentSlotType.FEET, FALLING_PROTECTION_ARRAY, ARRAY_2, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> ZEPHYR_HELMET = ITEMS.register("zephyr_helmet", () -> new ZephyrArmorItem(ModArmorMaterial.ZEPHYR, EquipmentSlotType.HEAD, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> ZEPHYR_CHESTPLATE = ITEMS.register("zephyr_chestplate", () -> new ZephyrArmorItem(ModArmorMaterial.ZEPHYR, EquipmentSlotType.CHEST, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> ZEPHYR_LEGGINGS = ITEMS.register("zephyr_leggings", () -> new ZephyrArmorItem(ModArmorMaterial.ZEPHYR, EquipmentSlotType.LEGS, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> ZEPHYR_BOOTS = ITEMS.register("zephyr_boots", () -> new ZephyrArmorItem(ModArmorMaterial.ZEPHYR, EquipmentSlotType.FEET, new Item.Properties().tab(Odyssey.COMBAT)));
 
     //Tools
 

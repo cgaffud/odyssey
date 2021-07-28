@@ -2,7 +2,6 @@ package com.bedmen.odyssey.armor;
 
 import java.util.function.Supplier;
 
-import com.bedmen.odyssey.items.EquipmentArmorItem;
 import com.bedmen.odyssey.util.ItemRegistry;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;

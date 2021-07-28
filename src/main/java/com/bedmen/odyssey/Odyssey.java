@@ -8,6 +8,7 @@ import com.bedmen.odyssey.client.renderer.entity.WerewolfRenderer;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.WerewolfEntity;
 import com.bedmen.odyssey.items.*;
+import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
 import com.bedmen.odyssey.util.*;
 import com.bedmen.odyssey.client.renderer.NewBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.ModPotions;
@@ -22,6 +23,7 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -161,5 +163,10 @@ public class Odyssey
     @SubscribeEvent
     public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
         ModSpawnEggItem.initSpawnEggs();
+    }
+
+    @SubscribeEvent
+    public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
+        EquipmentArmorItem.initEquipment();
     }
 }

@@ -1,16 +1,12 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.armor.ModArmorMaterial;
 import com.bedmen.odyssey.items.HammerItem;
-import com.bedmen.odyssey.items.EquipmentArmorItem;
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,7 +19,6 @@ import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(EnchantmentHelper.class)
 public abstract class MixinEnchantmentHelper {
