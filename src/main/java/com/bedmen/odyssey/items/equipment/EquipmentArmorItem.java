@@ -22,8 +22,8 @@ public class EquipmentArmorItem extends ArmorItem {
     private final Map<Enchantment, Tuple<Integer, String>> setBonusMap = new HashMap<>();
     protected static final List<EquipmentArmorItem> UNFINISHED_EQUIPMENT = new ArrayList<EquipmentArmorItem>();
 
-    public EquipmentArmorItem(IArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties p_i48534_3_) {
-        super(armorMaterial, slotType, p_i48534_3_);
+    public EquipmentArmorItem(IArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties properties) {
+        super(armorMaterial, slotType, properties);
         this.enchantmentLazyMap.put(Lazy.of(EnchantmentRegistry.UNENCHANTABLE::get),1);
         UNFINISHED_EQUIPMENT.add(this);
     }
