@@ -7,10 +7,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.DamageSource;
@@ -23,7 +20,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @Mixin(EnchantmentHelper.class)
 public abstract class MixinEnchantmentHelper {
@@ -96,14 +96,35 @@ public abstract class MixinEnchantmentHelper {
     }
 
     @Overwrite
-    public static int getEnchantmentLevel(Enchantment enchantment, LivingEntity p_185284_1_) {
-        Iterable<ItemStack> iterable = enchantment.getSlotItems(p_185284_1_).values();
+    public static int getEnchantmentLevel(Enchantment enchantment, LivingEntity livingEntity) {
+        Iterable<ItemStack> iterable = enchantment.getSlotItems(livingEntity).values();
+        Iterable<ItemStack> armor = livingEntity.getArmorSlots();
+        IArmorMaterial material1 = null;
+        Item setBonusItem = null;
+        int setBonusCounter = 0;
         if (iterable == null) {
             return 0;
         } else {
             int i = 0;
             for(ItemStack itemstack : iterable) {
                 i += getItemEnchantmentLevel(enchantment, itemstack);
+            }
+            if(armor != null) {
+                for (ItemStack itemstack : armor) {
+                    Item item = itemstack.getItem();
+                    if (item instanceof ArmorItem) {
+                        IArmorMaterial material2 = ((ArmorItem) item).getMaterial();
+                        if (material1 == null){
+                            material1 = material2;
+                            setBonusItem = item;
+                            setBonusCounter++;
+                        }
+                        else if (material1 == material2)
+                            setBonusCounter++;
+                    }
+                }
+                if(setBonusCounter >= 4)
+                    i += EquipmentArmorItem.getSetBonusLevel(enchantment, setBonusItem);
             }
             return i;
         }

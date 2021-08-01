@@ -3,25 +3,19 @@ package com.bedmen.odyssey.client.gui;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.container.NewEnchantmentContainer;
-import com.bedmen.odyssey.network.CUpdateEnchantPacket;
+import com.bedmen.odyssey.network.ModNetwork;
+import com.bedmen.odyssey.network.packet.UpdateEnchantPacket;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.inventory.BeaconScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.play.client.CUpdateBeaconPacket;
-import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.*;
@@ -222,8 +216,7 @@ public class NewEnchantmentScreen extends ContainerScreen<NewEnchantmentContaine
         boolean b1 = this.menu.slots.get(1).getItem().getCount() >= cost || player.isCreative();
         boolean b2 = player.experienceLevel >= level*10 || player.isCreative();
         if(b1 && b2){
-            NewEnchantmentScreen.this.minecraft.getConnection().send(new CUpdateEnchantPacket(level, EnchantmentUtil.enchantmentToInt(e), cost));
-            this.inventory.player.onEnchantmentPerformed(ItemStack.EMPTY, cost);
+            ModNetwork.CHANNEL.sendToServer(new UpdateEnchantPacket(level, EnchantmentUtil.enchantmentToInt(e), cost));
             this.minecraft.getSoundManager().play(SimpleSound.forUI(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0f));
         }
     }
