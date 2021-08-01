@@ -115,6 +115,7 @@
   //Set Bonus Enchantments
   "enchantment.oddc.slow_falling": "Slow Falling",
   "enchantment.oddc.gliding": "Gliding",
+  "enchantment.oddc.turtling": "Turtling",
 
   //Curses
   "enchantment.oddc.unenchantable": "Inert",

@@ -3,6 +3,7 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.items.NewShieldItem;
 import com.bedmen.odyssey.network.ModNetwork;
 import com.bedmen.odyssey.network.packet.JumpingPacket;
+import com.bedmen.odyssey.network.packet.SneakingPacket;
 import com.bedmen.odyssey.util.EffectRegistry;
 import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -515,6 +516,14 @@ public abstract class MixinLivingEntity extends Entity{
                 ModNetwork.CHANNEL.sendToServer(new JumpingPacket(this.jumping));
             else if(this.jumping && this.getDeltaMovement().y <= 0.0D){
                 this.addEffect(new EffectInstance(Effects.SLOW_FALLING, 1, 0, false, false, true));
+            }
+        }
+
+        if(0 < EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.TURTLING.get(), (LivingEntity)(Object)this)){
+            if(this.level.isClientSide)
+                ModNetwork.CHANNEL.sendToServer(new SneakingPacket(this.isShiftKeyDown()));
+            else if(this.isShiftKeyDown()){
+                this.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 1, 2, false, false, true));
             }
         }
     }
