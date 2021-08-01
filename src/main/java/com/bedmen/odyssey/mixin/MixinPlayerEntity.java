@@ -7,6 +7,7 @@ import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerAbilities;
@@ -176,15 +177,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
         //Sets player on fire unless they have fire protection or an arctic chestplate
         if(!(this.abilities.instabuild || this.isSpectator()) && this.level.dimensionType().ultraWarm()){
-            boolean fireFlag = true;
-            for(ItemStack stack : this.getArmorSlots()){
-                if(stack.getItem() == ItemRegistry.ARCTIC_CHESTPLATE.get()){
-                    fireFlag = false;
-                    break;
-                }
-               fireFlag &= !EnchantmentUtil.checkStackForEnch(stack,"minecraft:fire_protection");
-            }
-            if(fireFlag)
+            if(0 >= EnchantmentHelper.getEnchantmentLevel(Enchantments.FIRE_PROTECTION, this))
                 this.setSecondsOnFire(1);
         }
 
