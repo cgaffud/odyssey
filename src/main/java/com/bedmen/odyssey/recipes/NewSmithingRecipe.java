@@ -1,10 +1,14 @@
 package com.bedmen.odyssey.recipes;
 
+import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
 import com.bedmen.odyssey.util.BlockRegistry;
+import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.bedmen.odyssey.util.RecipeRegistry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -18,6 +22,9 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class NewSmithingRecipe implements IRecipe<IInventory>{
     protected final ResourceLocation id;
@@ -172,7 +179,10 @@ public class NewSmithingRecipe implements IRecipe<IInventory>{
         if (compoundnbt != null) {
             itemstack.setTag(compoundnbt.copy());
         }
-
+        if(0 < EquipmentArmorItem.getInnateEnchantmentLevel(EnchantmentRegistry.UNENCHANTABLE.get(), itemstack.getItem())) {
+            Map<Enchantment, Integer> map2 = new HashMap<>();
+            EnchantmentHelper.setEnchantments(map2, itemstack);
+        }
         return itemstack;
     }
 
