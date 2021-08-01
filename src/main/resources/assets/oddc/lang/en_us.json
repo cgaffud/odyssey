@@ -111,10 +111,21 @@
   "enchantment.oddc.accuracy": "Accuracy",
   "enchantment.oddc.blocking": "Blocking",
   "enchantment.oddc.recovery": "Recovery",
+
+  //Set Bonus Enchantments
+  "enchantment.oddc.slow_falling": "Slow Falling",
+  "enchantment.oddc.gliding": "Gliding",
+
+  //Curses
   "enchantment.oddc.unenchantable": "Inert",
   "enchantment.oddc.bleeding": "Bleeding",
   "enchantment.oddc.drowning": "Drowning",
   "enchantment.oddc.heavy": "Heavy",
+
+  //Setbonus
+  "item.oddc.equipment.setbonus": "Set Bonus: ",
+  "item.oddc.equipment.key": " Key]",
+  "item.oddc.equipment.passive": " [Passive]",
 
   //Blocks
   "block.oddc.alloy_furnace": "Alloy Furnace",

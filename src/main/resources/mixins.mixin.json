@@ -9,7 +9,6 @@
     "MixinBlockItem",
     "MixinItemColors",
     "MixinForgeHooks",
-    "MixinServerPlayNetHandler",
     "MixinPlayerEntity",
     "MixinForgeIngameGui",
     "MixinAttributes",
@@ -26,7 +25,8 @@
     "MixinEnchantmentHelper",
     "MixinPotionUtils",
     "MixinWorldRenderer",
-    "MixinProtectionEnchantment"
+    "MixinProtectionEnchantment",
+    "MixinServerPlayerEntity"
   ],
   "injectors": {
     "defaultRequire": 1
