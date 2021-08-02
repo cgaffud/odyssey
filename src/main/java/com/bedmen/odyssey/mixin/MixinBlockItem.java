@@ -6,8 +6,6 @@ import net.minecraft.util.ActionResultType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-import net.minecraft.item.Item.Properties;
-
 @Mixin(BlockItem.class)
 public abstract class MixinBlockItem extends Item {
 

@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.util.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -15,7 +14,6 @@ import org.apache.logging.log4j.util.TriConsumer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-
 import javax.annotation.Nullable;
 import java.util.Set;
 

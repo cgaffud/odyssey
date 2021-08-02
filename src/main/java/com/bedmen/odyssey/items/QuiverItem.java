@@ -11,9 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
-
-import net.minecraft.item.Item.Properties;
-
 public class QuiverItem extends Item {
     private final int size;
     public QuiverItem(Properties properties, int size) {

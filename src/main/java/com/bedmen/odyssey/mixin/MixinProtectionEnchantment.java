@@ -1,11 +1,8 @@
 package com.bedmen.odyssey.mixin;
 
 import net.minecraft.enchantment.ProtectionEnchantment;
-import net.minecraft.util.CombatRules;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ProtectionEnchantment.class)

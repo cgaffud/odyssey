@@ -1,10 +1,9 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.items.NewShieldItem;
+import com.bedmen.odyssey.items.OdysseyShieldItem;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.item.crafting.ShieldRecipes;
 import net.minecraft.nbt.CompoundNBT;
@@ -28,7 +27,7 @@ public abstract class MixinShieldRecipes {
 
                     itemstack1 = itemstack2;
                 } else {
-                    if (!(itemstack2.getItem() instanceof ShieldItem || itemstack2.getItem() instanceof NewShieldItem)) {
+                    if (!(itemstack2.getItem() instanceof ShieldItem || itemstack2.getItem() instanceof OdysseyShieldItem)) {
                         return false;
                     }
 
@@ -57,7 +56,7 @@ public abstract class MixinShieldRecipes {
             if (!itemstack2.isEmpty()) {
                 if (itemstack2.getItem() instanceof BannerItem) {
                     itemstack = itemstack2;
-                } else if (itemstack2.getItem() instanceof ShieldItem || itemstack2.getItem() instanceof NewShieldItem) {
+                } else if (itemstack2.getItem() instanceof ShieldItem || itemstack2.getItem() instanceof OdysseyShieldItem) {
                     itemstack1 = itemstack2.copy();
                 }
             }

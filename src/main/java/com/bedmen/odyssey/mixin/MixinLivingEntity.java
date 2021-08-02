@@ -1,17 +1,16 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.items.NewShieldItem;
-import com.bedmen.odyssey.network.ModNetwork;
+import com.bedmen.odyssey.entity.IZephyrArmorEntity;
+import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.equipment.ZephyrArmorItem;
+import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.JumpingPacket;
 import com.bedmen.odyssey.network.packet.SneakingPacket;
 import com.bedmen.odyssey.util.EffectRegistry;
 import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.util.ItemRegistry;
 import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
-import com.google.common.collect.Maps;
-import io.netty.buffer.Unpooled;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
@@ -31,8 +30,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.CInputPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -47,26 +44,16 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import javax.annotation.Nullable;
 import java.util.*;
 
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity extends Entity{
+public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEntity {
 
     public MixinLivingEntity(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
-    @Shadow
-    public float xxa;
-    @Shadow
-    public float zza;
-    @Shadow
-    private Map<Effect, EffectInstance> activeEffects;
     @Shadow
     public boolean isFallFlying() {return false;}
     @Shadow
@@ -210,6 +197,8 @@ public abstract class MixinLivingEntity extends Entity{
     @Shadow
     protected float getJumpPower() { return 0.0f; }
 
+    private int zephyrArmorTicks = -1;
+
     private Supplier<EffectInstance> effectInstanceSupplier;
 
     public boolean hurt(DamageSource source, float amount) {
@@ -244,8 +233,8 @@ public abstract class MixinLivingEntity extends Entity{
 
                 // Shield Code
                 Item item = this.useItem.getItem();
-                if(item instanceof NewShieldItem)
-                    amount -= EnchantmentUtil.getBlocking((LivingEntity)(Entity)this) * ((NewShieldItem)item).getBlock();
+                if(item instanceof OdysseyShieldItem)
+                    amount -= EnchantmentUtil.getBlocking((LivingEntity)(Entity)this) * ((OdysseyShieldItem)item).getBlock();
                 if(amount < 0.0f){
                     amount = 0.0F;
                     flag = true;
@@ -454,18 +443,18 @@ public abstract class MixinLivingEntity extends Entity{
             if (heavySum != 0)
                 this.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 5, heavySum-1, true, true, true));
 
-            if (this.tickCount % 25 == 0) {
+            if (this.tickCount % 25 == 0 && !this.level.isClientSide) {
                 Enchantment bleeding = EnchantmentRegistry.BLEEDING.get();
-                Iterable<ItemStack> iterable = bleeding.getSlotItems((LivingEntity)(Object)this).values();
+                Iterable<ItemStack> iterable = this.getAllSlots();
                 List<Integer> bleedCheck = new ArrayList<>();
                 for(ItemStack itemstack : iterable) {
                     bleedCheck.add(EnchantmentHelper.getItemEnchantmentLevel(bleeding, itemstack));
                 }
                 if(bleedCheck.size() > 0){
-                    int bleedLevel = Collections.max(bleedCheck) - 1;
-                    int bleedAmnt = Collections.frequency(bleedCheck, 0);
-                    if ((bleedLevel != -1) && (this.tickCount % (100 >> bleedLevel) == 0))
-                        this.addEffect(new EffectInstance(EffectRegistry.BLEEDING.get(), 1, 6 - bleedAmnt, false, false, false));
+                    int bleedFrequency = Collections.max(bleedCheck) - 1;
+                    int bleedDamage = 6 - Collections.frequency(bleedCheck, 0);
+                    if ((bleedFrequency >= 0) && (this.tickCount % (100 >> bleedFrequency) == 0))
+                        this.addEffect(new EffectInstance(EffectRegistry.BLEEDING.get(), 1, bleedDamage, false, false, false));
                 }
             }
         }
@@ -511,17 +500,17 @@ public abstract class MixinLivingEntity extends Entity{
         this.xRotO = this.xRot;
         this.level.getProfiler().pop();
 
-        if(0 < EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SLOW_FALLING.get(), (LivingEntity)(Object)this)){
+        if(EnchantmentUtil.hasSlowFalling((LivingEntity)(Object)this)){
             if(this.level.isClientSide)
-                ModNetwork.CHANNEL.sendToServer(new JumpingPacket(this.jumping));
+                OdysseyNetwork.CHANNEL.sendToServer(new JumpingPacket(this.jumping));
             else if(this.jumping && this.getDeltaMovement().y <= 0.0D){
                 this.addEffect(new EffectInstance(Effects.SLOW_FALLING, 1, 0, false, false, true));
             }
         }
 
-        if(0 < EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.TURTLING.get(), (LivingEntity)(Object)this)){
+        if(EnchantmentUtil.hasTurtling((LivingEntity)(Object)this)){
             if(this.level.isClientSide)
-                ModNetwork.CHANNEL.sendToServer(new SneakingPacket(this.isShiftKeyDown()));
+                OdysseyNetwork.CHANNEL.sendToServer(new SneakingPacket(this.isShiftKeyDown()));
             else if(this.isShiftKeyDown()){
                 this.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 1, 2, false, false, true));
             }
@@ -529,17 +518,22 @@ public abstract class MixinLivingEntity extends Entity{
     }
 
     private void updateFallFlying() {
+        if(this.onGround)
+            this.zephyrArmorTicks = 40;
         boolean flag = this.getSharedFlag(7);
         if (flag && !this.onGround && !this.isPassenger() && !this.hasEffect(Effects.LEVITATION)) {
             ItemStack itemstack = this.getItemBySlot(EquipmentSlotType.CHEST);
             flag = itemstack.canElytraFly((LivingEntity)(Object)this) && itemstack.elytraFlightTick((LivingEntity)(Object)this, this.fallFlyTicks);
-            flag |= 0 < EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.GLIDING.get(), (LivingEntity)(Object)this);
+            if(itemstack.getItem() instanceof ZephyrArmorItem){
+                flag &= EnchantmentUtil.hasGliding((LivingEntity)(Object)this);
+            }
         } else {
             flag = false;
         }
-        if (!this.level.isClientSide) {
+        if(flag)
+            this.zephyrArmorTicks--;
+        if (!this.level.isClientSide)
             this.setSharedFlag(7, flag);
-        }
     }
 
     public void travel(Vector3d p_213352_1_) {
@@ -679,5 +673,9 @@ public abstract class MixinLivingEntity extends Entity{
         }
 
         this.calculateEntityAnimation((LivingEntity)(Object)this, this instanceof IFlyingAnimal);
+    }
+    
+    public int getZephyrArmorTicks(){
+        return this.zephyrArmorTicks;
     }
 }

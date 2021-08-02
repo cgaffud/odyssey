@@ -2,15 +2,12 @@ package com.bedmen.odyssey.client.gui;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.container.ResearchTableContainer;
-import com.bedmen.odyssey.container.slots.NewSmithingTableSlot;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.BrewingStandContainer;
 import net.minecraft.util.EnchantmentNameParts;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraftforge.api.distmarker.Dist;

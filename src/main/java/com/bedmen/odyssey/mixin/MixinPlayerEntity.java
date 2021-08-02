@@ -1,13 +1,9 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.QuiverItem;
-import com.bedmen.odyssey.util.EffectRegistry;
-import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerAbilities;
@@ -21,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.CooldownTracker;
 import net.minecraft.util.FoodStats;
@@ -31,16 +26,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntity extends LivingEntity {
 
+    @Shadow
+    public void startFallFlying() {}
     @Shadow
     public int experienceLevel;
     @Shadow
@@ -177,7 +169,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
         //Sets player on fire unless they have fire protection or an arctic chestplate
         if(!(this.abilities.instabuild || this.isSpectator()) && this.level.dimensionType().ultraWarm()){
-            if(0 >= EnchantmentHelper.getEnchantmentLevel(Enchantments.FIRE_PROTECTION, this))
+            if(!EnchantmentUtil.hasFireProtectionOrResistance(this))
                 this.setSecondsOnFire(1);
         }
 

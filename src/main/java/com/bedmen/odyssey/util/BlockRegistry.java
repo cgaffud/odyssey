@@ -3,7 +3,6 @@ package com.bedmen.odyssey.util;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.blocks.*;
 import net.minecraft.block.*;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraftforge.common.ToolType;
@@ -22,10 +21,10 @@ public class BlockRegistry {
         BLOCKS_VANILLA.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<Block> BEACON = BLOCKS_VANILLA.register("beacon", NewBeaconBlock::new);
-    public static final RegistryObject<Block> SMITHING_TABLE = BLOCKS_VANILLA.register("smithing_table", NewSmithingTableBlock::new);
+    public static final RegistryObject<Block> BEACON = BLOCKS_VANILLA.register("beacon", OdysseyBeaconBlock::new);
+    public static final RegistryObject<Block> SMITHING_TABLE = BLOCKS_VANILLA.register("smithing_table", OdysseySmithingTableBlock::new);
     public static final RegistryObject<Block> ALLOY_FURNACE = BLOCKS.register("alloy_furnace", AlloyFurnaceBlock::new);
-    public static final RegistryObject<Block> ENCHANTING_TABLE = BLOCKS_VANILLA.register("enchanting_table", NewEnchantingTableBlock::new);
+    public static final RegistryObject<Block> ENCHANTING_TABLE = BLOCKS_VANILLA.register("enchanting_table", OdysseyEnchantingTableBlock::new);
     public static final RegistryObject<Block> BOOKSHELF = BLOCKS_VANILLA.register("bookshelf", BookshelfBlock::new);
     public static final RegistryObject<Block> RECYCLE_FURNACE = BLOCKS.register("recycle_furnace", RecycleFurnaceBlock::new);
     public static final RegistryObject<Block> RESEARCH_TABLE = BLOCKS.register("research_table", ResearchTableBlock::new);

@@ -3,7 +3,6 @@ package com.bedmen.odyssey.client.renderer.entity;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.model.NewTridentModel;
 import com.bedmen.odyssey.entity.projectile.AbstractTridentEntity;
-import com.bedmen.odyssey.entity.projectile.SerpentTridentEntity;
 import com.bedmen.odyssey.util.ItemRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;

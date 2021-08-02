@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 
@@ -158,11 +159,11 @@ public class EnchantmentUtil {
                     return false;
             }
         }
-        if(item instanceof NewBowItem) return check(BOW_ENCHANTS, id);
-        if(item instanceof NewCrossbowItem) return check(CROSSBOW_ENCHANTS, id);
-        if(item instanceof NewTridentItem) return check(TRIDENT_ENCHANTS, id);
+        if(item instanceof OdysseyBowItem) return check(BOW_ENCHANTS, id);
+        if(item instanceof OdysseyCrossbowItem) return check(CROSSBOW_ENCHANTS, id);
+        if(item instanceof OdysseyTridentItem) return check(TRIDENT_ENCHANTS, id);
         if(item instanceof FishingRodItem) return check(FISHING_ROD_ENCHANTS, id);
-        if(item instanceof NewShieldItem) return check(SHIELD_ENCHANTS, id);
+        if(item instanceof OdysseyShieldItem) return check(SHIELD_ENCHANTS, id);
         return false;
     }
 
@@ -238,5 +239,21 @@ public class EnchantmentUtil {
     public static int getRecovery(LivingEntity entity){
         int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.RECOVERY.get(), entity);
         return 100 - 40 * i;
+    }
+
+    public static boolean hasFireProtectionOrResistance(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(Enchantments.FIRE_PROTECTION, entity) > 0 || entity.hasEffect(Effects.FIRE_RESISTANCE);
+    }
+
+    public static boolean hasGliding(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.GLIDING.get(), entity) > 0;
+    }
+
+    public static boolean hasSlowFalling(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SLOW_FALLING.get(), entity) > 0;
+    }
+
+    public static boolean hasTurtling(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.TURTLING.get(), entity) > 0;
     }
 }

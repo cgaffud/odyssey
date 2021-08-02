@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.items.NewShieldItem;
+import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -23,10 +23,10 @@ public abstract class MixinMobEntity extends Entity{
     }
 
     private void maybeDisableShield(PlayerEntity player, ItemStack mainhand, ItemStack activePlayerStack) {
-        if (!mainhand.isEmpty() && !activePlayerStack.isEmpty() && (mainhand.getItem() instanceof AxeItem) && (activePlayerStack.getItem() instanceof NewShieldItem)){
+        if (!mainhand.isEmpty() && !activePlayerStack.isEmpty() && (mainhand.getItem() instanceof AxeItem) && (activePlayerStack.getItem() instanceof OdysseyShieldItem)){
             float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(getMobEntity(this)) * 0.05F;
             if (this.random.nextFloat() < f) {
-                if(activePlayerStack.getItem() instanceof NewShieldItem || activePlayerStack.getItem() instanceof ShieldItem){
+                if(activePlayerStack.getItem() instanceof OdysseyShieldItem || activePlayerStack.getItem() instanceof ShieldItem){
                     int ticks = EnchantmentUtil.getRecovery(player);
                     player.getCooldowns().addCooldown(Items.SHIELD, ticks);
                     player.getCooldowns().addCooldown(ItemRegistry.SERPENT_SHIELD.get(), ticks);

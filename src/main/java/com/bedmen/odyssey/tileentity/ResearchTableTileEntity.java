@@ -1,16 +1,11 @@
 package com.bedmen.odyssey.tileentity;
 
-import java.util.Map;
 import javax.annotation.Nullable;
-
 import com.bedmen.odyssey.container.ResearchTableContainer;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.recipes.ResearchRecipe;
 import com.bedmen.odyssey.util.TileEntityTypeRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;

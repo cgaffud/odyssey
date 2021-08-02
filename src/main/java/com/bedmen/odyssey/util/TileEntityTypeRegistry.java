@@ -18,9 +18,9 @@ public class TileEntityTypeRegistry {
         TILE_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<TileEntityType<NewBeaconTileEntity>> BEACON = TILE_ENTITY_TYPES_VANILLA.register("beacon", () -> TileEntityType.Builder.of(NewBeaconTileEntity::new, BlockRegistry.BEACON.get()).build(null));
+    public static final RegistryObject<TileEntityType<OdysseyBeaconTileEntity>> BEACON = TILE_ENTITY_TYPES_VANILLA.register("beacon", () -> TileEntityType.Builder.of(OdysseyBeaconTileEntity::new, BlockRegistry.BEACON.get()).build(null));
     public static final RegistryObject<TileEntityType<AlloyFurnaceTileEntity>> ALLOY_FURNACE = TILE_ENTITY_TYPES.register("alloy_furnace", () -> TileEntityType.Builder.of(AlloyFurnaceTileEntity::new, BlockRegistry.ALLOY_FURNACE.get()).build(null));
-    public static final RegistryObject<TileEntityType<NewEnchantingTableTileEntity>> ENCHANTING_TABLE = TILE_ENTITY_TYPES.register("enchanting_table", () -> TileEntityType.Builder.of(NewEnchantingTableTileEntity::new, BlockRegistry.ENCHANTING_TABLE.get()).build(null));
+    public static final RegistryObject<TileEntityType<OdysseyEnchantingTableTileEntity>> ENCHANTING_TABLE = TILE_ENTITY_TYPES.register("enchanting_table", () -> TileEntityType.Builder.of(OdysseyEnchantingTableTileEntity::new, BlockRegistry.ENCHANTING_TABLE.get()).build(null));
     public static final RegistryObject<TileEntityType<BookshelfTileEntity>> BOOKSHELF = TILE_ENTITY_TYPES.register("bookshelf", () -> TileEntityType.Builder.of(BookshelfTileEntity::new, BlockRegistry.BOOKSHELF.get()).build(null));
     public static final RegistryObject<TileEntityType<RecycleFurnaceTileEntity>> RECYCLE_FURNACE = TILE_ENTITY_TYPES.register("recycle_furnace", () -> TileEntityType.Builder.of(RecycleFurnaceTileEntity::new, BlockRegistry.RECYCLE_FURNACE.get()).build(null));
     public static final RegistryObject<TileEntityType<ResearchTableTileEntity>> RESEARCH_TABLE = TILE_ENTITY_TYPES.register("research_table", () -> TileEntityType.Builder.of(ResearchTableTileEntity::new, BlockRegistry.RESEARCH_TABLE.get()).build(null));

@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.entity.projectile.NewTridentEntity;
+import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
 import com.bedmen.odyssey.entity.projectile.SerpentTridentEntity;
 import com.bedmen.odyssey.util.EntityTypeRegistry;
 import net.minecraft.block.Block;
@@ -83,7 +83,7 @@ public abstract class MixinClientPlayNetHandler {
                 ((AbstractArrowEntity)entity).setOwner(entity4);
             }
         } else if (entitytype == EntityTypeRegistry.NEW_TRIDENT.get()) {
-            entity = new NewTridentEntity(this.level, d0, d1, d2);
+            entity = new OdysseyTridentEntity(this.level, d0, d1, d2);
             Entity entity4 = this.level.getEntity(packetIn.getData());
             if (entity4 != null) {
                 ((AbstractArrowEntity)entity).setOwner(entity4);

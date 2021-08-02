@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.network.packet;
 
-import com.bedmen.odyssey.container.NewEnchantmentContainer;
+import com.bedmen.odyssey.container.OdysseyEnchantmentContainer;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -51,8 +51,8 @@ public class UpdateEnchantPacket{
             if(serverPlayerEntity != null){
                 serverPlayerEntity.onEnchantmentPerformed(ItemStack.EMPTY, updateEnchantPacket.cost);
             }
-            if (serverPlayerEntity.containerMenu instanceof NewEnchantmentContainer) {
-                ((NewEnchantmentContainer)serverPlayerEntity.containerMenu).doEnchant(updateEnchantPacket.level, updateEnchantPacket.id, updateEnchantPacket.cost);
+            if (serverPlayerEntity.containerMenu instanceof OdysseyEnchantmentContainer) {
+                ((OdysseyEnchantmentContainer)serverPlayerEntity.containerMenu).doEnchant(updateEnchantPacket.level, updateEnchantPacket.id, updateEnchantPacket.cost);
             }
         });
         context.setPacketHandled(true);

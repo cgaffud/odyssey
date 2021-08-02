@@ -2,8 +2,8 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.model.NewTridentModel;
-import com.bedmen.odyssey.items.NewShieldItem;
-import com.bedmen.odyssey.items.NewTridentItem;
+import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.OdysseyTridentItem;
 import com.bedmen.odyssey.util.ItemRegistry;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.entity.model.ShieldModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.BannerTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.SkullTileEntityRenderer;
@@ -26,7 +25,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -109,7 +107,7 @@ public abstract class MixinItemStackTileEntityRenderer {
                 TileEntityRendererDispatcher.instance.renderItem(tileentity, matrixStack, buffer, combinedLight, combinedOverlay);
             }
         } else {
-            if (item instanceof NewShieldItem) {
+            if (item instanceof OdysseyShieldItem) {
                 boolean flag = stack.getTagElement("BlockEntityTag") != null;
                 matrixStack.pushPose();
                 matrixStack.scale(1.0F, -1.0F, -1.0F);
@@ -131,7 +129,7 @@ public abstract class MixinItemStackTileEntityRenderer {
                 }
 
                 matrixStack.popPose();
-            } else if (item instanceof NewTridentItem) {
+            } else if (item instanceof OdysseyTridentItem) {
                 matrixStack.pushPose();
                 matrixStack.scale(1.0F, -1.0F, -1.0F);
                 IVertexBuilder ivertexbuilder1 = ItemRenderer.getFoilBufferDirect(buffer, this.newtrident.renderType(NewTridentModel.getTridentTexture(item)), false, stack.hasFoil());
