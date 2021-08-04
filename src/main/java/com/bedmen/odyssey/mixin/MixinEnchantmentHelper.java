@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.items.HammerItem;
-import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
+import com.bedmen.odyssey.items.equipment.IEquipment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -58,13 +57,14 @@ public abstract class MixinEnchantmentHelper {
         for(ItemStack itemStack : stacks){
             Item item = itemStack.getItem();
             if(source == DamageSource.FALL){
-                mutableint.add(EquipmentArmorItem.getInnateEnchantmentLevel(Enchantments.FALL_PROTECTION, item)*5);
+                mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(Enchantments.FALL_PROTECTION)*5);
+                System.out.println(((IEquipment)item).getInnateEnchantmentLevel(Enchantments.FALL_PROTECTION));
             }
             else if(source.isFire()){
-                mutableint.add(EquipmentArmorItem.getInnateEnchantmentLevel(Enchantments.FIRE_PROTECTION, item)*5);
+                mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(Enchantments.FIRE_PROTECTION)*5);
             }
             else if(source.isExplosion()){
-                mutableint.add(EquipmentArmorItem.getInnateEnchantmentLevel(Enchantments.BLAST_PROTECTION, item)*5);
+                mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(Enchantments.BLAST_PROTECTION)*5);
             }
         }
         return mutableint.intValue();
@@ -78,10 +78,11 @@ public abstract class MixinEnchantmentHelper {
         runIterationOnItem2((enchantment, level) -> {
             mutablefloat.add(enchantment.getDamageBonus(level, creatureAttribute));
         }, stack);
-        if(stack.getItem() instanceof HammerItem){
-            if(creatureAttribute == CreatureAttribute.ARTHROPOD){
-                mutablefloat.add((((HammerItem)stack.getItem()).getAttackDamage() + 1.0f) * 0.5f);
-            }
+        if(creatureAttribute == CreatureAttribute.ARTHROPOD){
+            mutablefloat.add(((IEquipment)stack.getItem()).getInnateEnchantmentLevel(Enchantments.BANE_OF_ARTHROPODS)*2);
+        }
+        if(creatureAttribute == CreatureAttribute.UNDEAD){
+            mutablefloat.add(((IEquipment)stack.getItem()).getInnateEnchantmentLevel(Enchantments.SMITE)*2);
         }
         return mutablefloat.floatValue();
     }
@@ -120,20 +121,20 @@ public abstract class MixinEnchantmentHelper {
                     }
                 }
                 if(setBonusCounter >= 4)
-                    i += EquipmentArmorItem.getSetBonusLevel(enchantment, setBonusItem);
+                    i += ((IEquipment)setBonusItem).getSetBonusLevel(enchantment);
             }
             return i;
         }
     }
 
     @Overwrite
-    public static int getItemEnchantmentLevel(Enchantment enchantment, ItemStack itemstack) {
-        if (itemstack.isEmpty()) {
+    public static int getItemEnchantmentLevel(Enchantment enchantment, ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
             return 0;
         } else {
             int j = 0;
             ResourceLocation resourcelocation = Registry.ENCHANTMENT.getKey(enchantment);
-            ListNBT listnbt = itemstack.getEnchantmentTags();
+            ListNBT listnbt = itemStack.getEnchantmentTags();
 
             for(int i = 0; i < listnbt.size(); ++i) {
                 CompoundNBT compoundnbt = listnbt.getCompound(i);
@@ -144,7 +145,7 @@ public abstract class MixinEnchantmentHelper {
                 }
             }
 
-            j += EquipmentArmorItem.getInnateEnchantmentLevel(enchantment, itemstack.getItem());
+            j += ((IEquipment)(itemStack.getItem())).getInnateEnchantmentLevel(enchantment);
 
             return j;
         }
@@ -154,7 +155,7 @@ public abstract class MixinEnchantmentHelper {
     public static Map<Enchantment, Integer> getEnchantments(ItemStack itemStack) {
         ListNBT listnbt = itemStack.getItem() == Items.ENCHANTED_BOOK ? EnchantedBookItem.getEnchantments(itemStack) : itemStack.getEnchantmentTags();
         Map<Enchantment, Integer> map = deserializeEnchantments(listnbt);
-        Map<Enchantment, Integer> map2 = EquipmentArmorItem.getInnateEnchantmentMap(itemStack.getItem());
+        Map<Enchantment, Integer> map2 = ((IEquipment)(itemStack.getItem())).getInnateEnchantmentMap();
         map.putAll(map2);
         return map;
     }

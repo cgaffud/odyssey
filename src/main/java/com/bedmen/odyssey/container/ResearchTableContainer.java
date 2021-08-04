@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.container;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.util.ContainerRegistry;
+import com.bedmen.odyssey.util.ItemRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -9,6 +11,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,12 +22,12 @@ public class ResearchTableContainer extends Container {
     private final IIntArray tableData;
 
     public ResearchTableContainer(int p_i50095_1_, PlayerInventory p_i50095_2_) {
-        this(p_i50095_1_, p_i50095_2_, new Inventory(10), new IntArray(2));
+        this(p_i50095_1_, p_i50095_2_, new Inventory(11), new IntArray(2));
     }
 
     public ResearchTableContainer(int id, PlayerInventory playerInventory, IInventory tableInventory, IIntArray tableData) {
         super(ContainerRegistry.RESEARCH_TABLE.get(), id);
-        checkContainerSize(tableInventory, 10);
+        checkContainerSize(tableInventory, 11);
         checkContainerDataCount(tableData, 2);
         this.tableInventory = tableInventory;
         this.tableData = tableData;
@@ -32,7 +35,8 @@ public class ResearchTableContainer extends Container {
             this.addSlot(new ResearchTableContainer.ResearchSlot(tableInventory, i, 17+18*i, 17));
         }
         this.addSlot(new ResearchTableContainer.FuelSlot(tableInventory, 8, 17, 50));
-        this.addSlot(new ResearchTableContainer.BookSlot(tableInventory, 9, 143, 50));
+        this.addSlot(new ResearchTableContainer.QuillSlot(tableInventory, 9, 53, 50));
+        this.addSlot(new ResearchTableContainer.BookSlot(tableInventory, 10, 143, 50));
         this.addDataSlots(tableData);
 
         for(int i = 0; i < 3; ++i) {
@@ -57,13 +61,17 @@ public class ResearchTableContainer extends Container {
         if(slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if(i > 9) {
+            if(i > 10) {
                 if(ResearchTableContainer.FuelSlot.mayPlaceItem(itemstack)) {
                     if(this.moveItemStackTo(itemstack1, 8, 9, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if(ResearchTableContainer.BookSlot.mayPlaceItem(itemstack)){
+                } else if(ResearchTableContainer.QuillSlot.mayPlaceItem(itemstack)){
                     if(!this.moveItemStackTo(itemstack1, 9, 10, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if(ResearchTableContainer.BookSlot.mayPlaceItem(itemstack)){
+                    if(!this.moveItemStackTo(itemstack1, 10, 11, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else {
@@ -72,7 +80,7 @@ public class ResearchTableContainer extends Container {
                     }
                 }
             } else {
-                if(!this.moveItemStackTo(itemstack1, 10, 46, true)) {
+                if(!this.moveItemStackTo(itemstack1, 11, 47, true)) {
                     return ItemStack.EMPTY;
                 }
 
@@ -105,9 +113,14 @@ public class ResearchTableContainer extends Container {
         return this.tableData.get(0);
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public boolean getCurse() {
+        return this.tableInventory.getItem(9).getItem() == ItemRegistry.MALEVOLENT_QUILL.get();
+    }
+
     static class FuelSlot extends Slot {
-        public FuelSlot(IInventory p_i47070_1_, int p_i47070_2_, int p_i47070_3_, int p_i47070_4_) {
-            super(p_i47070_1_, p_i47070_2_, p_i47070_3_, p_i47070_4_);
+        public FuelSlot(IInventory inventory, int index, int x, int y) {
+            super(inventory, index, x, y);
         }
 
         public boolean mayPlace(ItemStack itemStack) {
@@ -124,8 +137,8 @@ public class ResearchTableContainer extends Container {
     }
 
     static class ResearchSlot extends Slot {
-        public ResearchSlot(IInventory p_i47069_1_, int p_i47069_2_, int p_i47069_3_, int p_i47069_4_) {
-            super(p_i47069_1_, p_i47069_2_, p_i47069_3_, p_i47069_4_);
+        public ResearchSlot(IInventory inventory, int index, int x, int y) {
+            super(inventory, index, x, y);
         }
 
         public boolean mayPlace(ItemStack p_75214_1_) {
@@ -138,8 +151,8 @@ public class ResearchTableContainer extends Container {
     }
 
     static class BookSlot extends Slot {
-        public BookSlot(IInventory p_i47598_1_, int p_i47598_2_, int p_i47598_3_, int p_i47598_4_) {
-            super(p_i47598_1_, p_i47598_2_, p_i47598_3_, p_i47598_4_);
+        public BookSlot(IInventory inventory, int index, int x, int y) {
+            super(inventory, index, x, y);
         }
 
         public boolean mayPlace(ItemStack itemStack) {
@@ -148,6 +161,24 @@ public class ResearchTableContainer extends Container {
 
         public static boolean mayPlaceItem(ItemStack itemStack) {
             return itemStack.getItem() == Items.BOOK;
+        }
+
+        public int getMaxStackSize() {
+            return 1;
+        }
+    }
+
+    static class QuillSlot extends Slot {
+        public QuillSlot(IInventory inventory, int index, int x, int y) {
+            super(inventory, index, x, y);
+        }
+
+        public boolean mayPlace(ItemStack itemStack) {
+            return mayPlaceItem(itemStack);
+        }
+
+        public static boolean mayPlaceItem(ItemStack itemStack) {
+            return Odyssey.QUILL_TAG.contains(itemStack.getItem());
         }
 
         public int getMaxStackSize() {

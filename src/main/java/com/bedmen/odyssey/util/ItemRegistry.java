@@ -85,7 +85,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ARCTIC_HEART = ITEMS.register("arctic_heart", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> WEREWOLF_CLAW = ITEMS.register("werewolf_claw", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS)));
     public static final RegistryObject<Item> ARCTIC_HORN = ITEMS.register("arctic_horn", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS)));
+    public static final RegistryObject<Item> RAVEN_FEATHER = ITEMS.register("raven_feather", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS)));
     public static final RegistryObject<Item> BEWITCHED_QUILL = ITEMS.register("bewitched_quill", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> MALEVOLENT_QUILL = ITEMS.register("malevolent_quill", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS).rarity(Rarity.UNCOMMON)));
 
     //Armor
 
@@ -166,7 +168,11 @@ public class ItemRegistry {
     public static final RegistryObject<Item> DIAMOND_SWORD = ITEMS_VANILLA.register("diamond_sword", () -> new SwordItem(OdysseyItemTier.DIAMOND, 8, -2.4f, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> NETHERITE_SWORD = ITEMS_VANILLA.register("netherite_sword", () -> new SwordItem(OdysseyItemTier.NETHERITE, 9, -2.4f, new Item.Properties().fireResistant().tab(ItemGroup.TAB_COMBAT)));
 
-    public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new HammerItem(OdysseyItemTier.COPPER, 8, -3.2f, new Item.Properties().tab(Odyssey.COMBAT)));
+    //Hammers
+    public static final RegistryObject<Item> WOODEN_BAT = ITEMS.register("wooden_bat", () -> new HammerItem(OdysseyItemTier.WOOD, 6, -3.2f, 1, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> GRANITE_BAT = ITEMS.register("granite_bat", () -> new HammerItem(OdysseyItemTier.GRANITE, 7, -3.2f, 1, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new HammerItem(OdysseyItemTier.COPPER, 8, -3.2f, 2, new Item.Properties().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> OBSIDIAN_HAMMER = ITEMS.register("obsidian_hammer", () -> new HammerItem(OdysseyItemTier.OBSIDIAN, 10, -3.2f, 3, new Item.Properties().tab(Odyssey.COMBAT)));
 
     //Axes
     public static final RegistryObject<Item> WOODEN_AXE = ITEMS_VANILLA.register("wooden_axe", () -> new AxeItem(OdysseyItemTier.WOOD, 6.0f, -3.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));

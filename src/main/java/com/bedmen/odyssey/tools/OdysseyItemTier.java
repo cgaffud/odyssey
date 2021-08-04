@@ -10,7 +10,9 @@ import net.minecraft.tags.ItemTags;
 
 public enum OdysseyItemTier implements IItemTier{
 
-    COPPER(0, 250, 2.0F, -1.0F, 15, () -> { return Ingredient.of(ItemRegistry.COPPER_INGOT.get()); }),
+    COPPER(0, 250, 2.0F, -1.0F, 14, () -> { return Ingredient.of(ItemRegistry.COPPER_INGOT.get()); }),
+    GRANITE(0, 131, 4.0F, -1.0F, 5, () -> { return Ingredient.of(Items.GRANITE); }),
+    OBSIDIAN(4, 1561, 8.0F, -1.0F, 10, () -> { return Ingredient.of(Items.OBSIDIAN); }),
 
     WOOD(0, 59, 2.0F, -1.0F, 15, () -> { return Ingredient.of(ItemTags.PLANKS); }),
     STONE(1, 131, 4.0F, -1.0F, 5, () -> { return Ingredient.of(ItemTags.STONE_TOOL_MATERIALS); }),

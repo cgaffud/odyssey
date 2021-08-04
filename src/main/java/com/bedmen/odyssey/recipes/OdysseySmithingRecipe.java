@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.recipes;
 
-import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
+import com.bedmen.odyssey.items.equipment.IEquipment;
 import com.bedmen.odyssey.util.BlockRegistry;
 import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.bedmen.odyssey.util.RecipeRegistry;
@@ -177,7 +177,7 @@ public class OdysseySmithingRecipe implements IRecipe<IInventory>{
         if (compoundnbt != null) {
             itemstack.setTag(compoundnbt.copy());
         }
-        if(0 < EquipmentArmorItem.getInnateEnchantmentLevel(EnchantmentRegistry.UNENCHANTABLE.get(), itemstack.getItem())) {
+        if(0 < ((IEquipment)(itemstack.getItem())).getInnateEnchantmentLevel(EnchantmentRegistry.UNENCHANTABLE.get())) {
             Map<Enchantment, Integer> map2 = new HashMap<>();
             EnchantmentHelper.setEnchantments(map2, itemstack);
         }

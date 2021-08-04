@@ -15,12 +15,12 @@ import net.minecraftforge.common.util.Lazy;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EquipmentArmorItem extends ArmorItem {
+public abstract class EquipmentArmorItem extends ArmorItem {
     protected final Map<Lazy<Enchantment>, Integer> enchantmentLazyMap = new HashMap<>();
     protected final Map<Lazy<Enchantment>, Tuple<Integer, String>> setBonusLazyMap = new HashMap<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     private final Map<Enchantment, Tuple<Integer, String>> setBonusMap = new HashMap<>();
-    protected static final List<EquipmentArmorItem> UNFINISHED_EQUIPMENT = new ArrayList<EquipmentArmorItem>();
+    protected static final List<EquipmentArmorItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
     public EquipmentArmorItem(IArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties properties) {
         super(armorMaterial, slotType, properties);
@@ -30,52 +30,32 @@ public class EquipmentArmorItem extends ArmorItem {
 
     public static void initEquipment(){
         for(final EquipmentArmorItem equipmentArmorItem : UNFINISHED_EQUIPMENT){
-            for(Lazy<Enchantment> lazy : equipmentArmorItem.enchantmentLazyMap.keySet()){
-                equipmentArmorItem.enchantmentMap.put(lazy.get(), equipmentArmorItem.enchantmentLazyMap.get(lazy));
-            }
-            for(Lazy<Enchantment> lazy : equipmentArmorItem.setBonusLazyMap.keySet()){
-                equipmentArmorItem.setBonusMap.put(lazy.get(), equipmentArmorItem.setBonusLazyMap.get(lazy));
-            }
+            equipmentArmorItem.init();
         }
         UNFINISHED_EQUIPMENT.clear();
     }
 
-    public static int getInnateEnchantmentLevel(Enchantment e, Item item) {
-        if(item instanceof EquipmentArmorItem){
-            EquipmentArmorItem equipmentArmorItem = (EquipmentArmorItem)item;
-            return equipmentArmorItem.getInnateEnchantmentLevelHelper(e);
+    public void init(){
+        for(Lazy<Enchantment> lazy : this.enchantmentLazyMap.keySet()){
+            this.enchantmentMap.put(lazy.get(), this.enchantmentLazyMap.get(lazy));
         }
-        return 0;
+        for(Lazy<Enchantment> lazy : this.setBonusLazyMap.keySet()){
+            this.setBonusMap.put(lazy.get(), this.setBonusLazyMap.get(lazy));
+        }
     }
 
-    public int getInnateEnchantmentLevelHelper(Enchantment e) {
+    public int getInnateEnchantmentLevel(Enchantment e) {
         Integer i = this.enchantmentMap.get(e);
         if(i == null)
             return 0;
         return i;
     }
 
-    public static Map<Enchantment, Integer> getInnateEnchantmentMap(Item item) {
-        if(item instanceof EquipmentArmorItem){
-            EquipmentArmorItem equipmentArmorItem = (EquipmentArmorItem)item;
-            return equipmentArmorItem.getInnateEnchantmentMapHelper();
-        }
-        return new HashMap<>();
-    }
-
-    public Map<Enchantment, Integer> getInnateEnchantmentMapHelper(){
+    public Map<Enchantment, Integer> getInnateEnchantmentMap(){
         return this.enchantmentMap;
     }
 
-    public static int getSetBonusLevel(Enchantment e, Item item) {
-        if(item instanceof EquipmentArmorItem){
-            EquipmentArmorItem equipmentArmorItem = (EquipmentArmorItem)item;
-            return equipmentArmorItem.getSetBonusLevelHelper(e);
-        }
-        return 0;
-    }
-
-    public int getSetBonusLevelHelper(Enchantment e) {
+    public int getSetBonusLevel(Enchantment e) {
         Tuple<Integer, String> tuple = this.setBonusMap.get(e);
         if(tuple == null)
             return 0;

@@ -4,8 +4,7 @@
   "textures": {
     "particle": "block/dark_oak_planks",
     "all": "block/dark_oak_planks",
-    "bottle": "oddc:block/ink_bottle",
-    "quill": "oddc:item/bewitchedquill"
+    "bottle": "oddc:block/ink_bottle"
   },
   "elements": [
     {
@@ -76,13 +75,6 @@
       "faces": {
         "east": { "uv": [3,3,13,16], "texture": "#bottle", "tintindex": 0 },
         "west": { "uv": [3,3,13,16], "texture": "#bottle", "tintindex": 0 }
-      }
-    },
-    {   "from": [ 6.8, 12.1, 14.2 ],
-      "to": [ 1.8, 12.1, 9.2 ],
-      "faces": {
-        "up": { "uv": [0,0,16,16], "texture": "#quill", "tintindex": 0 },
-        "down": { "uv": [0,0,16,16], "texture": "#quill", "tintindex": 0 }
       }
     }
   ]

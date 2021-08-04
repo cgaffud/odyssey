@@ -50,9 +50,9 @@ public class ResearchTableScreen extends ContainerScreen<ResearchTableContainer>
             if (j1 > 0) {
                 this.blit(matrixStack, i + 53, j + 50, 0, 166, j1, 16);
             }
-
+            int color = this.menu.getCurse() ? 0xFF0000 : 0x00FFFF;
             ITextProperties itextproperties = EnchantmentNameParts.getInstance().getRandomName(this.font, 68);
-            this.font.drawWordWrap(itextproperties, i+69, j + 54, 68, 65535);
+            this.font.drawWordWrap(itextproperties, i+70, j + 54, 68, color);
             drawBox(matrixStack, Integer.max(i+53+14, i+53+j1), j+50, Integer.min(72, 86-j1));
         }
 

@@ -27,7 +27,8 @@
     "MixinWorldRenderer",
     "MixinProtectionEnchantment",
     "MixinServerPlayerEntity",
-    "MixinElytraLayer"
+    "MixinElytraLayer",
+    "MixinEnchantment"
   ],
   "injectors": {
     "defaultRequire": 1

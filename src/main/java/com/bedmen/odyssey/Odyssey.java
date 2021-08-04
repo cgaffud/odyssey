@@ -9,6 +9,7 @@ import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.WerewolfEntity;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
+import com.bedmen.odyssey.items.equipment.EquipmentItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.util.*;
 import com.bedmen.odyssey.client.renderer.OdysseyBeaconTileEntityRenderer;
@@ -28,10 +29,13 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,7 +51,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 @Mod("oddc")
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -63,6 +69,7 @@ public class Odyssey
     public static final ItemGroup TOOLS = new OdysseyItemGroup("oddc_tools", Lazy.of(ItemRegistry.STERLING_SILVER_AXE::get));
     public static final ItemGroup COMBAT = new OdysseyItemGroup("oddc_combat", Lazy.of(ItemRegistry.STERLING_SILVER_SWORD::get));
     public static final ItemGroup SPAWN_EGGS = new OdysseyItemGroup("oddc_spawn_eggs", Lazy.of(ItemRegistry.ARCTIHORN_SPAWN_EGG::get));
+    public static Tags.IOptionalNamedTag<Item> QUILL_TAG;
 
 
     public Odyssey() {
@@ -167,5 +174,14 @@ public class Odyssey
     @SubscribeEvent
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
+        EquipmentItem.initEquipment();
+    }
+
+    @SubscribeEvent
+    public static void onRegisterItems(final RegistryEvent.Register<Item> event){
+        Set<Supplier<Item>> set = new HashSet<>();
+        set.add(ItemRegistry.BEWITCHED_QUILL);
+        set.add(ItemRegistry.MALEVOLENT_QUILL);
+        QUILL_TAG = ItemTags.createOptional(new ResourceLocation(MOD_ID, "quills"), set);
     }
 }

@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 import com.bedmen.odyssey.container.ResearchTableContainer;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.recipes.ResearchRecipe;
+import com.bedmen.odyssey.util.ItemRegistry;
 import com.bedmen.odyssey.util.TileEntityTypeRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +24,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class ResearchTableTileEntity extends LockableTileEntity implements ITickableTileEntity {
-    private NonNullList<ItemStack> items = NonNullList.withSize(10, ItemStack.EMPTY);
+    private NonNullList<ItemStack> items = NonNullList.withSize(11, ItemStack.EMPTY);
     private int researchTime;
     private int ink;
     protected final IIntArray dataAccess = new IIntArray() {
@@ -108,14 +109,19 @@ public class ResearchTableTileEntity extends LockableTileEntity implements ITick
 
     private boolean isResearchable(@Nullable IRecipe<?> recipe) {
         if(recipe == null) return false;
-        return this.getItem(9).getItem() == Items.BOOK;
+        boolean flag = this.getItem(10).getItem() == Items.BOOK;
+        if(((ResearchRecipe)recipe).getEnchantment().isCurse())
+            flag &= this.getItem(9).getItem() == ItemRegistry.MALEVOLENT_QUILL.get();
+        else
+            flag &= this.getItem(9).getItem() == ItemRegistry.BEWITCHED_QUILL.get();
+        return flag;
     }
 
     private void doResearch(@Nullable IRecipe<?> recipe) {
         if (this.isResearchable(recipe)) {
             ItemStack itemstack = recipe.getResultItem();
             BlockPos blockpos = this.getBlockPos();
-            this.items.set(9, itemstack);
+            this.items.set(10, itemstack);
             this.level.levelEvent(10000, blockpos, 0);
         }
     }
@@ -128,29 +134,29 @@ public class ResearchTableTileEntity extends LockableTileEntity implements ITick
         this.ink = p_230337_2_.getByte("Ink");
     }
 
-    public CompoundNBT save(CompoundNBT p_189515_1_) {
-        super.save(p_189515_1_);
-        p_189515_1_.putShort("ResearchTime", (short)this.researchTime);
-        ItemStackHelper.saveAllItems(p_189515_1_, this.items);
-        p_189515_1_.putByte("Ink", (byte)this.ink);
-        return p_189515_1_;
+    public CompoundNBT save(CompoundNBT compoundNBT) {
+        super.save(compoundNBT);
+        compoundNBT.putShort("ResearchTime", (short)this.researchTime);
+        ItemStackHelper.saveAllItems(compoundNBT, this.items);
+        compoundNBT.putByte("Ink", (byte)this.ink);
+        return compoundNBT;
     }
 
     public ItemStack getItem(int p_70301_1_) {
         return p_70301_1_ >= 0 && p_70301_1_ < this.items.size() ? this.items.get(p_70301_1_) : ItemStack.EMPTY;
     }
 
-    public ItemStack removeItem(int p_70298_1_, int p_70298_2_) {
-        return ItemStackHelper.removeItem(this.items, p_70298_1_, p_70298_2_);
+    public ItemStack removeItem(int index, int amount) {
+        return ItemStackHelper.removeItem(this.items, index, amount);
     }
 
     public ItemStack removeItemNoUpdate(int p_70304_1_) {
         return ItemStackHelper.takeItem(this.items, p_70304_1_);
     }
 
-    public void setItem(int p_70299_1_, ItemStack p_70299_2_) {
-        if (p_70299_1_ >= 0 && p_70299_1_ < this.items.size()) {
-            this.items.set(p_70299_1_, p_70299_2_);
+    public void setItem(int index, ItemStack itemStack) {
+        if (index >= 0 && index < this.items.size()) {
+            this.items.set(index, itemStack);
         }
     }
 
@@ -166,7 +172,7 @@ public class ResearchTableTileEntity extends LockableTileEntity implements ITick
         this.items.clear();
     }
 
-    protected Container createMenu(int p_213906_1_, PlayerInventory p_213906_2_) {
-        return new ResearchTableContainer(p_213906_1_, p_213906_2_, this, this.dataAccess);
+    protected Container createMenu(int id, PlayerInventory playerInventory) {
+        return new ResearchTableContainer(id, playerInventory, this, this.dataAccess);
     }
 }

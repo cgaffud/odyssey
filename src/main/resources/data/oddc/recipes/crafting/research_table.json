@@ -1,16 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "E B",
+    "E  ",
     "LLL",
     "S S"
   ],
   "key": {
     "E": {
       "item": "minecraft:glass_bottle"
-    },
-    "B": {
-      "item": "oddc:bewitched_quill"
     },
     "S": {
       "item": "minecraft:stick"

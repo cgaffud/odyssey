@@ -14,16 +14,24 @@
   "item.oddc.feather_bundle": "Feather Bundle",
   "item.oddc.permafrost_shard": "Permafrost Shard",
   "item.oddc.arctic_heart": "Heart of the Arctic",
-  "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.werewolf_claw": "Werewolf Claw",
   "item.oddc.arctic_horn": "Arctic Horn",
+  "item.oddc.raven_feather": "Raven Feather",
   "item.oddc.bewitched_quill": "Bewitched Quill",
+  "item.oddc.malevolent_quill": "Malevolent Quill",
 
   //Emerald
   "item.oddc.emerald_bit": "Emerald Bit",
   "item.oddc.emerald_shard": "Emerald Shard",
   "item.oddc.emerald_fragment": "Emerald Fragment",
   "item.oddc.emerald_piece": "Emerald Piece",
+
+  //Hammers
+  "item.oddc.wooden_bat": "Wooden Bat",
+  "item.oddc.granite_bat": "Granite Bat",
+  "item.oddc.copper_hammer": "Copper Hammer",
+  "item.oddc.obsidian_hammer": "Obsidian Hammer",
+
 
   //Chicken Suit
   "item.oddc.chicken_boots": "Feathered Boots",
@@ -118,10 +126,11 @@
   "enchantment.oddc.turtling": "Turtling",
 
   //Curses
-  "enchantment.oddc.unenchantable": "Inert",
+  "enchantment.oddc.unenchantable": "Unenchantable",
   "enchantment.oddc.bleeding": "Bleeding",
   "enchantment.oddc.drowning": "Drowning",
   "enchantment.oddc.heavy": "Heavy",
+  "enchantment.oddc.volatile": "Volatile",
 
   //Setbonus
   "item.oddc.equipment.setbonus": "Set Bonus: ",
