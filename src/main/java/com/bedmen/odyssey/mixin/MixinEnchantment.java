@@ -21,7 +21,9 @@ public abstract class MixinEnchantment extends net.minecraftforge.registries.For
     public ITextComponent getFullname(int p_200305_1_) {
         IFormattableTextComponent iformattabletextcomponent;
         int isCurse = this.isCurse() ? 1 : 0;
-        isCurse += (Enchantment)(Object)this == EnchantmentRegistry.UNENCHANTABLE.get() ? 0 : 1;
+        if(isCurse > 0){
+            isCurse += (Enchantment)(Object)this == EnchantmentRegistry.UNENCHANTABLE.get() ? 0 : 1;
+        }
         if (isCurse >= 2)
             iformattabletextcomponent = new StringTextComponent("aaaaaaaaaa").withStyle(TextFormatting.OBFUSCATED).withStyle((TextFormatting.RED));
         else if (isCurse == 1)

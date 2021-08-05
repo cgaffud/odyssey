@@ -5,6 +5,7 @@ import com.bedmen.odyssey.client.renderer.OdysseyEnchantmentTableTileEntityRende
 import com.bedmen.odyssey.client.renderer.entity.ArctihornRenderer;
 import com.bedmen.odyssey.client.renderer.entity.NewTridentRenderer;
 import com.bedmen.odyssey.client.renderer.entity.WerewolfRenderer;
+import com.bedmen.odyssey.entity.attributes.OdysseyAttributes;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.WerewolfEntity;
 import com.bedmen.odyssey.items.*;
@@ -97,6 +98,7 @@ public class Odyssey
         OdysseyBiomeEntitySpawn.registerSpawners();
         OdysseyStructureEntitySpawn.registerSpawners();
         OdysseyPotions.addBrewingRecipes();
+        OdysseyAttributes.fixArmor();
         OdysseyTrades.addTrades();
         EnchantmentUtil.init();
         OdysseyNetwork.init();
