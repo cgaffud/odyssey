@@ -22,7 +22,6 @@
     "MixinFogRenderer",
     "MixinEnchantmentHelper",
     "MixinPotionUtils",
-    "MixinWorldRenderer",
     "MixinProtectionEnchantment",
     "MixinServerPlayerEntity",
     "MixinElytraLayer",
