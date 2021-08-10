@@ -7,17 +7,13 @@
   "mixins": [
     "MixinMinecraft",
     "MixinBlockItem",
-    "MixinItemColors",
     "MixinForgeHooks",
     "MixinPlayerEntity",
     "MixinForgeIngameGui",
     "MixinCombatRules",
     "MixinItem",
     "MixinItemRenderer",
-    "MixinItemStackTileEntityRenderer",
     "MixinMobEntity",
-    "MixinIForgeItem",
-    "MixinShieldRecipes",
     "MixinLivingEntity",
     "MixinFogRenderer",
     "MixinEnchantmentHelper",
@@ -25,7 +21,8 @@
     "MixinProtectionEnchantment",
     "MixinServerPlayerEntity",
     "MixinElytraLayer",
-    "MixinEnchantment"
+    "MixinEnchantment",
+    "MixinShieldRecipes"
   ],
   "injectors": {
     "defaultRequire": 1

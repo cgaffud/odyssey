@@ -213,7 +213,7 @@ public class OdysseySmithingRecipe implements IRecipe<IInventory>{
 
     @Override
     public IRecipeType<?> getType() {
-        return ModRecipeType.NEW_SMITHING;
+        return ModRecipeType.ODYSSEY_SMITHING;
     }
 
     public ItemStack getToastSymbol() {
@@ -222,7 +222,7 @@ public class OdysseySmithingRecipe implements IRecipe<IInventory>{
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.NEW_SMITHING.get();
+        return RecipeRegistry.ODYSSEY_SMITHING.get();
     }
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<OdysseySmithingRecipe> {

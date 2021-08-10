@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import javax.annotation.Nullable;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.ActionResult;
@@ -56,10 +57,6 @@ public class OdysseyShieldItem extends Item {
         return 72000;
     }
 
-    /**
-     * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
-     */
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         playerIn.startUsingItem(handIn);
@@ -88,5 +85,10 @@ public class OdysseyShieldItem extends Item {
 
     public float getBlock(){
         return this.block;
+    }
+
+    public boolean isShield(ItemStack stack, @Nullable LivingEntity entity)
+    {
+        return true;
     }
 }

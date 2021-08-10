@@ -13,12 +13,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class NewTridentModel extends Model {
+public class OdysseyTridentModel extends Model {
     public static final ResourceLocation TRIDENT_TEXTURE = new ResourceLocation("textures/entity/trident.png");
     public static final ResourceLocation SERPENT_TRIDENT_TEXTURE = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/serpent_trident.png");
     private final ModelRenderer modelRenderer = new ModelRenderer(32, 32, 0, 6);
 
-    public NewTridentModel() {
+    public OdysseyTridentModel() {
         super(RenderType::entitySolid);
         this.modelRenderer.addBox(-0.5F, 2.0F, -0.5F, 1.0F, 25.0F, 1.0F, 0.0F);
         ModelRenderer modelrenderer = new ModelRenderer(32, 32, 4, 0);

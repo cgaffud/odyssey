@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.container;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.ContainerRegistry;
 import com.bedmen.odyssey.util.ItemRegistry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -178,7 +179,7 @@ public class ResearchTableContainer extends Container {
         }
 
         public static boolean mayPlaceItem(ItemStack itemStack) {
-            return Odyssey.QUILL_TAG.contains(itemStack.getItem());
+            return OdysseyItemTags.QUILL_TAG.contains(itemStack.getItem());
         }
 
         public int getMaxStackSize() {

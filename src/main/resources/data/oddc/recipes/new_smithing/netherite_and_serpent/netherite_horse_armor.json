@@ -1,5 +1,5 @@
 {
-  "type": "oddc:new_smithing",
+  "type": "oddc:odyssey_smithing",
   "classification": "horse_armor",
   "base": {
     "item": "minecraft:diamond_horse_armor"

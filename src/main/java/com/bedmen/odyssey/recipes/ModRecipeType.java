@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 
 public interface ModRecipeType<T extends IRecipe<?>> {
     IRecipeType<AlloyRecipe> ALLOYING = register("alloying");
-    IRecipeType<OdysseySmithingRecipe> NEW_SMITHING = register("new_smithing");
+    IRecipeType<OdysseySmithingRecipe> ODYSSEY_SMITHING = register("odyssey_smithing");
     IRecipeType<RecycleRecipe> RECYCLING = register("recycling");
     IRecipeType<ResearchRecipe> RESEARCH = register("research");
 

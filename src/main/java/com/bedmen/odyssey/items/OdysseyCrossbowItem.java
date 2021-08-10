@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.ItemRegistry;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Random;
@@ -58,10 +59,6 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
         return ARROW_ONLY;
     }
 
-    /**
-     * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
-     */
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         if (isCharged(itemstack)) {
@@ -374,6 +371,11 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
         }
 
         return f;
+    }
+
+    //Basically IsCrossbow
+    public boolean useOnRelease(ItemStack stack) {
+        return true;
     }
 
     /**

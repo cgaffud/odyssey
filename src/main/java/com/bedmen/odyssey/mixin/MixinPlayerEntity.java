@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -9,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -17,13 +19,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.CooldownTracker;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import java.util.function.Predicate;
@@ -60,7 +61,9 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     @Shadow
     protected FoodStats foodData;
     @Shadow
-    public void awardStat(ResourceLocation p_195066_1_) {}
+    public void awardStat(Stat<?> p_71029_1_) {}
+    @Shadow
+    public void awardStat(ResourceLocation resourceLocation) {}
     @Shadow
     private ItemStack lastItemInMainHand;
     @Shadow
@@ -144,33 +147,47 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         }
 
         if (this.random.nextFloat() < f) {
-            this.getCooldowns().addCooldown(ItemRegistry.SHIELD.get(), EnchantmentUtil.getRecovery(this));
-            this.getCooldowns().addCooldown(ItemRegistry.SERPENT_SHIELD.get(), EnchantmentUtil.getRecovery(this));
+            for(Item item : OdysseyItemTags.SHIELD_TAG){
+                this.getCooldowns().addCooldown(item, EnchantmentUtil.getRecovery(this));
+            }
             this.stopUsingItem();
             this.level.broadcastEntityEvent(this, (byte)30);
         }
 
     }
 
+    protected void hurtCurrentlyUsedShield(float p_184590_1_) {
+        if (this.useItem.isShield(this)) {
+            if (!this.level.isClientSide) {
+                this.awardStat(Stats.ITEM_USED.get(this.useItem.getItem()));
+            }
+            //Changed from 3.0f to 0.0f so that shield lose durability on soft attacks
+            if (p_184590_1_ >= 0.0F) {
+                int i = 1 + MathHelper.floor(p_184590_1_);
+                Hand hand = this.getUsedItemHand();
+                this.useItem.hurtAndBreak(i, this, (p_213833_1_) -> {
+                    p_213833_1_.broadcastBreakEvent(hand);
+                    ForgeEventFactory.onPlayerDestroyItem(toPlayerEntity(this), this.useItem, hand);
+                });
+                if (this.useItem.isEmpty()) {
+                    if (hand == Hand.MAIN_HAND) {
+                        this.setItemSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+                    } else {
+                        this.setItemSlot(EquipmentSlotType.OFFHAND, ItemStack.EMPTY);
+                    }
 
-    /** I'm not sure if this is needed in a method anymore but it helps.
-     * It also might be better to move this method to ItemStack or something */
-
-
-
-
+                    this.useItem = ItemStack.EMPTY;
+                    this.playSound(SoundEvents.SHIELD_BREAK, 0.8F, 0.8F + this.level.random.nextFloat() * 0.4F);
+                }
+            }
+        }
+    }
 
     public void tick() {
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPreTick(toPlayerEntity(this));
         this.noPhysics = this.isSpectator();
         if (this.isSpectator()) {
             this.onGround = false;
-        }
-
-        //Sets player on fire unless they have fire protection or an arctic chestplate
-        if(!(this.abilities.instabuild || this.isSpectator()) && this.level.dimensionType().ultraWarm()){
-            if(!EnchantmentUtil.hasFireProtectionOrResistance(this))
-                this.setSecondsOnFire(1);
         }
 
         if (this.takeXpDelay > 0) {
@@ -238,7 +255,6 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         this.updatePlayerPose();
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(toPlayerEntity(this));
     }
-
 
     private PlayerEntity toPlayerEntity(MixinPlayerEntity mixinPlayerEntity){
         return (PlayerEntity)(Object)mixinPlayerEntity;

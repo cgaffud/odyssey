@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.util;
 
+import com.bedmen.odyssey.tags.OdysseyBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,16 +16,13 @@ public class FogUtil {
         BlockPos blockpos = new BlockPos(playerEntity.getX(), d0, playerEntity.getZ());
         BlockState blockState = playerEntity.level.getBlockState(blockpos);
         Block block = blockState.getBlock();
-        ITag<Block> tag = BlockTags.getAllTags().getTag(new ResourceLocation("oddc:fog"));
-        if(block.is(tag)){
+        if(OdysseyBlockTags.FOG_TAG.contains(block)){
             double d1 = (double)((float)blockpos.getY() + 1);
             if (d1 > d0) {
                 return fogToInt(block);
             }
         }
-
         return 0;
-
     }
 
     public static Block intToFog(int i){
