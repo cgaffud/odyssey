@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.entity;
+package com.bedmen.odyssey.entity.monster;
 
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityType;

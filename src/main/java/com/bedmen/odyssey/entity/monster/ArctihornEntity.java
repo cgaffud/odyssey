@@ -2,7 +2,6 @@ package com.bedmen.odyssey.entity.monster;
 
 import java.util.Random;
 
-import com.bedmen.odyssey.entity.MonsterWaterEntity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;

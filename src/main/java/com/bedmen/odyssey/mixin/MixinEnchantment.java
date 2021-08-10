@@ -22,7 +22,7 @@ public abstract class MixinEnchantment extends net.minecraftforge.registries.For
         IFormattableTextComponent iformattabletextcomponent;
         int isCurse = this.isCurse() ? 1 : 0;
         if(isCurse > 0){
-            isCurse += (Enchantment)(Object)this == EnchantmentRegistry.UNENCHANTABLE.get() ? 0 : 1;
+            isCurse += this.getDescriptionId().equals("enchantment.oddc.unenchantable") ? 0 : 1;
         }
         if (isCurse >= 2)
             iformattabletextcomponent = new StringTextComponent("aaaaaaaaaa").withStyle(TextFormatting.OBFUSCATED).withStyle((TextFormatting.RED));

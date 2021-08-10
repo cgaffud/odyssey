@@ -48,11 +48,11 @@ public class OdysseySmithingTableContainer extends Container {
         this.worldPos = worldPos;
         this.player = playerInv.player;
         this.world = playerInv.player.level;
-        this.recipeType = ModRecipeType.NEW_SMITHING;
+        this.recipeType = ModRecipeType.ODYSSEY_SMITHING;
         OdysseySmithingTableContainer con = this;
         Slot slot0 = this.addSlot(new Slot(this.inv, 0, 20, 35) {
             public boolean mayPlace(ItemStack stack) {
-                List<OdysseySmithingRecipe> list = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.NEW_SMITHING);
+                List<OdysseySmithingRecipe> list = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.ODYSSEY_SMITHING);
                 for(int i1 = 0; i1 < list.size(); i1++) {
                     if(list.get(i1).base.test(stack)) {
                         return true;
@@ -69,7 +69,7 @@ public class OdysseySmithingTableContainer extends Container {
                 this.addSlot(new OdysseySmithingTableSlot(this.inv, 1+k, 57+18*j, 17+18*i) {
 
                     public boolean shouldBeUsed() {
-                        List<OdysseySmithingRecipe> list = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.NEW_SMITHING);
+                        List<OdysseySmithingRecipe> list = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.ODYSSEY_SMITHING);
                         if (slot0 != null && slot0.hasItem()) {
                             for(int i1 = 0; i1 < list.size(); i1++) {
                                 if(list.get(i1).base.test(slot0.getItem())) {
@@ -81,7 +81,7 @@ public class OdysseySmithingTableContainer extends Container {
                     }
 
                     public boolean mayPlace(ItemStack stack) {
-                        List<OdysseySmithingRecipe> list = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.NEW_SMITHING);
+                        List<OdysseySmithingRecipe> list = con.world.getRecipeManager().getAllRecipesFor(ModRecipeType.ODYSSEY_SMITHING);
                         for(int i1 = 0; i1 < list.size(); i1++) {
                             if(list.get(i1).base.test(slot0.getItem())) {
                                 if(list.get(i1).addition.test(stack) || list.get(i1).addition2.test(stack)) {

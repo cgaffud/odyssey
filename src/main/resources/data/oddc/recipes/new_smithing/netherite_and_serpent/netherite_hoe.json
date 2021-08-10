@@ -1,5 +1,5 @@
 {
-  "type": "oddc:new_smithing",
+  "type": "oddc:odyssey_smithing",
   "classification": "hoe",
   "base": {
     "item": "minecraft:diamond_hoe"

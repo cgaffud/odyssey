@@ -1,10 +1,12 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.armor.OdysseyArmorMaterial;
+import com.bedmen.odyssey.client.renderer.tileentity.OdysseyItemStackTileEntityRenderer;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.tools.*;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.Items; //Used as easy access to item registry
@@ -14,6 +16,8 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.concurrent.Callable;
 
 public class ItemRegistry {
 
@@ -218,11 +222,11 @@ public class ItemRegistry {
     public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(Odyssey.COMBAT), 3));
     public static final RegistryObject<Item> SERPENT_QUIVER = ITEMS.register("serpent_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(Odyssey.COMBAT), 5));
     public static final RegistryObject<Item> TRIDENT = ITEMS_VANILLA.register("trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(250).tab(ItemGroup.TAB_COMBAT), 9.0D));
-    public static final RegistryObject<Item> SERPENT_TRIDENT = ITEMS.register("serpent_trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(750).fireResistant().tab(Odyssey.COMBAT), 11.0D));
+    public static final RegistryObject<Item> SERPENT_TRIDENT = ITEMS.register("serpent_trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(750).fireResistant().tab(Odyssey.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 11.0D));
 
     //Shields
     public static final RegistryObject<Item> SHIELD = ITEMS_VANILLA.register("shield", () -> new OdysseyShieldItem((new Item.Properties()).durability(336).tab(ItemGroup.TAB_COMBAT), 5.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(Items.OAK_PLANKS); nonNullList.add(Items.BIRCH_PLANKS); nonNullList.add(Items.SPRUCE_PLANKS); nonNullList.add(Items.DARK_OAK_PLANKS); nonNullList.add(Items.JUNGLE_PLANKS); nonNullList.add(Items.ACACIA_PLANKS); return nonNullList;}));
-    public static final RegistryObject<Item> SERPENT_SHIELD = ITEMS.register("serpent_shield", () -> new OdysseyShieldItem((new Item.Properties()).durability(1000).fireResistant().tab(Odyssey.COMBAT), 10.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(SERPENT_SCALE.get()); return nonNullList;}));
+    public static final RegistryObject<Item> SERPENT_SHIELD = ITEMS.register("serpent_shield", () -> new OdysseyShieldItem((new Item.Properties()).durability(1000).fireResistant().tab(Odyssey.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 10.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(SERPENT_SCALE.get()); return nonNullList;}));
 
 
     //Spawn Eggs

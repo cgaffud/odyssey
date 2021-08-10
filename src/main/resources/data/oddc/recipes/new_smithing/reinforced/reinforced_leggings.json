@@ -1,5 +1,5 @@
 {
-  "type": "oddc:new_smithing",
+  "type": "oddc:odyssey_smithing",
   "classification": "leggings",
   "base": {
     "item": "minecraft:iron_leggings"

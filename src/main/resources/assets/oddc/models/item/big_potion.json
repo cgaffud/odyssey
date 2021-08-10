@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "oddc:item/big_potion_overlay",
-    "layer1": "oddc:item/big_glass_bottle"
-  }
-}

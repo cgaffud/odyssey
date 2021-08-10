@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.client.renderer.entity.model.NewTridentModel;
+import com.bedmen.odyssey.client.renderer.entity.model.OdysseyTridentModel;
 import com.bedmen.odyssey.entity.projectile.AbstractTridentEntity;
 import com.bedmen.odyssey.util.ItemRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -18,12 +18,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class NewTridentRenderer extends EntityRenderer<AbstractTridentEntity> {
+public class OdysseyTridentRenderer extends EntityRenderer<AbstractTridentEntity> {
    public static final ResourceLocation TRIDENT = new ResourceLocation("textures/entity/trident.png");
    public static final ResourceLocation SERPENT_TRIDENT = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/serpent_trident.png");
-   private final NewTridentModel tridentModel = new NewTridentModel();
+   private final OdysseyTridentModel tridentModel = new OdysseyTridentModel();
 
-   public NewTridentRenderer(EntityRendererManager renderManagerIn) {
+   public OdysseyTridentRenderer(EntityRendererManager renderManagerIn) {
       super(renderManagerIn);
    }
 
