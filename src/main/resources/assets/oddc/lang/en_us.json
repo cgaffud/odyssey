@@ -166,6 +166,8 @@
   "block.oddc.fog6": "Fog 6",
   "block.oddc.fog7": "Fog 7",
   "block.oddc.fog8": "Fog 8",
+  "block.oddc.autumn_leaves_red": "Red Autumnal Leaves",
+  "block.oddc.autumn_leaves_orange": "Orange Autumnal Leaves",
   "block.oddc.frosted_obsidian": "Frosted Obsidian",
 
   //Entities
@@ -184,6 +186,8 @@
   "itemGroup.oddc_combat": "Odyssey Combat",
   "itemGroup.oddc_spawn_eggs": "Odyssey Spawn Eggs",
 
+  //Biome
+  "biome.oddc.autumn_forest": "Autumn Forest",
 
   //Potions
 

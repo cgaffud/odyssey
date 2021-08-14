@@ -51,6 +51,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FOG7 = ITEMS.register("fog7", () -> new BlockItem(BlockRegistry.FOG7.get(), (new Item.Properties()).tab(Odyssey.DECORATION_BLOCKS)));
     public static final RegistryObject<Item> FOG8 = ITEMS.register("fog8", () -> new BlockItem(BlockRegistry.FOG8.get(), (new Item.Properties()).tab(Odyssey.DECORATION_BLOCKS)));
 
+    public static final RegistryObject<Item> AUTUMN_LEAVES_RED = ITEMS.register("autumn_leaves_red", () -> new BlockItem(BlockRegistry.AUTUMN_LEAVES_RED.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> AUTUMN_LEAVES_ORANGE = ITEMS.register("autumn_leaves_orange", () -> new BlockItem(BlockRegistry.AUTUMN_LEAVES_ORANGE.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+
     //Items
 
     //Emeralds

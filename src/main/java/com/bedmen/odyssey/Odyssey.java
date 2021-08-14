@@ -1,5 +1,6 @@
 package com.bedmen.odyssey;
 
+import com.bedmen.odyssey.blocks.OdysseyComposting;
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.OdysseyEnchantmentTableTileEntityRenderer;
 import com.bedmen.odyssey.client.renderer.entity.ArctihornRenderer;
@@ -36,8 +37,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.RegistryEvent;
@@ -52,6 +58,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Set;
 
 @Mod("oddc")
@@ -75,6 +84,7 @@ public class Odyssey
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
         AttributeRegistry.init();
+        BiomeRegistry.init();
         BlockRegistry.init();
         ContainerRegistry.init();
         EffectRegistry.init();
@@ -95,12 +105,14 @@ public class Odyssey
         OdysseyBiomeEntitySpawn.registerSpawners();
         OdysseyStructureEntitySpawn.registerSpawners();
         OdysseyPotions.addBrewingRecipes();
+        OdysseyComposting.addCompostingRecipes();
         OdysseyAttributes.fixArmor();
         OdysseyTrades.addTrades();
         EnchantmentUtil.init();
         OdysseyNetwork.init();
         OdysseyItemTags.init();
         OdysseyBlockTags.init();
+        BiomeRegistry.register();
 
         Set<RenderMaterial> LOCATIONS_BUILTIN_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(ModelBakery.class, null, "UNREFERENCED_TEXTURES");
         LOCATIONS_BUILTIN_TEXTURES.add(LEVIATHAN_SHIELD_BASE);
