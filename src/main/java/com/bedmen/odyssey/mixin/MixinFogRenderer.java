@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.enchantment.EnchantmentUtil;
 import com.bedmen.odyssey.util.FogUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -49,7 +50,10 @@ public abstract class MixinFogRenderer {
             float f3;
             int i2 = FogUtil.inFog((PlayerEntity)entity);
             if (fluidstate.is(FluidTags.LAVA)) {
-                if (entity instanceof LivingEntity && ((LivingEntity)entity).hasEffect(Effects.FIRE_RESISTANCE)) {
+                if(entity instanceof LivingEntity && EnchantmentUtil.hasMoltenAffinity((LivingEntity)entity)){
+                    f2 = 0.0F;
+                    f3 = 20.0F;
+                } else if (entity instanceof LivingEntity && ((LivingEntity)entity).hasEffect(Effects.FIRE_RESISTANCE)) {
                     f2 = 0.0F;
                     f3 = 3.0F;
                 } else {

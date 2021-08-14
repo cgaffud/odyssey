@@ -2,8 +2,8 @@ package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.entity.projectile.AbstractTridentEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
-import com.bedmen.odyssey.entity.projectile.SerpentTridentEntity;
-import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.entity.projectile.LeviathanTridentEntity;
+import com.bedmen.odyssey.enchantment.EnchantmentUtil;
 import com.bedmen.odyssey.util.ItemRegistry;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -29,8 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class OdysseyTridentItem extends Item implements IVanishable {
     private final Multimap<Attribute, AttributeModifier> tridentAttributes;
@@ -80,8 +78,8 @@ public class OdysseyTridentItem extends Item implements IVanishable {
                         });
                         if (j == 0) {
                             AbstractTridentEntity tridententity;
-                            if(stack.getItem() == ItemRegistry.SERPENT_TRIDENT.get()) {
-                                tridententity = new SerpentTridentEntity(worldIn, playerentity, stack, this.damage);
+                            if(stack.getItem() == ItemRegistry.LEVIATHAN_TRIDENT.get()) {
+                                tridententity = new LeviathanTridentEntity(worldIn, playerentity, stack, this.damage);
                             }
                             else tridententity = new OdysseyTridentEntity(worldIn, playerentity, stack, this.damage);
                             float inaccuracy = EnchantmentUtil.getAccuracy(playerentity);

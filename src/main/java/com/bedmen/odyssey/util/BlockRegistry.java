@@ -5,6 +5,7 @@ import com.bedmen.odyssey.blocks.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.entity.EntityType;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -45,4 +46,6 @@ public class BlockRegistry {
     public static final RegistryObject<Block> FOG6 = BLOCKS.register("fog6", FogBlock::new);
     public static final RegistryObject<Block> FOG7 = BLOCKS.register("fog7", FogBlock::new);
     public static final RegistryObject<Block> FOG8 = BLOCKS.register("fog8", FogBlock::new);
+
+    public static final RegistryObject<Block> FROSTED_OBSIDIAN = BLOCKS.register("frosted_obsidian", () -> new FrostedObsidianBlock(AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).randomTicks().strength(50.0F, 1200.0F).lightLevel(FrostedObsidianBlock.litBlockEmission())));
 }

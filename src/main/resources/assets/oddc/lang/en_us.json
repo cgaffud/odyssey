@@ -62,6 +62,12 @@
   "item.oddc.zephyr_chestplate": "Zephyr Tunic",
   "item.oddc.zephyr_helmet": "Zephyr Cap",
 
+  //Leviathan Armor
+  "item.oddc.leviathan_boots": "Leviathan Boots",
+  "item.oddc.leviathan_leggings": "Leviathan Leggings",
+  "item.oddc.leviathan_chestplate": "Leviathan Chestplate",
+  "item.oddc.leviathan_helmet": "Leviathan Helmet",
+
   //Silver and Sterling Silver
   "item.oddc.silver_nugget": "Silver Nugget",
   "item.oddc.raw_silver": "Raw Silver",
@@ -87,26 +93,26 @@
   "item.oddc.hallowed_gold_ingot": "Hallowed Gold Ingot",
 
   //Leviathan
-  "item.oddc.serpent_scale": "Leviathan Scale",
-  "item.oddc.serpent_trident": "Leviathan Trident",
-  "item.oddc.serpent_quiver": "Leviathan Quiver",
-  "item.oddc.serpent_shield": "Leviathan Shield",
-  "item.oddc.serpent_shield.red": "Red Leviathan Shield",
-  "item.oddc.serpent_shield.brown": "Brown Leviathan Shield",
-  "item.oddc.serpent_shield.orange": "Orange Leviathan Shield",
-  "item.oddc.serpent_shield.yellow": "Yellow Leviathan Shield",
-  "item.oddc.serpent_shield.lime": "Lime Leviathan Shield",
-  "item.oddc.serpent_shield.green": "Green Leviathan Shield",
-  "item.oddc.serpent_shield.cyan": "Cyan Leviathan Shield",
-  "item.oddc.serpent_shield.blue": "Blue Leviathan Shield",
-  "item.oddc.serpent_shield.light_blue": "Light Blue Leviathan Shield",
-  "item.oddc.serpent_shield.purple": "Purple Leviathan Shield",
-  "item.oddc.serpent_shield.magenta": "Magenta Leviathan Shield",
-  "item.oddc.serpent_shield.pink": "Pink Leviathan Shield",
-  "item.oddc.serpent_shield.white": "White Leviathan Shield",
-  "item.oddc.serpent_shield.light_gray": "Light Gray Leviathan Shield",
-  "item.oddc.serpent_shield.gray": "Gray Leviathan Shield",
-  "item.oddc.serpent_shield.black": "Black Leviathan Shield",
+  "item.oddc.leviathan_scale": "Leviathan Scale",
+  "item.oddc.leviathan_trident": "Leviathan Trident",
+  "item.oddc.leviathan_quiver": "Leviathan Quiver",
+  "item.oddc.leviathan_shield": "Leviathan Shield",
+  "item.oddc.leviathan_shield.red": "Red Leviathan Shield",
+  "item.oddc.leviathan_shield.brown": "Brown Leviathan Shield",
+  "item.oddc.leviathan_shield.orange": "Orange Leviathan Shield",
+  "item.oddc.leviathan_shield.yellow": "Yellow Leviathan Shield",
+  "item.oddc.leviathan_shield.lime": "Lime Leviathan Shield",
+  "item.oddc.leviathan_shield.green": "Green Leviathan Shield",
+  "item.oddc.leviathan_shield.cyan": "Cyan Leviathan Shield",
+  "item.oddc.leviathan_shield.blue": "Blue Leviathan Shield",
+  "item.oddc.leviathan_shield.light_blue": "Light Blue Leviathan Shield",
+  "item.oddc.leviathan_shield.purple": "Purple Leviathan Shield",
+  "item.oddc.leviathan_shield.magenta": "Magenta Leviathan Shield",
+  "item.oddc.leviathan_shield.pink": "Pink Leviathan Shield",
+  "item.oddc.leviathan_shield.white": "White Leviathan Shield",
+  "item.oddc.leviathan_shield.light_gray": "Light Gray Leviathan Shield",
+  "item.oddc.leviathan_shield.gray": "Gray Leviathan Shield",
+  "item.oddc.leviathan_shield.black": "Black Leviathan Shield",
 
   //Containers
   "container.minecraft.beacon": "Beacon",
@@ -119,11 +125,15 @@
   "enchantment.oddc.accuracy": "Accuracy",
   "enchantment.oddc.blocking": "Blocking",
   "enchantment.oddc.recovery": "Recovery",
+  "enchantment.oddc.vulcan_strider": "Vulcan Strider",
+  "enchantment.oddc.obsidian_walker": "Obsidian Walker",
+  "enchantment.oddc.molten_affinity": "Molten Affinity",
 
   //Set Bonus Enchantments
   "enchantment.oddc.slow_falling": "Slow Falling",
   "enchantment.oddc.gliding": "Gliding",
   "enchantment.oddc.turtling": "Turtling",
+  "enchantment.oddc.fireproof": "Fireproof",
 
   //Curses
   "enchantment.oddc.unenchantable": "Unenchantable",
@@ -156,6 +166,7 @@
   "block.oddc.fog6": "Fog 6",
   "block.oddc.fog7": "Fog 7",
   "block.oddc.fog8": "Fog 8",
+  "block.oddc.frosted_obsidian": "Frosted Obsidian",
 
   //Entities
   "entity.oddc.werewolf": "Werewolf",

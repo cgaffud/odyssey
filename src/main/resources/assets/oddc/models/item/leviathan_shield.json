@@ -46,7 +46,7 @@
       "predicate": {
         "blocking": 1
       },
-      "model": "oddc:item/serpent_shield_blocking"
+      "model": "oddc:item/leviathan_shield_blocking"
     }
   ]
 }

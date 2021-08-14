@@ -5,6 +5,7 @@ import com.bedmen.odyssey.client.renderer.OdysseyEnchantmentTableTileEntityRende
 import com.bedmen.odyssey.client.renderer.entity.ArctihornRenderer;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyTridentRenderer;
 import com.bedmen.odyssey.client.renderer.entity.WerewolfRenderer;
+import com.bedmen.odyssey.enchantment.EnchantmentUtil;
 import com.bedmen.odyssey.entity.attributes.OdysseyAttributes;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.WerewolfEntity;
@@ -24,29 +25,22 @@ import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.OdysseyStructureEntitySpawn;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.data.CustomRecipeBuilder;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -56,14 +50,9 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.spongepowered.asm.mixin.Shadow;
-
-import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 
 @Mod("oddc")
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -71,8 +60,8 @@ public class Odyssey
 {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "oddc";
-    public static final RenderMaterial SERPENT_SHIELD_BASE = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID, "entity/serpent_shield_base")));
-    public static final RenderMaterial SERPENT_SHIELD_BASE_NOPATTERN = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID,"entity/serpent_shield_base_nopattern")));
+    public static final RenderMaterial LEVIATHAN_SHIELD_BASE = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID, "entity/leviathan_shield_base")));
+    public static final RenderMaterial LEVIATHAN_SHIELD_BASE_NOPATTERN = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID,"entity/leviathan_shield_base_nopattern")));
     public static final ItemGroup BUILDING_BLOCKS = new OdysseyItemGroup("oddc_building_blocks", Lazy.of(ItemRegistry.RUBY_ORE::get));
     public static final ItemGroup DECORATION_BLOCKS = new OdysseyItemGroup("oddc_decoration_blocks", Lazy.of(ItemRegistry.RESEARCH_TABLE::get));
     public static final ItemGroup MATERIALS = new OdysseyItemGroup("oddc_materials", Lazy.of(ItemRegistry.RUBY::get));
@@ -114,8 +103,8 @@ public class Odyssey
         OdysseyBlockTags.init();
 
         Set<RenderMaterial> LOCATIONS_BUILTIN_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(ModelBakery.class, null, "UNREFERENCED_TEXTURES");
-        LOCATIONS_BUILTIN_TEXTURES.add(SERPENT_SHIELD_BASE);
-        LOCATIONS_BUILTIN_TEXTURES.add(SERPENT_SHIELD_BASE_NOPATTERN);
+        LOCATIONS_BUILTIN_TEXTURES.add(LEVIATHAN_SHIELD_BASE);
+        LOCATIONS_BUILTIN_TEXTURES.add(LEVIATHAN_SHIELD_BASE_NOPATTERN);
 
         OdysseyPotionItem.RegisterBaseProperties(ItemRegistry.POTION.get());
         OdysseyPotionItem.RegisterBaseProperties(ItemRegistry.SPLASH_POTION.get());
@@ -164,7 +153,7 @@ public class Odyssey
 
         //Projectile Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.NEW_TRIDENT.get(), OdysseyTridentRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.SERPENT_TRIDENT.get(), OdysseyTridentRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LEVIATHAN_TRIDENT.get(), OdysseyTridentRenderer::new);
 
         //Block Render Types
         RenderTypeLookup.setRenderLayer(BlockRegistry.RESEARCH_TABLE.get(), RenderType.cutout());

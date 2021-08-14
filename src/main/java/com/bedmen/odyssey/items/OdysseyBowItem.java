@@ -2,7 +2,7 @@ package com.bedmen.odyssey.items;
 
 import java.util.function.Predicate;
 import com.bedmen.odyssey.util.BowUtil;
-import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.enchantment.EnchantmentUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;

@@ -53,8 +53,8 @@ public abstract class MixinItemRenderer{
             boolean flag = transformTypeIn == ItemCameraTransforms.TransformType.GUI || transformTypeIn == ItemCameraTransforms.TransformType.GROUND || transformTypeIn == ItemCameraTransforms.TransformType.FIXED;
             if (itemStackIn.getItem() == ItemRegistry.TRIDENT.get() && flag) {
                 modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
-            } else if(itemStackIn.getItem() == ItemRegistry.SERPENT_TRIDENT.get() && flag) {
-                modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("oddc:serpent_trident#inventory"));
+            } else if(itemStackIn.getItem() == ItemRegistry.LEVIATHAN_TRIDENT.get() && flag) {
+                modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("oddc:leviathan_trident#inventory"));
             }
 
             modelIn = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStackIn, modelIn, transformTypeIn, leftHand);

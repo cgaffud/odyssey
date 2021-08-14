@@ -1,6 +1,7 @@
-package com.bedmen.odyssey.util;
+package com.bedmen.odyssey.enchantment;
 
 import com.bedmen.odyssey.items.*;
+import com.bedmen.odyssey.util.EnchantmentRegistry;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -75,7 +76,11 @@ public class EnchantmentUtil {
             EnchantmentRegistry.BLEEDING.get(),
             EnchantmentRegistry.DROWNING.get(),
             EnchantmentRegistry.HEAVY.get(),
-            EnchantmentRegistry.VOLATILE.get()};
+            EnchantmentRegistry.VOLATILE.get(),
+            EnchantmentRegistry.VULCAN_STRIDER.get(),
+            EnchantmentRegistry.OBSIDIAN_WALKER.get(),
+            EnchantmentRegistry.MOLTEN_AFFINITY.get(),
+            };
     private static Map<Enchantment, Integer> integerMap = new HashMap<>();
 
     public static void init(){
@@ -125,6 +130,9 @@ public class EnchantmentUtil {
         integerMap.put(EnchantmentRegistry.DROWNING.get(), 43);
         integerMap.put(EnchantmentRegistry.HEAVY.get(), 44);
         integerMap.put(EnchantmentRegistry.VOLATILE.get(), 45);
+        integerMap.put(EnchantmentRegistry.VULCAN_STRIDER.get(), 46);
+        integerMap.put(EnchantmentRegistry.OBSIDIAN_WALKER.get(), 47);
+        integerMap.put(EnchantmentRegistry.MOLTEN_AFFINITY.get(), 48);
     }
 
     public static Enchantment intToEnchantment(int i){
@@ -189,8 +197,13 @@ public class EnchantmentUtil {
         if(e == Enchantments.MENDING) return new Enchantment[] {Enchantments.INFINITY_ARROWS};
         if(e == Enchantments.INFINITY_ARROWS) return new Enchantment[] {Enchantments.MENDING};
 
-        if(e == Enchantments.DEPTH_STRIDER) return new Enchantment[] {Enchantments.FROST_WALKER};
-        if(e == Enchantments.FROST_WALKER) return new Enchantment[] {Enchantments.DEPTH_STRIDER};
+        if(e == Enchantments.DEPTH_STRIDER) return new Enchantment[] {Enchantments.FROST_WALKER, EnchantmentRegistry.VULCAN_STRIDER.get(), EnchantmentRegistry.OBSIDIAN_WALKER.get()};
+        if(e == Enchantments.FROST_WALKER) return new Enchantment[] {Enchantments.DEPTH_STRIDER, EnchantmentRegistry.VULCAN_STRIDER.get(), EnchantmentRegistry.OBSIDIAN_WALKER.get()};
+        if(e == EnchantmentRegistry.VULCAN_STRIDER.get()) return new Enchantment[] {Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, EnchantmentRegistry.OBSIDIAN_WALKER.get()};
+        if(e == EnchantmentRegistry.OBSIDIAN_WALKER.get()) return new Enchantment[] {Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, EnchantmentRegistry.VULCAN_STRIDER.get()};
+
+        if(e == EnchantmentRegistry.MOLTEN_AFFINITY.get()) return new Enchantment[] {Enchantments.AQUA_AFFINITY};
+        if(e == Enchantments.AQUA_AFFINITY) return new Enchantment[] {EnchantmentRegistry.MOLTEN_AFFINITY.get()};
 
         if(e == Enchantments.THORNS) return new Enchantment[] {EnchantmentRegistry.ACCURACY.get()};
         if(e == EnchantmentRegistry.ACCURACY.get()) return new Enchantment[] {Enchantments.THORNS};
@@ -211,19 +224,6 @@ public class EnchantmentUtil {
 
     public static void writeEnchantment(Enchantment e, PacketBuffer buffer) {
         buffer.writeVarInt(enchantmentToInt(e));
-    }
-
-    public static boolean checkStackForEnch(ItemStack stack, String enchantment) {
-        if (!stack.isEmpty()) {
-            ListNBT listnbt = stack.getEnchantmentTags();
-            for (int i = 0; i < listnbt.size(); i++) {
-                String s = listnbt.getCompound(i).getString("id");
-                if (s.equals(enchantment)){
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public static float getAccuracy(LivingEntity entity){
@@ -255,5 +255,29 @@ public class EnchantmentUtil {
 
     public static boolean hasTurtling(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.TURTLING.get(), entity) > 0;
+    }
+
+    public static boolean hasFireproof(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FIREPROOF.get(), entity) > 0;
+    }
+
+    public static boolean hasMoltenAffinity(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MOLTEN_AFFINITY.get(), entity) > 0;
+    }
+
+    public static int getDepthStrider(LivingEntity entity) {
+        return getVulcanStrider(entity) + EnchantmentHelper.getEnchantmentLevel(Enchantments.DEPTH_STRIDER, entity);
+    }
+
+    public static int getVulcanStrider(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.VULCAN_STRIDER.get(), entity);
+    }
+
+    public static int getFrostWalker(LivingEntity entity) {
+        return getObsidianWalker(entity) + EnchantmentHelper.getEnchantmentLevel(Enchantments.FROST_WALKER, entity);
+    }
+
+    public static int getObsidianWalker(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.OBSIDIAN_WALKER.get(), entity);
     }
 }

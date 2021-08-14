@@ -6,7 +6,6 @@ import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.tools.*;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.Items; //Used as easy access to item registry
@@ -16,8 +15,6 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.concurrent.Callable;
 
 public class ItemRegistry {
 
@@ -78,7 +75,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_INGOT = ITEMS.register("sterling_silver_ingot", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS)));
     public static final RegistryObject<Item> CLOVER = ITEMS.register("clover", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS)));
     public static final RegistryObject<Item> PERIDOT = ITEMS.register("peridot", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS)));
-    public static final RegistryObject<Item> SERPENT_SCALE = ITEMS.register("serpent_scale", () -> new Item((new Item.Properties()).fireResistant().tab(Odyssey.MATERIALS)));
+    public static final RegistryObject<Item> LEVIATHAN_SCALE = ITEMS.register("leviathan_scale", () -> new Item((new Item.Properties()).fireResistant().tab(Odyssey.MATERIALS)));
     public static final RegistryObject<Item> RUBY = ITEMS.register("ruby", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> SAPPHIRE = ITEMS.register("sapphire", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> PEARL = ITEMS.register("pearl", () -> new Item((new Item.Properties()).tab(Odyssey.MATERIALS)));
@@ -161,6 +158,11 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ZEPHYR_LEGGINGS = ITEMS.register("zephyr_leggings", () -> new ZephyrArmorItem(OdysseyArmorMaterial.ZEPHYR, EquipmentSlotType.LEGS, new Item.Properties().tab(Odyssey.COMBAT)));
     public static final RegistryObject<Item> ZEPHYR_BOOTS = ITEMS.register("zephyr_boots", () -> new ZephyrArmorItem(OdysseyArmorMaterial.ZEPHYR, EquipmentSlotType.FEET, new Item.Properties().tab(Odyssey.COMBAT)));
 
+    public static final RegistryObject<Item> LEVIATHAN_HELMET = ITEMS.register("leviathan_helmet", () -> new UpperLeviathanArmorItem(OdysseyArmorMaterial.LEVIATHAN, EquipmentSlotType.HEAD, new Item.Properties().fireResistant().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> LEVIATHAN_CHESTPLATE = ITEMS.register("leviathan_chestplate", () -> new UpperLeviathanArmorItem(OdysseyArmorMaterial.LEVIATHAN, EquipmentSlotType.CHEST, new Item.Properties().fireResistant().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> LEVIATHAN_LEGGINGS = ITEMS.register("leviathan_leggings", () -> new LowerLeviathanArmorItem(OdysseyArmorMaterial.LEVIATHAN, EquipmentSlotType.LEGS, new Item.Properties().fireResistant().tab(Odyssey.COMBAT)));
+    public static final RegistryObject<Item> LEVIATHAN_BOOTS = ITEMS.register("leviathan_boots", () -> new LowerLeviathanArmorItem(OdysseyArmorMaterial.LEVIATHAN, EquipmentSlotType.FEET, new Item.Properties().fireResistant().tab(Odyssey.COMBAT)));
+
     //Tools
 
     //Swords
@@ -220,13 +222,13 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CROSSBOW = ITEMS_VANILLA.register("crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_COMBAT).durability(326), 0.5D));
     public static final RegistryObject<Item> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(Odyssey.COMBAT).durability(862).fireResistant(), 1.0D));
     public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(Odyssey.COMBAT), 3));
-    public static final RegistryObject<Item> SERPENT_QUIVER = ITEMS.register("serpent_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(Odyssey.COMBAT), 5));
+    public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(Odyssey.COMBAT), 5));
     public static final RegistryObject<Item> TRIDENT = ITEMS_VANILLA.register("trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(250).tab(ItemGroup.TAB_COMBAT), 9.0D));
-    public static final RegistryObject<Item> SERPENT_TRIDENT = ITEMS.register("serpent_trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(750).fireResistant().tab(Odyssey.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 11.0D));
+    public static final RegistryObject<Item> LEVIATHAN_TRIDENT = ITEMS.register("leviathan_trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(750).fireResistant().tab(Odyssey.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 11.0D));
 
     //Shields
     public static final RegistryObject<Item> SHIELD = ITEMS_VANILLA.register("shield", () -> new OdysseyShieldItem((new Item.Properties()).durability(336).tab(ItemGroup.TAB_COMBAT), 5.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(Items.OAK_PLANKS); nonNullList.add(Items.BIRCH_PLANKS); nonNullList.add(Items.SPRUCE_PLANKS); nonNullList.add(Items.DARK_OAK_PLANKS); nonNullList.add(Items.JUNGLE_PLANKS); nonNullList.add(Items.ACACIA_PLANKS); return nonNullList;}));
-    public static final RegistryObject<Item> SERPENT_SHIELD = ITEMS.register("serpent_shield", () -> new OdysseyShieldItem((new Item.Properties()).durability(1000).fireResistant().tab(Odyssey.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 10.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(SERPENT_SCALE.get()); return nonNullList;}));
+    public static final RegistryObject<Item> LEVIATHAN_SHIELD = ITEMS.register("leviathan_shield", () -> new OdysseyShieldItem((new Item.Properties()).durability(1000).fireResistant().tab(Odyssey.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 10.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(LEVIATHAN_SCALE.get()); return nonNullList;}));
 
 
     //Spawn Eggs

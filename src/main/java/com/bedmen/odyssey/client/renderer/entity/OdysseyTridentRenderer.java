@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class OdysseyTridentRenderer extends EntityRenderer<AbstractTridentEntity> {
    public static final ResourceLocation TRIDENT = new ResourceLocation("textures/entity/trident.png");
-   public static final ResourceLocation SERPENT_TRIDENT = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/serpent_trident.png");
+   public static final ResourceLocation LEVIATHAN_TRIDENT = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/leviathan_trident.png");
    private final OdysseyTridentModel tridentModel = new OdysseyTridentModel();
 
    public OdysseyTridentRenderer(EntityRendererManager renderManagerIn) {
@@ -42,7 +42,7 @@ public class OdysseyTridentRenderer extends EntityRenderer<AbstractTridentEntity
     */
    public ResourceLocation getTextureLocation(AbstractTridentEntity entity) {
       Item item = entity.getItem();
-      if(item == ItemRegistry.SERPENT_TRIDENT.get()) return SERPENT_TRIDENT;
+      if(item == ItemRegistry.LEVIATHAN_TRIDENT.get()) return LEVIATHAN_TRIDENT;
       return TRIDENT;
    }
 }

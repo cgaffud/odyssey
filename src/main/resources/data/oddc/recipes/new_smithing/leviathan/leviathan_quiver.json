@@ -5,9 +5,9 @@
     "item": "oddc:leather_quiver"
   },
   "addition": {
-    "item": "oddc:serpent_scale"
+    "item": "oddc:leviathan_scale"
   },
   "result": {
-    "item": "oddc:serpent_quiver"
+    "item": "oddc:leviathan_quiver"
   }
 }

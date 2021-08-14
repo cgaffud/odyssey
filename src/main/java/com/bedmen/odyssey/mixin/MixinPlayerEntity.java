@@ -2,8 +2,8 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
-import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.util.EnchantmentRegistry;
+import com.bedmen.odyssey.enchantment.EnchantmentUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -21,6 +21,7 @@ import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -139,7 +140,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         }
     }
 
-    //Disables both kinds of shields
+    //Disables All kinds of shields
     public void disableShield(boolean p_190777_1_) {
         float f = 0.25F + (float) EnchantmentHelper.getBlockEfficiency(this) * 0.05F;
         if (p_190777_1_) {
@@ -183,6 +184,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         }
     }
 
+    //Removed turtle helmet tick
     public void tick() {
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPreTick(toPlayerEntity(this));
         this.noPhysics = this.isSpectator();
@@ -254,6 +256,19 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         this.cooldowns.tick();
         this.updatePlayerPose();
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(toPlayerEntity(this));
+    }
+
+    public void updateSwimming() {
+        if (this.abilities.flying) {
+            this.setSwimming(false);
+        } else {
+            boolean vulcan = 0 < EnchantmentUtil.getVulcanStrider(this);
+            if (this.isSwimming()) {
+                this.setSwimming(this.isSprinting() && (this.isInWater() || (vulcan && this.isInLava())) && !this.isPassenger());
+            } else {
+                this.setSwimming(this.isSprinting() && (this.isUnderWater() || (vulcan && this.isInLava() && this.isEyeInFluid(FluidTags.LAVA))) && !this.isPassenger());
+            }
+        }
     }
 
     private PlayerEntity toPlayerEntity(MixinPlayerEntity mixinPlayerEntity){

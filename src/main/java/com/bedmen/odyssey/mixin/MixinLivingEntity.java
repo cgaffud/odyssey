@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.enchantment.ObsidianWalkerEnchantment;
 import com.bedmen.odyssey.entity.IZephyrArmorEntity;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.equipment.ZephyrArmorItem;
@@ -8,13 +9,13 @@ import com.bedmen.odyssey.network.packet.JumpingPacket;
 import com.bedmen.odyssey.network.packet.SneakingPacket;
 import com.bedmen.odyssey.util.EffectRegistry;
 import com.bedmen.odyssey.util.EnchantmentRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.enchantment.EnchantmentUtil;
 import com.google.common.base.Objects;
-import com.google.common.base.Supplier;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.enchantment.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -42,9 +43,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.*;
 
 @Mixin(LivingEntity.class)
@@ -54,6 +57,10 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         super(entityTypeIn, worldIn);
     }
 
+    @Shadow
+    protected void removeSoulSpeed() {}
+    @Shadow
+    protected void tryAddSoulSpeed() {}
     @Shadow
     public boolean isFallFlying() {return false;}
     @Shadow
@@ -125,8 +132,6 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     @Shadow
     private BlockPos lastPos;
     @Shadow
-    protected void onChangedBlock(BlockPos p_184594_1_) {}
-    @Shadow
     public boolean isDeadOrDying() {
         return false;
     }
@@ -196,10 +201,10 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     protected int fallFlyTicks;
     @Shadow
     protected float getJumpPower() { return 0.0f; }
+    @Shadow
+    protected boolean shouldRemoveSoulSpeed(BlockState p_230295_1_) {return false;}
 
     private int zephyrArmorTicks = -1;
-
-    private Supplier<EffectInstance> effectInstanceSupplier;
 
     public boolean hurt(DamageSource source, float amount) {
         if (!net.minecraftforge.common.ForgeHooks.onLivingAttack((LivingEntity)(Entity)this, source, amount)) return false;
@@ -362,6 +367,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     }
 
     // Reduces oxygen under lava too
+    // Drowning Curse
     public void baseTick() {
         this.oAttackAnim = this.attackAnim;
         if (this.firstTick) {
@@ -396,7 +402,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         boolean flag1 = flag && ((PlayerEntity) (Object) this).abilities.invulnerable;
         if (this.isAlive()) {
             //Drowns extra with drowning curse
-            int drowningAmount = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DROWNING.get(), (LivingEntity)(Object)this);
+            int drowningAmount = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DROWNING.get(), getLivingEntity());
             //Checks if player is in lava too
             drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
             if (drowningAmount > 0) {
@@ -437,7 +443,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         }
 
         if (!flag1) {
-            int heavySum = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.HEAVY.get(), (LivingEntity)(Object)this);
+            int heavySum = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.HEAVY.get(), getLivingEntity());
             if (heavySum > 10)
                 heavySum = 10;
             if (heavySum != 0)
@@ -500,32 +506,37 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         this.xRotO = this.xRot;
         this.level.getProfiler().pop();
 
-        if(EnchantmentUtil.hasSlowFalling((LivingEntity)(Object)this)){
+        if(EnchantmentUtil.hasSlowFalling(getLivingEntity())){
             if(this.level.isClientSide)
                 OdysseyNetwork.CHANNEL.sendToServer(new JumpingPacket(this.jumping));
             else if(this.jumping && this.getDeltaMovement().y <= 0.0D){
                 this.addEffect(new EffectInstance(Effects.SLOW_FALLING, 1, 0, false, false, true));
             }
-        }
-
-        if(EnchantmentUtil.hasTurtling((LivingEntity)(Object)this)){
+        } else if(EnchantmentUtil.hasTurtling(getLivingEntity())){
             if(this.level.isClientSide)
                 OdysseyNetwork.CHANNEL.sendToServer(new SneakingPacket(this.isShiftKeyDown()));
             else if(this.isShiftKeyDown()){
                 this.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 1, 2, false, false, true));
             }
+        } else if(EnchantmentUtil.hasFireproof(getLivingEntity())) {
+            if (this.level.isClientSide)
+                OdysseyNetwork.CHANNEL.sendToServer(new SneakingPacket(this.isShiftKeyDown()));
+            else if (this.isShiftKeyDown()) {
+                this.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 1, 0, false, false, true));
+            }
         }
     }
 
+    //Zephyr Suit Set Bonus
     private void updateFallFlying() {
         if(this.onGround)
             this.zephyrArmorTicks = 40;
         boolean flag = this.getSharedFlag(7);
         if (flag && !this.onGround && !this.isPassenger() && !this.hasEffect(Effects.LEVITATION)) {
             ItemStack itemstack = this.getItemBySlot(EquipmentSlotType.CHEST);
-            flag = itemstack.canElytraFly((LivingEntity)(Object)this) && itemstack.elytraFlightTick((LivingEntity)(Object)this, this.fallFlyTicks);
+            flag = itemstack.canElytraFly(getLivingEntity()) && itemstack.elytraFlightTick(getLivingEntity(), this.fallFlyTicks);
             if(itemstack.getItem() instanceof ZephyrArmorItem){
-                flag &= EnchantmentUtil.hasGliding((LivingEntity)(Object)this);
+                flag &= EnchantmentUtil.hasGliding(getLivingEntity());
             }
         } else {
             flag = false;
@@ -536,6 +547,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
             this.setSharedFlag(7, flag);
     }
 
+    //Raise Max Depth Strider to 10
     public void travel(Vector3d p_213352_1_) {
         if (this.isEffectiveAi() || this.isControlledByLocalInstance()) {
             double d0 = 0.08D;
@@ -554,19 +566,17 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
                 double d8 = this.getY();
                 float f5 = this.isSprinting() ? 0.9F : this.getWaterSlowDown();
                 float f6 = 0.02F;
-                float f7 = (float)EnchantmentHelper.getDepthStrider((LivingEntity)(Object)this);
-                if (f7 > 3.0F) {
-                    f7 = 3.0F;
+                float f7 = (float)EnchantmentUtil.getDepthStrider(getLivingEntity());
+                //Raise Max Depth Strider to 10
+                if (f7 > 10.0F) {
+                    f7 = 10.0F;
                 }
 
                 if (!this.onGround) {
                     f7 *= 0.5F;
                 }
 
-                if (f7 > 0.0F) {
-                    f5 += (0.54600006F - f5) * f7 / 3.0F;
-                    f6 += (this.getSpeed() - f6) * f7 / 3.0F;
-                }
+                f6 *= 1.0f + f7 * 0.25f;
 
                 if (this.hasEffect(Effects.DOLPHINS_GRACE)) {
                     f5 = 0.96F;
@@ -580,22 +590,43 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
                     vector3d6 = new Vector3d(vector3d6.x, 0.2D, vector3d6.z);
                 }
 
-                this.setDeltaMovement(vector3d6.multiply((double)f5, (double)0.8F, (double)f5));
+                this.setDeltaMovement(vector3d6.multiply((double)f5, (double)0.8f, (double)f5));
                 Vector3d vector3d2 = this.getFluidFallingAdjustedMovement(d0, flag, this.getDeltaMovement());
                 this.setDeltaMovement(vector3d2);
                 if (this.horizontalCollision && this.isFree(vector3d2.x, vector3d2.y + (double)0.6F - this.getY() + d8, vector3d2.z)) {
                     this.setDeltaMovement(vector3d2.x, (double)0.3F, vector3d2.z);
                 }
             } else if (this.isInLava() && this.isAffectedByFluids() && !this.canStandOnFluid(fluidstate.getType())) {
+                float f9 = 0.02F;
+                float f10 = (float)EnchantmentUtil.getVulcanStrider(getLivingEntity());
+                boolean sprinting = this.isSprinting();
+                float f8 = f10 > 0.0f ? (sprinting ? 0.90F : 0.7f) : 0.5f;
+
+                if (f10 > 10.0F) {
+                    f10 = 10.0F;
+                }
+
+                if (!this.onGround) {
+                    f10 *= 0.5F;
+                }
+
+                if (sprinting){
+                    f10 *= 2.0f;
+                }
+
+                f9 *= 1.0f + f10 * 0.25f;
+                f9 *= (float)this.getAttribute(net.minecraftforge.common.ForgeMod.SWIM_SPEED.get()).getValue();
+
+
                 double d7 = this.getY();
-                this.moveRelative(0.02F, p_213352_1_);
+                this.moveRelative(f9, p_213352_1_);
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 if (this.getFluidHeight(FluidTags.LAVA) <= this.getFluidJumpThreshold()) {
-                    this.setDeltaMovement(this.getDeltaMovement().multiply(0.5D, (double)0.8F, 0.5D));
+                    this.setDeltaMovement(this.getDeltaMovement().multiply(f8, (double)0.8F, f8));
                     Vector3d vector3d3 = this.getFluidFallingAdjustedMovement(d0, flag, this.getDeltaMovement());
                     this.setDeltaMovement(vector3d3);
                 } else {
-                    this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
+                    this.setDeltaMovement(this.getDeltaMovement().scale(f8));
                 }
 
                 if (!this.isNoGravity()) {
@@ -672,10 +703,50 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
             }
         }
 
-        this.calculateEntityAnimation((LivingEntity)(Object)this, this instanceof IFlyingAnimal);
+        this.calculateEntityAnimation(getLivingEntity(), this instanceof IFlyingAnimal);
+    }
+
+    protected void onChangedBlock(BlockPos p_184594_1_) {
+        int i = EnchantmentUtil.getFrostWalker(getLivingEntity());
+        int j = EnchantmentUtil.getObsidianWalker(getLivingEntity());
+        if (i > 0) {
+            FrostWalkerEnchantment.onEntityMoved(getLivingEntity(), this.level, p_184594_1_, i);
+        }
+        if (j > 0) {
+            ObsidianWalkerEnchantment.onEntityMoved(getLivingEntity(), this.level, p_184594_1_, j);
+        }
+
+        if (this.shouldRemoveSoulSpeed(this.getBlockStateOn())) {
+            this.removeSoulSpeed();
+        }
+
+        this.tryAddSoulSpeed();
+    }
+
+    //Prevents annoying fire from filling screen with fire res
+    public void setRemainingFireTicks(int i) {
+        Field fireTicksField = ObfuscationReflectionHelper.findField(Entity.class, "remainingFireTicks");
+        fireTicksField.setAccessible(true);
+        if(this.hasEffect(Effects.FIRE_RESISTANCE)){
+            try {
+                fireTicksField.set(this, 0);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                fireTicksField.set(this, i);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
     
     public int getZephyrArmorTicks(){
         return this.zephyrArmorTicks;
+    }
+
+    public LivingEntity getLivingEntity(){
+        return (LivingEntity)(Object)this;
     }
 }

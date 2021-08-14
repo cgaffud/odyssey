@@ -62,8 +62,8 @@ public class OdysseyItemStackTileEntityRenderer extends ItemStackTileEntityRende
             matrixStack.pushPose();
             matrixStack.scale(1.0F, -1.0F, -1.0F);
             RenderMaterial rendermaterial;
-            if(item == ItemRegistry.SERPENT_SHIELD.get()){
-                rendermaterial = flag ?  Odyssey.SERPENT_SHIELD_BASE : Odyssey.SERPENT_SHIELD_BASE_NOPATTERN;
+            if(item == ItemRegistry.LEVIATHAN_SHIELD.get()){
+                rendermaterial = flag ?  Odyssey.LEVIATHAN_SHIELD_BASE : Odyssey.LEVIATHAN_SHIELD_BASE_NOPATTERN;
             }
 
             else {

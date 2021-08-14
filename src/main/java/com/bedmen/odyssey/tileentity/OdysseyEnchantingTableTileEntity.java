@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.tileentity;
 
 import com.bedmen.odyssey.container.OdysseyEnchantmentContainer;
-import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.enchantment.EnchantmentUtil;
 import com.bedmen.odyssey.util.TileEntityTypeRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;

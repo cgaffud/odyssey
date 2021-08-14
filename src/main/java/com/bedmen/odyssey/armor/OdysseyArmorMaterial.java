@@ -26,7 +26,8 @@ public enum OdysseyArmorMaterial implements IArmorMaterial {
     DIAMOND("diamond", 33, new int[]{7,12,13,8}, 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(Items.DIAMOND); }),
     ARCTIC("oddc:arctic", 20, new int[]{6,10,11,7}, 9, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()); }),
     NETHERITE("netherite", 37, new int[]{7,13,15,9}, 15, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.1F, () -> { return Ingredient.of(Items.NETHERITE_INGOT); }),
-    ZEPHYR("oddc:zephyr", 10, new int[]{5,9,10,6}, 9, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0F, () -> { return Ingredient.of(Items.PHANTOM_MEMBRANE); });
+    ZEPHYR("oddc:zephyr", 15, new int[]{5,9,10,6}, 9, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0F, () -> { return Ingredient.of(Items.PHANTOM_MEMBRANE); }),
+    LEVIATHAN("oddc:leviathan", 30, new int[]{8,14,16,10}, 9, SoundEvents.ARMOR_EQUIP_TURTLE , 0.0F, () -> { return Ingredient.of(ItemRegistry.LEVIATHAN_SCALE.get()); });
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[] {11, 16, 15, 13};
     private final String name;

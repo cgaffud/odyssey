@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.recipes;
 
 import com.bedmen.odyssey.util.BlockRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.enchantment.EnchantmentUtil;
 import com.bedmen.odyssey.util.RecipeRegistry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

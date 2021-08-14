@@ -28,12 +28,12 @@ public class OdysseyItemTags {
         //Tridents
         set = new HashSet<>();
         set.add(ItemRegistry.TRIDENT.get());
-        set.add(ItemRegistry.SERPENT_TRIDENT.get());
+        set.add(ItemRegistry.LEVIATHAN_TRIDENT.get());
         TRIDENT_TAG = set;
         //Shields
         set = new HashSet<>();
         set.add(ItemRegistry.SHIELD.get());
-        set.add(ItemRegistry.SERPENT_SHIELD.get());
+        set.add(ItemRegistry.LEVIATHAN_SHIELD.get());
         SHIELD_TAG = set;
         //Quills
         set = new HashSet<>();

@@ -58,7 +58,6 @@ public abstract class MixinEnchantmentHelper {
             Item item = itemStack.getItem();
             if(source == DamageSource.FALL){
                 mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(Enchantments.FALL_PROTECTION)*5);
-                System.out.println(((IEquipment)item).getInnateEnchantmentLevel(Enchantments.FALL_PROTECTION));
             }
             else if(source.isFire()){
                 mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(Enchantments.FIRE_PROTECTION)*5);

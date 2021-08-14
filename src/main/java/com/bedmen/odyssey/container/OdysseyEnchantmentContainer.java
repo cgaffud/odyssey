@@ -3,7 +3,7 @@ package com.bedmen.odyssey.container;
 import com.bedmen.odyssey.client.gui.OdysseyEnchantmentScreen;
 import com.bedmen.odyssey.util.ContainerRegistry;
 import com.bedmen.odyssey.util.EnchantmentRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.enchantment.EnchantmentUtil;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
