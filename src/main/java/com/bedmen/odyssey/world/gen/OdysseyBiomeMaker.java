@@ -42,7 +42,7 @@ public class OdysseyBiomeMaker {
                 .scale(scale)
                 .temperature(0.3F)
                 .downfall(0.8F)
-                .specialEffects((new BiomeAmbience.Builder()).grassColorOverride(10783823).waterColor(4173284).waterFogColor(336947).fogColor(12642815).skyColor(calculateSkyColor(0.7F)).ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS).build())
+                .specialEffects((new BiomeAmbience.Builder()).grassColorOverride(10783823).waterColor(10604003).waterFogColor(336947).fogColor(12642815).skyColor(calculateSkyColor(0.7F)).ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS).build())
                 .mobSpawnSettings(mobspawninfo$builder.build())
                 .generationSettings(biomegenerationsettings$builder.build()).build();
     }
