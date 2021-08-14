@@ -14,7 +14,7 @@
   "item.oddc.feather_bundle": "Feather Bundle",
   "item.oddc.permafrost_shard": "Permafrost Shard",
   "item.oddc.arctic_heart": "Heart of the Arctic",
-  "item.oddc.werewolf_claw": "Werewolf Claw",
+  "item.oddc.lupine_claw": "Lupine Claw",
   "item.oddc.arctic_horn": "Arctic Horn",
   "item.oddc.raven_feather": "Raven Feather",
   "item.oddc.bewitched_quill": "Bewitched Quill",
@@ -26,9 +26,13 @@
   "item.oddc.emerald_fragment": "Emerald Fragment",
   "item.oddc.emerald_piece": "Emerald Piece",
 
-  //Hammers
-  "item.oddc.wooden_bat": "Wooden Bat",
+  //Bats
   "item.oddc.granite_bat": "Granite Bat",
+  "item.oddc.copper_bat": "Copper Bat",
+  "item.oddc.obsidian_bat": "Obsidian Bat",
+
+  //Hammers
+  "item.oddc.granite_hammer": "Granite Hammer",
   "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.obsidian_hammer": "Obsidian Hammer",
 
@@ -166,16 +170,19 @@
   "block.oddc.fog6": "Fog 6",
   "block.oddc.fog7": "Fog 7",
   "block.oddc.fog8": "Fog 8",
+  "block.oddc.permafrost_ice2": "Permafrost Ice 2",
+  "block.oddc.permafrost_ice4": "Permafrost Ice 2",
+  "block.oddc.permafrost_conduit": "Permafrost Conduit",
   "block.oddc.autumn_leaves_red": "Red Autumnal Leaves",
   "block.oddc.autumn_leaves_orange": "Orange Autumnal Leaves",
   "block.oddc.frosted_obsidian": "Frosted Obsidian",
 
   //Entities
-  "entity.oddc.werewolf": "Werewolf",
+  "entity.oddc.lupine": "Lupine",
   "entity.oddc.arctihorn": "Arctihorn",
 
   //Spawn Eggs
-  "item.oddc.werewolf_spawn_egg": "Werewolf Spawn Egg",
+  "item.oddc.lupine_spawn_egg": "Lupine Spawn Egg",
   "item.oddc.arctihorn_spawn_egg": "Arctihorn Spawn Egg",
 
   //ItemGroup (Creative Tab)

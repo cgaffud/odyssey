@@ -2,7 +2,7 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
-import com.bedmen.odyssey.entity.monster.WerewolfEntity;
+import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
 import com.bedmen.odyssey.entity.projectile.LeviathanTridentEntity;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
@@ -25,7 +25,7 @@ public class EntityTypeRegistry {
     }
 
     //Mobs
-    public static final RegistryObject<EntityType<WerewolfEntity>> WEREWOLF = ENTITY_TYPE.register("werewolf", () -> EntityType.Builder.<WerewolfEntity>of(WerewolfEntity::new, OdysseyBiomeEntitySpawn.WEREWOLF).sized(0.6F, 0.85F).clientTrackingRange(10).build(new ResourceLocation("werewolf").toString()));
+    public static final RegistryObject<EntityType<LupineEntity>> LUPINE = ENTITY_TYPE.register("lupine", () -> EntityType.Builder.<LupineEntity>of(LupineEntity::new, OdysseyBiomeEntitySpawn.HARD_BIOME).sized(0.6F, 0.85F).clientTrackingRange(10).build(new ResourceLocation("lupine").toString()));
     public static final RegistryObject<EntityType<ArctihornEntity>> ARCTIHORN = ENTITY_TYPE.register("arctihorn", () -> EntityType.Builder.<ArctihornEntity>of(ArctihornEntity::new, EntityClassification.MONSTER).sized(0.8F, 0.8F).clientTrackingRange(12).build(new ResourceLocation("arctihorn").toString()));
 
     //Other

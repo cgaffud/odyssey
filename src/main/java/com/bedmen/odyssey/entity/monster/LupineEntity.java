@@ -32,7 +32,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class WerewolfEntity extends MonsterEntity {
+public class LupineEntity extends MonsterEntity {
     private float headRotationCourse;
     private float headRotationCourseOld;
     private boolean isWet;
@@ -42,7 +42,7 @@ public class WerewolfEntity extends MonsterEntity {
     private static final RangedInteger PERSISTENT_ANGER_TIME = TickRangeConverter.rangeOfSeconds(20, 39);
     private UUID persistentAngerTarget;
 
-    public WerewolfEntity(EntityType<? extends WerewolfEntity> type, World worldIn) {
+    public LupineEntity(EntityType<? extends LupineEntity> type, World worldIn) {
         super(type, worldIn);
         this.xpReward = 5;
     }
@@ -81,10 +81,6 @@ public class WerewolfEntity extends MonsterEntity {
         super.readAdditionalSaveData(compound);
     }
 
-    public CreatureAttribute getMobType() {
-        return CreatureAttribute.UNDEAD;
-    }
-
     protected SoundEvent getAmbientSound() {
         return SoundEvents.WOLF_GROWL;
     }
@@ -109,12 +105,6 @@ public class WerewolfEntity extends MonsterEntity {
      * use this to react to sunlight and start to burn.
      */
     public void aiStep() {
-        if (this.isAlive()) {
-            boolean flag = this.shouldBurnInDay() && this.isSunBurnTick();
-            if (flag) {
-                this.setSecondsOnFire(8);
-            }
-        }
         super.aiStep();
         if (!this.level.isClientSide && this.isWet && !this.isShaking && !this.isPathFinding() && this.onGround) {
             this.isShaking = true;
@@ -123,10 +113,6 @@ public class WerewolfEntity extends MonsterEntity {
             this.level.broadcastEntityEvent(this, (byte)8);
         }
 
-    }
-
-    protected boolean shouldBurnInDay() {
-        return true;
     }
 
     /**
@@ -253,9 +239,6 @@ public class WerewolfEntity extends MonsterEntity {
         return flag;
     }
 
-    /**
-     * Handler for {@link World#setEntityState}
-     */
     @OnlyIn(Dist.CLIENT)
     public void handleEntityEvent(byte id) {
         if (id == 8) {

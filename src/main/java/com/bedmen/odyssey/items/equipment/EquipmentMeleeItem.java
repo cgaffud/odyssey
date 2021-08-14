@@ -1,11 +1,11 @@
-package com.bedmen.odyssey.items;
+package com.bedmen.odyssey.items.equipment;
 
-import com.bedmen.odyssey.items.equipment.EquipmentItem;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
@@ -15,26 +15,25 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IItemTier;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Lazy;
 
-public class HammerItem extends EquipmentItem implements IVanishable {
+public class EquipmentMeleeItem extends EquipmentItem implements IVanishable {
     private final float attackDamage;
     /** Modifiers applied when the item is in the mainhand of a user. */
     private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
-    public HammerItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, int level, Item.Properties builderIn) {
+    public EquipmentMeleeItem(IItemTier tier, Enchantment e, int attackDamageIn, float attackSpeedIn, int level, Properties builderIn) {
         super(tier, builderIn);
         this.attackDamage = (float)attackDamageIn + tier.getAttackDamageBonus();
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)attackSpeedIn, AttributeModifier.Operation.ADDITION));
         this.attributeModifiers = builder.build();
-        this.enchantmentLazyMap.put(Lazy.of(()-> Enchantments.BANE_OF_ARTHROPODS), level);
+        this.enchantmentLazyMap.put(Lazy.of(()-> e), level);
     }
 
     public float getAttackDamage() {

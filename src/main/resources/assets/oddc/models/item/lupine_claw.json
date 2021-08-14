@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "oddc:item/werewolf_claw"
+    "layer0": "oddc:item/lupine_claw"
   }
 }

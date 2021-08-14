@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.client.renderer.entity.model;
 
-import com.bedmen.odyssey.entity.monster.WerewolfEntity;
+import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.entity.model.TintedAgeableModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -9,7 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class WerewolfModel<T extends WerewolfEntity> extends TintedAgeableModel<T> {
+public class LupineModel<T extends LupineEntity> extends TintedAgeableModel<T> {
     private final ModelRenderer head;
     /** Added as a result/workaround for the loss of renderWithRotation */
     private final ModelRenderer headChild;
@@ -23,7 +23,7 @@ public class WerewolfModel<T extends WerewolfEntity> extends TintedAgeableModel<
     private final ModelRenderer tailChild;
     private final ModelRenderer mane;
 
-    public WerewolfModel() {
+    public LupineModel() {
         float f = 0.0F;
         float f1 = 13.5F;
         this.head = new ModelRenderer(this, 0, 0);
