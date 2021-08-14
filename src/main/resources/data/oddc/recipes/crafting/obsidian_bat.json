@@ -7,13 +7,13 @@
   ],
   "key": {
     "#": {
-      "item": "minecraft:stick"
+      "item": "minecraft:diamond"
     },
     "X": {
-      "tag": "minecraft:planks"
+      "item": "minecraft:obsidian"
     }
   },
   "result": {
-    "item": "oddc:wooden_bat"
+    "item": "oddc:obsidian_bat"
   }
 }

@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.client.renderer.entity.model.WerewolfModel;
-import com.bedmen.odyssey.entity.monster.WerewolfEntity;
+import com.bedmen.odyssey.client.renderer.entity.model.LupineModel;
+import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -12,21 +12,21 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class WerewolfRenderer extends MobRenderer<WerewolfEntity, WerewolfModel<WerewolfEntity>> {
-    private static final ResourceLocation ANGRY_WOLF_TEXTURES = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/werewolf.png");
+public class LupineRenderer extends MobRenderer<LupineEntity, LupineModel<LupineEntity>> {
+    private static final ResourceLocation ANGRY_WOLF_TEXTURES = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/lupine.png");
 
-    public WerewolfRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new WerewolfModel<>(), 0.5F);
+    public LupineRenderer(EntityRendererManager renderManagerIn) {
+        super(renderManagerIn, new LupineModel<>(), 0.5F);
     }
 
     /**
      * Defines what float the third param in setRotationAngles of ModelBase is
      */
-    protected float getBob(WerewolfEntity livingBase, float partialTicks) {
+    protected float getBob(LupineEntity livingBase, float partialTicks) {
         return livingBase.getTailRotation();
     }
 
-    public void render(WerewolfEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    public void render(LupineEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         if (entityIn.isWolfWet()) {
             float f = entityIn.getShadingWhileWet(partialTicks);
             this.model.setColor(f, f, f);
@@ -42,7 +42,7 @@ public class WerewolfRenderer extends MobRenderer<WerewolfEntity, WerewolfModel<
     /**
      * Returns the location of an entity's texture.
      */
-    public ResourceLocation getTextureLocation(WerewolfEntity entity) {
+    public ResourceLocation getTextureLocation(LupineEntity entity) {
         return ANGRY_WOLF_TEXTURES;
     }
 }

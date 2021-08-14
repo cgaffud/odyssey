@@ -1,8 +1,7 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.world.gen.feature.MegaIceSpikeFeature;
-import net.minecraft.world.gen.feature.Features;
+import com.bedmen.odyssey.world.gen.feature.PermafrostTowerFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.fml.RegistryObject;
@@ -20,5 +19,5 @@ public class FeatureRegistry {
         FEATURES_VANILLA.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<Feature<NoFeatureConfig>> MEGA_ICE_SPIKE = FEATURES.register("mega_ice_spike", () -> new MegaIceSpikeFeature(NoFeatureConfig.CODEC));
+    public static final RegistryObject<Feature<NoFeatureConfig>> PERMAFROST_TOWER = FEATURES.register("permafrost_tower", () -> new PermafrostTowerFeature(NoFeatureConfig.CODEC));
 }

@@ -5,11 +5,11 @@ import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.OdysseyEnchantmentTableTileEntityRenderer;
 import com.bedmen.odyssey.client.renderer.entity.ArctihornRenderer;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyTridentRenderer;
-import com.bedmen.odyssey.client.renderer.entity.WerewolfRenderer;
+import com.bedmen.odyssey.client.renderer.entity.LupineRenderer;
 import com.bedmen.odyssey.enchantment.EnchantmentUtil;
 import com.bedmen.odyssey.entity.attributes.OdysseyAttributes;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
-import com.bedmen.odyssey.entity.monster.WerewolfEntity;
+import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
 import com.bedmen.odyssey.items.equipment.EquipmentItem;
@@ -71,13 +71,6 @@ public class Odyssey
     public static final String MOD_ID = "oddc";
     public static final RenderMaterial LEVIATHAN_SHIELD_BASE = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID, "entity/leviathan_shield_base")));
     public static final RenderMaterial LEVIATHAN_SHIELD_BASE_NOPATTERN = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID,"entity/leviathan_shield_base_nopattern")));
-    public static final ItemGroup BUILDING_BLOCKS = new OdysseyItemGroup("oddc_building_blocks", Lazy.of(ItemRegistry.RUBY_ORE::get));
-    public static final ItemGroup DECORATION_BLOCKS = new OdysseyItemGroup("oddc_decoration_blocks", Lazy.of(ItemRegistry.RESEARCH_TABLE::get));
-    public static final ItemGroup MATERIALS = new OdysseyItemGroup("oddc_materials", Lazy.of(ItemRegistry.RUBY::get));
-    public static final ItemGroup TOOLS = new OdysseyItemGroup("oddc_tools", Lazy.of(ItemRegistry.STERLING_SILVER_AXE::get));
-    public static final ItemGroup COMBAT = new OdysseyItemGroup("oddc_combat", Lazy.of(ItemRegistry.STERLING_SILVER_SWORD::get));
-    public static final ItemGroup SPAWN_EGGS = new OdysseyItemGroup("oddc_spawn_eggs", Lazy.of(ItemRegistry.ARCTIHORN_SPAWN_EGG::get));
-
 
     public Odyssey() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -131,11 +124,11 @@ public class Odyssey
         for(Item item : OdysseyItemTags.SHIELD_TAG)
             OdysseyShieldItem.registerBaseProperties(item);
 
-        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.WEREWOLF.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, WerewolfEntity::predicate);
+        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::predicate);
         EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::predicate);
 
         DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(EntityTypeRegistry.WEREWOLF.get(), WerewolfEntity.attributes().build());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.attributes().build());
             GlobalEntityTypeAttributes.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.attributes().build());
         });
     }
@@ -160,7 +153,7 @@ public class Odyssey
         ScreenManager.register(ContainerRegistry.QUIVER9.get(), QuiverScreen::new);
 
         //Mob Renderings
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEREWOLF.get(), WerewolfRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
 
         //Projectile Renderings
@@ -171,6 +164,9 @@ public class Odyssey
         RenderTypeLookup.setRenderLayer(BlockRegistry.RESEARCH_TABLE.get(), RenderType.cutout());
         for(Block block : OdysseyBlockTags.FOG_TAG)
             RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
+
+        RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE2.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE4.get(), RenderType.translucent());
     }
 
     @SubscribeEvent
