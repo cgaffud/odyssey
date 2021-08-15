@@ -28,6 +28,8 @@ run
 CREDITS.txt
 LICENSE.txt
 README.txt
+block_data_writer.py
 
 # Files from Forge MDK
 forge*changelog.txt
+
