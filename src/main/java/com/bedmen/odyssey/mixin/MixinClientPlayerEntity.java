@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.items.equipment.ZephyrArmorItem;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
@@ -163,9 +165,16 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
             }
         }
 
+        //Makes it so that just having the zephyr suit chestplate doesn't activate flying
         if (this.input.jumping && !flag7 && !flag && !this.abilities.flying && !this.isPassenger() && !this.onClimbable()) {
             ItemStack itemstack = this.getItemBySlot(EquipmentSlotType.CHEST);
-            if (itemstack.canElytraFly(this) && this.tryToStartFallFlying()) {
+            boolean glidingFlag = itemstack.canElytraFly(this);
+            if(itemstack.getItem() instanceof ZephyrArmorItem)
+                glidingFlag &= EnchantmentUtil.hasGliding(this);
+            if (glidingFlag) {
+                glidingFlag = this.tryToStartFallFlying();
+            }
+            if (glidingFlag) {
                 this.connection.send(new CEntityActionPacket(this, CEntityActionPacket.Action.START_FALL_FLYING));
             }
         }

@@ -528,7 +528,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
 
     //Zephyr Suit Set Bonus
     private void updateFallFlying() {
-        if(this.onGround)
+        if(this.onGround || this.isInWater() || this.isInLava())
             this.zephyrArmorTicks = 40;
         boolean flag = this.getSharedFlag(7);
         if (flag && !this.onGround && !this.isPassenger() && !this.hasEffect(Effects.LEVITATION)) {
