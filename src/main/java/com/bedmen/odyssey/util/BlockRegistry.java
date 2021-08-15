@@ -51,6 +51,7 @@ public class BlockRegistry {
 
     public static final RegistryObject<Block> AUTUMN_LEAVES_RED = BLOCKS.register("autumn_leaves_red", BlockRegistry::leaves);
     public static final RegistryObject<Block> AUTUMN_LEAVES_ORANGE = BLOCKS.register("autumn_leaves_orange", BlockRegistry::leaves);
+    public static final RegistryObject<Block> AUTUMN_LEAVES_YELLOW = BLOCKS.register("autumn_leaves_yellow", BlockRegistry::leaves);
 
     public static final RegistryObject<Block> FROSTED_OBSIDIAN = BLOCKS.register("frosted_obsidian", () -> new FrostedObsidianBlock(AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).randomTicks().strength(50.0F, 1200.0F).lightLevel(FrostedObsidianBlock.litBlockEmission())));
 
