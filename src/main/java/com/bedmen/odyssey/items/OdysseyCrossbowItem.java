@@ -61,7 +61,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         if (isCharged(itemstack)) {
-            float inaccuracy = EnchantmentUtil.getAccuracy(playerIn);
+            float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerIn);
             fireProjectiles(worldIn, playerIn, handIn, itemstack, getVelocity(itemstack), inaccuracy);
             setCharged(itemstack, false);
             return ActionResult.consume(itemstack);

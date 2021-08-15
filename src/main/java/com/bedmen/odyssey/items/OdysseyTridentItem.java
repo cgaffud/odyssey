@@ -70,8 +70,9 @@ public class OdysseyTridentItem extends Item implements IVanishable {
             PlayerEntity playerentity = (PlayerEntity)entityLiving;
             int i = this.getUseDuration(stack) - timeLeft;
             if (i >= 10) {
-                int j = EnchantmentHelper.getRiptide(stack);
-                if (j <= 0 || playerentity.isInWaterOrRain()) {
+                int j = EnchantmentUtil.getRiptide(stack);
+                int j2 = EnchantmentUtil.getEruption(stack);
+                if (j <= 0 ||  canRiptide(playerentity, j , j2)) {
                     if (!worldIn.isClientSide) {
                         stack.hurtAndBreak(1, playerentity, (player) -> {
                             player.broadcastBreakEvent(entityLiving.getUsedItemHand());
@@ -82,8 +83,8 @@ public class OdysseyTridentItem extends Item implements IVanishable {
                                 tridententity = new LeviathanTridentEntity(worldIn, playerentity, stack, this.damage);
                             }
                             else tridententity = new OdysseyTridentEntity(worldIn, playerentity, stack, this.damage);
-                            float inaccuracy = EnchantmentUtil.getAccuracy(playerentity);
-                            tridententity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, 2.5F + (float)j * 0.5F, inaccuracy);
+                            float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerentity);
+                            tridententity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, 2.5F, inaccuracy);
                             if (playerentity.abilities.instabuild) {
                                 tridententity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                             }
@@ -132,11 +133,19 @@ public class OdysseyTridentItem extends Item implements IVanishable {
         }
     }
 
+    private boolean canRiptide(PlayerEntity playerEntity, ItemStack itemStack){
+        return canRiptide(playerEntity, EnchantmentUtil.getRiptide(itemStack), EnchantmentUtil.getEruption(itemStack));
+    }
+
+    private boolean canRiptide(PlayerEntity playerEntity, int riptideLevel, int eruptionLevel){
+        return (riptideLevel > 0 && playerEntity.isInWaterOrRain()) || (eruptionLevel > 0 && playerEntity.isInLava());
+    }
+
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         if (itemstack.getDamageValue() >= itemstack.getMaxDamage() - 1) {
             return ActionResult.fail(itemstack);
-        } else if (EnchantmentHelper.getRiptide(itemstack) > 0 && !playerIn.isInWaterOrRain()) {
+        } else if (EnchantmentUtil.getRiptide(itemstack) > 0 && !canRiptide(playerIn, itemstack)) {
             return ActionResult.fail(itemstack);
         } else {
             playerIn.startUsingItem(handIn);

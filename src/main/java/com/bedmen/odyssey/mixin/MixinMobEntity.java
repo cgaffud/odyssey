@@ -25,7 +25,7 @@ public abstract class MixinMobEntity extends Entity{
             float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(getMobEntity(this)) * 0.05F;
             if (this.random.nextFloat() < f) {
                 if(activePlayerStack.getItem() instanceof OdysseyShieldItem || activePlayerStack.getItem() instanceof ShieldItem){
-                    int ticks = EnchantmentUtil.getRecovery(player);
+                    int ticks = EnchantmentUtil.getRecoveryTicks(player);
                     for(Item item : OdysseyItemTags.SHIELD_TAG){
                         player.getCooldowns().addCooldown(item, ticks);
                     }

@@ -20,15 +20,24 @@ public class EnchantmentUtil {
     private static final int[] SWORD_ENCHANTS = {12,13,14,15,17,18};
     private static final int[] AXE_ENCHANTS = {12,13,14,19,20,22};
     private static final int[] TOOL_ENCHANTS = {19,20,22};
-    private static final int[] HELMET_ENCHANTS = {0,5,6,10};
+    private static final int[] HELMET_ENCHANTS = {0,5,6,10,48};
     private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10,39};
     private static final int[] LEGGINGS_ENCHANTS = {0,3,8,10};
-    private static final int[] BOOTS_ENCHANTS = {0,2,9,10,11};
+    private static final int[] BOOTS_ENCHANTS = {0,2,9,10,11,46,47};
     private static final int[] BOW_ENCHANTS = {23,24,26};
     private static final int[] CROSSBOW_ENCHANTS = {33,34,35};
-    private static final int[] TRIDENT_ENCHANTS = {29,30,31,32};
+    private static final int[] TRIDENT_ENCHANTS = {29,30,31,32,49};
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
     private static final int[] SHIELD_ENCHANTS = {40,41};
+
+    private static final Enchantment[] MELEE_DAMAGE_EXCLUSION = {Enchantments.SHARPNESS, Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS};
+    private static final Enchantment[] TOUCH_EXCLUSION = {Enchantments.BLOCK_FORTUNE, Enchantments.SILK_TOUCH};
+    private static final Enchantment[] CHANNELING_EXCLUSION = {Enchantments.CHANNELING, Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
+    private static final Enchantment[] LOYALTY_EXCLUSION = {Enchantments.LOYALTY, Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
+    private static final Enchantment[] RIPTIDE_EXLCUSION = {Enchantments.LOYALTY, Enchantments.CHANNELING, Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
+    private static final Enchantment[] BOOT_EXLCUSION = {Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, EnchantmentRegistry.VULCAN_STRIDER.get(), EnchantmentRegistry.OBSIDIAN_WALKER.get()};
+    private static final Enchantment[] AFFINITY_EXCLUSION = {Enchantments.AQUA_AFFINITY, EnchantmentRegistry.MOLTEN_AFFINITY.get()};
+    private static final Enchantment[] CHESTPLATE_EXCLUSION = {Enchantments.THORNS, EnchantmentRegistry.ACCURACY.get()};
 
     private static final Enchantment[] enchantments = {Enchantments.ALL_DAMAGE_PROTECTION,
             Enchantments.FIRE_PROTECTION,
@@ -79,8 +88,9 @@ public class EnchantmentUtil {
             EnchantmentRegistry.VULCAN_STRIDER.get(),
             EnchantmentRegistry.OBSIDIAN_WALKER.get(),
             EnchantmentRegistry.MOLTEN_AFFINITY.get(),
+            EnchantmentRegistry.ERUPTION.get(),
             };
-    private static Map<Enchantment, Integer> integerMap = new HashMap<>();
+    private static final Map<Enchantment, Integer> integerMap = new HashMap<>();
 
     public static void init(){
         integerMap.put(Enchantments.ALL_DAMAGE_PROTECTION, 0);
@@ -132,6 +142,7 @@ public class EnchantmentUtil {
         integerMap.put(EnchantmentRegistry.VULCAN_STRIDER.get(), 46);
         integerMap.put(EnchantmentRegistry.OBSIDIAN_WALKER.get(), 47);
         integerMap.put(EnchantmentRegistry.MOLTEN_AFFINITY.get(), 48);
+        integerMap.put(EnchantmentRegistry.ERUPTION.get(), 49);
     }
 
     public static Enchantment intToEnchantment(int i){
@@ -148,7 +159,7 @@ public class EnchantmentUtil {
         if(id == -1 || itemStack == ItemStack.EMPTY) return false;
         Item item = itemStack.getItem();
         if(!item.isEnchantable(itemStack)) return false;
-        if(id == 21 || id == 36 || id == 37) return true; //Unbreaking, Mending, and Vanishing
+        if(id == 21 || id == 36 || id == 37 || (id >= 41 && id <= 45)) return true; //Unbreaking, Mending, Vanishing, + most new curses
         if(item instanceof SwordItem) return check(SWORD_ENCHANTS, id);
         if(item instanceof AxeItem) return check(AXE_ENCHANTS, id);
         if(item instanceof PickaxeItem || item instanceof ShovelItem || item instanceof HoeItem) return check(TOOL_ENCHANTS, id);
@@ -182,32 +193,35 @@ public class EnchantmentUtil {
     }
 
     public static Enchantment[] exclusiveWith(Enchantment e){
-        if(e == Enchantments.SHARPNESS) return new Enchantment[] {Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS};
-        if(e == Enchantments.SMITE) return new Enchantment[] {Enchantments.SHARPNESS, Enchantments.BANE_OF_ARTHROPODS};
-        if(e == Enchantments.BANE_OF_ARTHROPODS) return new Enchantment[] {Enchantments.SHARPNESS, Enchantments.SMITE};
-
-        if(e == Enchantments.BLOCK_FORTUNE) return new Enchantment[] {Enchantments.SILK_TOUCH};
-        if(e == Enchantments.SILK_TOUCH) return new Enchantment[] {Enchantments.BLOCK_FORTUNE};
-
-        if(e == Enchantments.CHANNELING) return new Enchantment[] {Enchantments.RIPTIDE};
-        if(e == Enchantments.LOYALTY) return new Enchantment[] {Enchantments.RIPTIDE};
-        if(e == Enchantments.RIPTIDE) return new Enchantment[] {Enchantments.CHANNELING, Enchantments.LOYALTY};
-
-        if(e == Enchantments.MENDING) return new Enchantment[] {Enchantments.INFINITY_ARROWS};
-        if(e == Enchantments.INFINITY_ARROWS) return new Enchantment[] {Enchantments.MENDING};
-
-        if(e == Enchantments.DEPTH_STRIDER) return new Enchantment[] {Enchantments.FROST_WALKER, EnchantmentRegistry.VULCAN_STRIDER.get(), EnchantmentRegistry.OBSIDIAN_WALKER.get()};
-        if(e == Enchantments.FROST_WALKER) return new Enchantment[] {Enchantments.DEPTH_STRIDER, EnchantmentRegistry.VULCAN_STRIDER.get(), EnchantmentRegistry.OBSIDIAN_WALKER.get()};
-        if(e == EnchantmentRegistry.VULCAN_STRIDER.get()) return new Enchantment[] {Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, EnchantmentRegistry.OBSIDIAN_WALKER.get()};
-        if(e == EnchantmentRegistry.OBSIDIAN_WALKER.get()) return new Enchantment[] {Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, EnchantmentRegistry.VULCAN_STRIDER.get()};
-
-        if(e == EnchantmentRegistry.MOLTEN_AFFINITY.get()) return new Enchantment[] {Enchantments.AQUA_AFFINITY};
-        if(e == Enchantments.AQUA_AFFINITY) return new Enchantment[] {EnchantmentRegistry.MOLTEN_AFFINITY.get()};
-
-        if(e == Enchantments.THORNS) return new Enchantment[] {EnchantmentRegistry.ACCURACY.get()};
-        if(e == EnchantmentRegistry.ACCURACY.get()) return new Enchantment[] {Enchantments.THORNS};
-
-        return new Enchantment[] {};
+        switch(EnchantmentUtil.enchantmentToInt(e)){
+            case 12: //Sharpness
+            case 13: //Smite
+            case 14: //Bane of Arthropods
+                return MELEE_DAMAGE_EXCLUSION;
+            case 20: //Silk Touch
+            case 22: //Fortune
+                return TOUCH_EXCLUSION;
+            case 29: //Loyalty
+                return LOYALTY_EXCLUSION;
+            case 32: //Channeling
+                return CHANNELING_EXCLUSION;
+            case 31: //Riptide
+            case 49: //Eruption
+                return RIPTIDE_EXLCUSION;
+            case 8: //Depth Strider
+            case 9: //Frost Walker
+            case 46: //Vulcan Strider
+            case 47: //Obsidian Walker
+                return BOOT_EXLCUSION;
+            case 6: //Aqua Affinity
+            case 48: //Molten Affinity
+                return AFFINITY_EXCLUSION;
+            case 7: //Thorns
+            case 38: //Accuracy
+                return CHESTPLATE_EXCLUSION;
+            default:
+                return new Enchantment[] {e};
+        }
     }
 
     public static Enchantment deserializeEnchantment(String s) {
@@ -225,17 +239,17 @@ public class EnchantmentUtil {
         buffer.writeVarInt(enchantmentToInt(e));
     }
 
-    public static float getAccuracy(LivingEntity entity){
+    public static float getAccuracyMultiplier(LivingEntity entity){
         int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.ACCURACY.get(), entity);
         return i > 0 ? 0.1f : 1.0f;
     }
 
-    public static float getBlocking(LivingEntity entity){
+    public static float getBlockingMultiplier(LivingEntity entity){
         int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.BLOCKING.get(), entity);
         return 1.0f + 0.25f * i;
     }
 
-    public static int getRecovery(LivingEntity entity){
+    public static int getRecoveryTicks(LivingEntity entity){
         int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.RECOVERY.get(), entity);
         return 100 - 40 * i;
     }
@@ -278,5 +292,13 @@ public class EnchantmentUtil {
 
     public static int getObsidianWalker(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.OBSIDIAN_WALKER.get(), entity);
+    }
+
+    public static int getRiptide(ItemStack itemStack) {
+        return getEruption(itemStack) + EnchantmentHelper.getItemEnchantmentLevel(Enchantments.RIPTIDE, itemStack);
+    }
+
+    public static int getEruption(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.ERUPTION.get(), itemStack);
     }
 }
