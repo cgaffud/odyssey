@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.equipment;
 
-import com.bedmen.odyssey.util.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;

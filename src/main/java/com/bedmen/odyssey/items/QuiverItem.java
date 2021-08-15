@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.container.QuiverContainer;
-import com.bedmen.odyssey.util.ContainerRegistry;
+import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.INamedContainerProvider;

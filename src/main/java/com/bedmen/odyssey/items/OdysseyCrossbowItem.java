@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.util.BowUtil;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Random;

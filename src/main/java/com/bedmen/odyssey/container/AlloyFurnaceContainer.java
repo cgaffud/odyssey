@@ -5,7 +5,7 @@ import com.bedmen.odyssey.container.slots.OdysseyFurnaceResultSlot;
 import com.bedmen.odyssey.recipes.AlloyRecipe;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.tileentity.AlloyFurnaceTileEntity;
-import com.bedmen.odyssey.util.ContainerRegistry;
+import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;

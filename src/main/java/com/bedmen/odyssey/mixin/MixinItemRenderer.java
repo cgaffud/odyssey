@@ -2,7 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.OdysseyTridentItem;
 import com.bedmen.odyssey.items.QuiverItem;
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.Block;

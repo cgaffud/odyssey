@@ -3,7 +3,7 @@ package com.bedmen.odyssey.client.renderer.entity;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.model.OdysseyTridentModel;
 import com.bedmen.odyssey.entity.projectile.AbstractTridentEntity;
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

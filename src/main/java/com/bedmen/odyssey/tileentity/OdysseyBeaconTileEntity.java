@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.tileentity;
 
 import com.bedmen.odyssey.container.OdysseyBeaconContainer;
-import com.bedmen.odyssey.util.TileEntityTypeRegistry;
+import com.bedmen.odyssey.registry.TileEntityTypeRegistry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.Arrays;

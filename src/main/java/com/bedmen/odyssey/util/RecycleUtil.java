@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.util;
 
 
+import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

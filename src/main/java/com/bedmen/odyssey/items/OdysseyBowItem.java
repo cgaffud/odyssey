@@ -2,7 +2,7 @@ package com.bedmen.odyssey.items;
 
 import java.util.function.Predicate;
 import com.bedmen.odyssey.util.BowUtil;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
@@ -118,10 +118,6 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
         return UseAction.BOW;
     }
 
-    /**
-     * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
-     */
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         boolean flag = !playerIn.getProjectile(itemstack).isEmpty();

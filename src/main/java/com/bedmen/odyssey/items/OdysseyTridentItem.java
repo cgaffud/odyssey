@@ -3,8 +3,8 @@ package com.bedmen.odyssey.items;
 import com.bedmen.odyssey.entity.projectile.AbstractTridentEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
 import com.bedmen.odyssey.entity.projectile.LeviathanTridentEntity;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
@@ -132,10 +132,6 @@ public class OdysseyTridentItem extends Item implements IVanishable {
         }
     }
 
-    /**
-     * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
-     */
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         if (itemstack.getDamageValue() >= itemstack.getMaxDamage() - 1) {

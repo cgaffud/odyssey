@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.container;
 
-import com.bedmen.odyssey.util.ContainerRegistry;
+import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;

@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.FogUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;

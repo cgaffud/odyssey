@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.client.renderer.entity.model;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.RenderType;
