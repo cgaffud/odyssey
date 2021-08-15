@@ -238,7 +238,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
                 // Shield Code
                 Item item = this.useItem.getItem();
                 if(item instanceof OdysseyShieldItem)
-                    amount -= EnchantmentUtil.getBlocking((LivingEntity)(Entity)this) * ((OdysseyShieldItem)item).getBlock();
+                    amount -= EnchantmentUtil.getBlockingMultiplier((LivingEntity)(Entity)this) * ((OdysseyShieldItem)item).getBlock();
                 if(amount < 0.0f){
                     amount = 0.0F;
                     flag = true;

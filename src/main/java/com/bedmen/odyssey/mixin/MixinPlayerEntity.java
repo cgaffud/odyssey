@@ -148,7 +148,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
         if (this.random.nextFloat() < f) {
             for(Item item : OdysseyItemTags.SHIELD_TAG){
-                this.getCooldowns().addCooldown(item, EnchantmentUtil.getRecovery(this));
+                this.getCooldowns().addCooldown(item, EnchantmentUtil.getRecoveryTicks(this));
             }
             this.stopUsingItem();
             this.level.broadcastEntityEvent(this, (byte)30);

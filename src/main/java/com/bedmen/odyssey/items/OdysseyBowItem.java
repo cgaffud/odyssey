@@ -47,7 +47,7 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                         ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
                         AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, itemstack, playerentity);
                         abstractarrowentity = customArrow(abstractarrowentity);
-                        float inaccuracy = EnchantmentUtil.getAccuracy(entityLiving);
+                        float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(entityLiving);
                         abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * 3.0F, inaccuracy);
                         //if (f == 1.0F) {
                         //    abstractarrowentity.setIsCritical(true);
