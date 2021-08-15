@@ -10,11 +10,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 
 public enum OdysseyArmorMaterial implements IArmorMaterial {
-
-
-
-
-
     LEATHER("leather", 5, new int[]{2,3,3,2}, 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> { return Ingredient.of(Items.LEATHER);}),
     CHICKEN("oddc:chicken", 4, new int[]{2,3,3,2}, 15, SoundEvents.CHICKEN_HURT, 0.0f, () -> { return Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get());}),
     CHAIN("chainmail", 15, new int[]{3,6,7,4}, 12, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
