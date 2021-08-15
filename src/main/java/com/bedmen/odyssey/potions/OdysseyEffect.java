@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.potions;
 
-import com.bedmen.odyssey.util.EffectRegistry;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;

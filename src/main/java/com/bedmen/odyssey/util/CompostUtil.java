@@ -1,20 +1,14 @@
-package com.bedmen.odyssey.blocks;
+package com.bedmen.odyssey.util;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
-import com.bedmen.odyssey.util.ItemRegistry;
-import com.bedmen.odyssey.util.PotionRegistry;
+
+import com.bedmen.odyssey.registry.ItemRegistry;
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
 import net.minecraft.block.ComposterBlock;
-import net.minecraft.item.*;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionBrewing;
-import net.minecraft.potion.Potions;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class OdysseyComposting {
+public class CompostUtil {
 
     private static Method addMethod;
     private static Object2FloatMap<IItemProvider> COMPOSTABLES;

@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.util.EffectRegistry;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;

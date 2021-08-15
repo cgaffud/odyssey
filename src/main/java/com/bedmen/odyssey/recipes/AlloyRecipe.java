@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.recipes;
 
-import com.bedmen.odyssey.util.ItemRegistry;
-import com.bedmen.odyssey.util.RecipeRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.registry.RecipeRegistry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 

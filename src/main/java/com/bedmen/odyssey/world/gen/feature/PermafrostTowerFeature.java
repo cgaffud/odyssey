@@ -1,13 +1,12 @@
 package com.bedmen.odyssey.world.gen.feature;
 
-import com.bedmen.odyssey.util.BlockRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.mojang.serialization.Codec;
 import java.util.Random;
-import net.minecraft.block.Block;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;

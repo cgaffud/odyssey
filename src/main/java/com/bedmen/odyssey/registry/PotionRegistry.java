@@ -1,7 +1,8 @@
-package com.bedmen.odyssey.util;
+package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
 
+import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.Potion;
@@ -9,7 +10,6 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraft.potion.Potions;
 
 public class PotionRegistry {
 

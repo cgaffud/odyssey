@@ -1,14 +1,13 @@
-package com.bedmen.odyssey.enchantment;
+package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.items.*;
-import com.bedmen.odyssey.util.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;

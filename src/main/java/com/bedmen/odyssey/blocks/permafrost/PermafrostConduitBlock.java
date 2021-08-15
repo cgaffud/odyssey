@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.blocks.permafrost;
 
-import com.bedmen.odyssey.util.BlockRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.util.Direction;

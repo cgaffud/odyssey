@@ -1,12 +1,12 @@
 package com.bedmen.odyssey;
 
-import com.bedmen.odyssey.blocks.OdysseyComposting;
+import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.OdysseyEnchantmentTableTileEntityRenderer;
 import com.bedmen.odyssey.client.renderer.entity.ArctihornRenderer;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyTridentRenderer;
 import com.bedmen.odyssey.client.renderer.entity.LupineRenderer;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.entity.attributes.OdysseyAttributes;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
@@ -14,9 +14,9 @@ import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
 import com.bedmen.odyssey.items.equipment.EquipmentItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tags.OdysseyBlockTags;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
-import com.bedmen.odyssey.util.*;
 import com.bedmen.odyssey.client.renderer.OdysseyBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.OdysseyPotions;
 import com.bedmen.odyssey.trades.OdysseyTrades;
@@ -36,16 +36,9 @@ import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.Heightmap;
-import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -59,8 +52,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Set;
 
 @Mod("oddc")
@@ -98,7 +89,7 @@ public class Odyssey
         OdysseyBiomeEntitySpawn.registerSpawners();
         OdysseyStructureEntitySpawn.registerSpawners();
         OdysseyPotions.addBrewingRecipes();
-        OdysseyComposting.addCompostingRecipes();
+        CompostUtil.addCompostingRecipes();
         OdysseyAttributes.fixArmor();
         OdysseyTrades.addTrades();
         EnchantmentUtil.init();

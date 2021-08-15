@@ -2,7 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

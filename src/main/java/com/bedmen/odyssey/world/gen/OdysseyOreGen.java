@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.world.gen;
 
-import com.bedmen.odyssey.util.BlockRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;

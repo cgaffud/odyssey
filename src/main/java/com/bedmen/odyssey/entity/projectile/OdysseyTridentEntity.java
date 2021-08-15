@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.util.EntityTypeRegistry;
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;

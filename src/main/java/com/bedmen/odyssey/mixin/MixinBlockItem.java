@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.util.EffectRegistry;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.item.*;
 import net.minecraft.util.ActionResultType;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.equipment;
 
-import com.bedmen.odyssey.util.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.inventory.EquipmentSlotType;

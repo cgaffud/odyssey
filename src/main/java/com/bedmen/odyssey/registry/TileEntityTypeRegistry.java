@@ -1,6 +1,7 @@
-package com.bedmen.odyssey.util;
+package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.tileentity.*;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;

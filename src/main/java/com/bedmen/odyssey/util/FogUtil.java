@@ -1,12 +1,10 @@
 package com.bedmen.odyssey.util;
 
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.tags.OdysseyBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
 public class FogUtil {

@@ -2,7 +2,7 @@ package com.bedmen.odyssey.tools;
 
 import java.util.function.Supplier;
 
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;

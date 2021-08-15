@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.util;
+package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.recipes.*;

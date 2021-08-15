@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.world.gen;
 
-import com.bedmen.odyssey.util.BlockRegistry;
-import com.bedmen.odyssey.util.FeatureRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.FeatureRegistry;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;

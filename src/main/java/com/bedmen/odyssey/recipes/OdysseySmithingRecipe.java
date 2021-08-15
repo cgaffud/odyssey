@@ -1,9 +1,9 @@
 package com.bedmen.odyssey.recipes;
 
 import com.bedmen.odyssey.items.equipment.IEquipment;
-import com.bedmen.odyssey.util.BlockRegistry;
-import com.bedmen.odyssey.util.EnchantmentRegistry;
-import com.bedmen.odyssey.util.RecipeRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.RecipeRegistry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.enchantment.Enchantment;

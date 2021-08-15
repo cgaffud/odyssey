@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.entity.IZephyrArmorEntity;
-import com.bedmen.odyssey.util.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;

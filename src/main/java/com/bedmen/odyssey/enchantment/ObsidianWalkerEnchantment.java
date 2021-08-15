@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.enchantment;
 
-import com.bedmen.odyssey.util.BlockRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
