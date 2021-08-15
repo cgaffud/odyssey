@@ -53,8 +53,6 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> AUTUMN_LEAVES_RED = ITEMS.register("autumn_leaves_red", () -> new BlockItem(BlockRegistry.AUTUMN_LEAVES_RED.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
     public static final RegistryObject<Item> AUTUMN_LEAVES_ORANGE = ITEMS.register("autumn_leaves_orange", () -> new BlockItem(BlockRegistry.AUTUMN_LEAVES_ORANGE.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> AUTUMN_LEAVES_YELLOW = ITEMS.register("autumn_leaves_yellow", () -> new BlockItem(BlockRegistry.AUTUMN_LEAVES_YELLOW.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-
 
     //Items
 
