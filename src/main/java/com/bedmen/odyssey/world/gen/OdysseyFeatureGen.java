@@ -2,6 +2,7 @@ package com.bedmen.odyssey.world.gen;
 
 import com.bedmen.odyssey.util.BlockRegistry;
 import com.bedmen.odyssey.util.FeatureRegistry;
+import com.bedmen.odyssey.world.gen.feature.FogFeature;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
@@ -11,6 +12,7 @@ import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -24,6 +26,7 @@ public class OdysseyFeatureGen {
 
     // Single Generating Features
     public static ConfiguredFeature<?, ?> MEGA_ICE_SPIKE;
+    public static ConfiguredFeature<?, ?> FOG;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> AUTUMN_TREE_RED;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> AUTUMN_TREE_ORANGE;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> AUTUMN_TREE_YELLOW;
@@ -33,6 +36,7 @@ public class OdysseyFeatureGen {
 
     public static void registerFeatures() {
         MEGA_ICE_SPIKE = featureGen(FeatureRegistry.MEGA_ICE_SPIKE);
+        FOG = FeatureRegistry.FOG_FEATURE.get().configured(IFeatureConfig.NONE).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(500);
         AUTUMN_TREE_RED =  Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.BIRCH_LOG.defaultBlockState()), new SimpleBlockStateProvider(BlockRegistry.AUTUMN_LEAVES_RED.get().defaultBlockState()), new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3), new StraightTrunkPlacer(6, 3, 0), new TwoLayerFeature(1, 0, 1))).ignoreVines().build());
         AUTUMN_TREE_ORANGE = Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.BIRCH_LOG.defaultBlockState()), new SimpleBlockStateProvider(BlockRegistry.AUTUMN_LEAVES_ORANGE.get().defaultBlockState()), new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3), new StraightTrunkPlacer(6, 2, 0), new TwoLayerFeature(1, 0, 1))).ignoreVines().build());
         AUTUMN_TREE_YELLOW = Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.BIRCH_LOG.defaultBlockState()), new SimpleBlockStateProvider(BlockRegistry.AUTUMN_LEAVES_YELLOW.get().defaultBlockState()), new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3), new StraightTrunkPlacer(6, 1, 0), new TwoLayerFeature(1, 0, 1))).ignoreVines().build());
@@ -51,6 +55,8 @@ public class OdysseyFeatureGen {
         } else {
             if(event.getName().toString().equals("oddc:autumn_forest")) {
                 gen.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AUTUMN_FOREST);
+                gen.addFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, FOG);
+
             }
         }
 
