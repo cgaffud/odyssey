@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.equipment.IEquipment;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -152,7 +153,7 @@ public abstract class MixinEnchantmentHelper {
 
     @Overwrite
     public static Map<Enchantment, Integer> getEnchantments(ItemStack itemStack) {
-        ListNBT listnbt = itemStack.getItem() == Items.ENCHANTED_BOOK ? EnchantedBookItem.getEnchantments(itemStack) : itemStack.getEnchantmentTags();
+        ListNBT listnbt = (itemStack.getItem() == Items.ENCHANTED_BOOK || itemStack.getItem() == ItemRegistry.PURGE_TABLET.get()) ? EnchantedBookItem.getEnchantments(itemStack) : itemStack.getEnchantmentTags();
         Map<Enchantment, Integer> map = deserializeEnchantments(listnbt);
         Map<Enchantment, Integer> map2 = ((IEquipment)(itemStack.getItem())).getInnateEnchantmentMap();
         map.putAll(map2);

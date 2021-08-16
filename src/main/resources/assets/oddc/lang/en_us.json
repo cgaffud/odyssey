@@ -19,6 +19,7 @@
   "item.oddc.raven_feather": "Raven Feather",
   "item.oddc.bewitched_quill": "Bewitched Quill",
   "item.oddc.malevolent_quill": "Malevolent Quill",
+  "item.oddc.purge_tablet": "Purge Tablet",
 
   //Emerald
   "item.oddc.emerald_bit": "Emerald Bit",
@@ -192,6 +193,7 @@
   "itemGroup.oddc_materials": "Odyssey Materials",
   "itemGroup.oddc_tools": "Odyssey Tools",
   "itemGroup.oddc_combat": "Odyssey Combat",
+  "itemGroup.oddc_magic": "Odyssey Magic",
   "itemGroup.oddc_spawn_eggs": "Odyssey Spawn Eggs",
 
   //Biome

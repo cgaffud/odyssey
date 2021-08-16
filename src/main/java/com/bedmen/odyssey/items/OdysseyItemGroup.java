@@ -15,6 +15,7 @@ public class OdysseyItemGroup extends ItemGroup {
     public static final ItemGroup MATERIALS = new OdysseyItemGroup("oddc_materials", Lazy.of(ItemRegistry.RUBY));
     public static final ItemGroup TOOLS = new OdysseyItemGroup("oddc_tools", Lazy.of(ItemRegistry.STERLING_SILVER_AXE));
     public static final ItemGroup COMBAT = new OdysseyItemGroup("oddc_combat", Lazy.of(ItemRegistry.STERLING_SILVER_SWORD));
+    public static final ItemGroup MAGIC = new OdysseyItemGroup("oddc_magic", Lazy.of(ItemRegistry.PURGE_TABLET));
     public static final ItemGroup SPAWN_EGGS = new OdysseyItemGroup("oddc_spawn_eggs", Lazy.of(ItemRegistry.ARCTIHORN_SPAWN_EGG));
 
     public OdysseyItemGroup(String label, Lazy<Item> itemLazy){
