@@ -21,22 +21,17 @@ public class FogFeature extends Feature<NoFeatureConfig> {
 
     @Override
     public boolean place(ISeedReader seedReader, ChunkGenerator chunkGenerator, Random random, BlockPos pos, NoFeatureConfig noFeatureConfig) {
-//        while(!(seedReader.canSeeSky(pos) && seedReader.isEmptyBlock(pos))) {
-//            pos = pos.above();
-//        }
-//
-//        if (isLeaf(seedReader.getBlockState(pos.below()))) {
-//            pos = pos.below().below();
-//            while(seedReader.isEmptyBlock(pos) || isLeaf(seedReader.getBlockState(pos))) {
-//                pos = pos.below();
-//            }
-//            pos.above();
-//        }
+
+        while(seedReader.isEmptyBlock(pos) || isLeaf(seedReader.getBlockState(pos))) {
+            pos = pos.below();
+        }
+        pos.above();
+
 
         for (int j = 0; j < 7; j++) {
             BlockState blockstate = seedReader.getBlockState(pos);
             if(blockstate.isAir() && !isLeaf(seedReader.getBlockState(pos)))
-                this.setBlock(seedReader, pos, BlockRegistry.FOG3.get().defaultBlockState());
+                this.setBlock(seedReader, pos, BlockRegistry.FOG5.get().defaultBlockState());
             pos = pos.above();
         }
         return true;

@@ -36,7 +36,7 @@ public class OdysseyFeatureGen {
 
     public static void registerFeatures() {
         MEGA_ICE_SPIKE = featureGen(FeatureRegistry.MEGA_ICE_SPIKE);
-        FOG = FeatureRegistry.FOG_FEATURE.get().configured(IFeatureConfig.NONE).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(500);
+        FOG = FeatureRegistry.FOG_FEATURE.get().configured(IFeatureConfig.NONE).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(750);
         AUTUMN_TREE_RED =  Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.BIRCH_LOG.defaultBlockState()), new SimpleBlockStateProvider(BlockRegistry.AUTUMN_LEAVES_RED.get().defaultBlockState()), new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3), new StraightTrunkPlacer(6, 3, 0), new TwoLayerFeature(1, 0, 1))).ignoreVines().build());
         AUTUMN_TREE_ORANGE = Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.BIRCH_LOG.defaultBlockState()), new SimpleBlockStateProvider(BlockRegistry.AUTUMN_LEAVES_ORANGE.get().defaultBlockState()), new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3), new StraightTrunkPlacer(6, 2, 0), new TwoLayerFeature(1, 0, 1))).ignoreVines().build());
         AUTUMN_TREE_YELLOW = Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.BIRCH_LOG.defaultBlockState()), new SimpleBlockStateProvider(BlockRegistry.AUTUMN_LEAVES_YELLOW.get().defaultBlockState()), new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3), new StraightTrunkPlacer(6, 1, 0), new TwoLayerFeature(1, 0, 1))).ignoreVines().build());
@@ -55,7 +55,7 @@ public class OdysseyFeatureGen {
         } else {
             if(event.getName().toString().equals("oddc:autumn_forest")) {
                 gen.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AUTUMN_FOREST);
-                gen.addFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, FOG);
+                gen.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, FOG);
 
             }
         }
