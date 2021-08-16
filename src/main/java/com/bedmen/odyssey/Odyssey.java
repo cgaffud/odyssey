@@ -26,6 +26,7 @@ import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.OdysseyStructureEntitySpawn;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.gui.screen.GrindstoneScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelBakery;
@@ -138,6 +139,7 @@ public class Odyssey
         ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
         ScreenManager.register(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);
         ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
+        ScreenManager.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER7.get(), QuiverScreen::new);
