@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.Features;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 
 import java.util.Random;
@@ -22,25 +23,26 @@ public class FogFeature extends Feature<NoFeatureConfig> {
     @Override
     public boolean place(ISeedReader seedReader, ChunkGenerator chunkGenerator, Random random, BlockPos pos, NoFeatureConfig noFeatureConfig) {
 
-        while(seedReader.isEmptyBlock(pos) || isLeaf(seedReader.getBlockState(pos))) {
+        // Search for ground
+        while(!isGround(seedReader.getBlockState(pos)))
             pos = pos.below();
-        }
         pos.above();
-
 
         for (int j = 0; j < 7; j++) {
             BlockState blockstate = seedReader.getBlockState(pos);
-            if(blockstate.isAir() && !isLeaf(seedReader.getBlockState(pos)))
+            if(blockstate.isAir())
                 this.setBlock(seedReader, pos, BlockRegistry.FOG5.get().defaultBlockState());
             pos = pos.above();
         }
         return true;
     }
 
-    private boolean isLeaf(BlockState blockstate){
-        return (blockstate.equals(BlockRegistry.AUTUMN_LEAVES_RED.get().defaultBlockState()) ||
-                blockstate.equals(BlockRegistry.AUTUMN_LEAVES_ORANGE.get().defaultBlockState()) ||
-                blockstate.equals(BlockRegistry.AUTUMN_LEAVES_YELLOW.get().defaultBlockState()) ||
-                blockstate.equals(Blocks.BIRCH_LEAVES.defaultBlockState()));
+    private boolean isGround(BlockState blockstate){
+        return (blockstate.is(Blocks.GRASS_BLOCK) ||
+                blockstate.is(Blocks.WATER) ||
+                blockstate.is(Blocks.DIRT) ||
+                blockstate.is(Blocks.STONE));
     }
+
+
 }
