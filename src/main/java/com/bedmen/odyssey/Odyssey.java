@@ -171,6 +171,9 @@ public class Odyssey
         RenderTypeLookup.setRenderLayer(BlockRegistry.RESEARCH_TABLE.get(), RenderType.cutout());
         for(Block block : OdysseyBlockTags.FOG_TAG)
             RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
+
+        System.out.println("beans");
+        System.out.println(Integer.parseInt(BlockRegistry.FOG3.get().toString().substring(14,15)));
     }
 
     @SubscribeEvent
