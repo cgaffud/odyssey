@@ -171,9 +171,6 @@ public class ArctihornEntity extends MonsterWaterEntity {
         this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
-    /**
-     * Handler for {@link World#setEntityState}
-     */
     @OnlyIn(Dist.CLIENT)
     public void handleEntityEvent(byte id) {
         if (id == 19) {
