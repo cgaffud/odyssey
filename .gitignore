@@ -33,3 +33,4 @@ block_data_writer.py
 # Files from Forge MDK
 changelog.txt
 updateMappings.md
+/gradle/
