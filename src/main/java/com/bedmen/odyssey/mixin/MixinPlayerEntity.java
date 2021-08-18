@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.entity.IPlayerPermanentBuffs;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -30,7 +31,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.function.Predicate;
 
 @Mixin(PlayerEntity.class)
-public abstract class MixinPlayerEntity extends LivingEntity {
+public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerPermanentBuffs {
 
     @Shadow
     public void startFallFlying() {}
@@ -75,9 +76,18 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     @Shadow
     protected void updatePlayerPose() {}
 
+    public boolean netherImmune = false;
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
+    }
+
+    public boolean getNetherImmune() {
+        return this.netherImmune;
+    }
+
+    public void setNetherImmune(boolean b) {
+        this.netherImmune = b;
     }
 
     //Remade the amount of xp needed up to level 50 because oddc has lvl 50 enchants
@@ -167,7 +177,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
                 Hand hand = this.getUsedItemHand();
                 this.useItem.hurtAndBreak(i, this, (p_213833_1_) -> {
                     p_213833_1_.broadcastBreakEvent(hand);
-                    ForgeEventFactory.onPlayerDestroyItem(toPlayerEntity(this), this.useItem, hand);
+                    ForgeEventFactory.onPlayerDestroyItem(getPlayerEntity(), this.useItem, hand);
                 });
                 if (this.useItem.isEmpty()) {
                     if (hand == Hand.MAIN_HAND) {
@@ -185,7 +195,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     //Removed turtle helmet tick
     public void tick() {
-        net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPreTick(toPlayerEntity(this));
+        net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPreTick(getPlayerEntity());
         this.noPhysics = this.isSpectator();
         if (this.isSpectator()) {
             this.onGround = false;
@@ -201,7 +211,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
                 this.sleepCounter = 100;
             }
 
-            if (!this.level.isClientSide && !net.minecraftforge.event.ForgeEventFactory.fireSleepingTimeCheck(toPlayerEntity(this), getSleepingPos())) {
+            if (!this.level.isClientSide && !net.minecraftforge.event.ForgeEventFactory.fireSleepingTimeCheck(getPlayerEntity(), getSleepingPos())) {
                 this.stopSleepInBed(false, true);
             }
         } else if (this.sleepCounter > 0) {
@@ -213,14 +223,14 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
         this.updateIsUnderwater();
         super.tick();
-        if (!this.level.isClientSide && this.containerMenu != null && !this.containerMenu.stillValid(toPlayerEntity(this))) {
+        if (!this.level.isClientSide && this.containerMenu != null && !this.containerMenu.stillValid(getPlayerEntity())) {
             this.closeContainer();
             this.containerMenu = this.inventoryMenu;
         }
 
         this.moveCloak();
         if (!this.level.isClientSide) {
-            this.foodData.tick(toPlayerEntity(this));
+            this.foodData.tick(getPlayerEntity());
             this.awardStat(Stats.PLAY_ONE_MINUTE);
             if (this.isAlive()) {
                 this.awardStat(Stats.TIME_SINCE_DEATH);
@@ -254,7 +264,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
         this.cooldowns.tick();
         this.updatePlayerPose();
-        net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(toPlayerEntity(this));
+        net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(getPlayerEntity());
     }
 
     public void updateSwimming() {
@@ -270,7 +280,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         }
     }
 
-    private PlayerEntity toPlayerEntity(MixinPlayerEntity mixinPlayerEntity){
-        return (PlayerEntity)(Object)mixinPlayerEntity;
+    private PlayerEntity getPlayerEntity(){
+        return (PlayerEntity)(Object)this;
     }
 }

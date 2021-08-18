@@ -15,10 +15,6 @@ public class OdysseySplashPotionItem extends ThrowablePotionItem {
         super(builder);
     }
 
-    /**
-     * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
-     */
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         worldIn.playSound((PlayerEntity)null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
         return super.use(worldIn, playerIn, handIn);
