@@ -1,10 +1,8 @@
 package com.bedmen.odyssey.network;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.network.packet.JumpingPacket;
-import com.bedmen.odyssey.network.packet.SneakingPacket;
-import com.bedmen.odyssey.network.packet.SoundPacket;
-import com.bedmen.odyssey.network.packet.UpdateEnchantPacket;
+import com.bedmen.odyssey.network.packet.*;
+import net.minecraft.network.play.server.SRespawnPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -26,5 +24,6 @@ public class OdysseyNetwork {
         CHANNEL.registerMessage(2, UpdateEnchantPacket.class, UpdateEnchantPacket::encode, UpdateEnchantPacket::decode, UpdateEnchantPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
         //Server to Client
         CHANNEL.registerMessage(3, SoundPacket.class, SoundPacket::encode, SoundPacket::decode, SoundPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(4, PermanentBuffsPacket.class, PermanentBuffsPacket::encode, PermanentBuffsPacket::decode, PermanentBuffsPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 }
