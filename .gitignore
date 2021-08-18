@@ -1,0 +1,35 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+*\gradle-wrapper.*
+.gradle
+build
+build.gradle
+gradle.properties
+gradlew
+gradlew.bat
+
+# other
+eclipse
+run
+CREDITS.txt
+LICENSE.txt
+README.txt
+block_data_writer.py
+
+# Files from Forge MDK
+changelog.txt
+updateMappings.md
