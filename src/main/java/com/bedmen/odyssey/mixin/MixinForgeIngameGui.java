@@ -7,8 +7,13 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.IngameGui;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,7 +21,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import java.util.Map;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.*;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.AIR;
 
@@ -38,6 +42,145 @@ public abstract class MixinForgeIngameGui extends IngameGui{
     public static int right_height;
     @Shadow
     private void post(RenderGameOverlayEvent.ElementType type, MatrixStack mStack){}
+    @Shadow
+    private void bind(ResourceLocation res){}
+
+    public void renderHealth(int width, int height, MatrixStack mStack)
+    {
+        bind(GUI_ICONS_LOCATION);
+        if (pre(HEALTH, mStack)) return;
+        minecraft.getProfiler().push("health");
+        RenderSystem.enableBlend();
+
+        PlayerEntity player = (PlayerEntity)this.minecraft.getCameraEntity();
+        int health = MathHelper.ceil(player.getHealth());
+        int healthRemaining = health;
+        boolean highlight = healthBlinkTime > (long)tickCount && (healthBlinkTime - (long)tickCount) / 3L %2L == 1L;
+
+        if (health < this.lastHealth && player.invulnerableTime > 0)
+        {
+            this.lastHealthTime = Util.getMillis();
+            this.healthBlinkTime = (long)(this.tickCount + 20);
+        }
+        else if (health > this.lastHealth && player.invulnerableTime > 0)
+        {
+            this.lastHealthTime = Util.getMillis();
+            this.healthBlinkTime = (long)(this.tickCount + 10);
+        }
+
+        if (Util.getMillis() - this.lastHealthTime > 1000L)
+        {
+            this.lastHealth = health;
+            this.displayHealth = health;
+            this.lastHealthTime = Util.getMillis();
+        }
+
+        this.lastHealth = health;
+        int healthLast = this.displayHealth;
+
+
+        ModifiableAttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
+        float healthMax = (float)attrMaxHealth.getValue();
+        int absorb = MathHelper.ceil(player.getAbsorptionAmount());
+        int absorptionHearts =  MathHelper.ceil((absorb) / 2.0F);
+        int twoHearts;
+        int fourHearts;
+        if(healthMax <= 20.0f)
+            twoHearts = MathHelper.ceil((healthMax) / 2.0F);
+        else
+            twoHearts = Math.max(20 - MathHelper.ceil((healthMax) / 2.0F), 0);
+        if(healthMax <= 40.0f)
+            fourHearts = MathHelper.ceil((healthMax-20.0f) / 2.0F);
+        else
+            fourHearts = MathHelper.ceil(healthMax / 4.0F);
+        int totalHearts = fourHearts + twoHearts + absorptionHearts;
+        int fourHearts1 = fourHearts;
+        int twoHearts1 = twoHearts;
+
+
+        int healthRows = ((totalHearts - 1) / 10) + 1;
+        int rowHeight = Math.max(10 - (healthRows - 2), 3);
+
+        this.random.setSeed((long)(tickCount * 312871));
+
+        int left = width / 2 - 91;
+        int top = height - left_height;
+        left_height += (healthRows * rowHeight);
+        if (rowHeight != 10) left_height += 10 - rowHeight;
+
+        int regen = -1;
+        if (player.hasEffect(Effects.REGENERATION))
+        {
+            regen = tickCount % 25;
+        }
+
+        final int TOP =  104 + (minecraft.level.getLevelData().isHardcore() ? 27 : 0);
+        final int BACKGROUND = (highlight ? 72 : 63);
+        int MARGIN = 81;
+        if (player.hasEffect(Effects.WITHER)) MARGIN += 72;
+        else if (player.hasEffect(Effects.POISON))      MARGIN += 36;
+
+        int absorbRemaining = absorb;
+
+        for(int i = 0; i < healthRows; i++){
+            for(int j = 0; j < 10 && i*10+j < totalHearts; j++){
+                int x = left + j * 8;
+                int y = top - i * rowHeight;
+
+                if (health <= 4) y += random.nextInt(2);
+                if (i == regen) y -= 2;
+
+                blit(mStack, x, y, BACKGROUND, TOP, 9, 9);
+
+                if (highlight)
+                {
+                    if(fourHearts1 > 0){
+                        if(healthLast > 0)
+                            blit(mStack, x, y, MARGIN+fourShift(healthLast), TOP+9, 9, 9);
+                        fourHearts1--;
+                        healthLast -= 4;
+                    } else if(twoHearts1 > 0){
+                        if(healthLast > 0)
+                            blit(mStack, x, y, MARGIN+twoShift(healthLast), TOP+9, 9, 9);
+                        twoHearts1--;
+                        healthLast -= 2;
+                    }
+                }
+
+                if(fourHearts > 0){
+                    if(healthRemaining > 0)
+                        blit(mStack, x, y, MARGIN+fourShift(healthRemaining), TOP+18, 9, 9);
+                    fourHearts--;
+                    healthRemaining -= 4;
+                } else if(twoHearts > 0){
+                    if(healthRemaining > 0)
+                        blit(mStack, x, y, MARGIN+twoShift(healthRemaining), TOP, 9, 9);
+                    twoHearts--;
+                    healthRemaining -= 2;
+                } else {
+                    if(absorbRemaining > 0)
+                        blit(mStack, x, y, MARGIN+twoShift(absorbRemaining)+108, TOP, 9, 9);
+                    //absorptionHearts--;
+                    absorbRemaining -= 2;
+                }
+            }
+        }
+        RenderSystem.disableBlend();
+        minecraft.getProfiler().pop();
+        post(HEALTH, mStack);
+    }
+
+    private int fourShift(int healthRemaining){
+        if(healthRemaining >= 4)
+            return 0;
+        return 9*(4-healthRemaining);
+    }
+
+    private int twoShift(int healthRemaining){
+        if(healthRemaining != 1)
+            return 0;
+        return 18;
+    }
 
     protected void renderArmor(MatrixStack mStack, int width, int height)
     {
