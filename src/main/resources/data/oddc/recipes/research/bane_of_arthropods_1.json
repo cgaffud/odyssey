@@ -1,0 +1,15 @@
+{
+  "type": "oddc:research",
+  "numIngredients": 3,
+  "ingredient0": {
+    "item": "oddc:granite_hammer"
+  },
+  "ingredient1": {
+    "item": "oddc:copper_hammer"
+  },
+  "ingredient2": {
+    "item": "oddc:obsidian_hammer"
+  },
+  "enchantment": "minecraft:bane_of_arthropods",
+  "level": 1
+}

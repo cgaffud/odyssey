@@ -1,0 +1,16 @@
+{
+  "type": "oddc:odyssey_smithing",
+  "classification": "trident",
+  "base": {
+    "item": "minecraft:trident"
+  },
+  "addition1": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "addition2": {
+    "item": "oddc:leviathan_scale"
+  },
+  "result": {
+    "item": "oddc:leviathan_trident"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "oddc:research",
+  "numIngredients": 4,
+  "ingredient0": {
+    "item": "oddc:reinforced_helmet"
+  },
+  "ingredient1": {
+    "item": "oddc:reinforced_chestplate"
+  },
+  "ingredient2": {
+    "item": "oddc:reinforced_leggings"
+  },
+  "ingredient3": {
+    "item": "oddc:reinforced_boots"
+  },
+  "enchantment": "minecraft:blast_protection",
+  "level": 1
+}

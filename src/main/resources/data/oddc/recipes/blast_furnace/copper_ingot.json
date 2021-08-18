@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient":[
+    {
+      "item": "oddc:copper_ore"
+    },
+    {
+      "item": "oddc:raw_copper"
+    }
+  ],
+  "result": "oddc:copper_ingot",
+  "experience": 0.7,
+  "cookingtime": 100
+}

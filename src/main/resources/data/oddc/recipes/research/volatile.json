@@ -1,0 +1,9 @@
+{
+  "type": "oddc:research",
+  "numIngredients": 1,
+  "ingredient0": {
+    "item": "minecraft:tnt"
+  },
+  "enchantment": "oddc:volatile",
+  "level": 1
+}

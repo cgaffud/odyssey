@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "oddc:emerald_fragment"
+    }
+  ],
+  "result": {
+    "item": "oddc:emerald_bit",
+    "count": 5
+  }
+}

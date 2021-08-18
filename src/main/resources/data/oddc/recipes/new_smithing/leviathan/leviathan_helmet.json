@@ -1,0 +1,13 @@
+{
+  "type": "oddc:odyssey_smithing",
+  "classification": "helmet",
+  "base": {
+    "item": "minecraft:turtle_helmet"
+  },
+  "addition": {
+    "item": "oddc:leviathan_scale"
+  },
+  "result": {
+    "item": "oddc:leviathan_helmet"
+  }
+}

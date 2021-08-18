@@ -1,0 +1,13 @@
+{
+  "type": "oddc:odyssey_smithing",
+  "classification": "boots",
+  "base": {
+    "item": "minecraft:iron_boots"
+  },
+  "addition": {
+    "item": "minecraft:obsidian"
+  },
+  "result": {
+    "item": "oddc:reinforced_boots"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "oddc:odyssey_smithing",
+  "classification": "boots",
+  "base": {
+    "item": "oddc:turtle_boots"
+  },
+  "addition": {
+    "item": "oddc:leviathan_scale"
+  },
+  "result": {
+    "item": "oddc:leviathan_boots"
+  }
+}

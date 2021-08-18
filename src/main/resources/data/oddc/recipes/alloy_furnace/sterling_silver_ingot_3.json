@@ -1,0 +1,17 @@
+{
+  "type": "oddc:alloying",
+  "ingredient1":{
+    "item": "oddc:copper_ingot"
+  },
+  "ingredient2":[
+    {
+      "item": "oddc:silver_ore"
+    },
+    {
+      "item": "oddc:raw_silver"
+    }
+  ],
+  "result": "oddc:sterling_silver_ingot",
+  "experience": 1.3,
+  "cookingtime": 200
+}

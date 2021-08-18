@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient":
+  {
+    "item": "oddc:sterling_silver_chestplate"
+  },
+  "nugget": "oddc:sterling_silver_nugget",
+  "nuggetCount": 0,
+  "ingotCount": 8,
+  "experience": 0.1,
+  "cookingtime": 100
+}

@@ -1,0 +1,65 @@
+package com.bedmen.odyssey.blocks;
+
+import com.bedmen.odyssey.tileentity.OdysseyBeaconTileEntity;
+import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Stats;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+
+public class OdysseyBeaconBlock extends ContainerBlock implements IBeaconBeamColorProvider {
+
+    public OdysseyBeaconBlock() {
+
+        super(AbstractBlock.Properties.of(Material.GLASS, MaterialColor.DIAMOND).strength(3.0F).lightLevel((state) -> { return 15; }).noOcclusion().isRedstoneConductor((p_test_1_, p_test_2_, p_test_3_) -> {return false;}));
+    }
+
+    public DyeColor getColor() {
+        return DyeColor.WHITE;
+    }
+
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
+        return new OdysseyBeaconTileEntity();
+    }
+
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (worldIn.isClientSide) {
+            return ActionResultType.SUCCESS;
+        } else {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            if (tileentity instanceof OdysseyBeaconTileEntity) {
+                player.openMenu((OdysseyBeaconTileEntity)tileentity);
+                player.awardStat(Stats.INTERACT_WITH_BEACON);
+            }
+
+            return ActionResultType.CONSUME;
+        }
+    }
+
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    /**
+     * Called by ItemBlocks after a block is set in the world, to allow post-place logic
+     */
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            if (tileentity instanceof OdysseyBeaconTileEntity) {
+                ((OdysseyBeaconTileEntity)tileentity).setCustomName(stack.getHoverName());
+            }
+        }
+
+    }
+}

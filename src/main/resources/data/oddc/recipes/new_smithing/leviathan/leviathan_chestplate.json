@@ -1,0 +1,13 @@
+{
+  "type": "oddc:odyssey_smithing",
+  "classification": "chestplate",
+  "base": {
+    "item": "oddc:turtle_chestplate"
+  },
+  "addition": {
+    "item": "oddc:leviathan_scale"
+  },
+  "result": {
+    "item": "oddc:leviathan_chestplate"
+  }
+}

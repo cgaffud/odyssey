@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CIC",
+    " I "
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:granite"
+    },
+    "I": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "oddc:granite_hammer"
+  }
+}

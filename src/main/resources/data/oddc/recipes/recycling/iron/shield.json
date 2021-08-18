@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient":
+  {
+    "item": "minecraft:shield"
+  },
+  "nugget": "minecraft:iron_nugget",
+  "nuggetCount": 0,
+  "ingotCount": 1,
+  "experience": 0.1,
+  "cookingtime": 100
+}

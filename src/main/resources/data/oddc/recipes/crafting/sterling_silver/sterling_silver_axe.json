@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XX",
+    "X#",
+    " #"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "oddc:sterling_silver_ingot"
+    }
+  },
+  "result": {
+    "item": "oddc:sterling_silver_axe"
+  }
+}

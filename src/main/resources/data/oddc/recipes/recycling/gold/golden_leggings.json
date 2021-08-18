@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient":
+  {
+    "item": "minecraft:golden_leggings"
+  },
+  "nugget": "minecraft:gold_nugget",
+  "nuggetCount": 0,
+  "ingotCount": 7,
+  "experience": 0.1,
+  "cookingtime": 100
+}

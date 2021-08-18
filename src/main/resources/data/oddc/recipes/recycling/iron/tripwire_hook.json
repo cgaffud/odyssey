@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient":
+  {
+    "item": "minecraft:tripwire_hook"
+  },
+  "nugget": "minecraft:iron_nugget",
+  "nuggetCount": 5,
+  "ingotCount": 0,
+  "experience": 0.1,
+  "cookingtime": 100
+}
