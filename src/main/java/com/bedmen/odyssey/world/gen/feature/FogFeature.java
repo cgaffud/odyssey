@@ -34,7 +34,7 @@ public class FogFeature extends Feature<NoFeatureConfig> {
         super(p_i231993_1_);
     }
 
-    public boolean place(ISeedReader seedReader, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos blockPos, NoFeatureConfig p_241855_5_) {
+    public boolean place(ISeedReader seedReader, ChunkGenerator chunkGenerator, Random p_241855_3_, BlockPos blockPos, NoFeatureConfig p_241855_5_) {
         int x = blockPos.getX();
         int z = blockPos.getZ();
 
@@ -42,7 +42,12 @@ public class FogFeature extends Feature<NoFeatureConfig> {
             for(int j = 0; j < 16; ++j) {
                 int k = x + i;
                 int l = z + j;
-                BlockPos pos =  new BlockPos(k, 63, l);
+                BlockPos pos =  new BlockPos(k, 0, l);
+
+                pos = pos.above(63);
+//                while(!seedReader.isEmptyBlock(pos) && (pos.getY() < 80) && !(ignoreBlock(seedReader.getBlockState(pos)))) {
+//                    pos = pos.above();
+//                }
                 if (shouldFog(seedReader, pos)) {
                     buildFog(seedReader, pos);
                 }
@@ -52,13 +57,13 @@ public class FogFeature extends Feature<NoFeatureConfig> {
     }
 
     public void buildFog(ISeedReader seedReader, BlockPos pos){
-        for(int x = -1; x <= 1; x++) {
-            for(int z = -1; z <= 1; z++) {
+        for(int x = -5; x <= 5; x++) {
+            for(int z = -5; z <= 5; z++) {
                 for(int y = 0; y <= 1; y++) {
-                    int fogNum = 7 - 4*(Math.abs(x) + Math.abs(y) + Math.abs(z));
+                    int fogNum = 6 - 2*(Math.abs(x)/2 + Math.abs(y) + Math.abs(z)/2);
                     if(fogNum >= 1){
                         for(int k = 0; k <= 3; k++) {
-                            BlockPos pos1 = pos.offset(x,y*4+k,z);
+                            BlockPos pos1 = pos.offset(x,y*4+k-Math.abs(x)-Math.abs(z),z);
                             if(fogNum > FogUtil.fogToInt(seedReader.getBlockState(pos1).getBlock())){
                                 Block block = FogUtil.intToFog(fogNum);
                                 seedReader.setBlock(pos1, block.defaultBlockState(), 2);
@@ -73,4 +78,9 @@ public class FogFeature extends Feature<NoFeatureConfig> {
     public boolean shouldFog(IWorldReader worldReader, BlockPos blockPos) {
         return worldReader.getBiome(blockPos).getRegistryName().toString().equals("oddc:autumn_forest");
     }
+
+//    private boolean ignoreBlock(BlockState blockstate){
+//        return (blockstate.is(Blocks.BIRCH_LOG));
+//    }
+
 }
