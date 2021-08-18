@@ -12,20 +12,23 @@ import java.util.function.Supplier;
 public class PermanentBuffsPacket {
 
     public boolean netherImmune;
+    public int lifeFruits;
 
     public PermanentBuffsPacket(){
     }
 
-    public PermanentBuffsPacket(boolean netherImmune) {
+    public PermanentBuffsPacket(boolean netherImmune, int lifeFruits) {
         this.netherImmune = netherImmune;
+        this.lifeFruits = lifeFruits;
     }
 
     public static void encode(PermanentBuffsPacket permanentBuffsPacket, PacketBuffer buf){
         buf.writeBoolean(permanentBuffsPacket.netherImmune);
+        buf.writeVarInt(permanentBuffsPacket.lifeFruits);
     }
 
     public static PermanentBuffsPacket decode(PacketBuffer buf){
-        return new PermanentBuffsPacket(buf.readBoolean());
+        return new PermanentBuffsPacket(buf.readBoolean(), buf.readVarInt());
     }
 
     public static void handle(PermanentBuffsPacket permanentBuffsPacket, Supplier<NetworkEvent.Context> supplier) {
@@ -33,7 +36,9 @@ public class PermanentBuffsPacket {
         context.enqueueWork(() -> {
             LogicalSide sideReceived = context.getDirection().getReceptionSide();
             Minecraft minecraft = LogicalSidedProvider.INSTANCE.get(sideReceived);
-            ((IPlayerPermanentBuffs) minecraft.player).setNetherImmune(permanentBuffsPacket.netherImmune);
+            IPlayerPermanentBuffs playerPermanentBuffs = (IPlayerPermanentBuffs)minecraft.player;
+            playerPermanentBuffs.setNetherImmune(permanentBuffsPacket.netherImmune);
+            playerPermanentBuffs.setLifeFruits(permanentBuffsPacket.lifeFruits);
         });
         context.setPacketHandled(true);
     }

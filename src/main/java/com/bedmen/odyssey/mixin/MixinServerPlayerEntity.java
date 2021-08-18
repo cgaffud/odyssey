@@ -24,17 +24,23 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
 
     @Inject(method = "restoreFrom", at = @At(value = "HEAD"))
     private void onRestoreFrom(ServerPlayerEntity serverPlayerEntity, boolean keepInventory, CallbackInfo ci) {
-        boolean netherImmune = ((IPlayerPermanentBuffs)serverPlayerEntity).getNetherImmune();
-        ((IPlayerPermanentBuffs) this).setNetherImmune(netherImmune);
+        IPlayerPermanentBuffs playerPermanentBuffs0 = ((IPlayerPermanentBuffs)serverPlayerEntity);
+        IPlayerPermanentBuffs playerPermanentBuffs1 = ((IPlayerPermanentBuffs)this);
+        playerPermanentBuffs1.setNetherImmune(playerPermanentBuffs0.getNetherImmune());
+        playerPermanentBuffs1.setLifeFruits(playerPermanentBuffs0.getLifeFruits());
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "TAIL"))
     private void onReadAdditionalSaveData(CompoundNBT compoundNBT, CallbackInfo ci) {
-        ((IPlayerPermanentBuffs) this).setNetherImmune(compoundNBT.getBoolean("netherImmune"));
+        IPlayerPermanentBuffs playerPermanentBuffs1 = ((IPlayerPermanentBuffs)this);
+        playerPermanentBuffs1.setNetherImmune(compoundNBT.getBoolean("netherImmune"));
+        playerPermanentBuffs1.setLifeFruits(compoundNBT.getInt("lifeFruits"));
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At(value = "TAIL"))
     private void onAddAdditionalSaveData(CompoundNBT compoundNBT, CallbackInfo ci) {
-        compoundNBT.putBoolean("netherImmune", ((IPlayerPermanentBuffs) this).getNetherImmune());
+        IPlayerPermanentBuffs playerPermanentBuffs1 = ((IPlayerPermanentBuffs)this);
+        compoundNBT.putBoolean("netherImmune", playerPermanentBuffs1.getNetherImmune());
+        compoundNBT.putInt("lifeFruits", playerPermanentBuffs1.getLifeFruits());
     }
 }

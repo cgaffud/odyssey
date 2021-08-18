@@ -25,5 +25,6 @@ public class EffectRegistry {
     public static final RegistryObject<Effect> CONSTRUCTION = EFFECTS.register("construction", () -> new OdysseyEffect(EffectType.BENEFICIAL, 0xb75a40));
     public static final RegistryObject<Effect> BUILDING_FATIGUE = EFFECTS.register("building_fatigue", () -> new OdysseyEffect(EffectType.HARMFUL, 0x7f3e2c));
     public static final RegistryObject<Effect> BLEEDING = EFFECTS.register("bleeding", () -> new OdysseyEffect(EffectType.HARMFUL, 0x7f3e2c));
+    public static final RegistryObject<Effect> LIFE_INCREASE = EFFECTS.register("life_increase", () -> new OdysseyEffect(EffectType.BENEFICIAL, 0xff0000));
 
 }

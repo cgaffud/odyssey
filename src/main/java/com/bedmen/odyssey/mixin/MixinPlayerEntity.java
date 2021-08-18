@@ -78,6 +78,8 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
     public boolean netherImmune = false;
 
+    public int lifeFruits = 0;
+
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
     }
@@ -88,6 +90,18 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
     public void setNetherImmune(boolean b) {
         this.netherImmune = b;
+    }
+
+    public int getLifeFruits(){
+        return lifeFruits;
+    }
+
+    public void setLifeFruits(int i){
+        lifeFruits = MathHelper.clamp(i, 0, 10);
+    }
+
+    public void incrementLifeFruits(){
+        lifeFruits = MathHelper.clamp(lifeFruits+1, 0, 10);
     }
 
     //Remade the amount of xp needed up to level 50 because oddc has lvl 50 enchants

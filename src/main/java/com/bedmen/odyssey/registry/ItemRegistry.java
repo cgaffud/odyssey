@@ -126,6 +126,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BLACK_BANNER = ITEMS_VANILLA.register("black_banner", () -> new BannerItem(Blocks.BLACK_BANNER, Blocks.BLACK_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
 
     //Food
+    public static final RegistryObject<Item> LIFE_FRUIT = ITEMS.register("life_fruit", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).food(OdysseyFoods.LIFE_FRUIT)));
 
     //Emeralds
     public static final RegistryObject<Item> EMERALD_BIT = ITEMS.register("emerald_bit", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
