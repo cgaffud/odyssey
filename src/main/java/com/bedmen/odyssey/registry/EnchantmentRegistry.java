@@ -26,6 +26,7 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> IMPALING = ENCHANTMENTS_VANILLA.register("impaling", () -> new OdysseyImpalingEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.MAINHAND));
     public static final RegistryObject<Enchantment> RIPTIDE = ENCHANTMENTS_VANILLA.register("riptide", () -> new OdysseyRiptideEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.MAINHAND));
     public static final RegistryObject<Enchantment> CHANNELING = ENCHANTMENTS_VANILLA.register("channeling", () -> new OdysseyChannelingEnchantment(Enchantment.Rarity.VERY_RARE, EquipmentSlotType.MAINHAND));
+    public static final RegistryObject<Enchantment> AQUA_AFFINITY = ENCHANTMENTS_VANILLA.register("aqua_affinity", () -> new OdysseyAquaAffinityEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.MAINHAND));
 
     public static final RegistryObject<Enchantment> ACCURACY = ENCHANTMENTS.register("accuracy", () -> new AccuracyEnchantment(Enchantment.Rarity.COMMON, EquipmentSlotType.CHEST));
     public static final RegistryObject<Enchantment> BLOCKING = ENCHANTMENTS.register("blocking", () -> new BlockingEnchantment(Enchantment.Rarity.COMMON, EquipmentSlotType.MAINHAND));
@@ -33,7 +34,7 @@ public class EnchantmentRegistry {
     //Volcanic Enchantments
     public static final RegistryObject<Enchantment> VULCAN_STRIDER = ENCHANTMENTS.register("vulcan_strider", () -> new VulcanStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
     public static final RegistryObject<Enchantment> OBSIDIAN_WALKER = ENCHANTMENTS.register("obsidian_walker", () -> new ObsidianWalkerEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.FEET));
-    public static final RegistryObject<Enchantment> MOLTEN_AFFINITY = ENCHANTMENTS.register("molten_affinity", () -> new MoltenAffinityEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
+    public static final RegistryObject<Enchantment> MOLTEN_AFFINITY = ENCHANTMENTS.register("molten_affinity", () -> new MoltenAffinityEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.MAINHAND));
     public static final RegistryObject<Enchantment> ERUPTION = ENCHANTMENTS.register("eruption", () -> new EruptionEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.MAINHAND));
 
     //Set Bonuses
