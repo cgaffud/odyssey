@@ -58,7 +58,6 @@ public class PlayerEntityEvents {
             if (modifiableattributeinstance != null) {
                 modifiableattributeinstance.setBaseValue(20.0d + 2.0d*lifeFruits);
                 PlayerEntity playerEntity = (PlayerEntity)entity;
-                playerEntity.setHealth(playerEntity.getHealth()+2.0f*lifeFruits);
             }
 
         }
