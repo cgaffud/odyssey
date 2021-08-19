@@ -4,6 +4,7 @@ import com.bedmen.odyssey.entity.IPlayerPermanentBuffs;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -19,15 +20,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectUtils;
+import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+
+import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 @Mixin(PlayerEntity.class)
@@ -292,6 +298,53 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
                 this.setSwimming(this.isSprinting() && (this.isUnderWater() || (vulcan && this.isInLava() && this.isEyeInFluid(FluidTags.LAVA))) && !this.isPassenger());
             }
         }
+    }
+
+    public float getDigSpeed(BlockState p_184813_1_, @Nullable BlockPos pos) {
+        float f = this.inventory.getDestroySpeed(p_184813_1_);
+        if (f > 1.0F) {
+            int i = EnchantmentHelper.getBlockEfficiency(this);
+            ItemStack itemstack = this.getMainHandItem();
+            if (i > 0 && !itemstack.isEmpty()) {
+                f += (float)(i * i + 1);
+            }
+        }
+
+        if (EffectUtils.hasDigSpeed(this)) {
+            f *= 1.0F + (float)(EffectUtils.getDigSpeedAmplification(this) + 1) * 0.2F;
+        }
+
+        if (this.hasEffect(Effects.DIG_SLOWDOWN)) {
+            float f1;
+            switch(this.getEffect(Effects.DIG_SLOWDOWN).getAmplifier()) {
+                case 0:
+                    f1 = 0.3F;
+                    break;
+                case 1:
+                    f1 = 0.09F;
+                    break;
+                case 2:
+                    f1 = 0.0027F;
+                    break;
+                case 3:
+                default:
+                    f1 = 8.1E-4F;
+            }
+
+            f *= f1;
+        }
+
+        if ((this.isEyeInFluid(FluidTags.WATER) && !EnchantmentUtil.hasAquaAffinity(getPlayerEntity()))
+                || (this.isEyeInFluid(FluidTags.LAVA) && !EnchantmentUtil.hasMoltenAffinity(getPlayerEntity()))) {
+            f /= 5.0F;
+        }
+
+        if (!this.onGround) {
+            f /= 5.0F;
+        }
+
+        f = net.minecraftforge.event.ForgeEventFactory.getBreakSpeed(getPlayerEntity(), p_184813_1_, f, pos);
+        return f;
     }
 
     private PlayerEntity getPlayerEntity(){

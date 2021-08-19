@@ -274,6 +274,10 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FIREPROOF.get(), entity) > 0;
     }
 
+    public static boolean hasAquaAffinity(LivingEntity entity) {
+        return hasMoltenAffinity(entity) || EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.AQUA_AFFINITY.get(), entity) > 0;
+    }
+
     public static boolean hasMoltenAffinity(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MOLTEN_AFFINITY.get(), entity) > 0;
     }

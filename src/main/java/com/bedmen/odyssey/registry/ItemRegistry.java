@@ -88,8 +88,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> LUPINE_CLAW = ITEMS.register("lupine_claw", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> ARCTIC_HORN = ITEMS.register("arctic_horn", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> RAVEN_FEATHER = ITEMS.register("raven_feather", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> BEWITCHED_QUILL = ITEMS.register("bewitched_quill", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).rarity(Rarity.UNCOMMON)));
-    public static final RegistryObject<Item> MALEVOLENT_QUILL = ITEMS.register("malevolent_quill", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> BEWITCHED_QUILL = ITEMS.register("bewitched_quill", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> MALEVOLENT_QUILL = ITEMS.register("malevolent_quill", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> PURGE_TABLET = ITEMS.register("purge_tablet", () -> new PurgeTabletItem((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.RARE)));
 
     // Vanilla things that used to stack to 16
