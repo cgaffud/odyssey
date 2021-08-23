@@ -97,7 +97,6 @@ public abstract class MixinForgeIngameGui extends IngameGui{
         int fourHearts1 = fourHearts;
         int twoHearts1 = twoHearts;
 
-
         int healthRows = ((totalHearts - 1) / 10) + 1;
         int rowHeight = Math.max(10 - (healthRows - 2), 3);
 
@@ -114,23 +113,48 @@ public abstract class MixinForgeIngameGui extends IngameGui{
             regen = tickCount % 25;
         }
 
-        final int TOP =  104 + (minecraft.level.getLevelData().isHardcore() ? 27 : 0);
-        final int BACKGROUND = (highlight ? 72 : 63);
+        final int TOP =  113 + (minecraft.level.getLevelData().isHardcore() ? 27 : 0);
+        int BACKGROUND = (highlight ? 72 : 63);
         int MARGIN = 81;
         if (player.hasEffect(Effects.WITHER)) MARGIN += 72;
         else if (player.hasEffect(Effects.POISON))      MARGIN += 36;
 
         int absorbRemaining = absorb;
+        int shake[] = new int[2];
+
+        // iterates backwards and displays hearts containers correctly
+        for(int i = healthRows-1; i >= 0; i--) {
+            for (int j = ((i*10+9) < totalHearts) ? (totalHearts-1) % 10 : 9; j >= 0; j--) {
+                int x = left + j * 8;
+                int y = top - i * rowHeight;
+                int heartNum = i*10+j;
+
+                if (health <= 4) {
+                    if (heartNum < 2) {
+                        shake[heartNum] = random.nextInt(2);
+                        y += shake[heartNum];
+                    }
+                    else y += random.nextInt(2);
+                }
+
+                if (i == regen) y -= 2;
+
+                BACKGROUND = ((fourHearts == i*10+j+1) && !highlight) ? BACKGROUND-9 : BACKGROUND;
+                blit(mStack, x, y, BACKGROUND, TOP+18, 9, 9);
+            }
+        }
 
         for(int i = 0; i < healthRows; i++){
             for(int j = 0; j < 10 && i*10+j < totalHearts; j++){
                 int x = left + j * 8;
                 int y = top - i * rowHeight;
+                int heartNum = i*10+j;
 
-                if (health <= 4) y += random.nextInt(2);
+                if ((health <= 4) && (heartNum < 2)) y += shake[heartNum];
                 if (i == regen) y -= 2;
 
-                blit(mStack, x, y, BACKGROUND, TOP, 9, 9);
+//                int TBACKGROUND = ((!highlight) && (fourHearts > 0)) ? BACKGROUND-9 : BACKGROUND;
+//                blit(mStack, x, y, TBACKGROUND, TOP+18, 9, 9);
 
                 if (highlight)
                 {
