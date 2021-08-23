@@ -97,7 +97,6 @@ public abstract class MixinForgeIngameGui extends IngameGui{
         int fourHearts1 = fourHearts;
         int twoHearts1 = twoHearts;
 
-
         int healthRows = ((totalHearts - 1) / 10) + 1;
         int rowHeight = Math.max(10 - (healthRows - 2), 3);
 
@@ -114,7 +113,7 @@ public abstract class MixinForgeIngameGui extends IngameGui{
             regen = tickCount % 25;
         }
 
-        final int TOP =  104 + (minecraft.level.getLevelData().isHardcore() ? 27 : 0);
+        final int TOP =  113 + (minecraft.level.getLevelData().isHardcore() ? 27 : 0);
         final int BACKGROUND = (highlight ? 72 : 63);
         int MARGIN = 81;
         if (player.hasEffect(Effects.WITHER)) MARGIN += 72;
@@ -130,7 +129,9 @@ public abstract class MixinForgeIngameGui extends IngameGui{
                 if (health <= 4) y += random.nextInt(2);
                 if (i == regen) y -= 2;
 
-                blit(mStack, x, y, BACKGROUND, TOP, 9, 9);
+                int TBACKGROUND = ((!highlight) && (fourHearts > 0)) ? BACKGROUND-9 : BACKGROUND;
+
+                blit(mStack, x, y, TBACKGROUND, TOP+18, 9, 9);
 
                 if (highlight)
                 {
