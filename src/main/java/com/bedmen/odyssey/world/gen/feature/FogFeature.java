@@ -48,15 +48,25 @@ public class FogFeature extends Feature<NoFeatureConfig> {
 //                while(!seedReader.isEmptyBlock(pos) && (pos.getY() < 80) && !(ignoreBlock(seedReader.getBlockState(pos)))) {
 //                    pos = pos.above();
 //                }
-                if (shouldFog(seedReader, pos)) {
-                    buildFog(seedReader, pos);
+
+                switch (howShouldFog(seedReader, pos)) {
+                    case 0:
+                        // if no fog
+                        break;
+                    case 1:
+                        // if not on edge of biome
+                        buildPillarFog(seedReader, pos);
+                        break;
+                    default:
+                        // if on edge of biome
+                        buildBillowFog(seedReader, pos);
                 }
             }
         }
         return true;
     }
 
-    public void buildFog(ISeedReader seedReader, BlockPos pos){
+    public void buildBillowFog(ISeedReader seedReader, BlockPos pos){
         for(int x = -5; x <= 5; x++) {
             for(int z = -5; z <= 5; z++) {
                 for(int y = 0; y <= 1; y++) {
@@ -73,6 +83,35 @@ public class FogFeature extends Feature<NoFeatureConfig> {
                 }
             }
         }
+    }
+
+    public void buildPillarFog(ISeedReader seedReader, BlockPos pos) {
+        for(int y = 0; y <= 1; y++) {
+            int fogNum = 6 - 2*(Math.abs(y));
+            if(fogNum >= 1){
+                for(int k = 0; k <= 3; k++) {
+                    BlockPos pos1 = pos.offset(0,y*4+k,0);
+                    if(fogNum > FogUtil.fogToInt(seedReader.getBlockState(pos1).getBlock())){
+                        Block block = FogUtil.intToFog(fogNum);
+                        seedReader.setBlock(pos1, block.defaultBlockState(), 2);
+                    }
+                }
+            }
+        }
+    }
+
+    public int howShouldFog(IWorldReader worldReader, BlockPos blockPos) {
+        if (!shouldFog(worldReader, blockPos))
+            return 0;
+        int how = 1;
+        for (int i = -1; (i < 2) && (i!=0); i++) {
+            for (int j = -1; (j < 2) && (j!=0); j++) {
+                BlockPos pos = blockPos.offset(i,0,j);
+                if (!shouldFog(worldReader, pos))
+                    how++;
+            }
+        }
+        return how;
     }
 
     public boolean shouldFog(IWorldReader worldReader, BlockPos blockPos) {
