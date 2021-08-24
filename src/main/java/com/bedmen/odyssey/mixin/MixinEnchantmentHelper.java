@@ -2,6 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.equipment.IEquipment;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -158,5 +159,10 @@ public abstract class MixinEnchantmentHelper {
         Map<Enchantment, Integer> map2 = ((IEquipment)(itemStack.getItem())).getInnateEnchantmentMap();
         map.putAll(map2);
         return map;
+    }
+
+    //Used in Magma and Campfire Blocks
+    public static boolean hasFrostWalker(LivingEntity livingEntity) {
+        return EnchantmentUtil.getFrostWalker(livingEntity) > 0;
     }
 }
