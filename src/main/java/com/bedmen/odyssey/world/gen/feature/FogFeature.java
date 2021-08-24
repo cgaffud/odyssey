@@ -26,6 +26,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.Features;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import org.lwjgl.system.CallbackI;
 
@@ -33,7 +34,7 @@ public class FogFeature extends Feature<NoFeatureConfig> {
     public FogFeature(Codec<NoFeatureConfig> p_i231993_1_) {
         super(p_i231993_1_);
     }
-
+  
     public boolean place(ISeedReader seedReader, ChunkGenerator chunkGenerator, Random p_241855_3_, BlockPos blockPos, NoFeatureConfig p_241855_5_) {
         int x = blockPos.getX();
         int z = blockPos.getZ();
