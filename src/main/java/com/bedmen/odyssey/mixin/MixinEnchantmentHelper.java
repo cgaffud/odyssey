@@ -162,6 +162,7 @@ public abstract class MixinEnchantmentHelper {
     }
 
     //Used in Magma and Campfire Blocks
+    @Overwrite
     public static boolean hasFrostWalker(LivingEntity livingEntity) {
         return EnchantmentUtil.getFrostWalker(livingEntity) > 0;
     }
