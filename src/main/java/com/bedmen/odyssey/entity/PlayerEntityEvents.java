@@ -3,22 +3,18 @@ package com.bedmen.odyssey.entity;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.PermanentBuffsPacket;
 import com.bedmen.odyssey.registry.EffectRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
-
-import java.util.Map;
 
 @Mod.EventBusSubscriber
 public class PlayerEntityEvents {
@@ -50,16 +46,24 @@ public class PlayerEntityEvents {
         Entity entity = event.getEntity();
         if(entity instanceof IPlayerPermanentBuffs && !event.getWorld().isClientSide){
             IPlayerPermanentBuffs playerPermanentBuffs = (IPlayerPermanentBuffs)entity;
+            PlayerEntity playerEntity = (PlayerEntity)entity;
             PacketDistributor.PacketTarget packetTarget = PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) entity);
             int lifeFruits = playerPermanentBuffs.getLifeFruits();
+            //Sync Client
             OdysseyNetwork.CHANNEL.send(packetTarget, new PermanentBuffsPacket(playerPermanentBuffs.getNetherImmune(), lifeFruits));
             //Increase max health
-            ModifiableAttributeInstance modifiableattributeinstance = ((PlayerEntity)entity).getAttributes().getInstance(Attributes.MAX_HEALTH);
+            ModifiableAttributeInstance modifiableattributeinstance = playerEntity.getAttributes().getInstance(Attributes.MAX_HEALTH);
             if (modifiableattributeinstance != null) {
                 modifiableattributeinstance.setBaseValue(20.0d + 2.0d*lifeFruits);
-                PlayerEntity playerEntity = (PlayerEntity)entity;
             }
+        }
+    }
 
+    @SubscribeEvent
+    public static void onPlayerRespawnEvent(final PlayerEvent.PlayerRespawnEvent event){
+        PlayerEntity playerEntity =  event.getPlayer();
+        if(playerEntity instanceof IPlayerPermanentBuffs && !playerEntity.level.isClientSide){
+            playerEntity.setHealth(20.0f + 2.0f * ((IPlayerPermanentBuffs) playerEntity).getLifeFruits());
         }
     }
 }
