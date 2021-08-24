@@ -26,5 +26,5 @@ public class BiomeRegistry {
         net.minecraftforge.common.BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(registryKey, 10));
     }
 
-    public static final RegistryObject<Biome> AUTUMN_FOREST = BIOMES.register("autumn_forest", () -> OdysseyBiomeMaker.autumnForestBiome(0.1F, 0.2F));
+    public static final RegistryObject<Biome> AUTUMN_FOREST = BIOMES.register("autumn_forest", () -> OdysseyBiomeMaker.autumnForestBiome(0.0F, 0.0F));
 }

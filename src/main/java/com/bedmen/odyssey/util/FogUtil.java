@@ -3,6 +3,7 @@ package com.bedmen.odyssey.util;
 import com.bedmen.odyssey.tags.OdysseyBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
@@ -40,6 +41,12 @@ public class FogUtil {
     }
 
     public static int fogToInt(Block block){
-        return Integer.parseInt(block.toString().substring(14,15));
+        if(block == Blocks.AIR)
+            return 0;
+        try{
+            return Integer.parseInt(block.toString().substring(14,15));
+        } catch(NumberFormatException e){
+            return 9;
+        }
     }
 }

@@ -3,11 +3,7 @@ package com.bedmen.odyssey.util;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.world.gen.feature.FogFeature;
 import com.bedmen.odyssey.world.gen.feature.MegaIceSpikeFeature;
-import net.minecraft.block.Blocks;
-import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
-import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -24,6 +20,6 @@ public class FeatureRegistry {
     }
 
     public static final RegistryObject<Feature<NoFeatureConfig>> MEGA_ICE_SPIKE = FEATURES.register("mega_ice_spike", () -> new MegaIceSpikeFeature(NoFeatureConfig.CODEC));
-    public static final RegistryObject<Feature<NoFeatureConfig>> FOG_FEATURE = FEATURES.register("fog", () -> new FogFeature(NoFeatureConfig.CODEC));
+    public static final RegistryObject<Feature<NoFeatureConfig>> FOG = FEATURES.register("fog", () -> new FogFeature(NoFeatureConfig.CODEC));
 
 }
