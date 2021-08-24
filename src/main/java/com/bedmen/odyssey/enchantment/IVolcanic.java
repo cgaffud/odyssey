@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.enchantment;
 
-public interface IVolcanic {
+import net.minecraft.enchantment.Enchantment;
 
-    default boolean isVolcanic(){
-        return false;
+public interface IVolcanic {
+    default Enchantment getPredecessor(){
+        return null;
     }
 }

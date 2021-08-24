@@ -3,6 +3,7 @@ package com.bedmen.odyssey.tileentity;
 import javax.annotation.Nullable;
 
 import com.bedmen.odyssey.container.ResearchTableContainer;
+import com.bedmen.odyssey.enchantment.IVolcanic;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.SoundPacket;
 import com.bedmen.odyssey.recipes.ModRecipeType;
@@ -10,6 +11,7 @@ import com.bedmen.odyssey.recipes.ResearchRecipe;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.TileEntityTypeRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -121,10 +123,18 @@ public class ResearchTableTileEntity extends LockableTileEntity implements ITick
         if(bookItemStack.getItem() == Items.BOOK)
             flag = true;
         else if(bookItemStack.getItem() == Items.ENCHANTED_BOOK){
-            Integer level = EnchantmentHelper.getEnchantments(bookItemStack).get(((ResearchRecipe)recipe).getEnchantment());
-            int level2 = level == null ? 0 : level;
+            Enchantment e1 = ((ResearchRecipe)recipe).getEnchantment();
+            Enchantment e2 = ((IVolcanic)((ResearchRecipe)recipe).getEnchantment()).getPredecessor();
+            Integer level1 = EnchantmentHelper.getEnchantments(bookItemStack).get(e1);
+            int level2 = level1 == null ? 0 : level1;
             if(level2 > 0 && level2 < ((ResearchRecipe)recipe).getLevel())
                 flag = true;
+            if(e2 != null){
+                Integer level3 = EnchantmentHelper.getEnchantments(bookItemStack).get(e2);
+                int level4 = level3 == null ? 0 : level3;
+                if(level4 > 0 && level4 <= ((ResearchRecipe)recipe).getLevel())
+                    flag = true;
+            }
         }
         if(((ResearchRecipe)recipe).getEnchantment().isCurse())
             flag &= this.getItem(9).getItem() == ItemRegistry.MALEVOLENT_QUILL.get();
