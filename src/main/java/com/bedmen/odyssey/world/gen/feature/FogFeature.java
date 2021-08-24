@@ -49,6 +49,8 @@ public class FogFeature extends Feature<NoFeatureConfig> {
 //                while(!seedReader.isEmptyBlock(pos) && (pos.getY() < 80) && !(ignoreBlock(seedReader.getBlockState(pos)))) {
 //                    pos = pos.above();
 //                }
+//                if (shouldFog(seedReader, pos))
+//                    buildBillowFog(seedReader, pos);
 
                 switch (howShouldFog(seedReader, pos)) {
                     case 0:

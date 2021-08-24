@@ -22,9 +22,15 @@ public class BiomeRegistry {
 
     public static void register()
     {
-        RegistryKey<Biome> registryKey = RegistryKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Odyssey.MOD_ID, "autumn_forest"));
-        net.minecraftforge.common.BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(registryKey, 10));
+        registerBiome("autumn_forest", BiomeManager.BiomeType.COOL, 10);
+        registerBiome("palm_beach", BiomeManager.BiomeType.WARM, 10);
+    }
+
+    private static void registerBiome(String biomeName, BiomeManager.BiomeType type, int weight) {
+        RegistryKey<Biome> registryKey = RegistryKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Odyssey.MOD_ID, biomeName));
+        BiomeManager.addBiome(type, new BiomeManager.BiomeEntry(registryKey, weight));
     }
 
     public static final RegistryObject<Biome> AUTUMN_FOREST = BIOMES.register("autumn_forest", () -> OdysseyBiomeMaker.autumnForestBiome(0.0F, 0.0F));
+    public static final RegistryObject<Biome> PALM_BEACH = BIOMES.register("palm_beach", () -> OdysseyBiomeMaker.tropicsBiome());
 }

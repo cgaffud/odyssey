@@ -1,9 +1,5 @@
 package com.bedmen.odyssey.world.gen;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorldReader;
@@ -50,6 +46,42 @@ public class OdysseyBiomeMaker {
                 .temperature(0.3F)
                 .downfall(0.8F)
                 .specialEffects((new BiomeAmbience.Builder()).grassColorOverride(10783823).waterColor(4173284).waterFogColor(336947).fogColor(12642815).skyColor(calculateSkyColor(0.7F)).ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS).build())
+                .mobSpawnSettings(mobspawninfo$builder.build())
+                .generationSettings(biomegenerationsettings$builder.build()).build();
+    }
+
+    public static Biome tropicsBiome() {
+        BiomeGenerationSettings.Builder biomegenerationsettings$builder = (new BiomeGenerationSettings.Builder()).surfaceBuilder(ConfiguredSurfaceBuilders.DESERT);
+        MobSpawnInfo.Builder mobspawninfo$builder = new MobSpawnInfo.Builder();
+
+        DefaultBiomeFeatures.addDefaultOverworldLandStructures(biomegenerationsettings$builder);
+        biomegenerationsettings$builder.addStructureStart(StructureFeatures.BURIED_TREASURE);
+        biomegenerationsettings$builder.addStructureStart(StructureFeatures.SHIPWRECH_BEACHED);
+
+        biomegenerationsettings$builder.addStructureStart(StructureFeatures.RUINED_PORTAL_DESERT);
+        DefaultBiomeFeatures.addDefaultCarvers(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDesertLakes(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDefaultMonsterRoom(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDefaultUndergroundVariety(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDefaultOres(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDefaultSoftDisks(biomegenerationsettings$builder);
+
+        DefaultBiomeFeatures.addDefaultFlowers(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDefaultGrass(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDesertVegetation(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDefaultMushrooms(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDesertExtraVegetation(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDefaultSprings(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addDesertExtraDecoration(biomegenerationsettings$builder);
+        DefaultBiomeFeatures.addSurfaceFreezing(biomegenerationsettings$builder);
+
+        return (new Biome.Builder()).precipitation(Biome.RainType.RAIN)
+                .biomeCategory(Biome.Category.BEACH)
+                .depth(0.0F)
+                .scale(0.025F)
+                .temperature(1.5F)
+                .downfall(0.8F)
+                .specialEffects((new BiomeAmbience.Builder()).waterColor(4445678).waterFogColor(270131).fogColor(12638463).skyColor(calculateSkyColor(0.5F)).ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS).build())
                 .mobSpawnSettings(mobspawninfo$builder.build())
                 .generationSettings(biomegenerationsettings$builder.build()).build();
     }
