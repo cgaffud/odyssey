@@ -22,7 +22,7 @@ public abstract class MixinEnchantment extends net.minecraftforge.registries.For
         if(i >= 2){
             i += this.getDescriptionId().equals("enchantment.oddc.unenchantable") ? 0 : 1;
         } else {
-            i -= this.isVolcanic() ? 1 : 0;
+            i -= this.getPredecessor() == null ? 0 : 1;
         }
         switch(i){
             case 0:
