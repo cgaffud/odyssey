@@ -109,8 +109,6 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     @Shadow
     public boolean canBreatheUnderwater() {return false;}
     @Shadow
-    protected int decreaseAirSupply(int air) {return 0;}
-    @Shadow
     private DamageSource lastDamageSource;
     @Shadow
     private long lastDamageStamp;
@@ -403,13 +401,11 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
             //Drowns extra with drowning curse
             int drowningAmount = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DROWNING.get(), getLivingEntity());
             //Checks if player is in lava too
-            drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
+            boolean inLava = this.isEyeInFluid(FluidTags.LAVA);
+            drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || inLava) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
             if (drowningAmount > 0) {
                 if (!this.canBreatheUnderwater() && !EffectUtils.hasWaterBreathing((LivingEntity) (Object) this) && !flag1) {
-                    int airsupply = this.getAirSupply();
-                    for(int i = 0; i < drowningAmount; i++)
-                        airsupply = this.decreaseAirSupply(airsupply);
-                    this.setAirSupply(airsupply);
+                    this.setAirSupply(this.decreaseAirSupply(this.getAirSupply(), drowningAmount, inLava));
                     if (this.getAirSupply() <= -20) {
                         this.setAirSupply(0);
                         Vector3d vector3d = this.getDeltaMovement();
@@ -705,6 +701,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         this.calculateEntityAnimation(getLivingEntity(), this instanceof IFlyingAnimal);
     }
 
+    // Added Obisidan Walker
     protected void onChangedBlock(BlockPos p_184594_1_) {
         int i = EnchantmentUtil.getFrostWalker(getLivingEntity());
         int j = EnchantmentUtil.getObsidianWalker(getLivingEntity());
@@ -739,6 +736,22 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
                 e.printStackTrace();
             }
         }
+    }
+
+    protected int decreaseAirSupply(int airSupply, int drowningAmount, boolean inLava) {
+        int i;
+        if(inLava){
+            i = EnchantmentUtil.getPyropneumatic(getLivingEntity());
+        } else {
+            i = EnchantmentUtil.getRespiration(getLivingEntity());
+        }
+        if(i == 0){
+            return airSupply - drowningAmount;
+        }
+        for(int j = 0; j < drowningAmount ; j++){
+            airSupply -= this.random.nextInt(i + 1) > 0 ? 0 : 1;
+        }
+        return airSupply;
     }
     
     public int getZephyrArmorTicks(){

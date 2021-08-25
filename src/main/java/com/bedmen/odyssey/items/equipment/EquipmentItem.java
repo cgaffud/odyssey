@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.IItemTier;
@@ -25,7 +27,7 @@ public abstract class EquipmentItem extends TieredItem {
     protected static final List<EquipmentItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
     public EquipmentItem(IItemTier tier, Item.Properties builderIn) {
-        super(tier, builderIn);
+        super(tier, builderIn.rarity(OdysseyRarity.EQUIPMENT));
         this.enchantmentLazyMap.put(Lazy.of(EnchantmentRegistry.UNENCHANTABLE::get),1);
         UNFINISHED_EQUIPMENT.add(this);
     }
@@ -60,9 +62,9 @@ public abstract class EquipmentItem extends TieredItem {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         for(Enchantment e : this.enchantmentMap.keySet()){
-            if(EnchantmentRegistry.UNENCHANTABLE.get() == e)
-                tooltip.add(1, e.getFullname(this.enchantmentMap.get(e)));
-            else
+            if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
+                tooltip.add(1, EnchantmentUtil.getUnenchantableName());
+            else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
                 tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
         }
     }

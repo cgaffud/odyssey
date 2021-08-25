@@ -12,6 +12,9 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +23,7 @@ public class EnchantmentUtil {
     private static final int[] SWORD_ENCHANTS = {12,13,14,15,17,18};
     private static final int[] AXE_ENCHANTS = {12,13,14,19,20,22};
     private static final int[] TOOL_ENCHANTS = {19,20,22};
-    private static final int[] HELMET_ENCHANTS = {0,5,6,10,48};
+    private static final int[] HELMET_ENCHANTS = {0,5,6,10,48,50};
     private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10,39};
     private static final int[] LEGGINGS_ENCHANTS = {0,3,8,10};
     private static final int[] BOOTS_ENCHANTS = {0,2,9,10,11,46,47};
@@ -34,10 +37,11 @@ public class EnchantmentUtil {
     private static final Enchantment[] TOUCH_EXCLUSION = {Enchantments.BLOCK_FORTUNE, Enchantments.SILK_TOUCH};
     private static final Enchantment[] CHANNELING_EXCLUSION = {Enchantments.CHANNELING, Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
     private static final Enchantment[] LOYALTY_EXCLUSION = {Enchantments.LOYALTY, Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
-    private static final Enchantment[] RIPTIDE_EXLCUSION = {Enchantments.LOYALTY, Enchantments.CHANNELING, Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
-    private static final Enchantment[] BOOT_EXLCUSION = {Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, EnchantmentRegistry.VULCAN_STRIDER.get(), EnchantmentRegistry.OBSIDIAN_WALKER.get()};
+    private static final Enchantment[] RIPTIDE_EXCLUSION = {Enchantments.LOYALTY, Enchantments.CHANNELING, Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
     private static final Enchantment[] AFFINITY_EXCLUSION = {Enchantments.AQUA_AFFINITY, EnchantmentRegistry.MOLTEN_AFFINITY.get()};
+    private static final Enchantment[] HELMET_EXCLUSION = {Enchantments.RESPIRATION, EnchantmentRegistry.PYROPNEUMATIC.get()};
     private static final Enchantment[] CHESTPLATE_EXCLUSION = {Enchantments.THORNS, EnchantmentRegistry.ACCURACY.get()};
+    private static final Enchantment[] BOOT_EXCLUSION = {Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, EnchantmentRegistry.VULCAN_STRIDER.get(), EnchantmentRegistry.OBSIDIAN_WALKER.get()};
 
     private static final Enchantment[] enchantments = {Enchantments.ALL_DAMAGE_PROTECTION,
             Enchantments.FIRE_PROTECTION,
@@ -89,6 +93,7 @@ public class EnchantmentUtil {
             EnchantmentRegistry.OBSIDIAN_WALKER.get(),
             EnchantmentRegistry.MOLTEN_AFFINITY.get(),
             EnchantmentRegistry.ERUPTION.get(),
+            EnchantmentRegistry.PYROPNEUMATIC.get(),
             };
     private static final Map<Enchantment, Integer> integerMap = new HashMap<>();
 
@@ -143,6 +148,7 @@ public class EnchantmentUtil {
         integerMap.put(EnchantmentRegistry.OBSIDIAN_WALKER.get(), 47);
         integerMap.put(EnchantmentRegistry.MOLTEN_AFFINITY.get(), 48);
         integerMap.put(EnchantmentRegistry.ERUPTION.get(), 49);
+        integerMap.put(EnchantmentRegistry.PYROPNEUMATIC.get(), 50);
     }
 
     public static Enchantment intToEnchantment(int i){
@@ -207,18 +213,21 @@ public class EnchantmentUtil {
                 return CHANNELING_EXCLUSION;
             case 31: //Riptide
             case 49: //Eruption
-                return RIPTIDE_EXLCUSION;
+                return RIPTIDE_EXCLUSION;
             case 8: //Depth Strider
             case 9: //Frost Walker
             case 46: //Vulcan Strider
             case 47: //Obsidian Walker
-                return BOOT_EXLCUSION;
+                return BOOT_EXCLUSION;
             case 6: //Aqua Affinity
             case 48: //Molten Affinity
                 return AFFINITY_EXCLUSION;
             case 7: //Thorns
             case 38: //Accuracy
                 return CHESTPLATE_EXCLUSION;
+            case 5: //Respiraiton
+            case 50: //Pyropneumatic
+                return HELMET_EXCLUSION;
             default:
                 return new Enchantment[] {e};
         }
@@ -239,6 +248,10 @@ public class EnchantmentUtil {
         buffer.writeVarInt(enchantmentToInt(e));
     }
 
+    public static ITextComponent getUnenchantableName(){
+        return new TranslationTextComponent("enchantment.oddc.unenchantable").withStyle(TextFormatting.DARK_RED);
+    }
+
     public static float getAccuracyMultiplier(LivingEntity entity){
         int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.ACCURACY.get(), entity);
         return i > 0 ? 0.1f : 1.0f;
@@ -252,10 +265,6 @@ public class EnchantmentUtil {
     public static int getRecoveryTicks(LivingEntity entity){
         int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.RECOVERY.get(), entity);
         return 100 - 40 * i;
-    }
-
-    public static boolean hasFireProtectionOrResistance(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(Enchantments.FIRE_PROTECTION, entity) > 0 || entity.hasEffect(Effects.FIRE_RESISTANCE);
     }
 
     public static boolean hasGliding(LivingEntity entity) {
@@ -296,6 +305,14 @@ public class EnchantmentUtil {
 
     public static int getObsidianWalker(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.OBSIDIAN_WALKER.get(), entity);
+    }
+
+    public static int getRespiration(LivingEntity entity) {
+        return getPyropneumatic(entity) + EnchantmentHelper.getEnchantmentLevel(Enchantments.RESPIRATION, entity);
+    }
+
+    public static int getPyropneumatic(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.PYROPNEUMATIC.get(), entity);
     }
 
     public static int getRiptide(ItemStack itemStack) {
