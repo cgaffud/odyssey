@@ -10,7 +10,7 @@ public class PyropneumaticEnchantment extends RespirationEnchantment {
         super(p_i46724_1_, p_i46724_2_);
     }
 
-    public Enchantment getPredecessor(){
+    public Enchantment getDowngrade(){
         return Enchantments.RESPIRATION;
     }
 }

@@ -1,5 +1,6 @@
-package com.bedmen.odyssey.enchantment;
+package com.bedmen.odyssey.enchantment.vanilla;
 
+import com.bedmen.odyssey.enchantment.OdysseyEnchantmentType;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.inventory.EquipmentSlotType;
 
