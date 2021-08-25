@@ -20,7 +20,7 @@ public class ObsidianWalkerEnchantment extends FrostWalkerEnchantment {
         super(p_i46728_1_, p_i46728_2_);
     }
 
-    public Enchantment getPredecessor(){
+    public Enchantment getDowngrade(){
         return Enchantments.FROST_WALKER;
     }
 

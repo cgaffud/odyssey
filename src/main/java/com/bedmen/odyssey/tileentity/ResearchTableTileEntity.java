@@ -3,7 +3,7 @@ package com.bedmen.odyssey.tileentity;
 import javax.annotation.Nullable;
 
 import com.bedmen.odyssey.container.ResearchTableContainer;
-import com.bedmen.odyssey.enchantment.IVolcanic;
+import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.SoundPacket;
 import com.bedmen.odyssey.recipes.ModRecipeType;
@@ -124,7 +124,7 @@ public class ResearchTableTileEntity extends LockableTileEntity implements ITick
             flag = true;
         else if(bookItemStack.getItem() == Items.ENCHANTED_BOOK){
             Enchantment e1 = ((ResearchRecipe)recipe).getEnchantment();
-            Enchantment e2 = ((IVolcanic)((ResearchRecipe)recipe).getEnchantment()).getPredecessor();
+            Enchantment e2 = ((IUpgradableEnchantment)((ResearchRecipe)recipe).getEnchantment()).getDowngrade();
             Integer level1 = EnchantmentHelper.getEnchantments(bookItemStack).get(e1);
             int level2 = level1 == null ? 0 : level1;
             if(level2 > 0 && level2 < ((ResearchRecipe)recipe).getLevel())

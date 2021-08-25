@@ -20,28 +20,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EnchantmentUtil {
-    private static final int[] SWORD_ENCHANTS = {12,13,14,15,17,18};
+    private static final int[] SWORD_ENCHANTS = {12,13,14,15,16,17,18};
     private static final int[] AXE_ENCHANTS = {12,13,14,19,20,22};
-    private static final int[] TOOL_ENCHANTS = {19,20,22};
-    private static final int[] HELMET_ENCHANTS = {0,5,6,10,48,50};
-    private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10,39};
-    private static final int[] LEGGINGS_ENCHANTS = {0,3,8,10};
-    private static final int[] BOOTS_ENCHANTS = {0,2,9,10,11,46,47};
-    private static final int[] BOW_ENCHANTS = {23,24,26};
+    private static final int[] TOOL_ENCHANTS = {6,19,20,22,48};
+    private static final int[] HELMET_ENCHANTS = {0,5,10,50};
+    private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10,38};
+    private static final int[] LEGGINGS_ENCHANTS = {0,3,10};
+    private static final int[] BOOTS_ENCHANTS = {0,2,8,9,10,11,46,47};
+    private static final int[] BOW_ENCHANTS = {23,24,25,26};
     private static final int[] CROSSBOW_ENCHANTS = {33,34,35};
     private static final int[] TRIDENT_ENCHANTS = {29,30,31,32,49};
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
-    private static final int[] SHIELD_ENCHANTS = {40,41};
+    private static final int[] SHIELD_ENCHANTS = {39,40};
 
-    private static final Enchantment[] MELEE_DAMAGE_EXCLUSION = {Enchantments.SHARPNESS, Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS};
-    private static final Enchantment[] TOUCH_EXCLUSION = {Enchantments.BLOCK_FORTUNE, Enchantments.SILK_TOUCH};
-    private static final Enchantment[] CHANNELING_EXCLUSION = {Enchantments.CHANNELING, Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
-    private static final Enchantment[] LOYALTY_EXCLUSION = {Enchantments.LOYALTY, Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
-    private static final Enchantment[] RIPTIDE_EXCLUSION = {Enchantments.LOYALTY, Enchantments.CHANNELING, Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
-    private static final Enchantment[] AFFINITY_EXCLUSION = {Enchantments.AQUA_AFFINITY, EnchantmentRegistry.MOLTEN_AFFINITY.get()};
-    private static final Enchantment[] HELMET_EXCLUSION = {Enchantments.RESPIRATION, EnchantmentRegistry.PYROPNEUMATIC.get()};
-    private static final Enchantment[] CHESTPLATE_EXCLUSION = {Enchantments.THORNS, EnchantmentRegistry.ACCURACY.get()};
-    private static final Enchantment[] BOOT_EXCLUSION = {Enchantments.DEPTH_STRIDER, Enchantments.FROST_WALKER, EnchantmentRegistry.VULCAN_STRIDER.get(), EnchantmentRegistry.OBSIDIAN_WALKER.get()};
+    private static final Enchantment[] SHARPNESS_EXCLUSION = {Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS};
+    private static final Enchantment[] SMITE_EXCLUSION = {Enchantments.SHARPNESS, Enchantments.BANE_OF_ARTHROPODS};
+    private static final Enchantment[] BANE_OF_ARTHROPODS_EXCLUSION = {Enchantments.SHARPNESS, Enchantments.SMITE};
+    private static final Enchantment[] FORTUNE_EXCLUSION = {Enchantments.SILK_TOUCH};
+    private static final Enchantment[] SILK_TOUCH_EXCLUSION = {Enchantments.BLOCK_FORTUNE};
+    private static final Enchantment[] CHANNELING_LOYALTY_EXCLUSION = {Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
+    private static final Enchantment[] RIPTIDE_EXCLUSION = {Enchantments.LOYALTY, Enchantments.CHANNELING};
+    private static final Enchantment[] THORNS_EXCLUSION = {EnchantmentRegistry.ACCURACY.get()};
+    private static final Enchantment[] ACCURACY_EXCLUSION = {Enchantments.THORNS};
+    private static final Enchantment[] DEPTH_STRIDER_EXCLUSION = {Enchantments.FROST_WALKER, EnchantmentRegistry.OBSIDIAN_WALKER.get()};
+    private static final Enchantment[] FROST_WALKER_EXCLUSION = {Enchantments.DEPTH_STRIDER, EnchantmentRegistry.VULCAN_STRIDER.get()};
 
     private static final Enchantment[] enchantments = {Enchantments.ALL_DAMAGE_PROTECTION,
             Enchantments.FIRE_PROTECTION,
@@ -201,35 +203,33 @@ public class EnchantmentUtil {
     public static Enchantment[] exclusiveWith(Enchantment e){
         switch(EnchantmentUtil.enchantmentToInt(e)){
             case 12: //Sharpness
+                return SHARPNESS_EXCLUSION;
             case 13: //Smite
+                return SMITE_EXCLUSION;
             case 14: //Bane of Arthropods
-                return MELEE_DAMAGE_EXCLUSION;
+                return BANE_OF_ARTHROPODS_EXCLUSION;
             case 20: //Silk Touch
+                return SILK_TOUCH_EXCLUSION;
             case 22: //Fortune
-                return TOUCH_EXCLUSION;
+                return FORTUNE_EXCLUSION;
             case 29: //Loyalty
-                return LOYALTY_EXCLUSION;
             case 32: //Channeling
-                return CHANNELING_EXCLUSION;
+                return CHANNELING_LOYALTY_EXCLUSION;
             case 31: //Riptide
             case 49: //Eruption
                 return RIPTIDE_EXCLUSION;
             case 8: //Depth Strider
-            case 9: //Frost Walker
             case 46: //Vulcan Strider
+                return DEPTH_STRIDER_EXCLUSION;
+            case 9: //Frost Walker
             case 47: //Obsidian Walker
-                return BOOT_EXCLUSION;
-            case 6: //Aqua Affinity
-            case 48: //Molten Affinity
-                return AFFINITY_EXCLUSION;
+                return FROST_WALKER_EXCLUSION;
             case 7: //Thorns
+                return THORNS_EXCLUSION;
             case 38: //Accuracy
-                return CHESTPLATE_EXCLUSION;
-            case 5: //Respiraiton
-            case 50: //Pyropneumatic
-                return HELMET_EXCLUSION;
+                return ACCURACY_EXCLUSION;
             default:
-                return new Enchantment[] {e};
+                return new Enchantment[] {};
         }
     }
 

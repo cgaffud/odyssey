@@ -1,5 +1,6 @@
-package com.bedmen.odyssey.enchantment;
+package com.bedmen.odyssey.enchantment.vanilla;
 
+import com.bedmen.odyssey.enchantment.OdysseyEnchantmentType;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -23,5 +24,9 @@ public class OdysseyRiptideEnchantment extends Enchantment {
 
     public boolean checkCompatibility(Enchantment p_77326_1_) {
         return super.checkCompatibility(p_77326_1_) && p_77326_1_ != EnchantmentRegistry.LOYALTY.get() && p_77326_1_ != EnchantmentRegistry.CHANNELING.get();
+    }
+
+    public Enchantment getUpgrade(){
+        return EnchantmentRegistry.ERUPTION.get();
     }
 }

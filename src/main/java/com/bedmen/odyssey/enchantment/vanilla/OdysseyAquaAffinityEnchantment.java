@@ -1,5 +1,6 @@
-package com.bedmen.odyssey.enchantment;
+package com.bedmen.odyssey.enchantment.vanilla;
 
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -19,5 +20,9 @@ public class OdysseyAquaAffinityEnchantment extends Enchantment {
 
     public int getMaxLevel() {
         return 1;
+    }
+
+    public Enchantment getUpgrade(){
+        return EnchantmentRegistry.MOLTEN_AFFINITY.get();
     }
 }

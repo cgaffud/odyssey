@@ -10,7 +10,7 @@ public class VulcanStriderEnchantment extends DepthStriderEnchantment {
         super(p_i46720_1_, p_i46720_2_);
     }
 
-    public Enchantment getPredecessor(){
+    public Enchantment getDowngrade(){
         return Enchantments.DEPTH_STRIDER;
     }
 }
