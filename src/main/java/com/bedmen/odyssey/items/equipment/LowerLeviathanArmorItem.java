@@ -11,7 +11,6 @@ public class LowerLeviathanArmorItem extends EquipmentArmorItem {
     public LowerLeviathanArmorItem(IArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties p_i48534_3_) {
         super(armorMaterial, slotType, p_i48534_3_);
         this.enchantmentLazyMap.put(Lazy.of(EnchantmentRegistry.VULCAN_STRIDER), 1);
-        this.enchantmentLazyMap.put(Lazy.of(() -> Enchantments.FIRE_PROTECTION), 1);
         this.setBonusLazyMap.put(Lazy.of(EnchantmentRegistry.FIREPROOF), new Tuple<>(1,"key.sneak"));
     }
 }

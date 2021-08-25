@@ -10,8 +10,7 @@ import net.minecraftforge.common.util.Lazy;
 public class UpperLeviathanArmorItem extends EquipmentArmorItem {
     public UpperLeviathanArmorItem(IArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties p_i48534_3_) {
         super(armorMaterial, slotType, p_i48534_3_);
-        this.enchantmentLazyMap.put(Lazy.of(()->Enchantments.RESPIRATION), 1);
-        this.enchantmentLazyMap.put(Lazy.of(() -> Enchantments.FIRE_PROTECTION), 1);
+        this.enchantmentLazyMap.put(Lazy.of(EnchantmentRegistry.PYROPNEUMATIC), 1);
         this.setBonusLazyMap.put(Lazy.of(EnchantmentRegistry.FIREPROOF), new Tuple<>(1,"key.sneak"));
     }
 }
