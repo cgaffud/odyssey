@@ -53,6 +53,9 @@ public class PotionRegistry {
     public static final RegistryObject<Potion> LUCK = POTIONS_VANILLA.register("luck", () -> new Potion(new EffectInstance(Effects.LUCK, 3600)));
     public static final RegistryObject<Potion> LONG_LUCK = POTIONS.register("long_luck", () -> new Potion(new EffectInstance(Effects.LUCK, 7200)));
 
+    public static final RegistryObject<Potion> LAVA_VISION = POTIONS.register("lava_vision", () -> new Potion(new EffectInstance(EffectRegistry.LAVA_VISION.get(), 3600)));
+    public static final RegistryObject<Potion> LONG_LAVA_VISION = POTIONS.register("long_lava_vision", () -> new Potion(new EffectInstance(EffectRegistry.LAVA_VISION.get(), 7200)));
+
     public static final RegistryObject<Potion> LONG_NIGHT_VISION = POTIONS_VANILLA.register("long_night_vision", () -> new Potion("night_vision", new EffectInstance(Effects.NIGHT_VISION, 7200)));
     public static final RegistryObject<Potion> LONG_INVISIBILITY = POTIONS_VANILLA.register("long_invisibility", () -> new Potion("invisibility", new EffectInstance(Effects.INVISIBILITY, 7200)));
     public static final RegistryObject<Potion> LONG_LEAPING = POTIONS_VANILLA.register("long_leaping", () -> new Potion("leaping", new EffectInstance(Effects.JUMP, 7200)));

@@ -99,6 +99,9 @@ public class OdysseyPotions {
         //Night Vision
         addMix(Potions.AWKWARD, Items.GOLDEN_CARROT, Potions.NIGHT_VISION);
         addMix(Potions.NIGHT_VISION, Items.REDSTONE, Potions.LONG_NIGHT_VISION);
+        //Lava Vision
+        addMix(Potions.NIGHT_VISION, Items.MAGMA_CREAM, PotionRegistry.LAVA_VISION.get());
+        addMix(PotionRegistry.LAVA_VISION.get(), Items.REDSTONE, PotionRegistry.LONG_LAVA_VISION.get());
         //Blindness
         addMix(Potions.AWKWARD, Items.FERMENTED_SPIDER_EYE, PotionRegistry.BLINDNESS.get());
         addMix(PotionRegistry.BLINDNESS.get(), Items.REDSTONE, PotionRegistry.LONG_BLINDNESS.get());

@@ -208,6 +208,7 @@
 
   "effect.oddc.construction": "Construction",
   "effect.oddc.building_fatigue": "Building Fatigue",
+  "effect.oddc.lava_vision": "Lava Vision",
 
   "item.minecraft.potion.effect.haste": "Potion of Haste",
   "item.minecraft.potion.effect.long_haste": "Potion of Haste",
@@ -304,5 +305,14 @@
   "item.minecraft.potion.effect.long_luck": "Potion of Luck",
   "item.minecraft.splash_potion.effect.long_luck": "Splash Potion of Luck",
   "item.minecraft.tipped_arrow.effect.long_luck": "Arrow of Luck",
-  "item.minecraft.lingering_potion.effect.long_luck": "Lingering Potion of Luck"
+  "item.minecraft.lingering_potion.effect.long_luck": "Lingering Potion of Luck",
+
+  "item.minecraft.potion.effect.lava_vision": "Potion of Lava Vision",
+  "item.minecraft.potion.effect.long_lava_vision": "Potion of Lava Vision",
+  "item.minecraft.splash_potion.effect.lava_vision": "Splash Potion of Lava Vision",
+  "item.minecraft.splash_potion.effect.long_lava_vision": "Splash Potion of Lava Vision",
+  "item.minecraft.tipped_arrow.effect.lava_vision": "Arrow of Lava Vision",
+  "item.minecraft.tipped_arrow.effect.long_lava_vision": "Arrow of Lava Vision",
+  "item.minecraft.lingering_potion.effect.lava_vision": "Lingering Potion of Lava Vision",
+  "item.minecraft.lingering_potion.effect.long_lava_vision": "Lingering Potion of Lava Vision"
 }
