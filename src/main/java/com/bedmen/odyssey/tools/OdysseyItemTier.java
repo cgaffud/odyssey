@@ -20,6 +20,7 @@ public enum OdysseyItemTier implements IItemTier{
     GOLD(2, 32, 12.0F, -1.0F, 22, () -> { return Ingredient.of(Items.GOLD_INGOT); }),
     STERLING_SILVER(3, 500, 7.0f, -1.0F, 14, () -> { return Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get()); }),
     DIAMOND(4, 1561, 8.0F, -1.0F, 10, () -> { return Ingredient.of(Items.DIAMOND); }),
+    MARINE(4, 1000, 10.0F, -1.0F, 20, () -> { return Ingredient.of(ItemRegistry.PEARL.get()); }),
     NETHERITE(5, 2031, 9.0F, -1.0F, 15, () -> { return Ingredient.of(Items.NETHERITE_INGOT); });
 
     private final int harvestLevel;

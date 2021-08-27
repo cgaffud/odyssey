@@ -40,7 +40,6 @@
   "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.obsidian_hammer": "Obsidian Hammer",
 
-
   //Chicken Suit
   "item.oddc.chicken_boots": "Feathered Boots",
   "item.oddc.chicken_leggings": "Feathered Pants",
@@ -63,6 +62,12 @@
   "item.oddc.arctic_leggings": "Arctic Leggings",
   "item.oddc.arctic_chestplate": "Arctic Chestplate",
   "item.oddc.arctic_helmet": "Arctic Helmet",
+
+  //Marine
+  "item.oddc.marine_pickaxe": "Marine Pickaxe",
+  "item.oddc.marine_axe": "Marine Axe",
+  "item.oddc.marine_shovel": "Marine Shovel",
+  "item.oddc.marine_hoe": "Marine Hoe",
 
   //Zephyr Suit
   "item.oddc.zephyr_boots": "Zephyr Boots",

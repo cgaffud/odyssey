@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    " X",
+    " X"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:prismarine_shard"
+    },
+    "#": {
+      "item": "oddc:pearl"
+    }
+  },
+  "result": {
+    "item": "oddc:marine_hoe"
+  }
+}

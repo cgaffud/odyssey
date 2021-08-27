@@ -234,6 +234,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GOLDEN_AXE = ITEMS_VANILLA.register("golden_axe", () -> new AxeItem(OdysseyItemTier.GOLD, 7.0f, -2.5f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
     public static final RegistryObject<Item> STERLING_SILVER_AXE = ITEMS.register("sterling_silver_axe", () -> new AxeItem(OdysseyItemTier.STERLING_SILVER, 9.0f, -3.0f, new Item.Properties().tab(OdysseyItemGroup.TOOLS)));
     public static final RegistryObject<Item> DIAMOND_AXE = ITEMS_VANILLA.register("diamond_axe", () -> new AxeItem(OdysseyItemTier.DIAMOND, 10.5f, -3.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
+    public static final RegistryObject<Item> MARINE_AXE = ITEMS.register("marine_axe", () -> new MarineAxeItem(OdysseyItemTier.MARINE, 8.0f, -2.5f, new Item.Properties().tab(OdysseyItemGroup.TOOLS)));
     public static final RegistryObject<Item> NETHERITE_AXE = ITEMS_VANILLA.register("netherite_axe", () -> new AxeItem(OdysseyItemTier.NETHERITE, 12.0f, -3.0f, new Item.Properties().fireResistant().tab(ItemGroup.TAB_TOOLS)));
 
     //Pickaxes
@@ -244,6 +245,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_PICKAXE = ITEMS.register("sterling_silver_pickaxe", () -> new PickaxeItem(OdysseyItemTier.STERLING_SILVER, 5, -2.8f, new Item.Properties().tab(OdysseyItemGroup.TOOLS)));
     public static final RegistryObject<Item> DIAMOND_PICKAXE = ITEMS_VANILLA.register("diamond_pickaxe", () -> new PickaxeItem(OdysseyItemTier.DIAMOND, 6, -2.8f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
     public static final RegistryObject<Item> NETHERITE_PICKAXE = ITEMS_VANILLA.register("netherite_pickaxe", () -> new PickaxeItem(OdysseyItemTier.NETHERITE, 7, -2.8f, new Item.Properties().fireResistant().tab(ItemGroup.TAB_TOOLS)));
+    public static final RegistryObject<Item> MARINE_PICKAXE = ITEMS.register("marine_pickaxe", () -> new MarinePickaxeItem(OdysseyItemTier.MARINE, 4, -2.2f, new Item.Properties().tab(OdysseyItemGroup.TOOLS)));
 
     //Shovels
     public static final RegistryObject<Item> WOODEN_SHOVEL = ITEMS_VANILLA.register("wooden_shovel", () -> new ShovelItem(OdysseyItemTier.WOOD, 1.5f, -2.6f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
@@ -252,6 +254,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GOLDEN_SHOVEL = ITEMS_VANILLA.register("golden_shovel", () -> new ShovelItem(OdysseyItemTier.GOLD, 2.5f, -1.9f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
     public static final RegistryObject<Item> STERLING_SILVER_SHOVEL = ITEMS.register("sterling_silver_shovel", () -> new ShovelItem(OdysseyItemTier.STERLING_SILVER, 4.5f, -2.6f, new Item.Properties().tab(OdysseyItemGroup.TOOLS)));
     public static final RegistryObject<Item> DIAMOND_SHOVEL = ITEMS_VANILLA.register("diamond_shovel", () -> new ShovelItem(OdysseyItemTier.DIAMOND, 5.5f, -2.6f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
+    public static final RegistryObject<Item> MARINE_SHOVEL = ITEMS.register("marine_shovel", () -> new MarineShovelItem(OdysseyItemTier.MARINE, 3.5f, -1.9f, new Item.Properties().tab(OdysseyItemGroup.TOOLS)));
     public static final RegistryObject<Item> NETHERITE_SHOVEL = ITEMS_VANILLA.register("netherite_shovel", () -> new ShovelItem(OdysseyItemTier.NETHERITE, 6.5f, -2.6f, new Item.Properties().fireResistant().tab(ItemGroup.TAB_TOOLS)));
 
     //Hoes
@@ -261,15 +264,22 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GOLDEN_HOE = ITEMS_VANILLA.register("golden_hoe", () -> new HoeItem(OdysseyItemTier.GOLD, 2, -1.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
     public static final RegistryObject<Item> STERLING_SILVER_HOE = ITEMS.register("sterling_silver_hoe", () -> new HoeItem(OdysseyItemTier.STERLING_SILVER, 4, -2.0f, new Item.Properties().tab(OdysseyItemGroup.TOOLS)));
     public static final RegistryObject<Item> DIAMOND_HOE = ITEMS_VANILLA.register("diamond_hoe", () -> new HoeItem(OdysseyItemTier.DIAMOND, 5, -2.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
+    public static final RegistryObject<Item> MARINE_Hoe = ITEMS.register("marine_hoe", () -> new MarineHoeItem(OdysseyItemTier.MARINE, 3, -1.0f, new Item.Properties().tab(OdysseyItemGroup.TOOLS)));
     public static final RegistryObject<Item> NETHERITE_HOE = ITEMS_VANILLA.register("netherite_hoe", () -> new HoeItem(OdysseyItemTier.NETHERITE, 6, -2.0f, new Item.Properties().fireResistant().tab(ItemGroup.TAB_TOOLS)));
 
-    //Bows/Quivers/Tridents
+    //Bows
     public static final RegistryObject<Item> BOW = ITEMS_VANILLA.register("bow", () -> new OdysseyBowItem((new Item.Properties()).durability(384).tab(ItemGroup.TAB_COMBAT), 0.5D));
     public static final RegistryObject<Item> NETHERITE_BOW = ITEMS.register("netherite_bow", () -> new OdysseyBowItem((new Item.Properties()).durability(1016).tab(OdysseyItemGroup.COMBAT).fireResistant(), 1.0D));
+
+    //Crossbows
     public static final RegistryObject<Item> CROSSBOW = ITEMS_VANILLA.register("crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_COMBAT).durability(326), 0.5D));
     public static final RegistryObject<Item> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT).durability(862).fireResistant(), 1.0D));
+
+    //Quivers
     public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), 3));
     public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyItemGroup.COMBAT), 5));
+
+    //Tridents
     public static final RegistryObject<Item> TRIDENT = ITEMS_VANILLA.register("trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(250).tab(ItemGroup.TAB_COMBAT), 9.0D));
     public static final RegistryObject<Item> LEVIATHAN_TRIDENT = ITEMS.register("leviathan_trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(750).fireResistant().tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 11.0D));
 
