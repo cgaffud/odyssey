@@ -139,7 +139,9 @@ public class ItemRegistry {
     //Equipment Enchants
     public static final LevEnchSup FALL_PROTECTION_1 = new LevEnchSup(() -> Enchantments.FALL_PROTECTION, 1);
     public static final LevEnchSup RESPIRATION_1 = new LevEnchSup(EnchantmentRegistry.RESPIRATION, 1);
+    public static final LevEnchSup RESPIRATION_2 = new LevEnchSup(EnchantmentRegistry.RESPIRATION, 2);
     public static final LevEnchSup DEPTH_STRIDER_1 = new LevEnchSup(EnchantmentRegistry.DEPTH_STRIDER, 1);
+    public static final LevEnchSup DEPTH_STRIDER_2 = new LevEnchSup(EnchantmentRegistry.DEPTH_STRIDER, 2);
     public static final LevEnchSup BLAST_PROTECTION_1 = new LevEnchSup(() -> Enchantments.BLAST_PROTECTION, 1);
     public static final LevEnchSup FIRE_PROTECTION_1 = new LevEnchSup(() -> Enchantments.FIRE_PROTECTION, 1);
     public static final LevEnchSup FALL_PROTECTION_2 = new LevEnchSup(() -> Enchantments.FALL_PROTECTION, 2);
@@ -202,6 +204,11 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ARCTIC_CHESTPLATE = ITEMS.register("arctic_chestplate", () -> new EquipmentArmorItem(OdysseyArmorMaterial.ARCTIC, EquipmentSlotType.CHEST, new Item.Properties().tab(OdysseyItemGroup.COMBAT), FIRE_PROTECTION_1));
     public static final RegistryObject<Item> ARCTIC_LEGGINGS = ITEMS.register("arctic_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterial.ARCTIC, EquipmentSlotType.LEGS, new Item.Properties().tab(OdysseyItemGroup.COMBAT), FIRE_PROTECTION_1));
     public static final RegistryObject<Item> ARCTIC_BOOTS = ITEMS.register("arctic_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterial.ARCTIC, EquipmentSlotType.FEET, new Item.Properties().tab(OdysseyItemGroup.COMBAT), FIRE_PROTECTION_1));
+
+    public static final RegistryObject<Item> MARINE_HELMET = ITEMS.register("marine_helmet", () -> new EquipmentArmorItem(OdysseyArmorMaterial.MARINE, EquipmentSlotType.HEAD, new Item.Properties().tab(OdysseyItemGroup.COMBAT), RESPIRATION_2));
+    public static final RegistryObject<Item> MARINE_CHESTPLATE = ITEMS.register("marine_chestplate", () -> new EquipmentArmorItem(OdysseyArmorMaterial.MARINE, EquipmentSlotType.CHEST, new Item.Properties().tab(OdysseyItemGroup.COMBAT), RESPIRATION_2));
+    public static final RegistryObject<Item> MARINE_LEGGINGS = ITEMS.register("marine_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterial.MARINE, EquipmentSlotType.LEGS, new Item.Properties().tab(OdysseyItemGroup.COMBAT), DEPTH_STRIDER_2));
+    public static final RegistryObject<Item> MARINE_BOOTS = ITEMS.register("marine_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterial.MARINE, EquipmentSlotType.FEET, new Item.Properties().tab(OdysseyItemGroup.COMBAT), DEPTH_STRIDER_2));
 
     public static final RegistryObject<Item> NETHERITE_HELMET = ITEMS_VANILLA.register("netherite_helmet", () -> new ArmorItem(OdysseyArmorMaterial.NETHERITE, EquipmentSlotType.HEAD, new Item.Properties().fireResistant().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> NETHERITE_CHESTPLATE = ITEMS_VANILLA.register("netherite_chestplate", () -> new ArmorItem(OdysseyArmorMaterial.NETHERITE, EquipmentSlotType.CHEST, new Item.Properties().fireResistant().tab(ItemGroup.TAB_COMBAT)));
