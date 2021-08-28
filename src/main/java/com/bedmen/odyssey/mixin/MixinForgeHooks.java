@@ -1,6 +1,9 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.util.BlockRegistry;
+import com.bedmen.odyssey.items.equipment.EquipmentAxeItem;
+import com.bedmen.odyssey.items.equipment.EquipmentHoeItem;
+import com.bedmen.odyssey.items.equipment.EquipmentPickaxeItem;
+import com.bedmen.odyssey.items.equipment.EquipmentShovelItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -15,7 +18,6 @@ import org.apache.logging.log4j.util.TriConsumer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-
 import javax.annotation.Nullable;
 import java.util.Set;
 
@@ -36,10 +38,18 @@ public abstract class MixinForgeHooks {
             return;
         toolInit = true;
 
+        //Pickaxe
         Set<Block> blocks = getPrivateValue(PickaxeItem.class, null, 0);
         blocks.forEach(block -> blockToolSetter.accept(block, ToolType.PICKAXE, 0));
+        blocks = getPrivateValue(EquipmentPickaxeItem.class, null, 0);
+        blocks.forEach(block -> blockToolSetter.accept(block, ToolType.PICKAXE, 0));
+
+        //Shovel
         blocks = getPrivateValue(ShovelItem.class, null, 0);
         blocks.forEach(block -> blockToolSetter.accept(block, ToolType.SHOVEL, 0));
+        blocks = getPrivateValue(EquipmentShovelItem.class, null, 0);
+        blocks.forEach(block -> blockToolSetter.accept(block, ToolType.SHOVEL, 0));
+
         //Axes check Materials and Blocks now.
         Set<Material> materials = getPrivateValue(AxeItem.class, null, 0);
         for (Block block : ForgeRegistries.BLOCKS)
@@ -47,7 +57,17 @@ public abstract class MixinForgeHooks {
                 blockToolSetter.accept(block, ToolType.AXE, 0);
         blocks = getPrivateValue(AxeItem.class, null, 1);
         blocks.forEach(block -> blockToolSetter.accept(block, ToolType.AXE, 0));
+        materials = getPrivateValue(EquipmentAxeItem.class, null, 0);
+        for (Block block : ForgeRegistries.BLOCKS)
+            if (materials.contains(block.defaultBlockState().getMaterial()))
+                blockToolSetter.accept(block, ToolType.AXE, 0);
+        blocks = getPrivateValue(EquipmentAxeItem.class, null, 1);
+        blocks.forEach(block -> blockToolSetter.accept(block, ToolType.AXE, 0));
+
+        //Hoe
         blocks = getPrivateValue(HoeItem.class, null, 0);
+        blocks.forEach(block -> blockToolSetter.accept(block, ToolType.HOE, 0));
+        blocks = getPrivateValue(EquipmentHoeItem.class, null, 0);
         blocks.forEach(block -> blockToolSetter.accept(block, ToolType.HOE, 0));
 
         //This is taken from PickaxeItem, if that changes update here.

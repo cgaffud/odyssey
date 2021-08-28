@@ -1,9 +1,8 @@
 package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.entity.projectile.PermafrostIcicleEntity;
-import com.bedmen.odyssey.util.EntityTypeRegistry;
-import com.bedmen.odyssey.util.ItemRegistry;
-import com.bedmen.odyssey.util.SoundEventRegistry;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -19,7 +18,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -46,9 +44,6 @@ public class PermafrostEntity extends MonsterEntity {
     private final int MaxMovementPositions = 6;
     private final int[] attackCooldown = new int[2];
     private final int[] attackTimer = new int[2];
-    private int targetsAttacked = 0;
-    private float healthMultiplier = 1.0f;
-    private final Map<PermafrostIcicleEntity, LivingEntity> icicleTargetMap = new HashMap<>();
     private static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
         return entity.attackable() && entity.getType() != EntityTypeRegistry.PERMAFROST.get();
     };
@@ -80,23 +75,19 @@ public class PermafrostEntity extends MonsterEntity {
     }
 
     private void performSpiralAttack(LivingEntity livingEntity) {
-        double p_82209_2_ = livingEntity.getX();
-        double p_82209_4_ = livingEntity.getY() + (double)livingEntity.getEyeHeight() * 0.5D;
-        double p_82209_6_ = livingEntity.getZ();
+        double targetX = livingEntity.getX();
+        double targetY = livingEntity.getY() + (double)livingEntity.getEyeHeight() * 0.5D;
+        double targetZ = livingEntity.getZ();
         double angle = this.IciclePosition * Math.PI / this.MaxIciclePositions * 2.0d;
         double r = 2.0d;
         double d0 = this.getX() + Math.cos(angle) * r;
         double d1 = this.getY();
         double d2 = this.getZ() + Math.sin(angle) * r;
-        double d3 = p_82209_2_ - d0;
-        double d4 = p_82209_4_ - d1;
-        double d5 = p_82209_6_ - d2;
-        PermafrostIcicleEntity permafrostIcicleEntity = new PermafrostIcicleEntity(this.level, this, d3, d4, d5,8.0f, (int)(20.0f * this.healthMultiplier), livingEntity);
+        double d3 = targetX - d0;
+        double d4 = targetY - d1;
+        double d5 = targetZ - d2;
+        PermafrostIcicleEntity permafrostIcicleEntity = new PermafrostIcicleEntity(this.level, this, d3, d4, d5,6.0f);
         permafrostIcicleEntity.setOwner(this);
-        Vector3d vector3d = livingEntity.getPosition(1.0f);
-        permafrostIcicleEntity.setRotation(vector3d);
-        this.icicleTargetMap.put(permafrostIcicleEntity, livingEntity);
-
         permafrostIcicleEntity.setPosRaw(d0, d1, d2);
         this.level.addFreshEntity(permafrostIcicleEntity);
     }
@@ -118,7 +109,7 @@ public class PermafrostEntity extends MonsterEntity {
             double d0 = r * Math.sin(angleI) * Math.cos(angleJ);
             double d1 = r * Math.cos(angleI);
             double d2 = r * Math.sin(angleI) * Math.sin(angleJ);
-            PermafrostIcicleEntity permafrostIcicleEntity = new PermafrostIcicleEntity(this.level, this, d0, d1, d2, 16.0f, (int)(20.0f * this.healthMultiplier), null);
+            PermafrostIcicleEntity permafrostIcicleEntity = new PermafrostIcicleEntity(this.level, this, d0, d1, d2, 12.0f);
             permafrostIcicleEntity.setOwner(this);
 
             permafrostIcicleEntity.setPosRaw(this.getX() + d0, this.getY() + d1, this.getZ() + d2);
@@ -129,16 +120,6 @@ public class PermafrostEntity extends MonsterEntity {
     public void aiStep() {
         super.aiStep();
         ++this.activeRotation;
-
-        Set<PermafrostIcicleEntity> set = new HashSet<>(this.icicleTargetMap.keySet());
-        for(PermafrostIcicleEntity permafrostIcicleEntity : set){
-            if(permafrostIcicleEntity.removed || permafrostIcicleEntity.tickCount > 20){
-                this.icicleTargetMap.remove(permafrostIcicleEntity);
-            } else {
-                permafrostIcicleEntity.setRotation(Vector3d.ZERO);
-            }
-        }
-        //this.setTarget();
 
         //Choose Movement Position
         if(this.level.getGameTime() % 100 == 7){
@@ -151,15 +132,15 @@ public class PermafrostEntity extends MonsterEntity {
             --this.attackTimer[i];
         }
 
-        this.healthMultiplier = 0.5f+0.5f*(this.getHealth()/this.getMaxHealth());
+        float healthMultiplier = 0.5f + 0.5f * (this.getHealth() / this.getMaxHealth());
         if(this.attackCooldown[0] <= 0) {
             int i1 = random.nextInt(60)+100;
-            this.attackCooldown[0] = (int)(i1*this.healthMultiplier);
+            this.attackCooldown[0] = (int)(i1* healthMultiplier);
             this.attackTimer[0] = 20;
         }
         if(this.attackCooldown[1] <= 0) {
             int i1 = random.nextInt(200)+100;
-            this.attackCooldown[1] = (int)(i1*this.healthMultiplier);
+            this.attackCooldown[1] = (int)(i1* healthMultiplier);
             this.attackTimer[1] = 27;
         }
 
@@ -192,7 +173,7 @@ public class PermafrostEntity extends MonsterEntity {
                 location2 = location2.add(livingEntity.getPosition(1));
             }
             location2 = location2.scale(1.0d / list.size());
-            location2 = location2.add(Math.sin(angle) * 8.0d,10.0d,Math.cos(angle) * 8.0d);
+            location2 = location2.add(Math.sin(angle) * 10.0d,10.0d,Math.cos(angle) * 10.0d);
             Vector3d direction = location2.subtract(location1);
             double speed = 0.5d;
             double sl = direction.length();
@@ -205,22 +186,22 @@ public class PermafrostEntity extends MonsterEntity {
 
 
             if(this.attackTimer[0] > 0){
-                this.targetsAttacked = 0;
-                if (!this.isSilent() && this.attackTimer[0] == 20) {
+                int targetsAttacked = 0;
+                /*if (!this.isSilent() && this.attackTimer[0] == 20) {
                     BlockPos blockpos = this.blockPosition();
-                    //this.level.playLocalSound(blockpos.getX(), blockpos.getY(), blockpos.getZ(), SoundEventRegistry.PERMAFROST_ICICLE_SPIRAL.get(), SoundCategory.HOSTILE, 2.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F, false);
-                }
+                    this.level.playLocalSound(blockpos.getX(), blockpos.getY(), blockpos.getZ(), SoundEventRegistry.PERMAFROST_ICICLE_SPIRAL.get(), SoundCategory.HOSTILE, 2.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F, false);
+                }*/
                 for(LivingEntity livingEntity : list){
-                    if(this.targetsAttacked < 10){
+                    if(targetsAttacked < 10){
                         this.performSpiralAttack(livingEntity);
-                        ++this.targetsAttacked;
+                        ++targetsAttacked;
                     }
                 }
                 ++this.IciclePosition;
                 this.IciclePosition = this.IciclePosition % this.MaxIciclePositions;
             }
             if(this.attackTimer[1] >= 1 && this.attackTimer[1] <= 23){
-                //this.performSphereAttack(this.attackTimer[1]);
+                 this.performSphereAttack(this.attackTimer[1]);
             }
         }
     }
@@ -257,7 +238,7 @@ public class PermafrostEntity extends MonsterEntity {
     }
 
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEventRegistry.PERMAFROST_ICICLE_SPIRAL.get();
+        return SoundEvents.GUARDIAN_HURT;
     }
 
     protected SoundEvent getDeathSound() {

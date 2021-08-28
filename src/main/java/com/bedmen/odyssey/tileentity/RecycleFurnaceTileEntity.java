@@ -4,15 +4,12 @@ import com.bedmen.odyssey.blocks.RecycleFurnaceBlock;
 import com.bedmen.odyssey.container.RecycleFurnaceContainer;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.recipes.RecycleRecipe;
-import com.bedmen.odyssey.util.ItemRegistry;
 import com.bedmen.odyssey.util.RecycleUtil;
-import com.bedmen.odyssey.util.TileEntityTypeRegistry;
+import com.bedmen.odyssey.registry.TileEntityTypeRegistry;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,13 +20,10 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.*;
@@ -38,10 +32,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
 
 public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISidedInventory, IRecipeHolder, IRecipeHelperPopulator, ITickableTileEntity {
     private static final int[] SLOTS_UP = new int[]{0};
@@ -95,96 +87,6 @@ public class RecycleFurnaceTileEntity extends LockableTileEntity implements ISid
     public RecycleFurnaceTileEntity() {
         super(TileEntityTypeRegistry.RECYCLE_FURNACE.get());
         this.recipeType = ModRecipeType.RECYCLING;
-    }
-
-    @Deprecated //Forge - get burn times by calling ForgeHooks#getBurnTime(ItemStack)
-    public static Map<Item, Integer> getBurnTimes() {
-        Map<Item, Integer> map = Maps.newLinkedHashMap();
-        addItemBurnTime(map, Items.LAVA_BUCKET, 20000);
-        addItemBurnTime(map, Blocks.COAL_BLOCK, 16000);
-        addItemBurnTime(map, Items.BLAZE_ROD, 2400);
-        addItemBurnTime(map, Items.COAL, 1600);
-        addItemBurnTime(map, Items.CHARCOAL, 1600);
-        addItemTagBurnTime(map, ItemTags.LOGS, 300);
-        addItemTagBurnTime(map, ItemTags.PLANKS, 300);
-        addItemTagBurnTime(map, ItemTags.WOODEN_STAIRS, 300);
-        addItemTagBurnTime(map, ItemTags.WOODEN_SLABS, 150);
-        addItemTagBurnTime(map, ItemTags.WOODEN_TRAPDOORS, 300);
-        addItemTagBurnTime(map, ItemTags.WOODEN_PRESSURE_PLATES, 300);
-        addItemBurnTime(map, Blocks.OAK_FENCE, 300);
-        addItemBurnTime(map, Blocks.BIRCH_FENCE, 300);
-        addItemBurnTime(map, Blocks.SPRUCE_FENCE, 300);
-        addItemBurnTime(map, Blocks.JUNGLE_FENCE, 300);
-        addItemBurnTime(map, Blocks.DARK_OAK_FENCE, 300);
-        addItemBurnTime(map, Blocks.ACACIA_FENCE, 300);
-        addItemBurnTime(map, Blocks.OAK_FENCE_GATE, 300);
-        addItemBurnTime(map, Blocks.BIRCH_FENCE_GATE, 300);
-        addItemBurnTime(map, Blocks.SPRUCE_FENCE_GATE, 300);
-        addItemBurnTime(map, Blocks.JUNGLE_FENCE_GATE, 300);
-        addItemBurnTime(map, Blocks.DARK_OAK_FENCE_GATE, 300);
-        addItemBurnTime(map, Blocks.ACACIA_FENCE_GATE, 300);
-        addItemBurnTime(map, Blocks.NOTE_BLOCK, 300);
-        addItemBurnTime(map, Blocks.BOOKSHELF, 300);
-        addItemBurnTime(map, Blocks.LECTERN, 300);
-        addItemBurnTime(map, Blocks.JUKEBOX, 300);
-        addItemBurnTime(map, Blocks.CHEST, 300);
-        addItemBurnTime(map, Blocks.TRAPPED_CHEST, 300);
-        addItemBurnTime(map, Blocks.CRAFTING_TABLE, 300);
-        addItemBurnTime(map, Blocks.DAYLIGHT_DETECTOR, 300);
-        addItemTagBurnTime(map, ItemTags.BANNERS, 300);
-        addItemBurnTime(map, Items.BOW, 300);
-        addItemBurnTime(map, Items.FISHING_ROD, 300);
-        addItemBurnTime(map, Blocks.LADDER, 300);
-        addItemTagBurnTime(map, ItemTags.SIGNS, 200);
-        addItemBurnTime(map, Items.WOODEN_SHOVEL, 200);
-        addItemBurnTime(map, Items.WOODEN_SWORD, 200);
-        addItemBurnTime(map, Items.WOODEN_HOE, 200);
-        addItemBurnTime(map, Items.WOODEN_AXE, 200);
-        addItemBurnTime(map, Items.WOODEN_PICKAXE, 200);
-        addItemTagBurnTime(map, ItemTags.WOODEN_DOORS, 200);
-        addItemTagBurnTime(map, ItemTags.BOATS, 1200);
-        addItemTagBurnTime(map, ItemTags.WOOL, 100);
-        addItemTagBurnTime(map, ItemTags.WOODEN_BUTTONS, 100);
-        addItemBurnTime(map, Items.STICK, 100);
-        addItemTagBurnTime(map, ItemTags.SAPLINGS, 100);
-        addItemBurnTime(map, Items.BOWL, 100);
-        addItemTagBurnTime(map, ItemTags.CARPETS, 67);
-        addItemBurnTime(map, Blocks.DRIED_KELP_BLOCK, 4001);
-        addItemBurnTime(map, Items.CROSSBOW, 300);
-        addItemBurnTime(map, Blocks.BAMBOO, 50);
-        addItemBurnTime(map, Blocks.DEAD_BUSH, 100);
-        addItemBurnTime(map, Blocks.SCAFFOLDING, 400);
-        addItemBurnTime(map, Blocks.LOOM, 300);
-        addItemBurnTime(map, Blocks.BARREL, 300);
-        addItemBurnTime(map, Blocks.CARTOGRAPHY_TABLE, 300);
-        addItemBurnTime(map, Blocks.FLETCHING_TABLE, 300);
-        addItemBurnTime(map, Blocks.SMITHING_TABLE, 300);
-        addItemBurnTime(map, Blocks.COMPOSTER, 300);
-        return map;
-    }
-
-    private static boolean isNonFlammable(Item item) {
-        return ItemTags.NON_FLAMMABLE_WOOD.contains(item);
-    }
-
-    private static void addItemTagBurnTime(Map<Item, Integer> map, ITag<Item> itemTag, int burnTimeIn) {
-        for(Item item : itemTag.getValues()) {
-            if (!isNonFlammable(item)) {
-                map.put(item, burnTimeIn);
-            }
-        }
-
-    }
-
-    private static void addItemBurnTime(Map<Item, Integer> map, IItemProvider itemProvider, int burnTimeIn) {
-        Item item = itemProvider.asItem();
-        if (isNonFlammable(item)) {
-            if (SharedConstants.IS_RUNNING_IN_IDE) {
-                throw (IllegalStateException)Util.pauseInIde(new IllegalStateException("A developer tried to explicitly make fire resistant item " + item.getName((ItemStack)null).getString() + " a furnace fuel. That will not work!"));
-            }
-        } else {
-            map.put(item, burnTimeIn);
-        }
     }
 
     private boolean isBurning() {

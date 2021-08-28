@@ -1,0 +1,13 @@
+{
+  "type": "oddc:odyssey_smithing",
+  "classification": "leggings",
+  "base": {
+    "item": "minecraft:iron_leggings"
+  },
+  "addition": {
+    "item": "minecraft:obsidian"
+  },
+  "result": {
+    "item": "oddc:reinforced_leggings"
+  }
+}

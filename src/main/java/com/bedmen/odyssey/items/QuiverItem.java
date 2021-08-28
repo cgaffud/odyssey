@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.container.QuiverContainer;
-import com.bedmen.odyssey.util.ContainerRegistry;
+import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -10,9 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
-
-
-import net.minecraft.item.Item.Properties;
 
 public class QuiverItem extends Item {
     private final int size;

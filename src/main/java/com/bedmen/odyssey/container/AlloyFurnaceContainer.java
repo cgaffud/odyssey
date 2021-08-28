@@ -1,11 +1,11 @@
 package com.bedmen.odyssey.container;
 
-import com.bedmen.odyssey.container.slots.AlloyFurnaceFuelSlot;
-import com.bedmen.odyssey.container.slots.ModFurnaceResultSlot;
+import com.bedmen.odyssey.container.slots.OdysseyFurnaceFuelSlot;
+import com.bedmen.odyssey.container.slots.OdysseyFurnaceResultSlot;
 import com.bedmen.odyssey.recipes.AlloyRecipe;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.tileentity.AlloyFurnaceTileEntity;
-import com.bedmen.odyssey.util.ContainerRegistry;
+import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -42,8 +42,8 @@ public class AlloyFurnaceContainer extends Container {
         this.world = playerInventory.player.level;
         this.addSlot(new Slot(furnaceInventory, 0, 47, 17));
         this.addSlot(new Slot(furnaceInventory, 1, 65, 17));
-        this.addSlot(new AlloyFurnaceFuelSlot(this, furnaceInventory, 2, 56, 53));
-        this.addSlot(new ModFurnaceResultSlot(playerInventory.player, furnaceInventory, 3, 116, 35));
+        this.addSlot(new OdysseyFurnaceFuelSlot(furnaceInventory, 2, 56, 53));
+        this.addSlot(new OdysseyFurnaceResultSlot(playerInventory.player, furnaceInventory, 3, 116, 35));
 
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {

@@ -1,15 +1,13 @@
 package com.bedmen.odyssey.recipes;
 
-import com.bedmen.odyssey.util.ItemRegistry;
-import com.bedmen.odyssey.util.RecipeRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.registry.RecipeRegistry;
 import com.bedmen.odyssey.util.RecycleUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -19,7 +17,6 @@ import net.minecraft.world.World;
 
 public class RecycleRecipe implements IRecipe<IInventory> {
     protected final ResourceLocation id;
-    protected final String group;
     protected final Ingredient ingredient;
     protected final ItemStack nugget;
     protected final ItemStack ingot;
@@ -30,9 +27,8 @@ public class RecycleRecipe implements IRecipe<IInventory> {
     protected final int cookTime;
     protected final double penalty = 2.0/3.0;
 
-    public RecycleRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, ItemStack nuggetIn, int nuggetCountIn, int ingotCountIn, float experienceIn, int cookTimeIn) {
+    public RecycleRecipe(ResourceLocation idIn, Ingredient ingredientIn, ItemStack nuggetIn, int nuggetCountIn, int ingotCountIn, float experienceIn, int cookTimeIn) {
         this.id = idIn;
-        this.group = groupIn;
         this.ingredient = ingredientIn;
         this.nugget = nuggetIn;
         this.ingot = RecycleUtil.getIngot(nuggetIn);
@@ -99,13 +95,6 @@ public class RecycleRecipe implements IRecipe<IInventory> {
     public ItemStack getRecipeOutputIngot() {return this.ingot;}
 
     /**
-     * Recipes with equal group are combined into one button in the recipe book
-     */
-    public String getGroup() {
-        return this.group;
-    }
-
-    /**
      * Gets the cook time in ticks
      */
     public int getCookTime() {
@@ -131,7 +120,6 @@ public class RecycleRecipe implements IRecipe<IInventory> {
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<RecycleRecipe> {
         public RecycleRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            String s = JSONUtils.getAsString(json, "group", "");
             JsonElement jsonelement1 = (JsonElement)(JSONUtils.isArrayNode(json, "ingredient") ? JSONUtils.getAsJsonArray(json, "ingredient") : JSONUtils.getAsJsonObject(json, "ingredient"));
             Ingredient ingredient = Ingredient.fromJson(jsonelement1);
             //Forge: Check if primitive string to keep vanilla or a object which can contain a count field.
@@ -149,24 +137,23 @@ public class RecycleRecipe implements IRecipe<IInventory> {
             int ingotCount = JSONUtils.getAsInt(json, "ingotCount");
             float f = JSONUtils.getAsFloat(json, "experience", 0.0F);
             int i = JSONUtils.getAsInt(json, "cookingtime", 200);
-            return new RecycleRecipe(recipeId, s, ingredient, nugget, nuggetCount, ingotCount, f, i);
+            return new RecycleRecipe(recipeId, ingredient, nugget, nuggetCount, ingotCount, f, i);
         }
 
         public RecycleRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
-            String s = buffer.readUtf(32767);
             Ingredient ingredient= Ingredient.fromNetwork(buffer);
             ItemStack nugget = buffer.readItem();
             int nuggetCount = buffer.readVarInt();
             int ingotCount = buffer.readVarInt();
             float f = buffer.readFloat();
             int i = buffer.readVarInt();
-            return new RecycleRecipe(recipeId, s, ingredient, nugget, nuggetCount, ingotCount, f, i);
+            return new RecycleRecipe(recipeId, ingredient, nugget, nuggetCount, ingotCount, f, i);
         }
 
         public void toNetwork(PacketBuffer buffer, RecycleRecipe recipe) {
-            buffer.writeUtf(recipe.group);
             recipe.ingredient.toNetwork(buffer);
-            buffer.writeItem(recipe.nugget);            buffer.writeVarInt(recipe.nuggetCount);
+            buffer.writeItem(recipe.nugget);
+            buffer.writeVarInt(recipe.nuggetCount);
             buffer.writeVarInt(recipe.ingotCount);
             buffer.writeFloat(recipe.experience);
             buffer.writeVarInt(recipe.cookTime);

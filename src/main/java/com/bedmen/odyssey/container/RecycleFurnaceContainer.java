@@ -1,11 +1,11 @@
 package com.bedmen.odyssey.container;
 
-import com.bedmen.odyssey.container.slots.ModFurnaceResultSlot;
-import com.bedmen.odyssey.container.slots.RecycleFurnaceFuelSlot;
+import com.bedmen.odyssey.container.slots.OdysseyFurnaceFuelSlot;
+import com.bedmen.odyssey.container.slots.OdysseyFurnaceResultSlot;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.recipes.RecycleRecipe;
 import com.bedmen.odyssey.tileentity.RecycleFurnaceTileEntity;
-import com.bedmen.odyssey.util.ContainerRegistry;
+import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -41,9 +41,9 @@ public class RecycleFurnaceContainer extends Container {
         this.furnaceData = furnaceData;
         this.world = playerInventory.player.level;
         this.addSlot(new Slot(furnaceInventory, 0, 44, 17));
-        this.addSlot(new RecycleFurnaceFuelSlot(this, furnaceInventory, 1, 44, 53));
-        this.addSlot(new ModFurnaceResultSlot(playerInventory.player, furnaceInventory, 2, 102, 35));
-        this.addSlot(new ModFurnaceResultSlot(playerInventory.player, furnaceInventory, 3, 124, 35));
+        this.addSlot(new OdysseyFurnaceFuelSlot(furnaceInventory, 1, 44, 53));
+        this.addSlot(new OdysseyFurnaceResultSlot(playerInventory.player, furnaceInventory, 2, 102, 35));
+        this.addSlot(new OdysseyFurnaceResultSlot(playerInventory.player, furnaceInventory, 3, 124, 35));
 
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {

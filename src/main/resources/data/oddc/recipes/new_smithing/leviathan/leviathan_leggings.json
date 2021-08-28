@@ -1,0 +1,13 @@
+{
+  "type": "oddc:odyssey_smithing",
+  "classification": "leggings",
+  "base": {
+    "item": "oddc:turtle_leggings"
+  },
+  "addition": {
+    "item": "oddc:leviathan_scale"
+  },
+  "result": {
+    "item": "oddc:leviathan_leggings"
+  }
+}

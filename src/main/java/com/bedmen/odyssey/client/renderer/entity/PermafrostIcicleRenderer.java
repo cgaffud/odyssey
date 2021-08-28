@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
@@ -21,7 +20,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class PermafrostIcicleRenderer extends EntityRenderer<PermafrostIcicleEntity> {
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/permafrost/icicle.png");
-    //private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/entity/projectiles/arrow.png");
 
     public PermafrostIcicleRenderer(EntityRendererManager p_i46129_1_) {
         super(p_i46129_1_);

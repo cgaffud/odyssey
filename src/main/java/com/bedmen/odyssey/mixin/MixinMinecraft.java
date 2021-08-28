@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.util.EffectRegistry;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -43,13 +43,12 @@ public class MixinMinecraft {
     //    System.out.println("TemplateClient Working!");
     //}
 
+    //Added Construction effect
     private void startUseItem() {
         if (!this.gameMode.isDestroying()) {
             int rightClickDelay = 4;
             if(player.hasEffect(EffectRegistry.CONSTRUCTION.get())){
-                int amplifier = player.getEffect(EffectRegistry.CONSTRUCTION.get()).getAmplifier();
-                if(amplifier == 0) rightClickDelay = 2;
-                else if(amplifier == 1) rightClickDelay = 1;
+                rightClickDelay >>= (player.getEffect(EffectRegistry.CONSTRUCTION.get()).getAmplifier()+1);
             }
             this.rightClickDelay = rightClickDelay;
             if (!this.player.isHandsBusy()) {

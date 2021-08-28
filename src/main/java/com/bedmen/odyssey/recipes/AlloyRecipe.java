@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.recipes;
 
-import com.bedmen.odyssey.util.ItemRegistry;
-import com.bedmen.odyssey.util.RecipeRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.registry.RecipeRegistry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -21,16 +21,14 @@ import net.minecraft.world.World;
 
 public class AlloyRecipe implements IRecipe<IInventory> {
     protected final ResourceLocation id;
-    protected final String group;
     protected final Ingredient ingredient1;
     protected final Ingredient ingredient2;
     protected final ItemStack result;
     protected final float experience;
     protected final int cookTime;
 
-    public AlloyRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredient1In, Ingredient ingredient2In, ItemStack resultIn, float experienceIn, int cookTimeIn) {
+    public AlloyRecipe(ResourceLocation idIn, Ingredient ingredient1In, Ingredient ingredient2In, ItemStack resultIn, float experienceIn, int cookTimeIn) {
         this.id = idIn;
-        this.group = groupIn;
         this.ingredient1 = ingredient1In;
         this.ingredient2 = ingredient2In;
         this.result = resultIn;
@@ -84,13 +82,6 @@ public class AlloyRecipe implements IRecipe<IInventory> {
     }
 
     /**
-     * Recipes with equal group are combined into one button in the recipe book
-     */
-    public String getGroup() {
-        return this.group;
-    }
-
-    /**
      * Gets the cook time in ticks
      */
     public int getCookTime() {
@@ -116,7 +107,6 @@ public class AlloyRecipe implements IRecipe<IInventory> {
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AlloyRecipe> {
         public AlloyRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            String s = JSONUtils.getAsString(json, "group", "");
             JsonElement jsonelement1 = (JsonElement)(JSONUtils.isArrayNode(json, "ingredient1") ? JSONUtils.getAsJsonArray(json, "ingredient1") : JSONUtils.getAsJsonObject(json, "ingredient1"));
             Ingredient ingredient1 = Ingredient.fromJson(jsonelement1);
             JsonElement jsonelement2 = (JsonElement)(JSONUtils.isArrayNode(json, "ingredient2") ? JSONUtils.getAsJsonArray(json, "ingredient2") : JSONUtils.getAsJsonObject(json, "ingredient2"));
@@ -134,7 +124,7 @@ public class AlloyRecipe implements IRecipe<IInventory> {
             }
             float f = JSONUtils.getAsFloat(json, "experience", 0.0F);
             int i = JSONUtils.getAsInt(json, "cookingtime", 200);
-            return new AlloyRecipe(recipeId, s, ingredient1, ingredient2, itemstack, f, i);
+            return new AlloyRecipe(recipeId, ingredient1, ingredient2, itemstack, f, i);
         }
 
         public AlloyRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
@@ -144,11 +134,10 @@ public class AlloyRecipe implements IRecipe<IInventory> {
             ItemStack itemstack = buffer.readItem();
             float f = buffer.readFloat();
             int i = buffer.readVarInt();
-            return new AlloyRecipe(recipeId, s, ingredient1, ingredient2, itemstack, f, i);
+            return new AlloyRecipe(recipeId, ingredient1, ingredient2, itemstack, f, i);
         }
 
         public void toNetwork(PacketBuffer buffer, AlloyRecipe recipe) {
-            buffer.writeUtf(recipe.group);
             recipe.ingredient1.toNetwork(buffer);
             recipe.ingredient2.toNetwork(buffer);
             buffer.writeItem(recipe.result);

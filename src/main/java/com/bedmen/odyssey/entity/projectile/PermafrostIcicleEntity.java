@@ -1,73 +1,106 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.util.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.UUID;
 
 public class PermafrostIcicleEntity extends DamagingProjectileEntity {
-    private float damage;
-    private int timer;
-    private LivingEntity target;
-    private double rx;
-    private double ry;
-    private double rz;
+    private float damage = 6.0f;
+    private static final int maxTicks = 40;
+    private static Field leftOwnerField;
+    private static Method checkLeftOwnerMethod;
 
-
-    public PermafrostIcicleEntity(EntityType<? extends PermafrostIcicleEntity> p_i50147_1_, World p_i50147_2_) {
-        super(p_i50147_1_, p_i50147_2_);
-        this.damage = 8.0f;
-        this.timer = 20;
-        this.target = null;
-        this.rx = 0.0d;
-        this.ry = 0.0d;
-        this.rz = 0.0d;
+    static {
+        try {
+            leftOwnerField = ProjectileEntity.class.getDeclaredField("leftOwner");
+            checkLeftOwnerMethod = ProjectileEntity.class.getDeclaredMethod("checkLeftOwner");
+            leftOwnerField.setAccessible(true);
+            checkLeftOwnerMethod.setAccessible(true);
+        } catch (NoSuchFieldException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
-    public PermafrostIcicleEntity(World p_i1794_1_, LivingEntity p_i1794_2_, double x, double y, double z, float damage, int timer, LivingEntity target) {
+    public PermafrostIcicleEntity(EntityType<? extends PermafrostIcicleEntity> entityType, World world) {
+        super(entityType, world);
+    }
+
+    public PermafrostIcicleEntity(World p_i1794_1_, LivingEntity p_i1794_2_, double x, double y, double z, float damage) {
         super(EntityTypeRegistry.PERMAFROST_ICICLE.get(), p_i1794_2_, x, y, z, p_i1794_1_);
         this.damage = damage;
-        this.timer = 20;
-        this.target = target;
-        Vector3d vector3d = this.getOwner().getPosition(1.0f);
-        this.rx = x - vector3d.x;
-        this.ry = y - vector3d.y;
-        this.rz = z - vector3d.z;
-        this.setDeltaMovement(Vector3d.ZERO);
+        Vector3d vector3d = new Vector3d(x,y,z);
+        this.setRotation(vector3d);
+        this.setDeltaMovement(vector3d.normalize().scale(0.8));
     }
 
     @OnlyIn(Dist.CLIENT)
     public PermafrostIcicleEntity(World p_i1795_1_, double p_i1795_2_, double p_i1795_4_, double p_i1795_6_, double p_i1795_8_, double p_i1795_10_, double p_i1795_12_) {
         super(EntityTypeRegistry.PERMAFROST_ICICLE.get(), p_i1795_2_, p_i1795_4_, p_i1795_6_, p_i1795_8_, p_i1795_10_, p_i1795_12_, p_i1795_1_);
-        this.damage = 8.0f;
-        this.timer = 20;
-        this.target = null;
-        this.rx = 0.0d;
-        this.ry = 0.0d;
-        this.rz = 0.0d;
+    }
+
+    protected void defineSynchedData() {
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public boolean shouldRenderAtSqrDistance(double p_70112_1_) {
+        double d0 = this.getBoundingBox().getSize() * 4.0D;
+        if (Double.isNaN(d0)) {
+            d0 = 4.0D;
+        }
+
+        d0 = d0 * 64.0D;
+        return p_70112_1_ < d0 * d0;
     }
 
     public void tick() {
         Entity entity = this.getOwner();
-        if (this.level.isClientSide || (entity == null || !entity.removed) && this.level.hasChunkAt(this.blockPosition())) {
-            if (this.shouldBurn()) {
-                this.setSecondsOnFire(1);
+        if ((this.level.isClientSide || (entity == null || !entity.removed) && this.level.hasChunkAt(this.blockPosition())) && this.tickCount <= maxTicks) {
+            try {
+                if (!(Boolean)leftOwnerField.get(this)) {
+                    leftOwnerField.set(this, checkLeftOwnerMethod.invoke(this));
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
             }
+
+            if (!this.level.isClientSide) {
+                this.setSharedFlag(6, this.isGlowing());
+            }
+
+            this.baseTick();
 
             RayTraceResult raytraceresult = ProjectileHelper.getHitResult(this, this::canHitEntity);
             if (raytraceresult.getType() != RayTraceResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
@@ -75,54 +108,97 @@ public class PermafrostIcicleEntity extends DamagingProjectileEntity {
             }
 
             this.checkInsideBlocks();
-            if(this.tickCount <= this.timer){
-                this.setDeltaMovement(Vector3d.ZERO);
-            }
-
+            
             Vector3d vector3d = this.getDeltaMovement();
             double d0 = this.getX() + vector3d.x;
             double d1 = this.getY() + vector3d.y;
             double d2 = this.getZ() + vector3d.z;
-            float f = this.getInertia();
+
             if (this.isInWater()) {
                 for(int i = 0; i < 4; ++i) {
                     this.level.addParticle(ParticleTypes.BUBBLE, d0 - vector3d.x * 0.25D, d1 - vector3d.y * 0.25D, d2 - vector3d.z * 0.25D, vector3d.x, vector3d.y, vector3d.z);
                 }
-
-                f = 0.8F;
             }
-            this.setDeltaMovement(vector3d.add(this.xPower, this.yPower, this.zPower).scale((double)f));
             this.setPos(d0, d1, d2);
+            this.setRotation(vector3d);
         } else {
             this.remove();
         }
-        if(this.tickCount > 80){
+    }
+
+    protected boolean canHitEntity(Entity p_230298_1_) {
+        return super.canHitEntity(p_230298_1_) && !p_230298_1_.noPhysics;
+    }
+
+    public boolean isOnFire() {
+        return false;
+    }
+
+    protected boolean shouldBurn() {
+        return false;
+    }
+
+    protected IParticleData getTrailParticle() {
+        return null;
+    }
+
+    protected float getInertia() {
+        return 0.8F;
+    }
+
+    public void addAdditionalSaveData(CompoundNBT p_213281_1_) {
+        super.addAdditionalSaveData(p_213281_1_);
+        p_213281_1_.put("power", this.newDoubleList(new double[]{this.xPower, this.yPower, this.zPower}));
+    }
+
+    public void readAdditionalSaveData(CompoundNBT p_70037_1_) {
+        super.readAdditionalSaveData(p_70037_1_);
+        if (p_70037_1_.contains("power", 9)) {
+            ListNBT listnbt = p_70037_1_.getList("power", 6);
+            if (listnbt.size() == 3) {
+                this.xPower = listnbt.getDouble(0);
+                this.yPower = listnbt.getDouble(1);
+                this.zPower = listnbt.getDouble(2);
+            }
+        }
+
+    }
+
+    public boolean isPickable() {
+        return false;
+    }
+
+    public float getPickRadius() {
+        return 1.0F;
+    }
+
+    public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
+        return false;
+    }
+
+    public float getBrightness() {
+        return 1.0F;
+    }
+
+    protected void onHit(RayTraceResult p_70227_1_) {
+        this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.GLASS_BREAK, SoundCategory.HOSTILE, 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F, false);
+        super.onHit(p_70227_1_);
+        if (!this.level.isClientSide) {
             this.remove();
         }
     }
 
-    public void setRotation(Vector3d vector3d) {
-        //System.out.println("fffff");
-        vector3d = vector3d.subtract(this.getPosition(1.0f));
-        //Vector3d vector3d = this.getDeltaMovement();
-        float f = MathHelper.sqrt(Entity.getHorizontalDistanceSqr(vector3d));
-        if (vector3d.lengthSqr() != 0.0D) {
-            this.xRot = (float)(MathHelper.atan2(vector3d.y, f) * (double)(180F / (float)Math.PI)) * -1.0F + 180.0f;
-            this.xRotO = this.xRot;
-            this.yRot = (float)(MathHelper.atan2(vector3d.z, vector3d.x) * (double)(180F / (float)Math.PI)) * -1.0f - 90.0F;
-            this.yRotO = this.yRot;
-        }
+    @Override
+    public IPacket<?> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public void setRotation(LivingEntity livingEntity) {
-        Vector3d vector3d = livingEntity.getPosition(1.0f);
-        vector3d = vector3d.subtract(this.getPosition(1.0f));
-        float f = MathHelper.sqrt(Entity.getHorizontalDistanceSqr(vector3d));
-        if (vector3d.lengthSqr() != 0.0D) {
-            this.xRot = (float)(MathHelper.atan2(vector3d.y, f) * (double)(180F / (float)Math.PI)) * -1.0F + 180.0f;
-            this.xRotO = this.xRot;
-            this.yRot = (float)(MathHelper.atan2(vector3d.z, vector3d.x) * (double)(180F / (float)Math.PI)) * -1.0f - 90.0F;
-            this.yRotO = this.yRot;
+    private float damageMult(){
+        switch(this.level.getDifficulty()){
+            case EASY: return 0.67f;
+            case NORMAL: return 1.0f;
+            case HARD: return 1.5f;
+            default: return 0.0f;
         }
     }
 
@@ -140,44 +216,13 @@ public class PermafrostIcicleEntity extends DamagingProjectileEntity {
         }
     }
 
-    private float damageMult(){
-        switch(this.level.getDifficulty()){
-            case EASY: return 0.67f;
-            case NORMAL: return 1.0f;
-            case HARD: return 1.5f;
-            default: return 0.0f;
+    public void setRotation(Vector3d vector3d) {
+        float f = MathHelper.sqrt(Entity.getHorizontalDistanceSqr(vector3d));
+        if (vector3d.lengthSqr() != 0.0D) {
+            this.xRot = (float)(MathHelper.atan2(f, vector3d.y) * (double)(180F / (float)Math.PI) * -1.0f + 90.0f);
+            this.xRotO = this.xRot;
+            this.yRot = (float)(MathHelper.atan2(vector3d.x, vector3d.z) * (double)(180F / (float)Math.PI));
+            this.yRotO = this.yRot;
         }
-    }
-
-    protected void onHit(RayTraceResult p_70227_1_) {
-        this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.GLASS_BREAK, SoundCategory.HOSTILE, 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F, false);
-        super.onHit(p_70227_1_);
-        if (!this.level.isClientSide) {
-            this.remove();
-        }
-    }
-
-    public boolean isOnFire() {
-        return false;
-    }
-
-    public boolean isPickable() {
-        return false;
-    }
-
-    public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
-        return false;
-    }
-
-    protected boolean shouldBurn() {
-        return false;
-    }
-
-    protected float getInertia() {
-        return 0.8F;
-    }
-
-    protected IParticleData getTrailParticle() {
-        return ParticleTypes.CRIT;
     }
 }

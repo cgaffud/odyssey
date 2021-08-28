@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " X ",
+    "XCX",
+    " X "
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:heart_of_the_sea"
+    },
+    "X": {
+      "item": "oddc:permafrost_shard"
+    }
+  },
+  "result": {
+    "item": "oddc:arctic_heart"
+  }
+}

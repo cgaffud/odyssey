@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.screen.ReadBookScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
@@ -23,7 +22,7 @@ public class ChangeEnchantPageButton extends Button {
 
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bind(NewEnchantmentScreen.GUI_TEXTURE);
+        Minecraft.getInstance().getTextureManager().bind(OdysseyEnchantmentScreen.GUI_TEXTURE);
         int i = 176;
         int j = 8;
         if (this.isHovered()) {

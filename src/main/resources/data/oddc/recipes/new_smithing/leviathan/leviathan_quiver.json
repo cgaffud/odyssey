@@ -1,0 +1,13 @@
+{
+  "type": "oddc:odyssey_smithing",
+  "classification": "quiver",
+  "base": {
+    "item": "oddc:leather_quiver"
+  },
+  "addition": {
+    "item": "oddc:leviathan_scale"
+  },
+  "result": {
+    "item": "oddc:leviathan_quiver"
+  }
+}

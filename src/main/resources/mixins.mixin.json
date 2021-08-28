@@ -7,23 +7,24 @@
   "mixins": [
     "MixinMinecraft",
     "MixinBlockItem",
-    "MixinItemColors",
     "MixinForgeHooks",
-    "MixinServerPlayNetHandler",
     "MixinPlayerEntity",
     "MixinForgeIngameGui",
-    "MixinAttributes",
     "MixinCombatRules",
     "MixinItem",
     "MixinItemRenderer",
-    "MixinItemStackTileEntityRenderer",
-    "MixinClientPlayNetHandler",
     "MixinMobEntity",
-    "MixinIForgeItem",
-    "MixinShieldRecipes",
     "MixinLivingEntity",
     "MixinFogRenderer",
-    "MixinEnchantmentHelper"
+    "MixinEnchantmentHelper",
+    "MixinPotionUtils",
+    "MixinElytraLayer",
+    "MixinEnchantment",
+    "MixinShieldRecipes",
+    "MixinClientPlayerEntity",
+    "MixinServerPlayerEntity",
+    "MixinInventoryScreen",
+    "MixinTextFormatting"
   ],
   "injectors": {
     "defaultRequire": 1

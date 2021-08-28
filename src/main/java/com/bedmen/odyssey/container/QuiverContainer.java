@@ -1,8 +1,7 @@
 package com.bedmen.odyssey.container;
 
 import com.bedmen.odyssey.items.QuiverItem;
-import com.bedmen.odyssey.util.ContainerRegistry;
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -15,8 +14,6 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
 
 public class QuiverContainer extends Container {
 
