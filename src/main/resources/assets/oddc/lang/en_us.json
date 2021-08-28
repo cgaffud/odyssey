@@ -196,6 +196,14 @@
   "entity.oddc.lupine": "Lupine",
   "entity.oddc.arctihorn": "Arctihorn",
 
+  //Bosses
+  "entity.oddc.permafrost": "Permafrost",
+
+  //Projectiles
+  "entity.oddc.trident": "Trident",
+  "entity.oddc.leviathan_trident": "Leviathan Trident",
+  "entity.oddc.permafrost_icicle": "Permafrost Icicle",
+
   //Spawn Eggs
   "item.oddc.lupine_spawn_egg": "Lupine Spawn Egg",
   "item.oddc.arctihorn_spawn_egg": "Arctihorn Spawn Egg",

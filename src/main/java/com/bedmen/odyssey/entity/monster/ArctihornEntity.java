@@ -53,7 +53,7 @@ public class ArctihornEntity extends MonsterWaterEntity {
     }
 
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new ArctihornEntity.MoveToTarget(this));
+        this.goalSelector.addGoal(1, new MoveToTarget(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(3, new ArctihornEntity.MoveRandomGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers());
@@ -61,7 +61,7 @@ public class ArctihornEntity extends MonsterWaterEntity {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PolarBearEntity.class, true));
     }
 
-    public static AttributeModifierMap.MutableAttribute attributes() {
+    public static AttributeModifierMap.MutableAttribute createAttributes() {
         return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 40.0D).add(Attributes.ATTACK_DAMAGE, 5.0D);
     }
 
@@ -228,7 +228,7 @@ public class ArctihornEntity extends MonsterWaterEntity {
         }
     }
 
-    class MoveToTarget extends Goal {
+    static class MoveToTarget extends Goal {
         private final ArctihornEntity squid;
         private LivingEntity target;
 

@@ -1,11 +1,10 @@
 package com.bedmen.odyssey;
 
+import com.bedmen.odyssey.client.renderer.entity.*;
+import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.client.gui.*;
-import com.bedmen.odyssey.client.renderer.OdysseyEnchantmentTableTileEntityRenderer;
-import com.bedmen.odyssey.client.renderer.entity.ArctihornRenderer;
-import com.bedmen.odyssey.client.renderer.entity.OdysseyTridentRenderer;
-import com.bedmen.odyssey.client.renderer.entity.LupineRenderer;
+import com.bedmen.odyssey.client.renderer.tileentity.OdysseyEnchantmentTableTileEntityRenderer;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.entity.attributes.OdysseyAttributes;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
@@ -17,7 +16,7 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tags.OdysseyBlockTags;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
-import com.bedmen.odyssey.client.renderer.OdysseyBeaconTileEntityRenderer;
+import com.bedmen.odyssey.client.renderer.tileentity.OdysseyBeaconTileEntityRenderer;
 import com.bedmen.odyssey.potions.OdysseyPotions;
 import com.bedmen.odyssey.trades.OdysseyTrades;
 import com.bedmen.odyssey.world.gen.OdysseyFeatureGen;
@@ -78,6 +77,7 @@ public class Odyssey
         ItemRegistry.init();
         PotionRegistry.init();
         RecipeRegistry.init();
+        SoundEventRegistry.init();
         TileEntityTypeRegistry.init();
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -119,8 +119,9 @@ public class Odyssey
         EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::predicate);
 
         DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.attributes().build());
-            GlobalEntityTypeAttributes.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.attributes().build());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
         });
     }
 
@@ -148,9 +149,13 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
 
+        //Boss Renderings
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
+
         //Projectile Renderings
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.NEW_TRIDENT.get(), OdysseyTridentRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LEVIATHAN_TRIDENT.get(), OdysseyTridentRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
 
         //Block Render Types
         RenderTypeLookup.setRenderLayer(BlockRegistry.RESEARCH_TABLE.get(), RenderType.cutout());

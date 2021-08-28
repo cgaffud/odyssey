@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.blocks.permafrost;
 
+import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.block.*;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.util.Direction;
@@ -64,9 +66,9 @@ public class PermafrostConduitBlock extends Block{
         }
 
         if(flag <= 0){
-            //PermafrostEntity permafrostEntity = EntityTypeRegistry.PERMAFROST.get().create(serverWorld);
-            //permafrostEntity.moveTo((double)pos.getX() + 0.5D, (double)pos.getY() + 0.05D, (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
-            //serverWorld.addFreshEntity(permafrostEntity);
+            PermafrostEntity permafrostEntity = EntityTypeRegistry.PERMAFROST.get().create(serverWorld);
+            permafrostEntity.moveTo((double)pos.getX() + 0.5D, (double)pos.getY() + 0.05D, (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
+            serverWorld.addFreshEntity(permafrostEntity);
             serverWorld.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
         }
     }

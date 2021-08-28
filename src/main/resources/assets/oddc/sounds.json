@@ -1,0 +1,12 @@
+{
+  "entity.permafrost.icicle_spiral": {
+    "category": "entity",
+    "subtitle": "entity.permafrost.icicle_spiral.sub",
+    "sounds": [
+      {
+        "name": "oddc:entity/permafrost/spiral",
+        "stream": true
+      }
+    ]
+  }
+}
