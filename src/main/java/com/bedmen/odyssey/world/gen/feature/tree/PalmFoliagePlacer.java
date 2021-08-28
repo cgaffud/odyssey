@@ -30,7 +30,7 @@ public class PalmFoliagePlacer extends FoliagePlacer {
     @Override
     protected void createFoliage(IWorldGenerationReader worldGenerationReader, Random random, BaseTreeFeatureConfig config, int maxTreeHeight, Foliage foliage, int foliageHeight, int foliageRadius, Set<BlockPos> set, int offset, MutableBoundingBox mutableBoundingBox) {
         BlockPos blockpos = foliage.foliagePos();
-        for (int h = 0; h < foliageHeight; h++)
+        for (int h = -1; h < foliageHeight; h++)
             this.placeLeavesRow(worldGenerationReader, random, config, blockpos, foliageRadius, set, h, false, mutableBoundingBox);
     }
 
@@ -44,10 +44,14 @@ public class PalmFoliagePlacer extends FoliagePlacer {
         int smallRadius = radius/2;
         if ((yOff >= 0) && (xOff+yOff+zOff) <= smallRadius)
             return false;
-        else if ((yOff == 0) && ((xOff+zOff) <= radius+1)) {
-            if (((xOff != 0) || (zOff != 0)) && (xOff != zOff))
-                return true;
-            return false;
+        else if ((yOff == 0) && ((xOff+zOff) <= radius-1)) {
+            if ((xOff == zOff)) return false;
+            if (((xOff == 0) || (zOff == 0)) && (xOff+zOff <= radius-2)) return false;
+            return true;
+        }
+        else if (yOff == -1){
+            if ((xOff == zOff) && ((xOff+zOff) == radius)) return false;
+            if (((xOff == 0) || (zOff == 0)) && (xOff+zOff == radius-1)) return false;
         }
         return true;
     }
