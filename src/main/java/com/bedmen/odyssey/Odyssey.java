@@ -12,7 +12,7 @@ import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
-import com.bedmen.odyssey.items.equipment.EquipmentItem;
+import com.bedmen.odyssey.items.equipment.EquipmentTieredItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tags.OdysseyBlockTags;
@@ -169,6 +169,6 @@ public class Odyssey
     @SubscribeEvent
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
-        EquipmentItem.initEquipment();
+        EquipmentTieredItem.initEquipment();
     }
 }

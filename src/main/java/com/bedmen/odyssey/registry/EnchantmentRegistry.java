@@ -30,8 +30,8 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> CHANNELING = ENCHANTMENTS_VANILLA.register("channeling", () -> new OdysseyChannelingEnchantment(Enchantment.Rarity.VERY_RARE, EquipmentSlotType.MAINHAND));
     public static final RegistryObject<Enchantment> AQUA_AFFINITY = ENCHANTMENTS_VANILLA.register("aqua_affinity", () -> new OdysseyAquaAffinityEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.MAINHAND));
     public static final RegistryObject<Enchantment> DEPTH_STRIDER = ENCHANTMENTS_VANILLA.register("depth_strider", () -> new OdysseyDepthStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
-    public static final RegistryObject<Enchantment> FROST_WALKER = ENCHANTMENTS_VANILLA.register("frost_walker", () -> new OdysseyDepthStriderEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.FEET));
-    public static final RegistryObject<Enchantment> RESPIRATION = ENCHANTMENTS_VANILLA.register("respiration", () -> new OdysseyDepthStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
+    public static final RegistryObject<Enchantment> FROST_WALKER = ENCHANTMENTS_VANILLA.register("frost_walker", () -> new OdysseyFrostWalkerEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.FEET));
+    public static final RegistryObject<Enchantment> RESPIRATION = ENCHANTMENTS_VANILLA.register("respiration", () -> new OdysseyRespirationEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
 
     //Odyssey
     public static final RegistryObject<Enchantment> ACCURACY = ENCHANTMENTS.register("accuracy", () -> new AccuracyEnchantment(Enchantment.Rarity.COMMON, EquipmentSlotType.CHEST));

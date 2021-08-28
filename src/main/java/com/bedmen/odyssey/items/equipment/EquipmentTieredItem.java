@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.items.equipment;
 
+import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
@@ -21,20 +22,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class EquipmentItem extends TieredItem {
+public abstract class EquipmentTieredItem extends TieredItem {
     protected final Map<Lazy<Enchantment>, Integer> enchantmentLazyMap = new HashMap<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
-    protected static final List<EquipmentItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
+    protected static final List<EquipmentTieredItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
-    public EquipmentItem(IItemTier tier, Item.Properties builderIn) {
+    public EquipmentTieredItem(IItemTier tier, Item.Properties builderIn, LevEnchSup[] levEnchSups) {
         super(tier, builderIn.rarity(OdysseyRarity.EQUIPMENT));
-        this.enchantmentLazyMap.put(Lazy.of(EnchantmentRegistry.UNENCHANTABLE::get),1);
+        this.enchantmentLazyMap.put(Lazy.of(EnchantmentRegistry.UNENCHANTABLE),1);
+        for(LevEnchSup levEnchSup : levEnchSups){
+            this.enchantmentLazyMap.put(Lazy.of(levEnchSup.enchantmentSupplier), levEnchSup.level);
+        }
         UNFINISHED_EQUIPMENT.add(this);
     }
 
     public static void initEquipment(){
-        for(final EquipmentItem equipmentItem : UNFINISHED_EQUIPMENT){
-            equipmentItem.init();
+        for(final EquipmentTieredItem equipmentTieredItem : UNFINISHED_EQUIPMENT){
+            equipmentTieredItem.init();
         }
         UNFINISHED_EQUIPMENT.clear();
     }
