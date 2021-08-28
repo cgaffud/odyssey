@@ -12,7 +12,7 @@ import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
-import com.bedmen.odyssey.items.equipment.EquipmentItem;
+import com.bedmen.odyssey.items.equipment.EquipmentTieredItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tags.OdysseyBlockTags;
@@ -38,10 +38,8 @@ import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -171,6 +169,6 @@ public class Odyssey
     @SubscribeEvent
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
-        EquipmentItem.initEquipment();
+        EquipmentTieredItem.initEquipment();
     }
 }

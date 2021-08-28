@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.items.equipment;
 
+import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
@@ -23,8 +24,8 @@ public class EquipmentHoeItem extends EquipmentToolItem {
     private static final Set<Block> DIGGABLES = ImmutableSet.of(Blocks.NETHER_WART_BLOCK, Blocks.WARPED_WART_BLOCK, Blocks.HAY_BLOCK, Blocks.DRIED_KELP_BLOCK, Blocks.TARGET, Blocks.SHROOMLIGHT, Blocks.SPONGE, Blocks.WET_SPONGE, Blocks.JUNGLE_LEAVES, Blocks.OAK_LEAVES, Blocks.SPRUCE_LEAVES, Blocks.DARK_OAK_LEAVES, Blocks.ACACIA_LEAVES, Blocks.BIRCH_LEAVES);
     protected static final Map<Block, BlockState> TILLABLES = Maps.newHashMap(ImmutableMap.of(Blocks.GRASS_BLOCK, Blocks.FARMLAND.defaultBlockState(), Blocks.GRASS_PATH, Blocks.FARMLAND.defaultBlockState(), Blocks.DIRT, Blocks.FARMLAND.defaultBlockState(), Blocks.COARSE_DIRT, Blocks.DIRT.defaultBlockState()));
 
-    public EquipmentHoeItem(IItemTier p_i231595_1_, int p_i231595_2_, float p_i231595_3_, Item.Properties p_i231595_4_) {
-        super((float)p_i231595_2_, p_i231595_3_, p_i231595_1_, DIGGABLES, p_i231595_4_.addToolType(net.minecraftforge.common.ToolType.HOE, p_i231595_1_.getLevel()));
+    public EquipmentHoeItem(IItemTier p_i231595_1_, int p_i231595_2_, float p_i231595_3_, Item.Properties p_i231595_4_, LevEnchSup... levEnchSups) {
+        super((float)p_i231595_2_, p_i231595_3_, p_i231595_1_, DIGGABLES, p_i231595_4_.addToolType(net.minecraftforge.common.ToolType.HOE, p_i231595_1_.getLevel()), levEnchSups);
     }
 
     public ActionResultType useOn(ItemUseContext p_195939_1_) {

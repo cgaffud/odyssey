@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.items.equipment;
 
+import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
@@ -18,14 +19,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EquipmentToolItem extends EquipmentItem implements IVanishable {
+public class EquipmentToolItem extends EquipmentTieredItem implements IVanishable {
     private final Set<Block> blocks;
     protected final float speed;
     private final float attackDamageBaseline;
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
-    public EquipmentToolItem(float p_i48512_1_, float p_i48512_2_, IItemTier p_i48512_3_, Set<Block> p_i48512_4_, Item.Properties p_i48512_5_) {
-        super(p_i48512_3_, p_i48512_5_);
+    public EquipmentToolItem(float p_i48512_1_, float p_i48512_2_, IItemTier p_i48512_3_, Set<Block> p_i48512_4_, Item.Properties p_i48512_5_, LevEnchSup[] levEnchSups) {
+        super(p_i48512_3_, p_i48512_5_, levEnchSups);
         this.blocks = p_i48512_4_;
         this.speed = p_i48512_3_.getSpeed();
         this.attackDamageBaseline = p_i48512_1_ + p_i48512_3_.getAttackDamageBonus();
