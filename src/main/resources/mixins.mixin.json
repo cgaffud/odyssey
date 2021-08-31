@@ -23,8 +23,9 @@
     "MixinShieldRecipes",
     "MixinClientPlayerEntity",
     "MixinServerPlayerEntity",
-    "MixinInventoryScreen",
-    "MixinTextFormatting"
+    "MixinTextFormatting",
+    "MixinCreativeScreen",
+    "MixinServerPlayNetHandler"
   ],
   "injectors": {
     "defaultRequire": 1

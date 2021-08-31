@@ -1,7 +1,9 @@
 package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.renderer.entity.*;
+import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
+import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.tileentity.OdysseyEnchantmentTableTileEntityRenderer;
@@ -37,6 +39,7 @@ import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,7 +53,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.Set;
 
 @Mod("oddc")
@@ -175,5 +177,11 @@ public class Odyssey
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
         EquipmentTieredItem.initEquipment();
+        EquipmentTrinketItem.initEquipment();
+    }
+
+    @SubscribeEvent
+    public static void onTextureStitch(final TextureStitchEvent.Pre event){
+        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
     }
 }

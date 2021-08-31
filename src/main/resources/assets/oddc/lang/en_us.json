@@ -57,11 +57,12 @@
   "item.oddc.reinforced_chestplate": "Reinforced Chestplate",
   "item.oddc.reinforced_helmet": "Reinforced Helmet",
 
-  //Arctic Armor
+  //Arctic
   "item.oddc.arctic_boots": "Arctic Boots",
   "item.oddc.arctic_leggings": "Arctic Leggings",
   "item.oddc.arctic_chestplate": "Arctic Chestplate",
   "item.oddc.arctic_helmet": "Arctic Helmet",
+  "item.oddc.arctic_amulet": "Arctic Amulet",
 
   //Marine
   "item.oddc.marine_pickaxe": "Marine Pickaxe",

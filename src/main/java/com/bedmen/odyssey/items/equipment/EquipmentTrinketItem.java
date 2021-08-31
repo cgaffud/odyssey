@@ -19,22 +19,22 @@ import net.minecraftforge.common.util.Lazy;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public abstract class EquipmentTieredItem extends TieredItem {
+public class EquipmentTrinketItem extends Item {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
-    protected static final List<EquipmentTieredItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
+    protected static final List<EquipmentTrinketItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
     private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
-    public EquipmentTieredItem(IItemTier tier, Item.Properties builderIn, LevEnchSup[] levEnchSups) {
-        super(tier, builderIn.rarity(OdysseyRarity.EQUIPMENT));
+    public EquipmentTrinketItem(Item.Properties builderIn, LevEnchSup... levEnchSups) {
+        super(builderIn.rarity(OdysseyRarity.EQUIPMENT));
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);
     }
 
     public static void initEquipment(){
-        for(final EquipmentTieredItem equipmentTieredItem : UNFINISHED_EQUIPMENT){
-            equipmentTieredItem.init();
+        for(final EquipmentTrinketItem equipmentTrinketItem : UNFINISHED_EQUIPMENT){
+            equipmentTrinketItem.init();
         }
         UNFINISHED_EQUIPMENT.clear();
     }

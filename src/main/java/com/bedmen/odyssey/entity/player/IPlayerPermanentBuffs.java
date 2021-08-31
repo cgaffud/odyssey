@@ -1,8 +1,6 @@
-package com.bedmen.odyssey.entity;
+package com.bedmen.odyssey.entity.player;
 
 public interface IPlayerPermanentBuffs {
-    boolean getNetherImmune();
-    void setNetherImmune(boolean b);
     int getLifeFruits();
     void setLifeFruits(int i);
     void incrementLifeFruits();
