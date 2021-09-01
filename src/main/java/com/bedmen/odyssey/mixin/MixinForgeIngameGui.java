@@ -247,40 +247,6 @@ public abstract class MixinForgeIngameGui extends IngameGui{
             left += 8;
         }
 
-        int resLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.RESPIRATION, player);
-        int fireLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FIRE_PROTECTION, player);
-        int blastLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, player);
-        int featherLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FALL_PROTECTION, player);
-
-        if(resLevel + fireLevel + blastLevel + featherLevel > 0){
-            top -= 5;
-            left = width / 2 - 91;
-            blit(mStack, left, top, 0, 140, 81, 4);
-            top += 1;
-            left += 1;
-            int total = 0;
-            for (int i = 0; i < resLevel && total < 20; i++){
-                blit(mStack, left, top, 0, 144, 3, 2);
-                left += 4;
-                total++;
-            }
-            for (int i = 0; i < fireLevel && total < 20; i++){
-                blit(mStack, left, top, 0, 146, 3, 2);
-                left += 4;
-                total++;
-            }
-            for (int i = 0; i < blastLevel && total < 20; i++){
-                blit(mStack, left, top, 0, 148, 3, 2);
-                left += 4;
-                total++;
-            }
-            for (int i = 0; i < featherLevel && total < 20; i++){
-                blit(mStack, left, top, 0, 150, 3, 2);
-                left += 4;
-                total++;
-            }
-        }
-
         RenderSystem.disableBlend();
         minecraft.getProfiler().pop();
         post(ARMOR, mStack);
@@ -303,7 +269,7 @@ public abstract class MixinForgeIngameGui extends IngameGui{
             int partial = MathHelper.ceil((double) air * 10.0D / 300.0D) - full;
 
             for (int i = 0; i < full + partial; ++i) {
-                blit(mStack, left - i * 8 - 9, top, (i < full ? 0 : 9), 152, 9, 9);
+                blit(mStack, left - i * 8 - 9, top, (i < full ? 0 : 9), 140, 9, 9);
             }
             right_height += 10;
         } else if (player.isEyeInFluid(FluidTags.WATER) || air < 300) {

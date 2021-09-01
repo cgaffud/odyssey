@@ -21,21 +21,18 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class EquipmentArmorItem extends ArmorItem {
-    protected final Map<Lazy<Enchantment>, Integer> enchantmentLazyMap = new HashMap<>();
-    protected final Map<Lazy<Enchantment>, Tuple<Integer, String>> setBonusLazyMap = new HashMap<>();
+    protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
+    protected final Set<SetBonusEnchSup> setBonusEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     private final Map<Enchantment, Tuple<Integer, String>> setBonusMap = new HashMap<>();
     protected static final List<EquipmentArmorItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
+    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
     public EquipmentArmorItem(OdysseyArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties properties, LevEnchSup... levEnchSups) {
         super(armorMaterial, slotType, properties.rarity(OdysseyRarity.EQUIPMENT));
-        this.enchantmentLazyMap.put(Lazy.of(EnchantmentRegistry.UNENCHANTABLE::get),1);
-        for(LevEnchSup levEnchSup : levEnchSups){
-            this.enchantmentLazyMap.put(Lazy.of(levEnchSup.enchantmentSupplier), levEnchSup.level);
-        }
-        for(SetBonusEnchSup setBonusEnchSup :  armorMaterial.getSetBonusEnchSups()){
-            this.setBonusLazyMap.put(Lazy.of(setBonusEnchSup.enchantmentSupplier), new Tuple<>(setBonusEnchSup.level, setBonusEnchSup.key));
-        }
+        this.levEnchSupSet.add(UNENCHANTABLE);
+        Collections.addAll(this.levEnchSupSet, levEnchSups);
+        Collections.addAll(this.setBonusEnchSupSet, armorMaterial.getSetBonusEnchSups());
         UNFINISHED_EQUIPMENT.add(this);
     }
 
@@ -47,11 +44,11 @@ public class EquipmentArmorItem extends ArmorItem {
     }
 
     public void init(){
-        for(Lazy<Enchantment> lazy : this.enchantmentLazyMap.keySet()){
-            this.enchantmentMap.put(lazy.get(), this.enchantmentLazyMap.get(lazy));
+        for(LevEnchSup levEnchSup : this.levEnchSupSet){
+            this.enchantmentMap.put(levEnchSup.enchantmentSupplier.get(), levEnchSup.level);
         }
-        for(Lazy<Enchantment> lazy : this.setBonusLazyMap.keySet()){
-            this.setBonusMap.put(lazy.get(), this.setBonusLazyMap.get(lazy));
+        for(SetBonusEnchSup setBonusEnchSup : this.setBonusEnchSupSet){
+            this.setBonusMap.put(setBonusEnchSup.enchantmentSupplier.get(), new Tuple<>(setBonusEnchSup.level, setBonusEnchSup.key));
         }
     }
 

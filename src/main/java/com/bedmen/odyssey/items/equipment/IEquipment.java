@@ -24,7 +24,4 @@ public interface IEquipment {
     default int getSetBonusLevel(Enchantment e) {
         return 0;
     }
-
-    default void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-    }
 }

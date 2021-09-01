@@ -1,9 +1,12 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.entity.IPlayerPermanentBuffs;
+import com.bedmen.odyssey.container.OdysseyPlayerContainer;
+import com.bedmen.odyssey.entity.player.IPlayerPermanentBuffs;
+import com.bedmen.odyssey.entity.player.OdysseyPlayerInventory;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
@@ -32,6 +35,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
@@ -43,8 +49,6 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
     public void startFallFlying() {}
     @Shadow
     public int experienceLevel;
-    @Shadow
-    public PlayerInventory inventory;
     @Shadow
     public PlayerAbilities abilities;
     @Shadow
@@ -82,20 +86,12 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
     @Shadow
     protected void updatePlayerPose() {}
 
-    public boolean netherImmune = false;
+    public final PlayerInventory inventory = new OdysseyPlayerInventory(getPlayerEntity());
 
     public int lifeFruits = 0;
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
-    }
-
-    public boolean getNetherImmune() {
-        return this.netherImmune;
-    }
-
-    public void setNetherImmune(boolean b) {
-        this.netherImmune = b;
     }
 
     public int getLifeFruits(){
@@ -110,7 +106,13 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
         lifeFruits = MathHelper.clamp(lifeFruits+1, 0, 10);
     }
 
-    //Remade the amount of xp needed up to level 50 because oddc has lvl 50 enchants
+    @Inject(method = "<init>", at = @At(value = "TAIL"))
+    public void onPlayerEntity(World p_i241920_1_, BlockPos p_i241920_2_, float p_i241920_3_, GameProfile p_i241920_4_, CallbackInfo ci) {
+        this.inventoryMenu = new OdysseyPlayerContainer(this.inventory, !p_i241920_1_.isClientSide, getPlayerEntity());
+        this.containerMenu = this.inventoryMenu;
+    }
+
+    //Remade the amount of xp needed up to level 50 because Odyssey has lvl 50 enchants
     public int getXpNeededForNextLevel() {
         if (this.experienceLevel >= 50) {
             return 304 + (this.experienceLevel - 49) * 12;

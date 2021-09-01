@@ -57,11 +57,12 @@
   "item.oddc.reinforced_chestplate": "Reinforced Chestplate",
   "item.oddc.reinforced_helmet": "Reinforced Helmet",
 
-  //Arctic Armor
+  //Arctic
   "item.oddc.arctic_boots": "Arctic Boots",
   "item.oddc.arctic_leggings": "Arctic Leggings",
   "item.oddc.arctic_chestplate": "Arctic Chestplate",
   "item.oddc.arctic_helmet": "Arctic Helmet",
+  "item.oddc.arctic_amulet": "Arctic Amulet",
 
   //Marine
   "item.oddc.marine_pickaxe": "Marine Pickaxe",
@@ -103,6 +104,7 @@
   "item.oddc.sterling_silver_horse_armor": "Sterling Silver Horse Armor",
 
   //Nether
+  "item.oddc.golden_amulet": "Golden Amulet",
   "item.oddc.netherite_nugget": "Netherite Nugget",
   "item.oddc.netherite_bow": "Netherite Bow",
   "item.oddc.netherite_crossbow": "Netherite Crossbow",
