@@ -2,6 +2,7 @@ package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
+import com.bedmen.odyssey.client.renderer.tileentity.SterlingSilverChestTileEntityRenderer;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.tileentity.OdysseyEnchantmentTableTileEntityRenderer;
@@ -130,6 +131,7 @@ public class Odyssey
         //Tile Entity Renderings
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.STERLING_SILVER_CHEST.get(), SterlingSilverChestTileEntityRenderer::new);
 
         //Container Screens
         ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
