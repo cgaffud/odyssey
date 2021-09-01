@@ -6,10 +6,15 @@ import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.TieredItem;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,10 +31,22 @@ public class EquipmentTrinketItem extends Item {
     private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
     public EquipmentTrinketItem(Item.Properties builderIn, LevEnchSup... levEnchSups) {
-        super(builderIn.rarity(OdysseyRarity.EQUIPMENT));
+        super(builderIn.rarity(OdysseyRarity.EQUIPMENT).stacksTo(1));
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);
+    }
+
+    public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+        ItemStack itemstack = playerEntity.getItemInHand(hand);
+        ItemStack itemstack1 = playerEntity.inventory.getItem(41);
+        if (itemstack1.isEmpty()) {
+            playerEntity.inventory.setItem(41, itemstack.copy());
+            itemstack.setCount(0);
+            return ActionResult.sidedSuccess(itemstack, world.isClientSide());
+        } else {
+            return ActionResult.fail(itemstack);
+        }
     }
 
     public static void initEquipment(){

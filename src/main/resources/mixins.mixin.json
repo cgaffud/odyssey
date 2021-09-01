@@ -25,7 +25,8 @@
     "MixinServerPlayerEntity",
     "MixinTextFormatting",
     "MixinCreativeScreen",
-    "MixinServerPlayNetHandler"
+    "MixinServerPlayNetHandler",
+    "MixinPiglinTasks"
   ],
   "injectors": {
     "defaultRequire": 1
