@@ -267,6 +267,10 @@ public class EnchantmentUtil {
         return 100 - 40 * i;
     }
 
+    public static boolean hasFireProtectionOrResistance(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(Enchantments.FIRE_PROTECTION, entity) > 0 || entity.hasEffect(Effects.FIRE_RESISTANCE);
+    }
+
     public static boolean hasGliding(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.GLIDING.get(), entity) > 0;
     }

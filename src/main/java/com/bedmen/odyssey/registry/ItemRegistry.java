@@ -87,7 +87,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> HALLOWED_GOLD_INGOT = ITEMS.register("hallowed_gold_ingot", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> FEATHER_BUNDLE = ITEMS.register("feather_bundle", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> PERMAFROST_SHARD = ITEMS.register("permafrost_shard", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> ARCTIC_HEART = ITEMS.register("arctic_heart", () -> new ArcticHeartItem((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS).stacksTo(1).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> ARCTIC_HEART = ITEMS.register("arctic_heart", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS).stacksTo(1).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> LUPINE_CLAW = ITEMS.register("lupine_claw", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> ARCTIC_HORN = ITEMS.register("arctic_horn", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> RAVEN_FEATHER = ITEMS.register("raven_feather", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
@@ -181,10 +181,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> TURTLE_LEGGINGS = ITEMS.register("turtle_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterial.TURTLE, EquipmentSlotType.LEGS, new Item.Properties().tab(OdysseyItemGroup.COMBAT), DEPTH_STRIDER_1));
     public static final RegistryObject<Item> TURTLE_BOOTS = ITEMS.register("turtle_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterial.TURTLE, EquipmentSlotType.FEET, new Item.Properties().tab(OdysseyItemGroup.COMBAT), DEPTH_STRIDER_1));
 
-    public static final RegistryObject<Item> GOLDEN_HELMET = ITEMS_VANILLA.register("golden_helmet", () -> new ArmorItem(OdysseyArmorMaterial.GOLD, EquipmentSlotType.HEAD, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
-    public static final RegistryObject<Item> GOLDEN_CHESTPLATE = ITEMS_VANILLA.register("golden_chestplate", () -> new ArmorItem(OdysseyArmorMaterial.GOLD, EquipmentSlotType.CHEST, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
-    public static final RegistryObject<Item> GOLDEN_LEGGINGS = ITEMS_VANILLA.register("golden_leggings", () -> new ArmorItem(OdysseyArmorMaterial.GOLD, EquipmentSlotType.LEGS, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
-    public static final RegistryObject<Item> GOLDEN_BOOTS = ITEMS_VANILLA.register("golden_boots", () -> new ArmorItem(OdysseyArmorMaterial.GOLD, EquipmentSlotType.FEET, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
+    public static final RegistryObject<Item> GOLDEN_HELMET = ITEMS_VANILLA.register("golden_helmet", () -> new GoldArmorItem(OdysseyArmorMaterial.GOLD, EquipmentSlotType.HEAD, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
+    public static final RegistryObject<Item> GOLDEN_CHESTPLATE = ITEMS_VANILLA.register("golden_chestplate", () -> new GoldArmorItem(OdysseyArmorMaterial.GOLD, EquipmentSlotType.CHEST, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
+    public static final RegistryObject<Item> GOLDEN_LEGGINGS = ITEMS_VANILLA.register("golden_leggings", () -> new GoldArmorItem(OdysseyArmorMaterial.GOLD, EquipmentSlotType.LEGS, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
+    public static final RegistryObject<Item> GOLDEN_BOOTS = ITEMS_VANILLA.register("golden_boots", () -> new GoldArmorItem(OdysseyArmorMaterial.GOLD, EquipmentSlotType.FEET, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> GOLDEN_HORSE_ARMOR = ITEMS_VANILLA.register("golden_horse_armor", () -> new HorseArmorItem(28, "gold", (new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_MISC)));
     
     public static final RegistryObject<Item> STERLING_SILVER_HELMET = ITEMS.register("sterling_silver_helmet", () -> new ArmorItem(OdysseyArmorMaterial.STERLING_SILVER, EquipmentSlotType.HEAD, new Item.Properties().tab(OdysseyItemGroup.COMBAT)));
@@ -229,6 +229,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> LEVIATHAN_CHESTPLATE = ITEMS.register("leviathan_chestplate", () -> new EquipmentArmorItem(OdysseyArmorMaterial.LEVIATHAN, EquipmentSlotType.CHEST, new Item.Properties().fireResistant().tab(OdysseyItemGroup.COMBAT), PYROPNEUMATIC_1));
     public static final RegistryObject<Item> LEVIATHAN_LEGGINGS = ITEMS.register("leviathan_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterial.LEVIATHAN, EquipmentSlotType.LEGS, new Item.Properties().fireResistant().tab(OdysseyItemGroup.COMBAT), VULCAN_STRIDER_1));
     public static final RegistryObject<Item> LEVIATHAN_BOOTS = ITEMS.register("leviathan_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterial.LEVIATHAN, EquipmentSlotType.FEET, new Item.Properties().fireResistant().tab(OdysseyItemGroup.COMBAT), VULCAN_STRIDER_1));
+
+    //Trinkets
+    public static final RegistryObject<Item> ARCTIC_AMULET = ITEMS.register("arctic_amulet", () -> new EquipmentTrinketItem(new Item.Properties().tab(OdysseyItemGroup.MAGIC), FIRE_PROTECTION_1));
+    public static final RegistryObject<Item> GOLDEN_AMULET = ITEMS.register("golden_amulet", () -> new GoldenAmuletItem(new Item.Properties().tab(OdysseyItemGroup.MAGIC)));
 
     //Tools
 

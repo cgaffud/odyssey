@@ -23,8 +23,10 @@
     "MixinShieldRecipes",
     "MixinClientPlayerEntity",
     "MixinServerPlayerEntity",
-    "MixinInventoryScreen",
-    "MixinTextFormatting"
+    "MixinTextFormatting",
+    "MixinCreativeScreen",
+    "MixinServerPlayNetHandler",
+    "MixinPiglinTasks"
   ],
   "injectors": {
     "defaultRequire": 1

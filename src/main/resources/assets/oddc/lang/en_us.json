@@ -75,11 +75,12 @@
   "item.oddc.sterling_silver_horse_armor": "Sterling Silver Horse Armor",
   "item.oddc.sterling_silver_key": "Sterling Silver Key",
 
-  //Arctic Armor
+  //Arctic
   "item.oddc.arctic_boots": "Arctic Boots",
   "item.oddc.arctic_leggings": "Arctic Leggings",
   "item.oddc.arctic_chestplate": "Arctic Chestplate",
   "item.oddc.arctic_helmet": "Arctic Helmet",
+  "item.oddc.arctic_amulet": "Arctic Amulet",
 
   //Marine
   "item.oddc.marine_pickaxe": "Marine Pickaxe",
@@ -175,7 +176,6 @@
   "block.oddc.sapphire_ore": "Sapphire Ore",
   "block.oddc.silver_block": "Block of Silver",
   "block.oddc.sterling_silver_block": "Block of Sterling Silver",
-  "block.oddc.sterling_silver_chest": "Sterling Silver Chest",
   "block.oddc.leather_pile": "Leather Pile",
   "block.oddc.fog1": "Fog 1",
   "block.oddc.fog2": "Fog 2",

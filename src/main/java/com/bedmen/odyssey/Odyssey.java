@@ -1,8 +1,10 @@
 package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.renderer.entity.*;
+import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.client.renderer.tileentity.SterlingSilverChestTileEntityRenderer;
+import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.tileentity.OdysseyEnchantmentTableTileEntityRenderer;
@@ -51,7 +53,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.Set;
 
 @Mod("oddc")
@@ -131,7 +132,6 @@ public class Odyssey
         //Tile Entity Renderings
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.STERLING_SILVER_CHEST.get(), SterlingSilverChestTileEntityRenderer::new);
 
         //Container Screens
         ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
@@ -177,5 +177,11 @@ public class Odyssey
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
         EquipmentTieredItem.initEquipment();
+        EquipmentTrinketItem.initEquipment();
+    }
+
+    @SubscribeEvent
+    public static void onTextureStitch(final TextureStitchEvent.Pre event){
+        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
     }
 }
