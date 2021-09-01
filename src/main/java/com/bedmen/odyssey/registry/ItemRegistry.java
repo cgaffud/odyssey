@@ -6,6 +6,7 @@ import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.equipment.*;
+import com.bedmen.odyssey.loot.ChestMaterial;
 import com.bedmen.odyssey.tools.*;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantments;
@@ -45,6 +46,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SAPPHIRE_ORE = ITEMS.register("sapphire_ore", () -> new BlockItem(BlockRegistry.SAPPHIRE_ORE.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> SILVER_BLOCK = ITEMS.register("silver_block", () -> new BlockItem(BlockRegistry.SILVER_BLOCK.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> STERLING_SILVER_BLOCK = ITEMS.register("sterling_silver_block", () -> new BlockItem(BlockRegistry.STERLING_SILVER_BLOCK.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> STERLING_SILVER_CHEST = ITEMS.register("sterling_silver_chest", () -> new BlockItem(BlockRegistry.STERLING_SILVER_CHEST.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance)));
     public static final RegistryObject<Item> LEATHER_PILE = ITEMS.register("leather_pile", () -> new BlockItem(BlockRegistry.LEATHER_PILE.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> PERMAFROST_CONDUIT = ITEMS.register("permafrost_conduit", () -> new BlockItem(BlockRegistry.PERMAFROST_CONDUIT.get(), (new Item.Properties()).tab(ItemGroup.TAB_MISC).rarity(Rarity.RARE)));
 
@@ -61,7 +63,6 @@ public class ItemRegistry {
     public static final RegistryObject<Item> AUTUMN_LEAVES_ORANGE = ITEMS.register("autumn_leaves_orange", () -> new BlockItem(BlockRegistry.AUTUMN_LEAVES_ORANGE.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS)));
 
     //Items
-
     public static final RegistryObject<Item> POTION = ITEMS_VANILLA.register("potion", () -> new OdysseyPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
     public static final RegistryObject<Item> SPLASH_POTION = ITEMS_VANILLA.register("splash_potion", () -> new OdysseySplashPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
     public static final RegistryObject<Item> LINGERING_POTION = ITEMS_VANILLA.register("lingering_potion", () -> new OdysseyLingeringPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
@@ -135,6 +136,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> EMERALD_SHARD = ITEMS.register("emerald_shard", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> EMERALD_FRAGMENT = ITEMS.register("emerald_fragment", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> EMERALD_PIECE = ITEMS.register("emerald_piece", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+
+    //Keys
+    public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem(ChestMaterial.STERLING_SILVER, (new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
 
     //Equipment Enchants
     public static final LevEnchSup FALL_PROTECTION_1 = new LevEnchSup(() -> Enchantments.FALL_PROTECTION, 1);

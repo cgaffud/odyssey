@@ -57,6 +57,24 @@
   "item.oddc.reinforced_chestplate": "Reinforced Chestplate",
   "item.oddc.reinforced_helmet": "Reinforced Helmet",
 
+  //Silver and Sterling Silver
+  "item.oddc.silver_nugget": "Silver Nugget",
+  "item.oddc.raw_silver": "Raw Silver",
+  "item.oddc.silver_ingot": "Silver Ingot",
+  "item.oddc.sterling_silver_nugget": "Sterling Silver Nugget",
+  "item.oddc.sterling_silver_ingot": "Sterling Silver Ingot",
+  "item.oddc.sterling_silver_sword": "Sterling Silver Sword",
+  "item.oddc.sterling_silver_pickaxe": "Sterling Silver Pickaxe",
+  "item.oddc.sterling_silver_axe": "Sterling Silver Axe",
+  "item.oddc.sterling_silver_shovel": "Sterling Silver Shovel",
+  "item.oddc.sterling_silver_hoe": "Sterling Silver Hoe",
+  "item.oddc.sterling_silver_boots": "Sterling Silver Boots",
+  "item.oddc.sterling_silver_leggings": "Sterling Silver Leggings",
+  "item.oddc.sterling_silver_chestplate": "Sterling Silver Chestplate",
+  "item.oddc.sterling_silver_helmet": "Sterling Silver Helmet",
+  "item.oddc.sterling_silver_horse_armor": "Sterling Silver Horse Armor",
+  "item.oddc.sterling_silver_key": "Sterling Silver Key",
+
   //Arctic
   "item.oddc.arctic_boots": "Arctic Boots",
   "item.oddc.arctic_leggings": "Arctic Leggings",
@@ -80,29 +98,6 @@
   "item.oddc.zephyr_chestplate": "Zephyr Tunic",
   "item.oddc.zephyr_helmet": "Zephyr Cap",
 
-  //Leviathan Armor
-  "item.oddc.leviathan_boots": "Leviathan Boots",
-  "item.oddc.leviathan_leggings": "Leviathan Leggings",
-  "item.oddc.leviathan_chestplate": "Leviathan Chestplate",
-  "item.oddc.leviathan_helmet": "Leviathan Helmet",
-
-  //Silver and Sterling Silver
-  "item.oddc.silver_nugget": "Silver Nugget",
-  "item.oddc.raw_silver": "Raw Silver",
-  "item.oddc.silver_ingot": "Silver Ingot",
-  "item.oddc.sterling_silver_nugget": "Sterling Silver Nugget",
-  "item.oddc.sterling_silver_ingot": "Sterling Silver Ingot",
-  "item.oddc.sterling_silver_sword": "Sterling Silver Sword",
-  "item.oddc.sterling_silver_pickaxe": "Sterling Silver Pickaxe",
-  "item.oddc.sterling_silver_axe": "Sterling Silver Axe",
-  "item.oddc.sterling_silver_shovel": "Sterling Silver Shovel",
-  "item.oddc.sterling_silver_hoe": "Sterling Silver Hoe",
-  "item.oddc.sterling_silver_boots": "Sterling Silver Boots",
-  "item.oddc.sterling_silver_leggings": "Sterling Silver Leggings",
-  "item.oddc.sterling_silver_chestplate": "Sterling Silver Chestplate",
-  "item.oddc.sterling_silver_helmet": "Sterling Silver Helmet",
-  "item.oddc.sterling_silver_horse_armor": "Sterling Silver Horse Armor",
-
   //Nether
   "item.oddc.golden_amulet": "Golden Amulet",
   "item.oddc.netherite_nugget": "Netherite Nugget",
@@ -112,6 +107,10 @@
   "item.oddc.hallowed_gold_ingot": "Hallowed Gold Ingot",
 
   //Leviathan
+  "item.oddc.leviathan_boots": "Leviathan Boots",
+  "item.oddc.leviathan_leggings": "Leviathan Leggings",
+  "item.oddc.leviathan_chestplate": "Leviathan Chestplate",
+  "item.oddc.leviathan_helmet": "Leviathan Helmet",
   "item.oddc.leviathan_scale": "Leviathan Scale",
   "item.oddc.leviathan_trident": "Leviathan Trident",
   "item.oddc.leviathan_quiver": "Leviathan Quiver",
@@ -178,6 +177,7 @@
   "block.oddc.sapphire_ore": "Sapphire Ore",
   "block.oddc.silver_block": "Block of Silver",
   "block.oddc.sterling_silver_block": "Block of Sterling Silver",
+  "block.oddc.sterling_silver_chest": "Sterling Silver Chest",
   "block.oddc.leather_pile": "Leather Pile",
   "block.oddc.fog1": "Fog 1",
   "block.oddc.fog2": "Fog 2",
