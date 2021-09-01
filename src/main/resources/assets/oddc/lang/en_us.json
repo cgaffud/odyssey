@@ -99,6 +99,7 @@
   "item.oddc.zephyr_helmet": "Zephyr Cap",
 
   //Nether
+  "item.oddc.golden_amulet": "Golden Amulet",
   "item.oddc.netherite_nugget": "Netherite Nugget",
   "item.oddc.netherite_bow": "Netherite Bow",
   "item.oddc.netherite_crossbow": "Netherite Crossbow",
@@ -176,6 +177,7 @@
   "block.oddc.sapphire_ore": "Sapphire Ore",
   "block.oddc.silver_block": "Block of Silver",
   "block.oddc.sterling_silver_block": "Block of Sterling Silver",
+  "block.oddc.sterling_silver_chest": "Sterling Silver Chest",
   "block.oddc.leather_pile": "Leather Pile",
   "block.oddc.fog1": "Fog 1",
   "block.oddc.fog2": "Fog 2",
