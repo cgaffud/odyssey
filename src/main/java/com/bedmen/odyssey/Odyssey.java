@@ -25,6 +25,7 @@ import com.bedmen.odyssey.world.gen.OdysseyOreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.OdysseyStructureEntitySpawn;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -40,9 +41,12 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.FoliageColors;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeColors;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
@@ -56,6 +60,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.IRegistryDelegate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -146,6 +151,11 @@ public class Odyssey
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
 
+        event.getMinecraftSupplier().get().getBlockColors().register((p_getColor_1_, p_getColor_2_, p_getColor_3_, p_getColor_4_) ->
+                { return (p_getColor_2_ != null && p_getColor_3_ != null) ? BiomeColors.getAverageFoliageColor(p_getColor_2_, p_getColor_3_) : FoliageColors.getDefaultColor(); },
+                BlockRegistry.PALM_LEAVES.get());
+
+
         //Container Screens
         ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
         ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), OdysseySmithingTableScreen::new);
@@ -172,6 +182,9 @@ public class Odyssey
         for(Block block : OdysseyBlockTags.FOG_TAG)
             RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
 
+        RenderTypeLookup.setRenderLayer(BlockRegistry.PALM_LEAVES.get(), RenderType.cutoutMipped());
+
+
         System.out.println("beans");
         System.out.println(Integer.parseInt(BlockRegistry.FOG3.get().toString().substring(14,15)));
     }
@@ -186,4 +199,9 @@ public class Odyssey
         EquipmentArmorItem.initEquipment();
         EquipmentItem.initEquipment();
     }
+
+//    @SubscribeEvent
+//    public static void onColorHandlerEvent(final ColorHandlerEvent.Block event) {
+//
+//    }
 }

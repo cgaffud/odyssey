@@ -42,16 +42,17 @@ public class PalmFoliagePlacer extends FoliagePlacer {
     @Override
     protected boolean shouldSkipLocation(Random random, int xOff, int yOff, int zOff, int radius, boolean isDoubleTrunk) {
         int smallRadius = radius/2;
-        if ((yOff >= 0) && (xOff+yOff+zOff) <= smallRadius)
+        int horizontalSum = xOff + zOff;
+        if ((yOff >= 0) && (yOff+horizontalSum) <= smallRadius)
             return false;
         else if ((yOff == 0) && ((xOff+zOff) <= radius-1)) {
-            if ((xOff == zOff)) return false;
-            if (((xOff == 0) || (zOff == 0)) && (xOff+zOff <= radius-2)) return false;
+            if (xOff == zOff) return false;
+            if (((xOff == 0) || (zOff == 0)) && (horizontalSum <= radius-2)) return false;
             return true;
         }
         else if (yOff == -1){
-            if ((xOff == zOff) && ((xOff+zOff) == radius)) return false;
-            if (((xOff == 0) || (zOff == 0)) && (xOff+zOff == radius-1)) return false;
+            if ((xOff == zOff) && (horizontalSum >= radius-1) && (horizontalSum <= radius+1)) return false;
+            if (((xOff == 0) || (zOff == 0)) && ((horizontalSum == radius-2) || (horizontalSum == radius-1))) return false;
         }
         return true;
     }

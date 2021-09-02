@@ -56,6 +56,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> AUTUMN_LEAVES_YELLOW = ITEMS.register("autumn_leaves_yellow", () -> new BlockItem(BlockRegistry.AUTUMN_LEAVES_YELLOW.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
 
     public static final RegistryObject<Item> PALM_LOG = ITEMS.register("palm_log", () -> new BlockItem(BlockRegistry.PALM_LOG.get(), (new Item.Properties()).tab(Odyssey.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> PALM_LEAVES = ITEMS.register("palm_leaves", () -> new BlockItem(BlockRegistry.PALM_LEAVES.get(), (new Item.Properties()).tab(Odyssey.DECORATION_BLOCKS)));
+
 
     //Items
 
