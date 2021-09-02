@@ -56,13 +56,18 @@ public class BlockRegistry {
     public static final RegistryObject<Block> AUTUMN_LEAVES_YELLOW = BLOCKS.register("autumn_leaves_yellow", BlockRegistry::leaves);
 
     public static final RegistryObject<Block> PALM_LOG = BLOCKS.register("palm_log", () -> log(MaterialColor.TERRACOTTA_LIGHT_GRAY, MaterialColor.TERRACOTTA_LIGHT_GRAY));
-    public static final RegistryObject<Block> PALM_LEAVES = BLOCKS.register("palm_leaves", BlockRegistry::leaves);
+    public static final RegistryObject<Block> PALM_LEAVES = BLOCKS.register("palm_leaves", BlockRegistry::dleaves);
 
     public static final RegistryObject<Block> FROSTED_OBSIDIAN = BLOCKS.register("frosted_obsidian", () -> new FrostedObsidianBlock(AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).randomTicks().strength(50.0F, 1200.0F).lightLevel(FrostedObsidianBlock.litBlockEmission())));
 
     // Default Leaf Maker
     private static LeavesBlock leaves() {
         return new LeavesBlock(AbstractBlock.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).harvestTool(ToolType.HOE).noOcclusion().isValidSpawn(BlockRegistry::ocelotOrParrot).isSuffocating(BlockRegistry::never).isViewBlocking(BlockRegistry::never));
+    }
+
+    //Diagonals Leaf Maker
+    private static DiagonalLeavesBlock dleaves() {
+        return new DiagonalLeavesBlock(AbstractBlock.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).harvestTool(ToolType.HOE).noOcclusion().isValidSpawn(BlockRegistry::ocelotOrParrot).isSuffocating(BlockRegistry::never).isViewBlocking(BlockRegistry::never));
     }
 
     // Default Log Maker
