@@ -185,5 +185,8 @@ public class Odyssey
     @SubscribeEvent
     public static void onTextureStitch(final TextureStitchEvent.Pre event){
         event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
+        event.addSprite(SterlingSilverChestTileEntityRenderer.SINGLE_RESOURCE_LOCATION);
+        event.addSprite(SterlingSilverChestTileEntityRenderer.LEFT_RESOURCE_LOCATION);
+        event.addSprite(SterlingSilverChestTileEntityRenderer.RIGHT_RESOURCE_LOCATION);
     }
 }

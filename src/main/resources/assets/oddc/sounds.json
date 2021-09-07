@@ -1,10 +1,10 @@
 {
-  "entity.permafrost.icicle_spiral": {
-    "category": "entity",
-    "subtitle": "entity.permafrost.icicle_spiral.sub",
+  "block.key_unlock": {
+    "category": "block",
+    "subtitle": "block.key_unlock.sub",
     "sounds": [
       {
-        "name": "oddc:entity/permafrost/spiral",
+        "name": "oddc:block/key_unlock",
         "stream": true
       }
     ]

@@ -21,6 +21,5 @@ public class SoundEventRegistry {
         SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    //public static final RegistryObject<SoundEvent> PERMAFROST_ICICLE_SPIRAL = SOUND_EVENTS.register("permafrost_icicle_spiral", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.permafrost.icicle_spiral")));
-
+    public static final RegistryObject<SoundEvent> KEY_UNLOCK = SOUND_EVENTS.register("key_unlock", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "block.key_unlock")));
 }

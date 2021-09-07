@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.client.renderer.tileentity;
 
+import com.bedmen.odyssey.Odyssey;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
@@ -24,6 +25,7 @@ import net.minecraft.tileentity.IChestLid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMerger;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,6 +33,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class SterlingSilverChestTileEntityRenderer<T extends TileEntity & IChestLid> extends TileEntityRenderer<T> {
+    public static final ResourceLocation SINGLE_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/single");
+    public static final ResourceLocation LEFT_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/left");
+    public static final ResourceLocation RIGHT_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/right");
+    public static final RenderMaterial SINGLE_RENDER_MATERIAL = new RenderMaterial(Atlases.CHEST_SHEET, SINGLE_RESOURCE_LOCATION);
+    public static final RenderMaterial LEFT_RENDER_MATERIAL = new RenderMaterial(Atlases.CHEST_SHEET, LEFT_RESOURCE_LOCATION);
+    public static final RenderMaterial RIGHT_RENDER_MATERIAL = new RenderMaterial(Atlases.CHEST_SHEET, RIGHT_RESOURCE_LOCATION);
     private final ModelRenderer lid;
     private final ModelRenderer bottom;
     private final ModelRenderer lock;
@@ -128,6 +136,13 @@ public class SterlingSilverChestTileEntityRenderer<T extends TileEntity & IChest
     }
 
     protected RenderMaterial getMaterial(T tileEntity, ChestType chestType) {
-        return Atlases.chooseMaterial(tileEntity, chestType, this.xmasTextures);
+        switch(chestType) {
+            case LEFT:
+                return LEFT_RENDER_MATERIAL;
+            case RIGHT:
+                return RIGHT_RENDER_MATERIAL;
+            default:
+                return SINGLE_RENDER_MATERIAL;
+        }
     }
 }
