@@ -333,5 +333,8 @@
   "item.minecraft.tipped_arrow.effect.lava_vision": "Arrow of Lava Vision",
   "item.minecraft.tipped_arrow.effect.long_lava_vision": "Arrow of Lava Vision",
   "item.minecraft.lingering_potion.effect.lava_vision": "Lingering Potion of Lava Vision",
-  "item.minecraft.lingering_potion.effect.long_lava_vision": "Lingering Potion of Lava Vision"
+  "item.minecraft.lingering_potion.effect.long_lava_vision": "Lingering Potion of Lava Vision",
+
+  //Sounds
+  "block.key_unlock.sub": "Chest Unlock"
 }

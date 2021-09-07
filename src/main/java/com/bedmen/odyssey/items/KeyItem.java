@@ -6,8 +6,8 @@ import net.minecraft.item.Item;
 public class KeyItem extends Item {
     private final ChestMaterial chestMaterial;
 
-    public KeyItem(ChestMaterial chestMaterial, Properties p_i48487_1_) {
-        super(p_i48487_1_);
+    public KeyItem(ChestMaterial chestMaterial, Properties properties) {
+        super(properties);
         this.chestMaterial = chestMaterial;
     }
 
