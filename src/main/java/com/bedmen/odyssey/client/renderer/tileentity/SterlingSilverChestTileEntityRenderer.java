@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.client.renderer.tileentity;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.blocks.SterlingSilverChestBlock;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
@@ -34,11 +36,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class SterlingSilverChestTileEntityRenderer<T extends TileEntity & IChestLid> extends TileEntityRenderer<T> {
     public static final ResourceLocation SINGLE_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/single");
+    public static final ResourceLocation SINGLE_LOCKED_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/single_locked");
     public static final ResourceLocation LEFT_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/left");
+    public static final ResourceLocation LEFT_LOCKED_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/left_locked");
     public static final ResourceLocation RIGHT_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/right");
+    public static final ResourceLocation RIGHT_LOCKED_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/right_locked");
     public static final RenderMaterial SINGLE_RENDER_MATERIAL = new RenderMaterial(Atlases.CHEST_SHEET, SINGLE_RESOURCE_LOCATION);
+    public static final RenderMaterial SINGLE_LOCKED_RENDER_MATERIAL = new RenderMaterial(Atlases.CHEST_SHEET, SINGLE_LOCKED_RESOURCE_LOCATION);
     public static final RenderMaterial LEFT_RENDER_MATERIAL = new RenderMaterial(Atlases.CHEST_SHEET, LEFT_RESOURCE_LOCATION);
+    public static final RenderMaterial LEFT_LOCKED_RENDER_MATERIAL = new RenderMaterial(Atlases.CHEST_SHEET, LEFT_LOCKED_RESOURCE_LOCATION);
     public static final RenderMaterial RIGHT_RENDER_MATERIAL = new RenderMaterial(Atlases.CHEST_SHEET, RIGHT_RESOURCE_LOCATION);
+    public static final RenderMaterial RIGHT_LOCKED_RENDER_MATERIAL = new RenderMaterial(Atlases.CHEST_SHEET, RIGHT_LOCKED_RESOURCE_LOCATION);
     private final ModelRenderer lid;
     private final ModelRenderer bottom;
     private final ModelRenderer lock;
@@ -89,7 +97,7 @@ public class SterlingSilverChestTileEntityRenderer<T extends TileEntity & IChest
     public void render(T p_225616_1_, float p_225616_2_, MatrixStack p_225616_3_, IRenderTypeBuffer p_225616_4_, int p_225616_5_, int p_225616_6_) {
         World world = p_225616_1_.getLevel();
         boolean flag = world != null;
-        BlockState blockstate = flag ? p_225616_1_.getBlockState() : Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
+        BlockState blockstate = flag ? p_225616_1_.getBlockState() : BlockRegistry.STERLING_SILVER_CHEST.get().defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
         ChestType chesttype = blockstate.hasProperty(ChestBlock.TYPE) ? blockstate.getValue(ChestBlock.TYPE) : ChestType.SINGLE;
         Block block = blockstate.getBlock();
         if (block instanceof AbstractChestBlock) {
@@ -111,7 +119,8 @@ public class SterlingSilverChestTileEntityRenderer<T extends TileEntity & IChest
             f1 = 1.0F - f1;
             f1 = 1.0F - f1 * f1 * f1;
             int i = icallbackwrapper.<Int2IntFunction>apply(new DualBrightnessCallback<>()).applyAsInt(p_225616_5_);
-            RenderMaterial rendermaterial = this.getMaterial(p_225616_1_, chesttype);
+            boolean locked = blockstate.getValue(SterlingSilverChestBlock.LOCKED);
+            RenderMaterial rendermaterial = this.getMaterial(chesttype, locked);
             IVertexBuilder ivertexbuilder = rendermaterial.buffer(p_225616_4_, RenderType::entityCutout);
             if (flag1) {
                 if (chesttype == ChestType.LEFT) {
@@ -131,18 +140,18 @@ public class SterlingSilverChestTileEntityRenderer<T extends TileEntity & IChest
         p_228871_3_.xRot = -(p_228871_6_ * ((float)Math.PI / 2F));
         p_228871_4_.xRot = p_228871_3_.xRot;
         p_228871_3_.render(p_228871_1_, p_228871_2_, p_228871_7_, p_228871_8_);
-        p_228871_4_.render(p_228871_1_, p_228871_2_, p_228871_7_, p_228871_8_);
         p_228871_5_.render(p_228871_1_, p_228871_2_, p_228871_7_, p_228871_8_);
+        p_228871_4_.render(p_228871_1_, p_228871_2_, p_228871_7_, p_228871_8_);
     }
 
-    protected RenderMaterial getMaterial(T tileEntity, ChestType chestType) {
+    protected RenderMaterial getMaterial(ChestType chestType, boolean locked) {
         switch(chestType) {
             case LEFT:
-                return LEFT_RENDER_MATERIAL;
+                return locked ? LEFT_LOCKED_RENDER_MATERIAL : LEFT_RENDER_MATERIAL;
             case RIGHT:
-                return RIGHT_RENDER_MATERIAL;
+                return locked ? RIGHT_LOCKED_RENDER_MATERIAL : RIGHT_RENDER_MATERIAL;
             default:
-                return SINGLE_RENDER_MATERIAL;
+                return locked ? SINGLE_LOCKED_RENDER_MATERIAL : SINGLE_RENDER_MATERIAL;
         }
     }
 }

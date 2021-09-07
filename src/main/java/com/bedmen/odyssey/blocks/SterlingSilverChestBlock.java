@@ -11,6 +11,8 @@ import net.minecraft.block.ChestBlock;
 import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
@@ -36,7 +38,7 @@ public class SterlingSilverChestBlock extends ChestBlock {
 
     public SterlingSilverChestBlock(AbstractBlock.Properties p_i48306_1_) {
         super(p_i48306_1_, TileEntityTypeRegistry.STERLING_SILVER_CHEST::get);
-        this.registerDefaultState(this.stateDefinition.any().setValue(LOCKED, Boolean.TRUE));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LOCKED, Boolean.FALSE));
     }
 
     public TileEntity newBlockEntity(IBlockReader p_196283_1_) {
@@ -54,6 +56,23 @@ public class SterlingSilverChestBlock extends ChestBlock {
             ItemStack itemStack = playerEntity.getItemInHand(hand);
             if(itemStack.getItem() == ItemRegistry.STERLING_SILVER_KEY.get()){
                 world.setBlock(blockPos, blockState.setValue(LOCKED, Boolean.FALSE), 3);
+                if (blockState.getValue(TYPE) != ChestType.SINGLE) {
+                    switch(getConnectedDirection(blockState)) {
+                        case NORTH:
+                        default:
+                            world.setBlock(blockPos.north(), world.getBlockState(blockPos.north()).setValue(LOCKED, Boolean.FALSE), 3);
+                            break;
+                        case SOUTH:
+                            world.setBlock(blockPos.south(), world.getBlockState(blockPos.south()).setValue(LOCKED, Boolean.FALSE), 3);
+                            break;
+                        case WEST:
+                            world.setBlock(blockPos.west(), world.getBlockState(blockPos.west()).setValue(LOCKED, Boolean.FALSE), 3);
+                            break;
+                        case EAST:
+                            world.setBlock(blockPos.east(), world.getBlockState(blockPos.east()).setValue(LOCKED, Boolean.FALSE), 3);
+                            break;
+                    }
+                }
                 world.playSound(playerEntity, blockPos, SoundEventRegistry.KEY_UNLOCK.get(), SoundCategory.BLOCKS, 1.0f, 1.0f);
                 itemStack.shrink(1);
             }
@@ -73,6 +92,20 @@ public class SterlingSilverChestBlock extends ChestBlock {
             }
         } else {
             return ActionResultType.FAIL;
+        }
+    }
+
+    public void onRemove(BlockState blockState, World world, BlockPos blockPos, BlockState blockState2, boolean p_196243_5_) {
+        if (!blockState.is(blockState2.getBlock())) {
+            TileEntity tileentity = world.getBlockEntity(blockPos);
+            if (tileentity instanceof IInventory && !blockState.getValue(LOCKED)) {
+                InventoryHelper.dropContents(world, blockPos, (IInventory)tileentity);
+                world.updateNeighbourForOutputSignal(blockPos, this);
+            }
+
+            if (blockState.hasTileEntity() && (!blockState.is(blockState2.getBlock()) || !blockState2.hasTileEntity())) {
+                world.removeBlockEntity(blockPos);
+            }
         }
     }
 }
