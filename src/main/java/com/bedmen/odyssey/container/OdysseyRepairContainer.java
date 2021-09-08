@@ -14,9 +14,11 @@ import net.minecraft.inventory.container.AbstractRepairContainer;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.*;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -123,6 +125,31 @@ public class OdysseyRepairContainer extends AbstractRepairContainer {
                     }
 
                     this.repairItemCountCost = i3;
+                } else if(itemstack2.getItem() == Items.PAPER) {
+                    i++;
+                    CompoundNBT compoundNBT = itemstack1.getOrCreateTagElement("display");
+                    if (itemstack2.hasCustomHoverName()) {
+                        ITextComponent iTextComponent = itemstack2.getHoverName();
+                        if (compoundNBT.getTagType("Lore") == 9) {
+                            ListNBT listNBT = compoundNBT.getList("Lore", 8);
+                            if(listNBT.size() >= 5){
+                                this.resultSlots.setItem(0, ItemStack.EMPTY);
+                                this.cost.set(0);
+                                return;
+                            }
+                            listNBT.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(iTextComponent)));
+                        } else {
+                            ListNBT listNBT = new ListNBT();
+                            listNBT.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(iTextComponent)));
+                            compoundNBT.put("Lore", listNBT);
+                        }
+                    } else if (compoundNBT.getTagType("Lore") == 9){
+                        compoundNBT.remove("Lore");
+                    } else {
+                        this.resultSlots.setItem(0, ItemStack.EMPTY);
+                        this.cost.set(0);
+                        return;
+                    }
                 } else {
                     this.resultSlots.setItem(0, ItemStack.EMPTY);
                     this.cost.set(0);
