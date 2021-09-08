@@ -47,6 +47,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SILVER_BLOCK = ITEMS.register("silver_block", () -> new BlockItem(BlockRegistry.SILVER_BLOCK.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> STERLING_SILVER_BLOCK = ITEMS.register("sterling_silver_block", () -> new BlockItem(BlockRegistry.STERLING_SILVER_BLOCK.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> STERLING_SILVER_CHEST = ITEMS.register("sterling_silver_chest", () -> new BlockItem(BlockRegistry.STERLING_SILVER_CHEST.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance)));
+    public static final RegistryObject<Item> FLUORITE_BLOCK = ITEMS.register("fluorite_block", () -> new BlockItem(BlockRegistry.FLUORITE_BLOCK.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> PERIDOT_BLOCK = ITEMS.register("peridot_block", () -> new BlockItem(BlockRegistry.PERIDOT_BLOCK.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> LEATHER_PILE = ITEMS.register("leather_pile", () -> new BlockItem(BlockRegistry.LEATHER_PILE.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> PERMAFROST_CONDUIT = ITEMS.register("permafrost_conduit", () -> new BlockItem(BlockRegistry.PERMAFROST_CONDUIT.get(), (new Item.Properties()).tab(ItemGroup.TAB_MISC).rarity(Rarity.RARE)));
 
@@ -67,22 +69,15 @@ public class ItemRegistry {
     public static final RegistryObject<Item> AUTUMN_LEAVES_ORANGE = ITEMS.register("autumn_leaves_orange", () -> new BlockItem(BlockRegistry.AUTUMN_LEAVES_ORANGE.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS)));
 
     //Items
-    public static final RegistryObject<Item> POTION = ITEMS_VANILLA.register("potion", () -> new OdysseyPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
-    public static final RegistryObject<Item> SPLASH_POTION = ITEMS_VANILLA.register("splash_potion", () -> new OdysseySplashPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
-    public static final RegistryObject<Item> LINGERING_POTION = ITEMS_VANILLA.register("lingering_potion", () -> new OdysseyLingeringPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
-    public static final RegistryObject<Item> DIAMOND_SHARD = ITEMS.register("diamond_shard", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> RAW_IRON = ITEMS.register("raw_iron", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> RAW_COPPER = ITEMS.register("raw_copper", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> RAW_GOLD = ITEMS.register("raw_gold", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> RAW_SILVER = ITEMS.register("raw_silver", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> COPPER_NUGGET = ITEMS.register("copper_nugget", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> COPPER_INGOT = ITEMS.register("copper_ingot", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> RAW_SILVER = ITEMS.register("raw_silver", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> SILVER_NUGGET = ITEMS.register("silver_nugget", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> SILVER_INGOT = ITEMS.register("silver_ingot", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_NUGGET = ITEMS.register("sterling_silver_nugget", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_INGOT = ITEMS.register("sterling_silver_ingot", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> CLOVER = ITEMS.register("clover", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> FLUORITE = ITEMS.register("fluorite", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> PERIDOT = ITEMS.register("peridot", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> CLOVER = ITEMS.register("clover", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> LEVIATHAN_SCALE = ITEMS.register("leviathan_scale", () -> new Item((new Item.Properties()).fireResistant().tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> RUBY = ITEMS.register("ruby", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> SAPPHIRE = ITEMS.register("sapphire", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)));
@@ -99,47 +94,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MALEVOLENT_QUILL = ITEMS.register("malevolent_quill", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> PURGE_TABLET = ITEMS.register("purge_tablet", () -> new PurgeTabletItem((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.RARE)));
 
-    // Vanilla things that used to stack to 16
-    public static final RegistryObject<Item> ENDER_PEARL = ITEMS_VANILLA.register("ender_pearl", () -> new EnderPearlItem((new Item.Properties()).tab(ItemGroup.TAB_MISC)));
-    public static final RegistryObject<Item> EGG = ITEMS_VANILLA.register("egg", () -> new EggItem((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
-    public static final RegistryObject<Item> SNOWBALL = ITEMS_VANILLA.register("snowball", () -> new SnowballItem((new Item.Properties()).tab(ItemGroup.TAB_MISC)));
-    public static final RegistryObject<Item> HONEY_BOTTLE = ITEMS_VANILLA.register("honey_bottle", () -> new HoneyBottleItem((new Item.Properties()).craftRemainder(Items.GLASS_BOTTLE).food(Foods.HONEY_BOTTLE).tab(ItemGroup.TAB_FOOD)));
-    public static final RegistryObject<Item> OAK_SIGN = ITEMS_VANILLA.register("oak_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.OAK_SIGN, Blocks.OAK_WALL_SIGN));
-    public static final RegistryObject<Item> SPRUCE_SIGN = ITEMS_VANILLA.register("spruce_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.SPRUCE_SIGN, Blocks.SPRUCE_WALL_SIGN));
-    public static final RegistryObject<Item> BIRCH_SIGN = ITEMS_VANILLA.register("birch_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.BIRCH_SIGN, Blocks.BIRCH_WALL_SIGN));
-    public static final RegistryObject<Item> JUNGLE_SIGN = ITEMS_VANILLA.register("jungle_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.JUNGLE_SIGN, Blocks.JUNGLE_WALL_SIGN));
-    public static final RegistryObject<Item> ACACIA_SIGN = ITEMS_VANILLA.register("acacia_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.ACACIA_SIGN, Blocks.ACACIA_WALL_SIGN));
-    public static final RegistryObject<Item> DARK_OAK_SIGN = ITEMS_VANILLA.register("dark_oak_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.DARK_OAK_SIGN, Blocks.DARK_OAK_WALL_SIGN));
-    public static final RegistryObject<Item> CRIMSON_SIGN = ITEMS_VANILLA.register("crimson_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.CRIMSON_SIGN, Blocks.CRIMSON_WALL_SIGN));
-    public static final RegistryObject<Item> WARPED_SIGN = ITEMS_VANILLA.register("warped_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.WARPED_SIGN, Blocks.WARPED_WALL_SIGN));
-    public static final RegistryObject<Item> BUCKET = ITEMS_VANILLA.register("bucket", () -> new BucketItem(Fluids.EMPTY, (new Item.Properties()).tab(ItemGroup.TAB_MISC)));
-    public static final RegistryObject<Item> WRITTEN_BOOK = ITEMS_VANILLA.register("written_book", () -> new WrittenBookItem((new Item.Properties())));
-    public static final RegistryObject<Item> ARMOR_STAND = ITEMS_VANILLA.register("armor_stand", () -> new ArmorStandItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> WHITE_BANNER = ITEMS_VANILLA.register("white_banner", () -> new BannerItem(Blocks.WHITE_BANNER, Blocks.WHITE_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> ORANGE_BANNER = ITEMS_VANILLA.register("orange_banner", () -> new BannerItem(Blocks.ORANGE_BANNER, Blocks.ORANGE_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> MAGENTA_BANNER = ITEMS_VANILLA.register("magenta_banner", () -> new BannerItem(Blocks.MAGENTA_BANNER, Blocks.MAGENTA_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> LIGHT_BLUE_BANNER = ITEMS_VANILLA.register("light_blue_banner", () -> new BannerItem(Blocks.LIGHT_BLUE_BANNER, Blocks.LIGHT_BLUE_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> YELLOW_BANNER = ITEMS_VANILLA.register("yellow_banner", () -> new BannerItem(Blocks.YELLOW_BANNER, Blocks.YELLOW_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> LIME_BANNER = ITEMS_VANILLA.register("lime_banner", () -> new BannerItem(Blocks.LIME_BANNER, Blocks.LIME_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> PINK_BANNER = ITEMS_VANILLA.register("pink_banner", () -> new BannerItem(Blocks.PINK_BANNER, Blocks.PINK_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> GRAY_BANNER = ITEMS_VANILLA.register("gray_banner", () -> new BannerItem(Blocks.GRAY_BANNER, Blocks.GRAY_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> LIGHT_GRAY_BANNER = ITEMS_VANILLA.register("light_gray_banner", () -> new BannerItem(Blocks.LIGHT_GRAY_BANNER, Blocks.LIGHT_GRAY_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> CYAN_BANNER = ITEMS_VANILLA.register("cyan_banner", () -> new BannerItem(Blocks.CYAN_BANNER, Blocks.CYAN_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> PURPLE_BANNER = ITEMS_VANILLA.register("purple_banner", () -> new BannerItem(Blocks.PURPLE_BANNER, Blocks.PURPLE_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> BLUE_BANNER = ITEMS_VANILLA.register("blue_banner", () -> new BannerItem(Blocks.BLUE_BANNER, Blocks.BLUE_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> BROWN_BANNER = ITEMS_VANILLA.register("brown_banner", () -> new BannerItem(Blocks.BROWN_BANNER, Blocks.BROWN_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> GREEN_BANNER = ITEMS_VANILLA.register("green_banner", () -> new BannerItem(Blocks.GREEN_BANNER, Blocks.GREEN_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> RED_BANNER = ITEMS_VANILLA.register("red_banner", () -> new BannerItem(Blocks.RED_BANNER, Blocks.RED_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-    public static final RegistryObject<Item> BLACK_BANNER = ITEMS_VANILLA.register("black_banner", () -> new BannerItem(Blocks.BLACK_BANNER, Blocks.BLACK_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
-
     //Food
     public static final RegistryObject<Item> LIFE_FRUIT = ITEMS.register("life_fruit", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).food(OdysseyFoods.LIFE_FRUIT)));
-
-    //Emeralds
-    public static final RegistryObject<Item> EMERALD_BIT = ITEMS.register("emerald_bit", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> EMERALD_SHARD = ITEMS.register("emerald_shard", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> EMERALD_FRAGMENT = ITEMS.register("emerald_fragment", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> EMERALD_PIECE = ITEMS.register("emerald_piece", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
 
     //Keys
     public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem(ChestMaterial.STERLING_SILVER, (new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
@@ -322,4 +278,51 @@ public class ItemRegistry {
     //Spawn Eggs
     public static final RegistryObject<Item> ARCTIHORN_SPAWN_EGG = ITEMS.register("arctihorn_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.ARCTIHORN, 0x6e7d90, 0x8ab5eb, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
     public static final RegistryObject<Item> LUPINE_SPAWN_EGG = ITEMS.register("lupine_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.LUPINE, 0x000000, 0x000000, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
+
+    // Vanilla
+
+    // Used to stack to 16, now stack to 64
+    public static final RegistryObject<Item> ENDER_PEARL = ITEMS_VANILLA.register("ender_pearl", () -> new EnderPearlItem((new Item.Properties()).tab(ItemGroup.TAB_MISC)));
+    public static final RegistryObject<Item> EGG = ITEMS_VANILLA.register("egg", () -> new EggItem((new Item.Properties()).tab(ItemGroup.TAB_MATERIALS)));
+    public static final RegistryObject<Item> SNOWBALL = ITEMS_VANILLA.register("snowball", () -> new SnowballItem((new Item.Properties()).tab(ItemGroup.TAB_MISC)));
+    public static final RegistryObject<Item> HONEY_BOTTLE = ITEMS_VANILLA.register("honey_bottle", () -> new HoneyBottleItem((new Item.Properties()).craftRemainder(Items.GLASS_BOTTLE).food(Foods.HONEY_BOTTLE).tab(ItemGroup.TAB_FOOD)));
+    public static final RegistryObject<Item> OAK_SIGN = ITEMS_VANILLA.register("oak_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.OAK_SIGN, Blocks.OAK_WALL_SIGN));
+    public static final RegistryObject<Item> SPRUCE_SIGN = ITEMS_VANILLA.register("spruce_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.SPRUCE_SIGN, Blocks.SPRUCE_WALL_SIGN));
+    public static final RegistryObject<Item> BIRCH_SIGN = ITEMS_VANILLA.register("birch_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.BIRCH_SIGN, Blocks.BIRCH_WALL_SIGN));
+    public static final RegistryObject<Item> JUNGLE_SIGN = ITEMS_VANILLA.register("jungle_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.JUNGLE_SIGN, Blocks.JUNGLE_WALL_SIGN));
+    public static final RegistryObject<Item> ACACIA_SIGN = ITEMS_VANILLA.register("acacia_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.ACACIA_SIGN, Blocks.ACACIA_WALL_SIGN));
+    public static final RegistryObject<Item> DARK_OAK_SIGN = ITEMS_VANILLA.register("dark_oak_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.DARK_OAK_SIGN, Blocks.DARK_OAK_WALL_SIGN));
+    public static final RegistryObject<Item> CRIMSON_SIGN = ITEMS_VANILLA.register("crimson_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.CRIMSON_SIGN, Blocks.CRIMSON_WALL_SIGN));
+    public static final RegistryObject<Item> WARPED_SIGN = ITEMS_VANILLA.register("warped_sign", () -> new SignItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS), Blocks.WARPED_SIGN, Blocks.WARPED_WALL_SIGN));
+    public static final RegistryObject<Item> BUCKET = ITEMS_VANILLA.register("bucket", () -> new BucketItem(Fluids.EMPTY, (new Item.Properties()).tab(ItemGroup.TAB_MISC)));
+    public static final RegistryObject<Item> WRITTEN_BOOK = ITEMS_VANILLA.register("written_book", () -> new WrittenBookItem((new Item.Properties())));
+    public static final RegistryObject<Item> ARMOR_STAND = ITEMS_VANILLA.register("armor_stand", () -> new ArmorStandItem((new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> WHITE_BANNER = ITEMS_VANILLA.register("white_banner", () -> new BannerItem(Blocks.WHITE_BANNER, Blocks.WHITE_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> ORANGE_BANNER = ITEMS_VANILLA.register("orange_banner", () -> new BannerItem(Blocks.ORANGE_BANNER, Blocks.ORANGE_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> MAGENTA_BANNER = ITEMS_VANILLA.register("magenta_banner", () -> new BannerItem(Blocks.MAGENTA_BANNER, Blocks.MAGENTA_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> LIGHT_BLUE_BANNER = ITEMS_VANILLA.register("light_blue_banner", () -> new BannerItem(Blocks.LIGHT_BLUE_BANNER, Blocks.LIGHT_BLUE_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> YELLOW_BANNER = ITEMS_VANILLA.register("yellow_banner", () -> new BannerItem(Blocks.YELLOW_BANNER, Blocks.YELLOW_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> LIME_BANNER = ITEMS_VANILLA.register("lime_banner", () -> new BannerItem(Blocks.LIME_BANNER, Blocks.LIME_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> PINK_BANNER = ITEMS_VANILLA.register("pink_banner", () -> new BannerItem(Blocks.PINK_BANNER, Blocks.PINK_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> GRAY_BANNER = ITEMS_VANILLA.register("gray_banner", () -> new BannerItem(Blocks.GRAY_BANNER, Blocks.GRAY_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> LIGHT_GRAY_BANNER = ITEMS_VANILLA.register("light_gray_banner", () -> new BannerItem(Blocks.LIGHT_GRAY_BANNER, Blocks.LIGHT_GRAY_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> CYAN_BANNER = ITEMS_VANILLA.register("cyan_banner", () -> new BannerItem(Blocks.CYAN_BANNER, Blocks.CYAN_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> PURPLE_BANNER = ITEMS_VANILLA.register("purple_banner", () -> new BannerItem(Blocks.PURPLE_BANNER, Blocks.PURPLE_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> BLUE_BANNER = ITEMS_VANILLA.register("blue_banner", () -> new BannerItem(Blocks.BLUE_BANNER, Blocks.BLUE_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> BROWN_BANNER = ITEMS_VANILLA.register("brown_banner", () -> new BannerItem(Blocks.BROWN_BANNER, Blocks.BROWN_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> GREEN_BANNER = ITEMS_VANILLA.register("green_banner", () -> new BannerItem(Blocks.GREEN_BANNER, Blocks.GREEN_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> RED_BANNER = ITEMS_VANILLA.register("red_banner", () -> new BannerItem(Blocks.RED_BANNER, Blocks.RED_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> BLACK_BANNER = ITEMS_VANILLA.register("black_banner", () -> new BannerItem(Blocks.BLACK_BANNER, Blocks.BLACK_WALL_BANNER, (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+
+    //Potion Overwrites
+    public static final RegistryObject<Item> POTION = ITEMS_VANILLA.register("potion", () -> new OdysseyPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
+    public static final RegistryObject<Item> SPLASH_POTION = ITEMS_VANILLA.register("splash_potion", () -> new OdysseySplashPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
+    public static final RegistryObject<Item> LINGERING_POTION = ITEMS_VANILLA.register("lingering_potion", () -> new OdysseyLingeringPotionItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_BREWING)));
+
+    // 1.17 Materials
+    public static final RegistryObject<Item> RAW_COPPER = ITEMS.register("raw_copper", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> COPPER_INGOT = ITEMS.register("copper_ingot", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> RAW_IRON = ITEMS.register("raw_iron", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> RAW_GOLD = ITEMS.register("raw_gold", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> AMETHYST_SHARD = ITEMS.register("amethyst_shard", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
 }

@@ -1,0 +1,14 @@
+{
+  "type": "oddc:alloying",
+  "ingredient1":
+  {
+    "item": "minecraft:emerald"
+  },
+  "ingredient2":
+  {
+    "item": "oddc:amethyst_shard"
+  },
+  "result": "oddc:fluorite",
+  "experience": 1.0,
+  "cookingtime": 200
+}
