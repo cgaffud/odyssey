@@ -6,10 +6,16 @@
   },
   "ingredient2":[
     {
-      "item": "minecraft:gold_ingot"
+      "item": "minecraft:gold_ore"
+    },
+    {
+      "item": "oddc:raw_gold"
+    },
+    {
+      "item": "minecraft:nether_gold_ore"
     }
   ],
   "result": "minecraft:netherite_ingot",
-  "experience": 2.0,
+  "experience": 3.0,
   "cookingtime": 200
 }

@@ -1,16 +1,20 @@
 {
-  "item.oddc.diamond_shard": "Diamond Shard",
-  "item.oddc.leather_quiver": "Leather Quiver",
-  "item.oddc.clover": "Clover",
-  "item.oddc.peridot": "Peridot",
+  //1.17 Materials
+  "item.oddc.raw_copper": "Raw Copper",
+  "item.oddc.copper_ingot": "Copper Ingot",
   "item.oddc.raw_iron": "Raw Iron",
   "item.oddc.raw_gold": "Raw Gold",
-  "item.oddc.raw_copper": "Raw Copper",
+  "item.oddc.amethyst_shard": "Amethyst Shard",
+
+  //New Items
+  "item.oddc.leather_quiver": "Leather Quiver",
   "item.oddc.copper_nugget": "Copper Nugget",
-  "item.oddc.copper_ingot": "Copper Ingot",
+  "item.oddc.clover": "Clover",
+  "item.oddc.peridot": "Peridot",
   "item.oddc.ruby": "Ruby",
   "item.oddc.sapphire": "Sapphire",
   "item.oddc.pearl": "Pearl",
+  "item.oddc.fluorite": "Fluorite",
   "item.oddc.feather_bundle": "Feather Bundle",
   "item.oddc.permafrost_shard": "Permafrost Shard",
   "item.oddc.arctic_heart": "Heart of the Arctic",
@@ -20,12 +24,6 @@
   "item.oddc.bewitched_quill": "Bewitched Quill",
   "item.oddc.malevolent_quill": "Malevolent Quill",
   "item.oddc.purge_tablet": "Purge Tablet",
-
-  //Emerald
-  "item.oddc.emerald_bit": "Emerald Bit",
-  "item.oddc.emerald_shard": "Emerald Shard",
-  "item.oddc.emerald_fragment": "Emerald Fragment",
-  "item.oddc.emerald_piece": "Emerald Piece",
 
   //Food
   "item.oddc.life_fruit": "Life Fruit",
@@ -92,7 +90,7 @@
   "item.oddc.marine_chestplate": "Marine Chestplate",
   "item.oddc.marine_helmet": "Marine Helmet",
 
-  //Zephyr Suit
+  //Zephyr
   "item.oddc.zephyr_boots": "Zephyr Boots",
   "item.oddc.zephyr_leggings": "Zephyr Pants",
   "item.oddc.zephyr_chestplate": "Zephyr Tunic",
@@ -178,6 +176,8 @@
   "block.oddc.silver_block": "Block of Silver",
   "block.oddc.sterling_silver_block": "Block of Sterling Silver",
   "block.oddc.sterling_silver_chest": "Sterling Silver Chest",
+  "block.oddc.fluorite_block": "Block of Fluorite",
+  "block.oddc.peridot_block": "Block of Peridot",
   "block.oddc.leather_pile": "Leather Pile",
   "block.oddc.fog1": "Fog 1",
   "block.oddc.fog2": "Fog 2",
