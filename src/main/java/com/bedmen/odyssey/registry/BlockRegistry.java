@@ -45,6 +45,10 @@ public class BlockRegistry {
     public static final RegistryObject<Block> RUBY_ORE = BLOCKS.register("ruby_ore", () -> new OreBlock(AbstractBlock.Properties.of(Material.STONE).harvestLevel(3).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops().strength(3.0F, 3.0F).sound(SoundType.STONE)));
     public static final RegistryObject<Block> SAPPHIRE_ORE = BLOCKS.register("sapphire_ore", () -> new OreBlock(AbstractBlock.Properties.of(Material.ICE_SOLID).harvestLevel(3).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops().strength(0.5F, 0.5F).sound(SoundType.GLASS)));
 
+    public static final RegistryObject<Block> ANVIL = BLOCKS_VANILLA.register("anvil", () -> new OdysseyAnvilBlock(AbstractBlock.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).requiresCorrectToolForDrops().strength(5.0F, 1200.0F).sound(SoundType.ANVIL)));
+    public static final RegistryObject<Block> CHIPPED_ANVIL = BLOCKS_VANILLA.register("chipped_anvil", () -> new OdysseyAnvilBlock(AbstractBlock.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).requiresCorrectToolForDrops().strength(5.0F, 1200.0F).sound(SoundType.ANVIL)));
+    public static final RegistryObject<Block> DAMAGED_ANVIL = BLOCKS_VANILLA.register("damaged_anvil", () -> new OdysseyAnvilBlock(AbstractBlock.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).requiresCorrectToolForDrops().strength(5.0F, 1200.0F).sound(SoundType.ANVIL)));
+
     public static final RegistryObject<Block> FOG1 = BLOCKS.register("fog1", FogBlock::new);
     public static final RegistryObject<Block> FOG2 = BLOCKS.register("fog2", FogBlock::new);
     public static final RegistryObject<Block> FOG3 = BLOCKS.register("fog3", FogBlock::new);

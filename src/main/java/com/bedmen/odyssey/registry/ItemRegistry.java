@@ -50,6 +50,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> LEATHER_PILE = ITEMS.register("leather_pile", () -> new BlockItem(BlockRegistry.LEATHER_PILE.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> PERMAFROST_CONDUIT = ITEMS.register("permafrost_conduit", () -> new BlockItem(BlockRegistry.PERMAFROST_CONDUIT.get(), (new Item.Properties()).tab(ItemGroup.TAB_MISC).rarity(Rarity.RARE)));
 
+    public static final RegistryObject<Item> ANVIL = ITEMS_VANILLA.register("anvil", () -> new BlockItem(BlockRegistry.ANVIL.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> CHIPPED_ANVIL = ITEMS_VANILLA.register("chipped_anvil", () -> new BlockItem(BlockRegistry.CHIPPED_ANVIL.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+    public static final RegistryObject<Item> DAMAGED_ANVIL = ITEMS_VANILLA.register("damaged_anvil", () -> new BlockItem(BlockRegistry.DAMAGED_ANVIL.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
+
     public static final RegistryObject<Item> FOG1 = ITEMS.register("fog1", () -> new BlockItem(BlockRegistry.FOG1.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS)));
     public static final RegistryObject<Item> FOG2 = ITEMS.register("fog2", () -> new BlockItem(BlockRegistry.FOG2.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS)));
     public static final RegistryObject<Item> FOG3 = ITEMS.register("fog3", () -> new BlockItem(BlockRegistry.FOG3.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS)));
