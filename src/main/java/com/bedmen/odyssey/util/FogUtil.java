@@ -4,15 +4,16 @@ import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.tags.OdysseyBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
 public class FogUtil {
 
-    public static int inFog(PlayerEntity playerEntity) {
-        double d0 = playerEntity.getEyeY() - (double)0.11111111F;
-        BlockPos blockpos = new BlockPos(playerEntity.getX(), d0, playerEntity.getZ());
-        BlockState blockState = playerEntity.level.getBlockState(blockpos);
+    public static int inFog(LivingEntity livingEntity) {
+        double d0 = livingEntity.getEyeY() - (double)0.11111111F;
+        BlockPos blockpos = new BlockPos(livingEntity.getX(), d0, livingEntity.getZ());
+        BlockState blockState = livingEntity.level.getBlockState(blockpos);
         Block block = blockState.getBlock();
         if(OdysseyBlockTags.FOG_TAG.contains(block)){
             double d1 = (double)((float)blockpos.getY() + 1);

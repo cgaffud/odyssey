@@ -49,7 +49,7 @@ public abstract class MixinFogRenderer {
         } else {
             float f2;
             float f3;
-            int i2 = FogUtil.inFog((PlayerEntity)entity);
+            int i2 = entity instanceof LivingEntity ? FogUtil.inFog((LivingEntity) entity) : 0;
             if (fluidstate.is(FluidTags.LAVA)) {
                 if(((PlayerEntity) entity).hasEffect(EffectRegistry.LAVA_VISION.get())){
                     f2 = 0.0F;

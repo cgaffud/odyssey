@@ -2,6 +2,7 @@ package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
+import com.bedmen.odyssey.container.OdysseyRepairContainer;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.client.renderer.tileentity.SterlingSilverChestTileEntityRenderer;
 import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
@@ -144,6 +145,7 @@ public class Odyssey
         ScreenManager.register(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);
         ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
         ScreenManager.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
+        ScreenManager.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER7.get(), QuiverScreen::new);
