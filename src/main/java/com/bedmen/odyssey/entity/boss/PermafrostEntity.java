@@ -55,7 +55,8 @@ public class PermafrostEntity extends MonsterEntity {
         super(entityType, world);
         this.setHealth(this.getMaxHealth());
         this.getNavigation().setCanFloat(true);
-        this.xpReward = 50;
+        this.noCulling = true;
+        this.xpReward = 100;
         this.destroyBlocksTick = 0;
         this.attackTimer[0] = 0;
         this.attackTimer[1] = 0;
@@ -313,17 +314,12 @@ public class PermafrostEntity extends MonsterEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
-        return MonsterEntity.createMonsterAttributes().add(Attributes.MAX_HEALTH, 300.0D).add(Attributes.MOVEMENT_SPEED, (double)0.6F).add(Attributes.FOLLOW_RANGE, 40.0D).add(Attributes.ARMOR, 4.0D);
+        return MonsterEntity.createMonsterAttributes().add(Attributes.MAX_HEALTH, 350.0D).add(Attributes.MOVEMENT_SPEED, (double)0.6F).add(Attributes.FOLLOW_RANGE, 40.0D).add(Attributes.ARMOR, 0.0D);
     }
 
     @OnlyIn(Dist.CLIENT)
     public float getActiveRotation(float p_205036_1_) {
         return (this.activeRotation + p_205036_1_) * -0.0375F;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public int getAttackTimer(int i){
-        return this.attackTimer[i];
     }
 
     static class DoNothingGoal extends Goal {

@@ -2,7 +2,7 @@ package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
-import com.bedmen.odyssey.container.OdysseyRepairContainer;
+import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.client.renderer.tileentity.SterlingSilverChestTileEntityRenderer;
 import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
@@ -193,5 +193,9 @@ public class Odyssey
         event.addSprite(SterlingSilverChestTileEntityRenderer.LEFT_LOCKED_RESOURCE_LOCATION);
         event.addSprite(SterlingSilverChestTileEntityRenderer.RIGHT_RESOURCE_LOCATION);
         event.addSprite(SterlingSilverChestTileEntityRenderer.RIGHT_LOCKED_RESOURCE_LOCATION);
+        event.addSprite(PermafrostRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
+        event.addSprite(PermafrostRenderer.WIND_RESOURCE_LOCATION);
+        event.addSprite(PermafrostRenderer.VERTICAL_WIND_RESOURCE_LOCATION);
+        event.addSprite(PermafrostRenderer.OPEN_EYE_RESOURCE_LOCATION);
     }
 }
