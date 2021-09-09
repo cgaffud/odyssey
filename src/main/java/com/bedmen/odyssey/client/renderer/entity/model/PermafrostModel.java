@@ -85,19 +85,6 @@ public class PermafrostModel<T extends Entity> extends SegmentedModel<T> {
         }
     }
 
-    public void prepareMobModel(T entity, float p_212843_2_, float p_212843_3_, float p_212843_4_) {
-        /*
-        PermafrostEntity permafrostEntity = (PermafrostEntity)entity;
-        int i = permafrostEntity.getAttackTimer(1);
-        if (i >= 1 && permafrostEntity.getTarget() != null) {
-            if (i >= 24) {
-                this.phi[1] = Math.PI * 0.1d * (i - 23);
-            } else {
-                this.phi[1] = (Math.PI / 45.0d) * (23 - i);
-            }
-        }*/
-    }
-
     public Iterable<ModelRenderer> parts() {
         return this.parts;
     }

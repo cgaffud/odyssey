@@ -22,10 +22,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class PermafrostRenderer extends MobRenderer<PermafrostEntity, PermafrostModel<PermafrostEntity>> {
-    public static final RenderMaterial ACTIVE_SHELL_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation("entity/conduit/cage"));
-    public static final RenderMaterial WIND_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation("entity/conduit/wind"));
-    public static final RenderMaterial VERTICAL_WIND_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation("entity/conduit/wind_vertical"));
-    public static final RenderMaterial OPEN_EYE_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation("entity/conduit/open_eye"));
+    public static final ResourceLocation ACTIVE_SHELL_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/permafrost/cage");
+    public static final ResourceLocation WIND_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/permafrost/wind");
+    public static final ResourceLocation VERTICAL_WIND_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/permafrost/wind_vertical");
+    public static final ResourceLocation OPEN_EYE_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/permafrost/open_eye");
+    public static final RenderMaterial ACTIVE_SHELL_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, ACTIVE_SHELL_RESOURCE_LOCATION);
+    public static final RenderMaterial WIND_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, WIND_RESOURCE_LOCATION);
+    public static final RenderMaterial VERTICAL_WIND_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, VERTICAL_WIND_RESOURCE_LOCATION);
+    public static final RenderMaterial OPEN_EYE_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, OPEN_EYE_RESOURCE_LOCATION);
     private static final ResourceLocation PERMAFROST_TEXTURE = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/permafrost/permafrost.png");
     private final ModelRenderer eye = new ModelRenderer(16, 16, 0, 0);
     private final ModelRenderer wind;
