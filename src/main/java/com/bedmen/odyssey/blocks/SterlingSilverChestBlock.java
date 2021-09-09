@@ -91,6 +91,7 @@ public class SterlingSilverChestBlock extends ChestBlock {
                 return ActionResultType.CONSUME;
             }
         } else {
+            world.playSound(playerEntity, blockPos, SoundEventRegistry.LOCKED_CHEST.get(), SoundCategory.BLOCKS, 1.0f, 1.0f);
             return ActionResultType.FAIL;
         }
     }

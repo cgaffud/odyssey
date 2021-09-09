@@ -336,5 +336,6 @@
   "item.minecraft.lingering_potion.effect.long_lava_vision": "Lingering Potion of Lava Vision",
 
   //Sounds
-  "block.key_unlock.sub": "Chest Unlock"
+  "block.key_unlock.sub": "Chest Unlock",
+  "block.locked_chest.sub": "Locked Chest"
 }
