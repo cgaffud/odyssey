@@ -22,4 +22,5 @@ public class SoundEventRegistry {
     }
 
     public static final RegistryObject<SoundEvent> KEY_UNLOCK = SOUND_EVENTS.register("key_unlock", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "block.key_unlock")));
+    public static final RegistryObject<SoundEvent> LOCKED_CHEST = SOUND_EVENTS.register("locked_chest", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "block.locked_chest")));
 }

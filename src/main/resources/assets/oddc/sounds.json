@@ -8,5 +8,15 @@
         "stream": true
       }
     ]
+  },
+  "block.locked_chest": {
+    "category": "block",
+    "subtitle": "block.locked_chest.sub",
+    "sounds": [
+      {
+        "name": "oddc:block/locked_chest",
+        "stream": true
+      }
+    ]
   }
 }
