@@ -34,6 +34,7 @@ public class MineralLeviathanPartEntity extends net.minecraftforge.entity.PartEn
     }
 
     public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
+        System.out.println("ouch");
         return !this.isInvulnerableTo(p_70097_1_) && this.parentMob.hurt(this, p_70097_1_, p_70097_2_);
     }
 

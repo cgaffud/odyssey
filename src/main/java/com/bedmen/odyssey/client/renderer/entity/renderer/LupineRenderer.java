@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.client.renderer.entity;
+package com.bedmen.odyssey.client.renderer.entity.renderer;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.model.LupineModel;

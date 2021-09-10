@@ -8,7 +8,6 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -16,14 +15,13 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -33,8 +31,9 @@ import java.util.stream.Stream;
 
 public class MineralLeviathanEntity extends MobEntity implements IMob{
     private final MineralLeviathanPartEntity head;
-    private final MineralLeviathanPartEntity[] body = new MineralLeviathanPartEntity[10];
-    private final double[][] bodyInfo = new double[9][3];
+    private final MineralLeviathanPartEntity[] subEntities = new MineralLeviathanPartEntity[10];
+    public final double[][] positions = new double[64][3];
+    public int posPointer = -1;
     private static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
         return entity.attackable() && entity.getType() != EntityTypeRegistry.PERMAFROST.get();
     };
@@ -49,41 +48,29 @@ public class MineralLeviathanEntity extends MobEntity implements IMob{
         this.xpReward = 50;
 
         this.head = new MineralLeviathanPartEntity(this, "head", 2.0F, 2.0F);
-        this.body[0] = this.head;
+        this.subEntities[0] = this.head;
         for(int i = 1; i <= 9; i++){
-            this.body[i] = new MineralLeviathanPartEntity(this, "body", 2.0F, 2.0F);
+            this.subEntities[i] = new MineralLeviathanPartEntity(this, "body", 2.0F, 2.0F);
         }
     }
 
-    private void tickBody(){
-        for(int i = 0; i <= 9; i++){
-            if(i == 0){
-                this.head.setPos(this.getX(), this.getY(), this.getZ());
-                this.updatePositions(i);
-            } else {
-                Vector3d prevPartPos = this.body[i-1].getPosition(1.0f);
-                if(this.body[i].distanceToSqr(prevPartPos) > 4.0d){
-                    Vector3d partPos = this.body[i].getPosition(1.0f).subtract(prevPartPos).normalize().scale(1.95d);
-                    this.body[i].setPos(prevPartPos.x + partPos.x, prevPartPos.y + partPos.y, prevPartPos.z + partPos.z);
-                    this.updatePositions(i);
-                }
-            }
+    public double[] getLatencyPos(int p_70974_1_, float p_70974_2_) {
+        if (this.isDeadOrDying()) {
+            p_70974_2_ = 0.0F;
         }
-    }
 
-    private void updatePositions(int i){
-        Vector3d bodyPiecePosition = new Vector3d(this.body[i].getX(), this.body[i].getY(), this.body[i].getZ());
-        this.body[i].xo = bodyPiecePosition.x;
-        this.body[i].yo = bodyPiecePosition.y;
-        this.body[i].zo = bodyPiecePosition.z;
-        this.body[i].xOld = bodyPiecePosition.x;
-        this.body[i].yOld = bodyPiecePosition.y;
-        this.body[i].zOld = bodyPiecePosition.z;
-        if(i >= 1){
-            this.bodyInfo[i-1][0] = bodyPiecePosition.x;
-            this.bodyInfo[i-1][1] = bodyPiecePosition.y;
-            this.bodyInfo[i-1][2] = bodyPiecePosition.z;
-        }
+        p_70974_2_ = 1.0F - p_70974_2_;
+        int i = this.posPointer - p_70974_1_ & 63;
+        int j = this.posPointer - p_70974_1_ - 1 & 63;
+        double[] adouble = new double[3];
+        double d0 = this.positions[i][0];
+        double d1 = MathHelper.wrapDegrees(this.positions[j][0] - d0);
+        adouble[0] = d0 + d1 * (double)p_70974_2_;
+        d0 = this.positions[i][1];
+        d1 = this.positions[j][1] - d0;
+        adouble[1] = d0 + d1 * (double)p_70974_2_;
+        adouble[2] = MathHelper.lerp((double)p_70974_2_, this.positions[i][2], this.positions[j][2]);
+        return adouble;
     }
 
     protected void registerGoals() {
@@ -98,37 +85,89 @@ public class MineralLeviathanEntity extends MobEntity implements IMob{
     public void aiStep() {
         super.aiStep();
 
-        //Choose Target
-        List<LivingEntity> list = this.level.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(40.0D, 40.0D, 40.0D));
-        Stream<LivingEntity> stream = list.stream().filter(livingEntity -> {return livingEntity.isAlive() && this != livingEntity;});
-        list = stream.collect(Collectors.toList());
-        List<LivingEntity> playerList = list.stream().filter(livingEntity -> {return livingEntity instanceof PlayerEntity && !((PlayerEntity) livingEntity).abilities.invulnerable;}).collect(Collectors.toList());
-        if(!playerList.isEmpty()){
-            list = playerList;
-        }
-        if(this.level.getGameTime() % 10 == 9){
-            LivingEntity target = this.getTarget();
-            if(list.isEmpty()){
-                if(target != null && target.isAlive() && (!(target instanceof PlayerEntity) || !((PlayerEntity) target).abilities.invulnerable))
-                    list.add(target);
-                else
-                    this.setTarget(null);
+        if (this.level.isClientSide) {
+            this.setHealth(this.getHealth());
+            if (!this.isSilent()) {
+                //Player Sounds Here
             }
-            else
-                setTarget(list.get(this.random.nextInt(list.size())));
         }
 
-        //Movement
-        LivingEntity target = this.getTarget();
-        if(target != null){
-            Vector3d targetPosition = target.getPosition(1.0f);
-            Vector3d movementVector = targetPosition.subtract(this.getPosition(1.0f));
-            if(movementVector.length() > 2.0d){
-                movementVector = movementVector.normalize().scale(0.2);
-                this.setDeltaMovement(movementVector);
-                this.tickBody();
+        if(!this.isNoAi()){
+            if (this.level.isClientSide) {
+                //Lerp stuff
+                if (this.lerpSteps > 0) {
+                    double d7 = this.getX() + (this.lerpX - this.getX()) / (double)this.lerpSteps;
+                    double d0 = this.getY() + (this.lerpY - this.getY()) / (double)this.lerpSteps;
+                    double d1 = this.getZ() + (this.lerpZ - this.getZ()) / (double)this.lerpSteps;
+                    double d2 = MathHelper.wrapDegrees(this.lerpYRot - (double)this.yRot);
+                    this.yRot = (float)((double)this.yRot + d2 / (double)this.lerpSteps);
+                    this.xRot = (float)((double)this.xRot + (this.lerpXRot - (double)this.xRot) / (double)this.lerpSteps);
+                    --this.lerpSteps;
+                    this.setPos(d7, d0, d1);
+                    this.setRot(this.yRot, this.xRot);
+                }
             } else {
-                this.setDeltaMovement(Vector3d.ZERO);
+                //Choose Target
+                List<LivingEntity> list = this.level.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(40.0D, 40.0D, 40.0D));
+                Stream<LivingEntity> stream = list.stream().filter(livingEntity -> {return livingEntity.isAlive() && this != livingEntity;});
+                list = stream.collect(Collectors.toList());
+                List<LivingEntity> playerList = list.stream().filter(livingEntity -> {return livingEntity instanceof PlayerEntity && !((PlayerEntity) livingEntity).abilities.invulnerable;}).collect(Collectors.toList());
+                if(!playerList.isEmpty()){
+                    list = playerList;
+                }
+                if(this.level.getGameTime() % 10 == 9){
+                    LivingEntity target = this.getTarget();
+                    if(list.isEmpty()){
+                        if(target != null && target.isAlive() && (!(target instanceof PlayerEntity) || !((PlayerEntity) target).abilities.invulnerable))
+                            list.add(target);
+                        else
+                            this.setTarget(null);
+                    }
+                    else
+                        setTarget(list.get(this.random.nextInt(list.size())));
+                }
+                //Movement
+                LivingEntity target = this.getTarget();
+                if(target != null){
+                    Vector3d targetPosition = target.getPosition(1.0f);
+                    Vector3d movementVector = targetPosition.subtract(this.getPosition(1.0f));
+                    if(movementVector.length() > 2.0d){
+                        movementVector = movementVector.normalize().scale(0.2);
+                        this.setDeltaMovement(movementVector);
+                    } else {
+                        this.setDeltaMovement(Vector3d.ZERO);
+                    }
+                }
+            }
+
+            //avector3d
+            this.yBodyRot = this.yRot;
+            Vector3d[] avector3d = new Vector3d[this.subEntities.length];
+            for(int j = 0; j < this.subEntities.length; ++j) {
+                avector3d[j] = new Vector3d(this.subEntities[j].getX(), this.subEntities[j].getY(), this.subEntities[j].getZ());
+            }
+
+            //Tick Parts
+            for(int i = 0; i <= 9; i++){
+                if(i == 0){
+                    this.head.setPos(this.getX(), this.getY(), this.getZ());
+                } else {
+                    Vector3d prevPartPos = this.subEntities[i-1].getPosition(1.0f);
+                    if(this.subEntities[i].distanceToSqr(prevPartPos) > 4.0d){
+                        Vector3d partPos = this.subEntities[i].getPosition(1.0f).subtract(prevPartPos).normalize().scale(1.95d);
+                        this.subEntities[i].setPos(prevPartPos.x + partPos.x, prevPartPos.y + partPos.y, prevPartPos.z + partPos.z);
+                    }
+                }
+            }
+
+            //Update Old Values
+            for(int l = 0; l < this.subEntities.length; ++l) {
+                this.subEntities[l].xo = avector3d[l].x;
+                this.subEntities[l].yo = avector3d[l].y;
+                this.subEntities[l].zo = avector3d[l].z;
+                this.subEntities[l].xOld = avector3d[l].x;
+                this.subEntities[l].yOld = avector3d[l].y;
+                this.subEntities[l].zOld = avector3d[l].z;
             }
         }
     }
@@ -161,6 +200,10 @@ public class MineralLeviathanEntity extends MobEntity implements IMob{
         }
     }
 
+    protected boolean shouldDespawnInPeaceful() {
+        return true;
+    }
+
     public void checkDespawn() {
         if (this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
             this.remove();
@@ -169,20 +212,16 @@ public class MineralLeviathanEntity extends MobEntity implements IMob{
         }
     }
 
-    public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
-        if (this.isInvulnerableTo(p_70097_1_))
+    public boolean hurt(DamageSource damageSource, float amount) {
+        if (this.isInvulnerableTo(damageSource) || amount < 0.01f)
             return false;
-        if(p_70097_1_ == DamageSource.DROWN)
+        if(damageSource == DamageSource.DROWN)
             return false;
-        return super.hurt(p_70097_1_, p_70097_2_);
+        return super.hurt(damageSource, amount);
     }
 
-    public boolean hurt(MineralLeviathanPartEntity p_213403_1_, DamageSource p_213403_2_, float p_213403_3_) {
-        if (p_213403_3_ < 0.01F) {
-            return false;
-        } else {
-            return true;
-        }
+    public boolean hurt(MineralLeviathanPartEntity part, DamageSource damageSource, float amount) {
+        return this.hurt(damageSource, amount);
     }
 
     public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
@@ -220,12 +259,7 @@ public class MineralLeviathanEntity extends MobEntity implements IMob{
 
     @Override
     public net.minecraftforge.entity.PartEntity<?>[] getParts() {
-        return this.body;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public double[][] getBodyInfo(){
-        return this.bodyInfo;
+        return this.subEntities;
     }
 
     public void startSeenByPlayer(ServerPlayerEntity p_184178_1_) {
