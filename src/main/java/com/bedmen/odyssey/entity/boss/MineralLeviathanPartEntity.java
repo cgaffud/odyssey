@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.entity.boss;
 
-import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.Pose;

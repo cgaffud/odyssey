@@ -22,6 +22,8 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -32,6 +34,7 @@ import java.util.stream.Stream;
 public class MineralLeviathanEntity extends MobEntity implements IMob{
     private final MineralLeviathanPartEntity head;
     private final MineralLeviathanPartEntity[] body = new MineralLeviathanPartEntity[10];
+    private final double[][] bodyInfo = new double[9][3];
     private static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
         return entity.attackable() && entity.getType() != EntityTypeRegistry.PERMAFROST.get();
     };
@@ -56,25 +59,31 @@ public class MineralLeviathanEntity extends MobEntity implements IMob{
         for(int i = 0; i <= 9; i++){
             if(i == 0){
                 this.head.setPos(this.getX(), this.getY(), this.getZ());
+                this.updatePositions(i);
             } else {
                 Vector3d prevPartPos = this.body[i-1].getPosition(1.0f);
                 if(this.body[i].distanceToSqr(prevPartPos) > 4.0d){
-                    Vector3d partPos = this.body[i].getPosition(1.0f).subtract(prevPartPos).normalize().scale(2.0d);
+                    Vector3d partPos = this.body[i].getPosition(1.0f).subtract(prevPartPos).normalize().scale(1.95d);
                     this.body[i].setPos(prevPartPos.x + partPos.x, prevPartPos.y + partPos.y, prevPartPos.z + partPos.z);
+                    this.updatePositions(i);
                 }
             }
-            Vector3d avector3d = new Vector3d(this.body[i].getX(), this.body[i].getY(), this.body[i].getZ());
-            this.body[i].xo = avector3d.x;
-            this.body[i].yo = avector3d.y;
-            this.body[i].zo = avector3d.z;
-            this.body[i].xOld = avector3d.x;
-            this.body[i].yOld = avector3d.y;
-            this.body[i].zOld = avector3d.z;
         }
     }
 
-    public double[] getLatencyPos(int p_70974_1_, float p_70974_2_) {
-        return new double[]{0f,0f,0f};
+    private void updatePositions(int i){
+        Vector3d bodyPiecePosition = new Vector3d(this.body[i].getX(), this.body[i].getY(), this.body[i].getZ());
+        this.body[i].xo = bodyPiecePosition.x;
+        this.body[i].yo = bodyPiecePosition.y;
+        this.body[i].zo = bodyPiecePosition.z;
+        this.body[i].xOld = bodyPiecePosition.x;
+        this.body[i].yOld = bodyPiecePosition.y;
+        this.body[i].zOld = bodyPiecePosition.z;
+        if(i >= 1){
+            this.bodyInfo[i-1][0] = bodyPiecePosition.x;
+            this.bodyInfo[i-1][1] = bodyPiecePosition.y;
+            this.bodyInfo[i-1][2] = bodyPiecePosition.z;
+        }
     }
 
     protected void registerGoals() {
@@ -118,6 +127,8 @@ public class MineralLeviathanEntity extends MobEntity implements IMob{
                 movementVector = movementVector.normalize().scale(0.2);
                 this.setDeltaMovement(movementVector);
                 this.tickBody();
+            } else {
+                this.setDeltaMovement(Vector3d.ZERO);
             }
         }
     }
@@ -157,21 +168,19 @@ public class MineralLeviathanEntity extends MobEntity implements IMob{
             this.noActionTime = 0;
         }
     }
+
     public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
-        if (this.isInvulnerableTo(p_70097_1_)) {
+        if (this.isInvulnerableTo(p_70097_1_))
             return false;
-        } else {
-            this.markHurt();
-            System.out.println("cheese1");
-            return true;
-        }
+        if(p_70097_1_ == DamageSource.DROWN)
+            return false;
+        return super.hurt(p_70097_1_, p_70097_2_);
     }
 
     public boolean hurt(MineralLeviathanPartEntity p_213403_1_, DamageSource p_213403_2_, float p_213403_3_) {
         if (p_213403_3_ < 0.01F) {
             return false;
         } else {
-            System.out.println("cheese2");
             return true;
         }
     }
@@ -214,6 +223,11 @@ public class MineralLeviathanEntity extends MobEntity implements IMob{
         return this.body;
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public double[][] getBodyInfo(){
+        return this.bodyInfo;
+    }
+
     public void startSeenByPlayer(ServerPlayerEntity p_184178_1_) {
         super.startSeenByPlayer(p_184178_1_);
         this.bossEvent.addPlayer(p_184178_1_);
@@ -225,7 +239,7 @@ public class MineralLeviathanEntity extends MobEntity implements IMob{
     }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
-        return MonsterEntity.createMonsterAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(Attributes.MOVEMENT_SPEED, (double)0.6F).add(Attributes.FOLLOW_RANGE, 40.0D).add(Attributes.ARMOR, 0.0D);
+        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D);
     }
 
     static class DoNothingGoal extends Goal {
