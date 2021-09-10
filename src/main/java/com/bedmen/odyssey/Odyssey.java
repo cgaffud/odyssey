@@ -126,6 +126,7 @@ public class Odyssey
             GlobalEntityTypeAttributes.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
             GlobalEntityTypeAttributes.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
             GlobalEntityTypeAttributes.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanEntity.createAttributes().build());
         });
     }
 
@@ -157,6 +158,7 @@ public class Odyssey
 
         //Boss Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanRenderer::new);
 
         //Projectile Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);

@@ -34,6 +34,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PermafrostEntity extends MonsterEntity {
     private float activeRotation = 0;
@@ -48,13 +50,11 @@ public class PermafrostEntity extends MonsterEntity {
         return entity.attackable() && entity.getType() != EntityTypeRegistry.PERMAFROST.get();
     };
     private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(20.0D).selector(ENTITY_SELECTOR);
-    private static final EntityPredicate HURT_BY_TARGETING = (new EntityPredicate()).allowUnseeable().ignoreInvisibilityTesting();
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.BLUE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
 
     public PermafrostEntity(EntityType<? extends PermafrostEntity> entityType, World world) {
         super(entityType, world);
         this.setHealth(this.getMaxHealth());
-        this.getNavigation().setCanFloat(true);
         this.noCulling = true;
         this.xpReward = 100;
         this.destroyBlocksTick = 0;
@@ -147,26 +147,26 @@ public class PermafrostEntity extends MonsterEntity {
 
         //Choose Target
         List<LivingEntity> list = this.level.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(40.0D, 40.0D, 40.0D));
-        for (int j2 = 0; j2 < 10 && !list.isEmpty(); ++j2) {
-            LivingEntity livingentity = list.get(this.random.nextInt(list.size()));
-            if (livingentity != this && livingentity.isAlive() /*&& this.canSee(livingentity)*/) {
-                if (livingentity instanceof PlayerEntity) {
-                    if (!((PlayerEntity) livingentity).abilities.invulnerable) {
-                        this.setTarget(livingentity);
-                    }
-                } else {
-                    this.setTarget(livingentity);
-                }
-                break;
+        Stream<LivingEntity> stream = list.stream().filter(livingEntity -> {return livingEntity.isAlive() && this != livingEntity;});
+        list = stream.collect(Collectors.toList());
+        List<LivingEntity> playerList = list.stream().filter(livingEntity -> {return livingEntity instanceof PlayerEntity && !((PlayerEntity) livingEntity).abilities.invulnerable;}).collect(Collectors.toList());
+        if(!playerList.isEmpty()){
+            list = playerList;
+        }
+        if(this.level.getGameTime() % 10 == 9){
+            LivingEntity target = this.getTarget();
+            if(list.isEmpty()){
+                if(target != null && target.isAlive() && (!(target instanceof PlayerEntity) || !((PlayerEntity) target).abilities.invulnerable))
+                    list.add(target);
+                else
+                    this.setTarget(null);
             }
-            //list.remove(livingentity);
+            else
+                setTarget(list.get(this.random.nextInt(list.size())));
         }
 
-        LivingEntity target = this.getTarget();
-        if(list.isEmpty())
-            list.add(target);
         //Movement
-        if(target != null){
+        if(this.getTarget() != null){
             Vector3d location1 = this.getPosition(1);
             double angle = this.movementPosition * Math.PI / this.MaxMovementPositions * 2.0d;
             Vector3d location2 = Vector3d.ZERO;
@@ -188,10 +188,6 @@ public class PermafrostEntity extends MonsterEntity {
 
             if(this.attackTimer[0] > 0){
                 int targetsAttacked = 0;
-                /*if (!this.isSilent() && this.attackTimer[0] == 20) {
-                    BlockPos blockpos = this.blockPosition();
-                    this.level.playLocalSound(blockpos.getX(), blockpos.getY(), blockpos.getZ(), SoundEventRegistry.PERMAFROST_ICICLE_SPIRAL.get(), SoundCategory.HOSTILE, 2.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F, false);
-                }*/
                 for(LivingEntity livingEntity : list){
                     if(targetsAttacked < 10){
                         this.performSpiralAttack(livingEntity);

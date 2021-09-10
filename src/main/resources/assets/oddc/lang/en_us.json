@@ -200,6 +200,7 @@
 
   //Bosses
   "entity.oddc.permafrost": "Permafrost",
+  "entity.oddc.mineral_leviathan": "Mineral Leviathan",
 
   //Projectiles
   "entity.oddc.trident": "Trident",
