@@ -11,10 +11,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class MineralLeviathanRenderer extends MobRenderer<MineralLeviathanEntity, MineralLeviathanModel> {
+public class MineralLeviathanPartRenderer extends MobRenderer<MineralLeviathanEntity, MineralLeviathanModel> {
     private static final ResourceLocation MINERAL_LEVIATHAN_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/mineral_leviathan/head.png");
     private static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(MINERAL_LEVIATHAN_LOCATION);
-    public MineralLeviathanRenderer(EntityRendererManager entityRendererManager) {
+    public MineralLeviathanPartRenderer(EntityRendererManager entityRendererManager) {
         super(entityRendererManager, new MineralLeviathanModel(), 0.7F);
         this.shadowRadius = 0.5F;
     }

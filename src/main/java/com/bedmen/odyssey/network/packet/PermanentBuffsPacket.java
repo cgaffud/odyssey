@@ -21,11 +21,11 @@ public class PermanentBuffsPacket {
     }
 
     public static void encode(PermanentBuffsPacket permanentBuffsPacket, PacketBuffer buf){
-        buf.writeVarInt(permanentBuffsPacket.lifeFruits);
+        buf.writeInt(permanentBuffsPacket.lifeFruits);
     }
 
     public static PermanentBuffsPacket decode(PacketBuffer buf){
-        return new PermanentBuffsPacket(buf.readVarInt());
+        return new PermanentBuffsPacket(buf.readInt());
     }
 
     public static void handle(PermanentBuffsPacket permanentBuffsPacket, Supplier<NetworkEvent.Context> supplier) {

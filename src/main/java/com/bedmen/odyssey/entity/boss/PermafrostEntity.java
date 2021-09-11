@@ -135,12 +135,12 @@ public class PermafrostEntity extends MonsterEntity {
 
         float healthMultiplier = 0.5f + 0.5f * (this.getHealth() / this.getMaxHealth());
         if(this.attackCooldown[0] <= 0) {
-            int i1 = random.nextInt(60)+100;
+            int i1 = this.random.nextInt(60)+100;
             this.attackCooldown[0] = (int)(i1* healthMultiplier);
             this.attackTimer[0] = 20;
         }
         if(this.attackCooldown[1] <= 0) {
-            int i1 = random.nextInt(200)+100;
+            int i1 = this.random.nextInt(200)+100;
             this.attackCooldown[1] = (int)(i1* healthMultiplier);
             this.attackTimer[1] = 27;
         }
