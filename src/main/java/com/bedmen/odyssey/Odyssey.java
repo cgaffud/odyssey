@@ -2,7 +2,6 @@ package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
-import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.client.renderer.tileentity.SterlingSilverChestTileEntityRenderer;
 import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
