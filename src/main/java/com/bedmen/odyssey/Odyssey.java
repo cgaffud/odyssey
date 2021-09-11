@@ -3,6 +3,7 @@ package com.bedmen.odyssey;
 import com.bedmen.odyssey.client.renderer.entity.renderer.*;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
+import com.bedmen.odyssey.entity.boss.MineralLeviathanPartEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.client.renderer.tileentity.SterlingSilverChestTileEntityRenderer;
 import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
@@ -127,6 +128,7 @@ public class Odyssey
             GlobalEntityTypeAttributes.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
             GlobalEntityTypeAttributes.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
             GlobalEntityTypeAttributes.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanEntity.createAttributes().build());
+            GlobalEntityTypeAttributes.put(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), MineralLeviathanPartEntity.createAttributes().build());
         });
     }
 
@@ -159,6 +161,7 @@ public class Odyssey
         //Boss Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), MineralLeviathanPartRenderer::new);
 
         //Projectile Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);

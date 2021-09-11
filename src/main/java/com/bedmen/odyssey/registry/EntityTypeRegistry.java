@@ -2,6 +2,7 @@ package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
+import com.bedmen.odyssey.entity.boss.MineralLeviathanPartEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
@@ -32,7 +33,8 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<ArctihornEntity>> ARCTIHORN = ENTITY_TYPE.register("arctihorn", () -> EntityType.Builder.<ArctihornEntity>of(ArctihornEntity::new, EntityClassification.MONSTER).sized(0.8F, 0.8F).clientTrackingRange(12).build(new ResourceLocation("arctihorn").toString()));
 
     //Bosses
-    public static final RegistryObject<EntityType<MineralLeviathanEntity>> MINERAL_LEVIATHAN = ENTITY_TYPE.register("mineral_leviathan", () -> EntityType.Builder.<MineralLeviathanEntity>of(MineralLeviathanEntity::new, EntityClassification.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(10).build(new ResourceLocation("mineral_leviathan").toString()));
+    public static final RegistryObject<EntityType<MineralLeviathanEntity>> MINERAL_LEVIATHAN = ENTITY_TYPE.register("mineral_leviathan", () -> EntityType.Builder.<MineralLeviathanEntity>of(MineralLeviathanEntity::new, EntityClassification.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(20).build(new ResourceLocation("mineral_leviathan").toString()));
+    public static final RegistryObject<EntityType<MineralLeviathanPartEntity>> MINERAL_LEVIATHAN_PART = ENTITY_TYPE.register("mineral_leviathan_part", () -> EntityType.Builder.<MineralLeviathanPartEntity>of(MineralLeviathanPartEntity::new, EntityClassification.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(20).build(new ResourceLocation("mineral_leviathan_part").toString()));
     public static final RegistryObject<EntityType<PermafrostEntity>> PERMAFROST = ENTITY_TYPE.register("permafrost", () -> EntityType.Builder.<PermafrostEntity>of(PermafrostEntity::new, EntityClassification.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(10).build(new ResourceLocation("permafrost").toString()));
 
     //Projectiles

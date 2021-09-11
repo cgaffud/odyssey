@@ -2,7 +2,9 @@ package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.entity.IRotationallyIncompetent;
 import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.MineralLeviathanPacket;
 import com.bedmen.odyssey.network.packet.UpdateEntityRotationPacket;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -18,13 +20,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.BossInfo;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraft.world.server.ServerBossInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -36,7 +35,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MineralLeviathanEntity extends MonsterEntity implements IRotationallyIncompetent {
+public class MineralLeviathanEntity extends MonsterEntity implements IRotationallyIncompetent, IMineralLeviathanSegment {
     private static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
         return entity.attackable() && !(entity instanceof MonsterEntity);
     };
@@ -48,6 +47,8 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
     private int passingTimer;
     private float dYRot;
     private float dXRot;
+    private MineralLeviathanPartEntity nextSegment;
+    private static final int NUM_SEGMENTS = 20;
 
     public MineralLeviathanEntity(EntityType<? extends MineralLeviathanEntity> entityType, World world) {
         super(entityType, world);
@@ -57,12 +58,13 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
         this.xpReward = 50;
     }
 
-    protected void registerGoals() {
-//        this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 1.0D, true));
-//        this.goalSelector.addGoal(1, new MineralLeviathanEntity.IdleGoal(this));
-//        this.goalSelector.addGoal(1, new MineralLeviathanEntity.ChargingGoal(this));
-//        this.goalSelector.addGoal(1, new MineralLeviathanEntity.PassingGoal(this));
-//        this.goalSelector.addGoal(1, new MineralLeviathanEntity.LoopingGoal(this));
+    public ILivingEntityData finalizeSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
+        ILivingEntityData ilivingentitydata = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
+
+        this.nextSegment = new MineralLeviathanPartEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), this.level, this, this, NUM_SEGMENTS-1);
+        this.nextSegment.moveTo(this.getPosition(1.0f));
+        this.level.addFreshEntity(this.nextSegment);
+        return ilivingentitydata;
     }
 
     public void setCustomName(@Nullable ITextComponent p_200203_1_) {
@@ -88,7 +90,7 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
                 //Choose Target
                 if(this.level.getGameTime() % 19 == 0){
                     LivingEntity target = this.getTarget();
-                    List<LivingEntity> list = this.level.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(40.0D, 40.0D, 40.0D));
+                    List<LivingEntity> list = this.level.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(20.0D, 20.0D, 20.0D));
                     if(target != null && target.isAttackable()){
                         list.add(target);
                     }
@@ -110,6 +112,7 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
                     }
                 }
                 //Movement
+
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.5));
                 LivingEntity target = this.getTarget();
                 switch(this.phase){
@@ -159,18 +162,13 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
                 AxisAlignedBB axisAlignedBB = new AxisAlignedBB(this.getX()-1.0d,this.getY(),this.getZ()-1.0d,this.getX()+1.0d,this.getY()+2.0d,this.getZ()+1.0d);
                 List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, axisAlignedBB);
                 for(LivingEntity livingEntity : livingEntityList){
-                    if(livingEntity != this){
-                        livingEntity.hurt(DamageSource.mobAttack(this), 5.0f);
+                    if(!(livingEntity instanceof MineralLeviathanEntity) && !(livingEntity instanceof MineralLeviathanPartEntity)){
+                        livingEntity.hurt(DamageSource.mobAttack(this), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
                     }
                 }
             }
         }
         super.aiStep();
-    }
-
-    protected boolean isInBlock(){
-        BlockPos blockPos = new BlockPos(this.getX(), this.getY(), this.getZ());
-        return !this.level.getBlockState(blockPos).isAir();
     }
 
     protected void moveTowards(Vector3d vector3d, double acceleration){
@@ -313,6 +311,13 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
         return false;
     }
 
+    public void die(DamageSource damageSource) {
+        if(this.nextSegment != null){
+            this.nextSegment.die(damageSource);
+        }
+        super.die(damageSource);
+    }
+
     public void startSeenByPlayer(ServerPlayerEntity p_184178_1_) {
         super.startSeenByPlayer(p_184178_1_);
         this.bossEvent.addPlayer(p_184178_1_);
@@ -325,104 +330,6 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(Attributes.ATTACK_DAMAGE, 5.0d);
-    }
-
-    static class IdleGoal extends Goal {
-        private final MineralLeviathanEntity entity;
-        private float dXRot;
-        private float dYRot;
-
-        public IdleGoal(MineralLeviathanEntity entity) {
-            this.entity = entity;
-        }
-
-        public boolean canUse() {
-            return this.entity.phase == Phase.IDLE;
-        }
-
-        public void tick() {
-            if(this.entity.random.nextInt(80) == 0){
-                this.dYRot = (this.entity.random.nextFloat() - 0.5f) * 4.0f;
-                this.dXRot = (this.entity.random.nextFloat() - 0.5f) * 4.0f;
-            }
-            this.entity.rotateTowards(this.dYRot, this.dXRot, 0.1d);
-        }
-    }
-
-    static class ChargingGoal extends Goal {
-        private final MineralLeviathanEntity entity;
-        private LivingEntity target;
-
-        public ChargingGoal(MineralLeviathanEntity entity) {
-            this.entity = entity;
-            this.target = entity.getTarget();
-        }
-
-        public boolean canUse() {
-            return this.entity.phase == Phase.CHARGING && this.target != null;
-        }
-
-        public void tick() {
-            this.entity.moveTowards(this.target.getPosition(1.0f).subtract(this.entity.getPosition(1.0f)), 0.3d);
-            if(this.entity.distanceToSqr(this.target) < 9.0d){
-                this.entity.phase = Phase.PASSING;
-                this.entity.passingTimer = 20;
-            }
-        }
-    }
-
-    static class PassingGoal extends Goal {
-        private final MineralLeviathanEntity entity;
-
-        public PassingGoal(MineralLeviathanEntity entity) {
-            this.entity = entity;
-        }
-
-        public boolean canUse() {
-            return this.entity.phase == Phase.PASSING;
-        }
-
-        public void tick() {
-            this.entity.passingTimer--;
-            this.entity.moveTowards(this.entity.getDeltaMovement(), 0.25d);
-            if(this.entity.passingTimer <= 0){
-                this.entity.phase = Phase.LOOPING;
-            }
-        }
-    }
-
-    static class LoopingGoal extends Goal {
-        private final MineralLeviathanEntity entity;
-        private LivingEntity target;
-
-        public LoopingGoal(MineralLeviathanEntity entity) {
-            this.entity = entity;
-            this.target = entity.getTarget();
-        }
-
-        public boolean canUse() {
-            return this.entity.phase == Phase.CHARGING && this.target != null;
-        }
-
-        public void tick() {
-            Vector3d movement = this.entity.getDeltaMovement();
-            Vector3d target = this.target.getPosition(1.0f).subtract(this.entity.getPosition(1.0f));
-            double angle = Math.acos(Math.max(1.0d, movement.dot(target) / movement.length() / target.length()));
-            if(angle < Math.PI / 4.0d){
-                this.entity.phase = Phase.CHARGING;
-            }
-            float theta = (float)(MathHelper.atan2(movement.x, movement.z) * (double)(180F / (float)Math.PI));
-            float phi = (float)(MathHelper.atan2(target.x, target.z) * (double)(180F / (float)Math.PI));
-            boolean flag1 = MathHelper.abs(theta - phi) < 180f;
-            boolean flag2 = theta > phi;
-            float dYRot = flag1 ^ flag2 ? 3.0f : -3.0f;
-            theta = (float)(MathHelper.atan2(MathHelper.sqrt(Entity.getHorizontalDistanceSqr(movement)), movement.y) * (double)(180F / (float)Math.PI) * -1.0f + 90.0f);
-            phi = (float)(MathHelper.atan2(MathHelper.sqrt(Entity.getHorizontalDistanceSqr(target)), target.y) * (double)(180F / (float)Math.PI) * -1.0f + 90.0f);
-            flag1 = MathHelper.abs(theta - phi) < 180f;
-            flag2 = theta > phi;
-            float dXRot = flag1 ^ flag2 ? 3.0f : -3.0f;
-            this.entity.rotateTowards(dYRot, dXRot, 0.2d);
-        }
     }
 
     static class HurtByTargetGoal extends TargetGoal {
