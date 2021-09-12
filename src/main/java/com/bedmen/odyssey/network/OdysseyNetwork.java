@@ -2,7 +2,6 @@ package com.bedmen.odyssey.network;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.network.packet.*;
-import net.minecraft.network.play.server.SRespawnPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
