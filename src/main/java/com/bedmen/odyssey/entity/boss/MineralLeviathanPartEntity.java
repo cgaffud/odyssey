@@ -8,6 +8,7 @@ import com.bedmen.odyssey.network.packet.PermanentBuffsPacket;
 import com.bedmen.odyssey.network.packet.UpdateEntityRotationPacket;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.BossUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -51,36 +52,18 @@ public class MineralLeviathanPartEntity extends MonsterEntity implements IRotati
     private float trueXRot;
     public  MineralLeviathanEntity head;
     public IMineralLeviathanSegment prevSegment;
-    public MineralLeviathanPartEntity nextSegment;
-    private final int numRemainingSegments;
 
     public MineralLeviathanPartEntity(EntityType<? extends MineralLeviathanPartEntity> entityType, World world) {
-        this(entityType, world, null, null, 0);
+        this(entityType, world, null, null);
     }
 
-    public MineralLeviathanPartEntity(EntityType<? extends MineralLeviathanPartEntity> entityType, World world, MineralLeviathanEntity head, IMineralLeviathanSegment prevSegment, int numRemainingSegments) {
+    public MineralLeviathanPartEntity(EntityType<? extends MineralLeviathanPartEntity> entityType, World world, MineralLeviathanEntity head, IMineralLeviathanSegment prevSegment) {
         super(entityType, world);
         this.setHealth(this.getMaxHealth());
         this.noPhysics = true;
         this.setNoGravity(true);
         this.head = head;
         this.prevSegment = prevSegment;
-        this.numRemainingSegments = numRemainingSegments;
-    }
-
-    @SubscribeEvent
-    public static void onJoin(final EntityJoinWorldEvent event){
-        Entity entity = event.getEntity();
-        if(entity instanceof MineralLeviathanPartEntity && !event.getWorld().isClientSide){
-            MineralLeviathanPartEntity mineralLeviathanPartEntity = (MineralLeviathanPartEntity) entity;
-            if(mineralLeviathanPartEntity.numRemainingSegments > 1){
-                mineralLeviathanPartEntity.nextSegment = new MineralLeviathanPartEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), event.getWorld(), mineralLeviathanPartEntity.head, mineralLeviathanPartEntity, mineralLeviathanPartEntity.numRemainingSegments-1);
-                mineralLeviathanPartEntity.nextSegment.moveTo(mineralLeviathanPartEntity.getPosition(1.0f));
-                mineralLeviathanPartEntity.level.addFreshEntity(mineralLeviathanPartEntity.nextSegment);
-            } else {
-                mineralLeviathanPartEntity.nextSegment = null;
-            }
-        }
     }
 
     public void tick() {
@@ -98,15 +81,6 @@ public class MineralLeviathanPartEntity extends MonsterEntity implements IRotati
 
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
-                if(this.tickCount == 2){
-                    int nextSegmentID;
-                    if(this.nextSegment == null) {
-                        nextSegmentID = -1;
-                    } else {
-                        nextSegmentID = this.nextSegment.getId();
-                    }
-                    OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new MineralLeviathanPacket(this.getId(), this.head.getId(), this.prevSegment.getId(), nextSegmentID));
-                }
                 //Movement
                 Vector3d prevSegmentPosition = this.prevSegment.getPosition(1.0f);
                 Vector3d movement = prevSegmentPosition.subtract(this.getPosition(1.0f));
@@ -121,8 +95,8 @@ public class MineralLeviathanPartEntity extends MonsterEntity implements IRotati
                 AxisAlignedBB axisAlignedBB = new AxisAlignedBB(this.getX()-1.0d,this.getY(),this.getZ()-1.0d,this.getX()+1.0d,this.getY()+2.0d,this.getZ()+1.0d);
                 List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, axisAlignedBB);
                 for(LivingEntity livingEntity : livingEntityList){
-                    if(!(livingEntity instanceof MineralLeviathanEntity) && !(livingEntity instanceof MineralLeviathanPartEntity)){
-                        livingEntity.hurt(DamageSource.mobAttack(this), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
+                    if(!(livingEntity instanceof MineralLeviathanEntity) && !(livingEntity instanceof MineralLeviathanPartEntity) && this.isAlive()){
+                        livingEntity.hurt(DamageSource.mobAttack(this), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE) * BossUtil.difficultMultiplier(this.level.getDifficulty()));
                     }
                 }
             }
@@ -204,14 +178,7 @@ public class MineralLeviathanPartEntity extends MonsterEntity implements IRotati
         return false;
     }
 
-    public void die(DamageSource damageSource) {
-        if(this.nextSegment != null && !this.nextSegment.dead){
-            this.nextSegment.die(damageSource);
-        }
-        super.die(damageSource);
-    }
-
     public static AttributeModifierMap.MutableAttribute createAttributes() {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 1024.0D).add(Attributes.ATTACK_DAMAGE, 5.0d);
+        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 1.0D).add(Attributes.ATTACK_DAMAGE, MineralLeviathanEntity.DAMAGE * 0.5d);
     }
 }

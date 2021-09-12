@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.BossUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -193,15 +194,6 @@ public class PermafrostIcicleEntity extends DamagingProjectileEntity {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    private float damageMult(){
-        switch(this.level.getDifficulty()){
-            case EASY: return 0.67f;
-            case NORMAL: return 1.0f;
-            case HARD: return 1.5f;
-            default: return 0.0f;
-        }
-    }
-
     protected void onHitEntity(EntityRayTraceResult p_213868_1_) {
         super.onHitEntity(p_213868_1_);
         if (!this.level.isClientSide) {
@@ -209,7 +201,7 @@ public class PermafrostIcicleEntity extends DamagingProjectileEntity {
             Entity entity1 = this.getOwner();
             if (entity1 instanceof LivingEntity) {
                 LivingEntity livingentity = (LivingEntity)entity1;
-                entity.hurt(DamageSource.indirectMobAttack(this, livingentity), this.damage * this.damageMult());
+                entity.hurt(DamageSource.indirectMobAttack(this, livingentity), this.damage * BossUtil.difficultMultiplier(this.level.getDifficulty()));
             } else {
                 entity.hurt(DamageSource.MAGIC, 0.0F);
             }

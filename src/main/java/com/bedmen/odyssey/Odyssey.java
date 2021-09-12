@@ -75,6 +75,7 @@ public class Odyssey
         BiomeRegistry.init();
         BlockRegistry.init();
         ContainerRegistry.init();
+        DataSerializerRegistry.init();
         EffectRegistry.init();
         EnchantmentRegistry.init();
         EntityTypeRegistry.init();

@@ -6,6 +6,7 @@ import com.bedmen.odyssey.network.packet.MineralLeviathanPacket;
 import com.bedmen.odyssey.network.packet.UpdateEntityRotationPacket;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.BossUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -15,6 +16,7 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
@@ -47,24 +49,39 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
     private int passingTimer;
     private float dYRot;
     private float dXRot;
-    private MineralLeviathanPartEntity nextSegment;
-    private static final int NUM_SEGMENTS = 20;
+    public static final int NUM_SEGMENTS = 20;
+    public static final double DAMAGE = 8.0d;
+    public MineralLeviathanPartEntity[] parts = new MineralLeviathanPartEntity[NUM_SEGMENTS-1];
+    public int[] partIDs = new int[NUM_SEGMENTS-1];
 
     public MineralLeviathanEntity(EntityType<? extends MineralLeviathanEntity> entityType, World world) {
         super(entityType, world);
         this.setHealth(this.getMaxHealth());
         this.noPhysics = true;
         this.setNoGravity(true);
-        this.xpReward = 50;
     }
 
     public ILivingEntityData finalizeSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
         ILivingEntityData ilivingentitydata = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
-
-        this.nextSegment = new MineralLeviathanPartEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), this.level, this, this, NUM_SEGMENTS-1);
-        this.nextSegment.moveTo(this.getPosition(1.0f));
-        this.level.addFreshEntity(this.nextSegment);
+        for(int i = 0; i < this.parts.length; i++){
+            if(i == 0){
+                this.parts[i] = new MineralLeviathanPartEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), this.level, this, this);
+            } else {
+                this.parts[i] = new MineralLeviathanPartEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), this.level, this, this.parts[i-1]);
+            }
+            this.parts[i].moveTo(this.getPosition(1.0f));
+            this.level.addFreshEntity(this.parts[i]);
+            this.partIDs[i] = this.parts[i].getId();
+        }
         return ilivingentitydata;
+    }
+
+    protected void registerGoals() {
+        this.targetSelector.addGoal(1, new MineralLeviathanEntity.HurtByTargetGoal(this));
+    }
+
+    protected void defineSynchedData() {
+        super.defineSynchedData();
     }
 
     public void setCustomName(@Nullable ITextComponent p_200203_1_) {
@@ -87,6 +104,9 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
 
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
+                //Send Packet to Client
+                OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new MineralLeviathanPacket(this.getId(), this.partIDs));
+
                 //Choose Target
                 if(this.level.getGameTime() % 19 == 0){
                     LivingEntity target = this.getTarget();
@@ -132,6 +152,8 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
                                 this.phase = Phase.PASSING;
                                 this.passingTimer = 20;
                             }
+                        } else {
+                            this.phase = Phase.IDLE;
                         }
                         break;
 
@@ -155,6 +177,8 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
                                 this.passingTimer = 20;
                             }
                             this.rotateTowards(getdYRot(movementVector, targetVector), getdXRot(movementVector, targetVector), 0.3d);
+                        } else {
+                            this.phase = Phase.IDLE;
                         }
                         break;
                 }
@@ -162,8 +186,14 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
                 AxisAlignedBB axisAlignedBB = new AxisAlignedBB(this.getX()-1.0d,this.getY(),this.getZ()-1.0d,this.getX()+1.0d,this.getY()+2.0d,this.getZ()+1.0d);
                 List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, axisAlignedBB);
                 for(LivingEntity livingEntity : livingEntityList){
-                    if(!(livingEntity instanceof MineralLeviathanEntity) && !(livingEntity instanceof MineralLeviathanPartEntity)){
-                        livingEntity.hurt(DamageSource.mobAttack(this), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
+                    if(!(livingEntity instanceof MineralLeviathanEntity) && !(livingEntity instanceof MineralLeviathanPartEntity) && this.isAlive()){
+                        livingEntity.hurt(DamageSource.mobAttack(this), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE) * BossUtil.difficultMultiplier(this.level.getDifficulty()));
+                    }
+                }
+            } else {
+                for(MineralLeviathanPartEntity mineralLeviathanPartEntity : this.parts){
+                    if(mineralLeviathanPartEntity != null){
+                        mineralLeviathanPartEntity.hurtTime = this.hurtTime;
                     }
                 }
             }
@@ -252,12 +282,12 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
         return SoundEvents.SILVERFISH_DEATH;
     }
 
-    public void addAdditionalSaveData(CompoundNBT p_213281_1_) {
-        super.addAdditionalSaveData(p_213281_1_);
+    public void addAdditionalSaveData(CompoundNBT compoundNBT) {
+        super.addAdditionalSaveData(compoundNBT);
     }
 
-    public void readAdditionalSaveData(CompoundNBT p_70037_1_) {
-        super.readAdditionalSaveData(p_70037_1_);
+    public void readAdditionalSaveData(CompoundNBT compoundNBT) {
+        super.readAdditionalSaveData(compoundNBT);
         if (this.hasCustomName()) {
             this.bossEvent.setName(this.getDisplayName());
         }
@@ -312,8 +342,8 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
     }
 
     public void die(DamageSource damageSource) {
-        if(this.nextSegment != null){
-            this.nextSegment.die(damageSource);
+        for(MineralLeviathanPartEntity mineralLeviathanPartEntity : this.parts){
+            mineralLeviathanPartEntity.hurt(damageSource, 1.1f);
         }
         super.die(damageSource);
     }
@@ -329,7 +359,7 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
     }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(Attributes.ATTACK_DAMAGE, 5.0d);
+        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(Attributes.ATTACK_DAMAGE, DAMAGE);
     }
 
     static class HurtByTargetGoal extends TargetGoal {

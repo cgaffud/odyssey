@@ -67,7 +67,6 @@ public class PermafrostEntity extends MonsterEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new PermafrostEntity.DoNothingGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        //this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
     }
 
     public void setCustomName(@Nullable ITextComponent p_200203_1_) {

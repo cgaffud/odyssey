@@ -17,18 +17,14 @@ import java.util.function.Supplier;
 public class MineralLeviathanPacket {
 
     public int entityID;
-    public int headID;
-    public int prevSegmentID;
-    public int nextSegmentID;
+    public int[] partIDS;
 
     public MineralLeviathanPacket(){
     }
 
-    public MineralLeviathanPacket(int entityID, int headID, int prevSegmentID, int nextSegmentID){
+    public MineralLeviathanPacket(int entityID, int[] partIDS){
         this.entityID = entityID;
-        this.headID = headID;
-        this.prevSegmentID = prevSegmentID;
-        this.nextSegmentID = nextSegmentID;
+        this.partIDS = partIDS;
     }
 
     /**
@@ -36,16 +32,14 @@ public class MineralLeviathanPacket {
      */
     public static void encode(MineralLeviathanPacket mineralLeviathanPacket, PacketBuffer buf){
         buf.writeInt(mineralLeviathanPacket.entityID);
-        buf.writeInt(mineralLeviathanPacket.headID);
-        buf.writeInt(mineralLeviathanPacket.prevSegmentID);
-        buf.writeInt(mineralLeviathanPacket.nextSegmentID);
+        buf.writeVarIntArray(mineralLeviathanPacket.partIDS);
     }
 
     /**
      * Writes the raw packet data to the data stream.
      */
     public static MineralLeviathanPacket decode(PacketBuffer buf){
-        return new MineralLeviathanPacket(buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt());
+        return new MineralLeviathanPacket(buf.readInt(), buf.readVarIntArray());
     }
 
     /**
@@ -59,15 +53,10 @@ public class MineralLeviathanPacket {
             if (clientWorldOptional.isPresent()) {
                 ClientWorld clientWorld = clientWorldOptional.get();
                 Entity entity = clientWorld.getEntity(mineralLeviathanPacket.entityID);
-                if(entity instanceof MineralLeviathanPartEntity){
-                    MineralLeviathanEntity mineralLeviathanEntity = (MineralLeviathanEntity) clientWorld.getEntity(mineralLeviathanPacket.headID);
-                    System.out.println((mineralLeviathanEntity == null)+" beans2");
-                    ((MineralLeviathanPartEntity) entity).head = (MineralLeviathanEntity) clientWorld.getEntity(mineralLeviathanPacket.headID);
-                    ((MineralLeviathanPartEntity) entity).prevSegment = (IMineralLeviathanSegment) clientWorld.getEntity(mineralLeviathanPacket.prevSegmentID);
-                    if(mineralLeviathanPacket.nextSegmentID == -1){
-                        ((MineralLeviathanPartEntity) entity).nextSegment = null;
-                    } else {
-                        ((MineralLeviathanPartEntity) entity).nextSegment = (MineralLeviathanPartEntity) clientWorld.getEntity(mineralLeviathanPacket.nextSegmentID);
+                if(entity instanceof MineralLeviathanEntity){
+                    MineralLeviathanEntity mineralLeviathanEntity = (MineralLeviathanEntity)entity;
+                    for(int i = 0; i < MineralLeviathanEntity.NUM_SEGMENTS-1; i++){
+                        mineralLeviathanEntity.parts[i] = (MineralLeviathanPartEntity) clientWorld.getEntity(mineralLeviathanPacket.partIDS[i]);
                     }
                 }
             }
