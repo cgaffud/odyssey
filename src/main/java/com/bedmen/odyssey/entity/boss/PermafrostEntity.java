@@ -15,7 +15,6 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
@@ -25,7 +24,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
 import net.minecraftforge.api.distmarker.Dist;
@@ -37,7 +35,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class PermafrostEntity extends MonsterEntity {
+public class PermafrostEntity extends BossEntity {
     private float activeRotation = 0;
     private int destroyBlocksTick;
     private int IciclePosition = 0;
@@ -46,10 +44,7 @@ public class PermafrostEntity extends MonsterEntity {
     private final int MaxMovementPositions = 6;
     private final int[] attackCooldown = new int[2];
     private final int[] attackTimer = new int[2];
-    private static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
-        return entity.attackable() && entity.getType() != EntityTypeRegistry.PERMAFROST.get();
-    };
-    private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(20.0D).selector(ENTITY_SELECTOR);
+    private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(20.0D).selector(BossEntity.ENTITY_SELECTOR);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.BLUE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
 
     public PermafrostEntity(EntityType<? extends PermafrostEntity> entityType, World world) {
@@ -252,24 +247,12 @@ public class PermafrostEntity extends MonsterEntity {
         }
     }
 
-    public void checkDespawn() {
-        if (this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
-            this.remove();
-        } else {
-            this.noActionTime = 0;
-        }
-    }
-
     public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
         if (this.isInvulnerableTo(p_70097_1_))
             return false;
         if(p_70097_1_ == DamageSource.DROWN)
             return false;
         return super.hurt(p_70097_1_, p_70097_2_);
-    }
-
-    public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
-        return false;
     }
 
     protected void dropCustomDeathLoot(DamageSource damageSource, int p_213333_2_, boolean p_213333_3_) {
@@ -280,22 +263,6 @@ public class PermafrostEntity extends MonsterEntity {
                 itementity.setExtendedLifetime();
             }
         }
-    }
-
-    public CreatureAttribute getMobType() {
-        return CreatureAttribute.UNDEFINED;
-    }
-
-    public boolean canChangeDimensions() {
-        return false;
-    }
-
-    protected boolean canRide(Entity p_184228_1_) {
-        return false;
-    }
-
-    public boolean addEffect(EffectInstance p_195064_1_) {
-        return false;
     }
 
     public void startSeenByPlayer(ServerPlayerEntity p_184178_1_) {

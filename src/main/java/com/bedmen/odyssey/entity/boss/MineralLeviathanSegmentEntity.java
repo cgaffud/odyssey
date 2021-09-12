@@ -1,13 +1,9 @@
 package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.entity.IRotationallyIncompetent;
-import com.bedmen.odyssey.network.OdysseyNetwork;
-import com.bedmen.odyssey.network.packet.UpdateEntityRotationPacket;
 import com.bedmen.odyssey.util.BossUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -15,12 +11,10 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.List;
-import java.util.UUID;
 
-public class MineralLeviathanSegmentEntity extends MonsterEntity implements IRotationallyIncompetent {
+public class MineralLeviathanSegmentEntity extends BossEntity implements IRotationallyIncompetent {
     protected float trueYRot;
     protected float trueXRot;
     protected boolean initParts = false;
@@ -78,37 +72,5 @@ public class MineralLeviathanSegmentEntity extends MonsterEntity implements IRot
 
     public void setXRot(float f) {
         this.trueXRot = f;
-    }
-
-    protected boolean shouldDespawnInPeaceful() {
-        return true;
-    }
-
-    public void checkDespawn() {
-        if (this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
-            this.remove();
-        } else {
-            this.noActionTime = 0;
-        }
-    }
-
-    public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
-        return false;
-    }
-
-    public CreatureAttribute getMobType() {
-        return CreatureAttribute.UNDEFINED;
-    }
-
-    public boolean canChangeDimensions() {
-        return false;
-    }
-
-    protected boolean canRide(Entity p_184228_1_) {
-        return false;
-    }
-
-    public boolean addEffect(EffectInstance p_195064_1_) {
-        return false;
     }
 }

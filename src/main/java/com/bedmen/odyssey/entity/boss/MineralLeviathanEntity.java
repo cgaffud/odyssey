@@ -11,7 +11,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -29,15 +28,11 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity implements IRotationallyIncompetent {
-    private static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
-        return entity.attackable() && !(entity instanceof MonsterEntity);
-    };
-    private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(40.0D).selector(ENTITY_SELECTOR);
+    private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(40.0D).selector(BossEntity.ENTITY_SELECTOR);
     protected static final DataParameter<List<UUID>> DATA_PARTS_UUID_ID = EntityDataManager.defineId(MineralLeviathanEntity.class, OdysseyDataSerializers.UUID_LIST);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
     private Phase phase = Phase.IDLE;
