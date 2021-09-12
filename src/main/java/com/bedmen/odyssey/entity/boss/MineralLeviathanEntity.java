@@ -2,11 +2,10 @@ package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.entity.IRotationallyIncompetent;
 import com.bedmen.odyssey.network.OdysseyNetwork;
-import com.bedmen.odyssey.network.packet.MineralLeviathanPacket;
+import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.network.packet.UpdateEntityRotationPacket;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.util.BossUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -17,18 +16,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.*;
 import net.minecraft.world.server.ServerBossInfo;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
@@ -37,14 +33,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MineralLeviathanEntity extends MonsterEntity implements IRotationallyIncompetent, IMineralLeviathanSegment {
+public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity implements IRotationallyIncompetent {
     private static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
         return entity.attackable() && !(entity instanceof MonsterEntity);
     };
     private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(40.0D).selector(ENTITY_SELECTOR);
+    protected static final DataParameter<List<UUID>> DATA_PARTS_UUID_ID = EntityDataManager.defineId(MineralLeviathanEntity.class, OdysseyDataSerializers.UUID_LIST);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
-    private float trueYRot;
-    private float trueXRot;
     private Phase phase = Phase.IDLE;
     private int passingTimer;
     private float dYRot;
@@ -52,26 +47,25 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
     public static final int NUM_SEGMENTS = 20;
     public static final double DAMAGE = 8.0d;
     public MineralLeviathanPartEntity[] parts = new MineralLeviathanPartEntity[NUM_SEGMENTS-1];
-    public int[] partIDs = new int[NUM_SEGMENTS-1];
 
     public MineralLeviathanEntity(EntityType<? extends MineralLeviathanEntity> entityType, World world) {
         super(entityType, world);
-        this.setHealth(this.getMaxHealth());
-        this.noPhysics = true;
-        this.setNoGravity(true);
     }
 
     public ILivingEntityData finalizeSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
         ILivingEntityData ilivingentitydata = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
-        for(int i = 0; i < this.parts.length; i++){
-            if(i == 0){
-                this.parts[i] = new MineralLeviathanPartEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), this.level, this, this);
-            } else {
-                this.parts[i] = new MineralLeviathanPartEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), this.level, this, this.parts[i-1]);
+        if(this.getPartsUUIDs().isEmpty()){
+            for(int i = 0; i < this.parts.length; i++){
+                if(i == 0){
+                    this.parts[i] = new MineralLeviathanPartEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), this.level, this, this);
+                } else {
+                    this.parts[i] = new MineralLeviathanPartEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_PART.get(), this.level, this, this.parts[i-1]);
+                }
+                this.parts[i].moveTo(this.getPosition(1.0f));
+                this.level.addFreshEntity(this.parts[i]);
             }
-            this.parts[i].moveTo(this.getPosition(1.0f));
-            this.level.addFreshEntity(this.parts[i]);
-            this.partIDs[i] = this.parts[i].getId();
+            this.setPartsUUIDs(this.parts);
+            this.initParts = true;
         }
         return ilivingentitydata;
     }
@@ -82,17 +76,28 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
 
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(DATA_PARTS_UUID_ID, new ArrayList<>());
+    }
+
+    public void setPartsUUIDs(MineralLeviathanPartEntity[] parts) {
+        List<UUID> uuidList = new ArrayList<>();
+        for(MineralLeviathanPartEntity part : parts){
+            uuidList.add(part.getUUID());
+        }
+        this.entityData.set(DATA_PARTS_UUID_ID, uuidList);
+    }
+
+    public void setPartsUUIDs(List<UUID> uuidList) {
+        this.entityData.set(DATA_PARTS_UUID_ID, uuidList);
+    }
+
+    public List<UUID> getPartsUUIDs() {
+        return this.entityData.get(DATA_PARTS_UUID_ID);
     }
 
     public void setCustomName(@Nullable ITextComponent p_200203_1_) {
         super.setCustomName(p_200203_1_);
         this.bossEvent.setName(this.getDisplayName());
-    }
-
-    public void tick() {
-        this.setNoGravity(true);
-        this.noPhysics = true;
-        super.tick();
     }
 
     public void aiStep() {
@@ -102,11 +107,26 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
             }
         }
 
+        if(!this.initParts){
+            List<MineralLeviathanPartEntity> partList = this.level.getEntitiesOfClass(MineralLeviathanPartEntity.class, this.getBoundingBox().inflate(45.0d));
+            int i = 0;
+            for(UUID uuid : this.getPartsUUIDs()){
+                for(MineralLeviathanPartEntity part : partList){
+                    if(part.getUUID().equals(uuid)){
+                        this.parts[i] = part;
+                        break;
+                    }
+                }
+                i++;
+                if(i > 19){
+                    break;
+                }
+            }
+            this.initParts = true;
+        }
+
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
-                //Send Packet to Client
-                OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new MineralLeviathanPacket(this.getId(), this.partIDs));
-
                 //Choose Target
                 if(this.level.getGameTime() % 19 == 0){
                     LivingEntity target = this.getTarget();
@@ -182,14 +202,6 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
                         }
                         break;
                 }
-                //Damage
-                AxisAlignedBB axisAlignedBB = new AxisAlignedBB(this.getX()-1.0d,this.getY(),this.getZ()-1.0d,this.getX()+1.0d,this.getY()+2.0d,this.getZ()+1.0d);
-                List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, axisAlignedBB);
-                for(LivingEntity livingEntity : livingEntityList){
-                    if(!(livingEntity instanceof MineralLeviathanEntity) && !(livingEntity instanceof MineralLeviathanPartEntity) && this.isAlive()){
-                        livingEntity.hurt(DamageSource.mobAttack(this), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE) * BossUtil.difficultMultiplier(this.level.getDifficulty()));
-                    }
-                }
             } else {
                 for(MineralLeviathanPartEntity mineralLeviathanPartEntity : this.parts){
                     if(mineralLeviathanPartEntity != null){
@@ -219,14 +231,6 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
         OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new UpdateEntityRotationPacket(this.trueYRot, this.trueXRot, this.getId()));
     }
 
-    protected void setRotation(Vector3d vector3d) {
-        float f = MathHelper.sqrt(Entity.getHorizontalDistanceSqr(vector3d));
-        if (vector3d.lengthSqr() != 0.0D) {
-            this.trueYRot = (float)(MathHelper.atan2(vector3d.x, vector3d.z) * (double)(180F / (float)Math.PI));
-            this.trueXRot = (float)(MathHelper.atan2(f, vector3d.y) * (double)(180F / (float)Math.PI) * -1.0f + 90.0f);
-        }
-    }
-
     protected static float getdYRot(Vector3d movementVector, Vector3d targetVector){
         float theta = (float)(MathHelper.atan2(movementVector.x, movementVector.z) * (double)(180F / (float)Math.PI));
         float phi = (float)(MathHelper.atan2(targetVector.x, targetVector.z) * (double)(180F / (float)Math.PI));
@@ -245,24 +249,6 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
         angleDifference = Math.min(5.0f, angleDifference);
         boolean flag2 = theta > phi;
         return flag1 ^ flag2 ? angleDifference : -angleDifference;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getYRot() {
-        return this.trueYRot;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getXRot() {
-        return this.trueXRot;
-    }
-
-    public void setYRot(float f) {
-        this.trueYRot = f;
-    }
-
-    public void setXRot(float f) {
-        this.trueXRot = f;
     }
 
     protected void customServerAiStep() {
@@ -284,6 +270,10 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
 
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
+        List<UUID> uuidList = this.getPartsUUIDs();
+        for(int i = 0; i < uuidList.size(); i++){
+            compoundNBT.putUUID("PartUUID"+i, uuidList.get(i));
+        }
     }
 
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {
@@ -291,18 +281,13 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
         if (this.hasCustomName()) {
             this.bossEvent.setName(this.getDisplayName());
         }
-    }
-
-    protected boolean shouldDespawnInPeaceful() {
-        return true;
-    }
-
-    public void checkDespawn() {
-        if (this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
-            this.remove();
-        } else {
-            this.noActionTime = 0;
+        List<UUID> uuidList = new ArrayList<>();
+        for(int i = 0; i < NUM_SEGMENTS-1; i++){
+            if (compoundNBT.hasUUID("PartUUID"+i)) {
+                uuidList.add(compoundNBT.getUUID("PartUUID"+i));
+            }
         }
+        this.setPartsUUIDs(uuidList);
     }
 
     public boolean hurt(DamageSource damageSource, float amount) {
@@ -313,32 +298,12 @@ public class MineralLeviathanEntity extends MonsterEntity implements IRotational
         return super.hurt(damageSource, amount);
     }
 
-    public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
-        return false;
-    }
-
     protected void dropCustomDeathLoot(DamageSource damageSource, int p_213333_2_, boolean p_213333_3_) {
         super.dropCustomDeathLoot(damageSource, p_213333_2_, p_213333_3_);
         ItemEntity itementity = this.spawnAtLocation(ItemRegistry.RUBY.get());
         if (itementity != null) {
             itementity.setExtendedLifetime();
         }
-    }
-
-    public CreatureAttribute getMobType() {
-        return CreatureAttribute.UNDEFINED;
-    }
-
-    public boolean canChangeDimensions() {
-        return false;
-    }
-
-    protected boolean canRide(Entity p_184228_1_) {
-        return false;
-    }
-
-    public boolean addEffect(EffectInstance p_195064_1_) {
-        return false;
     }
 
     public void die(DamageSource damageSource) {
