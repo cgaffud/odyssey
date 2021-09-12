@@ -34,20 +34,20 @@ public class SoundPacket{
      * Reads the raw packet data from the data stream.
      */
     public static void encode(SoundPacket soundPacket, PacketBuffer buf){
-        buf.writeVarInt(soundPacket.type);
-        buf.writeVarInt(soundPacket.x);
-        buf.writeVarInt(soundPacket.y);
-        buf.writeVarInt(soundPacket.z);
+        buf.writeInt(soundPacket.type);
+        buf.writeInt(soundPacket.x);
+        buf.writeInt(soundPacket.y);
+        buf.writeInt(soundPacket.z);
     }
 
     /**
      * Writes the raw packet data to the data stream.
      */
     public static SoundPacket decode(PacketBuffer buf){
-        int type = buf.readVarInt();
-        int x = buf.readVarInt();
-        int y = buf.readVarInt();
-        int z = buf.readVarInt();
+        int type = buf.readInt();
+        int x = buf.readInt();
+        int y = buf.readInt();
+        int z = buf.readInt();
         return new SoundPacket(type, x, y, z);
     }
 

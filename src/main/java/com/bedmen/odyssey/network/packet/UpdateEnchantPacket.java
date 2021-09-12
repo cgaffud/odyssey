@@ -26,18 +26,18 @@ public class UpdateEnchantPacket{
      * Reads the raw packet data from the data stream.
      */
     public static void encode(UpdateEnchantPacket updateEnchantPacket, PacketBuffer buf){
-        buf.writeVarInt(updateEnchantPacket.level);
-        buf.writeVarInt(updateEnchantPacket.id);
-        buf.writeVarInt(updateEnchantPacket.cost);
+        buf.writeInt(updateEnchantPacket.level);
+        buf.writeInt(updateEnchantPacket.id);
+        buf.writeInt(updateEnchantPacket.cost);
     }
 
     /**
      * Writes the raw packet data to the data stream.
      */
     public static UpdateEnchantPacket decode(PacketBuffer buf){
-        int level = buf.readVarInt();
-        int id = buf.readVarInt();
-        int cost = buf.readVarInt();
+        int level = buf.readInt();
+        int id = buf.readInt();
+        int cost = buf.readInt();
         return new UpdateEnchantPacket(level, id, cost);
     }
 

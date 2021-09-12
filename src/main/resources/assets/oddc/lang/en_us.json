@@ -199,6 +199,8 @@
   "entity.oddc.arctihorn": "Arctihorn",
 
   //Bosses
+  "entity.oddc.mineral_leviathan": "Mineral Leviathan",
+  "entity.oddc.mineral_leviathan_body": "Mineral Leviathan",
   "entity.oddc.permafrost": "Permafrost",
 
   //Projectiles
