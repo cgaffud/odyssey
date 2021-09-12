@@ -1,9 +1,7 @@
 package com.bedmen.odyssey.network;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.network.packet.*;
-import net.minecraft.network.play.server.SRespawnPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -27,6 +25,5 @@ public class OdysseyNetwork {
         //Server to Client
         CHANNEL.registerMessage(4, SoundPacket.class, SoundPacket::encode, SoundPacket::decode, SoundPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(5, PermanentBuffsPacket.class, PermanentBuffsPacket::encode, PermanentBuffsPacket::decode, PermanentBuffsPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-        CHANNEL.registerMessage(6, UpdateEntityRotationPacket.class, UpdateEntityRotationPacket::encode, UpdateEntityRotationPacket::decode, UpdateEntityRotationPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 }
