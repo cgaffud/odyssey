@@ -27,9 +27,9 @@ public class MineralLeviathanSegmentRenderer extends MobRenderer<MineralLeviatha
         switch(entity.getShellType()){
             default:
                 return RUBY_SEGMENT_LOCATION;
-            case 1:
+            case COPPER:
                 return COPPER_SEGMENT_LOCATION;
-            case 2:
+            case SILVER:
                 return SILVER_SEGMENT_LOCATION;
         }
     }

@@ -59,15 +59,15 @@ public class ShellLayer extends LayerRenderer<MineralLeviathanSegmentEntity, Min
         switch(entity.getShellType()){
             default:
                 return getTextureLocation(RUBY_SHELL_LOCATION, entity);
-            case 1:
+            case COPPER:
                 return getTextureLocation(COPPER_SHELL_LOCATION, entity);
-            case 2:
+            case SILVER:
                 return getTextureLocation(SILVER_SHELL_LOCATION, entity);
         }
     }
 
     public ResourceLocation getTextureLocation(ResourceLocation[] locations, MineralLeviathanSegmentEntity entity) {
-        float maxHealth = entity.getShellHealthFromType(entity.getShellType());
+        float maxHealth = entity.getShellType().getShellMaxHealth();
         float currentHealth = entity.getShellHealth();
         int i = MathHelper.ceil(11.0f - (currentHealth / maxHealth * 10.0f)) - 1;
         i = MathHelper.clamp(i, 0, 10);

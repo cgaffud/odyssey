@@ -22,10 +22,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.*;
 import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
-import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,8 +46,8 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     public MineralLeviathanEntity(EntityType<? extends MineralLeviathanEntity> entityType, World world) {
         super(entityType, world);
         if(!this.level.isClientSide){
-            this.setShellType(0);
-            this.setShellHealth(this.getShellHealthFromType(0));
+            this.setShellType(ShellType.RUBY);
+            this.setShellHealth(ShellType.RUBY.getShellMaxHealth());
         }
     }
 
@@ -305,10 +303,8 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     }
 
     public void die(DamageSource damageSource) {
-        if(!this.level.isClientSide){
-            for(MineralLeviathanBodyEntity mineralLeviathanBodyEntity : this.bodyEntities){
-                mineralLeviathanBodyEntity.hurt(DamageSource.OUT_OF_WORLD, 1.1f);
-            }
+        for(MineralLeviathanBodyEntity mineralLeviathanBodyEntity : this.bodyEntities){
+            mineralLeviathanBodyEntity.hurt(DamageSource.OUT_OF_WORLD, 1.1f);
         }
         super.die(damageSource);
     }

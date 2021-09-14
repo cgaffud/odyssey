@@ -20,11 +20,12 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.*;
 
 import java.util.List;
+import java.util.Random;
 
 public abstract class MineralLeviathanSegmentEntity extends BossEntity {
     protected static final DataParameter<Float> DATA_YROT_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected static final DataParameter<Float> DATA_XROT_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
-    protected static final DataParameter<Integer> DATA_SHELL_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.INT);
+    protected static final DataParameter<String> DATA_SHELL_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.STRING);
     protected static final DataParameter<Float> DATA_SHELL_HEALTH_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected boolean initBody = false;
     protected float clientSideShellHealth;
@@ -41,7 +42,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         super.defineSynchedData();
         this.entityData.define(DATA_YROT_ID, 0.0f);
         this.entityData.define(DATA_XROT_ID, 0.0f);
-        this.entityData.define(DATA_SHELL_ID, 0);
+        this.entityData.define(DATA_SHELL_ID, "COPPER");
         this.entityData.define(DATA_SHELL_HEALTH_ID, 0.0f);
     }
 
@@ -109,12 +110,16 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         return this.entityData.get(DATA_XROT_ID);
     }
 
-    public void setShellType(int i) {
-        this.entityData.set(DATA_SHELL_ID, i);
+    public void setShellType(String s) {
+        this.entityData.set(DATA_SHELL_ID, s);
     }
 
-    public int getShellType() {
-        return this.entityData.get(DATA_SHELL_ID);
+    public void setShellType(ShellType shellType) {
+        this.entityData.set(DATA_SHELL_ID, shellType.name());
+    }
+
+    public ShellType getShellType() {
+        return ShellType.valueOf(this.entityData.get(DATA_SHELL_ID));
     }
 
     public void setShellHealth(float f) {
@@ -129,7 +134,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         super.addAdditionalSaveData(compoundNBT);
         compoundNBT.putFloat("TrueYRot", this.getYRot());
         compoundNBT.putFloat("TrueXRot", this.getXRot());
-        compoundNBT.putInt("ShellType", this.getShellType());
+        compoundNBT.putString("ShellType", this.getShellType().name());
         compoundNBT.putFloat("ShellHealth", this.getShellHealth());
     }
 
@@ -142,7 +147,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
             this.setXRot(compoundNBT.getFloat("TrueXRot"));
         }
         if(compoundNBT.contains("ShellType")){
-            this.setShellType(compoundNBT.getInt("ShellType"));
+            this.setShellType(compoundNBT.getString("ShellType"));
         }
         if(compoundNBT.contains("ShellHealth")){
             this.setShellHealth(compoundNBT.getFloat("ShellHealth"));
@@ -161,6 +166,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
             return this.hurtWithShell(damageSource, amount);
         }
         if(damageSource == DamageSource.OUT_OF_WORLD){
+            System.out.println("be");
             return super.hurt(damageSource, amount);
         }
         return false;
@@ -182,15 +188,24 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         return super.hurt(damageSource, amount);
     }
 
-    public float getShellHealthFromType(int i){
-        float f = (float)MineralLeviathanEntity.BASE_HEALTH;
-        switch(i){
-            default:
-                return 0.3f * f; //Ruby
-            case 1:
-                return 0.1f * f; //Copper
-            case 2:
-                return 0.2f * f; //Silver
+    public enum ShellType{
+        RUBY(0.3f),
+        COPPER(0.1f),
+        SILVER(0.2f);
+
+        private final float percentageHealth;
+
+        ShellType(float percentageHealth){
+            this.percentageHealth = percentageHealth;
+        }
+
+        public float getShellMaxHealth(){
+            return this.percentageHealth * (float)MineralLeviathanEntity.BASE_HEALTH;
+        }
+
+        public static ShellType getRandomShellType(Random random){
+            ShellType[] values = ShellType.values();
+            return values[random.nextInt(values.length-1)+1];
         }
     }
 }

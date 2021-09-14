@@ -12,10 +12,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.*;
 import net.minecraft.world.server.ServerWorld;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
@@ -39,9 +37,9 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
             this.setBodyIDs(this.head.getId(), this.prevSegment.getId());
             this.initBody = true;
         }
-        int shellType = this.random.nextInt(2)+1;
+        ShellType shellType = ShellType.getRandomShellType(this.random);
         this.setShellType(shellType);
-        this.setShellHealth(this.getShellHealthFromType(shellType));
+        this.setShellHealth(shellType.getShellMaxHealth());
     }
 
     protected void defineSynchedData() {
