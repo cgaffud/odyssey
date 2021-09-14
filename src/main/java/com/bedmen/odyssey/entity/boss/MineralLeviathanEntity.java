@@ -22,6 +22,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.*;
 import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
+import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -31,7 +32,7 @@ import java.util.stream.Stream;
 
 public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(60.0D).selector(BossEntity.ENTITY_SELECTOR);
-    protected static final DataParameter<List<UUID>> DATA_BODY_UUID_ID = EntityDataManager.defineId(MineralLeviathanEntity.class, OdysseyDataSerializers.UUID_LIST);
+    protected static final DataParameter<List<Integer>> DATA_BODY_ID = EntityDataManager.defineId(MineralLeviathanEntity.class, OdysseyDataSerializers.INT_LIST);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
     private Phase phase = Phase.IDLE;
     private int passingTimer;
@@ -42,6 +43,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     public static final double DODGE_RANGE = 4.0d;
     public static final double BASE_HEALTH = 150.0d;
     public MineralLeviathanBodyEntity[] bodyEntities = new MineralLeviathanBodyEntity[NUM_SEGMENTS-1];
+    public UUID[] bodyEntityUUIDs = new UUID[NUM_SEGMENTS-1];
 
     public MineralLeviathanEntity(EntityType<? extends MineralLeviathanEntity> entityType, World world) {
         super(entityType, world);
@@ -53,7 +55,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
 
     public ILivingEntityData finalizeSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
         ILivingEntityData ilivingentitydata = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
-        if(this.getBodyUUIDs().isEmpty()){
+        if(this.bodyEntityUUIDs[0] == null){
             Vector3d headPosition = this.getPosition(1.0f);
             Vector3d loweringVector = new Vector3d(0.0d,-1.0d, 0.0d);
             this.setXRot(90.0f);
@@ -65,9 +67,10 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
                 }
                 this.bodyEntities[i].moveTo(headPosition.add(loweringVector.scale(i)));
                 this.bodyEntities[i].setXRot(90.0f);
+                this.bodyEntityUUIDs[i] = this.bodyEntities[i].getUUID();
                 this.level.addFreshEntity(this.bodyEntities[i]);
             }
-            this.setBodyUUIDs(this.bodyEntities);
+            this.setBodyIDs(this.bodyEntities);
             this.initBody = true;
         }
         return ilivingentitydata;
@@ -79,23 +82,19 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_BODY_UUID_ID, new ArrayList<>());
+        this.entityData.define(DATA_BODY_ID, new ArrayList<>());
     }
 
-    public void setBodyUUIDs(MineralLeviathanBodyEntity[] bodyEntities) {
-        List<UUID> uuidList = new ArrayList<>();
+    public void setBodyIDs(MineralLeviathanBodyEntity[] bodyEntities) {
+        List<Integer> idList = new ArrayList<>();
         for(MineralLeviathanBodyEntity bodyEntity : bodyEntities){
-            uuidList.add(bodyEntity.getUUID());
+            idList.add(bodyEntity.getId());
         }
-        this.entityData.set(DATA_BODY_UUID_ID, uuidList);
+        this.entityData.set(DATA_BODY_ID, idList);
     }
 
-    public void setBodyUUIDs(List<UUID> uuidList) {
-        this.entityData.set(DATA_BODY_UUID_ID, uuidList);
-    }
-
-    public List<UUID> getBodyUUIDs() {
-        return this.entityData.get(DATA_BODY_UUID_ID);
+    public List<Integer> getBodyIDs() {
+        return this.entityData.get(DATA_BODY_ID);
     }
 
     public void setCustomName(@Nullable ITextComponent p_200203_1_) {
@@ -105,34 +104,20 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
 
     public void aiStep() {
         //Server side Init Body
-        if(!this.initBody && !this.level.isClientSide){
-            List<UUID> uuidList = this.getBodyUUIDs();
-            if(uuidList.size() >= NUM_SEGMENTS - 1){
-                try {
-                    Field entitiesByUuidField = ServerWorld.class.getDeclaredField("entitiesByUuid");
-                    entitiesByUuidField.setAccessible(true);
-                    Map<UUID, Entity> entitiesByUuid = (Map<UUID, Entity>) entitiesByUuidField.get(this.level);
-                    for(int i = 0; i < uuidList.size(); i++){
-                        this.bodyEntities[i] = (MineralLeviathanBodyEntity) entitiesByUuid.get(uuidList.get(i));
-                    }
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                this.initBody = true;
+        if(!this.initBody && !this.level.isClientSide && this.bodyEntityUUIDs[0] != null){
+            ServerWorld serverWorld = (ServerWorld) this.level;
+            for(int i = 0; i < this.bodyEntityUUIDs.length; i++){
+                this.bodyEntities[i] = (MineralLeviathanBodyEntity) serverWorld.getEntity(this.bodyEntityUUIDs[i]);
             }
+            this.setBodyIDs(this.bodyEntities);
+            this.initBody = true;
         }
+        //Client side Init Body
         else if(!this.initBody){
-            List<UUID> uuidList = this.getBodyUUIDs();
-            if(uuidList.size() >= NUM_SEGMENTS - 1){
-                List<MineralLeviathanBodyEntity> bodyEntities = this.level.getEntitiesOfClass(MineralLeviathanBodyEntity.class, this.getBoundingBox().inflate(45.0d));
+            List<Integer> idList = this.getBodyIDs();
+            if(idList.size() >= NUM_SEGMENTS - 1){
                 for(int i = 0; i < this.bodyEntities.length; i++){
-                    UUID uuid = uuidList.get(i);
-                    for(MineralLeviathanBodyEntity bodyEntity : bodyEntities){
-                        if(bodyEntity.getUUID().equals(uuid)){
-                            this.bodyEntities[i] = bodyEntity;
-                            break;
-                        }
-                    }
+                    this.bodyEntities[i] = (MineralLeviathanBodyEntity) this.level.getEntity(idList.get(i));
                 }
                 this.initBody = true;
             }
@@ -215,6 +200,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
                         }
                         break;
                 }
+            //Client Side
             } else {
                 for(MineralLeviathanBodyEntity mineralLeviathanBodyEntity : this.bodyEntities){
                     if(mineralLeviathanBodyEntity != null){
@@ -281,9 +267,8 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
 
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        List<UUID> uuidList = this.getBodyUUIDs();
-        for(int i = 0; i < uuidList.size(); i++){
-            compoundNBT.putUUID("BodyUUID"+i, uuidList.get(i));
+        for(int i = 0; i < this.bodyEntityUUIDs.length; i++){
+            compoundNBT.putUUID("BodyUUID"+i, this.bodyEntityUUIDs[i]);
         }
         compoundNBT.putString("Phase", this.phase.toString());
         compoundNBT.putInt("PassingTimer", this.passingTimer);
@@ -296,13 +281,11 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
         if (this.hasCustomName()) {
             this.bossEvent.setName(this.getDisplayName());
         }
-        List<UUID> uuidList = new ArrayList<>();
-        for(int i = 0; i < NUM_SEGMENTS-1; i++){
+        for(int i = 0; i < this.bodyEntityUUIDs.length; i++){
             if (compoundNBT.hasUUID("BodyUUID"+i)) {
-                uuidList.add(compoundNBT.getUUID("BodyUUID"+i));
+                this.bodyEntityUUIDs[i] = compoundNBT.getUUID("BodyUUID"+i);
             }
         }
-        this.setBodyUUIDs(uuidList);
         if(compoundNBT.contains("Phase")){
             this.phase = Phase.valueOf(compoundNBT.getString("Phase"));
         } else {

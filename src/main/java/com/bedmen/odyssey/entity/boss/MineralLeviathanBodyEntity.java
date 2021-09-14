@@ -19,9 +19,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
-    protected static final DataParameter<List<UUID>> DATA_DEPENDENCIES_UUID_ID = EntityDataManager.defineId(MineralLeviathanBodyEntity.class, OdysseyDataSerializers.UUID_LIST);
+    protected static final DataParameter<List<Integer>> DATA_DEPENDENCIES_ID = EntityDataManager.defineId(MineralLeviathanBodyEntity.class, OdysseyDataSerializers.INT_LIST);
     public  MineralLeviathanEntity head;
     public MineralLeviathanSegmentEntity prevSegment;
+    public UUID[] dependencyUUIDs = new UUID[2];
 
     public MineralLeviathanBodyEntity(EntityType<? extends MineralLeviathanBodyEntity> entityType, World world) {
         this(entityType, world, null, null);
@@ -33,9 +34,9 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
         this.prevSegment = prevSegment;
         if(head != null){
             List<UUID> uuidList = new ArrayList<>();
-            uuidList.add(this.head.getUUID());
-            uuidList.add(this.prevSegment.getUUID());
-            this.setBodyUUIDs(uuidList);
+            this.dependencyUUIDs[0] = this.head.getUUID();
+            this.dependencyUUIDs[1] = this.prevSegment.getUUID();
+            this.setBodyIDs(this.head.getId(), this.prevSegment.getId());
             this.initBody = true;
         }
         int shellType = this.random.nextInt(2)+1;
@@ -45,49 +46,34 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_DEPENDENCIES_UUID_ID, new ArrayList<>());
+        this.entityData.define(DATA_DEPENDENCIES_ID, new ArrayList<>());
     }
 
-    public void setBodyUUIDs(List<UUID> uuidList) {
-        this.entityData.set(DATA_DEPENDENCIES_UUID_ID, uuidList);
+    public void setBodyIDs(int headID, int prevSegmentID) {
+        List<Integer> idList = new ArrayList<>();
+        idList.add(headID);
+        idList.add(prevSegmentID);
+        this.entityData.set(DATA_DEPENDENCIES_ID, idList);
     }
 
-    public List<UUID> getBodyUUIDs() {
-        return this.entityData.get(DATA_DEPENDENCIES_UUID_ID);
+    public List<Integer> getBodyIDs() {
+        return this.entityData.get(DATA_DEPENDENCIES_ID);
     }
 
     public void aiStep() {
-        if(!this.initBody && !this.level.isClientSide){
-            List<UUID> uuidList = this.getBodyUUIDs();
-            if(uuidList.size() >= 2){
-                try {
-                    Field entitiesByUuidField = ServerWorld.class.getDeclaredField("entitiesByUuid");
-                    entitiesByUuidField.setAccessible(true);
-                    Map<UUID, Entity> entitiesByUuid = (Map<UUID, Entity>) entitiesByUuidField.get(this.level);
-                    this.head = (MineralLeviathanEntity) entitiesByUuid.get(uuidList.get(0));
-                    this.prevSegment = (MineralLeviathanSegmentEntity) entitiesByUuid.get(uuidList.get(1));
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                this.initBody = true;
-            }
-        } else if(!this.initBody){
-            List<UUID> uuidList = this.getBodyUUIDs();
-            if(!this.initBody && uuidList.size() >= 2){
-                List<MineralLeviathanSegmentEntity> segmentEntities = this.level.getEntitiesOfClass(MineralLeviathanSegmentEntity.class, this.getBoundingBox().inflate(45.0d));
-                for(MineralLeviathanSegmentEntity segmentEntity : segmentEntities){
-                    if(segmentEntity.getUUID().equals(uuidList.get(0))){
-                        if(segmentEntity instanceof MineralLeviathanEntity){
-                            this.head = (MineralLeviathanEntity) segmentEntity;
-                        }
-                    }
-                    if (segmentEntity.getUUID().equals(uuidList.get(1))){
-                        this.prevSegment = segmentEntity;
-                    }
-                    if(this.head != null && this.prevSegment != null){
-                        break;
-                    }
-                }
+        //Server side Init Body
+        if(!this.initBody && !this.level.isClientSide && this.dependencyUUIDs[0] != null){
+            ServerWorld serverWorld = (ServerWorld) this.level;
+            this.head = (MineralLeviathanEntity) serverWorld.getEntity(this.dependencyUUIDs[0]);
+            this.prevSegment = (MineralLeviathanSegmentEntity) serverWorld.getEntity(this.dependencyUUIDs[1]);
+            this.initBody = true;
+        }
+        //Client side Init Body
+        else if(!this.initBody){
+            List<Integer> idList = this.getBodyIDs();
+            if(idList.size() >= 2){
+                this.head = (MineralLeviathanEntity) this.level.getEntity(idList.get(0));
+                this.prevSegment = (MineralLeviathanSegmentEntity) this.level.getEntity(idList.get(1));
                 this.initBody = true;
             }
         }
@@ -109,21 +95,18 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
 
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        List<UUID> uuidList = this.getBodyUUIDs();
-        for(int i = 0; i < uuidList.size(); i++){
-            compoundNBT.putUUID("BodyUUID"+i, uuidList.get(i));
+        for(int i = 0; i < this.dependencyUUIDs.length; i++){
+            compoundNBT.putUUID("BodyUUID"+i, this.dependencyUUIDs[i]);
         }
     }
 
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
-        List<UUID> uuidList = new ArrayList<>();
         for(int i = 0; i < 2; i++){
             if (compoundNBT.hasUUID("BodyUUID"+i)) {
-                uuidList.add(compoundNBT.getUUID("BodyUUID"+i));
+                this.dependencyUUIDs[i] = compoundNBT.getUUID("BodyUUID"+i);
             }
         }
-        this.setBodyUUIDs(uuidList);
     }
 
     protected boolean hurtWithoutShell(DamageSource damageSource, float amount){
