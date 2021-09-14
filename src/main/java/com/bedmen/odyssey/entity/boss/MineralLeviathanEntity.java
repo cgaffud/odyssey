@@ -21,14 +21,16 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.*;
 import net.minecraft.world.server.ServerBossInfo;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
-    private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(40.0D).selector(BossEntity.ENTITY_SELECTOR);
+    private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(60.0D).selector(BossEntity.ENTITY_SELECTOR);
     protected static final DataParameter<List<UUID>> DATA_BODY_UUID_ID = EntityDataManager.defineId(MineralLeviathanEntity.class, OdysseyDataSerializers.UUID_LIST);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
     private Phase phase = Phase.IDLE;
@@ -37,22 +39,32 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     private float dXRot;
     public static final int NUM_SEGMENTS = 20;
     public static final double DAMAGE = 8.0d;
+    public static final double DODGE_RANGE = 4.0d;
+    public static final double BASE_HEALTH = 150.0d;
     public MineralLeviathanBodyEntity[] bodyEntities = new MineralLeviathanBodyEntity[NUM_SEGMENTS-1];
 
     public MineralLeviathanEntity(EntityType<? extends MineralLeviathanEntity> entityType, World world) {
         super(entityType, world);
+        if(!this.level.isClientSide){
+            this.setShellType(0);
+            this.setShellHealth(this.getShellHealthFromType(0));
+        }
     }
 
     public ILivingEntityData finalizeSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
         ILivingEntityData ilivingentitydata = super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
         if(this.getBodyUUIDs().isEmpty()){
+            Vector3d headPosition = this.getPosition(1.0f);
+            Vector3d loweringVector = new Vector3d(0.0d,-1.0d, 0.0d);
+            this.setXRot(90.0f);
             for(int i = 0; i < this.bodyEntities.length; i++){
                 if(i == 0){
                     this.bodyEntities[i] = new MineralLeviathanBodyEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), this.level, this, this);
                 } else {
                     this.bodyEntities[i] = new MineralLeviathanBodyEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), this.level, this, this.bodyEntities[i-1]);
                 }
-                this.bodyEntities[i].moveTo(this.getPosition(1.0f));
+                this.bodyEntities[i].moveTo(headPosition.add(loweringVector.scale(i)));
+                this.bodyEntities[i].setXRot(90.0f);
                 this.level.addFreshEntity(this.bodyEntities[i]);
             }
             this.setBodyUUIDs(this.bodyEntities);
@@ -92,28 +104,38 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     }
 
     public void aiStep() {
-        if (this.level.isClientSide) {
-            if (!this.isSilent()) {
-                //Player Sounds Here
+        //Server side Init Body
+        if(!this.initBody && !this.level.isClientSide){
+            List<UUID> uuidList = this.getBodyUUIDs();
+            if(uuidList.size() >= NUM_SEGMENTS - 1){
+                try {
+                    Field entitiesByUuidField = ServerWorld.class.getDeclaredField("entitiesByUuid");
+                    entitiesByUuidField.setAccessible(true);
+                    Map<UUID, Entity> entitiesByUuid = (Map<UUID, Entity>) entitiesByUuidField.get(this.level);
+                    for(int i = 0; i < uuidList.size(); i++){
+                        this.bodyEntities[i] = (MineralLeviathanBodyEntity) entitiesByUuid.get(uuidList.get(i));
+                    }
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                this.initBody = true;
             }
         }
-
-        if(!this.initBody){
-            List<MineralLeviathanBodyEntity> bodyEntities = this.level.getEntitiesOfClass(MineralLeviathanBodyEntity.class, this.getBoundingBox().inflate(45.0d));
-            int i = 0;
-            for(UUID uuid : this.getBodyUUIDs()){
-                for(MineralLeviathanBodyEntity bodyEntity : bodyEntities){
-                    if(bodyEntity.getUUID().equals(uuid)){
-                        this.bodyEntities[i] = bodyEntity;
-                        break;
+        else if(!this.initBody){
+            List<UUID> uuidList = this.getBodyUUIDs();
+            if(uuidList.size() >= NUM_SEGMENTS - 1){
+                List<MineralLeviathanBodyEntity> bodyEntities = this.level.getEntitiesOfClass(MineralLeviathanBodyEntity.class, this.getBoundingBox().inflate(45.0d));
+                for(int i = 0; i < this.bodyEntities.length; i++){
+                    UUID uuid = uuidList.get(i);
+                    for(MineralLeviathanBodyEntity bodyEntity : bodyEntities){
+                        if(bodyEntity.getUUID().equals(uuid)){
+                            this.bodyEntities[i] = bodyEntity;
+                            break;
+                        }
                     }
                 }
-                i++;
-                if(i > 19){
-                    break;
-                }
+                this.initBody = true;
             }
-            this.initBody = true;
         }
 
         if(!this.isNoAi()){
@@ -121,7 +143,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
                 //Choose Target
                 if(this.level.getGameTime() % 19 == 0){
                     LivingEntity target = this.getTarget();
-                    List<LivingEntity> list = this.level.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(20.0D, 20.0D, 20.0D));
+                    List<LivingEntity> list = this.level.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(60.0D, 60.0D, 60.0D));
                     if(target != null && target.isAttackable()){
                         list.add(target);
                     }
@@ -159,7 +181,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
                     case CHARGING:
                         if(target != null){
                             this.moveTowards(target.getPosition(1.0f).subtract(this.getPosition(1.0f)), 0.3d);
-                            if(this.distanceToSqr(target) < 9.0d){
+                            if(this.distanceTo(target) < DODGE_RANGE){
                                 this.phase = Phase.PASSING;
                                 this.passingTimer = 20;
                             }
@@ -291,14 +313,6 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
         this.dXRot = compoundNBT.getFloat("DXRot");
     }
 
-    public boolean hurt(DamageSource damageSource, float amount) {
-        if (this.isInvulnerableTo(damageSource) || amount < 0.01f)
-            return false;
-        if(damageSource == DamageSource.DROWN)
-            return false;
-        return super.hurt(damageSource, amount);
-    }
-
     protected void dropCustomDeathLoot(DamageSource damageSource, int p_213333_2_, boolean p_213333_3_) {
         super.dropCustomDeathLoot(damageSource, p_213333_2_, p_213333_3_);
         ItemEntity itementity = this.spawnAtLocation(ItemRegistry.RUBY.get());
@@ -308,8 +322,10 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     }
 
     public void die(DamageSource damageSource) {
-        for(MineralLeviathanBodyEntity mineralLeviathanBodyEntity : this.bodyEntities){
-            mineralLeviathanBodyEntity.hurt(damageSource, 1.1f);
+        if(!this.level.isClientSide){
+            for(MineralLeviathanBodyEntity mineralLeviathanBodyEntity : this.bodyEntities){
+                mineralLeviathanBodyEntity.hurt(DamageSource.OUT_OF_WORLD, 1.1f);
+            }
         }
         super.die(damageSource);
     }
@@ -325,7 +341,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(Attributes.ATTACK_DAMAGE, DAMAGE);
+        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, BASE_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE);
     }
 
     static class HurtByTargetGoal extends TargetGoal {
@@ -340,7 +356,10 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
         }
 
         public void start() {
-            this.mob.setTarget(this.mob.getLastHurtByMob());
+            LivingEntity livingEntity = this.mob.getLastHurtByMob();
+            if(livingEntity != null && livingEntity.isAlive() && livingEntity.isAttackable() && (!(livingEntity instanceof PlayerEntity) || !(((PlayerEntity) livingEntity).abilities.instabuild || ((PlayerEntity) livingEntity).abilities.invulnerable))){
+                this.mob.setTarget(livingEntity);
+            }
             this.unseenMemoryTicks = 300;
 
             super.start();

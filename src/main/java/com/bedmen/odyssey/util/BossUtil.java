@@ -3,11 +3,21 @@ package com.bedmen.odyssey.util;
 import net.minecraft.world.Difficulty;
 
 public class BossUtil {
-    public static float difficultyMultiplier(Difficulty difficulty){
+    private static float twoThirds = 2.0f/3.0f;
+
+    public static float difficultyDamageMultiplier(Difficulty difficulty){
         switch(difficulty){
+            default: return twoThirds;
             case NORMAL: return 1.0f;
             case HARD: return 1.5f;
-            default: return 0.67f;
+        }
+    }
+
+    public static float difficultyReductionMultiplier(Difficulty difficulty){
+        switch(difficulty){
+            default: return 1.5f;
+            case NORMAL: return 1.0f;
+            case HARD: return twoThirds;
         }
     }
 }

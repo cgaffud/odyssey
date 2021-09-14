@@ -1,12 +1,18 @@
 package com.bedmen.odyssey.entity.boss;
 
+import com.bedmen.odyssey.items.equipment.EquipmentPickaxeItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.util.BossUtil;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.PickaxeItem;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 
@@ -46,5 +52,10 @@ public class BossEntity extends MonsterEntity {
 
     public boolean addEffect(EffectInstance p_195064_1_) {
         return false;
+    }
+
+    public boolean hurt(DamageSource damageSource, float amount) {
+        amount *= BossUtil.difficultyReductionMultiplier(this.level.getDifficulty());
+        return super.hurt(damageSource, amount);
     }
 }
