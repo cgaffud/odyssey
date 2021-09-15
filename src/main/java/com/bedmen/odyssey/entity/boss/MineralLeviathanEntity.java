@@ -304,7 +304,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
 
     public void die(DamageSource damageSource) {
         for(MineralLeviathanBodyEntity mineralLeviathanBodyEntity : this.bodyEntities){
-            mineralLeviathanBodyEntity.hurt(DamageSource.OUT_OF_WORLD, 1.1f);
+            mineralLeviathanBodyEntity.hurt(DamageSource.OUT_OF_WORLD, 1000.0f);
         }
         super.die(damageSource);
     }
@@ -323,7 +323,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
         return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, BASE_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE);
     }
 
-    public ServerBossInfo bossEvent(){
+    public ServerBossInfo getBossEvent(){
         return this.bossEvent;
     }
 

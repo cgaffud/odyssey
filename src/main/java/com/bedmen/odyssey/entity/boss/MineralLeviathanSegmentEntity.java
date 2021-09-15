@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.items.equipment.EquipmentPickaxeItem;
-import com.bedmen.odyssey.util.BossUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.item.Item;
@@ -22,7 +21,7 @@ import net.minecraft.world.*;
 import java.util.List;
 import java.util.Random;
 
-public abstract class MineralLeviathanSegmentEntity extends BossEntity implements IBossEventEntity {
+public abstract class MineralLeviathanSegmentEntity extends BossEntity {
     protected static final DataParameter<Float> DATA_YROT_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected static final DataParameter<Float> DATA_XROT_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected static final DataParameter<String> DATA_SHELL_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.STRING);
@@ -30,6 +29,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
     protected boolean initBody = false;
     protected float clientSideShellHealth;
     protected boolean clientSideShellHealthUpdated;
+    protected float damageReduction = 1.0f;
 
     public MineralLeviathanSegmentEntity(EntityType<? extends MineralLeviathanSegmentEntity> entityType, World world) {
         super(entityType, world);
@@ -47,6 +47,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
     }
 
     public void tick() {
+        this.damageReduction = this.difficultyDamageReductionMultiplier() * this.nearbyPlayerDamageReductionMultiplier();
         this.setNoGravity(true);
         this.noPhysics = true;
         super.tick();
@@ -78,9 +79,10 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
                 List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, axisAlignedBB);
                 for(LivingEntity livingEntity : livingEntityList){
                     if(!(livingEntity instanceof MineralLeviathanEntity) && !(livingEntity instanceof MineralLeviathanBodyEntity) && this.isAlive()){
-                        livingEntity.hurt(DamageSource.mobAttack(this), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE) * BossUtil.difficultyDamageMultiplier(this.level.getDifficulty()));
+                        livingEntity.hurt(DamageSource.mobAttack(this), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE) * this.difficultyDamageMultiplier());
                     }
                 }
+                //Spawn SilverFish
             }
         }
         super.aiStep();
@@ -175,7 +177,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
         float shellHealth = this.getShellHealth();
         if(shellHealth > 0.0f){
             if(!this.level.isClientSide){
-                this.setShellHealth(shellHealth - amount * BossUtil.difficultyDamageReductionMultiplier(this.level.getDifficulty()) * this.nearbyPlayerDamageReductionMultiplier());
+                this.setShellHealth(shellHealth - amount * this.getDamageReduction());
             }
             return false;
         } else {
@@ -185,6 +187,18 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
 
     protected boolean hurtWithoutShell(DamageSource damageSource, float amount){
         return super.hurt(damageSource, amount);
+    }
+
+    public Difficulty getDifficulty(){
+        return this.level.getDifficulty();
+    }
+
+    public float getDamageReduction(){
+        return this.damageReduction;
+    }
+
+    protected boolean isAlwaysExperienceDropper() {
+        return true;
     }
 
     public enum ShellType{

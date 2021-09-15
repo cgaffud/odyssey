@@ -120,9 +120,9 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
         return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 1.0D).add(Attributes.ATTACK_DAMAGE, MineralLeviathanEntity.DAMAGE * 0.5d);
     }
 
-    public ServerBossInfo bossEvent(){
+    public ServerBossInfo getBossEvent(){
         if(this.head != null){
-            return this.head.bossEvent();
+            return this.head.getBossEvent();
         }
         return null;
     }

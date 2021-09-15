@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.entity.boss;
 
-import com.bedmen.odyssey.util.BossUtil;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -13,7 +12,7 @@ import net.minecraft.world.World;
 
 import java.util.function.Predicate;
 
-public class BossEntity extends MonsterEntity {
+public abstract class BossEntity extends MonsterEntity implements IBossEventEntity {
     protected static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
         return entity.attackable() && !(entity instanceof MonsterEntity);
     };
@@ -50,10 +49,7 @@ public class BossEntity extends MonsterEntity {
     }
 
     public boolean hurt(DamageSource damageSource, float amount) {
-        amount *= BossUtil.difficultyDamageReductionMultiplier(this.level.getDifficulty());
-        if(this instanceof IBossEventEntity){
-            amount *= ((IBossEventEntity) this).nearbyPlayerDamageReductionMultiplier();
-        }
+        amount *= this.getDamageReduction();
         return super.hurt(damageSource, amount);
     }
 }

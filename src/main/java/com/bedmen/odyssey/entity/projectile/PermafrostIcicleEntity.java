@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import com.bedmen.odyssey.util.BossUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -192,7 +191,7 @@ public class PermafrostIcicleEntity extends DamagingProjectileEntity {
             Entity entity1 = this.getOwner();
             if (entity1 instanceof LivingEntity) {
                 LivingEntity livingentity = (LivingEntity)entity1;
-                entity.hurt(DamageSource.indirectMobAttack(this, livingentity), this.damage * BossUtil.difficultyDamageMultiplier(this.level.getDifficulty()));
+                entity.hurt(DamageSource.indirectMobAttack(this, livingentity), this.damage);
             } else {
                 entity.hurt(DamageSource.MAGIC, 0.0F);
             }
