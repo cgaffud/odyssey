@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
+public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity implements IBossEventEntity {
     private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(60.0D).selector(BossEntity.ENTITY_SELECTOR);
     protected static final DataParameter<List<Integer>> DATA_BODY_ID = EntityDataManager.defineId(MineralLeviathanEntity.class, OdysseyDataSerializers.INT_LIST);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
@@ -38,7 +38,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     private float dXRot;
     public static final int NUM_SEGMENTS = 20;
     public static final double DAMAGE = 8.0d;
-    public static final double DODGE_RANGE = 4.0d;
+    public static final double DODGE_RANGE = 3.5d;
     public static final double BASE_HEALTH = 150.0d;
     public MineralLeviathanBodyEntity[] bodyEntities = new MineralLeviathanBodyEntity[NUM_SEGMENTS-1];
     public UUID[] bodyEntityUUIDs = new UUID[NUM_SEGMENTS-1];
@@ -321,6 +321,10 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, BASE_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE);
+    }
+
+    public ServerBossInfo bossEvent(){
+        return this.bossEvent;
     }
 
     static class HurtByTargetGoal extends TargetGoal {

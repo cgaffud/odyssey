@@ -166,7 +166,6 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
             return this.hurtWithShell(damageSource, amount);
         }
         if(damageSource == DamageSource.OUT_OF_WORLD){
-            System.out.println("be");
             return super.hurt(damageSource, amount);
         }
         return false;
@@ -176,7 +175,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         float shellHealth = this.getShellHealth();
         if(shellHealth > 0.0f){
             if(!this.level.isClientSide){
-                this.setShellHealth(shellHealth - amount * BossUtil.difficultyReductionMultiplier(this.level.getDifficulty()));
+                this.setShellHealth(shellHealth - amount * BossUtil.difficultyDamageReductionMultiplier(this.level.getDifficulty()));
             }
             return false;
         } else {
