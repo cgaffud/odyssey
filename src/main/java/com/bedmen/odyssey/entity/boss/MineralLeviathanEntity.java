@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity implements IBossEventEntity {
+public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(60.0D).selector(BossEntity.ENTITY_SELECTOR);
     protected static final DataParameter<List<Integer>> DATA_BODY_ID = EntityDataManager.defineId(MineralLeviathanEntity.class, OdysseyDataSerializers.INT_LIST);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);

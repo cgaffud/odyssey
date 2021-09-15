@@ -10,6 +10,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.*;
+import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.ArrayList;
@@ -117,5 +118,12 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 1.0D).add(Attributes.ATTACK_DAMAGE, MineralLeviathanEntity.DAMAGE * 0.5d);
+    }
+
+    public ServerBossInfo bossEvent(){
+        if(this.head != null){
+            return this.head.bossEvent();
+        }
+        return null;
     }
 }

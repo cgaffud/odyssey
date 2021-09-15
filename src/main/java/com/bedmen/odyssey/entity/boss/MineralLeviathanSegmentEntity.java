@@ -22,7 +22,7 @@ import net.minecraft.world.*;
 import java.util.List;
 import java.util.Random;
 
-public abstract class MineralLeviathanSegmentEntity extends BossEntity {
+public abstract class MineralLeviathanSegmentEntity extends BossEntity implements IBossEventEntity {
     protected static final DataParameter<Float> DATA_YROT_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected static final DataParameter<Float> DATA_XROT_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected static final DataParameter<String> DATA_SHELL_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.STRING);
@@ -175,7 +175,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         float shellHealth = this.getShellHealth();
         if(shellHealth > 0.0f){
             if(!this.level.isClientSide){
-                this.setShellHealth(shellHealth - amount * BossUtil.difficultyDamageReductionMultiplier(this.level.getDifficulty()));
+                this.setShellHealth(shellHealth - amount * BossUtil.difficultyDamageReductionMultiplier(this.level.getDifficulty()) * this.nearbyPlayerDamageReductionMultiplier());
             }
             return false;
         } else {
