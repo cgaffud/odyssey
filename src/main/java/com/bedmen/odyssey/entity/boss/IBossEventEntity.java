@@ -38,12 +38,4 @@ public interface IBossEventEntity {
             case HARD: return twoThirds;
         }
     }
-
-    default float difficultyDamageMultiplier(){
-        switch(getDifficulty()){
-            default: return twoThirds;
-            case NORMAL: return 1.0f;
-            case HARD: return 1.5f;
-        }
-    }
 }

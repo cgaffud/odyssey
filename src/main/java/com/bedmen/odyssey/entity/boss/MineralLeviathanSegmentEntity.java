@@ -79,7 +79,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
                 List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, axisAlignedBB);
                 for(LivingEntity livingEntity : livingEntityList){
                     if(!(livingEntity instanceof MineralLeviathanEntity) && !(livingEntity instanceof MineralLeviathanBodyEntity) && this.isAlive()){
-                        livingEntity.hurt(DamageSource.mobAttack(this), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE) * this.difficultyDamageMultiplier());
+                        livingEntity.hurt(DamageSource.mobAttack(this).setScalesWithDifficulty(), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
                     }
                 }
                 //Spawn SilverFish

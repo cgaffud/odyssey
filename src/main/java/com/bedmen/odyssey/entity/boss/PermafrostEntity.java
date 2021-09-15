@@ -83,7 +83,7 @@ public class PermafrostEntity extends BossEntity {
         double d3 = targetX - d0;
         double d4 = targetY - d1;
         double d5 = targetZ - d2;
-        PermafrostIcicleEntity permafrostIcicleEntity = new PermafrostIcicleEntity(this.level, this, d3, d4, d5,6.0f * this.difficultyDamageMultiplier());
+        PermafrostIcicleEntity permafrostIcicleEntity = new PermafrostIcicleEntity(this.level, this, d3, d4, d5,6.0f);
         permafrostIcicleEntity.setOwner(this);
         permafrostIcicleEntity.setPosRaw(d0, d1, d2);
         this.level.addFreshEntity(permafrostIcicleEntity);

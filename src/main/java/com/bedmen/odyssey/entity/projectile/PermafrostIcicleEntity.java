@@ -191,7 +191,7 @@ public class PermafrostIcicleEntity extends DamagingProjectileEntity {
             Entity entity1 = this.getOwner();
             if (entity1 instanceof LivingEntity) {
                 LivingEntity livingentity = (LivingEntity)entity1;
-                entity.hurt(DamageSource.indirectMobAttack(this, livingentity), this.damage);
+                entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setScalesWithDifficulty(), this.damage);
             } else {
                 entity.hurt(DamageSource.MAGIC, 0.0F);
             }
