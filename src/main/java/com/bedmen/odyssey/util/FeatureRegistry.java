@@ -3,6 +3,7 @@ package com.bedmen.odyssey.util;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.world.gen.feature.FogFeature;
 import com.bedmen.odyssey.world.gen.feature.MegaIceSpikeFeature;
+import com.bedmen.odyssey.world.gen.feature.tree.DiagonalTreeFeature;
 import net.minecraft.world.gen.feature.*;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -21,5 +22,6 @@ public class FeatureRegistry {
 
     public static final RegistryObject<Feature<NoFeatureConfig>> MEGA_ICE_SPIKE = FEATURES.register("mega_ice_spike", () -> new MegaIceSpikeFeature(NoFeatureConfig.CODEC));
     public static final RegistryObject<Feature<NoFeatureConfig>> FOG = FEATURES.register("fog", () -> new FogFeature(NoFeatureConfig.CODEC));
+    public static final RegistryObject<Feature<BaseTreeFeatureConfig>> DIAGONAL_TREE = FEATURES.register("diagonal_tree", () -> new DiagonalTreeFeature(BaseTreeFeatureConfig.CODEC));
 
 }
