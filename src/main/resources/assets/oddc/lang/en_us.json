@@ -170,6 +170,7 @@
   "block.oddc.autumn_leaves_orange": "Orange Autumnal Leaves",
   "block.oddc.autumn_leaves_yellow": "Yellow Autumnal Leaves",
   "block.oddc.palm_log": "Palm Log",
+  "block.oddc.palm_log": "Palm Leaves",
   "block.oddc.frosted_obsidian": "Frosted Obsidian",
 
   //Entities
@@ -190,6 +191,8 @@
 
   //Biome
   "biome.oddc.autumn_forest": "Autumn Forest",
+  "biome.oddc.tropics": "Tropics",
+  "biome.oddc.tropical_beach": "Tropical Beach",
 
   //Potions
 

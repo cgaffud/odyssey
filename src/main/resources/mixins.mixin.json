@@ -21,7 +21,8 @@
     "MixinElytraLayer",
     "MixinEnchantment",
     "MixinShieldRecipes",
-    "MixinClientPlayerEntity"
+    "MixinClientPlayerEntity",
+    "MixinLayerUtil"
   ],
   "injectors": {
     "defaultRequire": 1
