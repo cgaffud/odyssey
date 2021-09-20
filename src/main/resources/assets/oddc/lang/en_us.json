@@ -1,37 +1,42 @@
 {
-  "item.oddc.diamond_shard": "Diamond Shard",
-  "item.oddc.leather_quiver": "Leather Quiver",
-  "item.oddc.clover": "Clover",
-  "item.oddc.peridot": "Peridot",
+  //1.17 Materials
+  "item.oddc.raw_copper": "Raw Copper",
+  "item.oddc.copper_ingot": "Copper Ingot",
   "item.oddc.raw_iron": "Raw Iron",
   "item.oddc.raw_gold": "Raw Gold",
-  "item.oddc.raw_copper": "Raw Copper",
+  "item.oddc.amethyst_shard": "Amethyst Shard",
+
+  //New Items
+  "item.oddc.leather_quiver": "Leather Quiver",
   "item.oddc.copper_nugget": "Copper Nugget",
-  "item.oddc.copper_ingot": "Copper Ingot",
+  "item.oddc.clover": "Clover",
+  "item.oddc.peridot": "Peridot",
   "item.oddc.ruby": "Ruby",
   "item.oddc.sapphire": "Sapphire",
   "item.oddc.pearl": "Pearl",
+  "item.oddc.fluorite": "Fluorite",
   "item.oddc.feather_bundle": "Feather Bundle",
   "item.oddc.permafrost_shard": "Permafrost Shard",
   "item.oddc.arctic_heart": "Heart of the Arctic",
-  "item.oddc.werewolf_claw": "Werewolf Claw",
+  "item.oddc.lupine_claw": "Lupine Claw",
   "item.oddc.arctic_horn": "Arctic Horn",
   "item.oddc.raven_feather": "Raven Feather",
   "item.oddc.bewitched_quill": "Bewitched Quill",
   "item.oddc.malevolent_quill": "Malevolent Quill",
+  "item.oddc.purge_tablet": "Purge Tablet",
 
-  //Emerald
-  "item.oddc.emerald_bit": "Emerald Bit",
-  "item.oddc.emerald_shard": "Emerald Shard",
-  "item.oddc.emerald_fragment": "Emerald Fragment",
-  "item.oddc.emerald_piece": "Emerald Piece",
+  //Food
+  "item.oddc.life_fruit": "Life Fruit",
+
+  //Bats
+  "item.oddc.granite_bat": "Granite Bat",
+  "item.oddc.copper_bat": "Copper Bat",
+  "item.oddc.obsidian_bat": "Obsidian Bat",
 
   //Hammers
-  "item.oddc.wooden_bat": "Wooden Bat",
-  "item.oddc.granite_bat": "Granite Bat",
+  "item.oddc.granite_hammer": "Granite Hammer",
   "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.obsidian_hammer": "Obsidian Hammer",
-
 
   //Chicken Suit
   "item.oddc.chicken_boots": "Feathered Boots",
@@ -50,24 +55,6 @@
   "item.oddc.reinforced_chestplate": "Reinforced Chestplate",
   "item.oddc.reinforced_helmet": "Reinforced Helmet",
 
-  //Arctic Armor
-  "item.oddc.arctic_boots": "Arctic Boots",
-  "item.oddc.arctic_leggings": "Arctic Leggings",
-  "item.oddc.arctic_chestplate": "Arctic Chestplate",
-  "item.oddc.arctic_helmet": "Arctic Helmet",
-
-  //Zephyr Suit
-  "item.oddc.zephyr_boots": "Zephyr Boots",
-  "item.oddc.zephyr_leggings": "Zephyr Pants",
-  "item.oddc.zephyr_chestplate": "Zephyr Tunic",
-  "item.oddc.zephyr_helmet": "Zephyr Cap",
-
-  //Leviathan Armor
-  "item.oddc.leviathan_boots": "Leviathan Boots",
-  "item.oddc.leviathan_leggings": "Leviathan Leggings",
-  "item.oddc.leviathan_chestplate": "Leviathan Chestplate",
-  "item.oddc.leviathan_helmet": "Leviathan Helmet",
-
   //Silver and Sterling Silver
   "item.oddc.silver_nugget": "Silver Nugget",
   "item.oddc.raw_silver": "Raw Silver",
@@ -84,8 +71,33 @@
   "item.oddc.sterling_silver_chestplate": "Sterling Silver Chestplate",
   "item.oddc.sterling_silver_helmet": "Sterling Silver Helmet",
   "item.oddc.sterling_silver_horse_armor": "Sterling Silver Horse Armor",
+  "item.oddc.sterling_silver_key": "Sterling Silver Key",
+
+  //Arctic
+  "item.oddc.arctic_boots": "Arctic Boots",
+  "item.oddc.arctic_leggings": "Arctic Leggings",
+  "item.oddc.arctic_chestplate": "Arctic Chestplate",
+  "item.oddc.arctic_helmet": "Arctic Helmet",
+  "item.oddc.arctic_amulet": "Arctic Amulet",
+
+  //Marine
+  "item.oddc.marine_pickaxe": "Marine Pickaxe",
+  "item.oddc.marine_axe": "Marine Axe",
+  "item.oddc.marine_shovel": "Marine Shovel",
+  "item.oddc.marine_hoe": "Marine Hoe",
+  "item.oddc.marine_boots": "Marine Boots",
+  "item.oddc.marine_leggings": "Marine Leggings",
+  "item.oddc.marine_chestplate": "Marine Chestplate",
+  "item.oddc.marine_helmet": "Marine Helmet",
+
+  //Zephyr
+  "item.oddc.zephyr_boots": "Zephyr Boots",
+  "item.oddc.zephyr_leggings": "Zephyr Pants",
+  "item.oddc.zephyr_chestplate": "Zephyr Tunic",
+  "item.oddc.zephyr_helmet": "Zephyr Cap",
 
   //Nether
+  "item.oddc.golden_amulet": "Golden Amulet",
   "item.oddc.netherite_nugget": "Netherite Nugget",
   "item.oddc.netherite_bow": "Netherite Bow",
   "item.oddc.netherite_crossbow": "Netherite Crossbow",
@@ -93,6 +105,10 @@
   "item.oddc.hallowed_gold_ingot": "Hallowed Gold Ingot",
 
   //Leviathan
+  "item.oddc.leviathan_boots": "Leviathan Boots",
+  "item.oddc.leviathan_leggings": "Leviathan Leggings",
+  "item.oddc.leviathan_chestplate": "Leviathan Chestplate",
+  "item.oddc.leviathan_helmet": "Leviathan Helmet",
   "item.oddc.leviathan_scale": "Leviathan Scale",
   "item.oddc.leviathan_trident": "Leviathan Trident",
   "item.oddc.leviathan_quiver": "Leviathan Quiver",
@@ -128,6 +144,8 @@
   "enchantment.oddc.vulcan_strider": "Vulcan Strider",
   "enchantment.oddc.obsidian_walker": "Obsidian Walker",
   "enchantment.oddc.molten_affinity": "Molten Affinity",
+  "enchantment.oddc.eruption": "Eruption",
+  "enchantment.oddc.pyropneumatic": "Pyropneumatic",
 
   //Set Bonus Enchantments
   "enchantment.oddc.slow_falling": "Slow Falling",
@@ -157,6 +175,9 @@
   "block.oddc.sapphire_ore": "Sapphire Ore",
   "block.oddc.silver_block": "Block of Silver",
   "block.oddc.sterling_silver_block": "Block of Sterling Silver",
+  "block.oddc.sterling_silver_chest": "Sterling Silver Chest",
+  "block.oddc.fluorite_block": "Block of Fluorite",
+  "block.oddc.peridot_block": "Block of Peridot",
   "block.oddc.leather_pile": "Leather Pile",
   "block.oddc.fog1": "Fog 1",
   "block.oddc.fog2": "Fog 2",
@@ -166,19 +187,32 @@
   "block.oddc.fog6": "Fog 6",
   "block.oddc.fog7": "Fog 7",
   "block.oddc.fog8": "Fog 8",
+  "block.oddc.permafrost_ice2": "Permafrost Ice 2",
+  "block.oddc.permafrost_ice4": "Permafrost Ice 4",
+  "block.oddc.permafrost_conduit": "Permafrost Conduit",
   "block.oddc.autumn_leaves_red": "Red Autumnal Leaves",
   "block.oddc.autumn_leaves_orange": "Orange Autumnal Leaves",
   "block.oddc.autumn_leaves_yellow": "Yellow Autumnal Leaves",
   "block.oddc.palm_log": "Palm Log",
-  "block.oddc.palm_log": "Palm Leaves",
+  "block.oddc.palm_leaves": "Palm Leaves",
   "block.oddc.frosted_obsidian": "Frosted Obsidian",
 
   //Entities
-  "entity.oddc.werewolf": "Werewolf",
+  "entity.oddc.lupine": "Lupine",
   "entity.oddc.arctihorn": "Arctihorn",
 
+  //Bosses
+  "entity.oddc.mineral_leviathan": "Mineral Leviathan",
+  "entity.oddc.mineral_leviathan_body": "Mineral Leviathan",
+  "entity.oddc.permafrost": "Permafrost",
+
+  //Projectiles
+  "entity.oddc.trident": "Trident",
+  "entity.oddc.leviathan_trident": "Leviathan Trident",
+  "entity.oddc.permafrost_icicle": "Permafrost Icicle",
+
   //Spawn Eggs
-  "item.oddc.werewolf_spawn_egg": "Werewolf Spawn Egg",
+  "item.oddc.lupine_spawn_egg": "Lupine Spawn Egg",
   "item.oddc.arctihorn_spawn_egg": "Arctihorn Spawn Egg",
 
   //ItemGroup (Creative Tab)
@@ -187,6 +221,7 @@
   "itemGroup.oddc_materials": "Odyssey Materials",
   "itemGroup.oddc_tools": "Odyssey Tools",
   "itemGroup.oddc_combat": "Odyssey Combat",
+  "itemGroup.oddc_magic": "Odyssey Magic",
   "itemGroup.oddc_spawn_eggs": "Odyssey Spawn Eggs",
 
   //Biome
@@ -199,6 +234,7 @@
 
   "effect.oddc.construction": "Construction",
   "effect.oddc.building_fatigue": "Building Fatigue",
+  "effect.oddc.lava_vision": "Lava Vision",
 
   "item.minecraft.potion.effect.haste": "Potion of Haste",
   "item.minecraft.potion.effect.long_haste": "Potion of Haste",
@@ -295,5 +331,18 @@
   "item.minecraft.potion.effect.long_luck": "Potion of Luck",
   "item.minecraft.splash_potion.effect.long_luck": "Splash Potion of Luck",
   "item.minecraft.tipped_arrow.effect.long_luck": "Arrow of Luck",
-  "item.minecraft.lingering_potion.effect.long_luck": "Lingering Potion of Luck"
+  "item.minecraft.lingering_potion.effect.long_luck": "Lingering Potion of Luck",
+
+  "item.minecraft.potion.effect.lava_vision": "Potion of Lava Vision",
+  "item.minecraft.potion.effect.long_lava_vision": "Potion of Lava Vision",
+  "item.minecraft.splash_potion.effect.lava_vision": "Splash Potion of Lava Vision",
+  "item.minecraft.splash_potion.effect.long_lava_vision": "Splash Potion of Lava Vision",
+  "item.minecraft.tipped_arrow.effect.lava_vision": "Arrow of Lava Vision",
+  "item.minecraft.tipped_arrow.effect.long_lava_vision": "Arrow of Lava Vision",
+  "item.minecraft.lingering_potion.effect.lava_vision": "Lingering Potion of Lava Vision",
+  "item.minecraft.lingering_potion.effect.long_lava_vision": "Lingering Potion of Lava Vision",
+
+  //Sounds
+  "block.key_unlock.sub": "Chest Unlock",
+  "block.locked_chest.sub": "Locked Chest"
 }

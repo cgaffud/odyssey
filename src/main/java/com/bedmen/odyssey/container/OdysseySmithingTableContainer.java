@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.container;
 
 import com.bedmen.odyssey.container.slots.OdysseySmithingTableSlot;
-import com.bedmen.odyssey.util.BlockRegistry;
-import com.bedmen.odyssey.util.ContainerRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.recipes.OdysseySmithingRecipe;
 import net.minecraft.block.BlockState;

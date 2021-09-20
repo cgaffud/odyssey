@@ -1,0 +1,22 @@
+{
+  "block.key_unlock": {
+    "category": "block",
+    "subtitle": "block.key_unlock.sub",
+    "sounds": [
+      {
+        "name": "oddc:block/key_unlock",
+        "stream": true
+      }
+    ]
+  },
+  "block.locked_chest": {
+    "category": "block",
+    "subtitle": "block.locked_chest.sub",
+    "sounds": [
+      {
+        "name": "oddc:block/locked_chest",
+        "stream": true
+      }
+    ]
+  }
+}

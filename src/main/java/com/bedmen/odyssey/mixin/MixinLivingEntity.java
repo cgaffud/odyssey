@@ -7,14 +7,13 @@ import com.bedmen.odyssey.items.equipment.ZephyrArmorItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.JumpingPacket;
 import com.bedmen.odyssey.network.packet.SneakingPacket;
-import com.bedmen.odyssey.util.EffectRegistry;
-import com.bedmen.odyssey.util.EnchantmentRegistry;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.base.Objects;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.enchantment.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -109,8 +108,6 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     protected ItemStack useItem;
     @Shadow
     public boolean canBreatheUnderwater() {return false;}
-    @Shadow
-    protected int decreaseAirSupply(int air) {return 0;}
     @Shadow
     private DamageSource lastDamageSource;
     @Shadow
@@ -239,7 +236,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
                 // Shield Code
                 Item item = this.useItem.getItem();
                 if(item instanceof OdysseyShieldItem)
-                    amount -= EnchantmentUtil.getBlocking((LivingEntity)(Entity)this) * ((OdysseyShieldItem)item).getBlock();
+                    amount -= EnchantmentUtil.getBlockingMultiplier((LivingEntity)(Entity)this) * ((OdysseyShieldItem)item).getBlock();
                 if(amount < 0.0f){
                     amount = 0.0F;
                     flag = true;
@@ -404,13 +401,11 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
             //Drowns extra with drowning curse
             int drowningAmount = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DROWNING.get(), getLivingEntity());
             //Checks if player is in lava too
-            drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
+            boolean inLava = this.isEyeInFluid(FluidTags.LAVA);
+            drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || inLava) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
             if (drowningAmount > 0) {
                 if (!this.canBreatheUnderwater() && !EffectUtils.hasWaterBreathing((LivingEntity) (Object) this) && !flag1) {
-                    int airsupply = this.getAirSupply();
-                    for(int i = 0; i < drowningAmount; i++)
-                        airsupply = this.decreaseAirSupply(airsupply);
-                    this.setAirSupply(airsupply);
+                    this.setAirSupply(this.decreaseAirSupply(this.getAirSupply(), drowningAmount, inLava));
                     if (this.getAirSupply() <= -20) {
                         this.setAirSupply(0);
                         Vector3d vector3d = this.getDeltaMovement();
@@ -529,7 +524,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
 
     //Zephyr Suit Set Bonus
     private void updateFallFlying() {
-        if(this.onGround)
+        if(this.onGround || this.isInWater() || this.isInLava())
             this.zephyrArmorTicks = 40;
         boolean flag = this.getSharedFlag(7);
         if (flag && !this.onGround && !this.isPassenger() && !this.hasEffect(Effects.LEVITATION)) {
@@ -706,6 +701,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         this.calculateEntityAnimation(getLivingEntity(), this instanceof IFlyingAnimal);
     }
 
+    // Added Obisidan Walker
     protected void onChangedBlock(BlockPos p_184594_1_) {
         int i = EnchantmentUtil.getFrostWalker(getLivingEntity());
         int j = EnchantmentUtil.getObsidianWalker(getLivingEntity());
@@ -740,6 +736,22 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
                 e.printStackTrace();
             }
         }
+    }
+
+    protected int decreaseAirSupply(int airSupply, int drowningAmount, boolean inLava) {
+        int i;
+        if(inLava){
+            i = EnchantmentUtil.getPyropneumatic(getLivingEntity());
+        } else {
+            i = EnchantmentUtil.getRespiration(getLivingEntity());
+        }
+        if(i == 0){
+            return airSupply - drowningAmount;
+        }
+        for(int j = 0; j < drowningAmount ; j++){
+            airSupply -= this.random.nextInt(i + 1) > 0 ? 0 : 1;
+        }
+        return airSupply;
     }
     
     public int getZephyrArmorTicks(){

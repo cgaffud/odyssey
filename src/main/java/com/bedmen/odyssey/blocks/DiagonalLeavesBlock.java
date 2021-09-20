@@ -15,8 +15,6 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
 public class DiagonalLeavesBlock extends LeavesBlock {

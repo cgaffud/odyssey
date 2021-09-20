@@ -1,0 +1,12 @@
+{
+  "type": "oddc:research",
+  "numIngredients": 2,
+  "ingredient0": {
+    "item": "oddc:leviathan_leggings"
+  },
+  "ingredient1": {
+    "item": "oddc:leviathan_boots"
+  },
+  "enchantment": "oddc:vulcan_strider",
+  "level": 1
+}

@@ -1,13 +1,14 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.enchantment.IVolcanic;
+import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
+import com.bedmen.odyssey.util.OdysseyTextFormatting;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.text.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Enchantment.class)
-public abstract class MixinEnchantment extends net.minecraftforge.registries.ForgeRegistryEntry<Enchantment> implements IVolcanic {
+public abstract class MixinEnchantment extends net.minecraftforge.registries.ForgeRegistryEntry<Enchantment> implements IUpgradableEnchantment {
 
     @Shadow
     public boolean isCurse() {return false;}
@@ -19,19 +20,12 @@ public abstract class MixinEnchantment extends net.minecraftforge.registries.For
     public ITextComponent getFullname(int p_200305_1_) {
         IFormattableTextComponent iformattabletextcomponent;
         int i = this.isCurse() ? 2 : 1;
-        if(i >= 2){
-            i += this.getDescriptionId().equals("enchantment.oddc.unenchantable") ? 0 : 1;
-        } else {
-            i -= this.isVolcanic() ? 1 : 0;
-        }
-        switch(i){
+        i -= this.getDowngrade() == null ? 0 : 1;
+        switch(i) {
             case 0:
-                iformattabletextcomponent = ((IFormattableTextComponent)new TranslationTextComponent(this.getDescriptionId())).withStyle(TextFormatting.RED);
+                iformattabletextcomponent = ((IFormattableTextComponent)new TranslationTextComponent(this.getDescriptionId())).withStyle(OdysseyTextFormatting.ORANGE);
                 break;
             case 2:
-                iformattabletextcomponent = new TranslationTextComponent(this.getDescriptionId()).withStyle(TextFormatting.DARK_RED);
-                break;
-            case 3:
                 iformattabletextcomponent = new StringTextComponent("aaaaaaaaaa").withStyle(TextFormatting.OBFUSCATED).withStyle((TextFormatting.DARK_RED));
                 break;
             default:

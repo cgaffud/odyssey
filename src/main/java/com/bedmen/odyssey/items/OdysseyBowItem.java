@@ -2,7 +2,7 @@ package com.bedmen.odyssey.items;
 
 import java.util.function.Predicate;
 import com.bedmen.odyssey.util.BowUtil;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
@@ -47,7 +47,7 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                         ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
                         AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, itemstack, playerentity);
                         abstractarrowentity = customArrow(abstractarrowentity);
-                        float inaccuracy = EnchantmentUtil.getAccuracy(entityLiving);
+                        float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(entityLiving);
                         abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * 3.0F, inaccuracy);
                         //if (f == 1.0F) {
                         //    abstractarrowentity.setIsCritical(true);
@@ -118,10 +118,6 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
         return UseAction.BOW;
     }
 
-    /**
-     * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
-     */
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         boolean flag = !playerIn.getProjectile(itemstack).isEmpty();

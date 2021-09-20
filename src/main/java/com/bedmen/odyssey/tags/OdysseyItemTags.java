@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.tags;
 
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.item.Item;
 
 import java.util.HashSet;

@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.tileentity;
 
 import com.bedmen.odyssey.container.OdysseyEnchantmentContainer;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
-import com.bedmen.odyssey.util.TileEntityTypeRegistry;
+import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.registry.TileEntityTypeRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -310,6 +311,14 @@ public class OdysseyEnchantingTableTileEntity extends LockableTileEntity impleme
         this.items.get(1).shrink(enchantCost);
         ItemStack itemStack = this.items.get(0);
         Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
+        Enchantment downgrade = ((IUpgradableEnchantment)enchant).getDowngrade();
+        Enchantment upgrade = ((IUpgradableEnchantment)enchant).getUpgrade();
+        if(downgrade != null){
+            map.remove(downgrade);
+        }
+        if(upgrade != null){
+            map.remove(upgrade);
+        }
         map.put(enchant, enchantLevel);
         EnchantmentHelper.setEnchantments(map, itemStack);
         this.enchantData.set(0,-1);

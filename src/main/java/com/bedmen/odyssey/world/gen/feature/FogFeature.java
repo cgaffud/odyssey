@@ -1,34 +1,15 @@
 package com.bedmen.odyssey.world.gen.feature;
 
-import com.bedmen.odyssey.tags.OdysseyBlockTags;
-import com.bedmen.odyssey.util.BlockRegistry;
 import com.bedmen.odyssey.util.FogUtil;
-import com.bedmen.odyssey.world.gen.OdysseyBiomeMaker;
 import com.mojang.serialization.Codec;
-
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
-
 import net.minecraft.block.*;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IWorldReader;
-import net.minecraft.world.LightType;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.Features;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import org.lwjgl.system.CallbackI;
 
 public class FogFeature extends Feature<NoFeatureConfig> {
     public FogFeature(Codec<NoFeatureConfig> p_i231993_1_) {

@@ -2,19 +2,19 @@ package com.bedmen.odyssey.tileentity;
 
 import javax.annotation.Nullable;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.container.ResearchTableContainer;
+import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.SoundPacket;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.recipes.ResearchRecipe;
-import com.bedmen.odyssey.util.ItemRegistry;
-import com.bedmen.odyssey.util.TileEntityTypeRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.registry.TileEntityTypeRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
@@ -22,19 +22,14 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.server.management.PlayerList;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.WorldPersistenceHooks;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.network.*;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public class ResearchTableTileEntity extends LockableTileEntity implements ITickableTileEntity {
@@ -123,7 +118,24 @@ public class ResearchTableTileEntity extends LockableTileEntity implements ITick
 
     private boolean isResearchable(@Nullable IRecipe<?> recipe) {
         if(recipe == null) return false;
-        boolean flag = this.getItem(10).getItem() == Items.BOOK;
+        boolean flag = false;
+        ItemStack bookItemStack = this.getItem(10);
+        if(bookItemStack.getItem() == Items.BOOK)
+            flag = true;
+        else if(bookItemStack.getItem() == Items.ENCHANTED_BOOK){
+            Enchantment e1 = ((ResearchRecipe)recipe).getEnchantment();
+            Enchantment e2 = ((IUpgradableEnchantment)((ResearchRecipe)recipe).getEnchantment()).getDowngrade();
+            Integer level1 = EnchantmentHelper.getEnchantments(bookItemStack).get(e1);
+            int level2 = level1 == null ? 0 : level1;
+            if(level2 > 0 && level2 < ((ResearchRecipe)recipe).getLevel())
+                flag = true;
+            if(e2 != null){
+                Integer level3 = EnchantmentHelper.getEnchantments(bookItemStack).get(e2);
+                int level4 = level3 == null ? 0 : level3;
+                if(level4 > 0 && level4 <= ((ResearchRecipe)recipe).getLevel())
+                    flag = true;
+            }
+        }
         if(((ResearchRecipe)recipe).getEnchantment().isCurse())
             flag &= this.getItem(9).getItem() == ItemRegistry.MALEVOLENT_QUILL.get();
         else

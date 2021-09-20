@@ -1,6 +1,11 @@
 package com.bedmen.odyssey.items.equipment;
 
-import com.bedmen.odyssey.util.EnchantmentRegistry;
+import com.bedmen.odyssey.armor.OdysseyArmorMaterial;
+import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.enchantment.SetBonusEnchSup;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -15,16 +20,19 @@ import net.minecraftforge.common.util.Lazy;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public abstract class EquipmentArmorItem extends ArmorItem {
-    protected final Map<Lazy<Enchantment>, Integer> enchantmentLazyMap = new HashMap<>();
-    protected final Map<Lazy<Enchantment>, Tuple<Integer, String>> setBonusLazyMap = new HashMap<>();
+public class EquipmentArmorItem extends ArmorItem {
+    protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
+    protected final Set<SetBonusEnchSup> setBonusEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     private final Map<Enchantment, Tuple<Integer, String>> setBonusMap = new HashMap<>();
     protected static final List<EquipmentArmorItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
+    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
-    public EquipmentArmorItem(IArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties properties) {
-        super(armorMaterial, slotType, properties);
-        this.enchantmentLazyMap.put(Lazy.of(EnchantmentRegistry.UNENCHANTABLE::get),1);
+    public EquipmentArmorItem(OdysseyArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties properties, LevEnchSup... levEnchSups) {
+        super(armorMaterial, slotType, properties.rarity(OdysseyRarity.EQUIPMENT));
+        this.levEnchSupSet.add(UNENCHANTABLE);
+        Collections.addAll(this.levEnchSupSet, levEnchSups);
+        Collections.addAll(this.setBonusEnchSupSet, armorMaterial.getSetBonusEnchSups());
         UNFINISHED_EQUIPMENT.add(this);
     }
 
@@ -36,11 +44,11 @@ public abstract class EquipmentArmorItem extends ArmorItem {
     }
 
     public void init(){
-        for(Lazy<Enchantment> lazy : this.enchantmentLazyMap.keySet()){
-            this.enchantmentMap.put(lazy.get(), this.enchantmentLazyMap.get(lazy));
+        for(LevEnchSup levEnchSup : this.levEnchSupSet){
+            this.enchantmentMap.put(levEnchSup.enchantmentSupplier.get(), levEnchSup.level);
         }
-        for(Lazy<Enchantment> lazy : this.setBonusLazyMap.keySet()){
-            this.setBonusMap.put(lazy.get(), this.setBonusLazyMap.get(lazy));
+        for(SetBonusEnchSup setBonusEnchSup : this.setBonusEnchSupSet){
+            this.setBonusMap.put(setBonusEnchSup.enchantmentSupplier.get(), new Tuple<>(setBonusEnchSup.level, setBonusEnchSup.key));
         }
     }
 
@@ -68,9 +76,9 @@ public abstract class EquipmentArmorItem extends ArmorItem {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         for(Enchantment e : this.enchantmentMap.keySet()){
-            if(EnchantmentRegistry.UNENCHANTABLE.get() == e)
-                tooltip.add(1, e.getFullname(this.enchantmentMap.get(e)));
-            else
+            if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
+                tooltip.add(1, EnchantmentUtil.getUnenchantableName());
+            else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
                 tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
         }
         if(this.setBonusMap.size() > 0)
@@ -78,7 +86,7 @@ public abstract class EquipmentArmorItem extends ArmorItem {
         for(Enchantment e : this.setBonusMap.keySet()){
             IFormattableTextComponent iformattabletextcomponent = (IFormattableTextComponent)(e.getFullname(this.setBonusMap.get(e).getA()));
             String key = this.setBonusMap.get(e).getB();
-            if(key.equals(""))
+            if(key.equals("passive"))
                 iformattabletextcomponent.append(new TranslationTextComponent("item.oddc.equipment.passive").withStyle(TextFormatting.GRAY));
             else{
                 iformattabletextcomponent.append(" [");

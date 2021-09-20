@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.FogUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -48,19 +49,19 @@ public abstract class MixinFogRenderer {
         } else {
             float f2;
             float f3;
-            int i2 = FogUtil.inFog((PlayerEntity)entity);
+            int i2 = entity instanceof LivingEntity ? FogUtil.inFog((LivingEntity) entity) : 0;
             if (fluidstate.is(FluidTags.LAVA)) {
-                if(entity instanceof LivingEntity && EnchantmentUtil.hasMoltenAffinity((LivingEntity)entity)){
+                if(((PlayerEntity) entity).hasEffect(EffectRegistry.LAVA_VISION.get())){
                     f2 = 0.0F;
                     f3 = 20.0F;
-                } else if (entity instanceof LivingEntity && ((LivingEntity)entity).hasEffect(Effects.FIRE_RESISTANCE)) {
+                } else if (((LivingEntity)entity).hasEffect(Effects.FIRE_RESISTANCE)) {
                     f2 = 0.0F;
                     f3 = 3.0F;
                 } else {
                     f2 = 0.25F;
                     f3 = 1.0F;
                 }
-            } else if (entity instanceof LivingEntity && ((LivingEntity)entity).hasEffect(Effects.BLINDNESS)) {
+            } else if (((LivingEntity)entity).hasEffect(Effects.BLINDNESS)) {
                 int i = ((LivingEntity) entity).getEffect(Effects.BLINDNESS).getDuration();
                 float f1 = MathHelper.lerp(Math.min(1.0F, (float) i / 20.0F), farPlaneDistance, 5.0F);
                 if (fogTypeIn == net.minecraft.client.renderer.FogRenderer.FogType.FOG_SKY) {

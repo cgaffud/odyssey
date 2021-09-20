@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.util.EntityTypeRegistry;
-import com.bedmen.odyssey.util.ItemRegistry;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -16,11 +16,11 @@ public class OdysseyTridentEntity extends AbstractTridentEntity {
     }
 
     public OdysseyTridentEntity(World worldIn, LivingEntity thrower, ItemStack thrownStackIn, double damage) {
-        super(worldIn, thrower, thrownStackIn, damage, EntityTypeRegistry.NEW_TRIDENT.get());
+        super(worldIn, thrower, thrownStackIn, damage, EntityTypeRegistry.TRIDENT.get());
     }
 
     @OnlyIn(Dist.CLIENT)
     public OdysseyTridentEntity(World worldIn, double x, double y, double z) {
-        super(worldIn, x, y, z, EntityTypeRegistry.NEW_TRIDENT.get(), new ItemStack(ItemRegistry.TRIDENT.get()));
+        super(worldIn, x, y, z, EntityTypeRegistry.TRIDENT.get(), new ItemStack(ItemRegistry.TRIDENT.get()));
     }
 }

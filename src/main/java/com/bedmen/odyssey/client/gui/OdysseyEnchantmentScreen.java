@@ -5,7 +5,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.container.OdysseyEnchantmentContainer;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.UpdateEnchantPacket;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;

@@ -6,7 +6,7 @@ import com.bedmen.odyssey.blocks.AlloyFurnaceBlock;
 import com.bedmen.odyssey.container.AlloyFurnaceContainer;
 import com.bedmen.odyssey.recipes.AlloyRecipe;
 import com.bedmen.odyssey.recipes.ModRecipeType;
-import com.bedmen.odyssey.util.TileEntityTypeRegistry;
+import com.bedmen.odyssey.registry.TileEntityTypeRegistry;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;

@@ -3,8 +3,8 @@ package com.bedmen.odyssey.potions;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import com.bedmen.odyssey.util.ItemRegistry;
-import com.bedmen.odyssey.util.PotionRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.registry.PotionRegistry;
 import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionBrewing;
@@ -99,6 +99,9 @@ public class OdysseyPotions {
         //Night Vision
         addMix(Potions.AWKWARD, Items.GOLDEN_CARROT, Potions.NIGHT_VISION);
         addMix(Potions.NIGHT_VISION, Items.REDSTONE, Potions.LONG_NIGHT_VISION);
+        //Lava Vision
+        addMix(Potions.NIGHT_VISION, Items.MAGMA_CREAM, PotionRegistry.LAVA_VISION.get());
+        addMix(PotionRegistry.LAVA_VISION.get(), Items.REDSTONE, PotionRegistry.LONG_LAVA_VISION.get());
         //Blindness
         addMix(Potions.AWKWARD, Items.FERMENTED_SPIDER_EYE, PotionRegistry.BLINDNESS.get());
         addMix(PotionRegistry.BLINDNESS.get(), Items.REDSTONE, PotionRegistry.LONG_BLINDNESS.get());

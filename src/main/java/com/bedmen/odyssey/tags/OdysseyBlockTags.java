@@ -1,12 +1,9 @@
 package com.bedmen.odyssey.tags;
 
-import com.bedmen.odyssey.util.BlockRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.util.FogUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.HashSet;
 import java.util.Set;

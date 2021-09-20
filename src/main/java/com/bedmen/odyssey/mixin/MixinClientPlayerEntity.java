@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.items.equipment.ZephyrArmorItem;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
@@ -7,7 +9,6 @@ import net.minecraft.client.audio.IAmbientSoundHandler;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
-import net.minecraft.client.util.ClientRecipeBook;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.IJumpingMount;
 import net.minecraft.entity.Pose;
@@ -15,9 +16,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CEntityActionPacket;
 import net.minecraft.potion.Effects;
-import net.minecraft.stats.StatisticsManager;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Hand;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
@@ -163,9 +162,16 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
             }
         }
 
+        //Makes it so that just having the zephyr suit chestplate doesn't activate flying
         if (this.input.jumping && !flag7 && !flag && !this.abilities.flying && !this.isPassenger() && !this.onClimbable()) {
             ItemStack itemstack = this.getItemBySlot(EquipmentSlotType.CHEST);
-            if (itemstack.canElytraFly(this) && this.tryToStartFallFlying()) {
+            boolean glidingFlag = itemstack.canElytraFly(this);
+            if(itemstack.getItem() instanceof ZephyrArmorItem)
+                glidingFlag &= EnchantmentUtil.hasGliding(this);
+            if (glidingFlag) {
+                glidingFlag = this.tryToStartFallFlying();
+            }
+            if (glidingFlag) {
                 this.connection.send(new CEntityActionPacket(this, CEntityActionPacket.Action.START_FALL_FLYING));
             }
         }

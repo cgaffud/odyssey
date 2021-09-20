@@ -22,7 +22,12 @@
     "MixinEnchantment",
     "MixinShieldRecipes",
     "MixinClientPlayerEntity",
-    "MixinLayerUtil"
+    "MixinLayerUtil",
+    "MixinServerPlayerEntity",
+    "MixinTextFormatting",
+    "MixinCreativeScreen",
+    "MixinServerPlayNetHandler",
+    "MixinPiglinTasks"
   ],
   "injectors": {
     "defaultRequire": 1

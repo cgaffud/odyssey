@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.world.gen;
 
-import com.bedmen.odyssey.util.BlockRegistry;
-import com.bedmen.odyssey.util.FeatureRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.FeatureRegistry;
 import com.bedmen.odyssey.world.gen.feature.tree.LeaningTrunkPlacer;
 import com.bedmen.odyssey.world.gen.feature.tree.PalmFoliagePlacer;
 import com.google.common.collect.ImmutableList;
@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.Mod;
 public class OdysseyFeatureGen {
 
     // Single Generating Features
-    public static ConfiguredFeature<?, ?> MEGA_ICE_SPIKE;
+    public static ConfiguredFeature<?, ?> PERMAFROST_TOWER;
     public static ConfiguredFeature<?, ?> FOG;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> AUTUMN_TREE_RED;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> AUTUMN_TREE_ORANGE;
@@ -37,7 +37,7 @@ public class OdysseyFeatureGen {
     public static ConfiguredFeature<?,?> PALM_TREES;
 
     public static void registerFeatures() {
-        MEGA_ICE_SPIKE = featureGen(FeatureRegistry.MEGA_ICE_SPIKE);
+        PERMAFROST_TOWER = featureGen(FeatureRegistry.PERMAFROST_TOWER);
 
         FOG = FeatureRegistry.FOG.get().configured(IFeatureConfig.NONE);
 
@@ -60,6 +60,9 @@ public class OdysseyFeatureGen {
 
         } else {
             gen.addFeature(GenerationStage.Decoration.TOP_LAYER_MODIFICATION, FOG);
+            if(event.getName().toString().equals("minecraft:ice_spikes")) {
+                gen.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, PERMAFROST_TOWER);
+            }
             if(event.getName().toString().equals("oddc:autumn_forest")) {
                 gen.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AUTUMN_FOREST);
             }

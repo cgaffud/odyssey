@@ -1,10 +1,12 @@
 package com.bedmen.odyssey.enchantment;
 
-import com.bedmen.odyssey.util.BlockRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.FrostWalkerEnchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -18,8 +20,8 @@ public class ObsidianWalkerEnchantment extends FrostWalkerEnchantment {
         super(p_i46728_1_, p_i46728_2_);
     }
 
-    public boolean isVolcanic(){
-        return true;
+    public Enchantment getDowngrade(){
+        return Enchantments.FROST_WALKER;
     }
 
     public static void onEntityMoved(LivingEntity p_185266_0_, World p_185266_1_, BlockPos p_185266_2_, int p_185266_3_) {

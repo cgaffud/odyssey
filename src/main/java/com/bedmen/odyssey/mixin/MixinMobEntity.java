@@ -2,7 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -25,7 +25,7 @@ public abstract class MixinMobEntity extends Entity{
             float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(getMobEntity(this)) * 0.05F;
             if (this.random.nextFloat() < f) {
                 if(activePlayerStack.getItem() instanceof OdysseyShieldItem || activePlayerStack.getItem() instanceof ShieldItem){
-                    int ticks = EnchantmentUtil.getRecovery(player);
+                    int ticks = EnchantmentUtil.getRecoveryTicks(player);
                     for(Item item : OdysseyItemTags.SHIELD_TAG){
                         player.getCooldowns().addCooldown(item, ticks);
                     }

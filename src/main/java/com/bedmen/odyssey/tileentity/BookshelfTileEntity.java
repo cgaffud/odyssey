@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.tileentity;
 
 import com.bedmen.odyssey.container.BookshelfContainer;
-import com.bedmen.odyssey.util.BlockRegistry;
-import com.bedmen.odyssey.util.TileEntityTypeRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.TileEntityTypeRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

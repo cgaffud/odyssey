@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.world.gen.layer;
 
 import net.minecraft.world.gen.INoiseRandom;
-import net.minecraft.world.gen.layer.LayerUtil;
 import net.minecraft.world.gen.layer.traits.IBishopTransformer;
 
 public enum AddSpecialIslandLayer implements IBishopTransformer {
@@ -12,7 +11,7 @@ public enum AddSpecialIslandLayer implements IBishopTransformer {
         if (isShallowOcean(p_202792_6_) && isShallowOcean(p_202792_5_) && isShallowOcean(p_202792_2_) && isShallowOcean(p_202792_4_) && isShallowOcean(p_202792_3_)) {
             if(i == 0){
                 return 14;
-            } else if(i == 1) {
+            } else if(1 <= i && i <= 3) {
                 return 52;
             }
         }

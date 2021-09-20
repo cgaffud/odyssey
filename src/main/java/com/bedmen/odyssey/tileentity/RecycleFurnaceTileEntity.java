@@ -5,7 +5,7 @@ import com.bedmen.odyssey.container.RecycleFurnaceContainer;
 import com.bedmen.odyssey.recipes.ModRecipeType;
 import com.bedmen.odyssey.recipes.RecycleRecipe;
 import com.bedmen.odyssey.util.RecycleUtil;
-import com.bedmen.odyssey.util.TileEntityTypeRegistry;
+import com.bedmen.odyssey.registry.TileEntityTypeRegistry;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;

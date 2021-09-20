@@ -1,9 +1,10 @@
 package com.bedmen.odyssey.container;
 
 import com.bedmen.odyssey.client.gui.OdysseyEnchantmentScreen;
-import com.bedmen.odyssey.util.ContainerRegistry;
-import com.bedmen.odyssey.util.EnchantmentRegistry;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
+import com.bedmen.odyssey.registry.ContainerRegistry;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -126,51 +127,50 @@ public class OdysseyEnchantmentContainer extends Container {
     }
 
     private void generateLists(){
-        this.enchantmentList = new ArrayList<Enchantment>();
-        this.levelList = new ArrayList<Integer>();
-        this.costList = new ArrayList<Integer>();
-        List<Integer> list = new ArrayList<Integer>();
+        this.enchantmentList = new ArrayList<>();
+        this.levelList = new ArrayList<>();
+        this.costList = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
         ItemStack itemStack = this.inv.getItem(0);
         Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
-
-        // Let's try this
-
-        for(int i = 0; i < this.tableData1.getCount(); i++){
-            int i1 = this.tableData1.get(i);
-            if(!EnchantmentUtil.canBeApplied(itemStack,i1)) continue;
-            int i2 = this.tableData2.get(i);
-            int i3 = 32768*i1+i2;
-            if(list.contains(i3)) continue;
-            Enchantment e = EnchantmentUtil.intToEnchantment(i1);
-            boolean b = true;
-            if(map.containsKey(e) && map.get(e) >= i2) b = false;
-            else{
+        if (!map.containsKey(EnchantmentRegistry.UNENCHANTABLE.get())){
+            for(int i = 0; i < this.tableData1.getCount(); i++){
+                int i1 = this.tableData1.get(i);
+                if(!EnchantmentUtil.canBeApplied(itemStack,i1)) continue;
+                int i2 = this.tableData2.get(i);
+                int i3 = 32768*i1+i2;
+                if(list.contains(i3)) continue;
+                Enchantment e = EnchantmentUtil.intToEnchantment(i1);
+                if(map.containsKey(e) && map.get(e) >= i2) continue;
+                Enchantment downgrade = ((IUpgradableEnchantment)e).getDowngrade();
+                if(downgrade != null && map.containsKey(downgrade) && map.get(downgrade) > i2) continue;
+                Enchantment upgrade = ((IUpgradableEnchantment)e).getUpgrade();
+                if(upgrade != null && map.containsKey(upgrade) && map.get(upgrade) >= i2) continue;
+                boolean addToListFlag = true;
                 for(Enchantment e1 : EnchantmentUtil.exclusiveWith(e)){
                     if(map.containsKey(e1)){
-                        b = false;
+                        addToListFlag = false;
                         break;
                     }
                 }
-            }
-            if (map.containsKey(EnchantmentRegistry.UNENCHANTABLE.get())) b = false;
-            if(b)
-                list.add(i3);
-        }
-
-        list.sort(Integer::compare);
-        for(Integer i : list){
-            Enchantment e = EnchantmentUtil.intToEnchantment(i/32768);
-            this.enchantmentList.add(e);
-            int j = i%32768;
-            this.levelList.add(j);
-            if(map.containsKey(e)){
-                int k = map.get(e);
-                this.costList.add((j*j+j-k*k-k)/2);
-            }
-            else{
-                this.costList.add((j*j+j)/2);
+                if(addToListFlag)
+                    list.add(i3);
             }
 
+            list.sort(Integer::compare);
+            for(Integer i : list){
+                Enchantment e = EnchantmentUtil.intToEnchantment(i/32768);
+                this.enchantmentList.add(e);
+                int j = i%32768;
+                this.levelList.add(j);
+                if(map.containsKey(e)){
+                    int k = map.get(e);
+                    this.costList.add((j*j+j-k*k-k)/2);
+                }
+                else{
+                    this.costList.add((j*j+j)/2);
+                }
+            }
         }
     }
 

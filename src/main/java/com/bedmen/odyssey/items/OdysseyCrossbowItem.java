@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.util.BowUtil;
-import com.bedmen.odyssey.enchantment.EnchantmentUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Random;
@@ -61,7 +61,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         if (isCharged(itemstack)) {
-            float inaccuracy = EnchantmentUtil.getAccuracy(playerIn);
+            float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerIn);
             fireProjectiles(worldIn, playerIn, handIn, itemstack, getVelocity(itemstack), inaccuracy);
             setCharged(itemstack, false);
             return ActionResult.consume(itemstack);
