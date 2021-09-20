@@ -36,7 +36,7 @@
                   ]
                 }
               ],
-              "name": "oddc:palm_leaves"
+              "name": "oddc:autumn_leaves_yellow"
             },
             {
               "type": "minecraft:item",
@@ -55,7 +55,7 @@
                   ]
                 }
               ],
-              "name": "minecraft:oak_sapling"
+              "name": "minecraft:birch_sapling"
             }
           ]
         }
