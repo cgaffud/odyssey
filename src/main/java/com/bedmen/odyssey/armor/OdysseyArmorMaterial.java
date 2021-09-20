@@ -3,10 +3,8 @@ package com.bedmen.odyssey.armor;
 import java.util.function.Supplier;
 
 import com.bedmen.odyssey.enchantment.SetBonusEnchSup;
-import com.bedmen.odyssey.enchantment.SetBonusEnchSup;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;

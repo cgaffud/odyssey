@@ -29,6 +29,7 @@ import com.bedmen.odyssey.world.gen.OdysseyOreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.OdysseyStructureEntitySpawn;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -38,10 +39,16 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.FoliageColors;
+import net.minecraft.world.biome.BiomeColors;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -165,9 +172,9 @@ public class Odyssey
         RenderTypeLookup.setRenderLayer(BlockRegistry.RESEARCH_TABLE.get(), RenderType.cutout());
         for(Block block : OdysseyBlockTags.FOG_TAG)
             RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
-
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE2.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE4.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.PALM_LEAVES.get(), RenderType.cutoutMipped());
     }
 
     @SubscribeEvent
@@ -196,7 +203,7 @@ public class Odyssey
         event.addSprite(PermafrostRenderer.VERTICAL_WIND_RESOURCE_LOCATION);
         event.addSprite(PermafrostRenderer.OPEN_EYE_RESOURCE_LOCATION);
     }
-    
+
     @SubscribeEvent
     public static void onEntityAttributeCreation(final EntityAttributeCreationEvent event){
         event.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
@@ -204,5 +211,20 @@ public class Odyssey
         event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanEntity.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyEntity.createAttributes().build());
+    }
+
+    @SubscribeEvent
+    public static void onColorHandlerEvent(final ColorHandlerEvent.Block event) {
+        event.getBlockColors().register((p_228061_0_, p_228061_1_, p_228061_2_, p_228061_3_) -> {
+            return p_228061_1_ != null && p_228061_2_ != null ? BiomeColors.getAverageFoliageColor(p_228061_1_, p_228061_2_) : FoliageColors.getDefaultColor();
+        }, BlockRegistry.PALM_LEAVES.get());
+    }
+
+    @SubscribeEvent
+    public static void onColorHandlerEvent(final ColorHandlerEvent.Item event) {
+        event.getItemColors().register((p_210235_1_, p_210235_2_) -> {
+            BlockState blockstate = ((BlockItem)(p_210235_1_).getItem()).getBlock().defaultBlockState();
+            return event.getBlockColors().getColor(blockstate, null, null, p_210235_2_);
+        }, BlockRegistry.PALM_LEAVES.get());
     }
 }

@@ -22,6 +22,7 @@
     "MixinEnchantment",
     "MixinShieldRecipes",
     "MixinClientPlayerEntity",
+    "MixinLayerUtil",
     "MixinServerPlayerEntity",
     "MixinTextFormatting",
     "MixinCreativeScreen",

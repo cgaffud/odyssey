@@ -2,10 +2,7 @@ package com.bedmen.odyssey.container;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.stream.Collectors;
-
-import com.bedmen.odyssey.blocks.OdysseyGrindstoneBlock;
 import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.block.Blocks;
@@ -18,10 +15,8 @@ import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.GrindstoneContainer;
 import net.minecraft.inventory.container.RepairContainer;
 import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.IWorldPosCallable;

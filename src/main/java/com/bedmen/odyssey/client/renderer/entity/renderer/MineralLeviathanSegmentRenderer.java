@@ -4,7 +4,6 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.model.MineralLeviathanSegmentModel;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanSegmentEntity;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;

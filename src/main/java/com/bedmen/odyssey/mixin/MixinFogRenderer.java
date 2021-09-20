@@ -33,9 +33,9 @@ public abstract class MixinFogRenderer {
         if (hook >= 0) RenderSystem.fogDensity(hook);
         else
         if (fluidstate.is(FluidTags.WATER)) {
-            float f = 1.0F;
-            f = 0.05F;
+            float f = 0.05F;
             if (entity instanceof ClientPlayerEntity) {
+
                 ClientPlayerEntity clientplayerentity = (ClientPlayerEntity)entity;
                 f -= clientplayerentity.getWaterVision() * clientplayerentity.getWaterVision() * 0.03F;
                 Biome biome = clientplayerentity.level.getBiome(clientplayerentity.blockPosition());
