@@ -175,6 +175,7 @@ public class Odyssey
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE2.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE4.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PALM_LEAVES.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.COCONUT.get(), RenderType.cutout());
     }
 
     @SubscribeEvent
