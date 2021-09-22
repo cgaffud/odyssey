@@ -113,7 +113,7 @@ public class OdysseyBiomeMaker {
         DefaultBiomeFeatures.addSurfaceFreezing(biomegenerationsettings$builder);
         return (new Biome.Builder()).precipitation(Biome.RainType.RAIN)
                 .biomeCategory(Biome.Category.DESERT)
-                .depth(-0.05F)
+                .depth(0.05F)
                 .scale(0.025F)
                 .temperature(1.5F)
                 .downfall(0.8F)

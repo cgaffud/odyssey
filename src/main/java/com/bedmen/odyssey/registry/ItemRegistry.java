@@ -71,7 +71,7 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> PALM_LOG = ITEMS.register("palm_log", () -> new BlockItem(BlockRegistry.PALM_LOG.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> PALM_LEAVES = ITEMS.register("palm_leaves", () -> new BlockItem(BlockRegistry.PALM_LEAVES.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS)));
-    public static final RegistryObject<Item> COCONUT = ITEMS.register("coconut", () -> new BlockNamedItem(BlockRegistry.COCONUT.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS)));
+    public static final RegistryObject<Item> COCONUT_FLOWER = ITEMS.register("coconut_flower", () -> new BlockNamedItem(BlockRegistry.COCONUT.get(), (new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
 
     //Items
     public static final RegistryObject<Item> COPPER_NUGGET = ITEMS.register("copper_nugget", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
