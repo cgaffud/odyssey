@@ -170,12 +170,13 @@ public class Odyssey
 
         //Block Render Types
         RenderTypeLookup.setRenderLayer(BlockRegistry.RESEARCH_TABLE.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.PALM_LEAVES.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.COCONUT.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.HOLLOW_COCONUT.get(), RenderType.cutout());
         for(Block block : OdysseyBlockTags.FOG_TAG)
             RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE2.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE4.get(), RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.PALM_LEAVES.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.COCONUT.get(), RenderType.cutout());
     }
 
     @SubscribeEvent

@@ -4,14 +4,20 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.block.*;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -27,6 +33,26 @@ public class CoconutBlock extends Block implements IGrowable {
     public CoconutBlock(AbstractBlock.Properties p_i48426_1_) {
         super(p_i48426_1_);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
+    }
+
+    public ActionResultType use(BlockState p_225533_1_, World p_225533_2_, BlockPos p_225533_3_, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
+        ItemStack itemstack = p_225533_4_.getItemInHand(p_225533_5_);
+        if (itemstack.getItem() == Items.SHEARS) {
+            if (!p_225533_2_.isClientSide) {
+                p_225533_2_.playSound((PlayerEntity)null, p_225533_3_, SoundEvents.PUMPKIN_CARVE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                p_225533_2_.setBlock(p_225533_3_, BlockRegistry.HOLLOW_COCONUT.get().defaultBlockState().setValue(HollowCoconutBlock.HANGING, Boolean.TRUE), 11);
+                Direction direction1 = Direction.DOWN;
+                ItemEntity itementity = new ItemEntity(p_225533_2_, (double)p_225533_3_.getX() + 0.5D + (double)direction1.getStepX() * 0.65D, (double)p_225533_3_.getY() + 0.1D, (double)p_225533_3_.getZ() + 0.5D + (double)direction1.getStepZ() * 0.65D, new ItemStack(ItemRegistry.COCONUT_FLOWER.get(), 2));
+                itementity.setDeltaMovement(0.05D * (double)direction1.getStepX() + p_225533_2_.random.nextDouble() * 0.02D, 0.05D, 0.05D * (double)direction1.getStepZ() + p_225533_2_.random.nextDouble() * 0.02D);
+                p_225533_2_.addFreshEntity(itementity);
+                itemstack.hurtAndBreak(1, p_225533_4_, (p_220282_1_) -> {
+                    p_220282_1_.broadcastBreakEvent(p_225533_5_);
+                });
+            }
+            return ActionResultType.sidedSuccess(p_225533_2_.isClientSide);
+        } else {
+            return super.use(p_225533_1_, p_225533_2_, p_225533_3_, p_225533_4_, p_225533_5_, p_225533_6_);
+        }
     }
 
     public boolean isRandomlyTicking(BlockState p_149653_1_) {
