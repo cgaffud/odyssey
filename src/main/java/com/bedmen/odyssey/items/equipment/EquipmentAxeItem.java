@@ -1,63 +1,81 @@
 package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.OdysseyRarity;
 import com.google.common.collect.Sets;
 import com.google.common.collect.ImmutableMap.Builder;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class EquipmentAxeItem extends EquipmentToolItem {
-    private static final Set<Material> DIGGABLE_MATERIALS = Sets.newHashSet(Material.WOOD, Material.NETHER_WOOD, Material.PLANT, Material.REPLACEABLE_PLANT, Material.BAMBOO, Material.VEGETABLE);
-    private static final Set<Block> OTHER_DIGGABLE_BLOCKS = Sets.newHashSet(Blocks.LADDER, Blocks.SCAFFOLDING, Blocks.OAK_BUTTON, Blocks.SPRUCE_BUTTON, Blocks.BIRCH_BUTTON, Blocks.JUNGLE_BUTTON, Blocks.DARK_OAK_BUTTON, Blocks.ACACIA_BUTTON, Blocks.CRIMSON_BUTTON, Blocks.WARPED_BUTTON);
-    protected static final Map<Block, Block> STRIPABLES = (new Builder<Block, Block>()).put(Blocks.OAK_WOOD, Blocks.STRIPPED_OAK_WOOD).put(Blocks.OAK_LOG, Blocks.STRIPPED_OAK_LOG).put(Blocks.DARK_OAK_WOOD, Blocks.STRIPPED_DARK_OAK_WOOD).put(Blocks.DARK_OAK_LOG, Blocks.STRIPPED_DARK_OAK_LOG).put(Blocks.ACACIA_WOOD, Blocks.STRIPPED_ACACIA_WOOD).put(Blocks.ACACIA_LOG, Blocks.STRIPPED_ACACIA_LOG).put(Blocks.BIRCH_WOOD, Blocks.STRIPPED_BIRCH_WOOD).put(Blocks.BIRCH_LOG, Blocks.STRIPPED_BIRCH_LOG).put(Blocks.JUNGLE_WOOD, Blocks.STRIPPED_JUNGLE_WOOD).put(Blocks.JUNGLE_LOG, Blocks.STRIPPED_JUNGLE_LOG).put(Blocks.SPRUCE_WOOD, Blocks.STRIPPED_SPRUCE_WOOD).put(Blocks.SPRUCE_LOG, Blocks.STRIPPED_SPRUCE_LOG).put(Blocks.WARPED_STEM, Blocks.STRIPPED_WARPED_STEM).put(Blocks.WARPED_HYPHAE, Blocks.STRIPPED_WARPED_HYPHAE).put(Blocks.CRIMSON_STEM, Blocks.STRIPPED_CRIMSON_STEM).put(Blocks.CRIMSON_HYPHAE, Blocks.STRIPPED_CRIMSON_HYPHAE).build();
+import javax.annotation.Nullable;
 
-    public EquipmentAxeItem(IItemTier p_i48530_1_, float p_i48530_2_, float p_i48530_3_, Item.Properties p_i48530_4_, LevEnchSup... levEnchSups) {
-        super(p_i48530_2_, p_i48530_3_, p_i48530_1_, OTHER_DIGGABLE_BLOCKS, p_i48530_4_.addToolType(net.minecraftforge.common.ToolType.AXE, p_i48530_1_.getLevel()), levEnchSups);
+public class EquipmentAxeItem extends AxeItem {
+    protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
+    private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
+    protected static final List<EquipmentAxeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
+    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
+
+    public EquipmentAxeItem(IItemTier tier, float damage, float attackSpeed, Item.Properties properties, LevEnchSup... levEnchSups) {
+        super(tier, damage, attackSpeed, properties.rarity(OdysseyRarity.EQUIPMENT));
+        this.levEnchSupSet.add(UNENCHANTABLE);
+        Collections.addAll(this.levEnchSupSet, levEnchSups);
+        UNFINISHED_EQUIPMENT.add(this);
     }
 
-    public float getDestroySpeed(ItemStack p_150893_1_, BlockState p_150893_2_) {
-        Material material = p_150893_2_.getMaterial();
-        return DIGGABLE_MATERIALS.contains(material) ? this.speed : super.getDestroySpeed(p_150893_1_, p_150893_2_);
+    public static void initEquipment(){
+        for(final EquipmentAxeItem equipmentAxeItem : UNFINISHED_EQUIPMENT){
+            equipmentAxeItem.init();
+        }
+        UNFINISHED_EQUIPMENT.clear();
     }
 
-    public ActionResultType useOn(ItemUseContext p_195939_1_) {
-        World world = p_195939_1_.getLevel();
-        BlockPos blockpos = p_195939_1_.getClickedPos();
-        BlockState blockstate = world.getBlockState(blockpos);
-        BlockState block = blockstate.getToolModifiedState(world, blockpos, p_195939_1_.getPlayer(), p_195939_1_.getItemInHand(), net.minecraftforge.common.ToolType.AXE);
-        if (block != null) {
-            PlayerEntity playerentity = p_195939_1_.getPlayer();
-            world.playSound(playerentity, blockpos, SoundEvents.AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            if (!world.isClientSide) {
-                world.setBlock(blockpos, block, 11);
-                if (playerentity != null) {
-                    p_195939_1_.getItemInHand().hurtAndBreak(1, playerentity, (p_220040_1_) -> {
-                        p_220040_1_.broadcastBreakEvent(p_195939_1_.getHand());
-                    });
-                }
-            }
-
-            return ActionResultType.sidedSuccess(world.isClientSide);
-        } else {
-            return ActionResultType.PASS;
+    public void init(){
+        for(LevEnchSup levEnchSup : this.levEnchSupSet){
+            this.enchantmentMap.put(levEnchSup.enchantmentSupplier.get(), levEnchSup.level);
         }
     }
 
-    @javax.annotation.Nullable
-    public static BlockState getAxeStrippingState(BlockState originalState) {
-        Block block = STRIPABLES.get(originalState.getBlock());
-        return block != null ? block.defaultBlockState().setValue(RotatedPillarBlock.AXIS, originalState.getValue(RotatedPillarBlock.AXIS)) : null;
+    public int getInnateEnchantmentLevel(Enchantment e) {
+        Integer i = this.enchantmentMap.get(e);
+        if(i == null)
+            return 0;
+        return i;
+    }
+
+    public Map<Enchantment, Integer> getInnateEnchantmentMap(){
+        return this.enchantmentMap;
+    }
+
+    /**
+     * allows items to add custom lines of information to the mouseover description
+     */
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        for(Enchantment e : this.enchantmentMap.keySet()){
+            if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
+                tooltip.add(1, EnchantmentUtil.getUnenchantableName());
+            else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
+                tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
+        }
     }
 }

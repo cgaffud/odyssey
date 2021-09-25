@@ -23,8 +23,8 @@ import java.util.*;
 public class EquipmentArmorItem extends ArmorItem {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     protected final Set<SetBonusEnchSup> setBonusEnchSupSet = new HashSet<>();
-    private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
-    private final Map<Enchantment, Tuple<Integer, String>> setBonusMap = new HashMap<>();
+    protected final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
+    protected final Map<Enchantment, Tuple<Integer, String>> setBonusMap = new HashMap<>();
     protected static final List<EquipmentArmorItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
     private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
@@ -75,25 +75,29 @@ public class EquipmentArmorItem extends ArmorItem {
      */
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        for(Enchantment e : this.enchantmentMap.keySet()){
-            if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
-                tooltip.add(1, EnchantmentUtil.getUnenchantableName());
-            else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
-                tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
-        }
-        if(this.setBonusMap.size() > 0)
-            tooltip.add(new TranslationTextComponent("item.oddc.equipment.setbonus").withStyle(TextFormatting.GRAY));
-        for(Enchantment e : this.setBonusMap.keySet()){
-            IFormattableTextComponent iformattabletextcomponent = (IFormattableTextComponent)(e.getFullname(this.setBonusMap.get(e).getA()));
-            String key = this.setBonusMap.get(e).getB();
-            if(key.equals("passive"))
-                iformattabletextcomponent.append(new TranslationTextComponent("item.oddc.equipment.passive").withStyle(TextFormatting.GRAY));
-            else{
-                iformattabletextcomponent.append(" [");
-                iformattabletextcomponent.append(new TranslationTextComponent(key).withStyle(TextFormatting.GRAY));
-                iformattabletextcomponent.append(new TranslationTextComponent("item.oddc.equipment.key").withStyle(TextFormatting.GRAY));
+        if(this instanceof HollowCoconutItem){
+            super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        } else {
+            for(Enchantment e : this.enchantmentMap.keySet()){
+                if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
+                    tooltip.add(1, EnchantmentUtil.getUnenchantableName());
+                else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
+                    tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
             }
-            tooltip.add(iformattabletextcomponent);
+            if(this.setBonusMap.size() > 0)
+                tooltip.add(new TranslationTextComponent("item.oddc.equipment.setbonus").withStyle(TextFormatting.GRAY));
+            for(Enchantment e : this.setBonusMap.keySet()){
+                IFormattableTextComponent iformattabletextcomponent = (IFormattableTextComponent)(e.getFullname(this.setBonusMap.get(e).getA()));
+                String key = this.setBonusMap.get(e).getB();
+                if(key.equals("passive"))
+                    iformattabletextcomponent.append(new TranslationTextComponent("item.oddc.equipment.passive").withStyle(TextFormatting.GRAY));
+                else{
+                    iformattabletextcomponent.append(" [");
+                    iformattabletextcomponent.append(new TranslationTextComponent(key).withStyle(TextFormatting.GRAY));
+                    iformattabletextcomponent.append(new TranslationTextComponent("item.oddc.equipment.key").withStyle(TextFormatting.GRAY));
+                }
+                tooltip.add(iformattabletextcomponent);
+            }
         }
     }
 }

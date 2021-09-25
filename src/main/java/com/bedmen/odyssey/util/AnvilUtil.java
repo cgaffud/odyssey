@@ -1,9 +1,6 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.items.OdysseyShieldItem;
-import com.bedmen.odyssey.items.equipment.EquipmentAxeItem;
-import com.bedmen.odyssey.items.equipment.EquipmentHoeItem;
-import com.bedmen.odyssey.items.equipment.EquipmentPickaxeItem;
 import net.minecraft.item.*;
 
 public class AnvilUtil {
@@ -17,8 +14,8 @@ public class AnvilUtil {
     private static int getRepairFraction(ItemStack itemStack){
         Item item = itemStack.getItem();
         if(item instanceof ShovelItem) return 1;
-        if(item instanceof SwordItem || item instanceof HoeItem || item instanceof EquipmentHoeItem) return 2;
-        if(item instanceof AxeItem || item instanceof PickaxeItem || item instanceof EquipmentAxeItem || item instanceof EquipmentPickaxeItem) return 3;
+        if(item instanceof SwordItem || item instanceof HoeItem) return 2;
+        if(item instanceof AxeItem || item instanceof PickaxeItem) return 3;
         if(item instanceof ArmorItem){
             switch(((ArmorItem)item).getSlot()){
                 case CHEST:

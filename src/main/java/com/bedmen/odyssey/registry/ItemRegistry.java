@@ -72,7 +72,6 @@ public class ItemRegistry {
     public static final RegistryObject<Item> PALM_LOG = ITEMS.register("palm_log", () -> new BlockItem(BlockRegistry.PALM_LOG.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> PALM_LEAVES = ITEMS.register("palm_leaves", () -> new BlockItem(BlockRegistry.PALM_LEAVES.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS)));
     public static final RegistryObject<Item> COCONUT_FLOWER = ITEMS.register("coconut_flower", () -> new BlockNamedItem(BlockRegistry.COCONUT.get(), (new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
-    public static final RegistryObject<Item> HOLLOW_COCONUT = ITEMS.register("hollow_coconut", () -> new BlockItem(BlockRegistry.HOLLOW_COCONUT.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS)));
 
     //Items
     public static final RegistryObject<Item> COPPER_NUGGET = ITEMS.register("copper_nugget", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
@@ -126,6 +125,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> LEATHER_LEGGINGS = ITEMS_VANILLA.register("leather_leggings", () -> new DyeableArmorItem(OdysseyArmorMaterial.LEATHER, EquipmentSlotType.LEGS, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> LEATHER_BOOTS = ITEMS_VANILLA.register("leather_boots", () -> new DyeableArmorItem(OdysseyArmorMaterial.LEATHER, EquipmentSlotType.FEET, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> LEATHER_HORSE_ARMOR = ITEMS_VANILLA.register("leather_horse_armor", () -> new DyeableHorseArmorItem(10, "leather", (new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_MISC)));
+
+    public static final RegistryObject<Item> HOLLOW_COCONUT = ITEMS.register("hollow_coconut", () -> new HollowCoconutItem(OdysseyArmorMaterial.COCONUT, EquipmentSlotType.HEAD, new Item.Properties().tab(OdysseyItemGroup.COMBAT), BINDING));
 
     public static final RegistryObject<Item> CHICKEN_HELMET = ITEMS.register("chicken_helmet", () -> new EquipmentArmorItem(OdysseyArmorMaterial.CHICKEN, EquipmentSlotType.HEAD, new Item.Properties().tab(OdysseyItemGroup.COMBAT), FALL_PROTECTION_1));
     public static final RegistryObject<Item> CHICKEN_CHESTPLATE = ITEMS.register("chicken_chestplate", () -> new EquipmentArmorItem(OdysseyArmorMaterial.CHICKEN, EquipmentSlotType.CHEST, new Item.Properties().tab(OdysseyItemGroup.COMBAT), FALL_PROTECTION_1));
