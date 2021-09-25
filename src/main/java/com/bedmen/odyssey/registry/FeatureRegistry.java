@@ -3,7 +3,7 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.world.gen.feature.FogFeature;
 import com.bedmen.odyssey.world.gen.feature.PermafrostTowerFeature;
-import com.bedmen.odyssey.world.gen.feature.tree.DiagonalTreeFeature;
+import com.bedmen.odyssey.world.gen.feature.tree.PalmTreeFeature;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -24,5 +24,5 @@ public class FeatureRegistry {
 
     public static final RegistryObject<Feature<NoFeatureConfig>> PERMAFROST_TOWER = FEATURES.register("permafrost_tower", () -> new PermafrostTowerFeature(NoFeatureConfig.CODEC));
     public static final RegistryObject<Feature<NoFeatureConfig>> FOG = FEATURES.register("fog", () -> new FogFeature(NoFeatureConfig.CODEC));
-    public static final RegistryObject<Feature<BaseTreeFeatureConfig>> DIAGONAL_TREE = FEATURES.register("diagonal_tree", () -> new DiagonalTreeFeature(BaseTreeFeatureConfig.CODEC));
+    public static final RegistryObject<Feature<BaseTreeFeatureConfig>> DIAGONAL_TREE = FEATURES.register("diagonal_tree", () -> new PalmTreeFeature(BaseTreeFeatureConfig.CODEC));
 }

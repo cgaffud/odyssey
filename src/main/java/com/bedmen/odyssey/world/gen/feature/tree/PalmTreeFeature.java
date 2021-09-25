@@ -32,8 +32,8 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacer;
 
-public class DiagonalTreeFeature extends Feature<BaseTreeFeatureConfig> {
-    public DiagonalTreeFeature(Codec<BaseTreeFeatureConfig> p_i231999_1_) {
+public class PalmTreeFeature extends Feature<BaseTreeFeatureConfig> {
+    public PalmTreeFeature(Codec<BaseTreeFeatureConfig> p_i231999_1_) {
         super(p_i231999_1_);
     }
 
