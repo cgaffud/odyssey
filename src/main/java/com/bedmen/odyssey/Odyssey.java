@@ -6,7 +6,7 @@ import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.client.renderer.tileentity.SterlingSilverChestTileEntityRenderer;
-import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
+import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.tileentity.OdysseyEnchantmentTableTileEntityRenderer;
@@ -15,8 +15,6 @@ import com.bedmen.odyssey.entity.attributes.OdysseyAttributes;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.bedmen.odyssey.items.*;
-import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
-import com.bedmen.odyssey.items.equipment.EquipmentTieredItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tags.OdysseyBlockTags;
@@ -39,10 +37,8 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.FoliageColors;
 import net.minecraft.world.biome.BiomeColors;
@@ -170,11 +166,13 @@ public class Odyssey
 
         //Block Render Types
         RenderTypeLookup.setRenderLayer(BlockRegistry.RESEARCH_TABLE.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.PALM_LEAVES.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.COCONUT.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.HOLLOW_COCONUT.get(), RenderType.cutout());
         for(Block block : OdysseyBlockTags.FOG_TAG)
             RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE2.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE4.get(), RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.PALM_LEAVES.get(), RenderType.cutoutMipped());
     }
 
     @SubscribeEvent
@@ -185,8 +183,12 @@ public class Odyssey
     @SubscribeEvent
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
-        EquipmentTieredItem.initEquipment();
+        EquipmentMeleeItem.initEquipment();
         EquipmentTrinketItem.initEquipment();
+        EquipmentPickaxeItem.initEquipment();
+        EquipmentHoeItem.initEquipment();
+        EquipmentShovelItem.initEquipment();
+        EquipmentAxeItem.initEquipment();
     }
 
     @SubscribeEvent

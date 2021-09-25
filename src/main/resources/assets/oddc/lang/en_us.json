@@ -24,6 +24,7 @@
   "item.oddc.bewitched_quill": "Bewitched Quill",
   "item.oddc.malevolent_quill": "Malevolent Quill",
   "item.oddc.purge_tablet": "Purge Tablet",
+  "item.oddc.coconut_flower": "Coconut Flower",
 
   //Food
   "item.oddc.life_fruit": "Life Fruit",
@@ -196,6 +197,7 @@
   "block.oddc.palm_log": "Palm Log",
   "block.oddc.palm_leaves": "Palm Leaves",
   "block.oddc.coconut": "Coconut",
+  "block.oddc.hollow_coconut": "Hollow Coconut",
   "block.oddc.frosted_obsidian": "Frosted Obsidian",
 
   //Entities

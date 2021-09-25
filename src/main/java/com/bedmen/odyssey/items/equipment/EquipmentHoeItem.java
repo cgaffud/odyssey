@@ -1,61 +1,81 @@
 package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.OdysseyRarity;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.*;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class EquipmentHoeItem extends EquipmentToolItem {
-    private static final Set<Block> DIGGABLES = ImmutableSet.of(Blocks.NETHER_WART_BLOCK, Blocks.WARPED_WART_BLOCK, Blocks.HAY_BLOCK, Blocks.DRIED_KELP_BLOCK, Blocks.TARGET, Blocks.SHROOMLIGHT, Blocks.SPONGE, Blocks.WET_SPONGE, Blocks.JUNGLE_LEAVES, Blocks.OAK_LEAVES, Blocks.SPRUCE_LEAVES, Blocks.DARK_OAK_LEAVES, Blocks.ACACIA_LEAVES, Blocks.BIRCH_LEAVES);
-    protected static final Map<Block, BlockState> TILLABLES = Maps.newHashMap(ImmutableMap.of(Blocks.GRASS_BLOCK, Blocks.FARMLAND.defaultBlockState(), Blocks.GRASS_PATH, Blocks.FARMLAND.defaultBlockState(), Blocks.DIRT, Blocks.FARMLAND.defaultBlockState(), Blocks.COARSE_DIRT, Blocks.DIRT.defaultBlockState()));
+import javax.annotation.Nullable;
 
-    public EquipmentHoeItem(IItemTier p_i231595_1_, int p_i231595_2_, float p_i231595_3_, Item.Properties p_i231595_4_, LevEnchSup... levEnchSups) {
-        super((float)p_i231595_2_, p_i231595_3_, p_i231595_1_, DIGGABLES, p_i231595_4_.addToolType(net.minecraftforge.common.ToolType.HOE, p_i231595_1_.getLevel()), levEnchSups);
+public class EquipmentHoeItem extends HoeItem {
+    protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
+    private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
+    protected static final List<EquipmentHoeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
+    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
+
+    public EquipmentHoeItem(IItemTier tier, float damage, float attackSpeed, Item.Properties properties, LevEnchSup... levEnchSups) {
+        super(tier, (int)damage, attackSpeed, properties.rarity(OdysseyRarity.EQUIPMENT));
+        this.levEnchSupSet.add(UNENCHANTABLE);
+        Collections.addAll(this.levEnchSupSet, levEnchSups);
+        UNFINISHED_EQUIPMENT.add(this);
     }
 
-    public ActionResultType useOn(ItemUseContext p_195939_1_) {
-        World world = p_195939_1_.getLevel();
-        BlockPos blockpos = p_195939_1_.getClickedPos();
-        int hook = net.minecraftforge.event.ForgeEventFactory.onHoeUse(p_195939_1_);
-        if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
-        if (p_195939_1_.getClickedFace() != Direction.DOWN && world.isEmptyBlock(blockpos.above())) {
-            BlockState blockstate = world.getBlockState(blockpos).getToolModifiedState(world, blockpos, p_195939_1_.getPlayer(), p_195939_1_.getItemInHand(), net.minecraftforge.common.ToolType.HOE);
-            if (blockstate != null) {
-                PlayerEntity playerentity = p_195939_1_.getPlayer();
-                world.playSound(playerentity, blockpos, SoundEvents.HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                if (!world.isClientSide) {
-                    world.setBlock(blockpos, blockstate, 11);
-                    if (playerentity != null) {
-                        p_195939_1_.getItemInHand().hurtAndBreak(1, playerentity, (p_220043_1_) -> {
-                            p_220043_1_.broadcastBreakEvent(p_195939_1_.getHand());
-                        });
-                    }
-                }
-
-                return ActionResultType.sidedSuccess(world.isClientSide);
-            }
+    public static void initEquipment(){
+        for(final EquipmentHoeItem equipmentHoeItem : UNFINISHED_EQUIPMENT){
+            equipmentHoeItem.init();
         }
-
-        return ActionResultType.PASS;
+        UNFINISHED_EQUIPMENT.clear();
     }
 
-    @javax.annotation.Nullable
-    public static BlockState getHoeTillingState(BlockState originalState) {
-        return TILLABLES.get(originalState.getBlock());
+    public void init(){
+        for(LevEnchSup levEnchSup : this.levEnchSupSet){
+            this.enchantmentMap.put(levEnchSup.enchantmentSupplier.get(), levEnchSup.level);
+        }
+    }
+
+    public int getInnateEnchantmentLevel(Enchantment e) {
+        Integer i = this.enchantmentMap.get(e);
+        if(i == null)
+            return 0;
+        return i;
+    }
+
+    public Map<Enchantment, Integer> getInnateEnchantmentMap(){
+        return this.enchantmentMap;
+    }
+
+    /**
+     * allows items to add custom lines of information to the mouseover description
+     */
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        for(Enchantment e : this.enchantmentMap.keySet()){
+            if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
+                tooltip.add(1, EnchantmentUtil.getUnenchantableName());
+            else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
+                tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
+        }
     }
 }

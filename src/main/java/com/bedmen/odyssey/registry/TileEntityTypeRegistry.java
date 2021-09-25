@@ -27,4 +27,5 @@ public class TileEntityTypeRegistry {
     public static final RegistryObject<TileEntityType<RecycleFurnaceTileEntity>> RECYCLE_FURNACE = TILE_ENTITY_TYPES.register("recycle_furnace", () -> TileEntityType.Builder.of(RecycleFurnaceTileEntity::new, BlockRegistry.RECYCLE_FURNACE.get()).build(null));
     public static final RegistryObject<TileEntityType<ResearchTableTileEntity>> RESEARCH_TABLE = TILE_ENTITY_TYPES.register("research_table", () -> TileEntityType.Builder.of(ResearchTableTileEntity::new, BlockRegistry.RESEARCH_TABLE.get()).build(null));
     public static final RegistryObject<TileEntityType<SterlingSilverChestTileEntity>> STERLING_SILVER_CHEST = TILE_ENTITY_TYPES.register("sterling_silver_chest", () -> TileEntityType.Builder.of(SterlingSilverChestTileEntity::new, BlockRegistry.STERLING_SILVER_CHEST.get()).build(null));
+    public static final RegistryObject<TileEntityType<HollowCoconutTileEntity>> HOLLOW_COCONUT = TILE_ENTITY_TYPES.register("hollow_coconut", () -> TileEntityType.Builder.of(HollowCoconutTileEntity::new, BlockRegistry.HOLLOW_COCONUT.get()).build(null));
 }
