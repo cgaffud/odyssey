@@ -1,21 +1,27 @@
 package com.bedmen.odyssey.blocks;
 
+import com.bedmen.odyssey.tileentity.BookshelfTileEntity;
+import com.bedmen.odyssey.tileentity.HollowCoconutTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 
-public class HollowCoconutBlock extends Block {
+import javax.annotation.Nullable;
+
+public class HollowCoconutBlock extends Block implements ITileEntityProvider {
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
-    protected static final VoxelShape SHAPE_FLOOR = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
-    protected static final VoxelShape SHAPE_HANGING = Block.box(2.0D, 2.0D, 2.0D, 14.0D, 14.0D, 14.0D);
+    public static final VoxelShape SHAPE_FLOOR = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
+    public static final VoxelShape SHAPE_HANGING = Block.box(2.0D, 2.0D, 2.0D, 14.0D, 14.0D, 14.0D);
 
     public HollowCoconutBlock(Properties p_i48440_1_) {
         super(p_i48440_1_);
@@ -26,11 +32,16 @@ public class HollowCoconutBlock extends Block {
         return this.defaultBlockState().setValue(HANGING, context.getClickedFace() == Direction.DOWN);
     }
 
-    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        return p_220053_1_.getValue(HANGING) ? SHAPE_HANGING : SHAPE_FLOOR;
+    public VoxelShape getShape(BlockState blockState, IBlockReader iBlockReader, BlockPos blockPos, ISelectionContext selectionContext) {
+        return blockState.getValue(HANGING) ? SHAPE_HANGING : SHAPE_FLOOR;
     }
 
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> p_206840_1_) {
-        p_206840_1_.add(HANGING);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> blockStateBuilder) {
+        blockStateBuilder.add(HANGING);
+    }
+
+    @Nullable
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
+        return new HollowCoconutTileEntity();
     }
 }
