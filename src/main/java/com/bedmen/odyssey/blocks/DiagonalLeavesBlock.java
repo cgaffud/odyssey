@@ -65,22 +65,22 @@ public class DiagonalLeavesBlock extends LeavesBlock {
         return p_196271_1_;
     }
 
-    private static BlockState updateDistance(BlockState p_208493_0_, IWorld p_208493_1_, BlockPos p_208493_2_) {
+    private static BlockState updateDistance(BlockState blockState, IWorld world, BlockPos blockPos) {
         int i = 7;
         BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
 
         for(Direction direction : Direction.values()) {
-            blockpos$mutable.setWithOffset(p_208493_2_, direction);
-            i = Math.min(i, getDistanceAt(p_208493_1_.getBlockState(blockpos$mutable)) + 1);
+            blockpos$mutable.setWithOffset(blockPos, direction);
+            i = Math.min(i, getDistanceAt(world.getBlockState(blockpos$mutable)) + 1);
             if(direction.getAxis().isHorizontal()){
                 blockpos$mutable.setWithOffset(blockpos$mutable, direction.getClockWise());
-                i = Math.min(i, getDistanceAt(p_208493_1_.getBlockState(blockpos$mutable)) + 1);
+                i = Math.min(i, getDistanceAt(world.getBlockState(blockpos$mutable)) + 1);
             }
             if (i == 1) {
                 break;
             }
         }
-        return p_208493_0_.setValue(DISTANCE, i);
+        return blockState.setValue(DISTANCE, i);
     }
 
     private static int getDistanceAt(BlockState blockState) {

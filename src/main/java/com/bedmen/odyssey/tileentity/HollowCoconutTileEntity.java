@@ -2,6 +2,7 @@ package com.bedmen.odyssey.tileentity;
 
 import com.bedmen.odyssey.blocks.HollowCoconutBlock;
 import com.bedmen.odyssey.container.BookshelfContainer;
+import com.bedmen.odyssey.entity.item.FallingHollowCoconutEntity;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.TileEntityTypeRegistry;
 import net.minecraft.block.BlockState;
@@ -39,7 +40,7 @@ public class HollowCoconutTileEntity extends TileEntity implements ITickableTile
             AxisAlignedBB axisAlignedBB = HollowCoconutBlock.SHAPE_HANGING.bounds().move(blockPos).move(0.0d,-3.0d, 0.0d).inflate(0.0d, 2.0d, 0.0d);
             List<PlayerEntity> playerEntityList = this.level.getEntitiesOfClass(PlayerEntity.class, axisAlignedBB);
             if(!playerEntityList.isEmpty()){
-                FallingBlockEntity fallingblockentity = new FallingBlockEntity(this.level, (double)blockPos.getX() + 0.5D, (double)blockPos.getY(), (double)blockPos.getZ() + 0.5D, this.level.getBlockState(blockPos));
+                FallingBlockEntity fallingblockentity = new FallingHollowCoconutEntity(this.level, (double)blockPos.getX() + 0.5D, (double)blockPos.getY(), (double)blockPos.getZ() + 0.5D, this.level.getBlockState(blockPos).setValue(HollowCoconutBlock.HANGING, Boolean.FALSE));
                 this.level.addFreshEntity(fallingblockentity);
             }
         }

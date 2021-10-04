@@ -28,7 +28,7 @@
     "MixinCreativeScreen",
     "MixinServerPlayNetHandler",
     "MixinPiglinTasks",
-    "MixinFallingBlockEntity"
+    "MixinAbstractBlock"
   ],
   "injectors": {
     "defaultRequire": 1

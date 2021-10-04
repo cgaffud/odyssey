@@ -32,8 +32,8 @@ public class BiomeRegistry {
     public static void register()
     {
         registerBiome("autumn_forest", BiomeManager.BiomeType.COOL, 10, FOREST, OVERWORLD);
-        registerBiome("tropics", BiomeManager.BiomeType.COOL, 0, OVERWORLD);
-        registerBiome("tropical_beach", BiomeManager.BiomeType.COOL, 0, OVERWORLD);
+        registerBiome("tropics", BiomeManager.BiomeType.DESERT, 0, OVERWORLD);
+        registerBiome("tropical_beach", BiomeManager.BiomeType.DESERT, 0, OVERWORLD);
     }
 
     private static void registerBiome(String biomeName, BiomeManager.BiomeType type, int weight,  BiomeDictionary.Type... types) {
