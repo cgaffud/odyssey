@@ -80,15 +80,6 @@ public class DiagonalLeavesBlock extends LeavesBlock {
                 break;
             }
         }
-        if(blockState.getValue(DISTANCE) != i){
-            for(Direction direction : Direction.values()) {
-                if (direction.getAxis().isHorizontal()) {
-                    blockpos$mutable.setWithOffset(blockPos, direction);
-                    blockpos$mutable.setWithOffset(blockpos$mutable, direction.getClockWise());
-                    world.getBlockTicks().scheduleTick(blockpos$mutable, blockState.getBlock(), 1);
-                }
-            }
-        }
         return blockState.setValue(DISTANCE, i);
     }
 
