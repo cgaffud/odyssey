@@ -25,5 +25,6 @@ public class OdysseyNetwork {
         //Server to Client
         CHANNEL.registerMessage(4, SoundPacket.class, SoundPacket::encode, SoundPacket::decode, SoundPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(5, PermanentBuffsPacket.class, PermanentBuffsPacket::encode, PermanentBuffsPacket::decode, PermanentBuffsPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(5, SignPacket.class, SignPacket::encode, SignPacket::decode, SignPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 }

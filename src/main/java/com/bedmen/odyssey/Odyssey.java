@@ -2,6 +2,7 @@ package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.blocks.OdysseyWoodType;
 import com.bedmen.odyssey.client.renderer.entity.renderer.*;
+import com.bedmen.odyssey.client.renderer.tileentity.OdysseySignTileEntityRenderer;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
@@ -36,6 +37,7 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.tileentity.SignTileEntityRenderer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
@@ -135,6 +137,7 @@ public class Odyssey
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.STERLING_SILVER_CHEST.get(), SterlingSilverChestTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.SIGN.get(), OdysseySignTileEntityRenderer::new);
 
         //Container Screens
         ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);

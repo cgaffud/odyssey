@@ -61,10 +61,10 @@ public class PalmTreeFeature extends Feature<BaseTreeFeatureConfig> {
         });
     }
 
-    private static boolean isSand(IWorldGenerationBaseReader p_236418_0_, BlockPos p_236418_1_) {
+    private static boolean isGrassOrDirtOrFarmlandOrSand(IWorldGenerationBaseReader p_236418_0_, BlockPos p_236418_1_) {
         return p_236418_0_.isStateAtPosition(p_236418_1_, (p_236409_0_) -> {
             Block block = p_236409_0_.getBlock();
-            return block == Blocks.SAND;
+            return isDirt(block) || block == Blocks.FARMLAND || block == Blocks.SAND;
         });
     }
 
@@ -111,7 +111,7 @@ public class PalmTreeFeature extends Feature<BaseTreeFeatureConfig> {
         }
 
         if (blockpos.getY() >= 1 && blockpos.getY() + i + 1 <= 256) {
-            if (!isSand(p_225557_1_, blockpos.below())) {
+            if (!isGrassOrDirtOrFarmlandOrSand(p_225557_1_, blockpos.below())) {
                 return false;
             } else {
                 OptionalInt optionalint = p_225557_7_.minimumSize.minClippedHeight();

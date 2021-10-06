@@ -1,1 +1,7 @@
-{"variants": {"": {"model": "oddc:block/palm_leaves"}}}
+{
+  "variants": {
+    "": {
+      "model": "oddc:block/palm_leaves"
+    }
+  }
+}

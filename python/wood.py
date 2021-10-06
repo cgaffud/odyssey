@@ -1,9 +1,10 @@
 import json
+import os
 
-def write(fileNames, jsons):
-    assert len(fileNames) == len(jsons)
+def write(fileNames, L):
+    assert len(fileNames) == len(L)
     for i in range(len(fileNames)):
-        jsonString = json.dumps(jsons[i], indent = 2)
+        jsonString = json.dumps(L[i], indent = 2)
         jsonFile = open(fileNames[i], "w")
         jsonFile.write(jsonString)
         jsonFile.close()
@@ -33,115 +34,115 @@ def doBlockStates(name):
     blockStates = [
         {
           "variants": {
-            "face=ceiling,facing=east,powered=False": {
+            "face=ceiling,facing=east,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "y": 270,
               "x": 180
             },
-            "face=ceiling,facing=east,powered=True": {
+            "face=ceiling,facing=east,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "y": 270,
               "x": 180
             },
-            "face=ceiling,facing=north,powered=False": {
+            "face=ceiling,facing=north,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "y": 180,
               "x": 180
             },
-            "face=ceiling,facing=north,powered=True": {
+            "face=ceiling,facing=north,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "y": 180,
               "x": 180
             },
-            "face=ceiling,facing=south,powered=False": {
+            "face=ceiling,facing=south,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "x": 180
             },
-            "face=ceiling,facing=south,powered=True": {
+            "face=ceiling,facing=south,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "x": 180
             },
-            "face=ceiling,facing=west,powered=False": {
+            "face=ceiling,facing=west,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "y": 90,
               "x": 180
             },
-            "face=ceiling,facing=west,powered=True": {
+            "face=ceiling,facing=west,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "y": 90,
               "x": 180
             },
-            "face=floor,facing=east,powered=False": {
+            "face=floor,facing=east,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "y": 90
             },
-            "face=floor,facing=east,powered=True": {
+            "face=floor,facing=east,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "y": 90
             },
-            "face=floor,facing=north,powered=False": {
+            "face=floor,facing=north,powered=false": {
               "model": "oddc:block/"+name+"_button"
             },
-            "face=floor,facing=north,powered=True": {
+            "face=floor,facing=north,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed"
             },
-            "face=floor,facing=south,powered=False": {
+            "face=floor,facing=south,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "y": 180
             },
-            "face=floor,facing=south,powered=True": {
+            "face=floor,facing=south,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "y": 180
             },
-            "face=floor,facing=west,powered=False": {
+            "face=floor,facing=west,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "y": 270
             },
-            "face=floor,facing=west,powered=True": {
+            "face=floor,facing=west,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "y": 270
             },
-            "face=wall,facing=east,powered=False": {
+            "face=wall,facing=east,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "y": 90,
               "x": 90,
               "uvlock": True
             },
-            "face=wall,facing=east,powered=True": {
+            "face=wall,facing=east,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "y": 90,
               "x": 90,
               "uvlock": True
             },
-            "face=wall,facing=north,powered=False": {
+            "face=wall,facing=north,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "x": 90,
               "uvlock": True
             },
-            "face=wall,facing=north,powered=True": {
+            "face=wall,facing=north,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "x": 90,
               "uvlock": True
             },
-            "face=wall,facing=south,powered=False": {
+            "face=wall,facing=south,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "y": 180,
               "x": 90,
               "uvlock": True
             },
-            "face=wall,facing=south,powered=True": {
+            "face=wall,facing=south,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "y": 180,
               "x": 90,
               "uvlock": True
             },
-            "face=wall,facing=west,powered=False": {
+            "face=wall,facing=west,powered=false": {
               "model": "oddc:block/"+name+"_button",
               "y": 270,
               "x": 90,
               "uvlock": True
             },
-            "face=wall,facing=west,powered=True": {
+            "face=wall,facing=west,powered=true": {
               "model": "oddc:block/"+name+"_button_pressed",
               "y": 270,
               "x": 90,
@@ -151,123 +152,123 @@ def doBlockStates(name):
         },
         {
           "variants": {
-            "facing=east,half=lower,hinge=left,open=False": {
+            "facing=east,half=lower,hinge=left,open=false": {
               "model": "oddc:block/"+name+"_door_bottom"
             },
-            "facing=east,half=lower,hinge=left,open=True": {
+            "facing=east,half=lower,hinge=left,open=true": {
               "model": "oddc:block/"+name+"_door_bottom_hinge",
               "y": 90
             },
-            "facing=east,half=lower,hinge=right,open=False": {
+            "facing=east,half=lower,hinge=right,open=false": {
               "model": "oddc:block/"+name+"_door_bottom_hinge"
             },
-            "facing=east,half=lower,hinge=right,open=True": {
+            "facing=east,half=lower,hinge=right,open=true": {
               "model": "oddc:block/"+name+"_door_bottom",
               "y": 270
             },
-            "facing=east,half=upper,hinge=left,open=False": {
+            "facing=east,half=upper,hinge=left,open=false": {
               "model": "oddc:block/"+name+"_door_top"
             },
-            "facing=east,half=upper,hinge=left,open=True": {
+            "facing=east,half=upper,hinge=left,open=true": {
               "model": "oddc:block/"+name+"_door_top_hinge",
               "y": 90
             },
-            "facing=east,half=upper,hinge=right,open=False": {
+            "facing=east,half=upper,hinge=right,open=false": {
               "model": "oddc:block/"+name+"_door_top_hinge"
             },
-            "facing=east,half=upper,hinge=right,open=True": {
+            "facing=east,half=upper,hinge=right,open=true": {
               "model": "oddc:block/"+name+"_door_top",
               "y": 270
             },
-            "facing=north,half=lower,hinge=left,open=False": {
+            "facing=north,half=lower,hinge=left,open=false": {
               "model": "oddc:block/"+name+"_door_bottom",
               "y": 270
             },
-            "facing=north,half=lower,hinge=left,open=True": {
+            "facing=north,half=lower,hinge=left,open=true": {
               "model": "oddc:block/"+name+"_door_bottom_hinge"
             },
-            "facing=north,half=lower,hinge=right,open=False": {
+            "facing=north,half=lower,hinge=right,open=false": {
               "model": "oddc:block/"+name+"_door_bottom_hinge",
               "y": 270
             },
-            "facing=north,half=lower,hinge=right,open=True": {
+            "facing=north,half=lower,hinge=right,open=true": {
               "model": "oddc:block/"+name+"_door_bottom",
               "y": 180
             },
-            "facing=north,half=upper,hinge=left,open=False": {
+            "facing=north,half=upper,hinge=left,open=false": {
               "model": "oddc:block/"+name+"_door_top",
               "y": 270
             },
-            "facing=north,half=upper,hinge=left,open=True": {
+            "facing=north,half=upper,hinge=left,open=true": {
               "model": "oddc:block/"+name+"_door_top_hinge"
             },
-            "facing=north,half=upper,hinge=right,open=False": {
+            "facing=north,half=upper,hinge=right,open=false": {
               "model": "oddc:block/"+name+"_door_top_hinge",
               "y": 270
             },
-            "facing=north,half=upper,hinge=right,open=True": {
+            "facing=north,half=upper,hinge=right,open=true": {
               "model": "oddc:block/"+name+"_door_top",
               "y": 180
             },
-            "facing=south,half=lower,hinge=left,open=False": {
+            "facing=south,half=lower,hinge=left,open=false": {
               "model": "oddc:block/"+name+"_door_bottom",
               "y": 90
             },
-            "facing=south,half=lower,hinge=left,open=True": {
+            "facing=south,half=lower,hinge=left,open=true": {
               "model": "oddc:block/"+name+"_door_bottom_hinge",
               "y": 180
             },
-            "facing=south,half=lower,hinge=right,open=False": {
+            "facing=south,half=lower,hinge=right,open=false": {
               "model": "oddc:block/"+name+"_door_bottom_hinge",
               "y": 90
             },
-            "facing=south,half=lower,hinge=right,open=True": {
+            "facing=south,half=lower,hinge=right,open=true": {
               "model": "oddc:block/"+name+"_door_bottom"
             },
-            "facing=south,half=upper,hinge=left,open=False": {
+            "facing=south,half=upper,hinge=left,open=false": {
               "model": "oddc:block/"+name+"_door_top",
               "y": 90
             },
-            "facing=south,half=upper,hinge=left,open=True": {
+            "facing=south,half=upper,hinge=left,open=true": {
               "model": "oddc:block/"+name+"_door_top_hinge",
               "y": 180
             },
-            "facing=south,half=upper,hinge=right,open=False": {
+            "facing=south,half=upper,hinge=right,open=false": {
               "model": "oddc:block/"+name+"_door_top_hinge",
               "y": 90
             },
-            "facing=south,half=upper,hinge=right,open=True": {
+            "facing=south,half=upper,hinge=right,open=true": {
               "model": "oddc:block/"+name+"_door_top"
             },
-            "facing=west,half=lower,hinge=left,open=False": {
+            "facing=west,half=lower,hinge=left,open=false": {
               "model": "oddc:block/"+name+"_door_bottom",
               "y": 180
             },
-            "facing=west,half=lower,hinge=left,open=True": {
+            "facing=west,half=lower,hinge=left,open=true": {
               "model": "oddc:block/"+name+"_door_bottom_hinge",
               "y": 270
             },
-            "facing=west,half=lower,hinge=right,open=False": {
+            "facing=west,half=lower,hinge=right,open=false": {
               "model": "oddc:block/"+name+"_door_bottom_hinge",
               "y": 180
             },
-            "facing=west,half=lower,hinge=right,open=True": {
+            "facing=west,half=lower,hinge=right,open=true": {
               "model": "oddc:block/"+name+"_door_bottom",
               "y": 90
             },
-            "facing=west,half=upper,hinge=left,open=False": {
+            "facing=west,half=upper,hinge=left,open=false": {
               "model": "oddc:block/"+name+"_door_top",
               "y": 180
             },
-            "facing=west,half=upper,hinge=left,open=True": {
+            "facing=west,half=upper,hinge=left,open=true": {
               "model": "oddc:block/"+name+"_door_top_hinge",
               "y": 270
             },
-            "facing=west,half=upper,hinge=right,open=False": {
+            "facing=west,half=upper,hinge=right,open=false": {
               "model": "oddc:block/"+name+"_door_top_hinge",
               "y": 180
             },
-            "facing=west,half=upper,hinge=right,open=True": {
+            "facing=west,half=upper,hinge=right,open=true": {
               "model": "oddc:block/"+name+"_door_top",
               "y": 90
             }
@@ -282,7 +283,7 @@ def doBlockStates(name):
             },
             {
               "when": {
-                "north": "True"
+                "north": "true"
               },
               "apply": {
                 "model": "oddc:block/"+name+"_fence_side",
@@ -291,7 +292,7 @@ def doBlockStates(name):
             },
             {
               "when": {
-                "east": "True"
+                "east": "true"
               },
               "apply": {
                 "model": "oddc:block/"+name+"_fence_side",
@@ -301,7 +302,7 @@ def doBlockStates(name):
             },
             {
               "when": {
-                "south": "True"
+                "south": "true"
               },
               "apply": {
                 "model": "oddc:block/"+name+"_fence_side",
@@ -311,7 +312,7 @@ def doBlockStates(name):
             },
             {
               "when": {
-                "west": "True"
+                "west": "true"
               },
               "apply": {
                 "model": "oddc:block/"+name+"_fence_side",
@@ -323,78 +324,78 @@ def doBlockStates(name):
         },
         {
           "variants": {
-            "facing=east,in_wall=False,open=False": {
+            "facing=east,in_wall=false,open=false": {
               "uvlock": True,
               "y": 270,
               "model": "oddc:block/"+name+"_fence_gate"
             },
-            "facing=east,in_wall=False,open=True": {
+            "facing=east,in_wall=false,open=true": {
               "uvlock": True,
               "y": 270,
               "model": "oddc:block/"+name+"_fence_gate_open"
             },
-            "facing=east,in_wall=True,open=False": {
+            "facing=east,in_wall=true,open=false": {
               "uvlock": True,
               "y": 270,
               "model": "oddc:block/"+name+"_fence_gate_wall"
             },
-            "facing=east,in_wall=True,open=True": {
+            "facing=east,in_wall=true,open=true": {
               "uvlock": True,
               "y": 270,
               "model": "oddc:block/"+name+"_fence_gate_wall_open"
             },
-            "facing=north,in_wall=False,open=False": {
+            "facing=north,in_wall=false,open=false": {
               "uvlock": True,
               "y": 180,
               "model": "oddc:block/"+name+"_fence_gate"
             },
-            "facing=north,in_wall=False,open=True": {
+            "facing=north,in_wall=false,open=true": {
               "uvlock": True,
               "y": 180,
               "model": "oddc:block/"+name+"_fence_gate_open"
             },
-            "facing=north,in_wall=True,open=False": {
+            "facing=north,in_wall=true,open=false": {
               "uvlock": True,
               "y": 180,
               "model": "oddc:block/"+name+"_fence_gate_wall"
             },
-            "facing=north,in_wall=True,open=True": {
+            "facing=north,in_wall=true,open=true": {
               "uvlock": True,
               "y": 180,
               "model": "oddc:block/"+name+"_fence_gate_wall_open"
             },
-            "facing=south,in_wall=False,open=False": {
+            "facing=south,in_wall=false,open=false": {
               "uvlock": True,
               "model": "oddc:block/"+name+"_fence_gate"
             },
-            "facing=south,in_wall=False,open=True": {
+            "facing=south,in_wall=false,open=true": {
               "uvlock": True,
               "model": "oddc:block/"+name+"_fence_gate_open"
             },
-            "facing=south,in_wall=True,open=False": {
+            "facing=south,in_wall=true,open=false": {
               "uvlock": True,
               "model": "oddc:block/"+name+"_fence_gate_wall"
             },
-            "facing=south,in_wall=True,open=True": {
+            "facing=south,in_wall=true,open=true": {
               "uvlock": True,
               "model": "oddc:block/"+name+"_fence_gate_wall_open"
             },
-            "facing=west,in_wall=False,open=False": {
+            "facing=west,in_wall=false,open=false": {
               "uvlock": True,
               "y": 90,
               "model": "oddc:block/"+name+"_fence_gate"
             },
-            "facing=west,in_wall=False,open=True": {
+            "facing=west,in_wall=false,open=true": {
               "uvlock": True,
               "y": 90,
               "model": "oddc:block/"+name+"_fence_gate_open"
             },
-            "facing=west,in_wall=True,open=False": {
+            "facing=west,in_wall=true,open=false": {
               "uvlock": True,
               "y": 90,
               "model": "oddc:block/"+name+"_fence_gate_wall"
             },
-            "facing=west,in_wall=True,open=True": {
+            "facing=west,in_wall=true,open=true": {
               "uvlock": True,
               "y": 90,
               "model": "oddc:block/"+name+"_fence_gate_wall_open"
@@ -433,10 +434,10 @@ def doBlockStates(name):
         },
         {
           "variants": {
-            "powered=False": {
+            "powered=false": {
               "model": "oddc:block/"+name+"_pressure_plate"
             },
-            "powered=True": {
+            "powered=true": {
               "model": "oddc:block/"+name+"_pressure_plate_down"
             }
           }
@@ -679,67 +680,68 @@ def doBlockStates(name):
         },
         {
           "variants": {
-            "facing=east,half=bottom,open=False": {
+            "facing=east,half=bottom,open=false": {
               "model": "oddc:block/"+name+"_trapdoor_bottom",
               "y": 90
             },
-            "facing=east,half=bottom,open=True": {
+            "facing=east,half=bottom,open=true": {
               "model": "oddc:block/"+name+"_trapdoor_open",
               "y": 90
             },
-            "facing=east,half=top,open=False": {
+            "facing=east,half=top,open=false": {
               "model": "oddc:block/"+name+"_trapdoor_top",
               "y": 90
             },
-            "facing=east,half=top,open=True": {
+            "facing=east,half=top,open=true": {
               "model": "oddc:block/"+name+"_trapdoor_open",
               "x": 180,
               "y": 270
             },
-            "facing=north,half=bottom,open=False": {
+            "facing=north,half=bottom,open=false": {
               "model": "oddc:block/"+name+"_trapdoor_bottom"
             },
-            "facing=north,half=bottom,open=True": {
+            "facing=north,half=bottom,open=true": {
               "model": "oddc:block/"+name+"_trapdoor_open"
             },
-            "facing=north,half=top,open=False": {
+            "facing=north,half=top,open=false": {
               "model": "oddc:block/"+name+"_trapdoor_top"
             },
-            "facing=north,half=top,open=True": {
+            "facing=north,half=top,open=true": {
               "model": "oddc:block/"+name+"_trapdoor_open",
               "x": 180,
               "y": 180
             },
-            "facing=south,half=bottom,open=False": {
+            "facing=south,half=bottom,open=false": {
               "model": "oddc:block/"+name+"_trapdoor_bottom",
               "y": 180
             },
-            "facing=south,half=bottom,open=True": {
+            "facing=south,half=bottom,open=true": {
               "model": "oddc:block/"+name+"_trapdoor_open",
               "y": 180
             },
-            "facing=south,half=top,open=False": {
+            "facing=south,half=top,open=false": {
+                
               "model": "oddc:block/"+name+"_trapdoor_top",
               "y": 180
             },
-            "facing=south,half=top,open=True": {
+            "facing=south,half=top,open=true": {
               "model": "oddc:block/"+name+"_trapdoor_open",
               "x": 180,
               "y": 0
             },
-            "facing=west,half=bottom,open=False": {
+            "facing=west,half=bottom,open=false": {
               "model": "oddc:block/"+name+"_trapdoor_bottom",
               "y": 270
             },
-            "facing=west,half=bottom,open=True": {
+            "facing=west,half=bottom,open=true": {
               "model": "oddc:block/"+name+"_trapdoor_open",
               "y": 270
             },
-            "facing=west,half=top,open=False": {
+            "facing=west,half=top,open=false": {
               "model": "oddc:block/"+name+"_trapdoor_top",
               "y": 270
             },
-            "facing=west,half=top,open=True": {
+            "facing=west,half=top,open=true": {
               "model": "oddc:block/"+name+"_trapdoor_open",
               "x": 180,
               "y": 90
@@ -852,6 +854,12 @@ def doBlockModels(name):
     fileNames = [r"..\src\main\resources\assets\oddc\models\block\\"+itemName+".json" for itemName in itemNames]
     blockModels = [
         {
+          "parent": "minecraft:block/button",
+          "textures": {
+            "texture": "oddc:block/"+name+"_planks"
+          }
+        },
+        {
           "parent": "minecraft:block/button_inventory",
           "textures": {
             "texture": "oddc:block/"+name+"_planks"
@@ -859,12 +867,6 @@ def doBlockModels(name):
         },
         {
           "parent": "minecraft:block/button_pressed",
-          "textures": {
-            "texture": "oddc:block/"+name+"_planks"
-          }
-        },
-        {
-          "parent": "minecraft:block/button",
           "textures": {
             "texture": "oddc:block/"+name+"_planks"
           }
@@ -1705,6 +1707,10 @@ def doRecipes(name):
         name+"_wood",
         "stripped_"+name+"_wood"
     ]
+    try:
+        os.mkdir(r"..\src\main\resources\data\oddc\recipes\crafting\\"+name)
+    except:
+        print("Directory "+name+" already exists")
     fileNames = [r"..\src\main\resources\data\oddc\recipes\crafting\\"+name+"\\"+itemName+".json" for itemName in itemNames]
     recipes = [
         {
@@ -2022,7 +2028,7 @@ def doItemTags(name):
         tagFile.close()
 
 def doLang(name, lang_name):
-    filepath = r"..\src\main\resources\assets\oddc\lang\en_us_no_comments.json"
+    filepath = r"..\src\main\resources\assets\oddc\lang\en_us.json"
     blockNames = [
         ("block.oddc."+name+"_button", lang_name+" Button"),
         ("block.oddc."+name+"_door", lang_name+" Door"),

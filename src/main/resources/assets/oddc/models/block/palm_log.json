@@ -1,1 +1,7 @@
-{"parent": "minecraft:block/cube_column", "textures": {"end": "oddc:block/palm_log_top", "side":"oddc:block/palm_log"}}
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "oddc:block/palm_log_top",
+    "side": "oddc:block/palm_log"
+  }
+}
