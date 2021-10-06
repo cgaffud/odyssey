@@ -1968,7 +1968,8 @@ def doBlockTags(name):
         tagFile = open(tag, "r")
         tagData = json.load(tagFile)
         tagFile.close()
-        tagData["values"].append(pair[1])
+        if(pair[1] not in tagData["values"]):
+            tagData["values"].append(pair[1])
         tagJSON = json.dumps(tagData, indent = 2)
         tagFile = open(tag, "w")
         tagFile.write(tagJSON)
@@ -2009,17 +2010,54 @@ def doItemTags(name):
     ]
 
     for pair in tagDataPairs:
-        tag = filepath+pair{0]+".json"
+        tag = filepath+pair[0]+".json"
         tagFile = open(tag, "r")
         tagData = json.load(tagFile)
         tagFile.close()
-        tagData["values"].append(pair[1])
+        if(pair[1] not in tagData["values"]):
+            tagData["values"].append(pair[1])
         tagJSON = json.dumps(tagData, indent = 2)
         tagFile = open(tag, "w")
         tagFile.write(tagJSON)
         tagFile.close()
+
+def doLang(name, lang_name):
+    filepath = r"..\src\main\resources\assets\oddc\lang\en_us_no_comments.json"
+    blockNames = [
+        ("block.oddc."+name+"_button", lang_name+" Button"),
+        ("block.oddc."+name+"_door", lang_name+" Door"),
+        ("block.oddc."+name+"_fence", lang_name+" Fence"),
+        ("block.oddc."+name+"_fence_gate", lang_name+" Fence Gate"),
+        ("block.oddc."+name+"_leaves", lang_name+" Leaves"),
+        ("block.oddc."+name+"_log", lang_name+" Log"),
+        ("block.oddc."+name+"_planks", lang_name+" Planks"),
+        ("block.oddc."+name+"_pressure_plate", lang_name+" Pressure Plate"),
+        ("block.oddc."+name+"_sapling", lang_name+" Sapling"),
+        ("block.oddc."+name+"_sign", lang_name+" Sign"),
+        ("block.oddc."+name+"_slab", lang_name+" Slab"),
+        ("block.oddc."+name+"_stairs", lang_name+" Stairs"),
+        ("block.oddc."+name+"_trapdoor", lang_name+" Trapdoor"),
+        ("block.oddc."+name+"_wall_sign", lang_name+" Wall Sign"),
+        ("block.oddc."+name+"_wood", lang_name+" Wood"),
+        ("block.oddc.potted_"+name+"_sapling", "Potted "+lang_name+" Sapling"),
+        ("block.oddc.stripped_"+name+"_log", "Stripped "+lang_name+" Log"),
+        ("block.oddc.stripped_"+name+"_wood", "Stripped "+lang_name+" Wood"),
+        ("item.oddc."+name+"_boat", lang_name+" Boat") 
+    ]
+
+    tagFile = open(filepath, "r")
+    tagData = json.load(tagFile)
+    tagFile.close()
+    for pair in blockNames:
+        if(pair[0] not in tagData):
+            tagData[pair[0]] = pair[1]
+    tagJSON = json.dumps(tagData, indent = 2)
+    tagFile = open(filepath, "w")
+    tagFile.write(tagJSON)
+    tagFile.close()
         
 name = "palm"
+lang_name = "Palm"
 doBlockStates(name)
 doBlockModels(name)
 doItemModels(name)
@@ -2027,10 +2065,10 @@ doLootTables(name)
 doRecipes(name)
 doBlockTags(name)
 doItemTags(name)
+doLang(name, lang_name)
 
 # Missing funcitonality
 # Block Registration
 # Item Registration
-# Lang
 
 print("Done")
