@@ -1,12 +1,9 @@
 {
-  //1.17 Materials
   "item.oddc.raw_copper": "Raw Copper",
   "item.oddc.copper_ingot": "Copper Ingot",
   "item.oddc.raw_iron": "Raw Iron",
   "item.oddc.raw_gold": "Raw Gold",
   "item.oddc.amethyst_shard": "Amethyst Shard",
-
-  //New Items
   "item.oddc.leather_quiver": "Leather Quiver",
   "item.oddc.copper_nugget": "Copper Nugget",
   "item.oddc.clover": "Clover",
@@ -25,38 +22,24 @@
   "item.oddc.malevolent_quill": "Malevolent Quill",
   "item.oddc.purge_tablet": "Purge Tablet",
   "item.oddc.coconut_flower": "Coconut Flower",
-
-  //Food
   "item.oddc.life_fruit": "Life Fruit",
-
-  //Bats
   "item.oddc.granite_bat": "Granite Bat",
   "item.oddc.copper_bat": "Copper Bat",
   "item.oddc.obsidian_bat": "Obsidian Bat",
-
-  //Hammers
   "item.oddc.granite_hammer": "Granite Hammer",
   "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.obsidian_hammer": "Obsidian Hammer",
-
-  //Chicken Suit
   "item.oddc.chicken_boots": "Feathered Boots",
   "item.oddc.chicken_leggings": "Feathered Pants",
   "item.oddc.chicken_chestplate": "Feathered Tunic",
   "item.oddc.chicken_helmet": "Feathered Cap",
-
-  //Turtle Armor
   "item.oddc.turtle_boots": "Turtle Boots",
   "item.oddc.turtle_leggings": "Turtle Leggings",
   "item.oddc.turtle_chestplate": "Turtle Chestplate",
-
-  //Reinforced Armor
   "item.oddc.reinforced_boots": "Reinforced Boots",
   "item.oddc.reinforced_leggings": "Reinforced Leggings",
   "item.oddc.reinforced_chestplate": "Reinforced Chestplate",
   "item.oddc.reinforced_helmet": "Reinforced Helmet",
-
-  //Silver and Sterling Silver
   "item.oddc.silver_nugget": "Silver Nugget",
   "item.oddc.raw_silver": "Raw Silver",
   "item.oddc.silver_ingot": "Silver Ingot",
@@ -73,15 +56,11 @@
   "item.oddc.sterling_silver_helmet": "Sterling Silver Helmet",
   "item.oddc.sterling_silver_horse_armor": "Sterling Silver Horse Armor",
   "item.oddc.sterling_silver_key": "Sterling Silver Key",
-
-  //Arctic
   "item.oddc.arctic_boots": "Arctic Boots",
   "item.oddc.arctic_leggings": "Arctic Leggings",
   "item.oddc.arctic_chestplate": "Arctic Chestplate",
   "item.oddc.arctic_helmet": "Arctic Helmet",
   "item.oddc.arctic_amulet": "Arctic Amulet",
-
-  //Marine
   "item.oddc.marine_pickaxe": "Marine Pickaxe",
   "item.oddc.marine_axe": "Marine Axe",
   "item.oddc.marine_shovel": "Marine Shovel",
@@ -90,22 +69,16 @@
   "item.oddc.marine_leggings": "Marine Leggings",
   "item.oddc.marine_chestplate": "Marine Chestplate",
   "item.oddc.marine_helmet": "Marine Helmet",
-
-  //Zephyr
   "item.oddc.zephyr_boots": "Zephyr Boots",
   "item.oddc.zephyr_leggings": "Zephyr Pants",
   "item.oddc.zephyr_chestplate": "Zephyr Tunic",
   "item.oddc.zephyr_helmet": "Zephyr Cap",
-
-  //Nether
   "item.oddc.golden_amulet": "Golden Amulet",
   "item.oddc.netherite_nugget": "Netherite Nugget",
   "item.oddc.netherite_bow": "Netherite Bow",
   "item.oddc.netherite_crossbow": "Netherite Crossbow",
   "item.oddc.netherite_horse_armor": "Netherite Horse Armor",
   "item.oddc.hallowed_gold_ingot": "Hallowed Gold Ingot",
-
-  //Leviathan
   "item.oddc.leviathan_boots": "Leviathan Boots",
   "item.oddc.leviathan_leggings": "Leviathan Leggings",
   "item.oddc.leviathan_chestplate": "Leviathan Chestplate",
@@ -130,15 +103,11 @@
   "item.oddc.leviathan_shield.light_gray": "Light Gray Leviathan Shield",
   "item.oddc.leviathan_shield.gray": "Gray Leviathan Shield",
   "item.oddc.leviathan_shield.black": "Black Leviathan Shield",
-
-  //Containers
   "container.minecraft.beacon": "Beacon",
   "container.oddc.alloy_furnace": "Alloy Furnace",
   "container.oddc.recycle_furnace": "Recycling Furnace",
   "container.oddc.bookshelf": "Bookshelf",
   "container.oddc.research_table": "Research",
-
-  //Enchantments
   "enchantment.oddc.accuracy": "Accuracy",
   "enchantment.oddc.blocking": "Blocking",
   "enchantment.oddc.recovery": "Recovery",
@@ -147,26 +116,18 @@
   "enchantment.oddc.molten_affinity": "Molten Affinity",
   "enchantment.oddc.eruption": "Eruption",
   "enchantment.oddc.pyropneumatic": "Pyropneumatic",
-
-  //Set Bonus Enchantments
   "enchantment.oddc.slow_falling": "Slow Falling",
   "enchantment.oddc.gliding": "Gliding",
   "enchantment.oddc.turtling": "Turtling",
   "enchantment.oddc.fireproof": "Fireproof",
-
-  //Curses
   "enchantment.oddc.unenchantable": "Unenchantable",
   "enchantment.oddc.bleeding": "Bleeding",
   "enchantment.oddc.drowning": "Drowning",
   "enchantment.oddc.heavy": "Heavy",
   "enchantment.oddc.volatile": "Volatile",
-
-  //Setbonus
   "item.oddc.equipment.setbonus": "Set Bonus: ",
   "item.oddc.equipment.key": " Key]",
   "item.oddc.equipment.passive": " [Passive]",
-
-  //Blocks
   "block.oddc.alloy_furnace": "Alloy Furnace",
   "block.oddc.recycle_furnace": "Recycling Furnace",
   "block.oddc.research_table": "Research Table",
@@ -199,46 +160,31 @@
   "block.oddc.coconut": "Coconut",
   "block.oddc.hollow_coconut": "Hollow Coconut",
   "block.oddc.frosted_obsidian": "Frosted Obsidian",
-
-  //Entities
   "entity.oddc.lupine": "Lupine",
   "entity.oddc.arctihorn": "Arctihorn",
-
-  //Bosses
   "entity.oddc.mineral_leviathan": "Mineral Leviathan",
   "entity.oddc.mineral_leviathan_body": "Mineral Leviathan",
   "entity.oddc.permafrost": "Permafrost",
-
-  //Projectiles
   "entity.oddc.trident": "Trident",
   "entity.oddc.leviathan_trident": "Leviathan Trident",
   "entity.oddc.permafrost_icicle": "Permafrost Icicle",
-
-  //Spawn Eggs
   "item.oddc.lupine_spawn_egg": "Lupine Spawn Egg",
   "item.oddc.arctihorn_spawn_egg": "Arctihorn Spawn Egg",
-
-  //ItemGroup (Creative Tab)
   "itemGroup.oddc_building_blocks": "Odyssey Building Blocks",
   "itemGroup.oddc_decoration_blocks": "Odyssey Decoration Blocks",
+  "itemGroup.oddc_redstone": "Odyssey Redstone",
+  "itemGroup.oddc_transportation": "Odyssey Transportation",
   "itemGroup.oddc_materials": "Odyssey Materials",
   "itemGroup.oddc_tools": "Odyssey Tools",
   "itemGroup.oddc_combat": "Odyssey Combat",
   "itemGroup.oddc_magic": "Odyssey Magic",
   "itemGroup.oddc_spawn_eggs": "Odyssey Spawn Eggs",
-
-  //Biome
   "biome.oddc.autumn_forest": "Autumn Forest",
   "biome.oddc.tropics": "Tropics",
   "biome.oddc.tropical_beach": "Tropical Beach",
-
-  //Potions
-
-
   "effect.oddc.construction": "Construction",
   "effect.oddc.building_fatigue": "Building Fatigue",
   "effect.oddc.lava_vision": "Lava Vision",
-
   "item.minecraft.potion.effect.haste": "Potion of Haste",
   "item.minecraft.potion.effect.long_haste": "Potion of Haste",
   "item.minecraft.potion.effect.strong_haste": "Potion of Haste",
@@ -251,7 +197,6 @@
   "item.minecraft.lingering_potion.effect.haste": "Lingering Potion of Haste",
   "item.minecraft.lingering_potion.effect.long_haste": "Lingering Potion of Haste",
   "item.minecraft.lingering_potion.effect.strong_haste": "Lingering Potion of Haste",
-
   "item.minecraft.potion.effect.mining_fatigue": "Potion of Mining Fatigue",
   "item.minecraft.potion.effect.long_mining_fatigue": "Potion of Mining Fatigue",
   "item.minecraft.potion.effect.strong_mining_fatigue": "Potion of Mining Fatigue",
@@ -264,7 +209,6 @@
   "item.minecraft.lingering_potion.effect.mining_fatigue": "Lingering Potion of Mining Fatigue",
   "item.minecraft.lingering_potion.effect.long_mining_fatigue": "Lingering Potion of Mining Fatigue",
   "item.minecraft.lingering_potion.effect.strong_mining_fatigue": "Lingering Potion of Mining Fatigue",
-
   "item.minecraft.potion.effect.glow": "Potion of Glowing",
   "item.minecraft.potion.effect.long_glow": "Potion of Glowing",
   "item.minecraft.splash_potion.effect.glow": "Splash Potion of Glowing",
@@ -273,7 +217,6 @@
   "item.minecraft.tipped_arrow.effect.long_glow": "Arrow of Glowing",
   "item.minecraft.lingering_potion.effect.glow": "Lingering Potion of Glowing",
   "item.minecraft.lingering_potion.effect.long_glow": "Lingering Potion of Glowing",
-
   "item.minecraft.potion.effect.blindness": "Potion of Blindness",
   "item.minecraft.potion.effect.long_blindness": "Potion of Blindness",
   "item.minecraft.splash_potion.effect.blindness": "Splash Potion of Blindness",
@@ -282,7 +225,6 @@
   "item.minecraft.tipped_arrow.effect.long_blindness": "Arrow of Blindness",
   "item.minecraft.lingering_potion.effect.blindness": "Lingering Potion of Blindness",
   "item.minecraft.lingering_potion.effect.long_blindness": "Lingering Potion of Blindness",
-
   "item.minecraft.potion.effect.levitation": "Potion of Levitation",
   "item.minecraft.potion.effect.long_levitation": "Potion of Levitation",
   "item.minecraft.potion.effect.strong_levitation": "Potion of Levitation",
@@ -295,7 +237,6 @@
   "item.minecraft.lingering_potion.effect.levitation": "Lingering Potion of Levitation",
   "item.minecraft.lingering_potion.effect.long_levitation": "Lingering Potion of Levitation",
   "item.minecraft.lingering_potion.effect.strong_levitation": "Lingering Potion of Levitation",
-
   "item.minecraft.potion.effect.hunger": "Potion of Hunger",
   "item.minecraft.potion.effect.long_hunger": "Potion of Hunger",
   "item.minecraft.potion.effect.strong_hunger": "Potion of Hunger",
@@ -308,7 +249,6 @@
   "item.minecraft.lingering_potion.effect.hunger": "Lingering Potion of Hunger",
   "item.minecraft.lingering_potion.effect.long_hunger": "Lingering Potion of Hunger",
   "item.minecraft.lingering_potion.effect.strong_hunger": "Lingering Potion of Hunger",
-
   "item.minecraft.potion.effect.construction": "Potion of Construction",
   "item.minecraft.potion.effect.long_construction": "Potion of Construction",
   "item.minecraft.potion.effect.strong_construction": "Potion of Construction",
@@ -321,7 +261,6 @@
   "item.minecraft.lingering_potion.effect.construction": "Lingering Potion of Construction",
   "item.minecraft.lingering_potion.effect.long_construction": "Lingering Potion of Construction",
   "item.minecraft.lingering_potion.effect.strong_construction": "Lingering Potion of Construction",
-
   "item.minecraft.potion.effect.building_fatigue": "Potion of Building Fatigue",
   "item.minecraft.potion.effect.long_building_fatigue": "Potion of Building Fatigue",
   "item.minecraft.splash_potion.effect.building_fatigue": "Splash Potion of Building Fatigue",
@@ -330,12 +269,10 @@
   "item.minecraft.tipped_arrow.effect.long_building_fatigue": "Arrow of Building Fatigue",
   "item.minecraft.lingering_potion.effect.building_fatigue": "Lingering Potion of Building Fatigue",
   "item.minecraft.lingering_potion.effect.long_building_fatigue": "Lingering Potion of Building Fatigue",
-
   "item.minecraft.potion.effect.long_luck": "Potion of Luck",
   "item.minecraft.splash_potion.effect.long_luck": "Splash Potion of Luck",
   "item.minecraft.tipped_arrow.effect.long_luck": "Arrow of Luck",
   "item.minecraft.lingering_potion.effect.long_luck": "Lingering Potion of Luck",
-
   "item.minecraft.potion.effect.lava_vision": "Potion of Lava Vision",
   "item.minecraft.potion.effect.long_lava_vision": "Potion of Lava Vision",
   "item.minecraft.splash_potion.effect.lava_vision": "Splash Potion of Lava Vision",
@@ -344,8 +281,23 @@
   "item.minecraft.tipped_arrow.effect.long_lava_vision": "Arrow of Lava Vision",
   "item.minecraft.lingering_potion.effect.lava_vision": "Lingering Potion of Lava Vision",
   "item.minecraft.lingering_potion.effect.long_lava_vision": "Lingering Potion of Lava Vision",
-
-  //Sounds
   "block.key_unlock.sub": "Chest Unlock",
-  "block.locked_chest.sub": "Locked Chest"
+  "block.locked_chest.sub": "Locked Chest",
+  "block.oddc.palm_button": "Palm Button",
+  "block.oddc.palm_door": "Palm Door",
+  "block.oddc.palm_fence": "Palm Fence",
+  "block.oddc.palm_fence_gate": "Palm Fence Gate",
+  "block.oddc.palm_planks": "Palm Planks",
+  "block.oddc.palm_pressure_plate": "Palm Pressure Plate",
+  "block.oddc.palm_sapling": "Palm Sapling",
+  "block.oddc.palm_sign": "Palm Sign",
+  "block.oddc.palm_slab": "Palm Slab",
+  "block.oddc.palm_stairs": "Palm Stairs",
+  "block.oddc.palm_trapdoor": "Palm Trapdoor",
+  "block.oddc.palm_wall_sign": "Palm Wall Sign",
+  "block.oddc.palm_wood": "Palm Wood",
+  "block.oddc.potted_palm_sapling": "Potted Palm Sapling",
+  "block.oddc.stripped_palm_log": "Stripped Palm Log",
+  "block.oddc.stripped_palm_wood": "Stripped Palm Wood",
+  "item.oddc.palm_boat": "Palm Boat"
 }

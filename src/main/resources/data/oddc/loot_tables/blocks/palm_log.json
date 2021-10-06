@@ -9,6 +9,11 @@
           "type": "minecraft:item",
           "name": "oddc:palm_log"
         }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
       ]
     }
   ]

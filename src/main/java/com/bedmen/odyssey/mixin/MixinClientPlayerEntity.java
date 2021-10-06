@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.client.gui.OdysseyEditSignScreen;
 import com.bedmen.odyssey.items.equipment.ZephyrArmorItem;
+import com.bedmen.odyssey.tileentity.OdysseySignTileEntity;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
@@ -8,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.IAmbientSoundHandler;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.IJumpingMount;
@@ -73,6 +76,10 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     public boolean isRidingJumpable() {return false;}
     @Shadow
     protected void sendRidingJump() {}
+
+    public void openOdysseyTextEdit(OdysseySignTileEntity odysseySignTileEntity){
+        this.minecraft.setScreen(new OdysseyEditSignScreen(odysseySignTileEntity));
+    }
 
     public MixinClientPlayerEntity(ClientWorld p_i50991_1_, GameProfile p_i50991_2_) {
         super(p_i50991_1_, p_i50991_2_);

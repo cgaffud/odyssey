@@ -1,6 +1,8 @@
 package com.bedmen.odyssey;
 
+import com.bedmen.odyssey.blocks.OdysseyWoodType;
 import com.bedmen.odyssey.client.renderer.entity.renderer.*;
+import com.bedmen.odyssey.client.renderer.tileentity.OdysseySignTileEntityRenderer;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
@@ -29,11 +31,13 @@ import com.bedmen.odyssey.world.spawn.OdysseyStructureEntitySpawn;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.tileentity.SignTileEntityRenderer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
@@ -133,6 +137,7 @@ public class Odyssey
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.STERLING_SILVER_CHEST.get(), SterlingSilverChestTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.SIGN.get(), OdysseySignTileEntityRenderer::new);
 
         //Container Screens
         ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
@@ -163,6 +168,9 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LEVIATHAN_TRIDENT.get(), OdysseyTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
 
+        //Boat Renderings
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
+
         //Block Render Types
         RenderTypeLookup.setRenderLayer(BlockRegistry.RESEARCH_TABLE.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PALM_LEAVES.get(), RenderType.cutoutMipped());
@@ -172,6 +180,7 @@ public class Odyssey
             RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE2.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE4.get(), RenderType.translucent());
+        Atlases.addWoodType(OdysseyWoodType.PALM);
     }
 
     @SubscribeEvent
