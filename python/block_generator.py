@@ -7,7 +7,7 @@ blockPath = 'oddc:block/'+blockID
 blockModel = {
     'parent':'minecraft:block/cube_all',
     'textures':{
-        'all':blockPath
+        'all': blockPath
         }
     }
 

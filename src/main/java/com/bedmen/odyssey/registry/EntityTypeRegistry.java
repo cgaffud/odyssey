@@ -7,6 +7,7 @@ import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.entity.item.OdysseyBoatEntity;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
+import com.bedmen.odyssey.entity.projectile.AmethystArrowEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
 import com.bedmen.odyssey.entity.projectile.LeviathanTridentEntity;
 import com.bedmen.odyssey.entity.projectile.PermafrostIcicleEntity;
@@ -42,6 +43,7 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<OdysseyTridentEntity>> TRIDENT = ENTITY_TYPE.register("trident", () -> EntityType.Builder.<OdysseyTridentEntity>of(OdysseyTridentEntity::new, EntityClassification.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("new_trident").toString()));
     public static final RegistryObject<EntityType<LeviathanTridentEntity>> LEVIATHAN_TRIDENT = ENTITY_TYPE.register("leviathan_trident", () -> EntityType.Builder.<LeviathanTridentEntity>of(LeviathanTridentEntity::new, EntityClassification.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("leviathan_trident").toString()));
     public static final RegistryObject<EntityType<PermafrostIcicleEntity>> PERMAFROST_ICICLE = ENTITY_TYPE.register("permafrost_icicle", () -> EntityType.Builder.<PermafrostIcicleEntity>of(PermafrostIcicleEntity::new, EntityClassification.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_icicle").toString()));
+    public static final RegistryObject<EntityType<AmethystArrowEntity>> AMETHYST_ARROW = ENTITY_TYPE.register("amethyst_arrow", () -> EntityType.Builder.<AmethystArrowEntity>of(AmethystArrowEntity::new, EntityClassification.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("amethyst_arrow").toString()));
 
     //Boat
     public static final RegistryObject<EntityType<OdysseyBoatEntity>> BOAT = ENTITY_TYPE.register("boat", () -> EntityType.Builder.<OdysseyBoatEntity>of(OdysseyBoatEntity::new, EntityClassification.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).build(new ResourceLocation("boat").toString()));

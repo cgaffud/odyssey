@@ -16,14 +16,14 @@ import java.util.function.Supplier;
 public class SoundPacket{
 
     public int type;
-    public int x;
-    public int y;
-    public int z;
+    public double x;
+    public double y;
+    public double z;
 
     public SoundPacket(){
     }
 
-    public SoundPacket(int type, int x, int y, int z) {
+    public SoundPacket(int type, double x, double y, double z) {
         this.type = type;
         this.x = x;
         this.y = y;
@@ -35,9 +35,9 @@ public class SoundPacket{
      */
     public static void encode(SoundPacket soundPacket, PacketBuffer buf){
         buf.writeInt(soundPacket.type);
-        buf.writeInt(soundPacket.x);
-        buf.writeInt(soundPacket.y);
-        buf.writeInt(soundPacket.z);
+        buf.writeDouble(soundPacket.x);
+        buf.writeDouble(soundPacket.y);
+        buf.writeDouble(soundPacket.z);
     }
 
     /**
@@ -45,9 +45,9 @@ public class SoundPacket{
      */
     public static SoundPacket decode(PacketBuffer buf){
         int type = buf.readInt();
-        int x = buf.readInt();
-        int y = buf.readInt();
-        int z = buf.readInt();
+        double x = buf.readDouble();
+        double y = buf.readDouble();
+        double z = buf.readDouble();
         return new SoundPacket(type, x, y, z);
     }
 
@@ -61,7 +61,17 @@ public class SoundPacket{
             Optional<ClientWorld> clientWorldOptional = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
             if (clientWorldOptional.isPresent()) {
                 ClientWorld clientWorld = clientWorldOptional.get();
-                clientWorld.playLocalSound(soundPacket.x, soundPacket.y, soundPacket.z, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
+                switch(soundPacket.type){
+                    case 0:
+                        clientWorld.playLocalSound(soundPacket.x, soundPacket.y, soundPacket.z, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
+                        break;
+                    case 1:
+                        clientWorld.playLocalSound(soundPacket.x, soundPacket.y, soundPacket.z, SoundEvents.ITEM_BREAK, SoundCategory.HOSTILE, 1.5f, 0.8f, false);
+                        break;
+                    case 2:
+                        clientWorld.playLocalSound(soundPacket.x, soundPacket.y, soundPacket.z, SoundEvents.STONE_BREAK, SoundCategory.HOSTILE, 1.5f, 0.8f, false);
+                        break;
+                }
             }
         });
         context.setPacketHandled(true);

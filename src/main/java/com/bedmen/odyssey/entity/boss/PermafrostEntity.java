@@ -24,6 +24,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PermafrostEntity extends BossEntity {
+    private float damageReduction = 1.0f;
     private float activeRotation = 0;
     private int destroyBlocksTick;
     private int IciclePosition = 0;
@@ -110,6 +112,11 @@ public class PermafrostEntity extends BossEntity {
             permafrostIcicleEntity.setPosRaw(this.getX() + d0, this.getY() + d1, this.getZ() + d2);
             this.level.addFreshEntity(permafrostIcicleEntity);
         }
+    }
+
+    public void tick(){
+        super.tick();
+        this.damageReduction = this.difficultyDamageReductionMultiplier() * this.nearbyPlayerDamageReductionMultiplier();
     }
 
     public void aiStep() {
@@ -277,6 +284,18 @@ public class PermafrostEntity extends BossEntity {
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return MonsterEntity.createMonsterAttributes().add(Attributes.MAX_HEALTH, 350.0D).add(Attributes.MOVEMENT_SPEED, (double)0.6F).add(Attributes.FOLLOW_RANGE, 40.0D).add(Attributes.ARMOR, 0.0D);
+    }
+
+    public ServerBossInfo getBossEvent(){
+        return this.bossEvent;
+    }
+
+    public Difficulty getDifficulty(){
+        return this.level.getDifficulty();
+    }
+
+    public float getDamageReduction(){
+        return this.damageReduction;
     }
 
     @OnlyIn(Dist.CLIENT)

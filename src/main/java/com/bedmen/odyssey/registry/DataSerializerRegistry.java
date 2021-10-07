@@ -16,6 +16,6 @@ public class DataSerializerRegistry {
         DATA_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<DataSerializerEntry> UUID_LIST = DATA_SERIALIZERS.register("uuid_list", () -> new DataSerializerEntry(OdysseyDataSerializers.UUID_LIST));
+    public static final RegistryObject<DataSerializerEntry> INT_LIST = DATA_SERIALIZERS.register("int_list", () -> new DataSerializerEntry(OdysseyDataSerializers.INT_LIST));
 
 }

@@ -292,6 +292,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), 3));
     public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyItemGroup.COMBAT), 5));
 
+    //Arows
+    public static final RegistryObject<Item> AMETHYST_ARROW = ITEMS.register("amethyst_arrow", () -> new AmethystArrowItem((new Item.Properties()).tab(OdysseyItemGroup.COMBAT)));
+
     //Tridents
     public static final RegistryObject<Item> TRIDENT = ITEMS_VANILLA.register("trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(250).tab(ItemGroup.TAB_COMBAT), 9.0D));
     public static final RegistryObject<Item> LEVIATHAN_TRIDENT = ITEMS.register("leviathan_trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(750).fireResistant().tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 11.0D));

@@ -53,8 +53,6 @@ public class QuiverContainer extends Container {
             this.addSlot(new Slot(inv, k, 89 + k * 18 - this.size * 9, 34){
                 public boolean mayPlace(ItemStack stack) {
                     if(stack.getItem() instanceof ArrowItem) return true;
-                    if(stack.getItem() instanceof SpectralArrowItem) return true;
-                    if(stack.getItem() instanceof TippedArrowItem) return true;
                     if(stack.getItem() instanceof FireworkRocketItem) return true;
                     return false;
                 }
