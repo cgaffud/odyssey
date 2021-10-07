@@ -5,7 +5,6 @@ import com.bedmen.odyssey.tags.OdysseyBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
 public class FogUtil {
@@ -39,6 +38,12 @@ public class FogUtil {
     }
 
     public static int fogToInt(Block block){
-        return Integer.parseInt(block.toString().substring(14,15));
+        String path = block.getRegistryName().getPath();
+        if(path.equals("air")){
+            return 0;
+        } else if(!path.startsWith("fog")){
+            return 9;
+        }
+        return Integer.parseInt(path.substring(3,4));
     }
 }

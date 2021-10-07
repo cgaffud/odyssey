@@ -22,11 +22,13 @@
     "MixinEnchantment",
     "MixinShieldRecipes",
     "MixinClientPlayerEntity",
+    "MixinLayerUtil",
     "MixinServerPlayerEntity",
     "MixinTextFormatting",
     "MixinCreativeScreen",
     "MixinServerPlayNetHandler",
-    "MixinPiglinTasks"
+    "MixinPiglinTasks",
+    "MixinAbstractBlock"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,12 +1,14 @@
 package com.bedmen.odyssey;
 
+import com.bedmen.odyssey.blocks.OdysseyWoodType;
 import com.bedmen.odyssey.client.renderer.entity.renderer.*;
+import com.bedmen.odyssey.client.renderer.tileentity.OdysseySignTileEntityRenderer;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.client.renderer.tileentity.SterlingSilverChestTileEntityRenderer;
-import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
+import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.tileentity.OdysseyEnchantmentTableTileEntityRenderer;
@@ -15,8 +17,6 @@ import com.bedmen.odyssey.entity.attributes.OdysseyAttributes;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.bedmen.odyssey.items.*;
-import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
-import com.bedmen.odyssey.items.equipment.EquipmentTieredItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tags.OdysseyBlockTags;
@@ -29,7 +29,9 @@ import com.bedmen.odyssey.world.gen.OdysseyOreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.OdysseyStructureEntitySpawn;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelBakery;
@@ -38,10 +40,14 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.FoliageColors;
+import net.minecraft.world.biome.BiomeColors;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -55,7 +61,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.Set;
 
 @Mod("oddc")
@@ -131,6 +136,7 @@ public class Odyssey
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.STERLING_SILVER_CHEST.get(), SterlingSilverChestTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.SIGN.get(), OdysseySignTileEntityRenderer::new);
 
         //Container Screens
         ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
@@ -161,13 +167,19 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LEVIATHAN_TRIDENT.get(), OdysseyTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
 
+        //Boat Renderings
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
+
         //Block Render Types
         RenderTypeLookup.setRenderLayer(BlockRegistry.RESEARCH_TABLE.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.PALM_LEAVES.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.COCONUT.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.HOLLOW_COCONUT.get(), RenderType.cutout());
         for(Block block : OdysseyBlockTags.FOG_TAG)
             RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
-
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE2.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE4.get(), RenderType.translucent());
+        Atlases.addWoodType(OdysseyWoodType.PALM);
     }
 
     @SubscribeEvent
@@ -178,8 +190,12 @@ public class Odyssey
     @SubscribeEvent
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
-        EquipmentTieredItem.initEquipment();
+        EquipmentMeleeItem.initEquipment();
         EquipmentTrinketItem.initEquipment();
+        EquipmentPickaxeItem.initEquipment();
+        EquipmentHoeItem.initEquipment();
+        EquipmentShovelItem.initEquipment();
+        EquipmentAxeItem.initEquipment();
     }
 
     @SubscribeEvent
@@ -196,7 +212,7 @@ public class Odyssey
         event.addSprite(PermafrostRenderer.VERTICAL_WIND_RESOURCE_LOCATION);
         event.addSprite(PermafrostRenderer.OPEN_EYE_RESOURCE_LOCATION);
     }
-    
+
     @SubscribeEvent
     public static void onEntityAttributeCreation(final EntityAttributeCreationEvent event){
         event.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
@@ -204,5 +220,20 @@ public class Odyssey
         event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanEntity.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyEntity.createAttributes().build());
+    }
+
+    @SubscribeEvent
+    public static void onColorHandlerEvent(final ColorHandlerEvent.Block event) {
+        event.getBlockColors().register((p_228061_0_, p_228061_1_, p_228061_2_, p_228061_3_) -> {
+            return p_228061_1_ != null && p_228061_2_ != null ? BiomeColors.getAverageFoliageColor(p_228061_1_, p_228061_2_) : FoliageColors.getDefaultColor();
+        }, BlockRegistry.PALM_LEAVES.get());
+    }
+
+    @SubscribeEvent
+    public static void onColorHandlerEvent(final ColorHandlerEvent.Item event) {
+        event.getItemColors().register((p_210235_1_, p_210235_2_) -> {
+            BlockState blockstate = ((BlockItem)(p_210235_1_).getItem()).getBlock().defaultBlockState();
+            return event.getBlockColors().getColor(blockstate, null, null, p_210235_2_);
+        }, BlockRegistry.PALM_LEAVES.get());
     }
 }

@@ -9,6 +9,7 @@ import com.bedmen.odyssey.network.packet.JumpingPacket;
 import com.bedmen.odyssey.network.packet.SneakingPacket;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.base.Objects;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -177,8 +178,6 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     @Shadow
     protected float lastHurt;
     @Shadow
-    protected void actuallyHurt(DamageSource p_70665_1_, float p_70665_2_) {}
-    @Shadow
     public int hurtDuration;
     @Shadow
     public float hurtDir;
@@ -197,14 +196,15 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     @Shadow
     protected int fallFlyTicks;
     @Shadow
-    protected float getJumpPower() { return 0.0f; }
-    @Shadow
     protected boolean shouldRemoveSoulSpeed(BlockState p_230295_1_) {return false;}
+    @Shadow
+    protected void actuallyHurt(DamageSource p_70665_1_, float p_70665_2_) {}
+
 
     private int zephyrArmorTicks = -1;
 
     public boolean hurt(DamageSource source, float amount) {
-        if (!net.minecraftforge.common.ForgeHooks.onLivingAttack((LivingEntity)(Entity)this, source, amount)) return false;
+        if (!net.minecraftforge.common.ForgeHooks.onLivingAttack(getLivingEntity(), source, amount)) return false;
         if (this.isInvulnerableTo(source)) {
             return false;
         } else if (this.level.isClientSide) {
@@ -221,7 +221,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
             this.noActionTime  = 0;
             float f = amount;
             if ((source == DamageSource.ANVIL || source == DamageSource.FALLING_BLOCK) && !this.getItemBySlot(EquipmentSlotType.HEAD).isEmpty()) {
-                this.getItemBySlot(EquipmentSlotType.HEAD).hurtAndBreak((int)(amount * 4.0F + this.random.nextFloat() * amount * 2.0F), (LivingEntity)(Entity)this, (p_233653_0_) -> {
+                this.getItemBySlot(EquipmentSlotType.HEAD).hurtAndBreak((int)(amount * 4.0F + this.random.nextFloat() * amount * 2.0F), getLivingEntity(), (p_233653_0_) -> {
                     p_233653_0_.broadcastBreakEvent(EquipmentSlotType.HEAD);
                 });
                 amount *= 0.75F;
@@ -236,7 +236,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
                 // Shield Code
                 Item item = this.useItem.getItem();
                 if(item instanceof OdysseyShieldItem)
-                    amount -= EnchantmentUtil.getBlockingMultiplier((LivingEntity)(Entity)this) * ((OdysseyShieldItem)item).getBlock();
+                    amount -= EnchantmentUtil.getBlockingMultiplier(getLivingEntity()) * ((OdysseyShieldItem)item).getBlock();
                 if(amount < 0.0f){
                     amount = 0.0F;
                     flag = true;
@@ -348,10 +348,10 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
                 this.lastDamageStamp = this.level.getGameTime();
             }
 
-            if ((LivingEntity)(Entity)this instanceof ServerPlayerEntity) {
-                CriteriaTriggers.ENTITY_HURT_PLAYER.trigger((ServerPlayerEntity)(Entity)this, source, f, amount, flag);
+            if (getLivingEntity() instanceof ServerPlayerEntity) {
+                CriteriaTriggers.ENTITY_HURT_PLAYER.trigger((ServerPlayerEntity)getLivingEntity(), source, f, amount, flag);
                 if (f1 > 0.0F && f1 < 3.4028235E37F) {
-                    ((ServerPlayerEntity)(LivingEntity)(Entity)this).awardStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(f1 * 10.0F));
+                    ((ServerPlayerEntity)getLivingEntity()).awardStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(f1 * 10.0F));
                 }
             }
 

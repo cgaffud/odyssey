@@ -4,6 +4,7 @@ import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.player.IPlayerPermanentBuffs;
 import com.bedmen.odyssey.entity.player.OdysseyPlayerInventory;
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.mojang.authlib.GameProfile;
@@ -40,6 +41,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @Mixin(PlayerEntity.class)
@@ -85,6 +87,10 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
     private CooldownTracker cooldowns;
     @Shadow
     protected void updatePlayerPose() {}
+    @Shadow
+    public void awardStat(ResourceLocation p_195067_1_, int p_195067_2_) {}
+    @Shadow
+    public void causeFoodExhaustion(float p_71020_1_) {}
 
     public final PlayerInventory inventory = new OdysseyPlayerInventory(getPlayerEntity());
 
@@ -347,6 +353,45 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
         f = net.minecraftforge.event.ForgeEventFactory.getBreakSpeed(getPlayerEntity(), p_184813_1_, f, pos);
         return f;
+    }
+
+    protected void actuallyHurt(DamageSource damageSource, float amount) {
+        if (!this.isInvulnerableTo(damageSource)) {
+            amount = net.minecraftforge.common.ForgeHooks.onLivingHurt(this, damageSource, amount);
+            if (amount <= 0) return;
+            amount = this.getDamageAfterArmorAbsorb(damageSource, amount);
+            if(amount >= 10.0f && this.getItemBySlot(EquipmentSlotType.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
+                Consumer<PlayerEntity> consumer = (p_233653_0_) -> {
+                    p_233653_0_.broadcastBreakEvent(EquipmentSlotType.HEAD);
+                };
+                PlayerEntity player = getPlayerEntity();
+                ItemStack itemStack = this.getItemBySlot(EquipmentSlotType.HEAD);
+                Item item = itemStack.getItem();
+                item.damageItem(itemStack, 100, player, consumer);
+                consumer.accept(player);
+                itemStack.shrink(1);
+                player.awardStat(Stats.ITEM_BROKEN.get(item));
+            }
+            amount = this.getDamageAfterMagicAbsorb(damageSource, amount);
+            float f2 = Math.max(amount - this.getAbsorptionAmount(), 0.0F);
+            this.setAbsorptionAmount(this.getAbsorptionAmount() - (amount - f2));
+            f2 = net.minecraftforge.common.ForgeHooks.onLivingDamage(this, damageSource, f2);
+            float f = amount - f2;
+            if (f > 0.0F && f < 3.4028235E37F) {
+                this.awardStat(Stats.DAMAGE_ABSORBED, Math.round(f * 10.0F));
+            }
+
+            if (f2 != 0.0F) {
+                this.causeFoodExhaustion(damageSource.getFoodExhaustion());
+                float f1 = this.getHealth();
+                this.setHealth(this.getHealth() - f2);
+                this.getCombatTracker().recordDamage(damageSource, f1, f2);
+                if (f2 < 3.4028235E37F) {
+                    this.awardStat(Stats.DAMAGE_TAKEN, Math.round(f2 * 10.0F));
+                }
+
+            }
+        }
     }
 
     private PlayerEntity getPlayerEntity(){

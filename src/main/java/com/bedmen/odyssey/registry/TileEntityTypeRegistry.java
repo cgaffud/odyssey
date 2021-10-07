@@ -3,7 +3,9 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.tileentity.*;
+import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -27,4 +29,6 @@ public class TileEntityTypeRegistry {
     public static final RegistryObject<TileEntityType<RecycleFurnaceTileEntity>> RECYCLE_FURNACE = TILE_ENTITY_TYPES.register("recycle_furnace", () -> TileEntityType.Builder.of(RecycleFurnaceTileEntity::new, BlockRegistry.RECYCLE_FURNACE.get()).build(null));
     public static final RegistryObject<TileEntityType<ResearchTableTileEntity>> RESEARCH_TABLE = TILE_ENTITY_TYPES.register("research_table", () -> TileEntityType.Builder.of(ResearchTableTileEntity::new, BlockRegistry.RESEARCH_TABLE.get()).build(null));
     public static final RegistryObject<TileEntityType<SterlingSilverChestTileEntity>> STERLING_SILVER_CHEST = TILE_ENTITY_TYPES.register("sterling_silver_chest", () -> TileEntityType.Builder.of(SterlingSilverChestTileEntity::new, BlockRegistry.STERLING_SILVER_CHEST.get()).build(null));
+    public static final RegistryObject<TileEntityType<HollowCoconutTileEntity>> HOLLOW_COCONUT = TILE_ENTITY_TYPES.register("hollow_coconut", () -> TileEntityType.Builder.of(HollowCoconutTileEntity::new, BlockRegistry.HOLLOW_COCONUT.get()).build(null));
+    public static final RegistryObject<TileEntityType<OdysseySignTileEntity>> SIGN = TILE_ENTITY_TYPES.register("sign", () -> TileEntityType.Builder.of(OdysseySignTileEntity::new, BlockRegistry.PALM_SIGN.get(), BlockRegistry.PALM_WALL_SIGN.get()).build(null));
 }

@@ -1,15 +1,23 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.IngameGui;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +35,8 @@ import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType
 @OnlyIn(Dist.CLIENT)
 @Mixin(ForgeIngameGui.class)
 public abstract class MixinForgeIngameGui extends IngameGui{
+
+    private static final ResourceLocation COCONUT_BLUR_LOCATION = new ResourceLocation(Odyssey.MOD_ID , "textures/misc/coconutblur.png");
 
     public MixinForgeIngameGui(Minecraft mcIn) {
         super(mcIn);
@@ -287,4 +297,48 @@ public abstract class MixinForgeIngameGui extends IngameGui{
         post(AIR, mStack);
     }
 
+    private void renderHelmet(float partialTicks, MatrixStack mStack)
+    {
+        if (pre(HELMET, mStack)) return;
+
+        ItemStack itemstack = this.minecraft.player.inventory.getArmor(3);
+
+        if (this.minecraft.options.getCameraType().isFirstPerson() && !itemstack.isEmpty())
+        {
+            Item item = itemstack.getItem();
+            if (item == Blocks.CARVED_PUMPKIN.asItem())
+            {
+                renderPumpkin();
+            } else if (item == ItemRegistry.HOLLOW_COCONUT.get()) {
+                renderCoconut();
+            }
+            else
+            {
+                item.renderHelmetOverlay(itemstack, minecraft.player, this.screenWidth, this.screenHeight, partialTicks);
+            }
+        }
+
+        post(HELMET, mStack);
+    }
+
+    protected void renderCoconut() {
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.disableAlphaTest();
+        this.minecraft.getTextureManager().bind(COCONUT_BLUR_LOCATION);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuilder();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.vertex(0.0D, (double)this.screenHeight, -90.0D).uv(0.0F, 1.0F).endVertex();
+        bufferbuilder.vertex((double)this.screenWidth, (double)this.screenHeight, -90.0D).uv(1.0F, 1.0F).endVertex();
+        bufferbuilder.vertex((double)this.screenWidth, 0.0D, -90.0D).uv(1.0F, 0.0F).endVertex();
+        bufferbuilder.vertex(0.0D, 0.0D, -90.0D).uv(0.0F, 0.0F).endVertex();
+        tessellator.end();
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    }
 }

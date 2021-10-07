@@ -1,11 +1,16 @@
 package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.OdysseyRarity;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -15,22 +20,36 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.TieredItem;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class EquipmentMeleeItem extends EquipmentTieredItem implements IVanishable {
+import javax.annotation.Nullable;
+import java.util.*;
+
+public class EquipmentMeleeItem extends TieredItem implements IVanishable {
     private final float attackDamage;
     /** Modifiers applied when the item is in the mainhand of a user. */
     private final Multimap<Attribute, AttributeModifier> attributeModifiers;
+    protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
+    private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
+    protected static final List<EquipmentMeleeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
+    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
     public EquipmentMeleeItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Properties builderIn, LevEnchSup... levEnchSups) {
-        super(tier, builderIn, levEnchSups);
+        super(tier, builderIn.rarity(OdysseyRarity.EQUIPMENT));
         this.attackDamage = (float)attackDamageIn + tier.getAttackDamageBonus();
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)attackSpeedIn, AttributeModifier.Operation.ADDITION));
         this.attributeModifiers = builder.build();
+        this.levEnchSupSet.add(UNENCHANTABLE);
+        Collections.addAll(this.levEnchSupSet, levEnchSups);
+        UNFINISHED_EQUIPMENT.add(this);
     }
 
     public float getAttackDamage() {
@@ -86,5 +105,43 @@ public class EquipmentMeleeItem extends EquipmentTieredItem implements IVanishab
      */
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType equipmentSlot) {
         return equipmentSlot == EquipmentSlotType.MAINHAND ? this.attributeModifiers : super.getDefaultAttributeModifiers(equipmentSlot);
+    }
+
+
+    public static void initEquipment(){
+        for(final EquipmentMeleeItem equipmentMeleeItem : UNFINISHED_EQUIPMENT){
+            equipmentMeleeItem.init();
+        }
+        UNFINISHED_EQUIPMENT.clear();
+    }
+
+    public void init(){
+        for(LevEnchSup levEnchSup : this.levEnchSupSet){
+            this.enchantmentMap.put(levEnchSup.enchantmentSupplier.get(), levEnchSup.level);
+        }
+    }
+
+    public int getInnateEnchantmentLevel(Enchantment e) {
+        Integer i = this.enchantmentMap.get(e);
+        if(i == null)
+            return 0;
+        return i;
+    }
+
+    public Map<Enchantment, Integer> getInnateEnchantmentMap(){
+        return this.enchantmentMap;
+    }
+
+    /**
+     * allows items to add custom lines of information to the mouseover description
+     */
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        for(Enchantment e : this.enchantmentMap.keySet()){
+            if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
+                tooltip.add(1, EnchantmentUtil.getUnenchantableName());
+            else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
+                tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
+        }
     }
 }
