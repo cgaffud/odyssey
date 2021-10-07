@@ -1,13 +1,11 @@
 import json
 import os
 
-def write(fileNames, L):
-    assert len(fileNames) == len(L)
+def write(fileNames, data):
+    assert len(fileNames) == len(data)
     for i in range(len(fileNames)):
-        jsonString = json.dumps(L[i], indent = 2)
-        jsonFile = open(fileNames[i], "w")
-        jsonFile.write(jsonString)
-        jsonFile.close()
+        with open(fileNames[i], 'w') as file:
+            json.dump(data[i], file, indent = 2)
 
 def doBlockStates(name):
     itemNames = [
@@ -1938,7 +1936,7 @@ def doRecipes(name):
 def doBlockTags(name):
     filepath = r"..\src\main\resources\data\minecraft\tags\blocks\\"
 
-    logsTag ={
+    logsList ={
           "replace": False,
           "values": [
             "oddc:"+name+"_log",
@@ -1947,10 +1945,9 @@ def doBlockTags(name):
             "oddc:stripped_"+name+"_wood"
           ]
         }
-    jsonString = json.dumps(logsTag, indent = 2)
-    jsonFile = open(r"..\src\main\resources\data\oddc\tags\blocks\\"+name+"_logs.json", "w")
-    jsonFile.write(jsonString)
-    jsonFile.close()
+
+    with open(r"..\src\main\resources\data\oddc\tags\items\\"+name+"_logs.json", 'w') as logFile:
+        json.dump(logsList, logFile, indent = 2)
     
     tagDataPairs = [
         ("fence_gates","oddc:"+name+"_fence_gate"),
@@ -1969,22 +1966,18 @@ def doBlockTags(name):
         ("wooden_trapdoors","oddc:"+name+"_trapdoor",)
     ]
 
-    for pair in tagDataPairs:
-        tag = filepath+pair[0]+".json"
-        tagFile = open(tag, "r")
-        tagData = json.load(tagFile)
-        tagFile.close()
-        if(pair[1] not in tagData["values"]):
-            tagData["values"].append(pair[1])
-        tagJSON = json.dumps(tagData, indent = 2)
-        tagFile = open(tag, "w")
-        tagFile.write(tagJSON)
-        tagFile.close()
+    for (tagGroup,value) in tagDataPairs:
+        tagPath = filepath+tagGroup+".json"
+        with open(tagPath, 'r+') as tagFile:
+            tagList = json.load(tagFile)
+            tagFile.seek(0)
+            tagList["values"].append(value)
+            json.dump(tagList, tagFile, indent = 2)
 
 def doItemTags(name):
     filepath = r"..\src\main\resources\data\minecraft\tags\items\\"
     
-    logsTag ={
+    logsList ={
           "replace": False,
           "values": [
             "oddc:"+name+"_log",
@@ -1993,18 +1986,16 @@ def doItemTags(name):
             "oddc:stripped_"+name+"_wood"
           ]
         }
-    jsonString = json.dumps(logsTag, indent = 2)
-    jsonFile = open(r"..\src\main\resources\data\oddc\tags\items\\"+name+"_logs.json", "w")
-    jsonFile.write(jsonString)
-    jsonFile.close()
     
+    with open(r"..\src\main\resources\data\oddc\tags\items\\"+name+"_logs.json", 'w') as logFile:
+            json.dump(logsList, logFile, indent = 2)
+            
     tagDataPairs = [
         ("boats","oddc:"+name+"_boat"),
         ("leaves","oddc:"+name+"_leaves"),
         ("logs_that_burn","#oddc:"+name+"_logs"),
         ("planks","oddc:"+name+"_planks"),
         ("saplings","oddc:"+name+"_sapling"),
-
         ("signs","oddc:"+name+"_sign"),
         ("wooden_buttons","oddc:"+name+"_button",),
         ("wooden_doors","oddc:"+name+"_door",),
@@ -2014,21 +2005,18 @@ def doItemTags(name):
         ("wooden_stairs","oddc:"+name+"_stairs",),
         ("wooden_trapdoors","oddc:"+name+"_trapdoor",)
     ]
-
-    for pair in tagDataPairs:
-        tag = filepath+pair[0]+".json"
-        tagFile = open(tag, "r")
-        tagData = json.load(tagFile)
-        tagFile.close()
-        if(pair[1] not in tagData["values"]):
-            tagData["values"].append(pair[1])
-        tagJSON = json.dumps(tagData, indent = 2)
-        tagFile = open(tag, "w")
-        tagFile.write(tagJSON)
-        tagFile.close()
+    
+    for (tagGroup,value) in tagDataPairs:
+        tagPath = filepath+tagGroup+".json"
+        with open(tagPath, 'r+') as tagFile:
+            tagList = json.load(tagFile)
+            tagFile.seek(0)
+            tagList["values"].append(value)
+            json.dump(tagList, tagFile, indent = 2)
 
 def doLang(name, lang_name):
-    filepath = r"..\src\main\resources\assets\oddc\lang\en_us.json"
+    langPath = r"..\src\main\resources\assets\oddc\lang\en_us.json"
+    
     blockNames = [
         ("block.oddc."+name+"_button", lang_name+" Button"),
         ("block.oddc."+name+"_door", lang_name+" Door"),
@@ -2050,20 +2038,17 @@ def doLang(name, lang_name):
         ("block.oddc.stripped_"+name+"_wood", "Stripped "+lang_name+" Wood"),
         ("item.oddc."+name+"_boat", lang_name+" Boat") 
     ]
-
-    tagFile = open(filepath, "r")
-    tagData = json.load(tagFile)
-    tagFile.close()
-    for pair in blockNames:
-        if(pair[0] not in tagData):
-            tagData[pair[0]] = pair[1]
-    tagJSON = json.dumps(tagData, indent = 2)
-    tagFile = open(filepath, "w")
-    tagFile.write(tagJSON)
-    tagFile.close()
+    
+    with open(langPath, 'r+') as langFile:
+        langDictionary = json.load(langFile)
+        langFile.seek(0)
+        for (key,value) in blockNames:
+            if(key not in langDictionary):
+                langDictionary[key] = value
+        json.dump(langDictionary, langFile, indent = 2)
         
-name = "palm"
-lang_name = "Palm"
+name = input("Input Wood ID: ")
+lang_name = input("Lang File Wood Name: ")
 doBlockStates(name)
 doBlockModels(name)
 doItemModels(name)
