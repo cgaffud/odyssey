@@ -12,7 +12,7 @@ import net.minecraftforge.fml.RegistryObject;
 
 import javax.annotation.Nullable;
 
-public class StripableLogBlock extends RotatedPillarBlock {
+public class StripableLogBlock extends FlammableLogBlock {
 
     private final RegistryObject<Block> strippedBlock;
     public StripableLogBlock(Properties p_i48339_1_, RegistryObject<Block> strippedBlock) {

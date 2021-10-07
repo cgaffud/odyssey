@@ -1,8 +1,6 @@
 package com.bedmen.odyssey.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.*;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
@@ -91,8 +89,17 @@ public class DiagonalLeavesBlock extends LeavesBlock {
         }
     }
 
-
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> p_206840_1_) {
         p_206840_1_.add(DISTANCE, PERSISTENT);
+    }
+
+    public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face)
+    {
+        return 30;
+    }
+
+    public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face)
+    {
+        return 60;
     }
 }
