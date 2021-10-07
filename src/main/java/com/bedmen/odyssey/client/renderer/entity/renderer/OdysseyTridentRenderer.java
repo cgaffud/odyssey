@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class OdysseyTridentRenderer extends EntityRenderer<AbstractTridentEntity> {
    public static final ResourceLocation TRIDENT = new ResourceLocation("textures/entity/trident.png");
-   public static final ResourceLocation LEVIATHAN_TRIDENT = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/leviathan_trident.png");
+   public static final ResourceLocation LEVIATHAN_TRIDENT = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/leviathan_trident.png");
    private final OdysseyTridentModel tridentModel = new OdysseyTridentModel();
 
    public OdysseyTridentRenderer(EntityRendererManager renderManagerIn) {
