@@ -1,6 +1,10 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.SneakingPacket;
+import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
 import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -8,15 +12,21 @@ import net.minecraft.client.multiplayer.PlayerController;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.apache.logging.log4j.Logger;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
@@ -121,6 +131,14 @@ public class MixinMinecraft {
                 }
 
             }
+        }
+    }
+
+    @Inject(method = "startAttack", at = @At(value = "HEAD"))
+    private void startStartAttack(CallbackInfo ci) {
+        PlayerEntity playerEntity =  this.player;
+        if(EnchantmentUtil.hasVolatile(playerEntity.getItemInHand(Hand.MAIN_HAND))){
+            OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket());
         }
     }
 }
