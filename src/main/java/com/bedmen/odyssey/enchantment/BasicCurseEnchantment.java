@@ -10,6 +10,10 @@ public class BasicCurseEnchantment extends Enchantment {
         super(rarity, EnchantmentType.BREAKABLE, slots);
         this.maxLevel = maxLevel;
     }
+    public BasicCurseEnchantment(Rarity rarity, EnchantmentType enchantmentType, int maxLevel, EquipmentSlotType... slots) {
+        super(rarity, enchantmentType, slots);
+        this.maxLevel = maxLevel;
+    }
     /**
      * Returns the minimal value of enchantability needed on the enchantment level passed.
      */

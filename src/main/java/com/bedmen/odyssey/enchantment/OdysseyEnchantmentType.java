@@ -8,4 +8,5 @@ import net.minecraft.item.TridentItem;
 public class OdysseyEnchantmentType {
 
     public static final EnchantmentType ODYSSEY_TRIDENT = EnchantmentType.create("ODYSSEY_TRIDENT", (Item item) -> item instanceof TridentItem || item instanceof OdysseyTridentItem);
+    public static final EnchantmentType MELEE = EnchantmentType.create("MELEE", (Item item) -> EnchantmentType.DIGGER.canEnchant(item) || EnchantmentType.WEAPON.canEnchant(item));
 }

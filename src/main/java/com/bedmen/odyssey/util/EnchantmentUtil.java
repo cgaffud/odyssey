@@ -326,4 +326,8 @@ public class EnchantmentUtil {
     public static int getEruption(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.ERUPTION.get(), itemStack);
     }
+
+    public static boolean hasVolatile(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.VOLATILE.get(), itemStack) > 0;
+    }
 }
