@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
-import com.bedmen.odyssey.network.packet.SneakingPacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -16,17 +16,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.apache.logging.log4j.Logger;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
@@ -47,6 +43,9 @@ public class MixinMinecraft {
     public GameRenderer gameRenderer;
     @Shadow
     public ClientWorld level;
+    @Shadow
+    protected int missTime;
+    private boolean alternateHands = false;
 
     //@Inject(method = "rightClickMouse", at = @At(value = "HEAD"))
     //private void startClient(CallbackInfo ci) {
@@ -134,11 +133,50 @@ public class MixinMinecraft {
         }
     }
 
-    @Inject(method = "startAttack", at = @At(value = "HEAD"))
-    private void startStartAttack(CallbackInfo ci) {
+    private void startAttack() {
         PlayerEntity playerEntity =  this.player;
         if(EnchantmentUtil.hasVolatile(playerEntity.getItemInHand(Hand.MAIN_HAND))){
             OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket());
+        }
+        if (this.missTime <= 0) {
+            if (this.hitResult == null) {
+                LOGGER.error("Null returned as 'hitResult', this shouldn't happen!");
+                if (this.gameMode.hasMissTime()) {
+                    this.missTime = 10;
+                }
+
+            } else if (!this.player.isHandsBusy()) {
+                net.minecraftforge.client.event.InputEvent.ClickInputEvent inputEvent = net.minecraftforge.client.ForgeHooksClient.onClickInput(0, this.options.keyAttack, Hand.MAIN_HAND);
+                if (!inputEvent.isCanceled())
+                    switch(this.hitResult.getType()) {
+                        case ENTITY:
+                            this.gameMode.attack(this.player, ((EntityRayTraceResult)this.hitResult).getEntity());
+                            break;
+                        case BLOCK:
+                            BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)this.hitResult;
+                            BlockPos blockpos = blockraytraceresult.getBlockPos();
+                            if (!this.level.isEmptyBlock(blockpos)) {
+                                this.gameMode.startDestroyBlock(blockpos, blockraytraceresult.getDirection());
+                                break;
+                            }
+                        case MISS:
+                            if (this.gameMode.hasMissTime()) {
+                                this.missTime = 10;
+                            }
+
+                            this.player.resetAttackStrengthTicker();
+                            net.minecraftforge.common.ForgeHooks.onEmptyLeftClick(this.player);
+                    }
+
+                if (inputEvent.shouldSwingHand()) {
+                    if (DualWieldItem.isDuelWieldingHatchets(this.player)) {
+                        this.player.swing(this.alternateHands ? Hand.OFF_HAND : Hand.MAIN_HAND);
+                        this.alternateHands ^= true;
+                    } else {
+                        this.player.swing(Hand.MAIN_HAND);
+                    }
+                }
+            }
         }
     }
 }
