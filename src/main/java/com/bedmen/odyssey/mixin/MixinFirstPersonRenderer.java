@@ -47,7 +47,6 @@ public abstract class MixinFirstPersonRenderer {
             this.offHandHeight = MathHelper.clamp(this.offHandHeight - 0.4F, 0.0F, 1.0F);
         } else {
             float f = DualWieldItem.isDuelWieldingHatchets(this.minecraft.player) ? 1.0f : clientplayerentity.getAttackStrengthScale(1.0F);
-            System.out.println(f);
             boolean requipM = net.minecraftforge.client.ForgeHooksClient.shouldCauseReequipAnimation(this.mainHandItem, itemstack, clientplayerentity.inventory.selected);
             boolean requipO = net.minecraftforge.client.ForgeHooksClient.shouldCauseReequipAnimation(this.offHandItem, itemstack1, -1);
 

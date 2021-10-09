@@ -32,7 +32,7 @@ public class UpgradedArrowEntity extends AbstractArrowEntity {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ARROW_TYPE, "AMETHYST");
+        this.entityData.define(ARROW_TYPE, UpgradedArrowItem.ArrowType.AMETHYST.name());
     }
 
     protected ItemStack getPickupItem() {

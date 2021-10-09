@@ -1,15 +1,12 @@
 package com.bedmen.odyssey.items;
 
-import com.bedmen.odyssey.entity.projectile.AbstractTridentEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
-import com.bedmen.odyssey.entity.projectile.LeviathanTridentEntity;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
@@ -32,16 +29,14 @@ import net.minecraft.world.World;
 
 public class OdysseyTridentItem extends Item implements IVanishable {
     private final Multimap<Attribute, AttributeModifier> tridentAttributes;
-    private final double damage;
-
-    public OdysseyTridentItem(Item.Properties builderIn, double damage) {
+    private final TridentType tridentType;
+    public OdysseyTridentItem(Item.Properties builderIn, TridentType tridentType) {
         super(builderIn);
-        this.damage = damage;
         Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", this.damage - 1.0D, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", tridentType.getDamage()-1.0f, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", (double)-2.9F, AttributeModifier.Operation.ADDITION));
         this.tridentAttributes = builder.build();
-
+        this.tridentType = tridentType;
     }
 
     public boolean canAttackBlock(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
@@ -78,11 +73,7 @@ public class OdysseyTridentItem extends Item implements IVanishable {
                             player.broadcastBreakEvent(entityLiving.getUsedItemHand());
                         });
                         if (j == 0) {
-                            AbstractTridentEntity tridententity;
-                            if(stack.getItem() == ItemRegistry.LEVIATHAN_TRIDENT.get()) {
-                                tridententity = new LeviathanTridentEntity(worldIn, playerentity, stack, this.damage);
-                            }
-                            else tridententity = new OdysseyTridentEntity(worldIn, playerentity, stack, this.damage);
+                            OdysseyTridentEntity tridententity = new OdysseyTridentEntity(worldIn, playerentity, stack);
                             float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerentity);
                             tridententity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, 2.5F, inaccuracy);
                             if (playerentity.abilities.instabuild) {
@@ -195,5 +186,29 @@ public class OdysseyTridentItem extends Item implements IVanishable {
         ItemModelsProperties.register(item, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
             return p_239419_2_ != null && p_239419_2_.isUsingItem() && p_239419_2_.getUseItem() == p_239419_0_ ? 1.0F : 0.0F;
         });
+    }
+
+    public enum TridentType{
+        NORMAL(9.0d),
+        LEVIATHAN(11.0d);
+
+        private double damage;
+
+        TridentType(double damage){
+            this.damage = damage;
+        }
+
+        public double getDamage(){
+            return this.damage;
+        }
+
+        public static TridentType getTridentType(ItemStack itemStack){
+            Item item = itemStack.getItem();
+            if(item == ItemRegistry.TRIDENT.get()){
+                return NORMAL;
+            } else {
+                return LEVIATHAN;
+            }
+        }
     }
 }

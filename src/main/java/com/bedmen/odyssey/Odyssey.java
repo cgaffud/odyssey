@@ -164,7 +164,6 @@ public class Odyssey
 
         //Projectile Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LEVIATHAN_TRIDENT.get(), OdysseyTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.UPGRADED_ARROW.get(), UpgradedArrowRenderer::new);
 

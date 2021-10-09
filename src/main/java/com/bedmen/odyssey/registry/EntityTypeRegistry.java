@@ -7,9 +7,8 @@ import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.entity.item.OdysseyBoatEntity;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
-import com.bedmen.odyssey.entity.projectile.UpgradedArrowEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
-import com.bedmen.odyssey.entity.projectile.LeviathanTridentEntity;
+import com.bedmen.odyssey.entity.projectile.UpgradedArrowEntity;
 import com.bedmen.odyssey.entity.projectile.PermafrostIcicleEntity;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import net.minecraft.entity.EntityClassification;
@@ -40,8 +39,7 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<PermafrostEntity>> PERMAFROST = ENTITY_TYPE.register("permafrost", () -> EntityType.Builder.<PermafrostEntity>of(PermafrostEntity::new, EntityClassification.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(10).build(new ResourceLocation("permafrost").toString()));
 
     //Projectiles
-    public static final RegistryObject<EntityType<OdysseyTridentEntity>> TRIDENT = ENTITY_TYPE.register("trident", () -> EntityType.Builder.<OdysseyTridentEntity>of(OdysseyTridentEntity::new, EntityClassification.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("new_trident").toString()));
-    public static final RegistryObject<EntityType<LeviathanTridentEntity>> LEVIATHAN_TRIDENT = ENTITY_TYPE.register("leviathan_trident", () -> EntityType.Builder.<LeviathanTridentEntity>of(LeviathanTridentEntity::new, EntityClassification.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("leviathan_trident").toString()));
+    public static final RegistryObject<EntityType<OdysseyTridentEntity>> TRIDENT = ENTITY_TYPE.register("trident", () -> EntityType.Builder.<OdysseyTridentEntity>of(OdysseyTridentEntity::new, EntityClassification.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("trident").toString()));
     public static final RegistryObject<EntityType<PermafrostIcicleEntity>> PERMAFROST_ICICLE = ENTITY_TYPE.register("permafrost_icicle", () -> EntityType.Builder.<PermafrostIcicleEntity>of(PermafrostIcicleEntity::new, EntityClassification.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_icicle").toString()));
     public static final RegistryObject<EntityType<UpgradedArrowEntity>> UPGRADED_ARROW = ENTITY_TYPE.register("upgraded_arrow", () -> EntityType.Builder.<UpgradedArrowEntity>of(UpgradedArrowEntity::new, EntityClassification.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("upgraded_arrow").toString()));
 
