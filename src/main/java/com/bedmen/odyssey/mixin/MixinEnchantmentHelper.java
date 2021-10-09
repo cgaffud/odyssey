@@ -7,6 +7,7 @@ import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.enchantment.SweepingEnchantment;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -170,5 +171,10 @@ public abstract class MixinEnchantmentHelper {
     @Overwrite
     public static boolean hasFrostWalker(LivingEntity livingEntity) {
         return EnchantmentUtil.getFrostWalker(livingEntity) > 0;
+    }
+
+    @Overwrite
+    public static float getSweepingDamageRatio(LivingEntity livingEntity) {
+        return EnchantmentUtil.getSweepingDamageRatio(livingEntity);
     }
 }

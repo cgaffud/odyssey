@@ -2,6 +2,7 @@ import json, os
 
 itemID = input("Input itemID: ")
 langName = input("Lang File Item Name: ")
+handheld = input("Is this a tool or melee weapon? (Y/N): ")
 itemPath = 'oddc:item/'+itemID
 
 itemModel = {
@@ -10,6 +11,16 @@ itemModel = {
     "layer0": itemPath
   }
 }
+
+handheldModel = {
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": itemPath
+  }
+}
+
+if(handheld.__contains__("Y")):
+    itemModel = handheldModel
 
 assetsPath = "../src/main/resources/assets/oddc"
 

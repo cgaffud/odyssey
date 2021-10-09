@@ -24,4 +24,8 @@ public interface IEquipment {
     default int getSetBonusLevel(Enchantment e) {
         return 0;
     }
+
+    default boolean canSweep(){
+        return false;
+    }
 }

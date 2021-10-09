@@ -240,6 +240,12 @@ public class ItemRegistry {
     public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new EquipmentMeleeItem(OdysseyItemTier.COPPER, 8, -3.2f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.BANE_OF_ARTHROPODS, 2)));
     public static final RegistryObject<Item> OBSIDIAN_HAMMER = ITEMS.register("obsidian_hammer", () -> new EquipmentMeleeItem(OdysseyItemTier.OBSIDIAN, 10, -3.2f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.BANE_OF_ARTHROPODS, 3)));
 
+    //Sabres
+    public static final RegistryObject<Item> FLINT_SABRE = ITEMS.register("flint_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.FLINT, 4.5f, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 1)));
+    public static final RegistryObject<Item> AMETHYST_SABRE = ITEMS.register("amethyst_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.AMETHYST, 6.5f, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 2)));
+    public static final RegistryObject<Item> QUARTZ_SABRE = ITEMS.register("quartz_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.QUARTZ, 7.5f, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 2)));
+    public static final RegistryObject<Item> RAZOR_SABRE = ITEMS.register("razor_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.RAZOR, 10, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 3)));
+
     //Axes
     public static final RegistryObject<Item> WOODEN_AXE = ITEMS_VANILLA.register("wooden_axe", () -> new AxeItem(OdysseyItemTier.WOOD, 6.0f, -3.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
     public static final RegistryObject<Item> STONE_AXE = ITEMS_VANILLA.register("stone_axe", () -> new AxeItem(OdysseyItemTier.STONE, 7.0f, -3.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
