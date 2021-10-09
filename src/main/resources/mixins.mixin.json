@@ -28,7 +28,8 @@
     "MixinCreativeScreen",
     "MixinServerPlayNetHandler",
     "MixinPiglinTasks",
-    "MixinAbstractBlock"
+    "MixinAbstractBlock",
+    "MixinFirstPersonRenderer"
   ],
   "injectors": {
     "defaultRequire": 1
