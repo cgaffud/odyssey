@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AA",
+    "B "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:quartz"
+    },
+    "B": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "oddc:quartz_hatchet"
+  }
+}

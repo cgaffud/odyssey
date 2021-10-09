@@ -4,6 +4,7 @@ import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.player.IPlayerPermanentBuffs;
 import com.bedmen.odyssey.entity.player.OdysseyPlayerInventory;
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.items.equipment.HatchetItem;
 import com.bedmen.odyssey.items.equipment.IEquipment;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
@@ -562,6 +563,13 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
             }
         }
+    }
+
+    public float getCurrentItemAttackStrengthDelay() {
+        if(this.getMainHandItem().getItem() instanceof HatchetItem && this.getOffhandItem().getItem() instanceof HatchetItem){
+            return (float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 10.0D);
+        }
+        return (float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 20.0D);
     }
 
     private PlayerEntity getPlayerEntity(){

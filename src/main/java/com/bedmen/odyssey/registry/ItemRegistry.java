@@ -243,9 +243,15 @@ public class ItemRegistry {
     //Sabres
     public static final RegistryObject<Item> FLINT_SABRE = ITEMS.register("flint_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.FLINT, 4.5f, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 1)));
     public static final RegistryObject<Item> AMETHYST_SABRE = ITEMS.register("amethyst_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.AMETHYST, 6.5f, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 2)));
-    public static final RegistryObject<Item> QUARTZ_SABRE = ITEMS.register("quartz_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.QUARTZ, 7.5f, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 2)));
-    public static final RegistryObject<Item> RAZOR_SABRE = ITEMS.register("razor_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.RAZOR, 10, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 3)));
+    public static final RegistryObject<Item> QUARTZ_SABRE = ITEMS.register("quartz_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.QUARTZ, 7.5f, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 3)));
+    public static final RegistryObject<Item> RAZOR_SABRE = ITEMS.register("razor_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.RAZOR, 10, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 4)));
 
+    //Hatchets
+    public static final RegistryObject<Item> FLINT_HATCHET = ITEMS.register("flint_hatchet", () -> new HatchetItem(OdysseyItemTier.FLINT, 2.5f, -2.5f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SMITE, 1)));
+    public static final RegistryObject<Item> AMETHYST_HATCHET = ITEMS.register("amethyst_hatchet", () -> new HatchetItem(OdysseyItemTier.AMETHYST, 3.5f, -2.5f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SMITE, 2)));
+    public static final RegistryObject<Item> QUARTZ_HATCHET = ITEMS.register("quartz_hatchet", () -> new HatchetItem(OdysseyItemTier.QUARTZ, 4.5f, -2.5f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SMITE, 3)));
+    public static final RegistryObject<Item> RAZOR_HATCHET = ITEMS.register("razor_hatchet", () -> new HatchetItem(OdysseyItemTier.RAZOR, 5.5f, -2.5f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.SMITE, 4)));
+    
     //Axes
     public static final RegistryObject<Item> WOODEN_AXE = ITEMS_VANILLA.register("wooden_axe", () -> new AxeItem(OdysseyItemTier.WOOD, 6.0f, -3.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
     public static final RegistryObject<Item> STONE_AXE = ITEMS_VANILLA.register("stone_axe", () -> new AxeItem(OdysseyItemTier.STONE, 7.0f, -3.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));

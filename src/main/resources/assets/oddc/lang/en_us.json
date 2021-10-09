@@ -307,5 +307,9 @@
   "item.oddc.flint_sabre": "Flint Sabre",
   "item.oddc.amethyst_sabre": "Amethyst Sabre",
   "item.oddc.quartz_sabre": "Quartz Sabre",
-  "item.oddc.razor_sabre": "Razor Sabre"
+  "item.oddc.razor_sabre": "Razor Sabre",
+  "item.oddc.flint_hatchet": "Flint Hatchet",
+  "item.oddc.amethyst_hatchet": "Amethyst Hatchet",
+  "item.oddc.quartz_hatchet": "Quartz Hatchet",
+  "item.oddc.razor_hatchet": "Razor Hatchet"
 }
