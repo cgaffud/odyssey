@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "CCC",
-    "CIC",
-    " I "
+    "  A",
+    " A ",
+    "B  "
   ],
   "key": {
-    "C": {
+    "A": {
       "item": "oddc:copper_ingot"
     },
-    "I": {
-      "item": "minecraft:iron_ingot"
+    "B": {
+      "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "oddc:copper_hammer"
+    "item": "oddc:copper_bat"
   }
 }

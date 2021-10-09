@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " AA",
+    "AA ",
+    "B  "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:amethyst_shard"
+    },
+    "B": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "oddc:amethyst_sabre"
+  }
+}

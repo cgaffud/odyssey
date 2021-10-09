@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "CCC",
-    "CIC",
-    " I "
+    "  A",
+    " A ",
+    "B  "
   ],
   "key": {
-    "C": {
+    "A": {
       "item": "minecraft:obsidian"
     },
-    "I": {
-      "item": "minecraft:diamond"
+    "B": {
+      "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "oddc:obsidian_hammer"
+    "item": "oddc:obsidian_bat"
   }
 }

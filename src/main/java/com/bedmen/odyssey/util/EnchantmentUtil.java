@@ -330,4 +330,8 @@ public class EnchantmentUtil {
     public static boolean hasVolatile(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.VOLATILE.get(), itemStack) > 0;
     }
+
+    public static float getSweepingDamageRatio(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(Enchantments.SWEEPING_EDGE, entity) * 0.2f;
+    }
 }

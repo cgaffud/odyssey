@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "oddc:lupine_claw"
+          "name": "oddc:razor_claw"
         }
       ],
       "conditions": [
@@ -15,8 +15,8 @@
         },
         {
           "condition": "minecraft:random_chance_with_looting",
-          "chance": 0.2,
-          "looting_multiplier": 0.05
+          "chance": 0.5,
+          "looting_multiplier": 0.15
         }
       ]
     }

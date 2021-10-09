@@ -10,10 +10,18 @@ import net.minecraft.tags.ItemTags;
 
 public enum OdysseyItemTier implements IItemTier{
 
-    COPPER(0, 250, 2.0F, -1.0F, 14, () -> { return Ingredient.of(ItemRegistry.COPPER_INGOT.get()); }),
-    GRANITE(0, 131, 4.0F, -1.0F, 5, () -> { return Ingredient.of(Items.GRANITE); }),
-    OBSIDIAN(4, 1561, 8.0F, -1.0F, 10, () -> { return Ingredient.of(Items.OBSIDIAN); }),
+    //Heavy
+    COPPER(1, 250, 2.0F, -1.0F, 0, () -> { return Ingredient.of(ItemRegistry.COPPER_INGOT.get()); }),
+    GRANITE(1, 160, 2.0F, -1.0F, 0, () -> { return Ingredient.of(Items.GRANITE); }),
+    OBSIDIAN(1, 2000, 2.0F, -1.0F, 0, () -> { return Ingredient.of(Items.OBSIDIAN); }),
 
+    //Sharp
+    FLINT(0, 100, 2.0f, -1.0f, 0, () -> { return Ingredient.of(Items.FLINT); }),
+    AMETHYST(0, 400, 2.0f, -1.0f, 0, () -> { return Ingredient.of(ItemRegistry.AMETHYST_SHARD.get()); }),
+    QUARTZ(0, 600, 2.0f, -1.0f, 0, () -> { return Ingredient.of(Items.QUARTZ); }),
+    RAZOR(0, 800, 2.0f, -1.0f, 0, () -> { return Ingredient.of(ItemRegistry.RAZOR_CLAW.get()); }),
+
+    //Main or has tools
     WOOD(0, 59, 2.0F, -1.0F, 15, () -> { return Ingredient.of(ItemTags.PLANKS); }),
     STONE(1, 131, 4.0F, -1.0F, 5, () -> { return Ingredient.of(ItemTags.STONE_TOOL_MATERIALS); }),
     IRON(2, 250, 6.0F, -1.0F, 14, () -> { return Ingredient.of(Items.IRON_INGOT); }),

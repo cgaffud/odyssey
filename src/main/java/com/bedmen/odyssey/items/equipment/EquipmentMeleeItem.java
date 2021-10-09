@@ -11,6 +11,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -40,9 +41,9 @@ public class EquipmentMeleeItem extends TieredItem implements IVanishable {
     protected static final List<EquipmentMeleeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
     private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
-    public EquipmentMeleeItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Properties builderIn, LevEnchSup... levEnchSups) {
+    public EquipmentMeleeItem(IItemTier tier, float attackDamageIn, float attackSpeedIn, Properties builderIn, LevEnchSup... levEnchSups) {
         super(tier, builderIn.rarity(OdysseyRarity.EQUIPMENT));
-        this.attackDamage = (float)attackDamageIn + tier.getAttackDamageBonus();
+        this.attackDamage = attackDamageIn + tier.getAttackDamageBonus();
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)attackSpeedIn, AttributeModifier.Operation.ADDITION));
@@ -58,6 +59,10 @@ public class EquipmentMeleeItem extends TieredItem implements IVanishable {
 
     public boolean canAttackBlock(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
         return !player.isCreative();
+    }
+
+    public boolean canSweep(){
+        return this.getInnateEnchantmentLevel(Enchantments.SWEEPING_EDGE) > 0;
     }
 
     public float getDestroySpeed(ItemStack stack, BlockState state) {

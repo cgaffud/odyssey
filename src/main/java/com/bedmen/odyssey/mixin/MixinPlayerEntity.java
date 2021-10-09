@@ -4,26 +4,32 @@ import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.player.IPlayerPermanentBuffs;
 import com.bedmen.odyssey.entity.player.OdysseyPlayerInventory;
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.items.equipment.HatchetItem;
+import com.bedmen.odyssey.items.equipment.IEquipment;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.ShootableItem;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.play.server.SEntityVelocityPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stat;
@@ -32,7 +38,9 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -91,6 +99,14 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
     public void awardStat(ResourceLocation p_195067_1_, int p_195067_2_) {}
     @Shadow
     public void causeFoodExhaustion(float p_71020_1_) {}
+    @Shadow
+    public void magicCrit(Entity p_71047_1_) {}
+    @Shadow
+    public float getAttackStrengthScale(float p_184825_1_) {return 0.0f;}
+    @Shadow
+    public void sweepAttack() {}
+    @Shadow
+    public void crit(Entity p_71009_1_) {}
 
     public final PlayerInventory inventory = new OdysseyPlayerInventory(getPlayerEntity());
 
@@ -392,6 +408,168 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
             }
         }
+    }
+
+    public void attack(Entity p_71059_1_) {
+        if (!net.minecraftforge.common.ForgeHooks.onPlayerAttackTarget(getPlayerEntity(), p_71059_1_)) return;
+        if (p_71059_1_.isAttackable()) {
+            if (!p_71059_1_.skipAttackInteraction(this)) {
+                float f = (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+                float f1;
+                if (p_71059_1_ instanceof LivingEntity) {
+                    f1 = EnchantmentHelper.getDamageBonus(this.getMainHandItem(), ((LivingEntity)p_71059_1_).getMobType());
+                } else {
+                    f1 = EnchantmentHelper.getDamageBonus(this.getMainHandItem(), CreatureAttribute.UNDEFINED);
+                }
+
+                float f2 = this.getAttackStrengthScale(0.5F);
+                f = f * (0.2F + f2 * f2 * 0.8F);
+                f1 = f1 * f2;
+                this.resetAttackStrengthTicker();
+                if (f > 0.0F || f1 > 0.0F) {
+                    boolean flag = f2 > 0.9F;
+                    boolean flag1 = false;
+                    int i = 0;
+                    i = i + EnchantmentHelper.getKnockbackBonus(this);
+                    if (this.isSprinting() && flag) {
+                        this.level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, this.getSoundSource(), 1.0F, 1.0F);
+                        ++i;
+                        flag1 = true;
+                    }
+
+                    boolean flag2 = flag && this.fallDistance > 0.0F && !this.onGround && !this.onClimbable() && !this.isInWater() && !this.hasEffect(Effects.BLINDNESS) && !this.isPassenger() && p_71059_1_ instanceof LivingEntity;
+                    flag2 = flag2 && !this.isSprinting();
+                    net.minecraftforge.event.entity.player.CriticalHitEvent hitResult = net.minecraftforge.common.ForgeHooks.getCriticalHit(getPlayerEntity(), p_71059_1_, flag2, flag2 ? 1.5F : 1.0F);
+                    flag2 = hitResult != null;
+                    if (flag2) {
+                        f *= hitResult.getDamageModifier();
+                    }
+
+                    f = f + f1;
+                    boolean flag3 = false;
+                    double d0 = (double)(this.walkDist - this.walkDistO);
+                    if (flag && !flag2 && !flag1 && this.onGround && d0 < (double)this.getSpeed()) {
+                        ItemStack itemstack = this.getItemInHand(Hand.MAIN_HAND);
+                        Item item = itemstack.getItem();
+                        if (item instanceof SwordItem || ((IEquipment)item).canSweep()) {
+                            flag3 = true;
+                        }
+                    }
+
+                    float f4 = 0.0F;
+                    boolean flag4 = false;
+                    int j = EnchantmentHelper.getFireAspect(this);
+                    if (p_71059_1_ instanceof LivingEntity) {
+                        f4 = ((LivingEntity)p_71059_1_).getHealth();
+                        if (j > 0 && !p_71059_1_.isOnFire()) {
+                            flag4 = true;
+                            p_71059_1_.setSecondsOnFire(1);
+                        }
+                    }
+
+                    Vector3d vector3d = p_71059_1_.getDeltaMovement();
+                    boolean flag5 = p_71059_1_.hurt(DamageSource.playerAttack(getPlayerEntity()), f);
+                    if (flag5) {
+                        if (i > 0) {
+                            if (p_71059_1_ instanceof LivingEntity) {
+                                ((LivingEntity)p_71059_1_).knockback((float)i * 0.5F, (double)MathHelper.sin(this.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(this.yRot * ((float)Math.PI / 180F))));
+                            } else {
+                                p_71059_1_.push((double)(-MathHelper.sin(this.yRot * ((float)Math.PI / 180F)) * (float)i * 0.5F), 0.1D, (double)(MathHelper.cos(this.yRot * ((float)Math.PI / 180F)) * (float)i * 0.5F));
+                            }
+
+                            this.setDeltaMovement(this.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
+                            this.setSprinting(false);
+                        }
+
+                        if (flag3) {
+                            float f3 = 1.0f + EnchantmentHelper.getSweepingDamageRatio(this) * f;
+
+                            for(LivingEntity livingentity : this.level.getEntitiesOfClass(LivingEntity.class, p_71059_1_.getBoundingBox().inflate(1.0D, 0.25D, 1.0D))) {
+                                if (livingentity != this && livingentity != p_71059_1_ && !this.isAlliedTo(livingentity) && (!(livingentity instanceof ArmorStandEntity) || !((ArmorStandEntity)livingentity).isMarker()) && this.distanceToSqr(livingentity) < 9.0D) {
+                                    livingentity.knockback(0.4F, (double)MathHelper.sin(this.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(this.yRot * ((float)Math.PI / 180F))));
+                                    livingentity.hurt(DamageSource.playerAttack(getPlayerEntity()), f3);
+                                }
+                            }
+
+                            this.level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, this.getSoundSource(), 1.0F, 1.0F);
+                            this.sweepAttack();
+                        }
+
+                        if (p_71059_1_ instanceof ServerPlayerEntity && p_71059_1_.hurtMarked) {
+                            ((ServerPlayerEntity)p_71059_1_).connection.send(new SEntityVelocityPacket(p_71059_1_));
+                            p_71059_1_.hurtMarked = false;
+                            p_71059_1_.setDeltaMovement(vector3d);
+                        }
+
+                        if (flag2) {
+                            this.level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_CRIT, this.getSoundSource(), 1.0F, 1.0F);
+                            this.crit(p_71059_1_);
+                        }
+
+                        if (!flag2 && !flag3) {
+                            if (flag) {
+                                this.level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_STRONG, this.getSoundSource(), 1.0F, 1.0F);
+                            } else {
+                                this.level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_WEAK, this.getSoundSource(), 1.0F, 1.0F);
+                            }
+                        }
+
+                        if (f1 > 0.0F) {
+                            this.magicCrit(p_71059_1_);
+                        }
+
+                        this.setLastHurtMob(p_71059_1_);
+                        if (p_71059_1_ instanceof LivingEntity) {
+                            EnchantmentHelper.doPostHurtEffects((LivingEntity)p_71059_1_, this);
+                        }
+
+                        EnchantmentHelper.doPostDamageEffects(this, p_71059_1_);
+                        ItemStack itemstack1 = this.getMainHandItem();
+                        Entity entity = p_71059_1_;
+                        if (p_71059_1_ instanceof net.minecraftforge.entity.PartEntity) {
+                            entity = ((net.minecraftforge.entity.PartEntity<?>) p_71059_1_).getParent();
+                        }
+
+                        if (!this.level.isClientSide && !itemstack1.isEmpty() && entity instanceof LivingEntity) {
+                            ItemStack copy = itemstack1.copy();
+                            itemstack1.hurtEnemy((LivingEntity)entity, getPlayerEntity());
+                            if (itemstack1.isEmpty()) {
+                                net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(getPlayerEntity(), copy, Hand.MAIN_HAND);
+                                this.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+                            }
+                        }
+
+                        if (p_71059_1_ instanceof LivingEntity) {
+                            float f5 = f4 - ((LivingEntity)p_71059_1_).getHealth();
+                            this.awardStat(Stats.DAMAGE_DEALT, Math.round(f5 * 10.0F));
+                            if (j > 0) {
+                                p_71059_1_.setSecondsOnFire(j * 4);
+                            }
+
+                            if (this.level instanceof ServerWorld && f5 > 2.0F) {
+                                int k = (int)((double)f5 * 0.5D);
+                                ((ServerWorld)this.level).sendParticles(ParticleTypes.DAMAGE_INDICATOR, p_71059_1_.getX(), p_71059_1_.getY(0.5D), p_71059_1_.getZ(), k, 0.1D, 0.0D, 0.1D, 0.2D);
+                            }
+                        }
+
+                        this.causeFoodExhaustion(0.1F);
+                    } else {
+                        this.level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_NODAMAGE, this.getSoundSource(), 1.0F, 1.0F);
+                        if (flag4) {
+                            p_71059_1_.clearFire();
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    public float getCurrentItemAttackStrengthDelay() {
+        if(this.getMainHandItem().getItem() instanceof HatchetItem && this.getOffhandItem().getItem() instanceof HatchetItem){
+            return (float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 10.0D);
+        }
+        return (float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 20.0D);
     }
 
     private PlayerEntity getPlayerEntity(){

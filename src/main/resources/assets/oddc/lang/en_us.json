@@ -15,7 +15,7 @@
   "item.oddc.feather_bundle": "Feather Bundle",
   "item.oddc.permafrost_shard": "Permafrost Shard",
   "item.oddc.arctic_heart": "Heart of the Arctic",
-  "item.oddc.lupine_claw": "Lupine Claw",
+  "item.oddc.razor_claw": "Razor Claw",
   "item.oddc.arctic_horn": "Arctic Horn",
   "item.oddc.raven_feather": "Raven Feather",
   "item.oddc.bewitched_quill": "Bewitched Quill",
@@ -301,5 +301,15 @@
   "block.oddc.stripped_palm_wood": "Stripped Palm Wood",
   "item.oddc.palm_boat": "Palm Boat",
   "item.oddc.amethyst_arrow": "Amethyst Arrow",
-  "entity.oddc.amethyst_arrow": "Amethyst Arrow"
+  "item.oddc.quartz_arrow": "Quartz Arrow",
+  "item.oddc.razor_arrow": "Razor Arrow",
+  "entity.oddc.upgraded_arrow": "Arrow",
+  "item.oddc.flint_sabre": "Flint Sabre",
+  "item.oddc.amethyst_sabre": "Amethyst Sabre",
+  "item.oddc.quartz_sabre": "Quartz Sabre",
+  "item.oddc.razor_sabre": "Razor Sabre",
+  "item.oddc.flint_hatchet": "Flint Hatchet",
+  "item.oddc.amethyst_hatchet": "Amethyst Hatchet",
+  "item.oddc.quartz_hatchet": "Quartz Hatchet",
+  "item.oddc.razor_hatchet": "Razor Hatchet"
 }
