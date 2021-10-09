@@ -428,7 +428,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
                 if (f > 0.0F || f1 > 0.0F) {
                     boolean flag = f2 > 0.9F;
                     boolean flag1 = false;
-                    float i = (float)this.getAttributeValue(Attributes.ATTACK_KNOCKBACK); // Forge: Initialize this value to the attack knockback attribute of the player, which is by default 0
+                    int i = 0;
                     i = i + EnchantmentHelper.getKnockbackBonus(this);
                     if (this.isSprinting() && flag) {
                         this.level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, this.getSoundSource(), 1.0F, 1.0F);

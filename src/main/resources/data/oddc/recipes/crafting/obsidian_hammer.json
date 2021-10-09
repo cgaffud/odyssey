@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "CCC",
-    "CIC",
-    " I "
+    "AAA",
+    "ABA",
+    " B "
   ],
   "key": {
-    "C": {
+    "A": {
       "item": "minecraft:obsidian"
     },
-    "I": {
-      "item": "minecraft:diamond"
+    "B": {
+      "item": "minecraft:stick"
     }
   },
   "result": {
