@@ -2,9 +2,10 @@ package com.bedmen.odyssey.entity.projectile;
 
 import javax.annotation.Nullable;
 
-import com.bedmen.odyssey.items.OdysseyTridentItem;
+import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.OdysseyDamageSource;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -15,7 +16,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -29,45 +29,44 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
 
-public class OdysseyTridentEntity extends AbstractArrowEntity {
-    private static final DataParameter<Byte> LOYALTY_LEVEL = EntityDataManager.defineId(OdysseyTridentEntity.class, DataSerializers.BYTE);
-    private static final DataParameter<Boolean> ID_FOIL = EntityDataManager.defineId(OdysseyTridentEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<String> TRIDENT_TYPE = EntityDataManager.defineId(OdysseyTridentEntity.class, DataSerializers.STRING);
-    private ItemStack thrownStack = new ItemStack(ItemRegistry.TRIDENT.get());
+public class BoomerangEntity extends AbstractArrowEntity {
+    private static final DataParameter<Byte> LOYALTY_LEVEL = EntityDataManager.defineId(BoomerangEntity.class, DataSerializers.BYTE);
+    private static final DataParameter<Boolean> ID_FOIL = EntityDataManager.defineId(BoomerangEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<String> BOOMERANG_TYPE = EntityDataManager.defineId(BoomerangEntity.class, DataSerializers.STRING);
+    private ItemStack thrownStack = new ItemStack(ItemRegistry.COPPER_BOOMERANG.get());
     private boolean dealtDamage;
     public int returningTicks;
 
-    public OdysseyTridentEntity(EntityType<? extends OdysseyTridentEntity> type, World worldIn) {
+    public BoomerangEntity(EntityType<? extends BoomerangEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
-    public OdysseyTridentEntity(World worldIn, LivingEntity thrower, ItemStack thrownStackIn) {
-        super(EntityTypeRegistry.TRIDENT.get(), thrower, worldIn);
+    public BoomerangEntity(World worldIn, LivingEntity thrower, ItemStack thrownStackIn) {
+        super(EntityTypeRegistry.BOOMERANG.get(), thrower, worldIn);
         this.thrownStack = thrownStackIn.copy();
         this.entityData.set(LOYALTY_LEVEL, (byte)EnchantmentHelper.getLoyalty(thrownStackIn));
         this.entityData.set(ID_FOIL, thrownStackIn.hasFoil());
-        this.setTridentType(OdysseyTridentItem.TridentType.getTridentType(this.thrownStack.getItem()));
+        this.setBoomerangType(BoomerangItem.BoomerangType.getBoomerangType(this.thrownStack.getItem()));
     }
 
     @OnlyIn(Dist.CLIENT)
-    public OdysseyTridentEntity(World p_i48791_1_, double p_i48791_2_, double p_i48791_4_, double p_i48791_6_) {
-        super(EntityTypeRegistry.TRIDENT.get(), p_i48791_2_, p_i48791_4_, p_i48791_6_, p_i48791_1_);
+    public BoomerangEntity(World p_i48791_1_, double p_i48791_2_, double p_i48791_4_, double p_i48791_6_) {
+        super(EntityTypeRegistry.BOOMERANG.get(), p_i48791_2_, p_i48791_4_, p_i48791_6_, p_i48791_1_);
     }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(LOYALTY_LEVEL, (byte)0);
         this.entityData.define(ID_FOIL, false);
-        this.entityData.define(TRIDENT_TYPE, OdysseyTridentItem.TridentType.NORMAL.name());
+        this.entityData.define(BOOMERANG_TYPE, BoomerangItem.BoomerangType.COPPER.name());
     }
 
     /**
      * Called to update the entity's position/logic.
      */
     public void tick() {
-        if (this.inGroundTime > 4) {
+        if (this.inGroundTime > 0) {
             this.dealtDamage = true;
         }
 
@@ -132,14 +131,14 @@ public class OdysseyTridentEntity extends AbstractArrowEntity {
      */
     protected void onHitEntity(EntityRayTraceResult p_213868_1_) {
         Entity entity = p_213868_1_.getEntity();
-        float f = (float)this.getTridentType().getDamage() - 1.0f;
+        float f = (float)this.getBoomerangType().getDamage() - 1.0f;
         if (entity instanceof LivingEntity) {
             LivingEntity livingentity = (LivingEntity)entity;
             f += EnchantmentHelper.getDamageBonus(this.thrownStack, livingentity.getMobType());
         }
 
         Entity entity1 = this.getOwner();
-        DamageSource damagesource = DamageSource.trident(this, (Entity)(entity1 == null ? this : entity1));
+        DamageSource damagesource = OdysseyDamageSource.boomerang(this, (Entity)(entity1 == null ? this : entity1));
         this.dealtDamage = true;
         SoundEvent soundevent = SoundEvents.TRIDENT_HIT;
         if (entity.hurt(damagesource, f)) {
@@ -197,34 +196,34 @@ public class OdysseyTridentEntity extends AbstractArrowEntity {
      */
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
-        if (compoundNBT.contains("Trident", 10)) {
-            this.thrownStack = ItemStack.of(compoundNBT.getCompound("Trident"));
+        if (compoundNBT.contains("Boomerang", 10)) {
+            this.thrownStack = ItemStack.of(compoundNBT.getCompound("Boomerang"));
         }
         this.dealtDamage = compoundNBT.getBoolean("DealtDamage");
         this.entityData.set(LOYALTY_LEVEL, (byte)EnchantmentHelper.getLoyalty(this.thrownStack));
-        if (compoundNBT.contains("TridentType")) {
-            this.setTridentType(compoundNBT.getString("TridentType"));
+        if (compoundNBT.contains("BoomerangType")) {
+            this.setBoomerangType(compoundNBT.getString("BoomerangType"));
         }
     }
 
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.put("Trident", this.thrownStack.save(new CompoundNBT()));
+        compoundNBT.put("Boomerang", this.thrownStack.save(new CompoundNBT()));
         compoundNBT.putBoolean("DealtDamage", this.dealtDamage);
-        compoundNBT.putString("TridentType", this.entityData.get(TRIDENT_TYPE));
+        compoundNBT.putString("BoomerangType", this.entityData.get(BOOMERANG_TYPE));
     }
 
 
-    public OdysseyTridentItem.TridentType getTridentType(){
-        return OdysseyTridentItem.TridentType.valueOf(this.entityData.get(TRIDENT_TYPE));
+    public BoomerangItem.BoomerangType getBoomerangType(){
+        return BoomerangItem.BoomerangType.valueOf(this.entityData.get(BOOMERANG_TYPE));
     }
 
-    public void setTridentType(OdysseyTridentItem.TridentType tridentType){
-        this.entityData.set(TRIDENT_TYPE, tridentType.name());
+    public void setBoomerangType(BoomerangItem.BoomerangType BoomerangType){
+        this.entityData.set(BOOMERANG_TYPE, BoomerangType.name());
     }
 
-    public void setTridentType(String s){
-        this.entityData.set(TRIDENT_TYPE, s);
+    public void setBoomerangType(String s){
+        this.entityData.set(BOOMERANG_TYPE, s);
     }
 
     public void tickDespawn() {

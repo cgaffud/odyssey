@@ -202,8 +202,7 @@ public class OdysseyTridentItem extends Item implements IVanishable {
             return this.damage;
         }
 
-        public static TridentType getTridentType(ItemStack itemStack){
-            Item item = itemStack.getItem();
+        public static TridentType getTridentType(Item item){
             if(item == ItemRegistry.TRIDENT.get()){
                 return NORMAL;
             } else {

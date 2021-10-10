@@ -123,6 +123,8 @@ public class Odyssey
             OdysseyCrossbowItem.registerBaseProperties(item);
         for(Item item : OdysseyItemTags.TRIDENT_TAG)
             OdysseyTridentItem.registerBaseProperties(item);
+        for(Item item : OdysseyItemTags.BOOMERANG_TAG)
+            BoomerangItem.registerBaseProperties(item);
         for(Item item : OdysseyItemTags.SHIELD_TAG)
             OdysseyShieldItem.registerBaseProperties(item);
 
@@ -166,6 +168,7 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.UPGRADED_ARROW.get(), UpgradedArrowRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
 
         //Boat Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
@@ -179,6 +182,8 @@ public class Odyssey
             RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE2.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE4.get(), RenderType.translucent());
+
+        //Wood Types
         Atlases.addWoodType(OdysseyWoodType.PALM);
     }
 
@@ -191,7 +196,7 @@ public class Odyssey
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
         EquipmentMeleeItem.initEquipment();
-        EquipmentTrinketItem.initEquipment();
+        EquipmentItem.initEquipment();
         EquipmentPickaxeItem.initEquipment();
         EquipmentHoeItem.initEquipment();
         EquipmentShovelItem.initEquipment();

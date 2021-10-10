@@ -1,10 +1,9 @@
 package com.bedmen.odyssey.items.equipment;
 
-import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
-public class GoldenAmuletItem extends EquipmentTrinketItem {
+public class GoldenAmuletItem extends EquipmentItem {
 
     public GoldenAmuletItem(Properties p_i48487_1_) {
         super(p_i48487_1_);

@@ -10,7 +10,7 @@ public class DualWieldItem extends EquipmentMeleeItem {
         super(tier, attackDamageIn, attackSpeedIn, builderIn, levEnchSups);
     }
 
-    public static boolean isDuelWieldingHatchets(PlayerEntity player){
+    public static boolean isDualWielding(PlayerEntity player){
         Item mainHandItem = player.getMainHandItem().getItem();
         return mainHandItem instanceof DualWieldItem && player.getOffhandItem().getItem() == mainHandItem;
     }

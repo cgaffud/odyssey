@@ -310,5 +310,7 @@
   "item.oddc.flint_hatchet": "Flint Hatchet",
   "item.oddc.amethyst_hatchet": "Amethyst Hatchet",
   "item.oddc.quartz_hatchet": "Quartz Hatchet",
-  "item.oddc.razor_hatchet": "Razor Hatchet"
+  "item.oddc.razor_hatchet": "Razor Hatchet",
+  "item.oddc.copper_boomerang": "Copper Boomerang",
+  "entity.oddc.copper_boomerang": "Copper Boomerang"
 }

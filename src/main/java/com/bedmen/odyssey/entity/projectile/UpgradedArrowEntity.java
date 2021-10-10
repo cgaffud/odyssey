@@ -30,6 +30,10 @@ public class UpgradedArrowEntity extends AbstractArrowEntity {
         this.setBaseDamage(arrowType.getDamage());
     }
 
+    public UpgradedArrowEntity(World p_i46769_1_, double p_i46769_2_, double p_i46769_4_, double p_i46769_6_) {
+        super(EntityTypeRegistry.UPGRADED_ARROW.get(), p_i46769_2_, p_i46769_4_, p_i46769_6_, p_i46769_1_);
+    }
+
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ARROW_TYPE, UpgradedArrowItem.ArrowType.AMETHYST.name());
@@ -37,11 +41,6 @@ public class UpgradedArrowEntity extends AbstractArrowEntity {
 
     protected ItemStack getPickupItem() {
         return new ItemStack(this.getArrowType().getItem());
-    }
-
-    @Override
-    public IPacket<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {

@@ -169,7 +169,7 @@ public class MixinMinecraft {
                     }
 
                 if (inputEvent.shouldSwingHand()) {
-                    if (DualWieldItem.isDuelWieldingHatchets(this.player)) {
+                    if (DualWieldItem.isDualWielding(this.player)) {
                         this.player.swing(this.alternateHands ? Hand.OFF_HAND : Hand.MAIN_HAND);
                         this.alternateHands ^= true;
                     } else {

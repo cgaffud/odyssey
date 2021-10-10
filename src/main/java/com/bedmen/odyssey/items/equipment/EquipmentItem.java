@@ -6,32 +6,27 @@ import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.TieredItem;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Lazy;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EquipmentTrinketItem extends Item {
+public class EquipmentItem extends Item {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
-    protected static final List<EquipmentTrinketItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
+    protected static final List<EquipmentItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
     private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
-    public EquipmentTrinketItem(Item.Properties builderIn, LevEnchSup... levEnchSups) {
-        super(builderIn.rarity(OdysseyRarity.EQUIPMENT).stacksTo(1));
+    public EquipmentItem(Item.Properties builderIn, LevEnchSup... levEnchSups) {
+        super(builderIn.rarity(OdysseyRarity.EQUIPMENT));
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);
@@ -50,8 +45,8 @@ public class EquipmentTrinketItem extends Item {
     }
 
     public static void initEquipment(){
-        for(final EquipmentTrinketItem equipmentTrinketItem : UNFINISHED_EQUIPMENT){
-            equipmentTrinketItem.init();
+        for(final EquipmentItem equipmentItem : UNFINISHED_EQUIPMENT){
+            equipmentItem.init();
         }
         UNFINISHED_EQUIPMENT.clear();
     }

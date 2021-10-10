@@ -2,6 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.OdysseyTridentItem;
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -14,10 +15,7 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -55,6 +53,8 @@ public abstract class MixinItemRenderer{
                 modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
             } else if(itemStackIn.getItem() == ItemRegistry.LEVIATHAN_TRIDENT.get() && flag) {
                 modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("oddc:leviathan_trident#inventory"));
+            } else if(itemStackIn.getItem() == ItemRegistry.COPPER_BOOMERANG.get() && flag) {
+                modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("oddc:copper_boomerang#inventory"));
             }
 
             modelIn = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStackIn, modelIn, transformTypeIn, leftHand);
@@ -106,7 +106,7 @@ public abstract class MixinItemRenderer{
     public IBakedModel getModel(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entitylivingbaseIn) {
         Item item = stack.getItem();
         IBakedModel ibakedmodel;
-        if (item instanceof OdysseyTridentItem) {
+        if (item instanceof OdysseyTridentItem || item instanceof BoomerangItem || item instanceof TridentItem) {
             ibakedmodel = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("minecraft:trident_in_hand#inventory"));
         } else {
             ibakedmodel = this.itemModelShaper.getItemModel(stack);
