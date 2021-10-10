@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class BoomerangModel extends Model {
-    private final ModelRenderer modelRenderer;
+    private final ModelRenderer bone;
 
     public BoomerangModel() {
 
@@ -23,15 +23,15 @@ public class BoomerangModel extends Model {
         this.texWidth = 32;
         this.texHeight = 32;
 
-        modelRenderer = new ModelRenderer(this);
-        modelRenderer.setPos(0.0F, 0.0F, 0.0F);
-        modelRenderer.setTexSize(0, 0).addBox(4.0F, -1.0F, -6.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
-        modelRenderer.setTexSize(0, 0).addBox(4.0F, -1.0F, -4.0F, 2.0F, 1.0F, 10.0F, 0.0F, false);
-        modelRenderer.setTexSize(0, 11).addBox(-6.0F, -1.0F, -6.0F, 10.0F, 1.0F, 2.0F, 0.0F, false);
+        bone = new ModelRenderer(this);
+        bone.setPos(0.0F, 0.0F, 0.0F);
+        bone.texOffs(0, 0).addBox(4.0F, -0.5F, -6.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
+        bone.texOffs(0, 0).addBox(4.0F, -0.5F, -4.0F, 2.0F, 1.0F, 10.0F, 0.0F, false);
+        bone.texOffs(0, 11).addBox(-6.0F, -0.5F, -6.0F, 10.0F, 1.0F, 2.0F, 0.0F, false);
     }
 
     public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        this.modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        this.bone.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
     public static ResourceLocation getBoomerangTexture(Item item){

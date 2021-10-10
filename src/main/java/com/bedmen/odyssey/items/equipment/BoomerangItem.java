@@ -2,8 +2,10 @@ package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -53,7 +55,7 @@ public class BoomerangItem extends EquipmentItem implements IVanishable {
                     });
                     BoomerangEntity boomerangEntity = new BoomerangEntity(worldIn, playerentity, stack);
                     float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerentity);
-                    boomerangEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, 2.5F, inaccuracy);
+                    boomerangEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, 1.0f*this.getInnateEnchantmentLevel(EnchantmentRegistry.LOYALTY.get()), inaccuracy);
                     if (playerentity.abilities.instabuild) {
                         boomerangEntity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                     }
