@@ -314,6 +314,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> LEVIATHAN_TRIDENT = ITEMS.register("leviathan_trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(750).fireResistant().tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), OdysseyTridentItem.TridentType.LEVIATHAN));
 
     //Boomerangs
+    public static final RegistryObject<Item> BONE_BOOMERANG = ITEMS.register("bone_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(100).tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), BoomerangItem.BoomerangType.BONE, new LevEnchSup(EnchantmentRegistry.LOYALTY, 1)));
     public static final RegistryObject<Item> COPPER_BOOMERANG = ITEMS.register("copper_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(250).tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), BoomerangItem.BoomerangType.COPPER, new LevEnchSup(EnchantmentRegistry.LOYALTY, 2)));
 
     //Shields

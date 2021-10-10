@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class BoomerangRenderer extends EntityRenderer<BoomerangEntity> {
-    public static final ResourceLocation[] BOOMERANG_LOCATION = new ResourceLocation[]{new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png")};
+    public static final ResourceLocation[] BOOMERANG_LOCATION = new ResourceLocation[]{new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png")};
     private final BoomerangModel boomerangModel = new BoomerangModel();
 
     public BoomerangRenderer(EntityRendererManager renderManagerIn) {

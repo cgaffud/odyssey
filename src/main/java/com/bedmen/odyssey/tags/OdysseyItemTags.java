@@ -33,6 +33,7 @@ public class OdysseyItemTags {
         TRIDENT_TAG = set;
         //Boomerangs
         set = new HashSet<>();
+        set.add(ItemRegistry.BONE_BOOMERANG.get());
         set.add(ItemRegistry.COPPER_BOOMERANG.get());
         BOOMERANG_TAG = set;
         //Shields

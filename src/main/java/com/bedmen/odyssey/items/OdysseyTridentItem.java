@@ -188,26 +188,28 @@ public class OdysseyTridentItem extends Item implements IVanishable {
         });
     }
 
+    public TridentType getTridentType(){
+        return this.tridentType;
+    }
+
     public enum TridentType{
-        NORMAL(9.0d),
-        LEVIATHAN(11.0d);
+        NORMAL(9.0d, ""),
+        LEVIATHAN(11.0d, "leviathan");
 
-        private double damage;
+        private final double damage;
+        private final String resourceName;
 
-        TridentType(double damage){
+        TridentType(double damage, String resourceName){
             this.damage = damage;
+            this.resourceName = resourceName;
         }
 
         public double getDamage(){
             return this.damage;
         }
 
-        public static TridentType getTridentType(Item item){
-            if(item == ItemRegistry.TRIDENT.get()){
-                return NORMAL;
-            } else {
-                return LEVIATHAN;
-            }
+        public String getResourceName(){
+            return this.resourceName;
         }
     }
 }

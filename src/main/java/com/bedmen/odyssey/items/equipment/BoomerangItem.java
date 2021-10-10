@@ -4,10 +4,15 @@ import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -21,9 +26,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BoomerangItem extends EquipmentItem implements IVanishable {
+    private final Multimap<Attribute, AttributeModifier> boomerangAttributes;
     private final BoomerangType boomerangType;
     public BoomerangItem(Item.Properties builderIn, BoomerangType boomerangType, LevEnchSup... levEnchSups) {
         super(builderIn, levEnchSups);
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", boomerangType.getDamage()-1.0f, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", -2.9F, AttributeModifier.Operation.ADDITION));
+        this.boomerangAttributes = builder.build();
         this.boomerangType = boomerangType;
     }
 
@@ -82,6 +92,10 @@ public class BoomerangItem extends EquipmentItem implements IVanishable {
         }
     }
 
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType equipmentSlot) {
+        return equipmentSlot == EquipmentSlotType.MAINHAND ? this.boomerangAttributes : super.getDefaultAttributeModifiers(equipmentSlot);
+    }
+
     /**
      * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
      * the damage on the stack.
@@ -111,21 +125,28 @@ public class BoomerangItem extends EquipmentItem implements IVanishable {
         });
     }
 
+    public BoomerangType getBoomerangType(){
+        return this.boomerangType;
+    }
+
     public enum BoomerangType{
-        COPPER(5.0d);
+        BONE(5.0d, "bone"),
+        COPPER(6.0d, "copper");
 
-        private double damage;
+        private final double damage;
+        private final String resourceName;
 
-        BoomerangType(double damage){
+        BoomerangType(double damage, String resourceName){
             this.damage = damage;
+            this.resourceName = resourceName;
         }
 
         public double getDamage(){
             return this.damage;
         }
 
-        public static BoomerangType getBoomerangType(Item item){
-            return COPPER;
+        public String getResourceName(){
+            return this.resourceName;
         }
     }
 }

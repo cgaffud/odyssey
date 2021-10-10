@@ -48,7 +48,7 @@ public class OdysseyTridentEntity extends AbstractArrowEntity {
         this.thrownStack = thrownStackIn.copy();
         this.entityData.set(LOYALTY_LEVEL, (byte)EnchantmentHelper.getLoyalty(thrownStackIn));
         this.entityData.set(ID_FOIL, thrownStackIn.hasFoil());
-        this.setTridentType(OdysseyTridentItem.TridentType.getTridentType(this.thrownStack.getItem()));
+        this.setTridentType(((OdysseyTridentItem)this.thrownStack.getItem()).getTridentType());
     }
 
     @OnlyIn(Dist.CLIENT)

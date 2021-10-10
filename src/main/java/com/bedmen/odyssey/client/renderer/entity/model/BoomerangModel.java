@@ -15,6 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class BoomerangModel extends Model {
     private final ModelRenderer bone;
+    private final ModelRenderer arm2_r1;
 
     public BoomerangModel() {
 
@@ -27,7 +28,12 @@ public class BoomerangModel extends Model {
         bone.setPos(0.0F, 0.0F, 0.0F);
         bone.texOffs(0, 0).addBox(4.0F, -0.5F, -6.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
         bone.texOffs(0, 0).addBox(4.0F, -0.5F, -4.0F, 2.0F, 1.0F, 10.0F, 0.0F, false);
-        bone.texOffs(0, 11).addBox(-6.0F, -0.5F, -6.0F, 10.0F, 1.0F, 2.0F, 0.0F, false);
+
+        arm2_r1 = new ModelRenderer(this);
+        arm2_r1.setPos(0.0F, 0.0F, 0.0F);
+        bone.addChild(arm2_r1);
+        setRotationAngle(arm2_r1, 0.0F, -1.5708F, 0.0F);
+        arm2_r1.texOffs(0, 0).addBox(-6.0F, -0.5F, -4.0F, 2.0F, 1.0F, 10.0F, 0.0F, true);
     }
 
     public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
@@ -35,6 +41,12 @@ public class BoomerangModel extends Model {
     }
 
     public static ResourceLocation getBoomerangTexture(Item item){
-        return BoomerangRenderer.BOOMERANG_LOCATION[BoomerangItem.BoomerangType.getBoomerangType(item).ordinal()];
+        return BoomerangRenderer.BOOMERANG_LOCATION[((BoomerangItem)item).getBoomerangType().ordinal()];
+    }
+
+    public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+        modelRenderer.xRot = x;
+        modelRenderer.yRot = y;
+        modelRenderer.zRot = z;
     }
 }

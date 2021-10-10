@@ -1,9 +1,7 @@
 package com.bedmen.odyssey.client.renderer.entity.model;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.renderer.OdysseyTridentRenderer;
 import com.bedmen.odyssey.items.OdysseyTridentItem;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.RenderType;
@@ -41,6 +39,6 @@ public class OdysseyTridentModel extends Model {
     }
 
     public static ResourceLocation getTridentTexture(Item item){
-        return OdysseyTridentRenderer.TRIDENT_LOCATION[OdysseyTridentItem.TridentType.getTridentType(item).ordinal()];
+        return OdysseyTridentRenderer.TRIDENT_LOCATION[((OdysseyTridentItem)item).getTridentType().ordinal()];
     }
 }

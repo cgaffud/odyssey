@@ -44,7 +44,7 @@ public class BoomerangEntity extends AbstractArrowEntity {
         this.thrownStack = thrownStackIn.copy();
         this.entityData.set(LOYALTY_LEVEL, (byte)EnchantmentHelper.getLoyalty(thrownStackIn));
         this.entityData.set(ID_FOIL, thrownStackIn.hasFoil());
-        this.setBoomerangType(BoomerangItem.BoomerangType.getBoomerangType(this.thrownStack.getItem()));
+        this.setBoomerangType(((BoomerangItem)this.thrownStack.getItem()).getBoomerangType());
     }
 
     @OnlyIn(Dist.CLIENT)
