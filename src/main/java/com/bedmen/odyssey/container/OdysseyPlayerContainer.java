@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.container;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.items.equipment.EquipmentItem;
+import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +23,7 @@ public class OdysseyPlayerContainer extends PlayerContainer {
         this.addSlot(new Slot(p_i1819_1_, 41, 77, 44) {
 
             public boolean mayPlace(ItemStack itemStack) {
-                return itemStack.getItem() instanceof EquipmentItem;
+                return itemStack.getItem() instanceof EquipmentTrinketItem;
             }
 
             @OnlyIn(Dist.CLIENT)
@@ -63,7 +63,7 @@ public class OdysseyPlayerContainer extends PlayerContainer {
                 if (!this.moveItemStackTo(itemstack1, 45, 46, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (itemstack.getItem() instanceof EquipmentItem && !this.slots.get(46).hasItem()) {
+            } else if (itemstack.getItem() instanceof EquipmentTrinketItem && !this.slots.get(46).hasItem()) {
                 if (!this.moveItemStackTo(itemstack1, 46, 47, false)) {
                     return ItemStack.EMPTY;
                 }

@@ -106,8 +106,10 @@ public abstract class MixinItemRenderer{
     public IBakedModel getModel(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entitylivingbaseIn) {
         Item item = stack.getItem();
         IBakedModel ibakedmodel;
-        if (item instanceof OdysseyTridentItem || item instanceof BoomerangItem || item instanceof TridentItem) {
+        if (item instanceof TridentItem || item instanceof OdysseyTridentItem) {
             ibakedmodel = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("minecraft:trident_in_hand#inventory"));
+        } else if(item instanceof  BoomerangItem) {
+            ibakedmodel = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("oddc:boomerang_in_hand#inventory"));
         } else {
             ibakedmodel = this.itemModelShaper.getItemModel(stack);
         }

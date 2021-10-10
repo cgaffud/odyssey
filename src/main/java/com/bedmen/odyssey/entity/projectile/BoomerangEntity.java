@@ -66,7 +66,8 @@ public class BoomerangEntity extends AbstractArrowEntity {
      * Called to update the entity's position/logic.
      */
     public void tick() {
-        if (this.inGroundTime > 0) {
+        this.setNoGravity(true);
+        if (this.inGroundTime > 0 || this.tickCount > 20) {
             this.dealtDamage = true;
         }
 
@@ -89,9 +90,9 @@ public class BoomerangEntity extends AbstractArrowEntity {
 
                 double d0 = 0.05D * (double)i;
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
-                if (this.returningTicks == 0) {
-                    this.playSound(SoundEvents.TRIDENT_RETURN, 10.0F, 1.0F);
-                }
+//                if (this.returningTicks == 0) {
+//                    this.playSound(SoundEvents.PLAYER_ATTACK_SWEEP , 10.0F, 1.0F);
+//                }
 
                 ++this.returningTicks;
             }
@@ -131,16 +132,15 @@ public class BoomerangEntity extends AbstractArrowEntity {
      */
     protected void onHitEntity(EntityRayTraceResult p_213868_1_) {
         Entity entity = p_213868_1_.getEntity();
-        float f = (float)this.getBoomerangType().getDamage() - 1.0f;
+        float f = (float)this.getBoomerangType().getDamage();
         if (entity instanceof LivingEntity) {
             LivingEntity livingentity = (LivingEntity)entity;
             f += EnchantmentHelper.getDamageBonus(this.thrownStack, livingentity.getMobType());
         }
 
         Entity entity1 = this.getOwner();
-        DamageSource damagesource = OdysseyDamageSource.boomerang(this, (Entity)(entity1 == null ? this : entity1));
+        DamageSource damagesource = OdysseyDamageSource.boomerang(this, entity1 == null ? this : entity1);
         this.dealtDamage = true;
-        SoundEvent soundevent = SoundEvents.TRIDENT_HIT;
         if (entity.hurt(damagesource, f)) {
             if (entity.getType() == EntityType.ENDERMAN) {
                 return;
@@ -158,20 +158,7 @@ public class BoomerangEntity extends AbstractArrowEntity {
         }
 
         this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
-        float f1 = 1.0F;
-        if (this.level instanceof ServerWorld && this.level.isThundering() && EnchantmentHelper.hasChanneling(this.thrownStack)) {
-            BlockPos blockpos = entity.blockPosition();
-            if (this.level.canSeeSky(blockpos)) {
-                LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(this.level);
-                lightningboltentity.moveTo(Vector3d.atBottomCenterOf(blockpos));
-                lightningboltentity.setCause(entity1 instanceof ServerPlayerEntity ? (ServerPlayerEntity)entity1 : null);
-                this.level.addFreshEntity(lightningboltentity);
-                soundevent = SoundEvents.TRIDENT_THUNDER;
-                f1 = 5.0F;
-            }
-        }
-
-        this.playSound(soundevent, f1, 1.0F);
+        this.playSound(SoundEvents.TRIDENT_HIT, 1.0f, 1.0F);
     }
 
     /**

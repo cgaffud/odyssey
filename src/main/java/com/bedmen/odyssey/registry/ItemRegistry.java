@@ -216,7 +216,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> LEVIATHAN_BOOTS = ITEMS.register("leviathan_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterial.LEVIATHAN, EquipmentSlotType.FEET, new Item.Properties().fireResistant().tab(OdysseyItemGroup.COMBAT), VULCAN_STRIDER_1));
 
     //Trinkets
-    public static final RegistryObject<Item> ARCTIC_AMULET = ITEMS.register("arctic_amulet", () -> new EquipmentItem(new Item.Properties().stacksTo(1).tab(OdysseyItemGroup.MAGIC), FIRE_PROTECTION_1));
+    public static final RegistryObject<Item> ARCTIC_AMULET = ITEMS.register("arctic_amulet", () -> new EquipmentTrinketItem(new Item.Properties().stacksTo(1).tab(OdysseyItemGroup.MAGIC), FIRE_PROTECTION_1));
     public static final RegistryObject<Item> GOLDEN_AMULET = ITEMS.register("golden_amulet", () -> new GoldenAmuletItem(new Item.Properties().stacksTo(1).tab(OdysseyItemGroup.MAGIC)));
 
     //Tools
