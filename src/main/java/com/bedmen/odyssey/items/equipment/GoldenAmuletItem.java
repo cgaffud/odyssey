@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.items.equipment;
 
-import com.bedmen.odyssey.items.equipment.EquipmentTrinketItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 

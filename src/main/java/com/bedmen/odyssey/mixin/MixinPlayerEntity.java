@@ -437,7 +437,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
                         flag1 = true;
                     }
 
-                    boolean flag2 = flag && this.fallDistance > 0.0F && !this.onGround && !this.onClimbable() && !this.isInWater() && !this.hasEffect(Effects.BLINDNESS) && !this.isPassenger() && p_71059_1_ instanceof LivingEntity;
+                    boolean flag2 = flag && this.fallDistance > 0.0F && !this.onGround && !this.onClimbable() && !this.isInWater() && !this.hasEffect(Effects.BLINDNESS) && !this.isPassenger() && p_71059_1_ instanceof LivingEntity && !DualWieldItem.isDualWielding(getPlayerEntity());
                     flag2 = flag2 && !this.isSprinting();
                     net.minecraftforge.event.entity.player.CriticalHitEvent hitResult = net.minecraftforge.common.ForgeHooks.getCriticalHit(getPlayerEntity(), p_71059_1_, flag2, flag2 ? 1.5F : 1.0F);
                     flag2 = hitResult != null;
@@ -566,7 +566,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
     }
 
     public float getCurrentItemAttackStrengthDelay() {
-        if(DualWieldItem.isDuelWieldingHatchets(getPlayerEntity())){
+        if(DualWieldItem.isDualWielding(getPlayerEntity())){
             return (float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 10.0D);
         }
         return (float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 20.0D);

@@ -35,6 +35,7 @@ import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.enchantment.Enchantment;
@@ -46,8 +47,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.FoliageColors;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -123,6 +127,8 @@ public class Odyssey
             OdysseyCrossbowItem.registerBaseProperties(item);
         for(Item item : OdysseyItemTags.TRIDENT_TAG)
             OdysseyTridentItem.registerBaseProperties(item);
+        for(Item item : OdysseyItemTags.BOOMERANG_TAG)
+            BoomerangItem.registerBaseProperties(item);
         for(Item item : OdysseyItemTags.SHIELD_TAG)
             OdysseyShieldItem.registerBaseProperties(item);
 
@@ -164,9 +170,9 @@ public class Odyssey
 
         //Projectile Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LEVIATHAN_TRIDENT.get(), OdysseyTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.UPGRADED_ARROW.get(), UpgradedArrowRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
 
         //Boat Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
@@ -180,6 +186,8 @@ public class Odyssey
             RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE2.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PERMAFROST_ICE4.get(), RenderType.translucent());
+
+        //Wood Types
         Atlases.addWoodType(OdysseyWoodType.PALM);
     }
 
@@ -192,7 +200,7 @@ public class Odyssey
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
         EquipmentMeleeItem.initEquipment();
-        EquipmentTrinketItem.initEquipment();
+        EquipmentItem.initEquipment();
         EquipmentPickaxeItem.initEquipment();
         EquipmentHoeItem.initEquipment();
         EquipmentShovelItem.initEquipment();
@@ -236,5 +244,10 @@ public class Odyssey
             BlockState blockstate = ((BlockItem)(p_210235_1_).getItem()).getBlock().defaultBlockState();
             return event.getBlockColors().getColor(blockstate, null, null, p_210235_2_);
         }, BlockRegistry.PALM_LEAVES.get());
+    }
+
+    @SubscribeEvent
+    public static void onModelRegistryEvent(final ModelRegistryEvent event) {
+        ModelLoader.addSpecialModel(new ModelResourceLocation("oddc:boomerang_in_hand#inventory"));
     }
 }

@@ -1,9 +1,11 @@
 package com.bedmen.odyssey.client.renderer.tileentity;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.client.renderer.entity.model.BoomerangModel;
 import com.bedmen.odyssey.client.renderer.entity.model.OdysseyTridentModel;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.OdysseyTridentItem;
+import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tileentity.SterlingSilverChestTileEntity;
@@ -34,6 +36,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class OdysseyItemStackTileEntityRenderer extends ItemStackTileEntityRenderer implements Callable<ItemStackTileEntityRenderer> {
     public static final OdysseyItemStackTileEntityRenderer odysseyInstance = new OdysseyItemStackTileEntityRenderer();
     private final OdysseyTridentModel odysseyTridentModel = new OdysseyTridentModel();
+    private final BoomerangModel boomerangModel = new BoomerangModel();
     private final ShieldModel shieldModel = new ShieldModel();
     private final Supplier<SterlingSilverChestTileEntity> sterlingSilverChest = SterlingSilverChestTileEntity::new;
 
@@ -75,6 +78,12 @@ public class OdysseyItemStackTileEntityRenderer extends ItemStackTileEntityRende
                 matrixStack.scale(1.0F, -1.0F, -1.0F);
                 IVertexBuilder ivertexbuilder1 = ItemRenderer.getFoilBufferDirect(buffer, this.odysseyTridentModel.renderType(OdysseyTridentModel.getTridentTexture(item)), false, itemStack.hasFoil());
                 this.odysseyTridentModel.renderToBuffer(matrixStack, ivertexbuilder1, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+                matrixStack.popPose();
+            } else if (item instanceof BoomerangItem) {
+                matrixStack.pushPose();
+                matrixStack.scale(1.0F, -1.0F, -1.0F);
+                IVertexBuilder ivertexbuilder1 = ItemRenderer.getFoilBufferDirect(buffer, this.boomerangModel.renderType(BoomerangModel.getBoomerangTexture(item)), false, itemStack.hasFoil());
+                this.boomerangModel.renderToBuffer(matrixStack, ivertexbuilder1, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
                 matrixStack.popPose();
             } else {
                 super.renderByItem(itemStack, transformType, matrixStack, buffer, combinedLight, combinedOverlay);

@@ -11,6 +11,7 @@ public class OdysseyItemTags {
     public static Set<Item> BOW_TAG;
     public static Set<Item> CROSSBOW_TAG;
     public static Set<Item> TRIDENT_TAG;
+    public static Set<Item> BOOMERANG_TAG;
     public static Set<Item> SHIELD_TAG;
     public static Set<Item> QUILL_TAG;
 
@@ -30,6 +31,11 @@ public class OdysseyItemTags {
         set.add(ItemRegistry.TRIDENT.get());
         set.add(ItemRegistry.LEVIATHAN_TRIDENT.get());
         TRIDENT_TAG = set;
+        //Boomerangs
+        set = new HashSet<>();
+        set.add(ItemRegistry.BONE_BOOMERANG.get());
+        set.add(ItemRegistry.COPPER_BOOMERANG.get());
+        BOOMERANG_TAG = set;
         //Shields
         set = new HashSet<>();
         set.add(ItemRegistry.SHIELD.get());
