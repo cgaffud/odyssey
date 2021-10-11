@@ -6,6 +6,7 @@ import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.entity.item.OdysseyBoatEntity;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
+import com.bedmen.odyssey.entity.monster.BabySkeletonEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
@@ -33,6 +34,7 @@ public class EntityTypeRegistry {
     //Mobs
     public static final RegistryObject<EntityType<LupineEntity>> LUPINE = ENTITY_TYPE.register("lupine", () -> EntityType.Builder.<LupineEntity>of(LupineEntity::new, OdysseyBiomeEntitySpawn.HARD_BIOME).sized(0.6F, 0.85F).clientTrackingRange(10).build(new ResourceLocation("lupine").toString()));
     public static final RegistryObject<EntityType<ArctihornEntity>> ARCTIHORN = ENTITY_TYPE.register("arctihorn", () -> EntityType.Builder.<ArctihornEntity>of(ArctihornEntity::new, EntityClassification.MONSTER).sized(0.8F, 0.8F).clientTrackingRange(12).build(new ResourceLocation("arctihorn").toString()));
+    public static final RegistryObject<EntityType<BabySkeletonEntity>> BABY_SKELETON = ENTITY_TYPE.register("baby_skeleton", () -> EntityType.Builder.<BabySkeletonEntity>of(BabySkeletonEntity::new, EntityClassification.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation("baby_skeleton").toString()));
 
     //Bosses
     public static final RegistryObject<EntityType<MineralLeviathanEntity>> MINERAL_LEVIATHAN = ENTITY_TYPE.register("mineral_leviathan", () -> EntityType.Builder.<MineralLeviathanEntity>of(MineralLeviathanEntity::new, EntityClassification.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(20).build(new ResourceLocation("mineral_leviathan").toString()));

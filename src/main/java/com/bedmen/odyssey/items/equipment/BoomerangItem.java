@@ -65,7 +65,7 @@ public class BoomerangItem extends EquipmentItem implements IVanishable {
                     });
                     BoomerangEntity boomerangEntity = new BoomerangEntity(worldIn, playerentity, stack);
                     float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerentity);
-                    boomerangEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, 1.0f*this.getInnateEnchantmentLevel(EnchantmentRegistry.LOYALTY.get()), inaccuracy);
+                    boomerangEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, this.shootSpeed(), inaccuracy);
                     if (playerentity.abilities.instabuild) {
                         boomerangEntity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                     }
@@ -80,6 +80,10 @@ public class BoomerangItem extends EquipmentItem implements IVanishable {
                 playerentity.awardStat(Stats.ITEM_USED.get(this));
             }
         }
+    }
+
+    public float shootSpeed(){
+        return Float.max((float)this.getInnateEnchantmentLevel(EnchantmentRegistry.LOYALTY.get()), 1.0f);
     }
 
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {

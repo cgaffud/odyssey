@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.projectile;
 
 import javax.annotation.Nullable;
 
+import com.bedmen.odyssey.entity.monster.BabySkeletonEntity;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -19,13 +20,17 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.Optional;
 
 public class BoomerangEntity extends AbstractArrowEntity {
     private static final DataParameter<Byte> LOYALTY_LEVEL = EntityDataManager.defineId(BoomerangEntity.class, DataSerializers.BYTE);
@@ -80,11 +85,6 @@ public class BoomerangEntity extends AbstractArrowEntity {
             } else if (i > 0) {
                 this.setNoPhysics(true);
                 Vector3d vector3d = new Vector3d(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
-//                this.setPosRaw(this.getX(), this.getY() + vector3d.y * 0.015D * (double)i, this.getZ());
-//                if (this.level.isClientSide) {
-//                    this.yOld = this.getY();
-//                }
-
                 double d0 = 0.05D * (double)i;
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
 
@@ -118,7 +118,28 @@ public class BoomerangEntity extends AbstractArrowEntity {
      */
     @Nullable
     protected EntityRayTraceResult findHitEntity(Vector3d startVec, Vector3d endVec) {
-        return this.dealtDamage ? null : super.findHitEntity(startVec, endVec);
+        if(this.dealtDamage){
+            if(!this.level.isClientSide){
+                AxisAlignedBB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
+                for(Entity entity : this.level.getEntities(this, box, this::isBabySkeletonOwner)) {
+                    BabySkeletonEntity babySkeletonEntity = (BabySkeletonEntity)entity;
+                    if(babySkeletonEntity.getMainHandItem().isEmpty()){
+                        babySkeletonEntity.setItemInHand(Hand.MAIN_HAND, this.thrownStack);
+                    } else if (babySkeletonEntity.getOffhandItem().isEmpty()){
+                        babySkeletonEntity.setItemInHand(Hand.OFF_HAND, this.thrownStack);
+                    }
+                    this.remove();
+                    break;
+                }
+            }
+            return null;
+        } else {
+            return super.findHitEntity(startVec, endVec);
+        }
+    }
+
+    private boolean isBabySkeletonOwner(Entity entity){
+        return entity instanceof BabySkeletonEntity && entity.getUUID() == this.getOwner().getUUID();
     }
 
     /**
