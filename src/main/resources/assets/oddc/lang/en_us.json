@@ -313,5 +313,6 @@
   "item.oddc.razor_hatchet": "Razor Hatchet",
   "item.oddc.copper_boomerang": "Copper Boomerang",
   "entity.oddc.copper_boomerang": "Copper Boomerang",
-  "item.oddc.bone_boomerang": "Bonemerang"
+  "item.oddc.bone_boomerang": "Bonemerang",
+  "entity.oddc.baby_skeleton": "Skeleton"
 }
