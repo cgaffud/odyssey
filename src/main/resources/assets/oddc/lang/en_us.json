@@ -314,5 +314,6 @@
   "item.oddc.copper_boomerang": "Copper Boomerang",
   "entity.oddc.copper_boomerang": "Copper Boomerang",
   "item.oddc.bone_boomerang": "Bonemerang",
-  "entity.oddc.baby_skeleton": "Skeleton"
+  "entity.oddc.baby_skeleton": "Skeleton",
+  "item.oddc.baby_skeleton_spawn_egg": "Baby Skeleton Spawn Egg"
 }
