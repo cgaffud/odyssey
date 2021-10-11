@@ -9,6 +9,7 @@ import net.minecraft.entity.monster.AbstractSkeletonEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.DamageSource;
@@ -18,6 +19,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+
+import java.util.Optional;
 
 public class BabySkeletonEntity extends AbstractSkeletonEntity {
     private final BoomerangAttackGoal boomerangGoal = new BoomerangAttackGoal(this, 1.0D, 40, 15.0F);
@@ -74,23 +77,33 @@ public class BabySkeletonEntity extends AbstractSkeletonEntity {
     public void reassessWeaponGoal() {
         if (this.level != null && !this.level.isClientSide) {
             this.goalSelector.removeGoal(this.boomerangGoal);
-            ItemStack itemstack = this.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this, ItemRegistry.BONE_BOOMERANG.get()));
-            if (itemstack.getItem() instanceof BoomerangItem) {
+            if (this.hasBoomerang().isPresent()) {
                 this.goalSelector.addGoal(4, this.boomerangGoal);
             }
         }
     }
 
-    public void performRangedAttack(LivingEntity p_82196_1_, float p_82196_2_) {
-        BoomerangEntity boomerangEntity = new BoomerangEntity(this.level, this, new ItemStack(ItemRegistry.BONE_BOOMERANG.get()));
-        double d0 = p_82196_1_.getX() - this.getX();
-        double d1 = p_82196_1_.getY(0.3333333333333333D) - boomerangEntity.getY();
-        double d2 = p_82196_1_.getZ() - this.getZ();
-        double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
-        boomerangEntity.shoot(d0, d1 + d3 * (double)0.2F, d2, 1.6F, (float)(14 - this.level.getDifficulty().getId() * 4));
+    public Optional<Hand> hasBoomerang(){
+        if(this.getMainHandItem().getItem() instanceof BoomerangItem){
+            return Optional.of(Hand.MAIN_HAND);
+        }
+        if(this.getOffhandItem().getItem() instanceof BoomerangItem){
+            return Optional.of(Hand.OFF_HAND);
+        }
+        return Optional.empty();
+    }
+
+    public void performRangedAttack(LivingEntity target, float p_82196_2_) {
+        Optional<Hand> hand = this.hasBoomerang();
+        ItemStack itemstack = hand.map(value -> new ItemStack(this.getItemInHand(value).getItem())).orElseGet(() -> new ItemStack(ItemRegistry.BONE_BOOMERANG.get()));
+        BoomerangEntity boomerangEntity = new BoomerangEntity(this.level, this, itemstack);
+        double d0 = target.getX() - this.getX();
+        double d1 = target.getEyeHeight() - this.getEyeHeight() + target.getY() - this.getY();
+        double d2 = target.getZ() - this.getZ();
+        boomerangEntity.shoot(d0, d1, d2, ((BoomerangItem)itemstack.getItem()).shootSpeed(), (float)(14 - this.level.getDifficulty().getId() * 4));
         this.playSound(SoundEvents.TRIDENT_THROW, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.level.addFreshEntity(boomerangEntity);
-        this.setItemInHand(ProjectileHelper.getWeaponHoldingHand(this, ItemRegistry.BONE_BOOMERANG.get()), ItemStack.EMPTY);
+        hand.ifPresent(value -> this.setItemInHand(value, ItemStack.EMPTY));
         this.reassessWeaponGoal();
     }
 
@@ -103,7 +116,7 @@ public class BabySkeletonEntity extends AbstractSkeletonEntity {
         }
 
         public boolean canUse() {
-            return super.canUse() && this.babySkeletonEntity.getMainHandItem().getItem() instanceof BoomerangItem;
+            return super.canUse() && babySkeletonEntity.hasBoomerang().isPresent();
         }
 
         public void start() {

@@ -119,16 +119,18 @@ public class BoomerangEntity extends AbstractArrowEntity {
     @Nullable
     protected EntityRayTraceResult findHitEntity(Vector3d startVec, Vector3d endVec) {
         if(this.dealtDamage){
-            AxisAlignedBB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
-            for(Entity entity : this.level.getEntities(this, box, this::isBabySkeletonOwner)) {
-                BabySkeletonEntity babySkeletonEntity = (BabySkeletonEntity)entity;
-                if(babySkeletonEntity.getItemInHand(Hand.MAIN_HAND) == ItemStack.EMPTY){
-                    babySkeletonEntity.setItemInHand(Hand.MAIN_HAND, this.thrownStack);
-                } else if (babySkeletonEntity.getItemInHand(Hand.OFF_HAND) == ItemStack.EMPTY){
-                    babySkeletonEntity.setItemInHand(Hand.OFF_HAND, this.thrownStack);
+            if(!this.level.isClientSide){
+                AxisAlignedBB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
+                for(Entity entity : this.level.getEntities(this, box, this::isBabySkeletonOwner)) {
+                    BabySkeletonEntity babySkeletonEntity = (BabySkeletonEntity)entity;
+                    if(babySkeletonEntity.getMainHandItem().isEmpty()){
+                        babySkeletonEntity.setItemInHand(Hand.MAIN_HAND, this.thrownStack);
+                    } else if (babySkeletonEntity.getOffhandItem().isEmpty()){
+                        babySkeletonEntity.setItemInHand(Hand.OFF_HAND, this.thrownStack);
+                    }
+                    this.remove();
+                    break;
                 }
-                this.remove();
-                break;
             }
             return null;
         } else {
