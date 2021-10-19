@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.entity.projectile.UpgradedArrowEntity;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
@@ -33,16 +34,8 @@ public class UpgradedArrowItem extends ArrowItem {
 
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.oddc.arrow.damage").append(fmt(this.arrowType.getDamage())).withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.arrow.damage").append(StringUtil.doubleFormat(this.arrowType.getDamage())).withStyle(TextFormatting.BLUE));
         tooltip.add(new TranslationTextComponent("item.oddc.arrow.piercing_level").append(Integer.toString(this.arrowType.getPierce())).withStyle(TextFormatting.BLUE));
-    }
-
-    public static String fmt(double d)
-    {
-        if(d == (int) d)
-            return String.format("%d",(int)d);
-        else
-            return Double.toString(d);
     }
 
     public enum ArrowType{

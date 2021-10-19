@@ -1,8 +1,12 @@
 package com.bedmen.odyssey.items;
 
+import java.util.List;
 import java.util.function.Predicate;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.StringUtil;
+import com.google.common.collect.Lists;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
@@ -12,13 +16,25 @@ import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
 
 public class OdysseyBowItem extends BowItem implements IVanishable {
     private final double baseDamage;
-    public OdysseyBowItem(Item.Properties builder, double baseDamage) {
+    private final float velocity;
+    private final int chargeTime;
+    public OdysseyBowItem(Item.Properties builder, double baseDamage, float velocity, int chargeTime) {
         super(builder);
         this.baseDamage = baseDamage;
+        this.velocity = velocity;
+        this.chargeTime = chargeTime;
     }
 
     /**
@@ -48,7 +64,7 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                         AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, itemstack, playerentity);
                         abstractarrowentity = customArrow(abstractarrowentity);
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(entityLiving);
-                        abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * 3.0F, inaccuracy);
+                        abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity, inaccuracy);
                         //if (f == 1.0F) {
                         //    abstractarrowentity.setIsCritical(true);
                         //}
@@ -95,8 +111,8 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
     /**
      * Gets the velocity of the arrow entity from the bow's charge
      */
-    public static float getArrowVelocity(int charge) {
-        float f = (float)charge / 20.0F;
+    public float getArrowVelocity(int charge) {
+        float f = (float)charge / (float)this.chargeTime;
         f = (f * f + f * 2.0F) / 3.0F;
         if (f > 1.0F) {
             f = 1.0F;
@@ -153,11 +169,18 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
             if (entity == null) {
                 return 0.0F;
             } else {
-                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F;
+                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / ((OdysseyBowItem)item).chargeTime;
             }
         });
         ItemModelsProperties.register(item, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
             return entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack ? 1.0F : 0.0F;
         });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new TranslationTextComponent("item.oddc.bow.base_damage").append(StringUtil.doubleFormat(this.baseDamage)).withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(this.chargeTime/20f)).append("s").withStyle(TextFormatting.BLUE));
     }
 }

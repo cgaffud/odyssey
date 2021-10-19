@@ -39,7 +39,6 @@ public class OdysseyItemTags {
         BOOMERANG_TAG = set;
         //Shields
         set = new HashSet<>();
-        set.add(Items.SHIELD);
         set.add(ItemRegistry.SHIELD.get());
         set.add(ItemRegistry.LEVIATHAN_SHIELD.get());
         SHIELD_TAG = set;

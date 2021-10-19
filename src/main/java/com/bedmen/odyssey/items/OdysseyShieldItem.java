@@ -1,15 +1,11 @@
 package com.bedmen.odyssey.items;
 
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
-
-import com.bedmen.odyssey.registry.EnchantmentRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -18,14 +14,12 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jline.utils.DiffHelper;
 
 public class OdysseyShieldItem extends Item {
     private final NonNullList<Item> repairItems;
@@ -106,16 +100,8 @@ public class OdysseyShieldItem extends Item {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         Difficulty difficulty = worldIn == null ? null : worldIn.getDifficulty();
-        tooltip.add(new TranslationTextComponent("item.oddc.shield.damage_block").append(fmt(this.getDamageBlock(difficulty))).withStyle(TextFormatting.BLUE));
-        tooltip.add(new TranslationTextComponent("item.oddc.shield.recovery_time").append(fmt(this.getRecoveryTime()/20f)).append("s").withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.shield.damage_block").append(StringUtil.floatFormat(this.getDamageBlock(difficulty))).withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.shield.recovery_time").append(StringUtil.floatFormat(this.getRecoveryTime()/20f)).append("s").withStyle(TextFormatting.BLUE));
         BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
-    }
-
-    public static String fmt(float f)
-    {
-        if(f == (int) f)
-            return String.format("%d",(int)f);
-        else
-            return Float.toString(f);
     }
 }
