@@ -28,6 +28,7 @@ public class UpgradedArrowEntity extends AbstractArrowEntity {
         super(EntityTypeRegistry.UPGRADED_ARROW.get(), p_i46768_2_, p_i46768_1_);
         this.setArrowType(arrowType);
         this.setBaseDamage(arrowType.getDamage());
+        this.setPierceLevel((byte)arrowType.getPierce());
     }
 
     public UpgradedArrowEntity(World p_i46769_1_, double p_i46769_2_, double p_i46769_4_, double p_i46769_6_) {
@@ -36,7 +37,7 @@ public class UpgradedArrowEntity extends AbstractArrowEntity {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ARROW_TYPE, UpgradedArrowItem.ArrowType.AMETHYST.name());
+        this.entityData.define(ARROW_TYPE, UpgradedArrowItem.ArrowType.FLINT.name());
     }
 
     protected ItemStack getPickupItem() {
@@ -49,6 +50,7 @@ public class UpgradedArrowEntity extends AbstractArrowEntity {
             this.setArrowType(compoundNBT.getString("ArrowType"));
         }
         this.setBaseDamage(this.getArrowType().getDamage());
+        this.setPierceLevel((byte)this.getArrowType().getPierce());
     }
 
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {

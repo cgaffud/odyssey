@@ -106,8 +106,8 @@ public class OdysseyShieldItem extends Item {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         Difficulty difficulty = worldIn == null ? null : worldIn.getDifficulty();
-        tooltip.add(new TranslationTextComponent("item.oddc.shield.damage_block").append(" ").append(fmt(this.getDamageBlock(difficulty))).withStyle(TextFormatting.BLUE));
-        tooltip.add(new TranslationTextComponent("item.oddc.shield.recovery_time").append(" ").append(fmt(this.getRecoveryTime()/20f)).append("s").withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.shield.damage_block").append(fmt(this.getDamageBlock(difficulty))).withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.shield.recovery_time").append(fmt(this.getRecoveryTime()/20f)).append("s").withStyle(TextFormatting.BLUE));
         BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
     }
 

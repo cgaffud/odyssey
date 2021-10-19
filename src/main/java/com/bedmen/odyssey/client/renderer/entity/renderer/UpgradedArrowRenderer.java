@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class UpgradedArrowRenderer extends ArrowRenderer<UpgradedArrowEntity> {
-    public static final ResourceLocation[] UPGRADED_ARROW_LOCATION = new ResourceLocation[]{new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/amethyst_arrow.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/quartz_arrow.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/razor_arrow.png")};
+    public static final ResourceLocation[] UPGRADED_ARROW_LOCATION = new ResourceLocation[]{new ResourceLocation("textures/entity/projectiles/arrow.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/amethyst_arrow.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/quartz_arrow.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/razor_arrow.png")};
 
     public UpgradedArrowRenderer(EntityRendererManager p_i46549_1_) {
         super(p_i46549_1_);
