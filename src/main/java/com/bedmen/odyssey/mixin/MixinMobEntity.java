@@ -21,22 +21,28 @@ public abstract class MixinMobEntity extends Entity{
 
     //Disables all kinds of shields
     private void maybeDisableShield(PlayerEntity player, ItemStack mainhand, ItemStack activePlayerStack) {
-        if (!mainhand.isEmpty() && !activePlayerStack.isEmpty() && (mainhand.getItem() instanceof AxeItem) && (activePlayerStack.getItem() instanceof OdysseyShieldItem)){
+        if (!mainhand.isEmpty() && !activePlayerStack.isEmpty() && (mainhand.getItem() instanceof AxeItem)){
             float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(getMobEntity(this)) * 0.05F;
+            Item item = activePlayerStack.getItem();
             if (this.random.nextFloat() < f) {
-                if(activePlayerStack.getItem() instanceof OdysseyShieldItem || activePlayerStack.getItem() instanceof ShieldItem){
-                    int ticks = EnchantmentUtil.getRecoveryTicks(player);
-                    for(Item item : OdysseyItemTags.SHIELD_TAG){
-                        player.getCooldowns().addCooldown(item, ticks);
+                if(item instanceof OdysseyShieldItem){
+                    int ticks = ((OdysseyShieldItem)item).getRecoveryTime();
+                    for(Item item1 : OdysseyItemTags.SHIELD_TAG){
+                        player.getCooldowns().addCooldown(item1, ticks);
                     }
+                    this.level.broadcastEntityEvent(player, (byte)30);
+                } else if(item instanceof ShieldItem){
+                    for(Item item1 : OdysseyItemTags.SHIELD_TAG){
+                        player.getCooldowns().addCooldown(item1, 100);
+                    }
+                    this.level.broadcastEntityEvent(player, (byte)30);
                 }
-                this.level.broadcastEntityEvent(player, (byte)30);
             }
         }
     }
 
-    private MobEntity getMobEntity(Object o){
-        return (MobEntity)o;
+    private MobEntity getMobEntity(MixinMobEntity mixinMobEntity){
+        return (MobEntity)(Object)mixinMobEntity;
     }
 
 }

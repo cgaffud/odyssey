@@ -316,5 +316,7 @@
   "item.oddc.bone_boomerang": "Bonerang",
   "entity.oddc.baby_skeleton": "Skeleton",
   "item.oddc.baby_skeleton_spawn_egg": "Baby Skeleton Spawn Egg",
-  "death.attack.boomerang": "%1$s was bonked by %2$s"
+  "death.attack.boomerang": "%1$s was bonked by %2$s",
+  "item.oddc.shield.damage_block": "Damage Block:",
+  "item.oddc.shield.recovery_time": "Recovery Time:"
 }

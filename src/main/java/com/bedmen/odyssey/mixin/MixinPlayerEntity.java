@@ -3,6 +3,7 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.player.IPlayerPermanentBuffs;
 import com.bedmen.odyssey.entity.player.OdysseyPlayerInventory;
+import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.bedmen.odyssey.items.equipment.IEquipment;
@@ -201,8 +202,15 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
         }
 
         if (this.random.nextFloat() < f) {
-            for(Item item : OdysseyItemTags.SHIELD_TAG){
-                this.getCooldowns().addCooldown(item, EnchantmentUtil.getRecoveryTicks(this));
+            Item item = this.getUseItem().getItem();
+            if(item instanceof OdysseyShieldItem){
+                for(Item item1 : OdysseyItemTags.SHIELD_TAG){
+                    this.getCooldowns().addCooldown(item1, ((OdysseyShieldItem)item).getRecoveryTime());
+                }
+            } else if(item instanceof ShieldItem){
+                for(Item item1 : OdysseyItemTags.SHIELD_TAG){
+                    this.getCooldowns().addCooldown(item1, 100);
+                }
             }
             this.stopUsingItem();
             this.level.broadcastEntityEvent(this, (byte)30);

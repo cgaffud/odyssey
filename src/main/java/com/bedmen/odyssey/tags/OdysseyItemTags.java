@@ -2,6 +2,7 @@ package com.bedmen.odyssey.tags;
 
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +39,7 @@ public class OdysseyItemTags {
         BOOMERANG_TAG = set;
         //Shields
         set = new HashSet<>();
+        set.add(Items.SHIELD);
         set.add(ItemRegistry.SHIELD.get());
         set.add(ItemRegistry.LEVIATHAN_SHIELD.get());
         SHIELD_TAG = set;

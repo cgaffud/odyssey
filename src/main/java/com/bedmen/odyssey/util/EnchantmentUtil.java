@@ -31,7 +31,6 @@ public class EnchantmentUtil {
     private static final int[] CROSSBOW_ENCHANTS = {33,34,35};
     private static final int[] TRIDENT_ENCHANTS = {29,30,31,32,49};
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
-    private static final int[] SHIELD_ENCHANTS = {39,40};
 
     private static final Enchantment[] SHARPNESS_EXCLUSION = {Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS};
     private static final Enchantment[] SMITE_EXCLUSION = {Enchantments.SHARPNESS, Enchantments.BANE_OF_ARTHROPODS};
@@ -84,8 +83,8 @@ public class EnchantmentUtil {
             Enchantments.MENDING,
             Enchantments.VANISHING_CURSE,
             EnchantmentRegistry.ACCURACY.get(),
-            EnchantmentRegistry.BLOCKING.get(),
-            EnchantmentRegistry.RECOVERY.get(),
+            //EnchantmentRegistry.BLOCKING.get(),
+            //EnchantmentRegistry.RECOVERY.get(),
             EnchantmentRegistry.UNENCHANTABLE.get(),
             EnchantmentRegistry.BLEEDING.get(),
             EnchantmentRegistry.DROWNING.get(),
@@ -139,8 +138,8 @@ public class EnchantmentUtil {
         integerMap.put(Enchantments.MENDING, 36);
         integerMap.put(Enchantments.VANISHING_CURSE, 37);
         integerMap.put(EnchantmentRegistry.ACCURACY.get(), 38);
-        integerMap.put(EnchantmentRegistry.BLOCKING.get(), 39);
-        integerMap.put(EnchantmentRegistry.RECOVERY.get(), 40);
+        //integerMap.put(EnchantmentRegistry.BLOCKING.get(), 39);
+        //integerMap.put(EnchantmentRegistry.RECOVERY.get(), 40);
         integerMap.put(EnchantmentRegistry.UNENCHANTABLE.get(), 41);
         integerMap.put(EnchantmentRegistry.BLEEDING.get(), 42);
         integerMap.put(EnchantmentRegistry.DROWNING.get(), 43);
@@ -189,7 +188,6 @@ public class EnchantmentUtil {
         if(item instanceof OdysseyCrossbowItem) return check(CROSSBOW_ENCHANTS, id);
         if(item instanceof OdysseyTridentItem) return check(TRIDENT_ENCHANTS, id);
         if(item instanceof FishingRodItem) return check(FISHING_ROD_ENCHANTS, id);
-        if(item instanceof OdysseyShieldItem) return check(SHIELD_ENCHANTS, id);
         return false;
     }
 
@@ -255,16 +253,6 @@ public class EnchantmentUtil {
     public static float getAccuracyMultiplier(LivingEntity entity){
         int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.ACCURACY.get(), entity);
         return i > 0 ? 0.1f : 1.0f;
-    }
-
-    public static float getBlockingMultiplier(LivingEntity entity){
-        int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.BLOCKING.get(), entity);
-        return 1.0f + 0.25f * i;
-    }
-
-    public static int getRecoveryTicks(LivingEntity entity){
-        int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.RECOVERY.get(), entity);
-        return 100 - 40 * i;
     }
 
     public static boolean hasFireProtectionOrResistance(LivingEntity entity) {

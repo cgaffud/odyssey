@@ -42,6 +42,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.spongepowered.asm.mixin.Mixin;
@@ -236,7 +237,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
                 // Shield Code
                 Item item = this.useItem.getItem();
                 if(item instanceof OdysseyShieldItem)
-                    amount -= EnchantmentUtil.getBlockingMultiplier(getLivingEntity()) * ((OdysseyShieldItem)item).getBlock();
+                    amount -= ((OdysseyShieldItem)item).getDamageBlock(this.level.getDifficulty());
                 if(amount < 0.0f){
                     amount = 0.0F;
                     flag = true;
