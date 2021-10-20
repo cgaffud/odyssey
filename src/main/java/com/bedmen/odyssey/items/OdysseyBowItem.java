@@ -27,12 +27,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 public class OdysseyBowItem extends BowItem implements IVanishable {
-    private final double baseDamage;
     private final float velocity;
     private final int chargeTime;
-    public OdysseyBowItem(Item.Properties builder, double baseDamage, float velocity, int chargeTime) {
+    public OdysseyBowItem(Item.Properties builder, float velocity, int chargeTime) {
         super(builder);
-        this.baseDamage = baseDamage;
         this.velocity = velocity;
         this.chargeTime = chargeTime;
     }
@@ -64,12 +62,7 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                         AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, itemstack, playerentity);
                         abstractarrowentity = customArrow(abstractarrowentity);
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(entityLiving);
-                        abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity, inaccuracy);
-                        //if (f == 1.0F) {
-                        //    abstractarrowentity.setIsCritical(true);
-                        //}
-
-                        abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + this.baseDamage);
+                        abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity * 3.0f, inaccuracy);
                         int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
                         if (j > 0) {
                             abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + (double)j * 0.5D + 0.5D);
@@ -179,7 +172,6 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
 
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.oddc.bow.base_damage").append(StringUtil.doubleFormat(this.baseDamage)).withStyle(TextFormatting.BLUE));
         tooltip.add(new TranslationTextComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(TextFormatting.BLUE));
         tooltip.add(new TranslationTextComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(this.chargeTime/20f)).append("s").withStyle(TextFormatting.BLUE));
     }

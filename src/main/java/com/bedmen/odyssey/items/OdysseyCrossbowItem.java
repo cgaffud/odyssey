@@ -41,13 +41,11 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
     private boolean isLoadingStart = false;
     /** Set to {@code true} when the crossbow is 50% charged. */
     private boolean isLoadingMiddle = false;
-    private final double baseDamage;
     private final float velocity;
     private final int chargeTime;
 
-    public OdysseyCrossbowItem(Item.Properties propertiesIn, double baseDamage, float velocity, int chargeTime) {
+    public OdysseyCrossbowItem(Item.Properties propertiesIn, float velocity, int chargeTime) {
         super(propertiesIn);
-        this.baseDamage = baseDamage;
         this.velocity = velocity;
         this.chargeTime = chargeTime;
     }
@@ -215,7 +213,6 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
                 projectileentity = new FireworkRocketEntity(worldIn, projectile, shooter, shooter.getX(), shooter.getEyeY() - (double)0.15F, shooter.getZ(), true);
             } else {
                 projectileentity = createArrow(worldIn, shooter, crossbow, projectile);
-                ((AbstractArrowEntity)projectileentity).setBaseDamage(((AbstractArrowEntity)projectileentity).getBaseDamage()+(((OdysseyCrossbowItem)(crossbow.getItem()))).getBaseDamage());
                 if (isCreativeMode || projectileAngle != 0.0F) {
                     ((AbstractArrowEntity)projectileentity).pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                 }
@@ -244,9 +241,6 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
     private static AbstractArrowEntity createArrow(World worldIn, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
         ArrowItem arrowitem = (ArrowItem)(ammo.getItem() instanceof ArrowItem ? ammo.getItem() : Items.ARROW);
         AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, ammo, shooter);
-        if (shooter instanceof PlayerEntity) {
-            abstractarrowentity.setCritArrow(true);
-        }
 
         abstractarrowentity.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractarrowentity.setShotFromCrossbow(true);
@@ -346,7 +340,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
         int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, itemStack);
         Item item = itemStack.getItem();
         if(item instanceof OdysseyCrossbowItem){
-            return (int)(((OdysseyCrossbowItem) item).chargeTime * (1.0f - 0.2f * i));
+            return Math.round(((OdysseyCrossbowItem) item).chargeTime * (1.0f - 0.2f * i));
         }
         return 25 - 5 * i;
     }
@@ -390,9 +384,8 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
      */
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.oddc.bow.base_damage").append(StringUtil.doubleFormat(this.baseDamage)).withStyle(TextFormatting.BLUE));
         tooltip.add(new TranslationTextComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(TextFormatting.BLUE));
-        tooltip.add(new TranslationTextComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(getChargeDuration(this.getDefaultInstance())/20f)).append("s").withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(getChargeDuration(stack)/20f)).append("s").withStyle(TextFormatting.BLUE));
         List<ItemStack> list = getChargedProjectiles(stack);
         if (isCharged(stack) && !list.isEmpty()) {
             ItemStack itemstack = list.get(0);
@@ -411,15 +404,11 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
     }
 
     private float getVelocity(ItemStack itemStack) {
-        return hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 0.5f * this.velocity : this.velocity;
+        return hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.5f * this.velocity : 3.0f * this.velocity;
     }
 
     public int getDefaultProjectileRange() {
         return 8;
-    }
-
-    public double getBaseDamage() {
-        return this.baseDamage;
     }
 
     public static void registerBaseProperties(Item item){

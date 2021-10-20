@@ -39,10 +39,10 @@ public class UpgradedArrowItem extends ArrowItem {
     }
 
     public enum ArrowType{
-        FLINT(ItemRegistry.ARROW, 2.0d, 0),
-        AMETHYST(ItemRegistry.AMETHYST_ARROW, 2.5d, 1),
-        QUARTZ(ItemRegistry.QUARTZ_ARROW, 3.0d, 2),
-        RAZOR(ItemRegistry.RAZOR_ARROW, 3.5d, 3);
+        FLINT(ItemRegistry.ARROW, 6.0d, 0),
+        AMETHYST(ItemRegistry.AMETHYST_ARROW, 7.5d, 1),
+        QUARTZ(ItemRegistry.QUARTZ_ARROW, 9.0d, 2),
+        RAZOR(ItemRegistry.RAZOR_ARROW, 10.5d, 3);
 
         private final Lazy<Item> itemSupplier;
         private final double damage;

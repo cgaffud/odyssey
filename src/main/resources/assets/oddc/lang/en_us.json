@@ -321,7 +321,6 @@
   "item.oddc.shield.recovery_time": "Recovery Time: ",
   "item.oddc.arrow.damage": "Damage: ",
   "item.oddc.arrow.piercing_level": "Piercing Level: ",
-  "item.oddc.bow.base_damage": "Base Damage: ",
   "item.oddc.bow.velocity": "Velocity: ",
   "item.oddc.bow.charge_time": "Charge Time: "
 }
