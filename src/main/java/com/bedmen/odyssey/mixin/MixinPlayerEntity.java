@@ -7,6 +7,7 @@ import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.bedmen.odyssey.items.equipment.IEquipment;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -31,6 +32,7 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.play.server.SEntityVelocityPacket;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stat;
@@ -501,6 +503,22 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
                             this.level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, this.getSoundSource(), 1.0F, 1.0F);
                             this.sweepAttack();
+                        }
+
+                        int shatteringLevel = EnchantmentUtil.getShattering(getPlayerEntity());
+                        if(flag && shatteringLevel > 0 && p_71059_1_ instanceof LivingEntity && !this.level.isClientSide){
+                            System.out.println("beans1");
+                            EffectInstance effectInstance = ((LivingEntity) p_71059_1_).getEffect(EffectRegistry.SHATTERED.get());
+                            if(effectInstance != null){
+                                System.out.println("beans2");
+                                ((LivingEntity) p_71059_1_).removeEffect(EffectRegistry.SHATTERED.get());
+                                int amp = effectInstance.getAmplifier();
+                                effectInstance = new EffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, Integer.min(amp+1,1+2*shatteringLevel), false, true, true);
+                            } else {
+                                System.out.println("beans3");
+                                effectInstance = new EffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, 0, false, true, true);
+                            }
+                            ((LivingEntity) p_71059_1_).addEffect(effectInstance);
                         }
 
                         if (p_71059_1_ instanceof ServerPlayerEntity && p_71059_1_.hurtMarked) {

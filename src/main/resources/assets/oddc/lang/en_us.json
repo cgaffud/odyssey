@@ -322,5 +322,7 @@
   "item.oddc.arrow.damage": "Damage: ",
   "item.oddc.arrow.piercing_level": "Piercing Level: ",
   "item.oddc.bow.velocity": "Velocity: ",
-  "item.oddc.bow.charge_time": "Charge Time: "
+  "item.oddc.bow.charge_time": "Charge Time: ",
+  "effect.oddc.shattered": "Shattered",
+  "enchantment.oddc.shattering": "Shattering"
 }

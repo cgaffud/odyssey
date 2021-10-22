@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class EnchantmentUtil {
     private static final int[] SWORD_ENCHANTS = {12,13,14,15,16,17,18};
-    private static final int[] AXE_ENCHANTS = {12,13,14,19,20,22};
+    private static final int[] AXE_ENCHANTS = {12,13,14,19,20,22,39};
     private static final int[] TOOL_ENCHANTS = {6,19,20,22,48};
     private static final int[] HELMET_ENCHANTS = {0,5,10,50};
     private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10,38};
@@ -83,7 +83,7 @@ public class EnchantmentUtil {
             Enchantments.MENDING,
             Enchantments.VANISHING_CURSE,
             EnchantmentRegistry.ACCURACY.get(),
-            //EnchantmentRegistry.BLOCKING.get(),
+            EnchantmentRegistry.SHATTERING.get(),
             //EnchantmentRegistry.RECOVERY.get(),
             EnchantmentRegistry.UNENCHANTABLE.get(),
             EnchantmentRegistry.BLEEDING.get(),
@@ -138,7 +138,7 @@ public class EnchantmentUtil {
         integerMap.put(Enchantments.MENDING, 36);
         integerMap.put(Enchantments.VANISHING_CURSE, 37);
         integerMap.put(EnchantmentRegistry.ACCURACY.get(), 38);
-        //integerMap.put(EnchantmentRegistry.BLOCKING.get(), 39);
+        integerMap.put(EnchantmentRegistry.SHATTERING.get(), 39);
         //integerMap.put(EnchantmentRegistry.RECOVERY.get(), 40);
         integerMap.put(EnchantmentRegistry.UNENCHANTABLE.get(), 41);
         integerMap.put(EnchantmentRegistry.BLEEDING.get(), 42);
@@ -321,5 +321,9 @@ public class EnchantmentUtil {
 
     public static float getSweepingDamageRatio(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(Enchantments.SWEEPING_EDGE, entity) * 0.2f;
+    }
+
+    public static int getShattering(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SHATTERING.get(), entity);
     }
 }
