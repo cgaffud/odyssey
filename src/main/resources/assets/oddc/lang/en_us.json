@@ -23,10 +23,8 @@
   "item.oddc.purge_tablet": "Purge Tablet",
   "item.oddc.coconut_flower": "Coconut Flower",
   "item.oddc.life_fruit": "Life Fruit",
-  "item.oddc.granite_bat": "Granite Bat",
   "item.oddc.copper_bat": "Copper Bat",
   "item.oddc.obsidian_bat": "Obsidian Bat",
-  "item.oddc.granite_hammer": "Granite Hammer",
   "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.obsidian_hammer": "Obsidian Hammer",
   "item.oddc.chicken_boots": "Feathered Boots",
@@ -324,5 +322,7 @@
   "item.oddc.bow.velocity": "Velocity: ",
   "item.oddc.bow.charge_time": "Charge Time: ",
   "effect.oddc.shattered": "Shattered",
-  "enchantment.oddc.shattering": "Shattering"
+  "enchantment.oddc.shattering": "Shattering",
+  "item.oddc.copper_battle_axe": "Copper Battle Axe",
+  "item.oddc.obsidian_battle_axe": "Obsidian Battle Axe"
 }

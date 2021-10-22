@@ -11,9 +11,8 @@ import net.minecraft.tags.ItemTags;
 public enum OdysseyItemTier implements IItemTier{
 
     //Heavy
-    COPPER(1, 250, 2.0F, -1.0F, 0, () -> { return Ingredient.of(ItemRegistry.COPPER_INGOT.get()); }),
-    GRANITE(1, 160, 2.0F, -1.0F, 0, () -> { return Ingredient.of(Items.GRANITE); }),
-    OBSIDIAN(1, 2000, 2.0F, -1.0F, 0, () -> { return Ingredient.of(Items.OBSIDIAN); }),
+    COPPER(0, 250, 2.0F, -1.0F, 0, () -> { return Ingredient.of(ItemRegistry.COPPER_INGOT.get()); }),
+    OBSIDIAN(0, 2000, 2.0F, -1.0F, 0, () -> { return Ingredient.of(Items.OBSIDIAN); }),
 
     //Sharp
     FLINT(0, 100, 2.0f, -1.0f, 0, () -> { return Ingredient.of(Items.FLINT); }),
