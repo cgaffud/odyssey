@@ -4,7 +4,6 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.enchantment.*;
 import com.bedmen.odyssey.enchantment.vanilla.*;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -32,6 +31,12 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> DEPTH_STRIDER = ENCHANTMENTS_VANILLA.register("depth_strider", () -> new OdysseyDepthStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
     public static final RegistryObject<Enchantment> FROST_WALKER = ENCHANTMENTS_VANILLA.register("frost_walker", () -> new OdysseyFrostWalkerEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.FEET));
     public static final RegistryObject<Enchantment> RESPIRATION = ENCHANTMENTS_VANILLA.register("respiration", () -> new OdysseyRespirationEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
+    public static final RegistryObject<Enchantment> QUICK_CHARGE = ENCHANTMENTS_VANILLA.register("quick_charge", () -> new OdysseyQuickChargeEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlotType.MAINHAND));
+    public static final RegistryObject<Enchantment> PIERCING = ENCHANTMENTS_VANILLA.register("piercing", () -> new OdysseyPiercingEnchantment(Enchantment.Rarity.COMMON, EquipmentSlotType.MAINHAND));
+    public static final RegistryObject<Enchantment> MULTISHOT = ENCHANTMENTS_VANILLA.register("multishot", () -> new OdysseyMultishotEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.MAINHAND));
+    public static final RegistryObject<Enchantment> FLAMING_ARROWS = ENCHANTMENTS_VANILLA.register("flame", () -> new OdysseyFlameEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.MAINHAND));
+    public static final RegistryObject<Enchantment> PUNCH_ARROWS = ENCHANTMENTS_VANILLA.register("punch", () -> new OdysseyPunchEnchantment(Enchantment.Rarity.RARE, EquipmentSlotType.MAINHAND));
+
 
     //Odyssey
     public static final RegistryObject<Enchantment> ACCURACY = ENCHANTMENTS.register("accuracy", () -> new AccuracyEnchantment(Enchantment.Rarity.COMMON, EquipmentSlotType.CHEST));

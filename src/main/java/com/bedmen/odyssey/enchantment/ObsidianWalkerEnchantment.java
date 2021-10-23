@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.enchantment;
 
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
@@ -21,7 +22,7 @@ public class ObsidianWalkerEnchantment extends FrostWalkerEnchantment {
     }
 
     public Enchantment getDowngrade(){
-        return Enchantments.FROST_WALKER;
+        return EnchantmentRegistry.FROST_WALKER.get();
     }
 
     public static void onEntityMoved(LivingEntity p_185266_0_, World p_185266_1_, BlockPos p_185266_2_, int p_185266_3_) {

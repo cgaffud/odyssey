@@ -1,11 +1,9 @@
 package com.bedmen.odyssey.items;
 
-import java.util.List;
-import java.util.function.Predicate;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
-import com.google.common.collect.Lists;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -17,7 +15,6 @@ import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -25,6 +22,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class OdysseyBowItem extends BowItem implements IVanishable {
     private final float velocity;
@@ -54,7 +53,7 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                     itemstack = new ItemStack(Items.ARROW);
                 }
 
-                float f = getArrowVelocity(i);
+                float f = getArrowVelocity(i, stack);
                 if (!((double)f < 0.1D)) {
                     boolean flag1 = playerentity.abilities.instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, stack, playerentity));
                     if (!worldIn.isClientSide) {
@@ -68,12 +67,21 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                             abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + (double)j * 0.5D + 0.5D);
                         }
 
-                        int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
+                        int k = EnchantmentUtil.getPunch(stack);
                         if (k > 0) {
                             abstractarrowentity.setKnockback(k);
                         }
+                        k = EnchantmentUtil.getPiercing(stack);
+                        if (k > 0) {
+                            abstractarrowentity.setPierceLevel((byte)k);
+                        }
+                        k = EnchantmentUtil.getFlame(stack);
+                        if (k > 0) {
+                            abstractarrowentity.setRemainingFireTicks(100*k);
+                        }
 
-                        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack) > 0) {
+
+                        if (EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), stack) > 0) {
                             abstractarrowentity.setSecondsOnFire(100);
                         }
 
@@ -104,8 +112,8 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
     /**
      * Gets the velocity of the arrow entity from the bow's charge
      */
-    public float getArrowVelocity(int charge) {
-        float f = (float)charge / (float)this.chargeTime;
+    public float getArrowVelocity(int charge, ItemStack itemStack) {
+        float f = (float)charge / (float)this.getChargeTime(itemStack);
         f = (f * f + f * 2.0F) / 3.0F;
         if (f > 1.0F) {
             f = 1.0F;
@@ -156,13 +164,17 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
     public int getDefaultProjectileRange() {
         return 15;
     }
+
+    public int getChargeTime(ItemStack itemStack){
+        return EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack);
+    }
     
     public static void registerBaseProperties(Item item) {
         ItemModelsProperties.register(item, new ResourceLocation("pull"), (itemStack, world, entity) -> {
             if (entity == null) {
                 return 0.0F;
             } else {
-                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / ((OdysseyBowItem)item).chargeTime;
+                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / ((OdysseyBowItem)item).getChargeTime(itemStack);
             }
         });
         ItemModelsProperties.register(item, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
@@ -173,6 +185,6 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new TranslationTextComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(TextFormatting.BLUE));
-        tooltip.add(new TranslationTextComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(this.chargeTime/20f)).append("s").withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(this.getChargeTime(stack)/20f)).append("s").withStyle(TextFormatting.BLUE));
     }
 }

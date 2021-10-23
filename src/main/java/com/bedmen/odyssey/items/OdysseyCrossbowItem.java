@@ -1,17 +1,13 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.LivingEntity;
@@ -35,6 +31,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
 
 public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
     /** Set to {@code true} when the crossbow is 20% charged. */
@@ -98,7 +99,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
     }
 
     private static boolean hasAmmo(LivingEntity entityIn, ItemStack stack) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack);
+        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MULTISHOT.get(), stack);
         int j = i == 0 ? 1 : 3;
         boolean flag = entityIn instanceof PlayerEntity && ((PlayerEntity)entityIn).abilities.instabuild;
         ItemStack itemstack = entityIn.getProjectile(stack);
@@ -244,9 +245,17 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
 
         abstractarrowentity.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractarrowentity.setShotFromCrossbow(true);
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, crossbow);
-        if (i > 0) {
-            abstractarrowentity.setPierceLevel((byte)i);
+        int k = EnchantmentUtil.getPunch(crossbow);
+        if (k > 0) {
+            abstractarrowentity.setKnockback(k);
+        }
+        k = EnchantmentUtil.getPiercing(crossbow);
+        if (k > 0) {
+            abstractarrowentity.setPierceLevel((byte)k);
+        }
+        k = EnchantmentUtil.getFlame(crossbow);
+        if (k > 0) {
+            abstractarrowentity.setRemainingFireTicks(100*k);
         }
 
         return abstractarrowentity;
@@ -304,7 +313,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
      */
     public void onUseTick(World worldIn, LivingEntity livingEntityIn, ItemStack stack, int count) {
         if (!worldIn.isClientSide) {
-            int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
+            int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.QUICK_CHARGE.get(), stack);
             SoundEvent soundevent = this.getSoundEvent(i);
             SoundEvent soundevent1 = i == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
             float f = (float)(stack.getUseDuration() - count) / (float) getChargeDuration(stack);
@@ -337,12 +346,11 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
      * The time the crossbow must be used to reload it
      */
     public static int getChargeDuration(ItemStack itemStack) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, itemStack);
         Item item = itemStack.getItem();
         if(item instanceof OdysseyCrossbowItem){
-            return Math.round(((OdysseyCrossbowItem) item).chargeTime * (1.0f - 0.2f * i));
+            return EnchantmentUtil.getQuickChargeTime(((OdysseyCrossbowItem)item).chargeTime, itemStack);
         }
-        return 25 - 5 * i;
+        return EnchantmentUtil.getQuickChargeTime(25, itemStack);
     }
 
     /**

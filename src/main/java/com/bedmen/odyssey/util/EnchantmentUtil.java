@@ -27,8 +27,8 @@ public class EnchantmentUtil {
     private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10,38};
     private static final int[] LEGGINGS_ENCHANTS = {0,3,10};
     private static final int[] BOOTS_ENCHANTS = {0,2,8,9,10,11,46,47};
-    private static final int[] BOW_ENCHANTS = {23,24,25,26};
-    private static final int[] CROSSBOW_ENCHANTS = {33,34,35};
+    private static final int[] BOW_ENCHANTS = {24,25,34,35};
+    private static final int[] CROSSBOW_ENCHANTS = {24,25,33,34,35};
     private static final int[] TRIDENT_ENCHANTS = {29,30,31,32,49};
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
 
@@ -37,23 +37,24 @@ public class EnchantmentUtil {
     private static final Enchantment[] BANE_OF_ARTHROPODS_EXCLUSION = {Enchantments.SHARPNESS, Enchantments.SMITE};
     private static final Enchantment[] FORTUNE_EXCLUSION = {Enchantments.SILK_TOUCH};
     private static final Enchantment[] SILK_TOUCH_EXCLUSION = {Enchantments.BLOCK_FORTUNE};
-    private static final Enchantment[] CHANNELING_LOYALTY_EXCLUSION = {Enchantments.RIPTIDE, EnchantmentRegistry.ERUPTION.get()};
-    private static final Enchantment[] RIPTIDE_EXCLUSION = {Enchantments.LOYALTY, Enchantments.CHANNELING};
+    private static final Enchantment[] CHANNELING_LOYALTY_EXCLUSION = {EnchantmentRegistry.RIPTIDE.get(), EnchantmentRegistry.ERUPTION.get()};
+    private static final Enchantment[] RIPTIDE_EXCLUSION = {EnchantmentRegistry.LOYALTY.get(), EnchantmentRegistry.CHANNELING.get()};
     private static final Enchantment[] THORNS_EXCLUSION = {EnchantmentRegistry.ACCURACY.get()};
     private static final Enchantment[] ACCURACY_EXCLUSION = {Enchantments.THORNS};
-    private static final Enchantment[] DEPTH_STRIDER_EXCLUSION = {Enchantments.FROST_WALKER, EnchantmentRegistry.OBSIDIAN_WALKER.get()};
-    private static final Enchantment[] FROST_WALKER_EXCLUSION = {Enchantments.DEPTH_STRIDER, EnchantmentRegistry.VULCAN_STRIDER.get()};
+    private static final Enchantment[] DEPTH_STRIDER_EXCLUSION = {EnchantmentRegistry.FROST_WALKER.get(), EnchantmentRegistry.OBSIDIAN_WALKER.get()};
+    private static final Enchantment[] FROST_WALKER_EXCLUSION = {EnchantmentRegistry.DEPTH_STRIDER.get(), EnchantmentRegistry.VULCAN_STRIDER.get()};
 
-    private static final Enchantment[] enchantments = {Enchantments.ALL_DAMAGE_PROTECTION,
+    private static final Enchantment[] enchantments = {
+            Enchantments.ALL_DAMAGE_PROTECTION,
             Enchantments.FIRE_PROTECTION,
             Enchantments.FALL_PROTECTION,
             Enchantments.BLAST_PROTECTION,
             Enchantments.PROJECTILE_PROTECTION,
-            Enchantments.RESPIRATION,
-            Enchantments.AQUA_AFFINITY,
+            EnchantmentRegistry.RESPIRATION.get(),
+            EnchantmentRegistry.AQUA_AFFINITY.get(),
             Enchantments.THORNS,
-            Enchantments.DEPTH_STRIDER,
-            Enchantments.FROST_WALKER,
+            EnchantmentRegistry.DEPTH_STRIDER.get(),
+            EnchantmentRegistry.FROST_WALKER.get(),
             Enchantments.BINDING_CURSE,
             Enchantments.SOUL_SPEED,
             Enchantments.SHARPNESS,
@@ -68,18 +69,18 @@ public class EnchantmentUtil {
             Enchantments.UNBREAKING,
             Enchantments.BLOCK_FORTUNE,
             Enchantments.POWER_ARROWS,
-            Enchantments.PUNCH_ARROWS,
-            Enchantments.FLAMING_ARROWS,
+            EnchantmentRegistry.PUNCH_ARROWS.get(),
+            EnchantmentRegistry.FLAMING_ARROWS.get(),
             Enchantments.INFINITY_ARROWS,
             Enchantments.FISHING_LUCK,
             Enchantments.FISHING_SPEED,
-            Enchantments.LOYALTY,
-            Enchantments.IMPALING,
-            Enchantments.RIPTIDE,
-            Enchantments.CHANNELING,
-            Enchantments.MULTISHOT,
-            Enchantments.QUICK_CHARGE,
-            Enchantments.PIERCING,
+            EnchantmentRegistry.LOYALTY.get(),
+            EnchantmentRegistry.IMPALING.get(),
+            EnchantmentRegistry.RIPTIDE.get(),
+            EnchantmentRegistry.CHANNELING.get(),
+            EnchantmentRegistry.MULTISHOT.get(),
+            EnchantmentRegistry.QUICK_CHARGE.get(),
+            EnchantmentRegistry.PIERCING.get(),
             Enchantments.MENDING,
             Enchantments.VANISHING_CURSE,
             EnchantmentRegistry.ACCURACY.get(),
@@ -104,11 +105,11 @@ public class EnchantmentUtil {
         integerMap.put(Enchantments.FALL_PROTECTION, 2);
         integerMap.put(Enchantments.BLAST_PROTECTION, 3);
         integerMap.put(Enchantments.PROJECTILE_PROTECTION, 4);
-        integerMap.put(Enchantments.RESPIRATION, 5);
-        integerMap.put(Enchantments.AQUA_AFFINITY, 6);
+        integerMap.put(EnchantmentRegistry.RESPIRATION.get(), 5);
+        integerMap.put(EnchantmentRegistry.AQUA_AFFINITY.get(), 6);
         integerMap.put(Enchantments.THORNS, 7);
-        integerMap.put(Enchantments.DEPTH_STRIDER, 8);
-        integerMap.put(Enchantments.FROST_WALKER, 9);
+        integerMap.put(EnchantmentRegistry.DEPTH_STRIDER.get(), 8);
+        integerMap.put(EnchantmentRegistry.FROST_WALKER.get(), 9);
         integerMap.put(Enchantments.BINDING_CURSE, 10);
         integerMap.put(Enchantments.SOUL_SPEED, 11);
         integerMap.put(Enchantments.SHARPNESS, 12);
@@ -123,18 +124,18 @@ public class EnchantmentUtil {
         integerMap.put(Enchantments.UNBREAKING, 21);
         integerMap.put(Enchantments.BLOCK_FORTUNE, 22);
         integerMap.put(Enchantments.POWER_ARROWS, 23);
-        integerMap.put(Enchantments.PUNCH_ARROWS, 24);
-        integerMap.put(Enchantments.FLAMING_ARROWS, 25);
+        integerMap.put(EnchantmentRegistry.PUNCH_ARROWS.get(), 24);
+        integerMap.put(EnchantmentRegistry.FLAMING_ARROWS.get(), 25);
         integerMap.put(Enchantments.INFINITY_ARROWS, 26);
         integerMap.put(Enchantments.FISHING_LUCK, 27);
         integerMap.put(Enchantments.FISHING_SPEED, 28);
-        integerMap.put(Enchantments.LOYALTY, 29);
-        integerMap.put(Enchantments.IMPALING, 30);
-        integerMap.put(Enchantments.RIPTIDE, 31);
-        integerMap.put(Enchantments.CHANNELING, 32);
-        integerMap.put(Enchantments.MULTISHOT, 33);
-        integerMap.put(Enchantments.QUICK_CHARGE, 34);
-        integerMap.put(Enchantments.PIERCING, 35);
+        integerMap.put(EnchantmentRegistry.LOYALTY.get(), 29);
+        integerMap.put(EnchantmentRegistry.IMPALING.get(), 30);
+        integerMap.put(EnchantmentRegistry.RIPTIDE.get(), 31);
+        integerMap.put(EnchantmentRegistry.CHANNELING.get(), 32);
+        integerMap.put(EnchantmentRegistry.MULTISHOT.get(), 33);
+        integerMap.put(EnchantmentRegistry.QUICK_CHARGE.get(), 34);
+        integerMap.put(EnchantmentRegistry.PIERCING.get(), 35);
         integerMap.put(Enchantments.MENDING, 36);
         integerMap.put(Enchantments.VANISHING_CURSE, 37);
         integerMap.put(EnchantmentRegistry.ACCURACY.get(), 38);
@@ -284,7 +285,7 @@ public class EnchantmentUtil {
     }
 
     public static int getDepthStrider(LivingEntity entity) {
-        return getVulcanStrider(entity) + EnchantmentHelper.getEnchantmentLevel(Enchantments.DEPTH_STRIDER, entity);
+        return getVulcanStrider(entity) + EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DEPTH_STRIDER.get(), entity);
     }
 
     public static int getVulcanStrider(LivingEntity entity) {
@@ -292,7 +293,7 @@ public class EnchantmentUtil {
     }
 
     public static int getFrostWalker(LivingEntity entity) {
-        return getObsidianWalker(entity) + EnchantmentHelper.getEnchantmentLevel(Enchantments.FROST_WALKER, entity);
+        return getObsidianWalker(entity) + EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FROST_WALKER.get(), entity);
     }
 
     public static int getObsidianWalker(LivingEntity entity) {
@@ -300,7 +301,7 @@ public class EnchantmentUtil {
     }
 
     public static int getRespiration(LivingEntity entity) {
-        return getPyropneumatic(entity) + EnchantmentHelper.getEnchantmentLevel(Enchantments.RESPIRATION, entity);
+        return getPyropneumatic(entity) + EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.RESPIRATION.get(), entity);
     }
 
     public static int getPyropneumatic(LivingEntity entity) {
@@ -308,7 +309,7 @@ public class EnchantmentUtil {
     }
 
     public static int getRiptide(ItemStack itemStack) {
-        return getEruption(itemStack) + EnchantmentHelper.getItemEnchantmentLevel(Enchantments.RIPTIDE, itemStack);
+        return getEruption(itemStack) + EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.RIPTIDE.get(), itemStack);
     }
 
     public static int getEruption(ItemStack itemStack) {
@@ -325,5 +326,22 @@ public class EnchantmentUtil {
 
     public static int getShattering(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SHATTERING.get(), entity);
+    }
+
+    public static int getQuickChargeTime(int chargeTime, ItemStack itemStack) {
+        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.QUICK_CHARGE.get(), itemStack);
+        return chargeTime - (chargeTime / 5) * i;
+    }
+
+    public static int getPiercing(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), itemStack);
+    }
+
+    public static int getPunch(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get(), itemStack);
+    }
+
+    public static int getFlame(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), itemStack);
     }
 }

@@ -35,23 +35,20 @@ public class UpgradedArrowItem extends ArrowItem {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new TranslationTextComponent("item.oddc.arrow.damage").append(StringUtil.doubleFormat(this.arrowType.getDamage())).withStyle(TextFormatting.BLUE));
-        tooltip.add(new TranslationTextComponent("item.oddc.arrow.piercing_level").append(Integer.toString(this.arrowType.getPierce())).withStyle(TextFormatting.BLUE));
     }
 
     public enum ArrowType{
-        FLINT(ItemRegistry.ARROW, 6.0d, 0),
-        AMETHYST(ItemRegistry.AMETHYST_ARROW, 7.5d, 1),
-        QUARTZ(ItemRegistry.QUARTZ_ARROW, 9.0d, 2),
-        RAZOR(ItemRegistry.RAZOR_ARROW, 10.5d, 3);
+        FLINT(ItemRegistry.ARROW, 6.0d),
+        AMETHYST(ItemRegistry.AMETHYST_ARROW, 7.5d),
+        QUARTZ(ItemRegistry.QUARTZ_ARROW, 9.0d),
+        RAZOR(ItemRegistry.RAZOR_ARROW, 10.5d);
 
         private final Lazy<Item> itemSupplier;
         private final double damage;
-        private final int pierce;
 
-        ArrowType(Supplier<Item> itemSupplier, double damage, int pierce){
+        ArrowType(Supplier<Item> itemSupplier, double damage){
             this.itemSupplier = Lazy.of(itemSupplier);
             this.damage = damage;
-            this.pierce = pierce;
         }
 
         public Item getItem(){
@@ -60,10 +57,6 @@ public class UpgradedArrowItem extends ArrowItem {
 
         public double getDamage(){
             return this.damage;
-        }
-
-        public int getPierce(){
-            return this.pierce;
         }
     }
 }
