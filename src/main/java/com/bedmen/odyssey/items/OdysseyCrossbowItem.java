@@ -412,7 +412,9 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
     }
 
     private float getVelocity(ItemStack itemStack) {
-        return hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.5f * this.velocity : 3.0f * this.velocity;
+        float f = BowUtil.BASE_ARROW_VELOCITY * this.velocity;
+        f *= hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 0.5 : 1.0f;
+        return f;
     }
 
     public int getDefaultProjectileRange() {

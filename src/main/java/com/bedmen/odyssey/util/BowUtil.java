@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 
 public class BowUtil {
+    public static final float BASE_ARROW_VELOCITY = 3.0f;
 
     public static boolean consumeQuiverAmmo(PlayerEntity playerEntity, ItemStack ammo){
         NonNullList<ItemStack> offhand = playerEntity.inventory.offhand;

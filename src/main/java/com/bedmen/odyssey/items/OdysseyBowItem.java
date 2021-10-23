@@ -52,8 +52,9 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                 if (itemstack.isEmpty()) {
                     itemstack = new ItemStack(Items.ARROW);
                 }
-
-                float f = getArrowVelocity(i, stack);
+                int superCharge = EnchantmentUtil.getSuperCharge(stack);
+                Flag maxVelocityFlag = new Flag();
+                float f = getArrowVelocity(i, stack, superCharge, maxVelocityFlag);
                 if (!((double)f < 0.1D)) {
                     boolean flag1 = playerentity.abilities.instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, stack, playerentity));
                     if (!worldIn.isClientSide) {
@@ -61,7 +62,11 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                         AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, itemstack, playerentity);
                         abstractarrowentity = customArrow(abstractarrowentity);
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(entityLiving);
-                        abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity * 3.0f, inaccuracy);
+                        if(maxVelocityFlag.value && superCharge > 0){
+                            abstractarrowentity.setCritArrow(true);
+                            inaccuracy *= (1.0f - 0.2f * (float)superCharge);
+                        }
+                        abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
                         int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
                         if (j > 0) {
                             abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + (double)j * 0.5D + 0.5D);
@@ -112,12 +117,14 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
     /**
      * Gets the velocity of the arrow entity from the bow's charge
      */
-    public float getArrowVelocity(int charge, ItemStack itemStack) {
+    public float getArrowVelocity(int charge, ItemStack itemStack, int superCharge, Flag flag) {
         float f = (float)charge / (float)this.getChargeTime(itemStack);
-        f = (f * f + f * 2.0F) / 3.0F;
-        if (f > 1.0F) {
-            f = 1.0F;
+        float f1 = 1.0f + 0.5f*(float)superCharge;
+        if(f >= f1){
+            f = f1;
+            flag.value = true;
         }
+        f = (f * f + f * 2.0F) / 3.0F;
         return f;
     }
 
@@ -186,5 +193,9 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new TranslationTextComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(TextFormatting.BLUE));
         tooltip.add(new TranslationTextComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(this.getChargeTime(stack)/20f)).append("s").withStyle(TextFormatting.BLUE));
+    }
+
+    public static class Flag {
+        public boolean value;
     }
 }

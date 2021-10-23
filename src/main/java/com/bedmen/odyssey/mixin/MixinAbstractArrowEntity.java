@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.util.BowUtil;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -57,7 +58,7 @@ public abstract class MixinAbstractArrowEntity extends Entity {
     protected void onHitEntity(EntityRayTraceResult p_213868_1_) {
         Entity entity = p_213868_1_.getEntity();
         double length = this.getDeltaMovement().length();
-        double damage = MathHelper.clamp(length * this.baseDamage / 3.0f, 0.0D, 2.147483647E9D);
+        double damage = MathHelper.clamp(length * this.baseDamage / BowUtil.BASE_ARROW_VELOCITY, 0.0D, 2.147483647E9D);
         if (this.getPierceLevel() > 0) {
             if (this.piercingIgnoreEntityIds == null) {
                 this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
@@ -75,9 +76,9 @@ public abstract class MixinAbstractArrowEntity extends Entity {
             this.piercingIgnoreEntityIds.add(entity.getId());
         }
 
-        if (this.isCritArrow()) {
-            damage *= 1.5;
-        }
+//        if (this.isCritArrow()) {
+//            damage *= 1.5;
+//        }
 
         Entity entity1 = ((ProjectileEntity)(Object)this).getOwner();
         DamageSource damagesource;
