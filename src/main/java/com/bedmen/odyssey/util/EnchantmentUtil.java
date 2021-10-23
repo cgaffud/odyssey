@@ -27,7 +27,7 @@ public class EnchantmentUtil {
     private static final int[] CHESTPLATE_ENCHANTS = {0,1,7,10,38};
     private static final int[] LEGGINGS_ENCHANTS = {0,3,10};
     private static final int[] BOOTS_ENCHANTS = {0,2,8,9,10,11,46,47};
-    private static final int[] BOW_ENCHANTS = {24,25,34,35};
+    private static final int[] BOW_ENCHANTS = {24,25,34,35,40};
     private static final int[] CROSSBOW_ENCHANTS = {24,25,33,34,35};
     private static final int[] TRIDENT_ENCHANTS = {29,30,31,32,49};
     private static final int[] FISHING_ROD_ENCHANTS = {27,28};
@@ -85,7 +85,7 @@ public class EnchantmentUtil {
             Enchantments.VANISHING_CURSE,
             EnchantmentRegistry.ACCURACY.get(),
             EnchantmentRegistry.SHATTERING.get(),
-            //EnchantmentRegistry.RECOVERY.get(),
+            EnchantmentRegistry.SUPER_CHARGE.get(),
             EnchantmentRegistry.UNENCHANTABLE.get(),
             EnchantmentRegistry.BLEEDING.get(),
             EnchantmentRegistry.DROWNING.get(),
@@ -140,7 +140,7 @@ public class EnchantmentUtil {
         integerMap.put(Enchantments.VANISHING_CURSE, 37);
         integerMap.put(EnchantmentRegistry.ACCURACY.get(), 38);
         integerMap.put(EnchantmentRegistry.SHATTERING.get(), 39);
-        //integerMap.put(EnchantmentRegistry.RECOVERY.get(), 40);
+        integerMap.put(EnchantmentRegistry.SUPER_CHARGE.get(), 40);
         integerMap.put(EnchantmentRegistry.UNENCHANTABLE.get(), 41);
         integerMap.put(EnchantmentRegistry.BLEEDING.get(), 42);
         integerMap.put(EnchantmentRegistry.DROWNING.get(), 43);
@@ -343,5 +343,9 @@ public class EnchantmentUtil {
 
     public static int getFlame(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), itemStack);
+    }
+
+    public static int getSuperCharge(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.SUPER_CHARGE.get(), itemStack);
     }
 }
