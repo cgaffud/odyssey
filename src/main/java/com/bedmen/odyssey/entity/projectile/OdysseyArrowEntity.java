@@ -1,33 +1,30 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.items.UpgradedArrowItem;
+import com.bedmen.odyssey.items.OdysseyArrowItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.NetworkHooks;
 
-public class UpgradedArrowEntity extends AbstractArrowEntity implements IEntityAdditionalSpawnData {
-    private UpgradedArrowItem.ArrowType arrowType = UpgradedArrowItem.ArrowType.FLINT;
+public class OdysseyArrowEntity extends OdysseyAbstractArrowEntity implements IEntityAdditionalSpawnData {
+    private OdysseyArrowItem.ArrowType arrowType = OdysseyArrowItem.ArrowType.FLINT;
 
-    public UpgradedArrowEntity(EntityType<? extends UpgradedArrowEntity> p_i50158_1_, World p_i50158_2_) {
+    public OdysseyArrowEntity(EntityType<? extends OdysseyArrowEntity> p_i50158_1_, World p_i50158_2_) {
         super(p_i50158_1_, p_i50158_2_);
     }
 
-    public UpgradedArrowEntity(World p_i46768_1_, LivingEntity p_i46768_2_, UpgradedArrowItem.ArrowType arrowType) {
-        super(EntityTypeRegistry.UPGRADED_ARROW.get(), p_i46768_2_, p_i46768_1_);
+    public OdysseyArrowEntity(World p_i46768_1_, LivingEntity p_i46768_2_, OdysseyArrowItem.ArrowType arrowType) {
+        super(EntityTypeRegistry.ARROW.get(), p_i46768_2_, p_i46768_1_);
         this.arrowType = arrowType;
         this.setBaseDamage(arrowType.getDamage());
     }
 
-    public UpgradedArrowEntity(World p_i46769_1_, double p_i46769_2_, double p_i46769_4_, double p_i46769_6_) {
-        super(EntityTypeRegistry.UPGRADED_ARROW.get(), p_i46769_2_, p_i46769_4_, p_i46769_6_, p_i46769_1_);
+    public OdysseyArrowEntity(World p_i46769_1_, double p_i46769_2_, double p_i46769_4_, double p_i46769_6_) {
+        super(EntityTypeRegistry.ARROW.get(), p_i46769_2_, p_i46769_4_, p_i46769_6_, p_i46769_1_);
     }
 
     protected void defineSynchedData() {
@@ -41,7 +38,7 @@ public class UpgradedArrowEntity extends AbstractArrowEntity implements IEntityA
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
         if (compoundNBT.contains("ArrowType")) {
-            this.arrowType = UpgradedArrowItem.ArrowType.valueOf(compoundNBT.getString("ArrowType"));
+            this.arrowType = OdysseyArrowItem.ArrowType.valueOf(compoundNBT.getString("ArrowType"));
         }
         this.setBaseDamage(this.getArrowType().getDamage());
     }
@@ -51,7 +48,7 @@ public class UpgradedArrowEntity extends AbstractArrowEntity implements IEntityA
         compoundNBT.putString("ArrowType", this.arrowType.name());
     }
 
-    public UpgradedArrowItem.ArrowType getArrowType(){
+    public OdysseyArrowItem.ArrowType getArrowType(){
         return this.arrowType;
     }
 
@@ -62,11 +59,6 @@ public class UpgradedArrowEntity extends AbstractArrowEntity implements IEntityA
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-        this.arrowType = UpgradedArrowItem.ArrowType.values()[additionalData.readInt()];
-    }
-
-    @Override
-    public IPacket<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        this.arrowType = OdysseyArrowItem.ArrowType.values()[additionalData.readInt()];
     }
 }

@@ -10,10 +10,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -29,11 +27,10 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class OdysseyTridentEntity extends AbstractArrowEntity implements IEntityAdditionalSpawnData {
+public class OdysseyTridentEntity extends OdysseyAbstractArrowEntity implements IEntityAdditionalSpawnData {
     private static final DataParameter<Byte> LOYALTY_LEVEL = EntityDataManager.defineId(OdysseyTridentEntity.class, DataSerializers.BYTE);
     private static final DataParameter<Boolean> ID_FOIL = EntityDataManager.defineId(OdysseyTridentEntity.class, DataSerializers.BOOLEAN);
     private OdysseyTridentItem.TridentType tridentType = OdysseyTridentItem.TridentType.NORMAL;
@@ -76,7 +73,7 @@ public class OdysseyTridentEntity extends AbstractArrowEntity implements IEntity
         if ((this.dealtDamage || this.isNoPhysics()) && entity != null) {
             int i = this.entityData.get(LOYALTY_LEVEL);
             if (i > 0 && !this.shouldReturnToThrower()) {
-                if (!this.level.isClientSide && this.pickup == AbstractArrowEntity.PickupStatus.ALLOWED) {
+                if (!this.level.isClientSide && this.pickup == OdysseyAbstractArrowEntity.PickupStatus.ALLOWED) {
                     this.spawnAtLocation(this.getPickupItem(), 0.1F);
                 }
 
@@ -221,7 +218,7 @@ public class OdysseyTridentEntity extends AbstractArrowEntity implements IEntity
 
     public void tickDespawn() {
         int i = this.entityData.get(LOYALTY_LEVEL);
-        if (this.pickup != AbstractArrowEntity.PickupStatus.ALLOWED || i <= 0) {
+        if (this.pickup != OdysseyAbstractArrowEntity.PickupStatus.ALLOWED || i <= 0) {
             super.tickDespawn();
         }
 
@@ -234,11 +231,6 @@ public class OdysseyTridentEntity extends AbstractArrowEntity implements IEntity
     @OnlyIn(Dist.CLIENT)
     public boolean shouldRender(double x, double y, double z) {
         return true;
-    }
-
-    @Override
-    public IPacket<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

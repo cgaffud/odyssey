@@ -1,11 +1,11 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
+import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
@@ -14,7 +14,6 @@ import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
@@ -77,7 +76,7 @@ public class OdysseyTridentItem extends Item implements IVanishable {
                             float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerentity);
                             tridententity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, 2.5F, inaccuracy);
                             if (playerentity.abilities.instabuild) {
-                                tridententity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                                tridententity.pickup = OdysseyAbstractArrowEntity.PickupStatus .CREATIVE_ONLY;
                             }
 
                             worldIn.addFreshEntity(tridententity);

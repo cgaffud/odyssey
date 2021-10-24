@@ -78,6 +78,8 @@ public class Odyssey
     public static final RenderMaterial LEVIATHAN_SHIELD_BASE_NOPATTERN = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID,"entity/leviathan_shield_base_nopattern")));
 
     public Odyssey() {
+        //System.out.println(IndianCalendar.serialVersionUID);
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
@@ -173,7 +175,7 @@ public class Odyssey
         //Projectile Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.UPGRADED_ARROW.get(), UpgradedArrowRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
 
         //Boat Renderings

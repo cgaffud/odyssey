@@ -29,9 +29,7 @@
     "MixinServerPlayNetHandler",
     "MixinPiglinTasks",
     "MixinAbstractBlock",
-    "MixinFirstPersonRenderer",
-    "MixinClientLoginNetHandler",
-    "MixinAbstractArrowEntity"
+    "MixinFirstPersonRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

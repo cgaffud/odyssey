@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
@@ -13,7 +15,6 @@ import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.*;
@@ -215,7 +216,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
             } else {
                 projectileentity = createArrow(worldIn, shooter, crossbow, projectile);
                 if (isCreativeMode || projectileAngle != 0.0F) {
-                    ((AbstractArrowEntity)projectileentity).pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                    ((OdysseyAbstractArrowEntity)projectileentity).pickup = OdysseyAbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                 }
             }
 
@@ -239,26 +240,26 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
         }
     }
 
-    private static AbstractArrowEntity createArrow(World worldIn, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
-        ArrowItem arrowitem = (ArrowItem)(ammo.getItem() instanceof ArrowItem ? ammo.getItem() : Items.ARROW);
-        AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, ammo, shooter);
+    private static OdysseyAbstractArrowEntity createArrow(World worldIn, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
+        OdysseyArrowItem odysseyArrowItem = (OdysseyArrowItem)(ammo.getItem() instanceof OdysseyArrowItem ? ammo.getItem() : ItemRegistry.ARROW.get());
+        OdysseyAbstractArrowEntity odysseyAbstractArrowEntity = odysseyArrowItem.createArrow(worldIn, ammo, shooter);
 
-        abstractarrowentity.setSoundEvent(SoundEvents.CROSSBOW_HIT);
-        abstractarrowentity.setShotFromCrossbow(true);
+        odysseyAbstractArrowEntity.setSoundEvent(SoundEvents.CROSSBOW_HIT);
+        odysseyAbstractArrowEntity.setShotFromCrossbow(true);
         int k = EnchantmentUtil.getPunch(crossbow);
         if (k > 0) {
-            abstractarrowentity.setKnockback(k);
+            odysseyAbstractArrowEntity.setKnockback(k);
         }
         k = EnchantmentUtil.getPiercing(crossbow);
         if (k > 0) {
-            abstractarrowentity.setPierceLevel((byte)k);
+            odysseyAbstractArrowEntity.setPierceLevel((byte)k);
         }
         k = EnchantmentUtil.getFlame(crossbow);
         if (k > 0) {
-            abstractarrowentity.setRemainingFireTicks(100*k);
+            odysseyAbstractArrowEntity.setRemainingFireTicks(100*k);
         }
 
-        return abstractarrowentity;
+        return odysseyAbstractArrowEntity;
     }
 
     public static void fireProjectiles(World worldIn, LivingEntity shooter, Hand handIn, ItemStack stack, float velocityIn, float inaccuracyIn) {

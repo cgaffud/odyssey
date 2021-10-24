@@ -300,7 +300,7 @@
   "item.oddc.amethyst_arrow": "Amethyst Arrow",
   "item.oddc.quartz_arrow": "Quartz Arrow",
   "item.oddc.razor_arrow": "Razor Arrow",
-  "entity.oddc.upgraded_arrow": "Arrow",
+  "entity.oddc.arrow": "Arrow",
   "item.oddc.flint_sabre": "Flint Sabre",
   "item.oddc.amethyst_sabre": "Amethyst Sabre",
   "item.oddc.quartz_sabre": "Quartz Sabre",
@@ -314,7 +314,6 @@
   "item.oddc.bone_boomerang": "Bonerang",
   "entity.oddc.baby_skeleton": "Skeleton",
   "item.oddc.baby_skeleton_spawn_egg": "Baby Skeleton Spawn Egg",
-  "death.attack.boomerang": "%1$s was bonked by %2$s",
   "item.oddc.shield.damage_block": "Damage Block: ",
   "item.oddc.shield.recovery_time": "Recovery Time: ",
   "item.oddc.arrow.damage": "Damage: ",
@@ -324,5 +323,9 @@
   "effect.oddc.shattered": "Shattered",
   "enchantment.oddc.shattering": "Shattering",
   "item.oddc.copper_battle_axe": "Copper Battle Axe",
-  "item.oddc.obsidian_battle_axe": "Obsidian Battle Axe"
+  "item.oddc.obsidian_battle_axe": "Obsidian Battle Axe",
+  "death.attack.odyssey_arrow": "%1$s was shot by %2$s",
+  "death.attack.odyssey_arrow.item": "%1$s was shot by %2$s using %3$s",
+  "death.attack.boomerang": "%1$s was bonked by %2$s",
+  "death.attack.boomerang.item": "%1$s was bonked by %2$s using %3$s"
 }

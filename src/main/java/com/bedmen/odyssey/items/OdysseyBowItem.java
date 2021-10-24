@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
@@ -10,7 +12,6 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
@@ -58,46 +59,46 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                 if (!((double)f < 0.1D)) {
                     boolean flag1 = playerentity.abilities.instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, stack, playerentity));
                     if (!worldIn.isClientSide) {
-                        ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
-                        AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, itemstack, playerentity);
-                        abstractarrowentity = customArrow(abstractarrowentity);
+                        OdysseyArrowItem odysseyArrowItem = (OdysseyArrowItem)(itemstack.getItem() instanceof OdysseyArrowItem ? itemstack.getItem() : ItemRegistry.ARROW.get());
+                        OdysseyAbstractArrowEntity odysseyAbstractArrowEntity = odysseyArrowItem.createArrow(worldIn, itemstack, playerentity);
+                        //abstractarrowentity = customArrow(odysseyAbstractArrowEntity);
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(entityLiving);
                         if(maxVelocityFlag.value && superCharge > 0){
-                            abstractarrowentity.setCritArrow(true);
+                            odysseyAbstractArrowEntity.setCritArrow(true);
                             inaccuracy *= (1.0f - 0.2f * (float)superCharge);
                         }
-                        abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
+                        odysseyAbstractArrowEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
                         int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
                         if (j > 0) {
-                            abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + (double)j * 0.5D + 0.5D);
+                            odysseyAbstractArrowEntity.setBaseDamage(odysseyAbstractArrowEntity.getBaseDamage() + (double)j * 0.5D + 0.5D);
                         }
 
                         int k = EnchantmentUtil.getPunch(stack);
                         if (k > 0) {
-                            abstractarrowentity.setKnockback(k);
+                            odysseyAbstractArrowEntity.setKnockback(k);
                         }
                         k = EnchantmentUtil.getPiercing(stack);
                         if (k > 0) {
-                            abstractarrowentity.setPierceLevel((byte)k);
+                            odysseyAbstractArrowEntity.setPierceLevel((byte)k);
                         }
                         k = EnchantmentUtil.getFlame(stack);
                         if (k > 0) {
-                            abstractarrowentity.setRemainingFireTicks(100*k);
+                            odysseyAbstractArrowEntity.setRemainingFireTicks(100*k);
                         }
 
 
                         if (EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), stack) > 0) {
-                            abstractarrowentity.setSecondsOnFire(100);
+                            odysseyAbstractArrowEntity.setSecondsOnFire(100);
                         }
 
                         stack.hurtAndBreak(1, playerentity, (p_220009_1_) -> {
                             p_220009_1_.broadcastBreakEvent(playerentity.getUsedItemHand());
                         });
                         if (flag1 || playerentity.abilities.instabuild && (itemstack.getItem() == Items.SPECTRAL_ARROW || itemstack.getItem() == Items.TIPPED_ARROW)) {
-                            abstractarrowentity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                            odysseyAbstractArrowEntity.pickup = OdysseyAbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                         }
 
-                        worldIn.addFreshEntity(abstractarrowentity);
+                        worldIn.addFreshEntity(odysseyAbstractArrowEntity);
                     }
 
                     worldIn.playSound((PlayerEntity)null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
@@ -164,9 +165,9 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
         return ARROW_ONLY;
     }
 
-    public AbstractArrowEntity customArrow(AbstractArrowEntity arrow) {
-        return arrow;
-    }
+//    public AbstractArrowEntity customArrow(AbstractArrowEntity arrow) {
+//        return arrow;
+//    }
 
     public int getDefaultProjectileRange() {
         return 15;
