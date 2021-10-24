@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
+public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable, INeedsToRegisterItemModelProperty {
     /** Set to {@code true} when the crossbow is 20% charged. */
     private boolean isLoadingStart = false;
     /** Set to {@code true} when the crossbow is 50% charged. */
@@ -422,21 +422,21 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
         return 8;
     }
 
-    public static void registerBaseProperties(Item item){
-        ItemModelsProperties.register(item, new ResourceLocation("pull"), (itemStack, world, entity) -> {
+    public void registerItemModelProperties(){
+        ItemModelsProperties.register(this, new ResourceLocation("pull"), (itemStack, world, entity) -> {
             if (entity == null) {
                 return 0.0F;
             } else {
                 return OdysseyCrossbowItem.isCharged(itemStack) ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / (float) OdysseyCrossbowItem.getChargeDuration(itemStack);
             }
         });
-        ItemModelsProperties.register(item, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(this, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
             return entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack && !OdysseyCrossbowItem.isCharged(itemStack) ? 1.0F : 0.0F;
         });
-        ItemModelsProperties.register(item, new ResourceLocation("charged"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(this, new ResourceLocation("charged"), (itemStack, world, entity) -> {
             return entity != null && OdysseyCrossbowItem.isCharged(itemStack) ? 1.0F : 0.0F;
         });
-        ItemModelsProperties.register(item, new ResourceLocation("firework"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(this, new ResourceLocation("firework"), (itemStack, world, entity) -> {
             return entity != null && OdysseyCrossbowItem.isCharged(itemStack) && OdysseyCrossbowItem.hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.0F : 0.0F;
         });
     }

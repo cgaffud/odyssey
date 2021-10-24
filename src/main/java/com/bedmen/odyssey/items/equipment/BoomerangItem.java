@@ -3,6 +3,7 @@ package com.bedmen.odyssey.items.equipment;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
+import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.ImmutableMultimap;
@@ -24,7 +25,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BoomerangItem extends EquipmentItem implements IVanishable {
+public class BoomerangItem extends EquipmentItem implements IVanishable, INeedsToRegisterItemModelProperty {
     private final Multimap<Attribute, AttributeModifier> boomerangAttributes;
     private final BoomerangType boomerangType;
     public BoomerangItem(Item.Properties builderIn, BoomerangType boomerangType, LevEnchSup... levEnchSups) {
@@ -122,8 +123,8 @@ public class BoomerangItem extends EquipmentItem implements IVanishable {
         return true;
     }
 
-    public static void registerBaseProperties(Item item){
-        ItemModelsProperties.register(item, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
+    public void registerItemModelProperties(){
+        ItemModelsProperties.register(this, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
             return p_239419_2_ != null && p_239419_2_.isUsingItem() && p_239419_2_.getUseItem() == p_239419_0_ ? 1.0F : 0.0F;
         });
     }

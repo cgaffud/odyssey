@@ -1,8 +1,5 @@
 package com.bedmen.odyssey.items;
 
-import java.util.List;
-import java.util.function.Supplier;
-import javax.annotation.Nullable;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.util.ITooltipFlag;
@@ -21,7 +18,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class OdysseyShieldItem extends Item {
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Supplier;
+
+public class OdysseyShieldItem extends Item implements INeedsToRegisterItemModelProperty {
     private final NonNullList<Item> repairItems;
     private final float damageBlock;
     private final int recoveryTime;
@@ -75,8 +76,8 @@ public class OdysseyShieldItem extends Item {
         return DyeColor.byId(stack.getOrCreateTagElement("BlockEntityTag").getInt("Base"));
     }
 
-    public static void registerBaseProperties(Item item){
-        ItemModelsProperties.register(item, new ResourceLocation("blocking"), (p_239421_0_, p_239421_1_, p_239421_2_) -> {
+    public void registerItemModelProperties(){
+        ItemModelsProperties.register(this, new ResourceLocation("blocking"), (p_239421_0_, p_239421_1_, p_239421_2_) -> {
             return p_239421_2_ != null && p_239421_2_.isUsingItem() && p_239421_2_.getUseItem() == p_239421_0_ ? 1.0F : 0.0F;
         });
     }

@@ -2,13 +2,15 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShieldItem;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -25,15 +27,10 @@ public abstract class MixinMobEntity extends Entity{
             float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(getMobEntity(this)) * 0.05F;
             Item item = activePlayerStack.getItem();
             if (this.random.nextFloat() < f) {
-                if(item instanceof OdysseyShieldItem){
-                    int ticks = ((OdysseyShieldItem)item).getRecoveryTime();
-                    for(Item item1 : OdysseyItemTags.SHIELD_TAG){
+                if(item instanceof OdysseyShieldItem || item instanceof ShieldItem){
+                    int ticks = item instanceof OdysseyShieldItem ? ((OdysseyShieldItem)item).getRecoveryTime() : 100;
+                    for(Item item1 : OdysseyItemTags.SHIELD_TAG.getValues()){
                         player.getCooldowns().addCooldown(item1, ticks);
-                    }
-                    this.level.broadcastEntityEvent(player, (byte)30);
-                } else if(item instanceof ShieldItem){
-                    for(Item item1 : OdysseyItemTags.SHIELD_TAG){
-                        player.getCooldowns().addCooldown(item1, 100);
                     }
                     this.level.broadcastEntityEvent(player, (byte)30);
                 }

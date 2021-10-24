@@ -1,7 +1,11 @@
 package com.bedmen.odyssey.blocks.permafrost;
 
+import com.bedmen.odyssey.blocks.INeedsToRegisterRenderType;
 import com.bedmen.odyssey.registry.BlockRegistry;
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -10,7 +14,7 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
-public class PermafrostIce2Block extends Block{
+public class PermafrostIce2Block extends Block implements INeedsToRegisterRenderType {
 
     public PermafrostIce2Block(AbstractBlock.Properties p_i48930_1_) {
         super(p_i48930_1_);
@@ -53,5 +57,9 @@ public class PermafrostIce2Block extends Block{
         if(flag <= 0){
             serverWorld.destroyBlock(pos, true);
         }
+    }
+
+    public RenderType getRenderType() {
+        return RenderType.translucent();
     }
 }

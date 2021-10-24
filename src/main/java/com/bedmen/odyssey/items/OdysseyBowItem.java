@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class OdysseyBowItem extends BowItem implements IVanishable {
+public class OdysseyBowItem extends BowItem implements IVanishable, INeedsToRegisterItemModelProperty {
     private final float velocity;
     private final int chargeTime;
     public OdysseyBowItem(Item.Properties builder, float velocity, int chargeTime) {
@@ -172,15 +172,15 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
         return EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack);
     }
     
-    public static void registerBaseProperties(Item item) {
-        ItemModelsProperties.register(item, new ResourceLocation("pull"), (itemStack, world, entity) -> {
+    public void registerItemModelProperties() {
+        ItemModelsProperties.register(this, new ResourceLocation("pull"), (itemStack, world, entity) -> {
             if (entity == null) {
                 return 0.0F;
             } else {
-                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / ((OdysseyBowItem)item).getChargeTime(itemStack);
+                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / this.getChargeTime(itemStack);
             }
         });
-        ItemModelsProperties.register(item, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(this, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
             return entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack ? 1.0F : 0.0F;
         });
     }

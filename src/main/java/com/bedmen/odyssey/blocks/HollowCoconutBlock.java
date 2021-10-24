@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -31,7 +31,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class HollowCoconutBlock extends FallingBlock implements ITileEntityProvider {
+public class HollowCoconutBlock extends FallingBlock implements ITileEntityProvider, INeedsToRegisterRenderType {
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
     public static final VoxelShape SHAPE_FLOOR = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
     public static final VoxelShape SHAPE_HANGING = Block.box(2.0D, 2.0D, 2.0D, 14.0D, 14.0D, 14.0D);
@@ -89,5 +89,9 @@ public class HollowCoconutBlock extends FallingBlock implements ITileEntityProvi
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
     {
         return ItemRegistry.HOLLOW_COCONUT.get().getDefaultInstance();
+    }
+
+    public RenderType getRenderType() {
+        return RenderType.cutout();
     }
 }

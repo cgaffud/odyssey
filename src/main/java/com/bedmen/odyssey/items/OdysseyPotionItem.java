@@ -1,7 +1,5 @@
 package com.bedmen.odyssey.items;
 
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -21,7 +19,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class OdysseyPotionItem extends Item {
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class OdysseyPotionItem extends Item implements INeedsToRegisterItemModelProperty {
     public OdysseyPotionItem(Item.Properties builder) {
         super(builder);
     }
@@ -129,8 +130,8 @@ public class OdysseyPotionItem extends Item {
 
     }
 
-    public static void RegisterBaseProperties(Item item){
-        ItemModelsProperties.register(item, new ResourceLocation("type"),  (itemStack, world, entity) -> {
+    public void registerItemModelProperties(){
+        ItemModelsProperties.register(this, new ResourceLocation("type"),  (itemStack, world, entity) -> {
             CompoundNBT compoundnbt = itemStack.getTag();
             if(compoundnbt != null && compoundnbt.contains("Potion")){
                 String s = compoundnbt.get("Potion").getAsString();

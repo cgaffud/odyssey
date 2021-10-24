@@ -26,7 +26,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
-public class OdysseyTridentItem extends Item implements IVanishable {
+public class OdysseyTridentItem extends Item implements IVanishable, INeedsToRegisterItemModelProperty {
     private final Multimap<Attribute, AttributeModifier> tridentAttributes;
     private final TridentType tridentType;
     public OdysseyTridentItem(Item.Properties builderIn, TridentType tridentType) {
@@ -181,8 +181,8 @@ public class OdysseyTridentItem extends Item implements IVanishable {
         return 1;
     }
 
-    public static void registerBaseProperties(Item item){
-        ItemModelsProperties.register(item, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
+    public void registerItemModelProperties(){
+        ItemModelsProperties.register(this, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
             return p_239419_2_ != null && p_239419_2_.isUsingItem() && p_239419_2_.getUseItem() == p_239419_0_ ? 1.0F : 0.0F;
         });
     }

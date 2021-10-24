@@ -1,22 +1,25 @@
 package com.bedmen.odyssey.tags;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
-import com.bedmen.odyssey.util.FogUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class OdysseyBlockTags {
 
-    public static Set<Block> FOG_TAG;
+    public static final ITag.INamedTag<Block> FOG_TAG = BlockTags.bind(Odyssey.MOD_ID+":fog");
+    //public static Set<Block> FOG_TAG;
     public static Set<Block> AUTUMN_TAG;
 
     public static void init(){
-        FOG_TAG = new HashSet<>();
-        for(int i = 1; i <= 8; i++)
-            FOG_TAG.add(FogUtil.intToFog(i));
+//        FOG_TAG = new HashSet<>();
+//        for(int i = 1; i <= 8; i++)
+//            FOG_TAG.add(FogUtil.intToFog(i));
 
         AUTUMN_TAG = new HashSet<>();
         AUTUMN_TAG.add(BlockRegistry.AUTUMN_LEAVES_RED.get());

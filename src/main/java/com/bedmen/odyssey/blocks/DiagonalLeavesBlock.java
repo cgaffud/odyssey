@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.blocks;
 
 import net.minecraft.block.*;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
@@ -15,7 +16,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
 import java.util.Random;
 
-public class DiagonalLeavesBlock extends LeavesBlock {
+public class DiagonalLeavesBlock extends LeavesBlock implements INeedsToRegisterRenderType {
     public static final IntegerProperty DISTANCE = BlockStateProperties.DISTANCE;
     public static final BooleanProperty PERSISTENT = BlockStateProperties.PERSISTENT;
 
@@ -101,5 +102,9 @@ public class DiagonalLeavesBlock extends LeavesBlock {
     public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face)
     {
         return 60;
+    }
+
+    public RenderType getRenderType() {
+        return RenderType.cutoutMipped();
     }
 }

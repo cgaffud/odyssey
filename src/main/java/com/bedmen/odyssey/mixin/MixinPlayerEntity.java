@@ -205,13 +205,9 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
         if (this.random.nextFloat() < f) {
             Item item = this.getUseItem().getItem();
-            if(item instanceof OdysseyShieldItem){
-                for(Item item1 : OdysseyItemTags.SHIELD_TAG){
-                    this.getCooldowns().addCooldown(item1, ((OdysseyShieldItem)item).getRecoveryTime());
-                }
-            } else if(item instanceof ShieldItem){
-                for(Item item1 : OdysseyItemTags.SHIELD_TAG){
-                    this.getCooldowns().addCooldown(item1, 100);
+            if(item instanceof OdysseyShieldItem || item instanceof ShieldItem){
+                for(Item item1 : OdysseyItemTags.SHIELD_TAG.getValues()){
+                    this.getCooldowns().addCooldown(item1,(item instanceof OdysseyShieldItem ? ((OdysseyShieldItem)item).getRecoveryTime() : 100));
                 }
             }
             this.stopUsingItem();

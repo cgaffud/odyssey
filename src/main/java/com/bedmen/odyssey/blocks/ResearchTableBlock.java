@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -31,7 +32,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class ResearchTableBlock extends ContainerBlock {
+public class ResearchTableBlock extends ContainerBlock implements INeedsToRegisterRenderType {
 
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
     protected static final VoxelShape SHAPE = VoxelShapes.join(box(0,10,0,16,12,16),box(1,0,1,15,12,15), IBooleanFunction.OR);
@@ -105,5 +106,9 @@ public class ResearchTableBlock extends ContainerBlock {
 
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+    }
+
+    public RenderType getRenderType() {
+        return RenderType.cutout();
     }
 }
