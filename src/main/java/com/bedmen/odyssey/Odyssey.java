@@ -6,7 +6,6 @@ import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.entity.renderer.*;
 import com.bedmen.odyssey.client.renderer.tileentity.*;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
-import com.bedmen.odyssey.entity.attributes.OdysseyAttributes;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
@@ -35,6 +34,9 @@ import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.world.FoliageColors;
@@ -94,7 +96,6 @@ public class Odyssey
         OdysseyStructureEntitySpawn.registerSpawners();
         OdysseyPotions.addBrewingRecipes();
         CompostUtil.addCompostingRecipes();
-        OdysseyAttributes.fixArmor();
         OdysseyTrades.addTrades();
         EnchantmentUtil.init();
         OdysseyNetwork.init();
@@ -162,6 +163,12 @@ public class Odyssey
 
         //Wood Types
         Atlases.addWoodType(OdysseyWoodType.PALM);
+    }
+
+    //Fix Armor Max Value
+    @SubscribeEvent
+    public static void onRegisterAttributes(final RegistryEvent.Register<Attribute> event){
+        ((RangedAttribute)Attributes.ARMOR).maxValue = 80.0d;
     }
 
     @SubscribeEvent

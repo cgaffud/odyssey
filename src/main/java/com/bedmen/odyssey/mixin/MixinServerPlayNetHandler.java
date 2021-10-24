@@ -1,7 +1,5 @@
 package com.bedmen.odyssey.mixin;
 
-import net.minecraft.client.multiplayer.PlayerController;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
