@@ -324,8 +324,6 @@
   "enchantment.oddc.shattering": "Shattering",
   "item.oddc.copper_battle_axe": "Copper Battle Axe",
   "item.oddc.obsidian_battle_axe": "Obsidian Battle Axe",
-  "death.attack.odyssey_arrow": "%1$s was shot by %2$s",
-  "death.attack.odyssey_arrow.item": "%1$s was shot by %2$s using %3$s",
   "death.attack.boomerang": "%1$s was bonked by %2$s",
   "death.attack.boomerang.item": "%1$s was bonked by %2$s using %3$s",
   "enchantment.oddc.super_charge": "Super Charge"

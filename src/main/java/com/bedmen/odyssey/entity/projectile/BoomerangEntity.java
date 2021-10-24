@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -75,7 +76,7 @@ public class BoomerangEntity extends OdysseyAbstractArrowEntity implements IEnti
         if ((this.dealtDamage || this.isNoPhysics()) && entity != null) {
             int i = this.entityData.get(LOYALTY_LEVEL);
             if (i > 0 && !this.shouldReturnToThrower()) {
-                if (!this.level.isClientSide && this.pickup == OdysseyAbstractArrowEntity.PickupStatus.ALLOWED) {
+                if (!this.level.isClientSide && this.pickup == AbstractArrowEntity.PickupStatus.ALLOWED) {
                     this.spawnAtLocation(this.getPickupItem(), 0.1F);
                 }
 
@@ -220,7 +221,7 @@ public class BoomerangEntity extends OdysseyAbstractArrowEntity implements IEnti
 
     public void tickDespawn() {
         int i = this.entityData.get(LOYALTY_LEVEL);
-        if (this.pickup != OdysseyAbstractArrowEntity.PickupStatus.ALLOWED || i <= 0) {
+        if (this.pickup != AbstractArrowEntity.PickupStatus.ALLOWED || i <= 0) {
             super.tickDespawn();
         }
 

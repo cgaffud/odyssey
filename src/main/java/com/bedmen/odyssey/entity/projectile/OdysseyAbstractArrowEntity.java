@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.util.BowUtil;
-import com.bedmen.odyssey.util.OdysseyDamageSource;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -61,9 +60,9 @@ public abstract class OdysseyAbstractArrowEntity extends AbstractArrowEntity {
         Entity entity1 = this.getOwner();
         DamageSource damagesource;
         if (entity1 == null) {
-            damagesource = OdysseyDamageSource.odysseyArrow(this, this);
+            damagesource = DamageSource.arrow(this, this);
         } else {
-            damagesource = OdysseyDamageSource.odysseyArrow(this, entity1);
+            damagesource = DamageSource.arrow(this, entity1);
             if (entity1 instanceof LivingEntity) {
                 ((LivingEntity)entity1).setLastHurtMob(entity);
             }
