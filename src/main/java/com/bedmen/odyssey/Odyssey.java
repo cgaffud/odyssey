@@ -97,7 +97,6 @@ public class Odyssey
         OdysseyPotions.addBrewingRecipes();
         CompostUtil.addCompostingRecipes();
         OdysseyTrades.addTrades();
-        EnchantmentUtil.init();
         OdysseyNetwork.init();
         BiomeRegistry.register();
 
@@ -185,6 +184,8 @@ public class Odyssey
         EquipmentHoeItem.initEquipment();
         EquipmentShovelItem.initEquipment();
         EquipmentAxeItem.initEquipment();
+
+        EnchantmentUtil.init();
     }
 
     @SubscribeEvent

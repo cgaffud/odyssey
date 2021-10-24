@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.container;
 
 import com.bedmen.odyssey.client.gui.OdysseyEnchantmentScreen;
-import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
 import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -19,7 +18,9 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class OdysseyEnchantmentContainer extends Container {
     public final IInventory inv;
@@ -130,31 +131,18 @@ public class OdysseyEnchantmentContainer extends Container {
         this.enchantmentList = new ArrayList<>();
         this.levelList = new ArrayList<>();
         this.costList = new ArrayList<>();
-        List<Integer> list = new ArrayList<>();
-        ItemStack itemStack = this.inv.getItem(0);
-        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
-        if (!map.containsKey(EnchantmentRegistry.UNENCHANTABLE.get())){
+        List<Integer> list = new ArrayList<>(); //Stores a enchantment-level combination
+        ItemStack itemStack = this.inv.getItem(0); //Item in enchantment slot
+        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack); //Map of item's enchantments
+        if (!map.containsKey(EnchantmentRegistry.UNENCHANTABLE.get())){ //Don't want to populate lists on unenchantable item
             for(int i = 0; i < this.tableData1.getCount(); i++){
-                int i1 = this.tableData1.get(i);
-                if(!EnchantmentUtil.canBeApplied(itemStack,i1)) continue;
-                int i2 = this.tableData2.get(i);
-                int i3 = 32768*i1+i2;
-                if(list.contains(i3)) continue;
-                Enchantment e = EnchantmentUtil.intToEnchantment(i1);
-                if(map.containsKey(e) && map.get(e) >= i2) continue;
-                Enchantment downgrade = ((IUpgradableEnchantment)e).getDowngrade();
-                if(downgrade != null && map.containsKey(downgrade) && map.get(downgrade) > i2) continue;
-                Enchantment upgrade = ((IUpgradableEnchantment)e).getUpgrade();
-                if(upgrade != null && map.containsKey(upgrade) && map.get(upgrade) >= i2) continue;
-                boolean addToListFlag = true;
-                for(Enchantment e1 : EnchantmentUtil.exclusiveWith(e)){
-                    if(map.containsKey(e1)){
-                        addToListFlag = false;
-                        break;
-                    }
-                }
-                if(addToListFlag)
-                    list.add(i3);
+                int i1 = this.tableData1.get(i); //Enchantment id from bookshelf
+                if(i1 == -1) continue;
+                int i2 = this.tableData2.get(i); //Level for that enchantment
+                if(EnchantmentUtil.cannotBeApplied(itemStack,i1,i2,map)) continue; //If it cannot be applied, skip it
+                int i3 = 32768*i1+i2; //Enchantment-Level combination
+                if(list.contains(i3)) continue; //If it's already in our list, skip it
+                list.add(i3);
             }
 
             list.sort(Integer::compare);
