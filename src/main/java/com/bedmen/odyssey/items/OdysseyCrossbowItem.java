@@ -10,7 +10,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +37,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable, INeedsToRegisterItemModelProperty {
+public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegisterItemModelProperty {
     /** Set to {@code true} when the crossbow is 20% charged. */
     private boolean isLoadingStart = false;
     /** Set to {@code true} when the crossbow is 50% charged. */

@@ -9,7 +9,6 @@ import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -26,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class OdysseyBowItem extends BowItem implements IVanishable, INeedsToRegisterItemModelProperty {
+public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModelProperty {
     private final float velocity;
     private final int chargeTime;
     public OdysseyBowItem(Item.Properties builder, float velocity, int chargeTime) {
