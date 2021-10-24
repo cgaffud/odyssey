@@ -61,7 +61,6 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                     if (!worldIn.isClientSide) {
                         OdysseyArrowItem odysseyArrowItem = (OdysseyArrowItem)(itemstack.getItem() instanceof OdysseyArrowItem ? itemstack.getItem() : ItemRegistry.ARROW.get());
                         OdysseyAbstractArrowEntity odysseyAbstractArrowEntity = odysseyArrowItem.createArrow(worldIn, itemstack, playerentity);
-                        //abstractarrowentity = customArrow(odysseyAbstractArrowEntity);
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(entityLiving);
                         if(maxVelocityFlag.value && superCharge > 0){
                             odysseyAbstractArrowEntity.setCritArrow(true);
@@ -164,10 +163,6 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
     public Predicate<ItemStack> getAllSupportedProjectiles() {
         return ARROW_ONLY;
     }
-
-//    public AbstractArrowEntity customArrow(AbstractArrowEntity arrow) {
-//        return arrow;
-//    }
 
     public int getDefaultProjectileRange() {
         return 15;
