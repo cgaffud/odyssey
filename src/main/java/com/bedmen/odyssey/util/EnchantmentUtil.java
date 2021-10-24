@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.util;
 
+import com.bedmen.odyssey.client.gui.EnchantButton;
 import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.google.gson.JsonSyntaxException;
@@ -18,7 +19,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class EnchantmentUtil {
     private static final Map<Enchantment, Integer> ENCHANTMENT_TO_INTEGER_MAP = new HashMap<>();
@@ -52,27 +52,42 @@ public class EnchantmentUtil {
      */
     public static boolean cannotBeApplied(ItemStack itemStack, int id, int level, Map<Enchantment, Integer> map){
         Enchantment enchantment = intToEnchantment(id);
-
-        if(isExcluded(enchantment, map.keySet())) return true;
-
-        //Upgrades can't override downgrades of higher level
-        Enchantment downgrade = ((IUpgradableEnchantment)enchantment).getDowngrade();
-        if(downgrade != null && map.containsKey(downgrade) && map.get(downgrade) > level) return true;
-
-        //Downgrades can't override upgrades of higher than or equal level
-        Enchantment upgrade = ((IUpgradableEnchantment)enchantment).getUpgrade();
-        if(upgrade != null && map.containsKey(upgrade) && map.get(upgrade) >= level) return true;
-
-        return !enchantment.canEnchant(itemStack) || (map.containsKey(enchantment) && map.get(enchantment) >= level);
+        return !enchantment.canEnchant(itemStack);
+//        if(isExcluded(enchantment, map.keySet())) return true;
+//
+//        //Upgrades can't override downgrades of higher level
+//        Enchantment downgrade = ((IUpgradableEnchantment)enchantment).getDowngrade();
+//        if(downgrade != null && map.containsKey(downgrade) && map.get(downgrade) > level) return true;
+//
+//        //Downgrades can't override upgrades of higher than or equal level
+//        Enchantment upgrade = ((IUpgradableEnchantment)enchantment).getUpgrade();
+//        if(upgrade != null && map.containsKey(upgrade) && map.get(upgrade) >= level) return true;
+//
+//         (map.containsKey(enchantment) && map.get(enchantment) >= level);
     }
 
-    public static boolean isExcluded(Enchantment enchantment, Set<Enchantment> set){
-        for(Enchantment enchantment1 : set){
+    public static void getExclusiveFlag(Enchantment enchantment, int level, Map<Enchantment, Integer> map, EnchantButton.ExclusiveFlag exclusiveFlag){
+        for(Enchantment enchantment1 : map.keySet()){
+            Enchantment upgrade = ((IUpgradableEnchantment)enchantment).getUpgrade();
+            Enchantment downgrade = ((IUpgradableEnchantment)enchantment).getDowngrade();
             if(!enchantment1.isCompatibleWith(enchantment) && enchantment1 != enchantment){
-                return true;
+                exclusiveFlag.enchantment = enchantment1;
+                exclusiveFlag.flag = 3;
+                return;
+            } else if(enchantment1 == enchantment && level == map.get(enchantment1)){
+                exclusiveFlag.flag = 2;
+                return;
+            } else if(enchantment1 == enchantment && level < map.get(enchantment1)){
+                exclusiveFlag.flag = 1;
+                return;
+            } else if(upgrade != null && map.containsKey(upgrade) && map.get(upgrade) >= level){
+                exclusiveFlag.flag = 1;
+                return;
+            } else if(downgrade != null && map.containsKey(downgrade) && map.get(downgrade) > level){
+                exclusiveFlag.flag = 1;
+                return;
             }
         }
-        return false;
     }
 
     public static Enchantment deserializeEnchantment(String s) {

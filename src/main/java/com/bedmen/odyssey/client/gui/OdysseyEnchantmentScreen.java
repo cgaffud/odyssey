@@ -13,10 +13,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.TieredItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
@@ -27,7 +29,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantmentContainer> {
@@ -42,6 +46,7 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
     public List<Integer> levelList;
     public List<Integer> costList;
     private int size;
+    private Map<Enchantment, Integer> itemEnchantments = new HashMap<>();
     private int discount = 0;
 
     public OdysseyEnchantmentScreen(OdysseyEnchantmentContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
@@ -65,35 +70,72 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
         if(this.buttonPreviousPage.visible) this.buttonPreviousPage.renderButton(matrixStack, mouseX, mouseY, partialTicks);
         if(this.buttonNextPage.visible) this.buttonNextPage.renderButton(matrixStack, mouseX, mouseY, partialTicks);
         for(int i = 0; i < ENCHANT_PER_PAGE; i++){
-            if(this.numPages <= 0) this.enchantButtons[i].visible = false;
-            else if (this.size <= index(i)) this.enchantButtons[i].visible = false;
-            else if ((this.menu.slots.get(1).getItem().getCount() < this.costList.get(index(i)) || inventory.player.experienceLevel < levelRequirement(this.levelList.get(index(i)))) && !inventory.player.isCreative()) this.enchantButtons[i].visible = false;
-            else this.enchantButtons[i].visible = true;
-
-            if(this.enchantButtons[i].visible) this.enchantButtons[i].renderButton(matrixStack, mouseX, mouseY, partialTicks);
+            int index = index(i);
+            this.enchantButtons[i].visible = true;
+            this.enchantButtons[i].notEnoughLapis = false;
+            this.enchantButtons[i].notEnoughLevelRequirement = false;
+            this.enchantButtons[i].notEnoughLevelCost = false;
+            this.enchantButtons[i].exclusiveFlag.clear();
+            if(this.numPages <= 0 ||  this.size <= index){
+                this.enchantButtons[i].visible = false;
+            } else {
+                int cost = this.costList.get(index);
+                if(!this.inventory.player.isCreative()){
+                    if((this.menu.slots.get(1).getItem().getCount() < cost)){
+                        this.enchantButtons[i].visible = false;
+                        this.enchantButtons[i].notEnoughLapis = true;
+                    }
+                    if(this.inventory.player.experienceLevel < cost){
+                        this.enchantButtons[i].visible = false;
+                        this.enchantButtons[i].notEnoughLevelCost = true;
+                    }
+                    if(this.inventory.player.experienceLevel < levelRequirement(this.levelList.get(index))){
+                        this.enchantButtons[i].visible = false;
+                        this.enchantButtons[i].notEnoughLevelRequirement = true;
+                    }
+                }
+                EnchantmentUtil.getExclusiveFlag(this.enchantmentList.get(index), this.levelList.get(index), this.itemEnchantments, this.enchantButtons[i].exclusiveFlag);
+                if(this.enchantButtons[i].exclusiveFlag.flag > 0){
+                    this.enchantButtons[i].visible = false;
+                }
+            }
         }
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(matrixStack, mouseX, mouseY);
 
         for(int i = 0; i < ENCHANT_PER_PAGE; i++) {
-            if (this.isHovering(72, 18 + 10*i, 96, 10, mouseX, mouseY) && index(i) < this.size) {
+            int index = index(i);
+            if (this.isHovering(72, 18 + 10*i, 96, 10, mouseX, mouseY) && index < this.size) {
                 List<ITextComponent> list = Lists.newArrayList();
-                int level = this.levelList.get(index(i));
-                int experienceLevel = inventory.player.experienceLevel;
-                int cost = this.costList.get(index(i));
-                if(experienceLevel < levelRequirement(level) && !inventory.player.isCreative()){
-                    list.add((new TranslationTextComponent("container.enchant.level.requirement", levelRequirement(level))).withStyle(TextFormatting.RED));
-                }
-                if(experienceLevel < cost && !inventory.player.isCreative()){
-                    if(cost == 1){
-                        list.add((new TranslationTextComponent("container.enchant.level.one")).withStyle(TextFormatting.RED));
+                int level = this.levelList.get(index);
+                int cost = this.costList.get(index);
+                if(this.enchantButtons[i].exclusiveFlag.flag  == 1){
+                    list.add((new TranslationTextComponent("container.enchant.upgrade_already_applied")).withStyle(TextFormatting.RED));
+                } else if(this.enchantButtons[i].exclusiveFlag.flag  == 2){
+                    list.add((new TranslationTextComponent("container.enchant.already_applied")).withStyle(TextFormatting.RED));
+                } else if(this.enchantButtons[i].exclusiveFlag.flag == 3){
+                    TranslationTextComponent translationTextComponent = new TranslationTextComponent(this.enchantButtons[i].exclusiveFlag.enchantment.getDescriptionId());
+                    list.add((new TranslationTextComponent("container.enchant.mutual_exclusion")).append(translationTextComponent).withStyle(TextFormatting.RED));
+                } else {
+                    if(this.enchantButtons[i].notEnoughLevelRequirement){
+                        list.add((new TranslationTextComponent("container.enchant.level.requirement", levelRequirement(level))).withStyle(TextFormatting.RED));
                     }
-                    else{
-                        list.add((new TranslationTextComponent("container.enchant.level.many", cost)).withStyle(TextFormatting.RED));
+                    if(this.enchantButtons[i].notEnoughLevelCost){
+                        if(cost == 1){
+                            list.add((new TranslationTextComponent("container.enchant.level.one")).withStyle(TextFormatting.RED));
+                        }
+                        else{
+                            list.add((new TranslationTextComponent("container.enchant.level.many", cost)).withStyle(TextFormatting.RED));
+                        }
                     }
-                }
-                if(this.menu.slots.get(1).getItem().getCount() < cost && !inventory.player.isCreative()){
-                    list.add((new TranslationTextComponent("container.enchant.lapis.many", cost)).withStyle(TextFormatting.RED));
+                    if(this.enchantButtons[i].notEnoughLapis){
+                        if(cost == 1){
+                            list.add((new TranslationTextComponent("container.enchant.lapis.one")).withStyle(TextFormatting.RED));
+                        }
+                        else{
+                            list.add((new TranslationTextComponent("container.enchant.lapis.many", cost)).withStyle(TextFormatting.RED));
+                        }
+                    }
                 }
                 this.renderComponentTooltip(matrixStack, list, mouseX, mouseY);
                 break;
@@ -132,7 +174,8 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
             else  this.font.draw(matrixStack, enchantmentText, 0, 0, 0x404040);
             GlStateManager._popMatrix();
 
-            s = ""+levelRequirement(this.levelList.get(index(i)));
+            int index = index(i);
+            s = ""+levelRequirement(this.levelList.get(index));
             GlStateManager._pushMatrix();
             GlStateManager._scalef(scale, scale, 1.0f);
             GlStateManager._translatef((80.0f-(this.font.width(s)/2.0f))*(1.0f/scale), (20.5f+10*i)*(1.0f/scale), 0.0f);
@@ -173,8 +216,10 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
         this.buttonPreviousPage.visible = this.currPage > 1 && this.numPages > 0;
     }
 
-    private void updateDiscount() {
-        Item item = this.menu.getSlot(0).getItem().getItem();
+    private void updateItemStack() {
+        ItemStack itemStack = this.menu.getSlot(0).getItem();
+        this.itemEnchantments = EnchantmentHelper.getEnchantments(itemStack);
+        Item item = itemStack.getItem();
         if(item instanceof TieredItem){
             this.discount = ((TieredItem) item).getTier().getEnchantmentValue();
         } else if(item instanceof ArmorItem){
@@ -213,7 +258,7 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
         if(this.currPage > this.numPages) this.currPage = this.numPages;
         if(this.numPages == 0) this.currPage = 1;
         this.updateButtons();
-        this.updateDiscount();
+        this.updateItemStack();
     }
 
     protected void addEnchantButtons() {
@@ -227,9 +272,10 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
     }
 
     private void addEnchantment(final int k) {
-        int level = this.levelList.get(index(k));
-        int cost = this.costList.get(index(k));
-        Enchantment e = this.enchantmentList.get(index(k));
+        int index = index(k);
+        int level = this.levelList.get(index);
+        int cost = this.costList.get(index);
+        Enchantment e = this.enchantmentList.get(index);
         PlayerEntity player = inventory.player;
         boolean b1 = this.menu.slots.get(1).getItem().getCount() >= cost || player.isCreative();
         boolean b2 = player.experienceLevel >= levelRequirement(level) || player.isCreative();

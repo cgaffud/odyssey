@@ -326,5 +326,8 @@
   "item.oddc.obsidian_battle_axe": "Obsidian Battle Axe",
   "death.attack.boomerang": "%1$s was bonked by %2$s",
   "death.attack.boomerang.item": "%1$s was bonked by %2$s using %3$s",
-  "enchantment.oddc.super_charge": "Super Charge"
+  "enchantment.oddc.super_charge": "Super Charge",
+  "container.enchant.mutual_exclusion": "Not Compatible with ",
+  "container.enchant.already_applied": "Already Applied",
+  "container.enchant.upgrade_already_applied": "Upgrade Already Applied"
 }
