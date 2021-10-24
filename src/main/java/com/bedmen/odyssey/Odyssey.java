@@ -19,7 +19,6 @@ import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.potions.OdysseyPotions;
 import com.bedmen.odyssey.registry.*;
-import com.bedmen.odyssey.tags.OdysseyBlockTags;
 import com.bedmen.odyssey.trades.OdysseyTrades;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -99,7 +98,6 @@ public class Odyssey
         OdysseyTrades.addTrades();
         EnchantmentUtil.init();
         OdysseyNetwork.init();
-        OdysseyBlockTags.init();
         BiomeRegistry.register();
 
         EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::predicate);
@@ -108,12 +106,14 @@ public class Odyssey
 
     private void doClientStuff(final FMLClientSetupEvent event)
     {
+        //Item Model Properties
         for(Block block : ForgeRegistries.BLOCKS.getValues()){
             if(block instanceof INeedsToRegisterRenderType){
                 RenderTypeLookup.setRenderLayer(block, ((INeedsToRegisterRenderType) block).getRenderType());
             }
         }
 
+        //Block Render Types
         for(Item item : ForgeRegistries.ITEMS.getValues()){
             if(item instanceof INeedsToRegisterItemModelProperty){
                 ((INeedsToRegisterItemModelProperty) item).registerItemModelProperties();

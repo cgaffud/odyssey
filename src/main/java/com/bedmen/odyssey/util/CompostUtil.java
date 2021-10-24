@@ -1,23 +1,13 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.registry.ItemRegistry;
-import it.unimi.dsi.fastutil.objects.Object2FloatMap;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.util.IItemProvider;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-
-import java.lang.reflect.Method;
 
 public class CompostUtil {
 
-    private static Method addMethod;
-    private static Object2FloatMap<IItemProvider> COMPOSTABLES;
-
     private static void add(float f, IItemProvider iItemProvider) {
-        if(COMPOSTABLES == null){
-            COMPOSTABLES = ObfuscationReflectionHelper.getPrivateValue(ComposterBlock.class, null, "field_220299_b");
-        }
-        COMPOSTABLES.put(iItemProvider, f);
+        ComposterBlock.COMPOSTABLES.put(iItemProvider, f);
     }
 
     public static void addCompostingRecipes() {
