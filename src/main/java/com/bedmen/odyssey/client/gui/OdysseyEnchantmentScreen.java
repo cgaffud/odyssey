@@ -15,9 +15,15 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.TieredItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,6 +42,7 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
     public List<Integer> levelList;
     public List<Integer> costList;
     private int size;
+    private int discount = 0;
 
     public OdysseyEnchantmentScreen(OdysseyEnchantmentContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
@@ -60,7 +67,7 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
         for(int i = 0; i < ENCHANT_PER_PAGE; i++){
             if(this.numPages <= 0) this.enchantButtons[i].visible = false;
             else if (this.size <= index(i)) this.enchantButtons[i].visible = false;
-            else if ((this.menu.slots.get(1).getItem().getCount() < this.costList.get(index(i)) || inventory.player.experienceLevel < this.levelList.get(index(i))*10) && !inventory.player.isCreative()) this.enchantButtons[i].visible = false;
+            else if ((this.menu.slots.get(1).getItem().getCount() < this.costList.get(index(i)) || inventory.player.experienceLevel < levelRequirement(this.levelList.get(index(i)))) && !inventory.player.isCreative()) this.enchantButtons[i].visible = false;
             else this.enchantButtons[i].visible = true;
 
             if(this.enchantButtons[i].visible) this.enchantButtons[i].renderButton(matrixStack, mouseX, mouseY, partialTicks);
@@ -74,8 +81,8 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
                 int level = this.levelList.get(index(i));
                 int experienceLevel = inventory.player.experienceLevel;
                 int cost = this.costList.get(index(i));
-                if(experienceLevel < level*10 && !inventory.player.isCreative()){
-                    list.add((new TranslationTextComponent("container.enchant.level.requirement", level*10)).withStyle(TextFormatting.RED));
+                if(experienceLevel < levelRequirement(level) && !inventory.player.isCreative()){
+                    list.add((new TranslationTextComponent("container.enchant.level.requirement", levelRequirement(level))).withStyle(TextFormatting.RED));
                 }
                 if(experienceLevel < cost && !inventory.player.isCreative()){
                     if(cost == 1){
@@ -125,7 +132,7 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
             else  this.font.draw(matrixStack, enchantmentText, 0, 0, 0x404040);
             GlStateManager._popMatrix();
 
-            s = ""+this.levelList.get(index(i))*10;
+            s = ""+levelRequirement(this.levelList.get(index(i)));
             GlStateManager._pushMatrix();
             GlStateManager._scalef(scale, scale, 1.0f);
             GlStateManager._translatef((80.0f-(this.font.width(s)/2.0f))*(1.0f/scale), (20.5f+10*i)*(1.0f/scale), 0.0f);
@@ -166,6 +173,17 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
         this.buttonPreviousPage.visible = this.currPage > 1 && this.numPages > 0;
     }
 
+    private void updateDiscount() {
+        Item item = this.menu.getSlot(0).getItem().getItem();
+        if(item instanceof TieredItem){
+            this.discount = ((TieredItem) item).getTier().getEnchantmentValue();
+        } else if(item instanceof ArmorItem){
+            this.discount = ((ArmorItem) item).getMaterial().getEnchantmentValue();
+        } else {
+            this.discount = 0;
+        }
+    }
+
     protected void previousPage() {
         if (this.currPage > 1) {
             --this.currPage;
@@ -195,6 +213,7 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
         if(this.currPage > this.numPages) this.currPage = this.numPages;
         if(this.numPages == 0) this.currPage = 1;
         this.updateButtons();
+        this.updateDiscount();
     }
 
     protected void addEnchantButtons() {
@@ -213,11 +232,15 @@ public class OdysseyEnchantmentScreen extends ContainerScreen<OdysseyEnchantment
         Enchantment e = this.enchantmentList.get(index(k));
         PlayerEntity player = inventory.player;
         boolean b1 = this.menu.slots.get(1).getItem().getCount() >= cost || player.isCreative();
-        boolean b2 = player.experienceLevel >= level*10 || player.isCreative();
+        boolean b2 = player.experienceLevel >= levelRequirement(level) || player.isCreative();
         if(b1 && b2){
             OdysseyNetwork.CHANNEL.sendToServer(new UpdateEnchantPacket(level, EnchantmentUtil.enchantmentToInt(e), cost));
             this.minecraft.getSoundManager().play(SimpleSound.forUI(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0f));
         }
+    }
+
+    public int levelRequirement(int level){
+        return Integer.max(level * 10 - this.discount, 1);
     }
 
     private int index(int i){
