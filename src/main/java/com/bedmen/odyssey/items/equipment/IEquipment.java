@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.items.equipment;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.SwordItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ public interface IEquipment {
         return 0;
     }
 
-    default boolean canSweep(){
-        return false;
+    default boolean isSwordLike(){
+        return this instanceof SwordItem;
     }
 }

@@ -457,7 +457,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
                     if (flag && !flag2 && !flag1 && this.onGround && d0 < (double)this.getSpeed()) {
                         ItemStack itemstack = this.getItemInHand(Hand.MAIN_HAND);
                         Item item = itemstack.getItem();
-                        if (item instanceof SwordItem || ((IEquipment)item).canSweep()) {
+                        if (((IEquipment)item).isSwordLike()) {
                             flag3 = true;
                         }
                     }
