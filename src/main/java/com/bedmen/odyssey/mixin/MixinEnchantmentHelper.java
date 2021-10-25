@@ -7,6 +7,7 @@ import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +23,6 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-
 import java.util.Map;
 
 @Mixin(EnchantmentHelper.class)
@@ -62,18 +62,18 @@ public abstract class MixinEnchantmentHelper {
         for(ItemStack itemStack : stacks){
             Item item = itemStack.getItem();
             if(source == DamageSource.FALL){
-                mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(EnchantmentRegistry.FALL_PROTECTION.get())*5);
+                mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(Enchantments.FALL_PROTECTION)*5);
             }
             else if(source.isFire()){
-                mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(EnchantmentRegistry.FIRE_PROTECTION.get())*5);
+                mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(Enchantments.FIRE_PROTECTION)*5);
             }
             else if(source.isExplosion()){
-                mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(EnchantmentRegistry.BLAST_PROTECTION.get())*5);
+                mutableint.add(((IEquipment)item).getInnateEnchantmentLevel(Enchantments.BLAST_PROTECTION)*5);
             }
         }
         return mutableint.intValue();
     }
-    
+
 
 
     @Overwrite
