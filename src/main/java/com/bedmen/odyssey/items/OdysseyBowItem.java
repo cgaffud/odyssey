@@ -8,7 +8,6 @@ import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -40,7 +39,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
     public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerentity = (PlayerEntity)entityLiving;
-            boolean flag = playerentity.abilities.instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, stack) > 0;
+            boolean flag = playerentity.abilities.instabuild || EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.INFINITY_ARROWS.get(), stack) > 0;
             ItemStack itemstack = playerentity.getProjectile(stack);
             BowUtil.consumeQuiverAmmo(playerentity, itemstack);
 
@@ -66,7 +65,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                             inaccuracy *= (1.0f - 0.2f * (float)superCharge);
                         }
                         odysseyAbstractArrowEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
-                        int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
+                        int j = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.POWER_ARROWS.get(), stack);
                         if (j > 0) {
                             odysseyAbstractArrowEntity.setBaseDamage(odysseyAbstractArrowEntity.getBaseDamage() + (double)j * 0.5D + 0.5D);
                         }

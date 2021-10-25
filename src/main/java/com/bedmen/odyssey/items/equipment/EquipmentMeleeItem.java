@@ -62,7 +62,7 @@ public class EquipmentMeleeItem extends TieredItem implements IVanishable {
     }
 
     public boolean canSweep(){
-        return this.getInnateEnchantmentLevel(Enchantments.SWEEPING_EDGE) > 0;
+        return this.getInnateEnchantmentLevel(EnchantmentRegistry.SWEEPING_EDGE.get()) > 0;
     }
 
     public float getDestroySpeed(ItemStack stack, BlockState state) {

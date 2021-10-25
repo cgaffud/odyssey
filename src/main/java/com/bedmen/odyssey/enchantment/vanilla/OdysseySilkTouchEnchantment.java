@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.enchantment.vanilla;
 
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.inventory.EquipmentSlotType;
 
 public class OdysseySilkTouchEnchantment extends Enchantment {
@@ -32,6 +32,6 @@ public class OdysseySilkTouchEnchantment extends Enchantment {
      * Determines if the enchantment passed can be applyied together with this enchantment.
      */
     public boolean checkCompatibility(Enchantment pEnch) {
-        return super.checkCompatibility(pEnch) && pEnch != Enchantments.BLOCK_FORTUNE;
+        return super.checkCompatibility(pEnch) && pEnch != EnchantmentRegistry.BLOCK_FORTUNE.get();
     }
 }

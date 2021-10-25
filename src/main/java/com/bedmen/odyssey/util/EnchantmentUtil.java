@@ -6,7 +6,6 @@ import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -114,7 +113,7 @@ public class EnchantmentUtil {
     }
 
     public static boolean hasFireProtectionOrResistance(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(Enchantments.FIRE_PROTECTION, entity) > 0 || entity.hasEffect(Effects.FIRE_RESISTANCE);
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FIRE_PROTECTION.get(), entity) > 0 || entity.hasEffect(Effects.FIRE_RESISTANCE);
     }
 
     public static boolean hasGliding(LivingEntity entity) {
@@ -178,7 +177,7 @@ public class EnchantmentUtil {
     }
 
     public static float getSweepingDamageRatio(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(Enchantments.SWEEPING_EDGE, entity) * 0.2f;
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SWEEPING_EDGE.get(), entity) * 0.2f;
     }
 
     public static int getShattering(LivingEntity entity) {
