@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.items.equipment;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
@@ -134,23 +135,23 @@ public class BoomerangItem extends EquipmentItem implements IVanishable, INeedsT
     }
 
     public enum BoomerangType{
-        BONE(5.0d, "bone"),
-        COPPER(6.0d, "copper");
+        BONE(5.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png")),
+        COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
 
         private final double damage;
-        private final String resourceName;
+        private final ResourceLocation resourceLocation;
 
-        BoomerangType(double damage, String resourceName){
+        BoomerangType(double damage, ResourceLocation resourceLocation){
             this.damage = damage;
-            this.resourceName = resourceName;
+            this.resourceLocation = resourceLocation;
         }
 
         public double getDamage(){
             return this.damage;
         }
 
-        public String getResourceName(){
-            return this.resourceName;
+        public ResourceLocation getResourceLocation(){
+            return this.resourceLocation;
         }
     }
 }

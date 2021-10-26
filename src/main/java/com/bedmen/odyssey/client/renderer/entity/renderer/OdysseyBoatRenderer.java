@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.client.renderer.entity.renderer;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.item.OdysseyBoatEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -20,7 +19,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class OdysseyBoatRenderer extends EntityRenderer<BoatEntity> {
-    private static final ResourceLocation[] BOAT_TEXTURE_LOCATIONS = new ResourceLocation[]{new ResourceLocation(Odyssey.MOD_ID, "textures/entity/boat/palm.png")};
     protected final BoatModel model = new BoatModel();
 
     public OdysseyBoatRenderer(EntityRendererManager p_i46190_1_) {
@@ -62,6 +60,6 @@ public class OdysseyBoatRenderer extends EntityRenderer<BoatEntity> {
     }
 
     public ResourceLocation getTextureLocation(BoatEntity odysseyBoatEntity) {
-        return BOAT_TEXTURE_LOCATIONS[((OdysseyBoatEntity)odysseyBoatEntity).getOdysseyBoatType().ordinal()];
+        return ((OdysseyBoatEntity)odysseyBoatEntity).getOdysseyBoatType().getResourceLocation();
     }
 }

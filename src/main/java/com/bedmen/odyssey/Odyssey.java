@@ -19,6 +19,7 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.potions.OdysseyPotions;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.trades.OdysseyTrades;
+import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.OdysseyFeatureGen;
@@ -37,6 +38,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.world.FoliageColors;
@@ -138,8 +140,6 @@ public class Odyssey
         ScreenManager.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
         ScreenManager.register(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);
-        ScreenManager.register(ContainerRegistry.QUIVER7.get(), QuiverScreen::new);
-        ScreenManager.register(ContainerRegistry.QUIVER9.get(), QuiverScreen::new);
 
         //Mob Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
@@ -168,6 +168,11 @@ public class Odyssey
     @SubscribeEvent
     public static void onRegisterAttributes(final RegistryEvent.Register<Attribute> event){
         ((RangedAttribute)Attributes.ARMOR).maxValue = 80.0d;
+    }
+
+    @SubscribeEvent
+    public static void onRegisterContainers(final RegistryEvent.Register<ContainerType<?>> event){
+        BowUtil.init();
     }
 
     @SubscribeEvent

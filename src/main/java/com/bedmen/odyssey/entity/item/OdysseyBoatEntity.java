@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.item;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.block.Block;
@@ -11,6 +12,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -89,14 +91,16 @@ public class OdysseyBoatEntity extends BoatEntity {
     }
 
     public enum Type {
-        PALM(BlockRegistry.PALM_PLANKS.get(), "palm");
+        PALM(BlockRegistry.PALM_PLANKS.get(), "palm", new ResourceLocation(Odyssey.MOD_ID, "textures/entity/boat/palm.png"));
 
         private final String name;
         private final Block planks;
+        private final ResourceLocation resourceLocation;
 
-        Type(Block p_i48146_3_, String p_i48146_4_) {
+        Type(Block p_i48146_3_, String p_i48146_4_, ResourceLocation resourceLocation) {
             this.name = p_i48146_4_;
             this.planks = p_i48146_3_;
+            this.resourceLocation = resourceLocation;
         }
 
         public String getName() {
@@ -105,6 +109,10 @@ public class OdysseyBoatEntity extends BoatEntity {
 
         public Block getPlanks() {
             return this.planks;
+        }
+
+        public ResourceLocation getResourceLocation(){
+            return this.resourceLocation;
         }
 
         public String toString() {

@@ -1,21 +1,18 @@
 package com.bedmen.odyssey.registry;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.armor.OdysseyArmorMaterial;
 import com.bedmen.odyssey.client.renderer.tileentity.OdysseyItemStackTileEntityRenderer;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.item.OdysseyBoatEntity;
 import com.bedmen.odyssey.items.*;
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.loot.ChestMaterial;
-import com.bedmen.odyssey.tools.*;
+import com.bedmen.odyssey.tools.OdysseyItemTier;
 import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
-import net.minecraft.item.Items; //Used as easy access to item registry
-
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -303,8 +300,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT).durability(862).fireResistant(), 1.15f, 25));
 
     //Quivers
-    public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), 3));
-    public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyItemGroup.COMBAT), 5));
+    public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE));
+    public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.LEVIATHAN));
 
     //Arrows
     public static final RegistryObject<Item> ARROW = ITEMS_VANILLA.register("arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(ItemGroup.TAB_COMBAT), OdysseyArrowItem.ArrowType.FLINT));

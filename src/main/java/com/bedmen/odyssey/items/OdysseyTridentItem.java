@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -192,23 +193,23 @@ public class OdysseyTridentItem extends Item implements IVanishable, INeedsToReg
     }
 
     public enum TridentType{
-        NORMAL(9.0d, ""),
-        LEVIATHAN(11.0d, "leviathan");
+        NORMAL(9.0d, new ResourceLocation("textures/entity/trident.png")),
+        LEVIATHAN(11.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/leviathan_trident.png"));
 
         private final double damage;
-        private final String resourceName;
+        private final ResourceLocation resourceLocation;
 
-        TridentType(double damage, String resourceName){
+        TridentType(double damage, ResourceLocation resourceLocation){
             this.damage = damage;
-            this.resourceName = resourceName;
+            this.resourceLocation = resourceLocation;
         }
 
         public double getDamage(){
             return this.damage;
         }
 
-        public String getResourceName(){
-            return this.resourceName;
+        public ResourceLocation getResourceLocation(){
+            return this.resourceLocation;
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.client.renderer.entity.renderer;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.model.OdysseyTridentModel;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -17,7 +16,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class OdysseyTridentRenderer extends EntityRenderer<OdysseyTridentEntity> {
-   public static final ResourceLocation[] TRIDENT_LOCATION = new ResourceLocation[]{new ResourceLocation("textures/entity/trident.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/leviathan_trident.png")};
    private final OdysseyTridentModel tridentModel = new OdysseyTridentModel();
 
    public OdysseyTridentRenderer(EntityRendererManager renderManagerIn) {
@@ -35,6 +33,6 @@ public class OdysseyTridentRenderer extends EntityRenderer<OdysseyTridentEntity>
    }
 
    public ResourceLocation getTextureLocation(OdysseyTridentEntity odysseyTridentEntity) {
-      return TRIDENT_LOCATION[odysseyTridentEntity.getTridentType().ordinal()];
+      return odysseyTridentEntity.getTridentType().getResourceLocation();
    }
 }

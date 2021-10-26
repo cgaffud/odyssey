@@ -26,7 +26,7 @@ public class QuiverModel<T extends LivingEntity> extends AgeableModel<T> {
         quiver_r1.setPos(0.0F, 0.0F, 0.0F);
         bb_main.addChild(quiver_r1);
         setRotationAngle(quiver_r1, 0.5236F, 0.0F, 0.0F);
-        quiver_r1.texOffs(0, 0).addBox(-1.0F, -4.0F, -1.0F, 2.0F, 8.0F, 2.0F, 0.0F, false);
+        quiver_r1.texOffs(0, 0).addBox(-1.5F, -4.0F, -1.5F, 3.0F, 8.0F, 3.0F, 0.0F, false);
     }
 
     protected Iterable<ModelRenderer> headParts() {

@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.container;
 
 import com.bedmen.odyssey.items.QuiverItem;
-import com.bedmen.odyssey.registry.ContainerRegistry;
+import com.bedmen.odyssey.util.BowUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -11,7 +11,9 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.*;
+import net.minecraft.item.ArrowItem;
+import net.minecraft.item.FireworkRocketItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 
@@ -26,17 +28,8 @@ public class QuiverContainer extends Container {
         return true;
     }
 
-    public static QuiverContainer Quiver3(int id, PlayerInventory playerInventory){
-        return new QuiverContainer(id, playerInventory, 3, ContainerRegistry.QUIVER3.get());
-    }
-    public static QuiverContainer Quiver5(int id, PlayerInventory playerInventory){
-        return new QuiverContainer(id, playerInventory, 5, ContainerRegistry.QUIVER5.get());
-    }
-    public static QuiverContainer Quiver7(int id, PlayerInventory playerInventory){
-        return new QuiverContainer(id, playerInventory, 7, ContainerRegistry.QUIVER7.get());
-    }
-    public static QuiverContainer Quiver9(int id, PlayerInventory playerInventory){
-        return new QuiverContainer(id, playerInventory, 9, ContainerRegistry.QUIVER9.get());
+    public static ContainerType.IFactory<QuiverContainer> QuiverMaker(int size){
+        return (int pContainerId, PlayerInventory pPlayerInventory) ->  new QuiverContainer(pContainerId, pPlayerInventory, size, BowUtil.QUIVER_MAP.get(size));
     }
 
     public QuiverContainer(int id, PlayerInventory playerInventory, int size, ContainerType<?> type){

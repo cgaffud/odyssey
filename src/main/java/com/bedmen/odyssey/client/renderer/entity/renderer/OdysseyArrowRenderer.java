@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.client.renderer.entity.renderer;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrowEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -19,7 +18,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class OdysseyArrowRenderer<T extends OdysseyArrowEntity> extends EntityRenderer<T> {
-    public static final ResourceLocation[] ARROW_LOCATION = new ResourceLocation[]{new ResourceLocation("textures/entity/projectiles/arrow.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/amethyst_arrow.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/quartz_arrow.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/razor_arrow.png")};
     public OdysseyArrowRenderer(EntityRendererManager p_i46193_1_) {
         super(p_i46193_1_);
     }
@@ -77,6 +75,6 @@ public class OdysseyArrowRenderer<T extends OdysseyArrowEntity> extends EntityRe
     }
 
     public ResourceLocation getTextureLocation(OdysseyArrowEntity odysseyArrowEntity) {
-        return ARROW_LOCATION[odysseyArrowEntity.getArrowType().ordinal()];
+        return odysseyArrowEntity.getArrowType().getResourceLocation();
     }
 }
