@@ -1,19 +1,23 @@
 package com.bedmen.odyssey.container;
 
-import java.util.Map;
-
+import com.bedmen.odyssey.items.PurgeTabletItem;
 import com.bedmen.odyssey.registry.ContainerRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.AnvilUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.AbstractRepairContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntReferenceHolder;
@@ -24,6 +28,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
 
 public class OdysseyRepairContainer extends AbstractRepairContainer {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -100,7 +106,7 @@ public class OdysseyRepairContainer extends AbstractRepairContainer {
         } else {
             ItemStack itemstack1 = itemstack.copy();
             ItemStack itemstack2 = this.inputSlots.getItem(1);
-            Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemstack1);
+            Map<Enchantment, Integer> map = EnchantmentUtil.getEnchantmentsWithoutInnate(itemstack1);
             j = j + itemstack.getBaseRepairCost() + (itemstack2.isEmpty() ? 0 : itemstack2.getBaseRepairCost());
             this.repairItemCountCost = 0;
             boolean flag = false;
@@ -149,6 +155,23 @@ public class OdysseyRepairContainer extends AbstractRepairContainer {
                         this.cost.set(0);
                         return;
                     }
+                } else if(itemstack1.getItem() == ItemRegistry.PURGE_TABLET.get() && itemstack2.getItem() == ItemRegistry.PURGE_TABLET.get()){
+                    Map<Enchantment, Integer> map1 = EnchantmentHelper.getEnchantments(itemstack1);
+                    itemstack1.removeTagKey("StoredEnchantments");
+                    Map<Enchantment, Integer> map2 = EnchantmentHelper.getEnchantments(itemstack2);
+                    for(Enchantment enchantment : map1.keySet()){
+                        int level = map1.get(enchantment);
+                        if(map2.containsKey(enchantment) && level == map2.get(enchantment) && level < enchantment.getMaxLevel()){
+                            PurgeTabletItem.addEnchantment(itemstack1, new EnchantmentData(enchantment, level+1));
+                            i += level+1;
+                        }
+                    }
+                    if(i <= 0){
+                        this.resultSlots.setItem(0, ItemStack.EMPTY);
+                        this.cost.set(0);
+                        return;
+                    }
+                    flag = true;
                 } else {
                     this.resultSlots.setItem(0, ItemStack.EMPTY);
                     this.cost.set(0);
@@ -187,7 +210,9 @@ public class OdysseyRepairContainer extends AbstractRepairContainer {
                     k2 = itemstack2.getBaseRepairCost();
                 }
 
-                EnchantmentHelper.setEnchantments(map, itemstack1);
+                if(!flag) {
+                    EnchantmentHelper.setEnchantments(map, itemstack1);
+                }
             }
 
             this.resultSlots.setItem(0, itemstack1);

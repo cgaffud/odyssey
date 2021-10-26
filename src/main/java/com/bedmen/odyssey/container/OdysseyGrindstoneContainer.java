@@ -1,10 +1,8 @@
 package com.bedmen.odyssey.container;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -22,8 +20,12 @@ import net.minecraft.item.Items;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 public class OdysseyGrindstoneContainer extends Container {
-    public boolean wasPurge = false;
+    public int purgeXP;
     private final IInventory resultSlots = new CraftResultInventory();
     private final IInventory repairSlots = new Inventory(2) {
         public void setChanged() {
@@ -58,12 +60,12 @@ public class OdysseyGrindstoneContainer extends Container {
             public ItemStack onTake(PlayerEntity p_190901_1_, ItemStack p_190901_2_) {
                 p_i50081_3_.execute((p_216944_1_, p_216944_2_) -> {
                     int l;
-                    if(!this.grindstone.wasPurge){
+                    if(this.grindstone.purgeXP == 0){
                         l = this.getExperienceAmount(p_216944_1_);
                     } else {
-                        l = this.getCursedExperienceAmount(p_216944_1_);
+                        l = this.grindstone.purgeXP;
                     }
-                    this.grindstone.wasPurge = false;
+                    this.grindstone.purgeXP = 0;
 
                     while(l > 0) {
                         int i1 = ExperienceOrbEntity.getExperienceValue(l);
@@ -104,33 +106,6 @@ public class OdysseyGrindstoneContainer extends Container {
 
                 return l;
             }
-
-            private int getCursedExperienceAmount(World p_216942_1_) {
-                int l = 0;
-                l = l + this.getCursedExperienceFromItem(OdysseyGrindstoneContainer.this.repairSlots.getItem(0));
-                l = l + this.getCursedExperienceFromItem(OdysseyGrindstoneContainer.this.repairSlots.getItem(1));
-                if (l > 0) {
-                    int i1 = (int)Math.ceil((double)l / 2.0D);
-                    return i1 + p_216942_1_.random.nextInt(i1);
-                } else {
-                    return 0;
-                }
-            }
-
-            private int getCursedExperienceFromItem(ItemStack p_216943_1_) {
-                int l = 0;
-                Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(p_216943_1_);
-
-                for(Entry<Enchantment, Integer> entry : map.entrySet()) {
-                    Enchantment enchantment = entry.getKey();
-                    Integer integer = entry.getValue();
-                    if (enchantment.isCurse()) {
-                        l += enchantment.getMinCost(integer);
-                    }
-                }
-
-                return l;
-            }
         });
 
         for(int i = 0; i < 3; ++i) {
@@ -158,12 +133,12 @@ public class OdysseyGrindstoneContainer extends Container {
         ItemStack itemstack1 = this.repairSlots.getItem(1);
         boolean flag = !itemstack.isEmpty() || !itemstack1.isEmpty(); // Not Empty
         boolean flag1 = !itemstack.isEmpty() && !itemstack1.isEmpty(); // Full
-        if (!flag) {
+        if (!flag) { //If Empty
             this.resultSlots.setItem(0, ItemStack.EMPTY);
         } else {
-            boolean flag2 = !itemstack.isEmpty() && !itemstack.isEnchanted() || !itemstack1.isEmpty() && !itemstack1.isEnchanted(); // At least one is not enchanted
-            boolean flag4 = !itemstack.isEmpty() && itemstack.isEnchanted() || !itemstack1.isEmpty() && itemstack1.isEnchanted(); // At least one is enchanted
-            if (itemstack.getCount() > 1 || itemstack1.getCount() > 1 || !flag1 && flag2) {
+            boolean flag2 = !itemstack.isEmpty() && !EnchantmentUtil.hasNonCurseNonInnateEnchant(itemstack) || !itemstack1.isEmpty() && !EnchantmentUtil.hasNonCurseNonInnateEnchant(itemstack1); // At least one exists and is not enchanted with a non-curse
+            boolean flag4 = !itemstack.isEmpty() && itemstack.isEnchanted() || !itemstack1.isEmpty() && itemstack1.isEnchanted(); // At least one is enchanted with something
+            if (itemstack.getCount() > 1 || itemstack1.getCount() > 1 || (!flag1 && flag2)) { //If items are multiple or a single item not enchanted with a non-curse
                 this.resultSlots.setItem(0, ItemStack.EMPTY);
                 this.broadcastChanges();
                 return;
@@ -175,16 +150,16 @@ public class OdysseyGrindstoneContainer extends Container {
             if (flag1) {
                 boolean flag5 = itemstack.getItem() == ItemRegistry.PURGE_TABLET.get() || itemstack1.getItem() == ItemRegistry.PURGE_TABLET.get();
                 boolean flag6 = itemstack.getItem() == ItemRegistry.PURGE_TABLET.get() && itemstack1.getItem() == ItemRegistry.PURGE_TABLET.get();
-                if(flag5 && flag4){
+                if(flag5 && flag4){ //If one is enchanted and the other is a purge tablet
                     ItemStack purgeTablet = itemstack.getItem() == ItemRegistry.PURGE_TABLET.get() ? itemstack : itemstack1;
                     ItemStack other = purgeTablet == itemstack ? itemstack1 : itemstack;
                     Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(purgeTablet);
-                    Map<Enchantment, Integer> map1 = EnchantmentHelper.getEnchantments(other);
+                    Map<Enchantment, Integer> map1 = EnchantmentUtil.getEnchantmentsWithoutInnate(other);
                     int removalCount = 0;
                     for(Enchantment e : map.keySet()){
-                        if(map1.containsKey(e) && map.get(e).equals(map1.get(e))){
+                        if(map1.containsKey(e) && map.get(e) >= (map1.get(e))){
+                            removalCount += map1.get(e);
                             map1.remove(e);
-                            removalCount++;
                         }
                     }
                     if(removalCount == 0){
@@ -196,7 +171,7 @@ public class OdysseyGrindstoneContainer extends Container {
                     EnchantmentHelper.setEnchantments(map1, itemstack2);
                     this.resultSlots.setItem(0, itemstack2);
                     this.broadcastChanges();
-                    this.wasPurge = true;
+                    this.purgeXP = 25 * removalCount;
                     return;
                 }
                 if (itemstack.getItem() != itemstack1.getItem() || flag6) {
@@ -257,9 +232,7 @@ public class OdysseyGrindstoneContainer extends Container {
         }
 
         itemstack.setCount(p_217007_3_);
-        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(p_217007_1_).entrySet().stream().filter((p_217012_0_) -> {
-            return p_217012_0_.getKey().isCurse();
-        }).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        Map<Enchantment, Integer> map = EnchantmentUtil.getEnchantmentsWithoutInnate(p_217007_1_).entrySet().stream().filter((p_217012_0_) -> p_217012_0_.getKey().isCurse()).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
         EnchantmentHelper.setEnchantments(map, itemstack);
         itemstack.setRepairCost(0);
         if (itemstack.getItem() == Items.ENCHANTED_BOOK && map.size() == 0) {

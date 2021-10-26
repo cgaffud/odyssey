@@ -3,14 +3,19 @@ package com.bedmen.odyssey.util;
 import com.bedmen.odyssey.client.gui.EnchantButton;
 import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -52,17 +57,36 @@ public class EnchantmentUtil {
     public static boolean cannotBeApplied(ItemStack itemStack, int id, int level, Map<Enchantment, Integer> map){
         Enchantment enchantment = intToEnchantment(id);
         return !enchantment.canEnchant(itemStack);
-//        if(isExcluded(enchantment, map.keySet())) return true;
-//
-//        //Upgrades can't override downgrades of higher level
-//        Enchantment downgrade = ((IUpgradableEnchantment)enchantment).getDowngrade();
-//        if(downgrade != null && map.containsKey(downgrade) && map.get(downgrade) > level) return true;
-//
-//        //Downgrades can't override upgrades of higher than or equal level
-//        Enchantment upgrade = ((IUpgradableEnchantment)enchantment).getUpgrade();
-//        if(upgrade != null && map.containsKey(upgrade) && map.get(upgrade) >= level) return true;
-//
-//         (map.containsKey(enchantment) && map.get(enchantment) >= level);
+    }
+
+    public static Map<Enchantment, Integer> getEnchantmentsWithoutInnate(ItemStack itemStack){
+        ListNBT listnbt = (itemStack.getItem() == Items.ENCHANTED_BOOK || itemStack.getItem() == ItemRegistry.PURGE_TABLET.get()) ? EnchantedBookItem.getEnchantments(itemStack) : itemStack.getEnchantmentTags();
+        return EnchantmentHelper.deserializeEnchantments(listnbt);
+    }
+
+    public static boolean hasNonCurseNonInnateEnchant(ItemStack itemStack){
+        Map<Enchantment, Integer> map = getEnchantmentsWithoutInnate(itemStack);
+        for(Enchantment enchantment : map.keySet()){
+            if(!enchantment.isCurse()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static ITextComponent getFullnameForPurgeTablet(Enchantment enchantment, int p_200305_1_) {
+        IFormattableTextComponent iformattabletextcomponent = new TranslationTextComponent(enchantment.getDescriptionId());
+        if (enchantment.isCurse()) {
+            iformattabletextcomponent.withStyle(TextFormatting.RED);
+        } else {
+            iformattabletextcomponent.withStyle(TextFormatting.GRAY);
+        }
+
+        if (p_200305_1_ != 1 || enchantment.getMaxLevel() != 1) {
+            iformattabletextcomponent.append(" ").append(new TranslationTextComponent("enchantment.level." + p_200305_1_));
+        }
+
+        return iformattabletextcomponent.withStyle(TextFormatting.AQUA);
     }
 
     public static void getExclusiveFlag(Enchantment enchantment, int level, Map<Enchantment, Integer> map, EnchantButton.ExclusiveFlag exclusiveFlag){
