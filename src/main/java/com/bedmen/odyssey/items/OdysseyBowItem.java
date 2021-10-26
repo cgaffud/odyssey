@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -51,7 +52,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                 if (itemstack.isEmpty()) {
                     itemstack = new ItemStack(Items.ARROW);
                 }
-                int superCharge = EnchantmentUtil.getSuperCharge(stack);
+                float superCharge = EnchantmentUtil.getSuperChargeMultiplier(stack);
                 Flag maxVelocityFlag = new Flag();
                 float f = getArrowVelocity(i, stack, superCharge, maxVelocityFlag);
                 if (!((double)f < 0.1D)) {
@@ -60,9 +61,9 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                         OdysseyArrowItem odysseyArrowItem = (OdysseyArrowItem)(itemstack.getItem() instanceof OdysseyArrowItem ? itemstack.getItem() : ItemRegistry.ARROW.get());
                         OdysseyAbstractArrowEntity odysseyAbstractArrowEntity = odysseyArrowItem.createArrow(worldIn, itemstack, playerentity);
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(entityLiving);
-                        if(maxVelocityFlag.value && superCharge > 0){
+                        if(maxVelocityFlag.value && superCharge > 1.0f){
                             odysseyAbstractArrowEntity.setCritArrow(true);
-                            inaccuracy *= (1.0f - 0.2f * (float)superCharge);
+                            inaccuracy /= superCharge;
                         }
                         odysseyAbstractArrowEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
                         int j = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.POWER_ARROWS.get(), stack);
@@ -115,15 +116,18 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
     /**
      * Gets the velocity of the arrow entity from the bow's charge
      */
-    public float getArrowVelocity(int charge, ItemStack itemStack, int superCharge, Flag flag) {
-        float f = (float)charge / (float)this.getChargeTime(itemStack);
-        float f1 = 1.0f + 0.5f*(float)superCharge;
-        if(f >= f1){
-            f = f1;
+    public float getArrowVelocity(int charge, ItemStack itemStack, float superCharge, Flag flag) {
+        float f = (float)charge / (float)EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack);
+        if(f >= superCharge){
+            f = superCharge;
             flag.value = true;
         }
-        f = (f * f + f * 2.0F) / 3.0F;
+        f = chargeCurve(f);
         return f;
+    }
+
+    public static float chargeCurve(float f){
+        return (f * f + f * 2.0F) / 3.0F;
     }
 
     /**
@@ -167,7 +171,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
     }
 
     public int getChargeTime(ItemStack itemStack){
-        return EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack);
+        return MathHelper.floor(EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack) * EnchantmentUtil.getSuperChargeMultiplier(itemStack));
     }
     
     public void registerItemModelProperties() {
@@ -175,7 +179,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
             if (entity == null) {
                 return 0.0F;
             } else {
-                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / this.getChargeTime(itemStack);
+                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / (float)(this.getChargeTime(itemStack));
             }
         });
         ItemModelsProperties.register(this, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
@@ -185,7 +189,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
 
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity * chargeCurve(EnchantmentUtil.getSuperChargeMultiplier(stack)))).withStyle(TextFormatting.BLUE));
         tooltip.add(new TranslationTextComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(this.getChargeTime(stack)/20f)).append("s").withStyle(TextFormatting.BLUE));
     }
 
