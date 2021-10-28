@@ -19,7 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class PermafrostIcicleRenderer extends EntityRenderer<PermafrostIcicleEntity> {
-    private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/permafrost/icicle.png");
+    private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/projectiles/permafrost_icicle.png");
 
     public PermafrostIcicleRenderer(EntityRendererManager p_i46129_1_) {
         super(p_i46129_1_);

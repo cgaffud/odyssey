@@ -1,24 +1,37 @@
 package com.bedmen.odyssey.items;
 
-import java.util.function.Predicate;
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.StringUtil;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class OdysseyBowItem extends BowItem implements IVanishable {
-    private final double baseDamage;
-    public OdysseyBowItem(Item.Properties builder, double baseDamage) {
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Predicate;
+
+public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModelProperty {
+    private final float velocity;
+    private final int chargeTime;
+    public OdysseyBowItem(Item.Properties builder, float velocity, int chargeTime) {
         super(builder);
-        this.baseDamage = baseDamage;
+        this.velocity = velocity;
+        this.chargeTime = chargeTime;
     }
 
     /**
@@ -27,7 +40,7 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
     public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerentity = (PlayerEntity)entityLiving;
-            boolean flag = playerentity.abilities.instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, stack) > 0;
+            boolean flag = playerentity.abilities.instabuild || EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.INFINITY_ARROWS.get(), stack) > 0;
             ItemStack itemstack = playerentity.getProjectile(stack);
             BowUtil.consumeQuiverAmmo(playerentity, itemstack);
 
@@ -39,43 +52,51 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
                 if (itemstack.isEmpty()) {
                     itemstack = new ItemStack(Items.ARROW);
                 }
-
-                float f = getArrowVelocity(i);
+                float superCharge = EnchantmentUtil.getSuperChargeMultiplier(stack);
+                Flag maxVelocityFlag = new Flag();
+                float f = getArrowVelocity(i, stack, superCharge, maxVelocityFlag);
                 if (!((double)f < 0.1D)) {
                     boolean flag1 = playerentity.abilities.instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, stack, playerentity));
                     if (!worldIn.isClientSide) {
-                        ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
-                        AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, itemstack, playerentity);
-                        abstractarrowentity = customArrow(abstractarrowentity);
+                        OdysseyArrowItem odysseyArrowItem = (OdysseyArrowItem)(itemstack.getItem() instanceof OdysseyArrowItem ? itemstack.getItem() : ItemRegistry.ARROW.get());
+                        OdysseyAbstractArrowEntity odysseyAbstractArrowEntity = odysseyArrowItem.createArrow(worldIn, itemstack, playerentity);
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(entityLiving);
-                        abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * 3.0F, inaccuracy);
-                        //if (f == 1.0F) {
-                        //    abstractarrowentity.setIsCritical(true);
-                        //}
-
-                        abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + this.baseDamage);
-                        int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
+                        if(maxVelocityFlag.value && superCharge > 1.0f){
+                            odysseyAbstractArrowEntity.setCritArrow(true);
+                            inaccuracy /= superCharge;
+                        }
+                        odysseyAbstractArrowEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
+                        int j = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.POWER_ARROWS.get(), stack);
                         if (j > 0) {
-                            abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + (double)j * 0.5D + 0.5D);
+                            odysseyAbstractArrowEntity.setBaseDamage(odysseyAbstractArrowEntity.getBaseDamage() + (double)j * 0.5D + 0.5D);
                         }
 
-                        int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
+                        int k = EnchantmentUtil.getPunch(stack);
                         if (k > 0) {
-                            abstractarrowentity.setKnockback(k);
+                            odysseyAbstractArrowEntity.setKnockback(k);
+                        }
+                        k = EnchantmentUtil.getPiercing(stack);
+                        if (k > 0) {
+                            odysseyAbstractArrowEntity.setPierceLevel((byte)k);
+                        }
+                        k = EnchantmentUtil.getFlame(stack);
+                        if (k > 0) {
+                            odysseyAbstractArrowEntity.setRemainingFireTicks(100*k);
                         }
 
-                        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack) > 0) {
-                            abstractarrowentity.setSecondsOnFire(100);
+
+                        if (EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), stack) > 0) {
+                            odysseyAbstractArrowEntity.setSecondsOnFire(100);
                         }
 
                         stack.hurtAndBreak(1, playerentity, (p_220009_1_) -> {
                             p_220009_1_.broadcastBreakEvent(playerentity.getUsedItemHand());
                         });
                         if (flag1 || playerentity.abilities.instabuild && (itemstack.getItem() == Items.SPECTRAL_ARROW || itemstack.getItem() == Items.TIPPED_ARROW)) {
-                            abstractarrowentity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                            odysseyAbstractArrowEntity.pickup = OdysseyAbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                         }
 
-                        worldIn.addFreshEntity(abstractarrowentity);
+                        worldIn.addFreshEntity(odysseyAbstractArrowEntity);
                     }
 
                     worldIn.playSound((PlayerEntity)null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
@@ -95,13 +116,18 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
     /**
      * Gets the velocity of the arrow entity from the bow's charge
      */
-    public static float getArrowVelocity(int charge) {
-        float f = (float)charge / 20.0F;
-        f = (f * f + f * 2.0F) / 3.0F;
-        if (f > 1.0F) {
-            f = 1.0F;
+    public float getArrowVelocity(int charge, ItemStack itemStack, float superCharge, Flag flag) {
+        float f = (float)charge / (float)EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack);
+        if(f >= superCharge){
+            f = superCharge;
+            flag.value = true;
         }
+        f = chargeCurve(f);
         return f;
+    }
+
+    public static float chargeCurve(float f){
+        return (f * f + f * 2.0F) / 3.0F;
     }
 
     /**
@@ -140,24 +166,34 @@ public class OdysseyBowItem extends BowItem implements IVanishable {
         return ARROW_ONLY;
     }
 
-    public AbstractArrowEntity customArrow(AbstractArrowEntity arrow) {
-        return arrow;
-    }
-
     public int getDefaultProjectileRange() {
         return 15;
     }
+
+    public int getChargeTime(ItemStack itemStack){
+        return MathHelper.floor(EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack) * EnchantmentUtil.getSuperChargeMultiplier(itemStack));
+    }
     
-    public static void registerBaseProperties(Item item) {
-        ItemModelsProperties.register(item, new ResourceLocation("pull"), (itemStack, world, entity) -> {
+    public void registerItemModelProperties() {
+        ItemModelsProperties.register(this, new ResourceLocation("pull"), (itemStack, world, entity) -> {
             if (entity == null) {
                 return 0.0F;
             } else {
-                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F;
+                return entity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / (float)(this.getChargeTime(itemStack));
             }
         });
-        ItemModelsProperties.register(item, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(this, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
             return entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack ? 1.0F : 0.0F;
         });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new TranslationTextComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity * chargeCurve(EnchantmentUtil.getSuperChargeMultiplier(stack)))).withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(this.getChargeTime(stack)/20f)).append("s").withStyle(TextFormatting.BLUE));
+    }
+
+    public static class Flag {
+        public boolean value;
     }
 }

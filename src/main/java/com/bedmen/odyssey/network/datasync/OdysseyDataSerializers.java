@@ -9,25 +9,25 @@ import java.util.List;
 import java.util.UUID;
 
 public class OdysseyDataSerializers {
-    public static final IDataSerializer<List<UUID>> UUID_LIST = new IDataSerializer<List<UUID>>() {
-        public void write(PacketBuffer buffer, List<UUID> uuidList) {
-            for(UUID uuid : uuidList){
-                buffer.writeUUID(uuid);
+    public static final IDataSerializer<List<Integer>> INT_LIST = new IDataSerializer<List<Integer>>() {
+        public void write(PacketBuffer buffer, List<Integer> integerList) {
+            for(int i : integerList){
+                buffer.writeInt(i);
             }
         }
 
-        public List<UUID> read(PacketBuffer buffer) {
-            List<UUID> uuidList = new ArrayList<>();
+        public List<Integer> read(PacketBuffer buffer) {
+            List<Integer> integerList = new ArrayList<>();
             for(int i = 0; i < MineralLeviathanEntity.NUM_SEGMENTS-1; i++){
-                uuidList.add(buffer.readUUID());
+                integerList.add(buffer.readInt());
             }
-            return uuidList;
+            return integerList;
         }
 
-        public List<UUID> copy(List<UUID> uuidList) {
-            List<UUID> uuidList2 = new ArrayList<>();
-            uuidList2.addAll(uuidList);
-            return uuidList2;
+        public List<Integer> copy(List<Integer> integerList) {
+            List<Integer> integerList1 = new ArrayList<>();
+            integerList1.addAll(integerList);
+            return integerList1;
         }
     };
 }

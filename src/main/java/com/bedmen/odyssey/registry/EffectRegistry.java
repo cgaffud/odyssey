@@ -3,6 +3,9 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 
 import com.bedmen.odyssey.potions.OdysseyEffect;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.potion.AttackDamageEffect;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import net.minecraftforge.fml.RegistryObject;
@@ -27,5 +30,5 @@ public class EffectRegistry {
     public static final RegistryObject<Effect> BLEEDING = EFFECTS.register("bleeding", () -> new OdysseyEffect(EffectType.HARMFUL, 0x7f3e2c));
     public static final RegistryObject<Effect> LIFE_INCREASE = EFFECTS.register("life_increase", () -> new OdysseyEffect(EffectType.BENEFICIAL, 0xff0000));
     public static final RegistryObject<Effect> LAVA_VISION = EFFECTS.register("lava_vision", () -> new OdysseyEffect(EffectType.BENEFICIAL, 0xa01e80));
-
+    public static final RegistryObject<Effect> SHATTERED = EFFECTS.register("shattered", () -> (new OdysseyEffect(EffectType.HARMFUL, 0x000000)).addAttributeModifier(Attributes.ARMOR, "54ae752d-771a-4c38-b482-a514f2bf0177", -2.0D, AttributeModifier.Operation.ADDITION));
 }

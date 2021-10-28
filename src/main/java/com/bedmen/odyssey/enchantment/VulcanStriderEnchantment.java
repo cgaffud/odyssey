@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.enchantment;
 
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.enchantment.DepthStriderEnchantment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
@@ -11,6 +12,6 @@ public class VulcanStriderEnchantment extends DepthStriderEnchantment {
     }
 
     public Enchantment getDowngrade(){
-        return Enchantments.DEPTH_STRIDER;
+        return EnchantmentRegistry.DEPTH_STRIDER.get();
     }
 }

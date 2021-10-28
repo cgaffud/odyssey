@@ -11,22 +11,14 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class OdysseySpawnEggItem extends SpawnEggItem {
     protected static final List<OdysseySpawnEggItem> UNADDED_EGGS = new ArrayList<OdysseySpawnEggItem>();
     private final Lazy<? extends EntityType<?>> entityTypeSupplier;
-
-    public OdysseySpawnEggItem(final NonNullSupplier<? extends EntityType<?>> entityTypeSupplier, final int primaryColor, final int secondaryColor, final Item.Properties properties){
-        super(null, primaryColor, secondaryColor, properties);
-        this.entityTypeSupplier = Lazy.of(entityTypeSupplier::get);
-        UNADDED_EGGS.add(this);
-    }
 
     public OdysseySpawnEggItem(final RegistryObject<? extends EntityType<?>> entityTypeSupplier, final int primaryColor, final int secondaryColor, final Item.Properties properties) {
         super(null, primaryColor, secondaryColor, properties);
@@ -35,7 +27,6 @@ public class OdysseySpawnEggItem extends SpawnEggItem {
     }
 
     public static void initSpawnEggs(){
-        final Map<EntityType<?>, SpawnEggItem> EGGS = ObfuscationReflectionHelper.getPrivateValue(SpawnEggItem.class, null, "BY_ID");
         DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior(){
             @Override
             protected ItemStack execute(IBlockSource source, ItemStack stack){
@@ -48,7 +39,7 @@ public class OdysseySpawnEggItem extends SpawnEggItem {
         };
 
         for(final SpawnEggItem spawnEgg : UNADDED_EGGS){
-            EGGS.put(spawnEgg.getType(null), spawnEgg);
+            SpawnEggItem.BY_ID.put(spawnEgg.getType(null), spawnEgg);
             DispenserBlock.registerBehavior(spawnEgg, dispenseBehavior);
         }
         UNADDED_EGGS.clear();

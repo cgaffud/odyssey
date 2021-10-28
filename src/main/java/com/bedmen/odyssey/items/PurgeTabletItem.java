@@ -1,13 +1,13 @@
 package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
@@ -37,9 +37,15 @@ public class PurgeTabletItem extends Item {
     }
     
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack p_77624_1_, @Nullable World p_77624_2_, List<ITextComponent> p_77624_3_, ITooltipFlag p_77624_4_) {
-        super.appendHoverText(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
-        ItemStack.appendEnchantmentNames(p_77624_3_, getEnchantments(p_77624_1_));
+    public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> textComponentList, ITooltipFlag tooltipFlag) {
+        super.appendHoverText(itemStack, world, textComponentList, tooltipFlag);
+        ListNBT listNBT = getEnchantments(itemStack);
+        for(int i = 0; i < listNBT.size(); ++i) {
+            CompoundNBT compoundnbt = listNBT.getCompound(i);
+            Registry.ENCHANTMENT.getOptional(ResourceLocation.tryParse(compoundnbt.getString("id"))).ifPresent((enchantment) -> {
+                textComponentList.add(EnchantmentUtil.getFullnameForPurgeTablet(enchantment, compoundnbt.getInt("lvl")));
+            });
+        }
     }
 
     public static void addEnchantment(ItemStack p_92115_0_, EnchantmentData p_92115_1_) {

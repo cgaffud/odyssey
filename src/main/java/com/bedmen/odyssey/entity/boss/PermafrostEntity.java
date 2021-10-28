@@ -1,15 +1,18 @@
 package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.entity.projectile.PermafrostIcicleEntity;
-import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityPredicate;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,18 +27,20 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PermafrostEntity extends BossEntity {
+    private float damageReduction = 1.0f;
     private float activeRotation = 0;
     private int destroyBlocksTick;
     private int IciclePosition = 0;
@@ -110,6 +115,11 @@ public class PermafrostEntity extends BossEntity {
             permafrostIcicleEntity.setPosRaw(this.getX() + d0, this.getY() + d1, this.getZ() + d2);
             this.level.addFreshEntity(permafrostIcicleEntity);
         }
+    }
+
+    public void tick(){
+        super.tick();
+        this.damageReduction = this.difficultyDamageReductionMultiplier() * this.nearbyPlayerDamageReductionMultiplier();
     }
 
     public void aiStep() {
@@ -277,6 +287,18 @@ public class PermafrostEntity extends BossEntity {
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return MonsterEntity.createMonsterAttributes().add(Attributes.MAX_HEALTH, 350.0D).add(Attributes.MOVEMENT_SPEED, (double)0.6F).add(Attributes.FOLLOW_RANGE, 40.0D).add(Attributes.ARMOR, 0.0D);
+    }
+
+    public ServerBossInfo getBossEvent(){
+        return this.bossEvent;
+    }
+
+    public Difficulty getDifficulty(){
+        return this.level.getDifficulty();
+    }
+
+    public float getDamageReduction(){
+        return this.damageReduction;
     }
 
     @OnlyIn(Dist.CLIENT)

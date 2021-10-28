@@ -9,13 +9,14 @@ import com.bedmen.odyssey.network.packet.JumpingPacket;
 import com.bedmen.odyssey.network.packet.SneakingPacket;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.base.Objects;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.*;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.FrostWalkerEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -38,17 +39,22 @@ import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEntity {
@@ -236,7 +242,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
                 // Shield Code
                 Item item = this.useItem.getItem();
                 if(item instanceof OdysseyShieldItem)
-                    amount -= EnchantmentUtil.getBlockingMultiplier(getLivingEntity()) * ((OdysseyShieldItem)item).getBlock();
+                    amount -= ((OdysseyShieldItem)item).getDamageBlock(this.level.getDifficulty());
                 if(amount < 0.0f){
                     amount = 0.0F;
                     flag = true;
@@ -721,20 +727,10 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
 
     //Prevents annoying fire from filling screen with fire res
     public void setRemainingFireTicks(int i) {
-        Field fireTicksField = ObfuscationReflectionHelper.findField(Entity.class, "remainingFireTicks");
-        fireTicksField.setAccessible(true);
         if(this.hasEffect(Effects.FIRE_RESISTANCE)){
-            try {
-                fireTicksField.set(this, 0);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            this.remainingFireTicks = 0;
         } else {
-            try {
-                fireTicksField.set(this, i);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            this.remainingFireTicks = i;
         }
     }
 

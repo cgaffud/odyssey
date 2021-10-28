@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
-import java.lang.reflect.Field;
 
 public class OdysseyPlayerInventory extends PlayerInventory{
 
@@ -15,13 +14,7 @@ public class OdysseyPlayerInventory extends PlayerInventory{
 
     public OdysseyPlayerInventory(PlayerEntity p_i1750_1_) {
         super(p_i1750_1_);
-        try {
-            Field compartmentsField = PlayerInventory.class.getDeclaredField("compartments");
-            compartmentsField.setAccessible(true);
-            compartmentsField.set(this, ImmutableList.of(this.items, this.armor, this.offhand, this.trinket));
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        this.compartments = ImmutableList.of(this.items, this.armor, this.offhand, this.trinket);
     }
 
     public ListNBT save(ListNBT listNBT) {

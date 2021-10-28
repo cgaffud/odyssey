@@ -1,21 +1,18 @@
 package com.bedmen.odyssey.registry;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.armor.OdysseyArmorMaterial;
 import com.bedmen.odyssey.client.renderer.tileentity.OdysseyItemStackTileEntityRenderer;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.item.OdysseyBoatEntity;
 import com.bedmen.odyssey.items.*;
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.loot.ChestMaterial;
-import com.bedmen.odyssey.tools.*;
+import com.bedmen.odyssey.tools.OdysseyItemTier;
 import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
-import net.minecraft.item.Items; //Used as easy access to item registry
-
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -109,7 +106,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FEATHER_BUNDLE = ITEMS.register("feather_bundle", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> PERMAFROST_SHARD = ITEMS.register("permafrost_shard", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> ARCTIC_HEART = ITEMS.register("arctic_heart", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS).stacksTo(1).rarity(Rarity.UNCOMMON)));
-    public static final RegistryObject<Item> LUPINE_CLAW = ITEMS.register("lupine_claw", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> RAZOR_CLAW = ITEMS.register("razor_claw", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> ARCTIC_HORN = ITEMS.register("arctic_horn", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> RAVEN_FEATHER = ITEMS.register("raven_feather", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> BEWITCHED_QUILL = ITEMS.register("bewitched_quill", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.UNCOMMON)));
@@ -123,18 +120,18 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem(ChestMaterial.STERLING_SILVER, (new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
 
     //Equipment Enchants
-    public static final LevEnchSup FALL_PROTECTION_1 = new LevEnchSup(() -> Enchantments.FALL_PROTECTION, 1);
+    public static final LevEnchSup FALL_PROTECTION_1 = new LevEnchSup(() -> EnchantmentRegistry.FALL_PROTECTION.get(), 1);
     public static final LevEnchSup RESPIRATION_1 = new LevEnchSup(EnchantmentRegistry.RESPIRATION, 1);
     public static final LevEnchSup RESPIRATION_2 = new LevEnchSup(EnchantmentRegistry.RESPIRATION, 2);
     public static final LevEnchSup DEPTH_STRIDER_1 = new LevEnchSup(EnchantmentRegistry.DEPTH_STRIDER, 1);
     public static final LevEnchSup DEPTH_STRIDER_2 = new LevEnchSup(EnchantmentRegistry.DEPTH_STRIDER, 2);
-    public static final LevEnchSup BLAST_PROTECTION_1 = new LevEnchSup(() -> Enchantments.BLAST_PROTECTION, 1);
-    public static final LevEnchSup FIRE_PROTECTION_1 = new LevEnchSup(() -> Enchantments.FIRE_PROTECTION, 1);
-    public static final LevEnchSup FALL_PROTECTION_2 = new LevEnchSup(() -> Enchantments.FALL_PROTECTION, 2);
+    public static final LevEnchSup BLAST_PROTECTION_1 = new LevEnchSup(() -> EnchantmentRegistry.BLAST_PROTECTION.get(), 1);
+    public static final LevEnchSup FIRE_PROTECTION_1 = new LevEnchSup(() -> EnchantmentRegistry.FIRE_PROTECTION.get(), 1);
+    public static final LevEnchSup FALL_PROTECTION_2 = new LevEnchSup(() -> EnchantmentRegistry.FALL_PROTECTION.get(), 2);
     public static final LevEnchSup PYROPNEUMATIC_1 = new LevEnchSup(EnchantmentRegistry.PYROPNEUMATIC , 1);
     public static final LevEnchSup VULCAN_STRIDER_1 = new LevEnchSup(EnchantmentRegistry.VULCAN_STRIDER, 1);
     public static final LevEnchSup AQUA_AFFINITY = new LevEnchSup(EnchantmentRegistry.AQUA_AFFINITY);
-    public static final LevEnchSup BINDING = new LevEnchSup(() -> Enchantments.BINDING_CURSE);
+    public static final LevEnchSup BINDING = new LevEnchSup(() -> EnchantmentRegistry.BINDING_CURSE.get());
 
     //Armor
     public static final RegistryObject<Item> LEATHER_HELMET = ITEMS_VANILLA.register("leather_helmet", () -> new DyeableArmorItem(OdysseyArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
@@ -216,8 +213,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> LEVIATHAN_BOOTS = ITEMS.register("leviathan_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterial.LEVIATHAN, EquipmentSlotType.FEET, new Item.Properties().fireResistant().tab(OdysseyItemGroup.COMBAT), VULCAN_STRIDER_1));
 
     //Trinkets
-    public static final RegistryObject<Item> ARCTIC_AMULET = ITEMS.register("arctic_amulet", () -> new EquipmentTrinketItem(new Item.Properties().tab(OdysseyItemGroup.MAGIC), FIRE_PROTECTION_1));
-    public static final RegistryObject<Item> GOLDEN_AMULET = ITEMS.register("golden_amulet", () -> new GoldenAmuletItem(new Item.Properties().tab(OdysseyItemGroup.MAGIC)));
+    public static final RegistryObject<Item> ARCTIC_AMULET = ITEMS.register("arctic_amulet", () -> new EquipmentTrinketItem(new Item.Properties().stacksTo(1).tab(OdysseyItemGroup.MAGIC), FIRE_PROTECTION_1));
+    public static final RegistryObject<Item> GOLDEN_AMULET = ITEMS.register("golden_amulet", () -> new GoldenAmuletItem(new Item.Properties().stacksTo(1).tab(OdysseyItemGroup.MAGIC)));
 
     //Tools
 
@@ -229,17 +226,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_SWORD = ITEMS.register("sterling_silver_sword", () -> new SwordItem(OdysseyItemTier.STERLING_SILVER, 7, -2.4f, new Item.Properties().tab(OdysseyItemGroup.COMBAT)));
     public static final RegistryObject<Item> DIAMOND_SWORD = ITEMS_VANILLA.register("diamond_sword", () -> new SwordItem(OdysseyItemTier.DIAMOND, 8, -2.4f, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
     public static final RegistryObject<Item> NETHERITE_SWORD = ITEMS_VANILLA.register("netherite_sword", () -> new SwordItem(OdysseyItemTier.NETHERITE, 9, -2.4f, new Item.Properties().fireResistant().tab(ItemGroup.TAB_COMBAT)));
-
-    //Bats
-    public static final RegistryObject<Item> GRANITE_BAT = ITEMS.register("granite_bat", () -> new EquipmentMeleeItem(OdysseyItemTier.GRANITE, 5, -2.7f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.KNOCKBACK, 1)));
-    public static final RegistryObject<Item> COPPER_BAT = ITEMS.register("copper_bat", () -> new EquipmentMeleeItem(OdysseyItemTier.COPPER, 6, -2.7f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.KNOCKBACK, 2)));
-    public static final RegistryObject<Item> OBSIDIAN_BAT = ITEMS.register("obsidian_bat", () -> new EquipmentMeleeItem(OdysseyItemTier.OBSIDIAN, 8, -2.7f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.KNOCKBACK, 3)));
-
-    //Hammers
-    public static final RegistryObject<Item> GRANITE_HAMMER = ITEMS.register("granite_hammer", () -> new EquipmentMeleeItem(OdysseyItemTier.GRANITE, 7, -3.2f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.BANE_OF_ARTHROPODS, 1)));
-    public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new EquipmentMeleeItem(OdysseyItemTier.COPPER, 8, -3.2f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.BANE_OF_ARTHROPODS, 2)));
-    public static final RegistryObject<Item> OBSIDIAN_HAMMER = ITEMS.register("obsidian_hammer", () -> new EquipmentMeleeItem(OdysseyItemTier.OBSIDIAN, 10, -3.2f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> Enchantments.BANE_OF_ARTHROPODS, 3)));
-
+    
     //Axes
     public static final RegistryObject<Item> WOODEN_AXE = ITEMS_VANILLA.register("wooden_axe", () -> new AxeItem(OdysseyItemTier.WOOD, 6.0f, -3.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
     public static final RegistryObject<Item> STONE_AXE = ITEMS_VANILLA.register("stone_axe", () -> new AxeItem(OdysseyItemTier.STONE, 7.0f, -3.0f, new Item.Properties().tab(ItemGroup.TAB_TOOLS)));
@@ -280,29 +267,64 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MARINE_HOE = ITEMS.register("marine_hoe", () -> new EquipmentHoeItem(OdysseyItemTier.MARINE, 3, -1.0f, new Item.Properties().tab(OdysseyItemGroup.TOOLS), AQUA_AFFINITY));
     public static final RegistryObject<Item> NETHERITE_HOE = ITEMS_VANILLA.register("netherite_hoe", () -> new HoeItem(OdysseyItemTier.NETHERITE, 6, -2.0f, new Item.Properties().fireResistant().tab(ItemGroup.TAB_TOOLS)));
 
+    //Bats
+    public static final RegistryObject<Item> COPPER_BAT = ITEMS.register("copper_bat", () -> new EquipmentMeleeItem(OdysseyItemTier.COPPER, 6, -2.7f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> EnchantmentRegistry.KNOCKBACK.get(), 1)));
+    public static final RegistryObject<Item> OBSIDIAN_BAT = ITEMS.register("obsidian_bat", () -> new EquipmentMeleeItem(OdysseyItemTier.OBSIDIAN, 8, -2.7f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> EnchantmentRegistry.KNOCKBACK.get(), 2)));
+
+    //Hammers
+    public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new EquipmentMeleeItem(OdysseyItemTier.COPPER, 8, -3.2f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(EnchantmentRegistry.BANE_OF_ARTHROPODS, 1)));
+    public static final RegistryObject<Item> OBSIDIAN_HAMMER = ITEMS.register("obsidian_hammer", () -> new EquipmentMeleeItem(OdysseyItemTier.OBSIDIAN, 10, -3.2f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(EnchantmentRegistry.BANE_OF_ARTHROPODS, 2)));
+    
+    //Battle Axe
+    public static final RegistryObject<Item> COPPER_BATTLE_AXE = ITEMS.register("copper_battle_axe", () -> new EquipmentMeleeItem(OdysseyItemTier.COPPER, 8, -3.1f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(EnchantmentRegistry.SHATTERING, 1)));
+    public static final RegistryObject<Item> OBSIDIAN_BATTLE_AXE = ITEMS.register("obsidian_battle_axe", () -> new EquipmentMeleeItem(OdysseyItemTier.OBSIDIAN, 10, -3.1f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(EnchantmentRegistry.SHATTERING, 2)));
+
+    //Sabres
+    public static final RegistryObject<Item> FLINT_SABRE = ITEMS.register("flint_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.FLINT, 4.5f, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> EnchantmentRegistry.SWEEPING_EDGE.get(), 1)));
+    public static final RegistryObject<Item> AMETHYST_SABRE = ITEMS.register("amethyst_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.AMETHYST, 6.5f, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> EnchantmentRegistry.SWEEPING_EDGE.get(), 2)));
+    public static final RegistryObject<Item> QUARTZ_SABRE = ITEMS.register("quartz_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.QUARTZ, 7.5f, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> EnchantmentRegistry.SWEEPING_EDGE.get(), 3)));
+    public static final RegistryObject<Item> RAZOR_SABRE = ITEMS.register("razor_sabre", () -> new EquipmentMeleeItem(OdysseyItemTier.RAZOR, 10, -2.0f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(() -> EnchantmentRegistry.SWEEPING_EDGE.get(), 4)));
+
+    //Hatchets
+    public static final RegistryObject<Item> FLINT_HATCHET = ITEMS.register("flint_hatchet", () -> new DualWieldItem(OdysseyItemTier.FLINT, 2.5f, -2.5f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(EnchantmentRegistry.SMITE, 1)));
+    public static final RegistryObject<Item> AMETHYST_HATCHET = ITEMS.register("amethyst_hatchet", () -> new DualWieldItem(OdysseyItemTier.AMETHYST, 3.5f, -2.5f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(EnchantmentRegistry.SMITE, 2)));
+    public static final RegistryObject<Item> QUARTZ_HATCHET = ITEMS.register("quartz_hatchet", () -> new DualWieldItem(OdysseyItemTier.QUARTZ, 4.5f, -2.5f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(EnchantmentRegistry.SMITE, 3)));
+    public static final RegistryObject<Item> RAZOR_HATCHET = ITEMS.register("razor_hatchet", () -> new DualWieldItem(OdysseyItemTier.RAZOR, 5.5f, -2.5f, new Item.Properties().tab(OdysseyItemGroup.COMBAT), new LevEnchSup(EnchantmentRegistry.SMITE, 4)));
+
     //Bows
-    public static final RegistryObject<Item> BOW = ITEMS_VANILLA.register("bow", () -> new OdysseyBowItem((new Item.Properties()).durability(384).tab(ItemGroup.TAB_COMBAT), 0.5D));
-    public static final RegistryObject<Item> NETHERITE_BOW = ITEMS.register("netherite_bow", () -> new OdysseyBowItem((new Item.Properties()).durability(1016).tab(OdysseyItemGroup.COMBAT).fireResistant(), 1.0D));
+    public static final RegistryObject<Item> BOW = ITEMS_VANILLA.register("bow", () -> new OdysseyBowItem((new Item.Properties()).durability(384).tab(ItemGroup.TAB_COMBAT),1.0f, 20));
+    public static final RegistryObject<Item> NETHERITE_BOW = ITEMS.register("netherite_bow", () -> new OdysseyBowItem((new Item.Properties()).durability(1016).tab(OdysseyItemGroup.COMBAT).fireResistant(), 1.1f, 20));
 
     //Crossbows
-    public static final RegistryObject<Item> CROSSBOW = ITEMS_VANILLA.register("crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_COMBAT).durability(326), 0.5D));
-    public static final RegistryObject<Item> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT).durability(862).fireResistant(), 1.0D));
+    public static final RegistryObject<Item> CROSSBOW = ITEMS_VANILLA.register("crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_COMBAT).durability(326),1.05f, 25));
+    public static final RegistryObject<Item> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT).durability(862).fireResistant(), 1.15f, 25));
 
     //Quivers
-    public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), 3));
-    public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyItemGroup.COMBAT), 5));
+    public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE));
+    public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.LEVIATHAN));
+
+    //Arrows
+    public static final RegistryObject<Item> ARROW = ITEMS_VANILLA.register("arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(ItemGroup.TAB_COMBAT), OdysseyArrowItem.ArrowType.FLINT));
+    public static final RegistryObject<Item> AMETHYST_ARROW = ITEMS.register("amethyst_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyItemGroup.COMBAT), OdysseyArrowItem.ArrowType.AMETHYST));
+    public static final RegistryObject<Item> QUARTZ_ARROW = ITEMS.register("quartz_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyItemGroup.COMBAT), OdysseyArrowItem.ArrowType.QUARTZ));
+    public static final RegistryObject<Item> RAZOR_ARROW = ITEMS.register("razor_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyItemGroup.COMBAT), OdysseyArrowItem.ArrowType.RAZOR));
 
     //Tridents
-    public static final RegistryObject<Item> TRIDENT = ITEMS_VANILLA.register("trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(250).tab(ItemGroup.TAB_COMBAT), 9.0D));
-    public static final RegistryObject<Item> LEVIATHAN_TRIDENT = ITEMS.register("leviathan_trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(750).fireResistant().tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 11.0D));
+    public static final RegistryObject<Item> TRIDENT = ITEMS_VANILLA.register("trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(250).tab(ItemGroup.TAB_COMBAT), OdysseyTridentItem.TridentType.NORMAL));
+    public static final RegistryObject<Item> LEVIATHAN_TRIDENT = ITEMS.register("leviathan_trident", () -> new OdysseyTridentItem((new Item.Properties()).durability(750).fireResistant().tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), OdysseyTridentItem.TridentType.LEVIATHAN));
+
+    //Boomerangs
+    public static final RegistryObject<Item> BONE_BOOMERANG = ITEMS.register("bone_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(100).tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), BoomerangItem.BoomerangType.BONE, new LevEnchSup(EnchantmentRegistry.LOYALTY, 1)));
+    public static final RegistryObject<Item> COPPER_BOOMERANG = ITEMS.register("copper_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(250).tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), BoomerangItem.BoomerangType.COPPER, new LevEnchSup(EnchantmentRegistry.LOYALTY, 2)));
 
     //Shields
-    public static final RegistryObject<Item> SHIELD = ITEMS_VANILLA.register("shield", () -> new OdysseyShieldItem((new Item.Properties()).durability(336).tab(ItemGroup.TAB_COMBAT), 5.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(Items.OAK_PLANKS); nonNullList.add(Items.BIRCH_PLANKS); nonNullList.add(Items.SPRUCE_PLANKS); nonNullList.add(Items.DARK_OAK_PLANKS); nonNullList.add(Items.JUNGLE_PLANKS); nonNullList.add(Items.ACACIA_PLANKS); return nonNullList;}));
-    public static final RegistryObject<Item> LEVIATHAN_SHIELD = ITEMS.register("leviathan_shield", () -> new OdysseyShieldItem((new Item.Properties()).durability(1000).fireResistant().tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 10.0f, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(LEVIATHAN_SCALE.get()); return nonNullList;}));
+    public static final RegistryObject<Item> SHIELD = ITEMS_VANILLA.register("shield", () -> new OdysseyShieldItem((new Item.Properties()).durability(336).tab(ItemGroup.TAB_COMBAT), 5.0f, 100, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(Items.OAK_PLANKS); nonNullList.add(Items.BIRCH_PLANKS); nonNullList.add(Items.SPRUCE_PLANKS); nonNullList.add(Items.DARK_OAK_PLANKS); nonNullList.add(Items.JUNGLE_PLANKS); nonNullList.add(Items.ACACIA_PLANKS); return nonNullList;}));
+    public static final RegistryObject<Item> LEVIATHAN_SHIELD = ITEMS.register("leviathan_shield", () -> new OdysseyShieldItem((new Item.Properties()).durability(1000).fireResistant().tab(OdysseyItemGroup.COMBAT).setISTER(() -> OdysseyItemStackTileEntityRenderer.odysseyInstance), 10.0f, 100, () -> {NonNullList<Item> nonNullList = NonNullList.create(); nonNullList.add(LEVIATHAN_SCALE.get()); return nonNullList;}));
 
     //Spawn Eggs
     public static final RegistryObject<Item> ARCTIHORN_SPAWN_EGG = ITEMS.register("arctihorn_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.ARCTIHORN, 0x6e7d90, 0x8ab5eb, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
     public static final RegistryObject<Item> LUPINE_SPAWN_EGG = ITEMS.register("lupine_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.LUPINE, 0x000000, 0x000000, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
+    public static final RegistryObject<Item> BABY_SKELETON_SPAWN_EGG = ITEMS.register("baby_skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BABY_SKELETON, 12698049, 4802889, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
 
     // Vanilla
 

@@ -1,21 +1,24 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.container.QuiverContainer;
-import com.bedmen.odyssey.registry.ContainerRegistry;
+import com.bedmen.odyssey.util.BowUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class QuiverItem extends Item {
-    private final int size;
-    public QuiverItem(Properties properties, int size) {
+    private final QuiverType quiverType;
+    public QuiverItem(Properties properties, QuiverType quiverType) {
         super(properties);
-        this.size = size;
+        this.quiverType = quiverType;
     }
 
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
@@ -28,26 +31,34 @@ public class QuiverItem extends Item {
     }
 
     public INamedContainerProvider getContainer(ItemStack itemStack) {
-        ContainerType<?> type;
-        switch(this.size){
-            case 5:
-                type = ContainerRegistry.QUIVER5.get();
-                break;
-            case 7:
-                type = ContainerRegistry.QUIVER7.get();
-                break;
-            case 9:
-                type = ContainerRegistry.QUIVER9.get();
-                break;
-            default:
-                type = ContainerRegistry.QUIVER3.get();
-        }
+        ContainerType<?> type = BowUtil.QUIVER_MAP.get(this.quiverType.getSize());
         return new SimpleNamedContainerProvider((id, inventory, player) -> {
-            return new QuiverContainer(id, inventory, this.size, itemStack, type);
+            return new QuiverContainer(id, inventory, this.quiverType.getSize(), itemStack, type);
         }, itemStack.getHoverName());
     }
 
-    public int getSize(){
-        return this.size;
+    public QuiverType getQuiverType(){
+        return this.quiverType;
+    }
+
+    public enum QuiverType{
+        RABBIT_HIDE(3, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/rabbit_hide.png")),
+        LEVIATHAN(5, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/leviathan.png"));
+
+        private final int size;
+        private final ResourceLocation resourceLocation;
+
+        QuiverType(int size, ResourceLocation resourceLocation){
+            this.size = size;
+            this.resourceLocation = resourceLocation;
+        }
+
+        public int getSize(){
+            return this.size;
+        }
+
+        public ResourceLocation getResourceLocation(){
+            return this.resourceLocation;
+        }
     }
 }

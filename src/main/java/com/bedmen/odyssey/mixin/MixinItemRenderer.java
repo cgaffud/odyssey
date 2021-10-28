@@ -2,7 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.OdysseyTridentItem;
 import com.bedmen.odyssey.items.QuiverItem;
-import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.Block;
@@ -14,10 +14,8 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
+import net.minecraft.util.HandSide;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,10 +38,11 @@ public abstract class MixinItemRenderer{
     @Shadow
     public void renderModelLists(IBakedModel modelIn, ItemStack stack, int combinedLightIn, int combinedOverlayIn, MatrixStack matrixStackIn, IVertexBuilder bufferIn) {}
 
-    public void renderStatic(@Nullable LivingEntity livingEntityIn, ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean leftHand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, @Nullable World worldIn, int combinedLightIn, int combinedOverlayIn) {
-        if (!itemStackIn.isEmpty() && !(itemStackIn.getItem() instanceof QuiverItem && leftHand)) {
+    public void renderStatic(@Nullable LivingEntity livingEntityIn, ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean lefthand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, @Nullable World worldIn, int combinedLightIn, int combinedOverlayIn) {
+        boolean offhand = lefthand ^ livingEntityIn.getMainArm() == HandSide.LEFT;
+        if (!itemStackIn.isEmpty() && !(itemStackIn.getItem() instanceof QuiverItem && offhand)) {
             IBakedModel ibakedmodel = this.getModel(itemStackIn, worldIn, livingEntityIn);
-            this.render(itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, ibakedmodel);
+            this.render(itemStackIn, transformTypeIn, lefthand, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, ibakedmodel);
         }
     }
 
@@ -51,10 +50,9 @@ public abstract class MixinItemRenderer{
         if (!itemStackIn.isEmpty()) {
             matrixStackIn.pushPose();
             boolean flag = transformTypeIn == ItemCameraTransforms.TransformType.GUI || transformTypeIn == ItemCameraTransforms.TransformType.GROUND || transformTypeIn == ItemCameraTransforms.TransformType.FIXED;
-            if (itemStackIn.getItem() == ItemRegistry.TRIDENT.get() && flag) {
-                modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
-            } else if(itemStackIn.getItem() == ItemRegistry.LEVIATHAN_TRIDENT.get() && flag) {
-                modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("oddc:leviathan_trident#inventory"));
+            Item item = itemStackIn.getItem();
+            if(flag && (item instanceof OdysseyTridentItem || item instanceof BoomerangItem)) {
+                modelIn = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation(item.getRegistryName().toString(), "inventory"));
             }
 
             modelIn = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStackIn, modelIn, transformTypeIn, leftHand);
@@ -106,8 +104,10 @@ public abstract class MixinItemRenderer{
     public IBakedModel getModel(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entitylivingbaseIn) {
         Item item = stack.getItem();
         IBakedModel ibakedmodel;
-        if (item instanceof OdysseyTridentItem) {
+        if (item instanceof TridentItem || item instanceof OdysseyTridentItem) {
             ibakedmodel = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("minecraft:trident_in_hand#inventory"));
+        } else if(item instanceof  BoomerangItem) {
+            ibakedmodel = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation("oddc:boomerang_in_hand#inventory"));
         } else {
             ibakedmodel = this.itemModelShaper.getItemModel(stack);
         }

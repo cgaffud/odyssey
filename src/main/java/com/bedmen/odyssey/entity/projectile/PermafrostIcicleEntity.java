@@ -1,59 +1,31 @@
 package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.util.BossUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.UUID;
-
 public class PermafrostIcicleEntity extends DamagingProjectileEntity {
     private float damage = 6.0f;
     private static final int maxTicks = 40;
-    private static Field leftOwnerField;
-    private static Method checkLeftOwnerMethod;
-
-    static {
-        try {
-            leftOwnerField = ProjectileEntity.class.getDeclaredField("leftOwner");
-            checkLeftOwnerMethod = ProjectileEntity.class.getDeclaredMethod("checkLeftOwner");
-            leftOwnerField.setAccessible(true);
-            checkLeftOwnerMethod.setAccessible(true);
-        } catch (NoSuchFieldException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
 
     public PermafrostIcicleEntity(EntityType<? extends PermafrostIcicleEntity> entityType, World world) {
         super(entityType, world);
@@ -89,12 +61,8 @@ public class PermafrostIcicleEntity extends DamagingProjectileEntity {
     public void tick() {
         Entity entity = this.getOwner();
         if ((this.level.isClientSide || (entity == null || !entity.removed) && this.level.hasChunkAt(this.blockPosition())) && this.tickCount <= maxTicks) {
-            try {
-                if (!(Boolean)leftOwnerField.get(this)) {
-                    leftOwnerField.set(this, checkLeftOwnerMethod.invoke(this));
-                }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+            if (!this.leftOwner) {
+                this.leftOwner = this.checkLeftOwner();
             }
 
             if (!this.level.isClientSide) {
@@ -201,7 +169,7 @@ public class PermafrostIcicleEntity extends DamagingProjectileEntity {
             Entity entity1 = this.getOwner();
             if (entity1 instanceof LivingEntity) {
                 LivingEntity livingentity = (LivingEntity)entity1;
-                entity.hurt(DamageSource.indirectMobAttack(this, livingentity), this.damage * BossUtil.difficultyMultiplier(this.level.getDifficulty()));
+                entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setScalesWithDifficulty(), this.damage);
             } else {
                 entity.hurt(DamageSource.MAGIC, 0.0F);
             }

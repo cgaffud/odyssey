@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "ABA",
+    " B "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:copper_ingot"
+    },
+    "B": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "oddc:copper_hammer"
+  }
+}
