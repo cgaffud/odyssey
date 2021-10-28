@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.registry;
 
-import com.bedmen.odyssey.container.*;
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.container.*;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -25,8 +25,6 @@ public class ContainerRegistry {
     public static final RegistryObject<ContainerType<ResearchTableContainer>> RESEARCH_TABLE = CONTAINER.register("research_table", () -> new ContainerType<ResearchTableContainer>(ResearchTableContainer::new));
     public static final RegistryObject<ContainerType<OdysseyGrindstoneContainer>> GRINDSTONE = CONTAINER.register("grindstone", () -> new ContainerType<OdysseyGrindstoneContainer>(OdysseyGrindstoneContainer::new));
     public static final RegistryObject<ContainerType<OdysseyRepairContainer>> ANVIL = CONTAINER.register("anvil", () -> new ContainerType<OdysseyRepairContainer>(OdysseyRepairContainer::new));
-    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER3 = CONTAINER.register("quiver3", () -> new ContainerType<QuiverContainer>(QuiverContainer::Quiver3));
-    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER5 = CONTAINER.register("quiver5", () -> new ContainerType<QuiverContainer>(QuiverContainer::Quiver5));
-    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER7 = CONTAINER.register("quiver7", () -> new ContainerType<QuiverContainer>(QuiverContainer::Quiver7));
-    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER9 = CONTAINER.register("quiver9", () -> new ContainerType<QuiverContainer>(QuiverContainer::Quiver9));
+    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER3 = CONTAINER.register("quiver3", () -> new ContainerType<QuiverContainer>(QuiverContainer.QuiverMaker(3)));
+    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER5 = CONTAINER.register("quiver5", () -> new ContainerType<QuiverContainer>(QuiverContainer.QuiverMaker(5)));
 }

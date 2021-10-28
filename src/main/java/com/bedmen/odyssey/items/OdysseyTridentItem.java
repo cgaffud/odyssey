@@ -1,11 +1,12 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
+import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
@@ -14,7 +15,6 @@ import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
@@ -27,7 +27,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
-public class OdysseyTridentItem extends Item implements IVanishable {
+public class OdysseyTridentItem extends Item implements IVanishable, INeedsToRegisterItemModelProperty {
     private final Multimap<Attribute, AttributeModifier> tridentAttributes;
     private final TridentType tridentType;
     public OdysseyTridentItem(Item.Properties builderIn, TridentType tridentType) {
@@ -77,7 +77,7 @@ public class OdysseyTridentItem extends Item implements IVanishable {
                             float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerentity);
                             tridententity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, 2.5F, inaccuracy);
                             if (playerentity.abilities.instabuild) {
-                                tridententity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                                tridententity.pickup = OdysseyAbstractArrowEntity.PickupStatus .CREATIVE_ONLY;
                             }
 
                             worldIn.addFreshEntity(tridententity);
@@ -182,8 +182,8 @@ public class OdysseyTridentItem extends Item implements IVanishable {
         return 1;
     }
 
-    public static void registerBaseProperties(Item item){
-        ItemModelsProperties.register(item, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
+    public void registerItemModelProperties(){
+        ItemModelsProperties.register(this, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
             return p_239419_2_ != null && p_239419_2_.isUsingItem() && p_239419_2_.getUseItem() == p_239419_0_ ? 1.0F : 0.0F;
         });
     }
@@ -193,23 +193,23 @@ public class OdysseyTridentItem extends Item implements IVanishable {
     }
 
     public enum TridentType{
-        NORMAL(9.0d, ""),
-        LEVIATHAN(11.0d, "leviathan");
+        NORMAL(9.0d, new ResourceLocation("textures/entity/trident.png")),
+        LEVIATHAN(11.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/leviathan_trident.png"));
 
         private final double damage;
-        private final String resourceName;
+        private final ResourceLocation resourceLocation;
 
-        TridentType(double damage, String resourceName){
+        TridentType(double damage, ResourceLocation resourceLocation){
             this.damage = damage;
-            this.resourceName = resourceName;
+            this.resourceLocation = resourceLocation;
         }
 
         public double getDamage(){
             return this.damage;
         }
 
-        public String getResourceName(){
-            return this.resourceName;
+        public ResourceLocation getResourceLocation(){
+            return this.resourceLocation;
         }
     }
 }

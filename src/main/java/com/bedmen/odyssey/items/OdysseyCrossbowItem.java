@@ -1,22 +1,19 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.*;
@@ -35,16 +32,23 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
+
+public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegisterItemModelProperty {
     /** Set to {@code true} when the crossbow is 20% charged. */
     private boolean isLoadingStart = false;
     /** Set to {@code true} when the crossbow is 50% charged. */
     private boolean isLoadingMiddle = false;
-    private final double baseDamage;
+    private final float velocity;
+    private final int chargeTime;
 
-    public OdysseyCrossbowItem(Item.Properties propertiesIn, double baseDamage) {
+    public OdysseyCrossbowItem(Item.Properties propertiesIn, float velocity, int chargeTime) {
         super(propertiesIn);
-        this.baseDamage = baseDamage;
+        this.velocity = velocity;
+        this.chargeTime = chargeTime;
     }
 
     public Predicate<ItemStack> getSupportedHeldProjectiles() {
@@ -95,7 +99,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
     }
 
     private static boolean hasAmmo(LivingEntity entityIn, ItemStack stack) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack);
+        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MULTISHOT.get(), stack);
         int j = i == 0 ? 1 : 3;
         boolean flag = entityIn instanceof PlayerEntity && ((PlayerEntity)entityIn).abilities.instabuild;
         ItemStack itemstack = entityIn.getProjectile(stack);
@@ -210,9 +214,8 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
                 projectileentity = new FireworkRocketEntity(worldIn, projectile, shooter, shooter.getX(), shooter.getEyeY() - (double)0.15F, shooter.getZ(), true);
             } else {
                 projectileentity = createArrow(worldIn, shooter, crossbow, projectile);
-                ((AbstractArrowEntity)projectileentity).setBaseDamage(((AbstractArrowEntity)projectileentity).getBaseDamage()+(((OdysseyCrossbowItem)(crossbow.getItem()))).getBaseDamage());
                 if (isCreativeMode || projectileAngle != 0.0F) {
-                    ((AbstractArrowEntity)projectileentity).pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                    ((OdysseyAbstractArrowEntity)projectileentity).pickup = OdysseyAbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                 }
             }
 
@@ -236,21 +239,26 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
         }
     }
 
-    private static AbstractArrowEntity createArrow(World worldIn, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
-        ArrowItem arrowitem = (ArrowItem)(ammo.getItem() instanceof ArrowItem ? ammo.getItem() : Items.ARROW);
-        AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, ammo, shooter);
-        if (shooter instanceof PlayerEntity) {
-            abstractarrowentity.setCritArrow(true);
+    private static OdysseyAbstractArrowEntity createArrow(World worldIn, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
+        OdysseyArrowItem odysseyArrowItem = (OdysseyArrowItem)(ammo.getItem() instanceof OdysseyArrowItem ? ammo.getItem() : ItemRegistry.ARROW.get());
+        OdysseyAbstractArrowEntity odysseyAbstractArrowEntity = odysseyArrowItem.createArrow(worldIn, ammo, shooter);
+
+        odysseyAbstractArrowEntity.setSoundEvent(SoundEvents.CROSSBOW_HIT);
+        odysseyAbstractArrowEntity.setShotFromCrossbow(true);
+        int k = EnchantmentUtil.getPunch(crossbow);
+        if (k > 0) {
+            odysseyAbstractArrowEntity.setKnockback(k);
+        }
+        k = EnchantmentUtil.getPiercing(crossbow);
+        if (k > 0) {
+            odysseyAbstractArrowEntity.setPierceLevel((byte)k);
+        }
+        k = EnchantmentUtil.getFlame(crossbow);
+        if (k > 0) {
+            odysseyAbstractArrowEntity.setRemainingFireTicks(100*k);
         }
 
-        abstractarrowentity.setSoundEvent(SoundEvents.CROSSBOW_HIT);
-        abstractarrowentity.setShotFromCrossbow(true);
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, crossbow);
-        if (i > 0) {
-            abstractarrowentity.setPierceLevel((byte)i);
-        }
-
-        return abstractarrowentity;
+        return odysseyAbstractArrowEntity;
     }
 
     public static void fireProjectiles(World worldIn, LivingEntity shooter, Hand handIn, ItemStack stack, float velocityIn, float inaccuracyIn) {
@@ -305,10 +313,10 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
      */
     public void onUseTick(World worldIn, LivingEntity livingEntityIn, ItemStack stack, int count) {
         if (!worldIn.isClientSide) {
-            int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
+            int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.QUICK_CHARGE.get(), stack);
             SoundEvent soundevent = this.getSoundEvent(i);
             SoundEvent soundevent1 = i == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
-            float f = (float)(stack.getUseDuration() - count) / (float)getChargeTime(stack);
+            float f = (float)(stack.getUseDuration() - count) / (float) getChargeDuration(stack);
             if (f < 0.2F) {
                 this.isLoadingStart = false;
                 this.isLoadingMiddle = false;
@@ -316,12 +324,12 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
 
             if (f >= 0.2F && !this.isLoadingStart) {
                 this.isLoadingStart = true;
-                worldIn.playSound((PlayerEntity)null, livingEntityIn.getX(), livingEntityIn.getY(), livingEntityIn.getZ(), soundevent, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                worldIn.playSound(null, livingEntityIn.getX(), livingEntityIn.getY(), livingEntityIn.getZ(), soundevent, SoundCategory.PLAYERS, 0.5F, 1.0F);
             }
 
             if (f >= 0.5F && soundevent1 != null && !this.isLoadingMiddle) {
                 this.isLoadingMiddle = true;
-                worldIn.playSound((PlayerEntity)null, livingEntityIn.getX(), livingEntityIn.getY(), livingEntityIn.getZ(), soundevent1, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                worldIn.playSound(null, livingEntityIn.getX(), livingEntityIn.getY(), livingEntityIn.getZ(), soundevent1, SoundCategory.PLAYERS, 0.5F, 1.0F);
             }
         }
 
@@ -331,16 +339,18 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
      * How long it takes to use or consume an item
      */
     public int getUseDuration(ItemStack stack) {
-        return getChargeTime(stack) + 3;
+        return getChargeDuration(stack) + 3;
     }
 
     /**
      * The time the crossbow must be used to reload it
      */
-    public static int getChargeTime(ItemStack stack) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
-        i = 25 - (13*i - i*i)/2;
-        return i;
+    public static int getChargeDuration(ItemStack itemStack) {
+        Item item = itemStack.getItem();
+        if(item instanceof OdysseyCrossbowItem){
+            return EnchantmentUtil.getQuickChargeTime(((OdysseyCrossbowItem)item).chargeTime, itemStack);
+        }
+        return EnchantmentUtil.getQuickChargeTime(25, itemStack);
     }
 
     /**
@@ -364,7 +374,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
     }
 
     private static float getCharge(int useTime, ItemStack stack) {
-        float f = (float)useTime / (float)getChargeTime(stack);
+        float f = (float)useTime / (float) getChargeDuration(stack);
         if (f > 1.0F) {
             f = 1.0F;
         }
@@ -382,6 +392,8 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
      */
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new TranslationTextComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(getChargeDuration(stack)/20f)).append("s").withStyle(TextFormatting.BLUE));
         List<ItemStack> list = getChargedProjectiles(stack);
         if (isCharged(stack) && !list.isEmpty()) {
             ItemStack itemstack = list.get(0);
@@ -399,33 +411,31 @@ public class OdysseyCrossbowItem extends CrossbowItem implements IVanishable {
         }
     }
 
-    private static float getVelocity(ItemStack itemStack) {
-        return itemStack.getItem() instanceof OdysseyCrossbowItem && hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.6F : 3.15F;
+    private float getVelocity(ItemStack itemStack) {
+        float f = BowUtil.BASE_ARROW_VELOCITY * this.velocity;
+        f *= hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 0.5 : 1.0f;
+        return f;
     }
 
     public int getDefaultProjectileRange() {
         return 8;
     }
 
-    public double getBaseDamage() {
-        return this.baseDamage;
-    }
-
-    public static void registerBaseProperties(Item item){
-        ItemModelsProperties.register(item, new ResourceLocation("pull"), (itemStack, world, entity) -> {
+    public void registerItemModelProperties(){
+        ItemModelsProperties.register(this, new ResourceLocation("pull"), (itemStack, world, entity) -> {
             if (entity == null) {
                 return 0.0F;
             } else {
-                return OdysseyCrossbowItem.isCharged(itemStack) ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / (float) OdysseyCrossbowItem.getChargeTime(itemStack);
+                return OdysseyCrossbowItem.isCharged(itemStack) ? 0.0F : (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) / (float) OdysseyCrossbowItem.getChargeDuration(itemStack);
             }
         });
-        ItemModelsProperties.register(item, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(this, new ResourceLocation("pulling"), (itemStack, world, entity) -> {
             return entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack && !OdysseyCrossbowItem.isCharged(itemStack) ? 1.0F : 0.0F;
         });
-        ItemModelsProperties.register(item, new ResourceLocation("charged"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(this, new ResourceLocation("charged"), (itemStack, world, entity) -> {
             return entity != null && OdysseyCrossbowItem.isCharged(itemStack) ? 1.0F : 0.0F;
         });
-        ItemModelsProperties.register(item, new ResourceLocation("firework"), (itemStack, world, entity) -> {
+        ItemModelsProperties.register(this, new ResourceLocation("firework"), (itemStack, world, entity) -> {
             return entity != null && OdysseyCrossbowItem.isCharged(itemStack) && OdysseyCrossbowItem.hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.0F : 0.0F;
         });
     }

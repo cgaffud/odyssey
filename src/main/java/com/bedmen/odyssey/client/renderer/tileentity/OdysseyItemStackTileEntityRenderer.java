@@ -12,16 +12,14 @@ import com.bedmen.odyssey.tileentity.SterlingSilverChestTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.mojang.datafixers.util.Pair;
-
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.function.Supplier;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.model.ShieldModel;
-import net.minecraft.client.renderer.model.*;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.model.RenderMaterial;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.BannerTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -29,11 +27,20 @@ import net.minecraft.item.*;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.tileentity.BannerTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
+
 @OnlyIn(Dist.CLIENT)
 public class OdysseyItemStackTileEntityRenderer extends ItemStackTileEntityRenderer implements Callable<ItemStackTileEntityRenderer> {
+    public static final ResourceLocation LEVIATHAN_SHIELD_BASE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/leviathan_shield_base");
+    public static final RenderMaterial LEVIATHAN_SHIELD_BASE_MATERIAL = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, LEVIATHAN_SHIELD_BASE_LOCATION));
+    public static final ResourceLocation LEVIATHAN_SHIELD_BASE_NOPATTERN_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/leviathan_shield_base_nopattern");
+    public static final RenderMaterial LEVIATHAN_SHIELD_BASE_NOPATTERN_MATERIAL = (new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, LEVIATHAN_SHIELD_BASE_NOPATTERN_LOCATION));
     public static final OdysseyItemStackTileEntityRenderer odysseyInstance = new OdysseyItemStackTileEntityRenderer();
     private final OdysseyTridentModel odysseyTridentModel = new OdysseyTridentModel();
     private final BoomerangModel boomerangModel = new BoomerangModel();
@@ -57,7 +64,7 @@ public class OdysseyItemStackTileEntityRenderer extends ItemStackTileEntityRende
                 matrixStack.scale(1.0F, -1.0F, -1.0F);
                 RenderMaterial rendermaterial;
                 if(item == ItemRegistry.LEVIATHAN_SHIELD.get()){
-                    rendermaterial = flag ?  Odyssey.LEVIATHAN_SHIELD_BASE : Odyssey.LEVIATHAN_SHIELD_BASE_NOPATTERN;
+                    rendermaterial = flag ? LEVIATHAN_SHIELD_BASE_MATERIAL : LEVIATHAN_SHIELD_BASE_NOPATTERN_MATERIAL;
                 }
 
                 else {

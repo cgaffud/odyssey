@@ -1,9 +1,6 @@
 {
   "replace": false,
   "values": [
-    "minecraft:arrow",
-    "minecraft:tipped_arrow",
-    "minecraft:spectral_arrow",
     "oddc:amethyst_arrow",
     "oddc:quartz_arrow",
     "oddc:razor_arrow"

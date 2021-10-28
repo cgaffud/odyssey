@@ -1,20 +1,21 @@
 package com.bedmen.odyssey.items.equipment;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
+import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
@@ -25,7 +26,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BoomerangItem extends EquipmentItem implements IVanishable {
+public class BoomerangItem extends EquipmentItem implements IVanishable, INeedsToRegisterItemModelProperty {
     private final Multimap<Attribute, AttributeModifier> boomerangAttributes;
     private final BoomerangType boomerangType;
     public BoomerangItem(Item.Properties builderIn, BoomerangType boomerangType, LevEnchSup... levEnchSups) {
@@ -67,7 +68,7 @@ public class BoomerangItem extends EquipmentItem implements IVanishable {
                     float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerentity);
                     boomerangEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, this.shootSpeed(), inaccuracy);
                     if (playerentity.abilities.instabuild) {
-                        boomerangEntity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                        boomerangEntity.pickup = OdysseyAbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                     }
 
                     worldIn.addFreshEntity(boomerangEntity);
@@ -123,8 +124,8 @@ public class BoomerangItem extends EquipmentItem implements IVanishable {
         return true;
     }
 
-    public static void registerBaseProperties(Item item){
-        ItemModelsProperties.register(item, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
+    public void registerItemModelProperties(){
+        ItemModelsProperties.register(this, new ResourceLocation("throwing"), (p_239419_0_, p_239419_1_, p_239419_2_) -> {
             return p_239419_2_ != null && p_239419_2_.isUsingItem() && p_239419_2_.getUseItem() == p_239419_0_ ? 1.0F : 0.0F;
         });
     }
@@ -134,23 +135,23 @@ public class BoomerangItem extends EquipmentItem implements IVanishable {
     }
 
     public enum BoomerangType{
-        BONE(5.0d, "bone"),
-        COPPER(6.0d, "copper");
+        BONE(5.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png")),
+        COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
 
         private final double damage;
-        private final String resourceName;
+        private final ResourceLocation resourceLocation;
 
-        BoomerangType(double damage, String resourceName){
+        BoomerangType(double damage, ResourceLocation resourceLocation){
             this.damage = damage;
-            this.resourceName = resourceName;
+            this.resourceLocation = resourceLocation;
         }
 
         public double getDamage(){
             return this.damage;
         }
 
-        public String getResourceName(){
-            return this.resourceName;
+        public ResourceLocation getResourceLocation(){
+            return this.resourceLocation;
         }
     }
 }

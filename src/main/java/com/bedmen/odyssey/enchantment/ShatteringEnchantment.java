@@ -1,15 +1,12 @@
 package com.bedmen.odyssey.enchantment;
 
-import com.bedmen.odyssey.items.OdysseyShieldItem;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ShieldItem;
 
-public class BlockingEnchantment extends Enchantment{
-    public BlockingEnchantment(Enchantment.Rarity rarityIn, EquipmentSlotType... slots) {
-        super(rarityIn, EnchantmentType.create("shield", (Item item) -> {return item instanceof OdysseyShieldItem || item instanceof ShieldItem;}), slots);
+public class ShatteringEnchantment extends Enchantment{
+    public ShatteringEnchantment(Rarity rarityIn, EquipmentSlotType... slots) {
+        super(rarityIn, OdysseyEnchantmentType.AXE, slots);
     }
 
     /**
@@ -27,7 +24,7 @@ public class BlockingEnchantment extends Enchantment{
      * Returns the maximum level that the enchantment can have.
      */
     public int getMaxLevel() {
-        return 4;
+        return 3;
     }
 
     public boolean isTreasureOnly() {

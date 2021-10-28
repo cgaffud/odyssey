@@ -61,7 +61,7 @@ public class OdysseyFrostWalkerEnchantment extends Enchantment {
     }
 
     public boolean checkCompatibility(Enchantment p_77326_1_) {
-        return super.checkCompatibility(p_77326_1_) && p_77326_1_ != Enchantments.DEPTH_STRIDER;
+        return super.checkCompatibility(p_77326_1_) && p_77326_1_ != EnchantmentRegistry.DEPTH_STRIDER.get();
     }
 
     public Enchantment getUpgrade(){

@@ -11,7 +11,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -61,12 +60,12 @@ public class EquipmentMeleeItem extends TieredItem implements IVanishable {
         return !player.isCreative();
     }
 
-    public boolean canSweep(){
-        return this.getInnateEnchantmentLevel(Enchantments.SWEEPING_EDGE) > 0;
+    public boolean isSwordLike(){
+        return this.getInnateEnchantmentLevel(EnchantmentRegistry.SWEEPING_EDGE.get()) > 0;
     }
 
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (state.is(Blocks.COBWEB)) {
+        if (state.is(Blocks.COBWEB) && this.isSwordLike()) {
             return 15.0F;
         } else {
             Material material = state.getMaterial();
@@ -102,7 +101,7 @@ public class EquipmentMeleeItem extends TieredItem implements IVanishable {
      * Check whether this Item can harvest the given Block
      */
     public boolean isCorrectToolForDrops(BlockState blockIn) {
-        return blockIn.is(Blocks.COBWEB);
+        return blockIn.is(Blocks.COBWEB) && this.isSwordLike();
     }
 
     /**

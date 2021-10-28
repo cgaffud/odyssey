@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.enchantment;
 
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.RespirationEnchantment;
 import net.minecraft.inventory.EquipmentSlotType;
 
@@ -11,6 +11,6 @@ public class PyropneumaticEnchantment extends RespirationEnchantment {
     }
 
     public Enchantment getDowngrade(){
-        return Enchantments.RESPIRATION;
+        return EnchantmentRegistry.RESPIRATION.get();
     }
 }

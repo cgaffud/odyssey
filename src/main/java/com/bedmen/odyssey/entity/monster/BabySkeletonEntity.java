@@ -4,28 +4,46 @@ import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.RangedAttackGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
 import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 public class BabySkeletonEntity extends AbstractSkeletonEntity {
-    private final BoomerangAttackGoal boomerangGoal = new BoomerangAttackGoal(this, 1.0D, 40, 15.0F);
+    private int noBoomerangTick;
+    private Optional<Hand> boomerangHand = Optional.empty();
     public BabySkeletonEntity(EntityType<? extends BabySkeletonEntity> p_i50194_1_, World p_i50194_2_) {
         super(p_i50194_1_, p_i50194_2_);
+    }
+
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(4, new RangedBoomerangAttackGoal(this, 1.0D, 40, 15.0F));
+    }
+
+    public void tick(){
+        super.tick();
+        this.boomerangHand = this.hasBoomerang();
+        if(this.boomerangHand.isPresent()){
+            this.noBoomerangTick = 0;
+        } else {
+            if(this.noBoomerangTick < 200){
+                this.noBoomerangTick++;
+            } else {
+                this.setItemInHand(Hand.MAIN_HAND, new ItemStack(ItemRegistry.BONE_BOOMERANG.get()));
+            }
+        }
     }
 
     protected SoundEvent getAmbientSound() {
@@ -75,12 +93,6 @@ public class BabySkeletonEntity extends AbstractSkeletonEntity {
     }
 
     public void reassessWeaponGoal() {
-        if (this.level != null && !this.level.isClientSide) {
-            this.goalSelector.removeGoal(this.boomerangGoal);
-            if (this.hasBoomerang().isPresent()) {
-                this.goalSelector.addGoal(4, this.boomerangGoal);
-            }
-        }
     }
 
     public Optional<Hand> hasBoomerang(){
@@ -107,28 +119,114 @@ public class BabySkeletonEntity extends AbstractSkeletonEntity {
         this.reassessWeaponGoal();
     }
 
-    static class BoomerangAttackGoal extends RangedAttackGoal {
-        private final BabySkeletonEntity babySkeletonEntity;
+    public class RangedBoomerangAttackGoal extends Goal {
+        private final BabySkeletonEntity mob;
+        private final double speedModifier;
+        private int attackIntervalMin;
+        private final float attackRadiusSqr;
+        private int attackTime = -1;
+        private int seeTime;
+        private boolean strafingClockwise;
+        private boolean strafingBackwards;
+        private int strafingTime = -1;
 
-        public BoomerangAttackGoal(IRangedAttackMob p_i48907_1_, double p_i48907_2_, int p_i48907_4_, float p_i48907_5_) {
-            super(p_i48907_1_, p_i48907_2_, p_i48907_4_, p_i48907_5_);
-            this.babySkeletonEntity = (BabySkeletonEntity)p_i48907_1_;
+        public RangedBoomerangAttackGoal(BabySkeletonEntity p_i47515_1_, double p_i47515_2_, int p_i47515_4_, float p_i47515_5_) {
+            this.mob = p_i47515_1_;
+            this.speedModifier = p_i47515_2_;
+            this.attackIntervalMin = p_i47515_4_;
+            this.attackRadiusSqr = p_i47515_5_ * p_i47515_5_;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }
 
         public boolean canUse() {
-            return super.canUse() && babySkeletonEntity.hasBoomerang().isPresent();
+            return this.mob.getTarget() != null;
+        }
+
+        public boolean canContinueToUse() {
+            return (this.canUse() || !this.mob.getNavigation().isDone());
         }
 
         public void start() {
             super.start();
-            this.babySkeletonEntity.setAggressive(true);
-            this.babySkeletonEntity.startUsingItem(Hand.MAIN_HAND);
+            this.mob.setAggressive(true);
         }
 
         public void stop() {
             super.stop();
-            this.babySkeletonEntity.stopUsingItem();
-            this.babySkeletonEntity.setAggressive(false);
+            this.mob.setAggressive(false);
+            this.seeTime = 0;
+            this.attackTime = -1;
+            this.mob.stopUsingItem();
+        }
+
+        public void tick() {
+            LivingEntity livingentity = this.mob.getTarget();
+            if (livingentity != null) {
+                double d0 = this.mob.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
+                boolean flag = this.mob.getSensing().canSee(livingentity);
+                boolean flag1 = this.seeTime > 0;
+                if (flag != flag1) {
+                    this.seeTime = 0;
+                }
+
+                if (flag) {
+                    ++this.seeTime;
+                } else {
+                    --this.seeTime;
+                }
+
+                if (!(d0 > (double)this.attackRadiusSqr) && this.seeTime >= 20) {
+                    this.mob.getNavigation().stop();
+                    ++this.strafingTime;
+                } else {
+                    this.mob.getNavigation().moveTo(livingentity, this.speedModifier);
+                    this.strafingTime = -1;
+                }
+
+                if (this.strafingTime >= 20) {
+                    if ((double)this.mob.getRandom().nextFloat() < 0.3D) {
+                        this.strafingClockwise = !this.strafingClockwise;
+                    }
+
+                    if ((double)this.mob.getRandom().nextFloat() < 0.3D) {
+                        this.strafingBackwards = !this.strafingBackwards;
+                    }
+
+                    this.strafingTime = 0;
+                }
+
+                if (this.strafingTime > -1) {
+                    if (d0 > (double)(this.attackRadiusSqr * 0.75F)) {
+                        this.strafingBackwards = false;
+                    } else if (d0 < (double)(this.attackRadiusSqr * 0.25F)) {
+                        this.strafingBackwards = true;
+                    }
+
+                    this.mob.getMoveControl().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
+                    this.mob.lookAt(livingentity, 30.0F, 30.0F);
+                } else {
+                    this.mob.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
+                }
+
+                Optional<Hand> hand = mob.hasBoomerang();
+
+                if(hand.isPresent()){
+                    if (this.mob.isUsingItem()) {
+                        if (!flag && this.seeTime < -60) {
+                            this.mob.stopUsingItem();
+                        } else if (flag) {
+                            int i = this.mob.getTicksUsingItem();
+                            if (i >= 20) {
+                                this.mob.stopUsingItem();
+                                this.mob.performRangedAttack(livingentity, 0.0f);
+                                this.attackTime = this.attackIntervalMin;
+                            }
+                        }
+                    } else if (--this.attackTime <= 0 && this.seeTime >= -60) {
+                        this.mob.startUsingItem(hand.get());
+                    }
+                }
+            }
         }
     }
 }

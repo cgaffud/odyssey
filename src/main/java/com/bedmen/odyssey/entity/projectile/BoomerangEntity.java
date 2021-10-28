@@ -1,7 +1,5 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import javax.annotation.Nullable;
-
 import com.bedmen.odyssey.entity.monster.BabySkeletonEntity;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -16,6 +14,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -29,13 +28,14 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-import java.util.Optional;
+import javax.annotation.Nullable;
 
-public class BoomerangEntity extends AbstractArrowEntity {
+public class BoomerangEntity extends OdysseyAbstractArrowEntity implements IEntityAdditionalSpawnData {
     private static final DataParameter<Byte> LOYALTY_LEVEL = EntityDataManager.defineId(BoomerangEntity.class, DataSerializers.BYTE);
     private static final DataParameter<Boolean> ID_FOIL = EntityDataManager.defineId(BoomerangEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<String> BOOMERANG_TYPE = EntityDataManager.defineId(BoomerangEntity.class, DataSerializers.STRING);
+    private BoomerangItem.BoomerangType boomerangType = BoomerangItem.BoomerangType.COPPER;
     private ItemStack thrownStack = new ItemStack(ItemRegistry.COPPER_BOOMERANG.get());
     private boolean dealtDamage;
     public int returningTicks;
@@ -49,7 +49,7 @@ public class BoomerangEntity extends AbstractArrowEntity {
         this.thrownStack = thrownStackIn.copy();
         this.entityData.set(LOYALTY_LEVEL, (byte)EnchantmentHelper.getLoyalty(thrownStackIn));
         this.entityData.set(ID_FOIL, thrownStackIn.hasFoil());
-        this.setBoomerangType(((BoomerangItem)this.thrownStack.getItem()).getBoomerangType());
+        this.boomerangType = ((BoomerangItem)this.thrownStack.getItem()).getBoomerangType();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -61,7 +61,6 @@ public class BoomerangEntity extends AbstractArrowEntity {
         super.defineSynchedData();
         this.entityData.define(LOYALTY_LEVEL, (byte)0);
         this.entityData.define(ID_FOIL, false);
-        this.entityData.define(BOOMERANG_TYPE, BoomerangItem.BoomerangType.COPPER.name());
     }
 
     /**
@@ -204,7 +203,7 @@ public class BoomerangEntity extends AbstractArrowEntity {
         this.dealtDamage = compoundNBT.getBoolean("DealtDamage");
         this.entityData.set(LOYALTY_LEVEL, (byte)EnchantmentHelper.getLoyalty(this.thrownStack));
         if (compoundNBT.contains("BoomerangType")) {
-            this.setBoomerangType(compoundNBT.getString("BoomerangType"));
+            this.boomerangType = BoomerangItem.BoomerangType.valueOf(compoundNBT.getString("BoomerangType"));
         }
     }
 
@@ -212,20 +211,12 @@ public class BoomerangEntity extends AbstractArrowEntity {
         super.addAdditionalSaveData(compoundNBT);
         compoundNBT.put("Boomerang", this.thrownStack.save(new CompoundNBT()));
         compoundNBT.putBoolean("DealtDamage", this.dealtDamage);
-        compoundNBT.putString("BoomerangType", this.entityData.get(BOOMERANG_TYPE));
+        compoundNBT.putString("BoomerangType", this.boomerangType.name());
     }
 
 
     public BoomerangItem.BoomerangType getBoomerangType(){
-        return BoomerangItem.BoomerangType.valueOf(this.entityData.get(BOOMERANG_TYPE));
-    }
-
-    public void setBoomerangType(BoomerangItem.BoomerangType BoomerangType){
-        this.entityData.set(BOOMERANG_TYPE, BoomerangType.name());
-    }
-
-    public void setBoomerangType(String s){
-        this.entityData.set(BOOMERANG_TYPE, s);
+        return this.boomerangType;
     }
 
     public void tickDespawn() {
@@ -243,5 +234,17 @@ public class BoomerangEntity extends AbstractArrowEntity {
     @OnlyIn(Dist.CLIENT)
     public boolean shouldRender(double x, double y, double z) {
         return true;
+    }
+
+    @Override
+    public void writeSpawnData(PacketBuffer buffer) {
+        buffer.writeInt(this.getOwner().getId());
+        buffer.writeInt(this.boomerangType.ordinal());
+    }
+
+    @Override
+    public void readSpawnData(PacketBuffer additionalData) {
+        this.setOwner(this.level.getEntity(additionalData.readInt()));
+        this.boomerangType =  BoomerangItem.BoomerangType.values()[additionalData.readInt()];
     }
 }

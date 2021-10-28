@@ -1,11 +1,9 @@
 package com.bedmen.odyssey.blocks;
 
-import java.util.Random;
-import javax.annotation.Nullable;
-
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.block.*;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -26,7 +24,10 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class CoconutBlock extends Block implements IGrowable {
+import javax.annotation.Nullable;
+import java.util.Random;
+
+public class CoconutBlock extends Block implements IGrowable, INeedsToRegisterRenderType {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_2;
     protected static final VoxelShape[] AABB = new VoxelShape[]{Block.box(6.0D, 10.0D, 6.0D, 10.0D, 14.0D, 10.0D), Block.box(4.0D, 6.0D, 4.0D, 12.0D, 14.0D, 12.0D), Block.box(2.0D, 2.0D, 2.0D, 14.0D, 14.0D, 14.0D)};
 
@@ -113,5 +114,9 @@ public class CoconutBlock extends Block implements IGrowable {
 
     public boolean isPathfindable(BlockState p_196266_1_, IBlockReader p_196266_2_, BlockPos p_196266_3_, PathType p_196266_4_) {
         return false;
+    }
+
+    public RenderType getRenderType() {
+        return RenderType.cutout();
     }
 }

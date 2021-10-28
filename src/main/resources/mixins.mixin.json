@@ -30,7 +30,8 @@
     "MixinPiglinTasks",
     "MixinAbstractBlock",
     "MixinFirstPersonRenderer",
-    "MixinClientLoginNetHandler"
+    "MixinSEntityVelocityPacket",
+    "MixinEntityRendererManager"
   ],
   "injectors": {
     "defaultRequire": 1

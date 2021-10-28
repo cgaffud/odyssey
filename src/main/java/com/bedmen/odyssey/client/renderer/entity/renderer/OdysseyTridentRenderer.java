@@ -1,17 +1,13 @@
 package com.bedmen.odyssey.client.renderer.entity.renderer;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.model.OdysseyTridentModel;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
-import com.bedmen.odyssey.entity.projectile.UpgradedArrowEntity;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
@@ -20,7 +16,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class OdysseyTridentRenderer extends EntityRenderer<OdysseyTridentEntity> {
-   public static final ResourceLocation[] TRIDENT_LOCATION = new ResourceLocation[]{new ResourceLocation("textures/entity/trident.png"), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/leviathan_trident.png")};
    private final OdysseyTridentModel tridentModel = new OdysseyTridentModel();
 
    public OdysseyTridentRenderer(EntityRendererManager renderManagerIn) {
@@ -38,6 +33,6 @@ public class OdysseyTridentRenderer extends EntityRenderer<OdysseyTridentEntity>
    }
 
    public ResourceLocation getTextureLocation(OdysseyTridentEntity odysseyTridentEntity) {
-      return TRIDENT_LOCATION[odysseyTridentEntity.getTridentType().ordinal()];
+      return odysseyTridentEntity.getTridentType().getResourceLocation();
    }
 }

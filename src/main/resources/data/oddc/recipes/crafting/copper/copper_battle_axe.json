@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "CCC",
-    "CIC",
-    " I "
+    "AA ",
+    "ABA",
+    " B "
   ],
   "key": {
-    "C": {
-      "item": "minecraft:granite"
+    "A": {
+      "item": "oddc:copper_ingot"
     },
-    "I": {
+    "B": {
       "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "oddc:granite_hammer"
+    "item": "oddc:copper_battle_axe"
   }
 }

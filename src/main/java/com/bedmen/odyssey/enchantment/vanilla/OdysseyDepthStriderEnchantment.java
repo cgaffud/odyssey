@@ -24,7 +24,7 @@ public class OdysseyDepthStriderEnchantment extends Enchantment {
     }
 
     public boolean checkCompatibility(Enchantment p_77326_1_) {
-        return super.checkCompatibility(p_77326_1_) && p_77326_1_ != Enchantments.FROST_WALKER;
+        return super.checkCompatibility(p_77326_1_) && p_77326_1_ != EnchantmentRegistry.FROST_WALKER.get();
     }
 
     public Enchantment getUpgrade(){

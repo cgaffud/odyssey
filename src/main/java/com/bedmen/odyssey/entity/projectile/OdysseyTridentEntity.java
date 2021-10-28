@@ -1,7 +1,5 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import javax.annotation.Nullable;
-
 import com.bedmen.odyssey.items.OdysseyTridentItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -15,7 +13,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -29,12 +27,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-public class OdysseyTridentEntity extends AbstractArrowEntity {
+import javax.annotation.Nullable;
+
+public class OdysseyTridentEntity extends OdysseyAbstractArrowEntity implements IEntityAdditionalSpawnData {
     private static final DataParameter<Byte> LOYALTY_LEVEL = EntityDataManager.defineId(OdysseyTridentEntity.class, DataSerializers.BYTE);
     private static final DataParameter<Boolean> ID_FOIL = EntityDataManager.defineId(OdysseyTridentEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<String> TRIDENT_TYPE = EntityDataManager.defineId(OdysseyTridentEntity.class, DataSerializers.STRING);
+    private OdysseyTridentItem.TridentType tridentType = OdysseyTridentItem.TridentType.NORMAL;
     private ItemStack thrownStack = new ItemStack(ItemRegistry.TRIDENT.get());
     private boolean dealtDamage;
     public int returningTicks;
@@ -48,7 +48,7 @@ public class OdysseyTridentEntity extends AbstractArrowEntity {
         this.thrownStack = thrownStackIn.copy();
         this.entityData.set(LOYALTY_LEVEL, (byte)EnchantmentHelper.getLoyalty(thrownStackIn));
         this.entityData.set(ID_FOIL, thrownStackIn.hasFoil());
-        this.setTridentType(((OdysseyTridentItem)this.thrownStack.getItem()).getTridentType());
+        this.tridentType = ((OdysseyTridentItem)this.thrownStack.getItem()).getTridentType();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -60,7 +60,6 @@ public class OdysseyTridentEntity extends AbstractArrowEntity {
         super.defineSynchedData();
         this.entityData.define(LOYALTY_LEVEL, (byte)0);
         this.entityData.define(ID_FOIL, false);
-        this.entityData.define(TRIDENT_TYPE, OdysseyTridentItem.TridentType.NORMAL.name());
     }
 
     /**
@@ -203,7 +202,7 @@ public class OdysseyTridentEntity extends AbstractArrowEntity {
         this.dealtDamage = compoundNBT.getBoolean("DealtDamage");
         this.entityData.set(LOYALTY_LEVEL, (byte)EnchantmentHelper.getLoyalty(this.thrownStack));
         if (compoundNBT.contains("TridentType")) {
-            this.setTridentType(compoundNBT.getString("TridentType"));
+            this.tridentType = OdysseyTridentItem.TridentType.valueOf(compoundNBT.getString("TridentType"));
         }
     }
 
@@ -211,20 +210,11 @@ public class OdysseyTridentEntity extends AbstractArrowEntity {
         super.addAdditionalSaveData(compoundNBT);
         compoundNBT.put("Trident", this.thrownStack.save(new CompoundNBT()));
         compoundNBT.putBoolean("DealtDamage", this.dealtDamage);
-        compoundNBT.putString("TridentType", this.entityData.get(TRIDENT_TYPE));
+        compoundNBT.putString("TridentType", this.tridentType.name());
     }
-
 
     public OdysseyTridentItem.TridentType getTridentType(){
-        return OdysseyTridentItem.TridentType.valueOf(this.entityData.get(TRIDENT_TYPE));
-    }
-
-    public void setTridentType(OdysseyTridentItem.TridentType tridentType){
-        this.entityData.set(TRIDENT_TYPE, tridentType.name());
-    }
-
-    public void setTridentType(String s){
-        this.entityData.set(TRIDENT_TYPE, s);
+        return this.tridentType;
     }
 
     public void tickDespawn() {
@@ -242,5 +232,17 @@ public class OdysseyTridentEntity extends AbstractArrowEntity {
     @OnlyIn(Dist.CLIENT)
     public boolean shouldRender(double x, double y, double z) {
         return true;
+    }
+
+    @Override
+    public void writeSpawnData(PacketBuffer buffer) {
+        buffer.writeInt(this.getOwner().getId());
+        buffer.writeInt(this.tridentType.ordinal());
+    }
+
+    @Override
+    public void readSpawnData(PacketBuffer additionalData) {
+        this.setOwner(this.level.getEntity(additionalData.readInt()));
+        this.tridentType =  OdysseyTridentItem.TridentType.values()[additionalData.readInt()];
     }
 }

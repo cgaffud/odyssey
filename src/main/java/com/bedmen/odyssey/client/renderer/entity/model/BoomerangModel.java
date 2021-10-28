@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.client.renderer.entity.model;
 
-import com.bedmen.odyssey.client.renderer.entity.renderer.BoomerangRenderer;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -41,7 +40,7 @@ public class BoomerangModel extends Model {
     }
 
     public static ResourceLocation getBoomerangTexture(Item item){
-        return BoomerangRenderer.BOOMERANG_LOCATION[((BoomerangItem)item).getBoomerangType().ordinal()];
+        return ((BoomerangItem)item).getBoomerangType().getResourceLocation();
     }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {

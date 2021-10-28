@@ -5,7 +5,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -24,26 +23,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 public class PermafrostIcicleEntity extends DamagingProjectileEntity {
     private float damage = 6.0f;
     private static final int maxTicks = 40;
-    private static Field leftOwnerField;
-    private static Method checkLeftOwnerMethod;
-
-    static {
-        try {
-            leftOwnerField = ProjectileEntity.class.getDeclaredField("leftOwner");
-            checkLeftOwnerMethod = ProjectileEntity.class.getDeclaredMethod("checkLeftOwner");
-            leftOwnerField.setAccessible(true);
-            checkLeftOwnerMethod.setAccessible(true);
-        } catch (NoSuchFieldException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
 
     public PermafrostIcicleEntity(EntityType<? extends PermafrostIcicleEntity> entityType, World world) {
         super(entityType, world);
@@ -79,12 +61,8 @@ public class PermafrostIcicleEntity extends DamagingProjectileEntity {
     public void tick() {
         Entity entity = this.getOwner();
         if ((this.level.isClientSide || (entity == null || !entity.removed) && this.level.hasChunkAt(this.blockPosition())) && this.tickCount <= maxTicks) {
-            try {
-                if (!(Boolean)leftOwnerField.get(this)) {
-                    leftOwnerField.set(this, checkLeftOwnerMethod.invoke(this));
-                }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+            if (!this.leftOwner) {
+                this.leftOwner = this.checkLeftOwner();
             }
 
             if (!this.level.isClientSide) {

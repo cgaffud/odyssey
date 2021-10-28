@@ -3,9 +3,11 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.entity.player.IPlayerPermanentBuffs;
 import com.bedmen.odyssey.entity.player.OdysseyPlayerInventory;
+import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.bedmen.odyssey.items.equipment.IEquipment;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -30,6 +32,7 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.play.server.SEntityVelocityPacket;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stat;
@@ -167,7 +170,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
                     if (item instanceof QuiverItem) {
                         CompoundNBT compoundNBT = itemstack1.getOrCreateTag();
                         if (compoundNBT.contains("Items", 9)) {
-                            NonNullList<ItemStack> nonnulllist = NonNullList.withSize(((QuiverItem) item).getSize(), ItemStack.EMPTY);
+                            NonNullList<ItemStack> nonnulllist = NonNullList.withSize(((QuiverItem) item).getQuiverType().getSize(), ItemStack.EMPTY);
                             ItemStackHelper.loadAllItems(compoundNBT, nonnulllist);
                             for (int j = 0; j < nonnulllist.size(); j++) {
                                 ItemStack itemstack2 = nonnulllist.get(j);
@@ -201,8 +204,11 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
         }
 
         if (this.random.nextFloat() < f) {
-            for(Item item : OdysseyItemTags.SHIELD_TAG){
-                this.getCooldowns().addCooldown(item, EnchantmentUtil.getRecoveryTicks(this));
+            Item item = this.getUseItem().getItem();
+            if(item instanceof OdysseyShieldItem || item instanceof ShieldItem){
+                for(Item item1 : OdysseyItemTags.SHIELD_TAG.getValues()){
+                    this.getCooldowns().addCooldown(item1,(item instanceof OdysseyShieldItem ? ((OdysseyShieldItem)item).getRecoveryTime() : 100));
+                }
             }
             this.stopUsingItem();
             this.level.broadcastEntityEvent(this, (byte)30);
@@ -451,7 +457,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
                     if (flag && !flag2 && !flag1 && this.onGround && d0 < (double)this.getSpeed()) {
                         ItemStack itemstack = this.getItemInHand(Hand.MAIN_HAND);
                         Item item = itemstack.getItem();
-                        if (item instanceof SwordItem || ((IEquipment)item).canSweep()) {
+                        if (((IEquipment)item).isSwordLike()) {
                             flag3 = true;
                         }
                     }
@@ -493,6 +499,22 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
                             this.level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, this.getSoundSource(), 1.0F, 1.0F);
                             this.sweepAttack();
+                        }
+
+                        int shatteringLevel = EnchantmentUtil.getShattering(getPlayerEntity());
+                        if(flag && shatteringLevel > 0 && p_71059_1_ instanceof LivingEntity && !this.level.isClientSide){
+                            System.out.println("beans1");
+                            EffectInstance effectInstance = ((LivingEntity) p_71059_1_).getEffect(EffectRegistry.SHATTERED.get());
+                            if(effectInstance != null){
+                                System.out.println("beans2");
+                                ((LivingEntity) p_71059_1_).removeEffect(EffectRegistry.SHATTERED.get());
+                                int amp = effectInstance.getAmplifier();
+                                effectInstance = new EffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, Integer.min(amp+1,1+2*shatteringLevel), false, true, true);
+                            } else {
+                                System.out.println("beans3");
+                                effectInstance = new EffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, 0, false, true, true);
+                            }
+                            ((LivingEntity) p_71059_1_).addEffect(effectInstance);
                         }
 
                         if (p_71059_1_ instanceof ServerPlayerEntity && p_71059_1_.hurtMarked) {

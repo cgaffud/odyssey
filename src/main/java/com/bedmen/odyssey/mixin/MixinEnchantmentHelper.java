@@ -2,12 +2,12 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.entity.player.OdysseyPlayerInventory;
 import com.bedmen.odyssey.items.equipment.IEquipment;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.enchantment.SweepingEnchantment;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -73,7 +73,7 @@ public abstract class MixinEnchantmentHelper {
         }
         return mutableint.intValue();
     }
-    
+
 
 
     @Overwrite
@@ -83,10 +83,10 @@ public abstract class MixinEnchantmentHelper {
             mutablefloat.add(enchantment.getDamageBonus(level, creatureAttribute));
         }, stack);
         if(creatureAttribute == CreatureAttribute.ARTHROPOD){
-            mutablefloat.add(((IEquipment)stack.getItem()).getInnateEnchantmentLevel(Enchantments.BANE_OF_ARTHROPODS)*2);
+            mutablefloat.add(((IEquipment)stack.getItem()).getInnateEnchantmentLevel(EnchantmentRegistry.BANE_OF_ARTHROPODS.get())*2);
         }
         if(creatureAttribute == CreatureAttribute.UNDEAD){
-            mutablefloat.add(((IEquipment)stack.getItem()).getInnateEnchantmentLevel(Enchantments.SMITE)*2);
+            mutablefloat.add(((IEquipment)stack.getItem()).getInnateEnchantmentLevel(EnchantmentRegistry.SMITE.get())*2);
         }
         return mutablefloat.floatValue();
     }
