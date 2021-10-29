@@ -43,7 +43,7 @@ public class QuiverItem extends Item {
     public INamedContainerProvider getContainer(ItemStack itemStack) {
         ContainerType<?> type = ContainerRegistry.QUIVER_MAP.get(this.quiverType.getSize());
         return new SimpleNamedContainerProvider((id, inventory, player) -> {
-            return new QuiverContainer(id, inventory, this.quiverType.getSize(), itemStack, type);
+            return new QuiverContainer(id, inventory, this.quiverType.getSize(), this.quiverType.getIsRocketBag(), itemStack, type);
         }, itemStack.getHoverName());
     }
 
@@ -57,16 +57,19 @@ public class QuiverItem extends Item {
     }
 
     public enum QuiverType{
-        RABBIT_HIDE(3, 0.1f, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/rabbit_hide.png")),
-        LEVIATHAN(5, 0.2f, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/leviathan.png"));
+        RABBIT_HIDE_QUIVER(3, 0.1f, false, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/rabbit_hide.png")),
+        RABBIT_HIDE_ROCKET_BAG(2, 0.3f, true, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/rabbit_hide.png")),
+        LEVIATHAN_QUIVER(5, 0.2f, false, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/leviathan.png"));
 
         private final int size;
         private final float freeAmmoChance;
+        private final boolean isRocketBag;
         private final ResourceLocation resourceLocation;
 
-        QuiverType(int size, float freeAmmoChance, ResourceLocation resourceLocation){
+        QuiverType(int size, float freeAmmoChance, boolean isRocketBag, ResourceLocation resourceLocation){
             this.size = size;
             this.freeAmmoChance = freeAmmoChance;
+            this.isRocketBag = isRocketBag;
             this.resourceLocation = resourceLocation;
         }
 
@@ -76,6 +79,10 @@ public class QuiverItem extends Item {
 
         public float getFreeAmmoChance(){
             return this.freeAmmoChance;
+        }
+
+        public boolean getIsRocketBag(){
+            return this.isRocketBag;
         }
 
         public ResourceLocation getResourceLocation(){

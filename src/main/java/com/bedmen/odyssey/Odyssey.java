@@ -6,6 +6,7 @@ import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.entity.renderer.*;
 import com.bedmen.odyssey.client.renderer.tileentity.*;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
+import com.bedmen.odyssey.container.QuiverContainer;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
@@ -19,7 +20,6 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.potions.OdysseyPotions;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.trades.OdysseyTrades;
-import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.OdysseyFeatureGen;
@@ -138,8 +138,9 @@ public class Odyssey
         ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
         ScreenManager.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
         ScreenManager.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
-        ScreenManager.register(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
-        ScreenManager.register(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);
+        for(ContainerType<QuiverContainer> containerType : ContainerRegistry.QUIVER_MAP.values()){
+            ScreenManager.register(containerType, QuiverScreen::new);
+        }
 
         //Mob Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);

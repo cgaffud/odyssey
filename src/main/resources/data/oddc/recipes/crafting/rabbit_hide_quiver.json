@@ -7,10 +7,10 @@
   ],
   "key": {
     "X": {
-      "item": "minecraft:leather"
+      "item": "minecraft:rabbit_hide"
     }
   },
   "result": {
-    "item": "oddc:leather_quiver"
+    "item": "oddc:rabbit_hide_quiver"
   }
 }

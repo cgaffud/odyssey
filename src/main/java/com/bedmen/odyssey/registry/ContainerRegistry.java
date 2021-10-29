@@ -28,12 +28,14 @@ public class ContainerRegistry {
     public static final RegistryObject<ContainerType<ResearchTableContainer>> RESEARCH_TABLE = CONTAINER.register("research_table", () -> new ContainerType<ResearchTableContainer>(ResearchTableContainer::new));
     public static final RegistryObject<ContainerType<OdysseyGrindstoneContainer>> GRINDSTONE = CONTAINER.register("grindstone", () -> new ContainerType<OdysseyGrindstoneContainer>(OdysseyGrindstoneContainer::new));
     public static final RegistryObject<ContainerType<OdysseyRepairContainer>> ANVIL = CONTAINER.register("anvil", () -> new ContainerType<OdysseyRepairContainer>(OdysseyRepairContainer::new));
-    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER3 = CONTAINER.register("quiver3", () -> new ContainerType<QuiverContainer>(QuiverContainer.QuiverMaker(3)));
-    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER5 = CONTAINER.register("quiver5", () -> new ContainerType<QuiverContainer>(QuiverContainer.QuiverMaker(5)));
+    public static final RegistryObject<ContainerType<QuiverContainer>> ROCKET_BAG_2 = CONTAINER.register("quiver_2", () -> new ContainerType<QuiverContainer>(QuiverContainer.QuiverMaker(2, true)));
+    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER_3 = CONTAINER.register("quiver_3", () -> new ContainerType<QuiverContainer>(QuiverContainer.QuiverMaker(3, false)));
+    public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER_5 = CONTAINER.register("quiver_5", () -> new ContainerType<QuiverContainer>(QuiverContainer.QuiverMaker(5, false)));
     public static final Map<Integer, ContainerType<QuiverContainer>> QUIVER_MAP = new HashMap<>();
 
     public static void initQuivers(){
-        QUIVER_MAP.put(3, ContainerRegistry.QUIVER3.get());
-        QUIVER_MAP.put(5, ContainerRegistry.QUIVER5.get());
+        QUIVER_MAP.put(2, ContainerRegistry.ROCKET_BAG_2.get());
+        QUIVER_MAP.put(3, ContainerRegistry.QUIVER_3.get());
+        QUIVER_MAP.put(5, ContainerRegistry.QUIVER_5.get());
     }
 }

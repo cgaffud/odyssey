@@ -11,43 +11,50 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.FireworkRocketItem;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
+
+import java.util.function.Predicate;
 
 public class QuiverContainer extends Container {
 
     protected final IInventory inv;
     protected final int size;
     protected final PlayerEntity player;
+    protected final Predicate<ItemStack> allowedItems;
+    public static final Predicate<ItemStack> ROCKET_ONLY = (itemStack1 -> itemStack1.getItem() == Items.FIREWORK_ROCKET);
 
     @Override
     public boolean stillValid(PlayerEntity playerIn) {
         return true;
     }
 
-    public static ContainerType.IFactory<QuiverContainer> QuiverMaker(int size){
-        return (int pContainerId, PlayerInventory pPlayerInventory) ->  new QuiverContainer(pContainerId, pPlayerInventory, size, ContainerRegistry.QUIVER_MAP.get(size));
+    public static ContainerType.IFactory<QuiverContainer> QuiverMaker(int size, boolean isRocketbag){
+        return (int pContainerId, PlayerInventory pPlayerInventory) ->  new QuiverContainer(pContainerId, pPlayerInventory, size, isRocketbag, ContainerRegistry.QUIVER_MAP.get(size));
     }
 
-    public QuiverContainer(int id, PlayerInventory playerInventory, int size, ContainerType<?> type){
-        this(id, playerInventory, size, ItemStack.EMPTY, type);
+    public QuiverContainer(int id, PlayerInventory playerInventory, int size, boolean isRocketBag, ContainerType<?> type){
+        this(id, playerInventory, size, isRocketBag, ItemStack.EMPTY, type);
     }
 
-    public QuiverContainer(int id, PlayerInventory playerInv, int size, ItemStack itemStack, ContainerType<?> type) {
+    public QuiverContainer(int id, PlayerInventory playerInv, int size, boolean isRocketBag, ItemStack itemStack, ContainerType<?> type) {
         super(type, id);
         this.inv = new Inventory(size);
         this.size = size;
         this.player = playerInv.player;
+        if(isRocketBag){
+            this.allowedItems = ROCKET_ONLY;
+        } else {
+            this.allowedItems = CrossbowItem.ARROW_OR_FIREWORK;
+        }
 
         for(int k = 0; k < this.size; ++k) {
             this.addSlot(new Slot(inv, k, 89 + k * 18 - this.size * 9, 34){
                 public boolean mayPlace(ItemStack stack) {
-                    if(stack.getItem() instanceof ArrowItem) return true;
-                    if(stack.getItem() instanceof FireworkRocketItem) return true;
-                    return false;
+                    return allowedItems.test(stack);
                 }
             });
         }
@@ -131,5 +138,4 @@ public class QuiverContainer extends Container {
     public int getSize(){
         return this.size;
     }
-
 }

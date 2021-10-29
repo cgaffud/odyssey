@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.items;
 
-import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -215,7 +214,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             } else {
                 projectileentity = createArrow(worldIn, shooter, crossbow, projectile);
                 if (isCreativeMode || projectileAngle != 0.0F) {
-                    ((OdysseyAbstractArrowEntity)projectileentity).pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                    ((AbstractArrowEntity)projectileentity).pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                 }
             }
 

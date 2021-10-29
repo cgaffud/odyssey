@@ -300,8 +300,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT).durability(862).fireResistant(), 1.15f, 25));
 
     //Quivers
-    public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE));
-    public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.LEVIATHAN));
+    public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE_QUIVER));
+    public static final RegistryObject<Item> RABBIT_HIDE_ROCKET_BAG = ITEMS.register("rabbit_hide_rocket_bag", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE_ROCKET_BAG));
+    public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.LEVIATHAN_QUIVER));
 
     //Arrows
     public static final RegistryObject<Item> AMETHYST_ARROW = ITEMS.register("amethyst_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyItemGroup.COMBAT), OdysseyArrowItem.ArrowType.AMETHYST));

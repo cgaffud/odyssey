@@ -2,7 +2,7 @@
   "type": "oddc:odyssey_smithing",
   "classification": "quiver",
   "base": {
-    "item": "oddc:leather_quiver"
+    "item": "oddc:rabbit_hide_quiver"
   },
   "addition": {
     "item": "oddc:leviathan_scale"
