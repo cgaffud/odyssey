@@ -12,6 +12,12 @@ public class StringUtil {
             return df.format(f);
     }
 
+    public static String percentFormat(float f)
+    {
+        int i = Math.round(f * 100);
+        return Integer.toString(i) + "%";
+    }
+
     public static String doubleFormat(double d)
     {
         if(d == (int) d)

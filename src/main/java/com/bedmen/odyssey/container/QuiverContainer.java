@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.container;
 
 import com.bedmen.odyssey.items.QuiverItem;
-import com.bedmen.odyssey.util.BowUtil;
+import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -29,7 +29,7 @@ public class QuiverContainer extends Container {
     }
 
     public static ContainerType.IFactory<QuiverContainer> QuiverMaker(int size){
-        return (int pContainerId, PlayerInventory pPlayerInventory) ->  new QuiverContainer(pContainerId, pPlayerInventory, size, BowUtil.QUIVER_MAP.get(size));
+        return (int pContainerId, PlayerInventory pPlayerInventory) ->  new QuiverContainer(pContainerId, pPlayerInventory, size, ContainerRegistry.QUIVER_MAP.get(size));
     }
 
     public QuiverContainer(int id, PlayerInventory playerInventory, int size, ContainerType<?> type){

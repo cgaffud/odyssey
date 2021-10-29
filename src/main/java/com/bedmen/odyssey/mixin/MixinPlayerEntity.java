@@ -164,30 +164,26 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
             if (!itemstack.isEmpty()) {
                 return itemstack;
             } else {
-                NonNullList<ItemStack> offhand = this.inventory.offhand;
-                for (ItemStack itemstack1 : offhand) {
-                    Item item = itemstack1.getItem();
-                    if (item instanceof QuiverItem) {
-                        CompoundNBT compoundNBT = itemstack1.getOrCreateTag();
-                        if (compoundNBT.contains("Items", 9)) {
-                            NonNullList<ItemStack> nonnulllist = NonNullList.withSize(((QuiverItem) item).getQuiverType().getSize(), ItemStack.EMPTY);
-                            ItemStackHelper.loadAllItems(compoundNBT, nonnulllist);
-                            for (int j = 0; j < nonnulllist.size(); j++) {
-                                ItemStack itemstack2 = nonnulllist.get(j);
-                                if (predicate.test(itemstack2)) {
-                                    return itemstack2;
-                                }
+                ItemStack itemstack1 = this.getOffhandItem();
+                Item item = itemstack1.getItem();
+                if (item instanceof QuiverItem) {
+                    CompoundNBT compoundNBT = itemstack1.getOrCreateTag();
+                    if (compoundNBT.contains("Items", 9)) {
+                        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(((QuiverItem) item).getQuiverType().getSize(), ItemStack.EMPTY);
+                        ItemStackHelper.loadAllItems(compoundNBT, nonnulllist);
+                        for (int j = 0; j < nonnulllist.size(); j++) {
+                            ItemStack itemstack2 = nonnulllist.get(j);
+                            if (predicate.test(itemstack2)) {
+                                return itemstack2;
                             }
                         }
                     }
                 }
 
-                predicate = ((ShootableItem)shootable.getItem()).getAllSupportedProjectiles();
-
                 for(int i = 0; i < this.inventory.getContainerSize(); ++i) {
-                    ItemStack itemstack1 = this.inventory.getItem(i);
-                    if (predicate.test(itemstack1)) {
-                        return itemstack1;
+                    ItemStack itemstack2 = this.inventory.getItem(i);
+                    if (predicate.test(itemstack2)) {
+                        return itemstack2;
                     }
                 }
 
@@ -503,15 +499,12 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
                         int shatteringLevel = EnchantmentUtil.getShattering(getPlayerEntity());
                         if(flag && shatteringLevel > 0 && p_71059_1_ instanceof LivingEntity && !this.level.isClientSide){
-                            System.out.println("beans1");
                             EffectInstance effectInstance = ((LivingEntity) p_71059_1_).getEffect(EffectRegistry.SHATTERED.get());
                             if(effectInstance != null){
-                                System.out.println("beans2");
                                 ((LivingEntity) p_71059_1_).removeEffect(EffectRegistry.SHATTERED.get());
                                 int amp = effectInstance.getAmplifier();
                                 effectInstance = new EffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, Integer.min(amp+1,1+2*shatteringLevel), false, true, true);
                             } else {
-                                System.out.println("beans3");
                                 effectInstance = new EffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, 0, false, true, true);
                             }
                             ((LivingEntity) p_71059_1_).addEffect(effectInstance);

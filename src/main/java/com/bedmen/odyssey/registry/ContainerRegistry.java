@@ -8,6 +8,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ContainerRegistry {
 
     public static DeferredRegister<ContainerType<?>> CONTAINER = DeferredRegister.create(ForgeRegistries.CONTAINERS , Odyssey.MOD_ID);
@@ -27,4 +30,10 @@ public class ContainerRegistry {
     public static final RegistryObject<ContainerType<OdysseyRepairContainer>> ANVIL = CONTAINER.register("anvil", () -> new ContainerType<OdysseyRepairContainer>(OdysseyRepairContainer::new));
     public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER3 = CONTAINER.register("quiver3", () -> new ContainerType<QuiverContainer>(QuiverContainer.QuiverMaker(3)));
     public static final RegistryObject<ContainerType<QuiverContainer>> QUIVER5 = CONTAINER.register("quiver5", () -> new ContainerType<QuiverContainer>(QuiverContainer.QuiverMaker(5)));
+    public static final Map<Integer, ContainerType<QuiverContainer>> QUIVER_MAP = new HashMap<>();
+
+    public static void initQuivers(){
+        QUIVER_MAP.put(3, ContainerRegistry.QUIVER3.get());
+        QUIVER_MAP.put(5, ContainerRegistry.QUIVER5.get());
+    }
 }

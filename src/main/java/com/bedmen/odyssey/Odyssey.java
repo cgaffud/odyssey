@@ -172,7 +172,7 @@ public class Odyssey
 
     @SubscribeEvent
     public static void onRegisterContainers(final RegistryEvent.Register<ContainerType<?>> event){
-        BowUtil.init();
+        ContainerRegistry.initQuivers();
     }
 
     @SubscribeEvent

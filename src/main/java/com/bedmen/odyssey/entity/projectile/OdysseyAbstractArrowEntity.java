@@ -126,7 +126,7 @@ public abstract class OdysseyAbstractArrowEntity extends AbstractArrowEntity {
             this.yRot += 180.0F;
             this.yRotO += 180.0F;
             if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                if (this.pickup == OdysseyAbstractArrowEntity.PickupStatus.ALLOWED) {
+                if (this.pickup == AbstractArrowEntity.PickupStatus.ALLOWED) {
                     this.spawnAtLocation(this.getPickupItem(), 0.1F);
                 }
 
