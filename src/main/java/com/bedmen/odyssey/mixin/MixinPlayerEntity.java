@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
-import com.bedmen.odyssey.entity.player.IPlayerPermanentBuffs;
+import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.entity.player.OdysseyPlayerInventory;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.QuiverItem;
@@ -56,7 +56,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @Mixin(PlayerEntity.class)
-public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerPermanentBuffs {
+public abstract class MixinPlayerEntity extends LivingEntity implements IOdysseyPlayer {
 
     @Shadow
     public void startFallFlying() {}
@@ -129,6 +129,10 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
     public void incrementLifeFruits(){
         lifeFruits = MathHelper.clamp(lifeFruits+1, 0, 10);
+    }
+
+    public ItemStack getTrinketSlot(){
+        return ((OdysseyPlayerInventory)this.inventory).trinket.get(0);
     }
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
