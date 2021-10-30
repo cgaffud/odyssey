@@ -12,8 +12,6 @@ public class RepeaterItem extends EquipmentBowItem {
     }
 
     public void onUseTick(World pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pCount) {
-//        System.out.println(pCount);
-//        System.out.println(this.getChargeTime(pStack));
         if(this.getUseDuration(pStack) - pCount > this.getChargeTime(pStack)){
             pLivingEntity.stopUsingItem();
             this.releaseUsing(pStack, pLevel, pLivingEntity, pCount);
