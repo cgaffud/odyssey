@@ -42,7 +42,7 @@ public class AmuletLayer<T extends PlayerEntity, M extends PlayerModel<T>> exten
             if(!playerEntity.getItemBySlot(EquipmentSlotType.CHEST).isEmpty()){
                 d0 += 1d/16d;
             }
-            matrixStack.translate(0d, -6d/16d, d0);
+            matrixStack.translate(0d, -7d/16d, d0);
             Minecraft.getInstance().getItemInHandRenderer().renderItem(playerEntity, itemStack, p_229135_3_, false, matrixStack, p_229135_6_, p_229135_7_);
             matrixStack.popPose();
         }
