@@ -5,10 +5,7 @@ import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.entity.item.OdysseyBoatEntity;
-import com.bedmen.odyssey.entity.monster.ArctihornEntity;
-import com.bedmen.odyssey.entity.monster.BabySkeletonEntity;
-import com.bedmen.odyssey.entity.monster.LupineEntity;
-import com.bedmen.odyssey.entity.monster.WeaverEntity;
+import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrowEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
@@ -51,4 +48,8 @@ public class EntityTypeRegistry {
 
     //Boat
     public static final RegistryObject<EntityType<OdysseyBoatEntity>> BOAT = ENTITY_TYPE.register("boat", () -> EntityType.Builder.<OdysseyBoatEntity>of(OdysseyBoatEntity::new, EntityClassification.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).build(new ResourceLocation("boat").toString()));
+
+    //Vanilla
+    public static final RegistryObject<EntityType<OdysseySkeletonEntity>> SKELETON = ENTITY_TYPE_VANILLA.register("skeleton", () -> EntityType.Builder.<OdysseySkeletonEntity>of(OdysseySkeletonEntity::new, EntityClassification.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation("skeleton").toString()));
+
 }
