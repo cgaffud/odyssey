@@ -1,13 +1,12 @@
 package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -18,22 +17,22 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EquipmentAxeItem extends AxeItem {
+public class EquipmentBowItem extends OdysseyBowItem {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
-    protected static final List<EquipmentAxeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
+    protected static final List<EquipmentBowItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
     private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
-    public EquipmentAxeItem(IItemTier tier, float damage, float attackSpeed, Item.Properties properties, LevEnchSup... levEnchSups) {
-        super(tier, damage, attackSpeed, properties.rarity(OdysseyRarity.EQUIPMENT));
+    public EquipmentBowItem(Item.Properties builder, float velocity, int chargeTime, LevEnchSup... levEnchSups) {
+        super(builder.rarity(OdysseyRarity.EQUIPMENT), velocity, chargeTime);
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);
     }
 
     public static void initEquipment(){
-        for(final EquipmentAxeItem equipmentAxeItem : UNFINISHED_EQUIPMENT){
-            equipmentAxeItem.init();
+        for(final EquipmentBowItem equipmentBowItem : UNFINISHED_EQUIPMENT){
+            equipmentBowItem.init();
         }
         UNFINISHED_EQUIPMENT.clear();
     }
@@ -66,5 +65,6 @@ public class EquipmentAxeItem extends AxeItem {
             else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
                 tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
         }
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 }

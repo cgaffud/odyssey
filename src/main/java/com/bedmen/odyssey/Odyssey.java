@@ -192,6 +192,7 @@ public class Odyssey
         EquipmentHoeItem.initEquipment();
         EquipmentShovelItem.initEquipment();
         EquipmentAxeItem.initEquipment();
+        EquipmentBowItem.initEquipment();
 
         EnchantmentUtil.init();
     }
