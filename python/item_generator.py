@@ -8,9 +8,6 @@ while(again):
     itemID = input("Input itemID: ")
     langName = input("Lang File Item Name: ")
     handheld = yes(input("Is this a tool or melee weapon? (Y/N): "))
-    spawnEgg = False
-    if(not handheld):
-        spawnEgg = yes(input("Is this a Spawn Egg? (Y/N): "))
     itemPath = 'oddc:item/'+itemID
 
     itemModel = {
@@ -27,14 +24,8 @@ while(again):
       }
     }
 
-    spawnEggModel = {
-      "parent": "minecraft:item/template_spawn_egg"
-    }
-
     if(handheld):
         itemModel = handheldModel
-    elif(spawnEgg):
-        itemModel = spawnEggModel
 
     assetsPath = "../src/main/resources/assets/oddc"
 
