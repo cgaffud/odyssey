@@ -19,6 +19,7 @@ import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -189,6 +190,22 @@ public class WeaverEntity extends MonsterEntity {
             } else {
                 return super.canContinueToUse();
             }
+        }
+
+        protected void checkAndPerformAttack(LivingEntity pEnemy, double pDistToEnemySqr) {
+            double d0 = this.getAttackReachSqr(pEnemy);
+            if (pDistToEnemySqr <= d0 && this.ticksUntilNextAttack <= 0) {
+                this.resetAttackCooldown();
+                this.mob.swing(Hand.MAIN_HAND);
+                this.mob.doHurtTarget(pEnemy);
+                if(this.mob.getRandom().nextFloat() < 0.1f){
+                    BlockPos blockPos = new BlockPos(pEnemy.getPosition(1f));
+                    if(this.mob.level.getBlockState(blockPos).getBlock() == Blocks.AIR){
+                        this.mob.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
+                    }
+                }
+            }
+
         }
 
         protected double getAttackReachSqr(LivingEntity pAttackTarget) {

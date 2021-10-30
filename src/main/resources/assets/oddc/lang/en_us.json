@@ -333,5 +333,7 @@
   "item.oddc.quiver.free_ammo_chance": "Free Ammo Chance: ",
   "item.oddc.rabbit_hide_rocket_bag": "Rabbit Hide Rocket Bag",
   "entity.oddc.weaver": "Weaver",
-  "item.oddc.weaver_spawn_egg": "Weaver Spawn Egg"
+  "item.oddc.weaver_spawn_egg": "Weaver Spawn Egg",
+  "item.oddc.weaver_string": "Weaver String",
+  "item.minecraft.string": "Spider String"
 }
