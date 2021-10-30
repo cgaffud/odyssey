@@ -1,7 +1,10 @@
 package com.bedmen.odyssey.entity.player;
 
-public interface IPlayerPermanentBuffs {
+import net.minecraft.item.ItemStack;
+
+public interface IOdysseyPlayer {
     int getLifeFruits();
     void setLifeFruits(int i);
     void incrementLifeFruits();
+    ItemStack getTrinketSlot();
 }

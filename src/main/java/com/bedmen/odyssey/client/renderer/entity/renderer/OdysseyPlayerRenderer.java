@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.client.renderer.entity.renderer;
 
+import com.bedmen.odyssey.client.renderer.entity.layers.AmuletLayer;
 import com.bedmen.odyssey.client.renderer.entity.layers.QuiverLayer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
@@ -15,5 +16,6 @@ public class OdysseyPlayerRenderer extends PlayerRenderer {
     public OdysseyPlayerRenderer(EntityRendererManager entityRendererManager, boolean flag) {
         super(entityRendererManager, flag);
         this.addLayer(new QuiverLayer<>(this));
+        this.addLayer(new AmuletLayer<>(this));
     }
 }

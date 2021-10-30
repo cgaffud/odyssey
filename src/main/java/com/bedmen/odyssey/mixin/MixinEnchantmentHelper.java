@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.entity.player.OdysseyPlayerInventory;
+import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.equipment.IEquipment;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -10,7 +10,6 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -23,6 +22,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+
 import java.util.Map;
 
 @Mixin(EnchantmentHelper.class)
@@ -127,8 +127,8 @@ public abstract class MixinEnchantmentHelper {
                 if(setBonusCounter >= 4)
                     i += ((IEquipment)setBonusItem).getSetBonusLevel(enchantment);
             }
-            if(livingEntity instanceof PlayerEntity){
-                i += getItemEnchantmentLevel(enchantment, ((OdysseyPlayerInventory)(((PlayerEntity) livingEntity).inventory)).trinket.get(0));
+            if(livingEntity instanceof IOdysseyPlayer){
+                i += getItemEnchantmentLevel(enchantment, ((IOdysseyPlayer) livingEntity).getTrinketSlot());
             }
             return i;
         }

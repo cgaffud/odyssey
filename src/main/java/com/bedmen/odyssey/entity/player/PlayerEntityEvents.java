@@ -30,7 +30,7 @@ public class PlayerEntityEvents {
             }
             //Increases max health
             if(playerEntity.hasEffect(EffectRegistry.LIFE_INCREASE.get())){
-                IPlayerPermanentBuffs playerPermanentBuffs = (IPlayerPermanentBuffs)playerEntity;
+                IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)playerEntity;
                 playerPermanentBuffs.incrementLifeFruits();
                 ModifiableAttributeInstance modifiableattributeinstance = playerEntity.getAttributes().getInstance(Attributes.MAX_HEALTH);
                 if (modifiableattributeinstance != null) {
@@ -44,8 +44,8 @@ public class PlayerEntityEvents {
     @SubscribeEvent
     public static void onJoin(final EntityJoinWorldEvent event){
         Entity entity = event.getEntity();
-        if(entity instanceof IPlayerPermanentBuffs && !event.getWorld().isClientSide){
-            IPlayerPermanentBuffs playerPermanentBuffs = (IPlayerPermanentBuffs)entity;
+        if(entity instanceof IOdysseyPlayer && !event.getWorld().isClientSide){
+            IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)entity;
             PlayerEntity playerEntity = (PlayerEntity)entity;
             PacketDistributor.PacketTarget packetTarget = PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) entity);
             int lifeFruits = playerPermanentBuffs.getLifeFruits();
@@ -62,8 +62,8 @@ public class PlayerEntityEvents {
     @SubscribeEvent
     public static void onPlayerRespawnEvent(final PlayerEvent.PlayerRespawnEvent event){
         PlayerEntity playerEntity =  event.getPlayer();
-        if(playerEntity instanceof IPlayerPermanentBuffs && !playerEntity.level.isClientSide){
-            playerEntity.setHealth(20.0f + 2.0f * ((IPlayerPermanentBuffs) playerEntity).getLifeFruits());
+        if(playerEntity instanceof IOdysseyPlayer && !playerEntity.level.isClientSide){
+            playerEntity.setHealth(20.0f + 2.0f * ((IOdysseyPlayer) playerEntity).getLifeFruits());
         }
     }
 }
