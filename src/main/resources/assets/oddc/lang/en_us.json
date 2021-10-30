@@ -335,5 +335,6 @@
   "entity.oddc.weaver": "Weaver",
   "item.oddc.weaver_spawn_egg": "Weaver Spawn Egg",
   "item.oddc.weaver_string": "Weaver String",
-  "item.minecraft.string": "Spider String"
+  "item.minecraft.string": "Spider String",
+  "item.oddc.bown": "Bown"
 }
