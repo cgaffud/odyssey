@@ -22,11 +22,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class EntityTypeRegistry {
 
     public static DeferredRegister<EntityType<?>> ENTITY_TYPE = DeferredRegister.create(ForgeRegistries.ENTITIES , Odyssey.MOD_ID);
-    public static DeferredRegister<EntityType<?>> ENTITY_TYPE_VANILLA = DeferredRegister.create(ForgeRegistries.ENTITIES , "minecraft");
 
     public static void init() {
         ENTITY_TYPE.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ENTITY_TYPE_VANILLA.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     //Mobs
@@ -48,8 +46,4 @@ public class EntityTypeRegistry {
 
     //Boat
     public static final RegistryObject<EntityType<OdysseyBoatEntity>> BOAT = ENTITY_TYPE.register("boat", () -> EntityType.Builder.<OdysseyBoatEntity>of(OdysseyBoatEntity::new, EntityClassification.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).build(new ResourceLocation("boat").toString()));
-
-    //Vanilla
-    public static final RegistryObject<EntityType<OdysseySkeletonEntity>> SKELETON = ENTITY_TYPE_VANILLA.register("skeleton", () -> EntityType.Builder.<OdysseySkeletonEntity>of(OdysseySkeletonEntity::new, EntityClassification.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation("skeleton").toString()));
-
 }

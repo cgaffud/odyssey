@@ -119,7 +119,9 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         float f = (float)charge / (float)EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack);
         if(f >= superCharge){
             f = superCharge;
-            flag.value = true;
+            if(flag != null){
+                flag.value = true;
+            }
         }
         f = chargeCurve(f);
         return f;
