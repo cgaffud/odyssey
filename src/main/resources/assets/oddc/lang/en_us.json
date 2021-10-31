@@ -4,7 +4,7 @@
   "item.oddc.raw_iron": "Raw Iron",
   "item.oddc.raw_gold": "Raw Gold",
   "item.oddc.amethyst_shard": "Amethyst Shard",
-  "item.oddc.leather_quiver": "Leather Quiver",
+  "item.oddc.rabbit_hide_quiver": "Rabbit Hide Quiver",
   "item.oddc.copper_nugget": "Copper Nugget",
   "item.oddc.clover": "Clover",
   "item.oddc.peridot": "Peridot",
@@ -329,5 +329,12 @@
   "enchantment.oddc.super_charge": "Super Charge",
   "container.enchant.mutual_exclusion": "Not Compatible with ",
   "container.enchant.already_applied": "Already Applied",
-  "container.enchant.upgrade_already_applied": "Upgrade Already Applied"
+  "container.enchant.upgrade_already_applied": "Upgrade Already Applied",
+  "item.oddc.quiver.free_ammo_chance": "Free Ammo Chance: ",
+  "item.oddc.rabbit_hide_rocket_bag": "Rabbit Hide Rocket Bag",
+  "entity.oddc.weaver": "Weaver",
+  "item.oddc.weaver_spawn_egg": "Weaver Spawn Egg",
+  "item.oddc.weaver_string": "Weaver String",
+  "item.minecraft.string": "Spider String",
+  "item.oddc.bown": "Bown"
 }

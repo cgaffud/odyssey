@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.item;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -14,6 +15,7 @@ import net.minecraft.network.IPacket;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -24,8 +26,13 @@ public class OdysseyBoatEntity extends BoatEntity {
         super(p_i50129_1_, p_i50129_2_);
     }
 
-    public OdysseyBoatEntity(World world, double x, double y, double z) {
-        super(world, x, y, z);
+    public OdysseyBoatEntity(World p_i1705_1_, double p_i1705_2_, double p_i1705_4_, double p_i1705_6_) {
+        this(EntityTypeRegistry.BOAT.get(), p_i1705_1_);
+        this.setPos(p_i1705_2_, p_i1705_4_, p_i1705_6_);
+        this.setDeltaMovement(Vector3d.ZERO);
+        this.xo = p_i1705_2_;
+        this.yo = p_i1705_4_;
+        this.zo = p_i1705_6_;
     }
 
     protected void addAdditionalSaveData(CompoundNBT p_213281_1_) {

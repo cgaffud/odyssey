@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.enchantment;
 
+import com.bedmen.odyssey.enchantment.abstracts.AbstractFrostWalkerEnchantment;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.block.BlockState;
@@ -7,8 +8,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.enchantment.FrostWalkerEnchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.math.BlockPos;
@@ -16,9 +15,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
 
-public class ObsidianWalkerEnchantment extends FrostWalkerEnchantment {
-    public ObsidianWalkerEnchantment(Rarity p_i46728_1_, EquipmentSlotType... p_i46728_2_) {
-        super(p_i46728_1_, p_i46728_2_);
+public class ObsidianWalkerEnchantment extends AbstractFrostWalkerEnchantment implements IUpgradedEnchantment {
+    public ObsidianWalkerEnchantment(Rarity rarity, EquipmentSlotType... equipmentSlotTypes) {
+        super(rarity, equipmentSlotTypes);
     }
 
     public Enchantment getDowngrade(){

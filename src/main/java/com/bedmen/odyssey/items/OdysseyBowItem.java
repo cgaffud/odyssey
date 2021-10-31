@@ -1,8 +1,6 @@
 package com.bedmen.odyssey.items;
 
-import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
@@ -10,6 +8,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
@@ -42,7 +41,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
             PlayerEntity playerentity = (PlayerEntity)entityLiving;
             boolean flag = playerentity.abilities.instabuild || EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.INFINITY_ARROWS.get(), stack) > 0;
             ItemStack itemstack = playerentity.getProjectile(stack);
-            BowUtil.consumeQuiverAmmo(playerentity, itemstack);
+            BowUtil.consumeQuiverAmmo(playerentity, itemstack, entityLiving.getRandom());
 
             int i = this.getUseDuration(stack) - timeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, worldIn, playerentity, i, !itemstack.isEmpty() || flag);
@@ -58,45 +57,45 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                 if (!((double)f < 0.1D)) {
                     boolean flag1 = playerentity.abilities.instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, stack, playerentity));
                     if (!worldIn.isClientSide) {
-                        OdysseyArrowItem odysseyArrowItem = (OdysseyArrowItem)(itemstack.getItem() instanceof OdysseyArrowItem ? itemstack.getItem() : ItemRegistry.ARROW.get());
-                        OdysseyAbstractArrowEntity odysseyAbstractArrowEntity = odysseyArrowItem.createArrow(worldIn, itemstack, playerentity);
+                        ArrowItem arrowItem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
+                        AbstractArrowEntity abstractArrowEntity = arrowItem.createArrow(worldIn, itemstack, playerentity);
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(entityLiving);
                         if(maxVelocityFlag.value && superCharge > 1.0f){
-                            odysseyAbstractArrowEntity.setCritArrow(true);
+                            abstractArrowEntity.setCritArrow(true);
                             inaccuracy /= superCharge;
                         }
-                        odysseyAbstractArrowEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
+                        abstractArrowEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
                         int j = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.POWER_ARROWS.get(), stack);
                         if (j > 0) {
-                            odysseyAbstractArrowEntity.setBaseDamage(odysseyAbstractArrowEntity.getBaseDamage() + (double)j * 0.5D + 0.5D);
+                            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() + (double)j * 0.5D + 0.5D);
                         }
 
                         int k = EnchantmentUtil.getPunch(stack);
                         if (k > 0) {
-                            odysseyAbstractArrowEntity.setKnockback(k);
+                            abstractArrowEntity.setKnockback(k);
                         }
                         k = EnchantmentUtil.getPiercing(stack);
                         if (k > 0) {
-                            odysseyAbstractArrowEntity.setPierceLevel((byte)k);
+                            abstractArrowEntity.setPierceLevel((byte)k);
                         }
                         k = EnchantmentUtil.getFlame(stack);
                         if (k > 0) {
-                            odysseyAbstractArrowEntity.setRemainingFireTicks(100*k);
+                            abstractArrowEntity.setRemainingFireTicks(100*k);
                         }
 
 
                         if (EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), stack) > 0) {
-                            odysseyAbstractArrowEntity.setSecondsOnFire(100);
+                            abstractArrowEntity.setSecondsOnFire(100);
                         }
 
                         stack.hurtAndBreak(1, playerentity, (p_220009_1_) -> {
                             p_220009_1_.broadcastBreakEvent(playerentity.getUsedItemHand());
                         });
                         if (flag1 || playerentity.abilities.instabuild && (itemstack.getItem() == Items.SPECTRAL_ARROW || itemstack.getItem() == Items.TIPPED_ARROW)) {
-                            odysseyAbstractArrowEntity.pickup = OdysseyAbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                            abstractArrowEntity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                         }
 
-                        worldIn.addFreshEntity(odysseyAbstractArrowEntity);
+                        worldIn.addFreshEntity(abstractArrowEntity);
                     }
 
                     worldIn.playSound((PlayerEntity)null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
@@ -120,7 +119,9 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         float f = (float)charge / (float)EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack);
         if(f >= superCharge){
             f = superCharge;
-            flag.value = true;
+            if(flag != null){
+                flag.value = true;
+            }
         }
         f = chargeCurve(f);
         return f;

@@ -141,5 +141,4 @@ public class OdysseyPotionItem extends Item implements INeedsToRegisterItemModel
             return 0;
         });
     }
-
 }

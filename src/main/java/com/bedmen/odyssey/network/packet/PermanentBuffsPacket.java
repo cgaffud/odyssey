@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.network.packet;
 
-import com.bedmen.odyssey.entity.player.IPlayerPermanentBuffs;
+import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.LogicalSide;
@@ -33,7 +33,7 @@ public class PermanentBuffsPacket {
         context.enqueueWork(() -> {
             LogicalSide sideReceived = context.getDirection().getReceptionSide();
             Minecraft minecraft = LogicalSidedProvider.INSTANCE.get(sideReceived);
-            IPlayerPermanentBuffs playerPermanentBuffs = (IPlayerPermanentBuffs)minecraft.player;
+            IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)minecraft.player;
             playerPermanentBuffs.setLifeFruits(permanentBuffsPacket.lifeFruits);
         });
         context.setPacketHandled(true);

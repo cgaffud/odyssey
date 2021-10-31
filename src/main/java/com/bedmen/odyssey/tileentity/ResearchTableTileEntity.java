@@ -1,9 +1,7 @@
 package com.bedmen.odyssey.tileentity;
 
-import javax.annotation.Nullable;
-
 import com.bedmen.odyssey.container.ResearchTableContainer;
-import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
+import com.bedmen.odyssey.enchantment.IUpgradedEnchantment;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.SoundPacket;
 import com.bedmen.odyssey.recipes.ModRecipeType;
@@ -24,12 +22,14 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.IIntArray;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.network.*;
+import net.minecraftforge.fml.network.PacketDistributor;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class ResearchTableTileEntity extends LockableTileEntity implements ITickableTileEntity {
@@ -123,14 +123,14 @@ public class ResearchTableTileEntity extends LockableTileEntity implements ITick
         if(bookItemStack.getItem() == Items.BOOK)
             flag = true;
         else if(bookItemStack.getItem() == Items.ENCHANTED_BOOK){
-            Enchantment e1 = ((ResearchRecipe)recipe).getEnchantment();
-            Enchantment e2 = ((IUpgradableEnchantment)((ResearchRecipe)recipe).getEnchantment()).getDowngrade();
-            Integer level1 = EnchantmentHelper.getEnchantments(bookItemStack).get(e1);
+            Enchantment enchantment = ((ResearchRecipe)recipe).getEnchantment();
+            Integer level1 = EnchantmentHelper.getEnchantments(bookItemStack).get(enchantment);
             int level2 = level1 == null ? 0 : level1;
             if(level2 > 0 && level2 < ((ResearchRecipe)recipe).getLevel())
                 flag = true;
-            if(e2 != null){
-                Integer level3 = EnchantmentHelper.getEnchantments(bookItemStack).get(e2);
+            if(enchantment instanceof IUpgradedEnchantment){
+                Enchantment downgrade = ((IUpgradedEnchantment)enchantment).getDowngrade();
+                Integer level3 = EnchantmentHelper.getEnchantments(bookItemStack).get(downgrade);
                 int level4 = level3 == null ? 0 : level3;
                 if(level4 > 0 && level4 <= ((ResearchRecipe)recipe).getLevel())
                     flag = true;

@@ -15,9 +15,7 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
 public class OdysseyOreGen {
 
     public static ConfiguredFeature<?, ?> SAPPHIRE_ORE_FEATURE;

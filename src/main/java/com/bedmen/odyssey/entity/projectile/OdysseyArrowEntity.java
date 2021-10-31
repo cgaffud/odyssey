@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class OdysseyArrowEntity extends OdysseyAbstractArrowEntity implements IEntityAdditionalSpawnData {
-    private OdysseyArrowItem.ArrowType arrowType = OdysseyArrowItem.ArrowType.FLINT;
+    private OdysseyArrowItem.ArrowType arrowType = OdysseyArrowItem.ArrowType.AMETHYST;
 
     public OdysseyArrowEntity(EntityType<? extends OdysseyArrowEntity> p_i50158_1_, World p_i50158_2_) {
         super(p_i50158_1_, p_i50158_2_);

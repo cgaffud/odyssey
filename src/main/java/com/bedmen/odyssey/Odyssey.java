@@ -6,12 +6,16 @@ import com.bedmen.odyssey.client.gui.*;
 import com.bedmen.odyssey.client.renderer.entity.renderer.*;
 import com.bedmen.odyssey.client.renderer.tileentity.*;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
+import com.bedmen.odyssey.container.QuiverContainer;
+import com.bedmen.odyssey.entity.EntityEvents;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.BabySkeletonEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
+import com.bedmen.odyssey.entity.monster.WeaverEntity;
+import com.bedmen.odyssey.entity.player.PlayerEntityEvents;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseySpawnEggItem;
 import com.bedmen.odyssey.items.equipment.*;
@@ -19,7 +23,6 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.potions.OdysseyPotions;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.trades.OdysseyTrades;
-import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.OdysseyFeatureGen;
@@ -72,6 +75,13 @@ public class Odyssey
     public Odyssey() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(EntityEvents.class);
+        MinecraftForge.EVENT_BUS.register(PlayerEntityEvents.class);
+        MinecraftForge.EVENT_BUS.register(OdysseyBiomeEntitySpawn.class);
+        MinecraftForge.EVENT_BUS.register(OdysseyStructureEntitySpawn.class);
+        MinecraftForge.EVENT_BUS.register(OdysseyFeatureGen.class);
+        MinecraftForge.EVENT_BUS.register(OdysseyOreGen.class);
 
         BlockRegistry.init();
         ItemRegistry.init();
@@ -87,8 +97,6 @@ public class Odyssey
         RecipeRegistry.init();
         SoundEventRegistry.init();
         TileEntityTypeRegistry.init();
-
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -138,13 +146,15 @@ public class Odyssey
         ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
         ScreenManager.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
         ScreenManager.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
-        ScreenManager.register(ContainerRegistry.QUIVER3.get(), QuiverScreen::new);
-        ScreenManager.register(ContainerRegistry.QUIVER5.get(), QuiverScreen::new);
+        for(ContainerType<QuiverContainer> containerType : ContainerRegistry.QUIVER_MAP.values()){
+            ScreenManager.register(containerType, QuiverScreen::new);
+        }
 
         //Mob Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
 
         //Boss Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
@@ -172,7 +182,7 @@ public class Odyssey
 
     @SubscribeEvent
     public static void onRegisterContainers(final RegistryEvent.Register<ContainerType<?>> event){
-        BowUtil.init();
+        ContainerRegistry.initQuivers();
     }
 
     @SubscribeEvent
@@ -189,6 +199,7 @@ public class Odyssey
         EquipmentHoeItem.initEquipment();
         EquipmentShovelItem.initEquipment();
         EquipmentAxeItem.initEquipment();
+        EquipmentBowItem.initEquipment();
 
         EnchantmentUtil.init();
     }
@@ -218,6 +229,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanEntity.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.WEAVER.get(), WeaverEntity.createAttributes().build());
     }
 
     @SubscribeEvent

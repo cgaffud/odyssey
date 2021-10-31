@@ -39,7 +39,10 @@ public abstract class MixinItemRenderer{
     public void renderModelLists(IBakedModel modelIn, ItemStack stack, int combinedLightIn, int combinedOverlayIn, MatrixStack matrixStackIn, IVertexBuilder bufferIn) {}
 
     public void renderStatic(@Nullable LivingEntity livingEntityIn, ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean lefthand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, @Nullable World worldIn, int combinedLightIn, int combinedOverlayIn) {
-        boolean offhand = lefthand ^ livingEntityIn.getMainArm() == HandSide.LEFT;
+        boolean offhand = false;
+        if(livingEntityIn != null){
+            offhand = lefthand ^ livingEntityIn.getMainArm() == HandSide.LEFT;
+        }
         if (!itemStackIn.isEmpty() && !(itemStackIn.getItem() instanceof QuiverItem && offhand)) {
             IBakedModel ibakedmodel = this.getModel(itemStackIn, worldIn, livingEntityIn);
             this.render(itemStackIn, transformTypeIn, lefthand, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, ibakedmodel);

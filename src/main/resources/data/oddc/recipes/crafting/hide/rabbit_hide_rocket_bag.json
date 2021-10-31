@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X X",
+    "X X",
+    "SXS"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:rabbit_hide"
+    },
+    "S": {
+      "item": "oddc:weaver_string"
+    }
+  },
+  "result": {
+    "item": "oddc:rabbit_hide_rocket_bag"
+  }
+}

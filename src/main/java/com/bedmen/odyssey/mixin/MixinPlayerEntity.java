@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
-import com.bedmen.odyssey.entity.player.IPlayerPermanentBuffs;
+import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.entity.player.OdysseyPlayerInventory;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.QuiverItem;
@@ -56,7 +56,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @Mixin(PlayerEntity.class)
-public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerPermanentBuffs {
+public abstract class MixinPlayerEntity extends LivingEntity implements IOdysseyPlayer {
 
     @Shadow
     public void startFallFlying() {}
@@ -111,9 +111,13 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
     @Shadow
     public void crit(Entity p_71009_1_) {}
 
+    @Shadow public abstract ActionResultType interactOn(Entity pEntityToInteractOn, Hand pHand);
+
     public final PlayerInventory inventory = new OdysseyPlayerInventory(getPlayerEntity());
 
     public int lifeFruits = 0;
+
+    private NonNullList<ItemStack> armorAndTrinket = NonNullList.withSize(5, ItemStack.EMPTY);
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
@@ -129,6 +133,10 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
     public void incrementLifeFruits(){
         lifeFruits = MathHelper.clamp(lifeFruits+1, 0, 10);
+    }
+
+    public ItemStack getTrinketSlot(){
+        return ((OdysseyPlayerInventory)this.inventory).trinket.get(0);
     }
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
@@ -164,30 +172,26 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
             if (!itemstack.isEmpty()) {
                 return itemstack;
             } else {
-                NonNullList<ItemStack> offhand = this.inventory.offhand;
-                for (ItemStack itemstack1 : offhand) {
-                    Item item = itemstack1.getItem();
-                    if (item instanceof QuiverItem) {
-                        CompoundNBT compoundNBT = itemstack1.getOrCreateTag();
-                        if (compoundNBT.contains("Items", 9)) {
-                            NonNullList<ItemStack> nonnulllist = NonNullList.withSize(((QuiverItem) item).getQuiverType().getSize(), ItemStack.EMPTY);
-                            ItemStackHelper.loadAllItems(compoundNBT, nonnulllist);
-                            for (int j = 0; j < nonnulllist.size(); j++) {
-                                ItemStack itemstack2 = nonnulllist.get(j);
-                                if (predicate.test(itemstack2)) {
-                                    return itemstack2;
-                                }
+                ItemStack itemstack1 = this.getOffhandItem();
+                Item item = itemstack1.getItem();
+                if (item instanceof QuiverItem) {
+                    CompoundNBT compoundNBT = itemstack1.getOrCreateTag();
+                    if (compoundNBT.contains("Items", 9)) {
+                        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(((QuiverItem) item).getQuiverType().getSize(), ItemStack.EMPTY);
+                        ItemStackHelper.loadAllItems(compoundNBT, nonnulllist);
+                        for (int j = 0; j < nonnulllist.size(); j++) {
+                            ItemStack itemstack2 = nonnulllist.get(j);
+                            if (predicate.test(itemstack2)) {
+                                return itemstack2;
                             }
                         }
                     }
                 }
 
-                predicate = ((ShootableItem)shootable.getItem()).getAllSupportedProjectiles();
-
                 for(int i = 0; i < this.inventory.getContainerSize(); ++i) {
-                    ItemStack itemstack1 = this.inventory.getItem(i);
-                    if (predicate.test(itemstack1)) {
-                        return itemstack1;
+                    ItemStack itemstack2 = this.inventory.getItem(i);
+                    if (predicate.test(itemstack2)) {
+                        return itemstack2;
                     }
                 }
 
@@ -314,6 +318,12 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
         this.cooldowns.tick();
         this.updatePlayerPose();
+        for(int i1 = 0; i1 < 4; i1++){
+            this.armorAndTrinket.set(i1, this.inventory.armor.get(i1));
+        }
+        if(this.inventory instanceof OdysseyPlayerInventory){
+            this.armorAndTrinket.set(4, ((OdysseyPlayerInventory)this.inventory).trinket.get(0));
+        }
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(getPlayerEntity());
     }
 
@@ -457,7 +467,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
                     if (flag && !flag2 && !flag1 && this.onGround && d0 < (double)this.getSpeed()) {
                         ItemStack itemstack = this.getItemInHand(Hand.MAIN_HAND);
                         Item item = itemstack.getItem();
-                        if (((IEquipment)item).isSwordLike()) {
+                        if(item instanceof SwordItem || (item instanceof IEquipment && ((IEquipment) item).isSwordLike())){
                             flag3 = true;
                         }
                     }
@@ -503,15 +513,12 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
 
                         int shatteringLevel = EnchantmentUtil.getShattering(getPlayerEntity());
                         if(flag && shatteringLevel > 0 && p_71059_1_ instanceof LivingEntity && !this.level.isClientSide){
-                            System.out.println("beans1");
                             EffectInstance effectInstance = ((LivingEntity) p_71059_1_).getEffect(EffectRegistry.SHATTERED.get());
                             if(effectInstance != null){
-                                System.out.println("beans2");
                                 ((LivingEntity) p_71059_1_).removeEffect(EffectRegistry.SHATTERED.get());
                                 int amp = effectInstance.getAmplifier();
                                 effectInstance = new EffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, Integer.min(amp+1,1+2*shatteringLevel), false, true, true);
                             } else {
-                                System.out.println("beans3");
                                 effectInstance = new EffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, 0, false, true, true);
                             }
                             ((LivingEntity) p_71059_1_).addEffect(effectInstance);
@@ -592,6 +599,10 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IPlayerP
             return (float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 10.0D);
         }
         return (float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 20.0D);
+    }
+
+    public Iterable<ItemStack> getArmorSlots() {
+        return this.armorAndTrinket;
     }
 
     private PlayerEntity getPlayerEntity(){

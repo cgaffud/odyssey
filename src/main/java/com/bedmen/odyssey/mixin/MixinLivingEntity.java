@@ -39,10 +39,7 @@ import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -205,7 +202,6 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     protected boolean shouldRemoveSoulSpeed(BlockState p_230295_1_) {return false;}
     @Shadow
     protected void actuallyHurt(DamageSource p_70665_1_, float p_70665_2_) {}
-
 
     private int zephyrArmorTicks = -1;
 
@@ -749,6 +745,8 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         }
         return airSupply;
     }
+
+
     
     public int getZephyrArmorTicks(){
         return this.zephyrArmorTicks;

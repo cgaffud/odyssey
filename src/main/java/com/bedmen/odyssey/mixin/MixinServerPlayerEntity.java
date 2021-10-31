@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.entity.player.IPlayerPermanentBuffs;
+import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -21,20 +21,20 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
 
     @Inject(method = "restoreFrom", at = @At(value = "HEAD"))
     private void onRestoreFrom(ServerPlayerEntity serverPlayerEntity, boolean keepInventory, CallbackInfo ci) {
-        IPlayerPermanentBuffs playerPermanentBuffs0 = ((IPlayerPermanentBuffs)serverPlayerEntity);
-        IPlayerPermanentBuffs playerPermanentBuffs1 = ((IPlayerPermanentBuffs)this);
+        IOdysseyPlayer playerPermanentBuffs0 = ((IOdysseyPlayer)serverPlayerEntity);
+        IOdysseyPlayer playerPermanentBuffs1 = ((IOdysseyPlayer)this);
         playerPermanentBuffs1.setLifeFruits(playerPermanentBuffs0.getLifeFruits());
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "TAIL"))
     private void onReadAdditionalSaveData(CompoundNBT compoundNBT, CallbackInfo ci) {
-        IPlayerPermanentBuffs playerPermanentBuffs1 = ((IPlayerPermanentBuffs)this);
+        IOdysseyPlayer playerPermanentBuffs1 = ((IOdysseyPlayer)this);
         playerPermanentBuffs1.setLifeFruits(compoundNBT.getInt("lifeFruits"));
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At(value = "TAIL"))
     private void onAddAdditionalSaveData(CompoundNBT compoundNBT, CallbackInfo ci) {
-        IPlayerPermanentBuffs playerPermanentBuffs1 = ((IPlayerPermanentBuffs)this);
+        IOdysseyPlayer playerPermanentBuffs1 = ((IOdysseyPlayer)this);
         compoundNBT.putInt("lifeFruits", playerPermanentBuffs1.getLifeFruits());
     }
 }

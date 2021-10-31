@@ -3,7 +3,6 @@ package com.bedmen.odyssey.items.equipment;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
-import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrowEntity;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -16,6 +15,7 @@ import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
@@ -68,7 +68,7 @@ public class BoomerangItem extends EquipmentItem implements IVanishable, INeedsT
                     float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerentity);
                     boomerangEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, this.shootSpeed(), inaccuracy);
                     if (playerentity.abilities.instabuild) {
-                        boomerangEntity.pickup = OdysseyAbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                        boomerangEntity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                     }
 
                     worldIn.addFreshEntity(boomerangEntity);

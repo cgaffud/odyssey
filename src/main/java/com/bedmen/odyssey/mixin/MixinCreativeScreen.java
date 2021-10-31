@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.container.slots.OdysseyCreativeSlot;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.DisplayEffectsScreen;
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
@@ -120,7 +119,7 @@ public abstract class MixinCreativeScreen extends DisplayEffectsScreen<CreativeS
                     }
                 }
 
-                Slot slot = new OdysseyCreativeSlot(container.slots.get(l), l, i1, j1);
+                Slot slot = new CreativeScreen.CreativeSlot(container.slots.get(l), l, i1, j1);
                 (this.menu).slots.add(slot);
             }
 
@@ -196,13 +195,13 @@ public abstract class MixinCreativeScreen extends DisplayEffectsScreen<CreativeS
                     ItemStack itemstack1 = p_184098_1_.getItem();
                     this.minecraft.player.drop(itemstack, true);
                     this.minecraft.gameMode.handleCreativeModeItemDrop(itemstack);
-                    this.minecraft.gameMode.handleCreativeModeItemAdd(itemstack1, ((OdysseyCreativeSlot)p_184098_1_).target.index);
+                    this.minecraft.gameMode.handleCreativeModeItemAdd(itemstack1, ((CreativeScreen.CreativeSlot)p_184098_1_).target.index);
                 } else if (p_184098_4_ == ClickType.THROW && !this.minecraft.player.inventory.getCarried().isEmpty()) {
                     this.minecraft.player.drop(this.minecraft.player.inventory.getCarried(), true);
                     this.minecraft.gameMode.handleCreativeModeItemDrop(this.minecraft.player.inventory.getCarried());
                     this.minecraft.player.inventory.setCarried(ItemStack.EMPTY);
                 } else {
-                    this.minecraft.player.inventoryMenu.clicked(p_184098_1_ == null ? p_184098_2_ : ((OdysseyCreativeSlot)p_184098_1_).target.index, p_184098_3_, p_184098_4_, this.minecraft.player);
+                    this.minecraft.player.inventoryMenu.clicked(p_184098_1_ == null ? p_184098_2_ : ((CreativeScreen.CreativeSlot)p_184098_1_).target.index, p_184098_3_, p_184098_4_, this.minecraft.player);
                     this.minecraft.player.inventoryMenu.broadcastChanges();
                 }
             } else if (p_184098_4_ != ClickType.QUICK_CRAFT && p_184098_1_.container == CONTAINER) {

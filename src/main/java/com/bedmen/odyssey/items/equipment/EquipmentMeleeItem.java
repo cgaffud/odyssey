@@ -31,7 +31,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EquipmentMeleeItem extends TieredItem implements IVanishable {
+public class EquipmentMeleeItem extends TieredItem implements IVanishable, IEquipment {
     private final float attackDamage;
     /** Modifiers applied when the item is in the mainhand of a user. */
     private final Multimap<Attribute, AttributeModifier> attributeModifiers;

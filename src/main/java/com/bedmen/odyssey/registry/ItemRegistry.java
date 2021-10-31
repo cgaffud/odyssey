@@ -112,6 +112,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BEWITCHED_QUILL = ITEMS.register("bewitched_quill", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> MALEVOLENT_QUILL = ITEMS.register("malevolent_quill", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> PURGE_TABLET = ITEMS.register("purge_tablet", () -> new PurgeTabletItem((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> WEAVER_STRING = ITEMS.register("weaver_string", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
 
     //Food
     public static final RegistryObject<Item> LIFE_FRUIT = ITEMS.register("life_fruit", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).food(OdysseyFoods.LIFE_FRUIT)));
@@ -299,12 +300,15 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CROSSBOW = ITEMS_VANILLA.register("crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_COMBAT).durability(326),1.05f, 25));
     public static final RegistryObject<Item> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT).durability(862).fireResistant(), 1.15f, 25));
 
+    //Repeaters
+    public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new RepeaterItem((new Item.Properties()).durability(250).tab(ItemGroup.TAB_COMBAT),0.5f, 20, new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 3)));
+
     //Quivers
-    public static final RegistryObject<Item> LEATHER_QUIVER = ITEMS.register("leather_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE));
-    public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.LEVIATHAN));
+    public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE_QUIVER));
+    public static final RegistryObject<Item> RABBIT_HIDE_ROCKET_BAG = ITEMS.register("rabbit_hide_rocket_bag", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE_ROCKET_BAG));
+    public static final RegistryObject<Item> LEVIATHAN_QUIVER = ITEMS.register("leviathan_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.LEVIATHAN_QUIVER));
 
     //Arrows
-    public static final RegistryObject<Item> ARROW = ITEMS_VANILLA.register("arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(ItemGroup.TAB_COMBAT), OdysseyArrowItem.ArrowType.FLINT));
     public static final RegistryObject<Item> AMETHYST_ARROW = ITEMS.register("amethyst_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyItemGroup.COMBAT), OdysseyArrowItem.ArrowType.AMETHYST));
     public static final RegistryObject<Item> QUARTZ_ARROW = ITEMS.register("quartz_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyItemGroup.COMBAT), OdysseyArrowItem.ArrowType.QUARTZ));
     public static final RegistryObject<Item> RAZOR_ARROW = ITEMS.register("razor_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyItemGroup.COMBAT), OdysseyArrowItem.ArrowType.RAZOR));
@@ -325,6 +329,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ARCTIHORN_SPAWN_EGG = ITEMS.register("arctihorn_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.ARCTIHORN, 0x6e7d90, 0x8ab5eb, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
     public static final RegistryObject<Item> LUPINE_SPAWN_EGG = ITEMS.register("lupine_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.LUPINE, 0x000000, 0x000000, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
     public static final RegistryObject<Item> BABY_SKELETON_SPAWN_EGG = ITEMS.register("baby_skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BABY_SKELETON, 12698049, 4802889, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
+    public static final RegistryObject<Item> WEAVER_SPAWN_EGG = ITEMS.register("weaver_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WEAVER, 0x442512, 0x0096ea, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
 
     // Vanilla
 

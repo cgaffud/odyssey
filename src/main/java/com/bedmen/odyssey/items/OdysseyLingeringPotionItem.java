@@ -1,23 +1,23 @@
 package com.bedmen.odyssey.items;
 
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ThrowablePotionItem;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.PotionUtils;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class OdysseyLingeringPotionItem extends ThrowablePotionItem {
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class OdysseyLingeringPotionItem extends ThrowablePotionItem implements INeedsToRegisterItemModelProperty {
     public OdysseyLingeringPotionItem(Item.Properties blockIn) {
         super(blockIn);
     }
@@ -37,5 +37,17 @@ public class OdysseyLingeringPotionItem extends ThrowablePotionItem {
 
     public boolean isFoil(ItemStack stack) {
         return false;
+    }
+
+    public void registerItemModelProperties(){
+        ItemModelsProperties.register(this, new ResourceLocation("type"),  (itemStack, world, entity) -> {
+            CompoundNBT compoundnbt = itemStack.getTag();
+            if(compoundnbt != null && compoundnbt.contains("Potion")){
+                String s = compoundnbt.get("Potion").getAsString();
+                if(s.contains("long")) return 1;
+                else if(s.contains("strong")) return 2;
+            }
+            return 0;
+        });
     }
 }
