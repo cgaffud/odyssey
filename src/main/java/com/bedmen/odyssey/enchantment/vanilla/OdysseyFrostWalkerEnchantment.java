@@ -1,39 +1,27 @@
 package com.bedmen.odyssey.enchantment.vanilla;
 
+import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
+import com.bedmen.odyssey.enchantment.abstracts.AbstractFrostWalkerEnchantment;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
-import net.minecraft.enchantment.EnchantmentType;
 
-public class OdysseyFrostWalkerEnchantment extends Enchantment {
-    public OdysseyFrostWalkerEnchantment(Enchantment.Rarity p_i46728_1_, EquipmentSlotType... p_i46728_2_) {
-        super(p_i46728_1_, EnchantmentType.ARMOR_FEET, p_i46728_2_);
+public class OdysseyFrostWalkerEnchantment extends AbstractFrostWalkerEnchantment implements IUpgradableEnchantment {
+    public OdysseyFrostWalkerEnchantment(Enchantment.Rarity rarity, EquipmentSlotType... equipmentSlotTypes) {
+        super(rarity, equipmentSlotTypes);
     }
 
-    public int getMinCost(int p_77321_1_) {
-        return p_77321_1_ * 10;
-    }
-
-    public int getMaxCost(int p_223551_1_) {
-        return this.getMinCost(p_223551_1_) + 15;
-    }
-
-    public boolean isTreasureOnly() {
-        return true;
-    }
-
-    public int getMaxLevel() {
-        return 2;
+    public Enchantment getUpgrade(){
+        return EnchantmentRegistry.OBSIDIAN_WALKER.get();
     }
 
     public static void onEntityMoved(LivingEntity p_185266_0_, World p_185266_1_, BlockPos p_185266_2_, int p_185266_3_) {
@@ -58,13 +46,5 @@ public class OdysseyFrostWalkerEnchantment extends Enchantment {
             }
 
         }
-    }
-
-    public boolean checkCompatibility(Enchantment p_77326_1_) {
-        return super.checkCompatibility(p_77326_1_) && p_77326_1_ != EnchantmentRegistry.DEPTH_STRIDER.get();
-    }
-
-    public Enchantment getUpgrade(){
-        return EnchantmentRegistry.OBSIDIAN_WALKER.get();
     }
 }

@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
+import com.bedmen.odyssey.enchantment.IUpgradedEnchantment;
 import com.bedmen.odyssey.util.OdysseyTextFormatting;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.text.*;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Enchantment.class)
-public abstract class MixinEnchantment extends net.minecraftforge.registries.ForgeRegistryEntry<Enchantment> implements IUpgradableEnchantment {
+public abstract class MixinEnchantment extends net.minecraftforge.registries.ForgeRegistryEntry<Enchantment> {
 
     @Shadow
     public boolean isCurse() {return false;}
@@ -20,7 +20,7 @@ public abstract class MixinEnchantment extends net.minecraftforge.registries.For
     public ITextComponent getFullname(int p_200305_1_) {
         IFormattableTextComponent iformattabletextcomponent;
         int i = this.isCurse() ? 2 : 1;
-        i -= this.getDowngrade() == null ? 0 : 1;
+        i -= (this instanceof IUpgradedEnchantment) ? 1 : 0;
         switch(i) {
             case 0:
                 iformattabletextcomponent = ((IFormattableTextComponent)new TranslationTextComponent(this.getDescriptionId())).withStyle(OdysseyTextFormatting.ORANGE);

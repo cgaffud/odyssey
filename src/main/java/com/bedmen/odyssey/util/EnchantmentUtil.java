@@ -2,6 +2,7 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.client.gui.EnchantButton;
 import com.bedmen.odyssey.enchantment.IUpgradableEnchantment;
+import com.bedmen.odyssey.enchantment.IUpgradedEnchantment;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.google.gson.JsonSyntaxException;
@@ -91,8 +92,6 @@ public class EnchantmentUtil {
 
     public static void getExclusiveFlag(Enchantment enchantment, int level, Map<Enchantment, Integer> map, EnchantButton.ExclusiveFlag exclusiveFlag){
         for(Enchantment enchantment1 : map.keySet()){
-            Enchantment upgrade = ((IUpgradableEnchantment)enchantment).getUpgrade();
-            Enchantment downgrade = ((IUpgradableEnchantment)enchantment).getDowngrade();
             if(!enchantment1.isCompatibleWith(enchantment) && enchantment1 != enchantment){
                 exclusiveFlag.enchantment = enchantment1;
                 exclusiveFlag.flag = 3;
@@ -103,12 +102,18 @@ public class EnchantmentUtil {
             } else if(enchantment1 == enchantment && level < map.get(enchantment1)){
                 exclusiveFlag.flag = 1;
                 return;
-            } else if(upgrade != null && map.containsKey(upgrade) && map.get(upgrade) >= level){
-                exclusiveFlag.flag = 1;
-                return;
-            } else if(downgrade != null && map.containsKey(downgrade) && map.get(downgrade) > level){
-                exclusiveFlag.flag = 1;
-                return;
+            } else if(enchantment instanceof IUpgradableEnchantment) {
+                Enchantment upgrade = ((IUpgradableEnchantment)enchantment).getUpgrade();
+                if(map.containsKey(upgrade) && map.get(upgrade) >= level){
+                    exclusiveFlag.flag = 1;
+                    return;
+                }
+            } else if(enchantment instanceof IUpgradedEnchantment) {
+                Enchantment downgrade = ((IUpgradedEnchantment)enchantment).getDowngrade();
+                if(map.containsKey(downgrade) && map.get(downgrade) > level){
+                    exclusiveFlag.flag = 1;
+                    return;
+                }
             }
         }
     }
