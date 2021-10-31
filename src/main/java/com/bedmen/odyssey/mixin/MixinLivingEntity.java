@@ -202,24 +202,6 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     protected boolean shouldRemoveSoulSpeed(BlockState p_230295_1_) {return false;}
     @Shadow
     protected void actuallyHurt(DamageSource p_70665_1_, float p_70665_2_) {}
-    @Shadow
-    public boolean isUsingItem() {return false;}
-    @Shadow
-    public Hand getUsedItemHand() {return null;}
-    @Shadow
-    public ItemStack getItemInHand(Hand pHand) {return null;}
-    @Shadow
-    protected int useItemRemaining;
-    @Shadow
-    public int getUseItemRemainingTicks() {return 0;}
-    @Shadow
-    private boolean shouldTriggerItemUseEffects() {return false;}
-    @Shadow
-    protected void triggerItemUseEffects(ItemStack pStack, int pCount) {}
-    @Shadow
-    protected void completeUsingItem() {}
-    @Shadow
-    public void stopUsingItem() {}
 
     private int zephyrArmorTicks = -1;
 
@@ -764,32 +746,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         return airSupply;
     }
 
-//    private void updatingUsingItem() {
-//        if (this.isUsingItem()) {
-//            ItemStack itemStack = this.getItemInHand(this.getUsedItemHand());
-//            if (net.minecraftforge.common.ForgeHooks.canContinueUsing(this.useItem, itemStack)) this.useItem = itemStack;
-//            if (itemStack == this.useItem) {
-//
-//                if (!this.useItem.isEmpty()) {
-//                    useItemRemaining = net.minecraftforge.event.ForgeEventFactory.onItemUseTick(getLivingEntity(), useItem, useItemRemaining);
-//                    if (useItemRemaining > 0)
-//                        useItem.onUsingTick(getLivingEntity(), useItemRemaining);
-//                }
-//
-//                this.useItem.onUseTick(this.level, getLivingEntity(), this.getUseItemRemainingTicks());
-//                if (this.shouldTriggerItemUseEffects()) {
-//                    this.triggerItemUseEffects(this.useItem, 5);
-//                }
-//
-//                if (--this.useItemRemaining == 0 && !this.level.isClientSide && !this.useItem.useOnRelease()) {
-//                    this.completeUsingItem();
-//                }
-//            } else {
-//                this.stopUsingItem();
-//            }
-//        }
-//
-//    }
+
     
     public int getZephyrArmorTicks(){
         return this.zephyrArmorTicks;

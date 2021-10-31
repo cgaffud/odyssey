@@ -26,7 +26,6 @@
     "MixinTextFormatting",
     "MixinCreativeScreen",
     "MixinServerPlayNetHandler",
-    "MixinPiglinTasks",
     "MixinAbstractBlock",
     "MixinFirstPersonRenderer",
     "MixinSEntityVelocityPacket",

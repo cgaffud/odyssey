@@ -111,9 +111,13 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IOdyssey
     @Shadow
     public void crit(Entity p_71009_1_) {}
 
+    @Shadow public abstract ActionResultType interactOn(Entity pEntityToInteractOn, Hand pHand);
+
     public final PlayerInventory inventory = new OdysseyPlayerInventory(getPlayerEntity());
 
     public int lifeFruits = 0;
+
+    private NonNullList<ItemStack> armorAndTrinket = NonNullList.withSize(5, ItemStack.EMPTY);
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
@@ -314,6 +318,12 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IOdyssey
 
         this.cooldowns.tick();
         this.updatePlayerPose();
+        for(int i1 = 0; i1 < 4; i1++){
+            this.armorAndTrinket.set(i1, this.inventory.armor.get(i1));
+        }
+        if(this.inventory instanceof OdysseyPlayerInventory){
+            this.armorAndTrinket.set(4, ((OdysseyPlayerInventory)this.inventory).trinket.get(0));
+        }
         net.minecraftforge.fml.hooks.BasicEventHooks.onPlayerPostTick(getPlayerEntity());
     }
 
@@ -589,6 +599,10 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IOdyssey
             return (float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 10.0D);
         }
         return (float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 20.0D);
+    }
+
+    public Iterable<ItemStack> getArmorSlots() {
+        return this.armorAndTrinket;
     }
 
     private PlayerEntity getPlayerEntity(){
