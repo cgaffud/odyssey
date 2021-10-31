@@ -17,7 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EquipmentBowItem extends OdysseyBowItem {
+public class EquipmentBowItem extends OdysseyBowItem implements IEquipment {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentBowItem> UNFINISHED_EQUIPMENT = new ArrayList<>();

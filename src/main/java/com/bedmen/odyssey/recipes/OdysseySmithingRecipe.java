@@ -9,18 +9,16 @@ import com.google.gson.JsonObject;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.item.crafting.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -177,7 +175,8 @@ public class OdysseySmithingRecipe implements IRecipe<IInventory>{
         if (compoundnbt != null) {
             itemstack.setTag(compoundnbt.copy());
         }
-        if(0 < ((IEquipment)(itemstack.getItem())).getInnateEnchantmentLevel(EnchantmentRegistry.UNENCHANTABLE.get())) {
+        Item item = itemstack.getItem();
+        if(item instanceof IEquipment && 0 < ((IEquipment)item).getInnateEnchantmentLevel(EnchantmentRegistry.UNENCHANTABLE.get())) {
             Map<Enchantment, Integer> map2 = new HashMap<>();
             EnchantmentHelper.setEnchantments(map2, itemstack);
         }

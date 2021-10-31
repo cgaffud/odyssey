@@ -4,14 +4,6 @@ import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
-import com.google.common.collect.ImmutableSet;
-
-import java.util.*;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.IItemTier;
@@ -24,8 +16,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.*;
 
-public class EquipmentPickaxeItem extends PickaxeItem {
+public class EquipmentPickaxeItem extends PickaxeItem implements IEquipment {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentPickaxeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();

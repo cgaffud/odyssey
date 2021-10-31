@@ -18,7 +18,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EquipmentHoeItem extends HoeItem {
+public class EquipmentHoeItem extends HoeItem implements IEquipment {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentHoeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();

@@ -72,8 +72,9 @@ public abstract class MixinEnchantmentHelper {
                     setBonusCounter++;
             }
         }
-        if(setBonusCounter >= 4)
+        if(setBonusCounter >= 4 && setBonusItem instanceof IEquipment){
             i += ((IEquipment)setBonusItem).getSetBonusLevel(enchantment);
+        }
         if(livingEntity instanceof IOdysseyPlayer){
             i += getItemEnchantmentLevel(enchantment, ((IOdysseyPlayer) livingEntity).getTrinketSlot());
         }
@@ -98,7 +99,10 @@ public abstract class MixinEnchantmentHelper {
                 }
             }
 
-            j += ((IEquipment)(itemStack.getItem())).getInnateEnchantmentLevel(enchantment);
+            Item item = itemStack.getItem();
+            if(item instanceof IEquipment){
+                j += ((IEquipment)(itemStack.getItem())).getInnateEnchantmentLevel(enchantment);
+            }
 
             return j;
         }
@@ -106,10 +110,12 @@ public abstract class MixinEnchantmentHelper {
 
     @Overwrite
     public static Map<Enchantment, Integer> getEnchantments(ItemStack itemStack) {
-        ListNBT listnbt = (itemStack.getItem() == Items.ENCHANTED_BOOK || itemStack.getItem() == ItemRegistry.PURGE_TABLET.get()) ? EnchantedBookItem.getEnchantments(itemStack) : itemStack.getEnchantmentTags();
+        Item item = itemStack.getItem();
+        ListNBT listnbt = (item == Items.ENCHANTED_BOOK || item == ItemRegistry.PURGE_TABLET.get()) ? EnchantedBookItem.getEnchantments(itemStack) : itemStack.getEnchantmentTags();
         Map<Enchantment, Integer> map = deserializeEnchantments(listnbt);
-        Map<Enchantment, Integer> map2 = ((IEquipment)(itemStack.getItem())).getInnateEnchantmentMap();
-        map.putAll(map2);
+        if(item instanceof IEquipment){
+            map.putAll(((IEquipment)(itemStack.getItem())).getInnateEnchantmentMap());
+        }
         return map;
     }
 
