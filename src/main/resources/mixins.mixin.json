@@ -18,7 +18,6 @@
     "MixinFogRenderer",
     "MixinEnchantmentHelper",
     "MixinPotionUtils",
-    "MixinElytraLayer",
     "MixinEnchantment",
     "MixinShieldRecipes",
     "MixinClientPlayerEntity",
