@@ -5,6 +5,7 @@ import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.PermanentBuffsPacket;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.BowUtil;
 import net.minecraft.entity.Entity;
@@ -17,11 +18,16 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import java.util.Random;
 
 public class EntityEvents {
 
@@ -50,9 +56,18 @@ public class EntityEvents {
         Entity entity = event.getEntity();
         if(entity instanceof SkeletonEntity){
             SkeletonEntity skeletonEntity = (SkeletonEntity)entity;
-            if(skeletonEntity.getRandom().nextFloat() < 0.5f){
+            Random random = skeletonEntity.getRandom();
+
+            if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
+                EntityTypeRegistry.BABY_SKELETON.get().spawn((ServerWorld)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
+                event.setCanceled(true);
+                return;
+            }
+
+            if(skeletonEntity.getRandom().nextFloat() < 0.05f){
                 entity.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
             }
+
             reassessSkeletonWeaponGoal(skeletonEntity);
         }
     }
