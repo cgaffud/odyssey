@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class PlayerEntityEvents {
 
     @SubscribeEvent
-    public static void onPreTick(final TickEvent.PlayerTickEvent event){
+    public static void tickEvent$PlayerTickEventListener(final TickEvent.PlayerTickEvent event){
         PlayerEntity playerEntity =  event.player;
         if(!playerEntity.level.isClientSide && event.phase == TickEvent.Phase.START){
             //Sets player on fire unless they are nether immune
@@ -34,7 +34,7 @@ public class PlayerEntityEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerRespawnEvent(final PlayerEvent.PlayerRespawnEvent event){
+    public static void PlayerEvent$PlayerRespawnEventListener(final PlayerEvent.PlayerRespawnEvent event){
         PlayerEntity playerEntity =  event.getPlayer();
         if(playerEntity instanceof IOdysseyPlayer && !playerEntity.level.isClientSide){
             playerEntity.setHealth(20.0f + 2.0f * ((IOdysseyPlayer) playerEntity).getLifeFruits());

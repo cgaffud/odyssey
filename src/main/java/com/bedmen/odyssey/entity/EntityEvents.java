@@ -19,13 +19,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.Difficulty;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class EntityEvents {
 
     @SubscribeEvent
-    public static void onJoin(final EntityJoinWorldEvent event){
+    public static void entityJoinWorldEventListener(final EntityJoinWorldEvent event){
         Entity entity = event.getEntity();
 
         //Update Max Health Attribute for Player
@@ -42,8 +43,12 @@ public class EntityEvents {
                 modifiableattributeinstance.setBaseValue(20.0d + 2.0d*lifeFruits);
             }
         }
+    }
 
-        else if(entity instanceof SkeletonEntity){
+    @SubscribeEvent
+    public static void livingSpawnEvent$SpecialSpawnListener(final LivingSpawnEvent.SpecialSpawn event){
+        Entity entity = event.getEntity();
+        if(entity instanceof SkeletonEntity){
             SkeletonEntity skeletonEntity = (SkeletonEntity)entity;
             if(skeletonEntity.getRandom().nextFloat() < 0.5f){
                 entity.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
