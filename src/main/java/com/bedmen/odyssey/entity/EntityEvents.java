@@ -20,9 +20,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -49,6 +51,31 @@ public class EntityEvents {
                 modifiableattributeinstance.setBaseValue(20.0d + 2.0d*lifeFruits);
             }
         }
+    }
+
+//Attempt at moving Building Fatigue out of Mixins
+//    @SubscribeEvent
+//    public static void BlockEvent$EntityPlaceEventListener(final BlockEvent.EntityPlaceEvent event){
+//        Entity entity = event.getEntity();
+//        if(entity instanceof LivingEntity){
+//            LivingEntity livingEntity = (LivingEntity)entity;
+//            EffectInstance effectInstance = livingEntity.getEffect(EffectRegistry.BUILDING_FATIGUE.get());
+//            if(effectInstance != null){
+//                if(entity instanceof ServerPlayerEntity){
+//                    ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)entity;
+//                    Hand hand = serverPlayerEntity.getUsedItemHand();
+//                    serverPlayerEntity.setItemInHand(hand, serverPlayerEntity.getItemInHand(hand));
+//                    serverPlayerEntity.broadcastCarriedItem();
+//                }
+//                event.setCanceled(true);
+//            }
+//        }
+//    }
+
+    @SubscribeEvent
+    public static void BlockEvent$EntityPlaceEventListener(final ProjectileImpactEvent event){
+        Entity entity = event.getEntity();
+        World level = event.getEntity().level;
     }
 
     @SubscribeEvent

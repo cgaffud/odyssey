@@ -14,7 +14,6 @@
     "MixinItemRenderer",
     "MixinMobEntity",
     "MixinLivingEntity",
-    "MixinFogRenderer",
     "MixinEnchantmentHelper",
     "MixinPotionUtils",
     "MixinEnchantment",

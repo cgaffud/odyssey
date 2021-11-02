@@ -3,6 +3,7 @@ package com.bedmen.odyssey;
 import com.bedmen.odyssey.blocks.INeedsToRegisterRenderType;
 import com.bedmen.odyssey.blocks.OdysseyWoodType;
 import com.bedmen.odyssey.client.gui.*;
+import com.bedmen.odyssey.client.renderer.RenderEvents;
 import com.bedmen.odyssey.client.renderer.entity.renderer.*;
 import com.bedmen.odyssey.client.renderer.tileentity.*;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
@@ -78,6 +79,7 @@ public class Odyssey
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(EntityEvents.class);
         MinecraftForge.EVENT_BUS.register(PlayerEntityEvents.class);
+        MinecraftForge.EVENT_BUS.register(RenderEvents.class);
         MinecraftForge.EVENT_BUS.register(OdysseyBiomeEntitySpawn.class);
         MinecraftForge.EVENT_BUS.register(OdysseyStructureEntitySpawn.class);
         MinecraftForge.EVENT_BUS.register(OdysseyFeatureGen.class);
