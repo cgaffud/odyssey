@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.mixin;
+package com.bedmen.odyssey.client.gui;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -7,12 +7,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,37 +20,66 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.*;
-import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.AIR;
+import net.minecraftforge.common.MinecraftForge;
 
-@OnlyIn(Dist.CLIENT)
-@Mixin(ForgeIngameGui.class)
-public abstract class MixinForgeIngameGui extends IngameGui{
+import java.lang.reflect.Field;
+
+import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.*;
+
+public class OysseyIngameGui extends ForgeIngameGui {
 
     private static final ResourceLocation COCONUT_BLUR_LOCATION = new ResourceLocation(Odyssey.MOD_ID , "textures/misc/coconutblur.png");
+    private Field eventParentField;
 
-    public MixinForgeIngameGui(Minecraft mcIn) {
-        super(mcIn);
+    {
+        try {
+            eventParentField = ForgeIngameGui.class.getDeclaredField("eventParent");
+            eventParentField.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static boolean renderProt = false;
+    public OysseyIngameGui(Minecraft mc) {
+        super(mc);
+    }
 
-    @Shadow
-    private boolean pre(RenderGameOverlayEvent.ElementType type, MatrixStack mStack){return false;}
-    @Shadow
-    public static int left_height;
-    @Shadow
-    public static int right_height;
-    @Shadow
-    private void post(RenderGameOverlayEvent.ElementType type, MatrixStack mStack){}
-    @Shadow
-    private void bind(ResourceLocation res){}
+    //Helper macros
+    private boolean pre(RenderGameOverlayEvent.ElementType type, MatrixStack mStack)
+    {
+        try {
+            return MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(mStack, (RenderGameOverlayEvent)eventParentField.get(this), type));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    private void post(RenderGameOverlayEvent.ElementType type, MatrixStack mStack)
+    {
+        try {
+            MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(mStack, (RenderGameOverlayEvent)eventParentField.get(this), type));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+    private void bind(ResourceLocation res)
+    {
+        minecraft.getTextureManager().bind(res);
+    }
+
+    private int fourShift(int healthRemaining){
+        if(healthRemaining >= 4)
+            return 0;
+        return 9*(4-healthRemaining);
+    }
+
+    private int twoShift(int healthRemaining){
+        if(healthRemaining != 1)
+            return 0;
+        return 18;
+    }
 
     public void renderHealth(int width, int height, MatrixStack mStack)
     {
@@ -204,18 +230,6 @@ public abstract class MixinForgeIngameGui extends IngameGui{
         post(HEALTH, mStack);
     }
 
-    private int fourShift(int healthRemaining){
-        if(healthRemaining >= 4)
-            return 0;
-        return 9*(4-healthRemaining);
-    }
-
-    private int twoShift(int healthRemaining){
-        if(healthRemaining != 1)
-            return 0;
-        return 18;
-    }
-
     protected void renderArmor(MatrixStack mStack, int width, int height)
     {
         if (pre(ARMOR, mStack)) return;
@@ -270,8 +284,6 @@ public abstract class MixinForgeIngameGui extends IngameGui{
         RenderSystem.enableBlend();
         int left = width / 2 + 91;
         int top = height - right_height;
-
-        if(renderProt) top -= 10;
 
         int air = player.getAirSupply();
         if (player.isEyeInFluid(FluidTags.LAVA)) {

@@ -27,6 +27,7 @@ import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.OdysseyStructureEntitySpawn;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -165,6 +166,11 @@ public class Odyssey
 
         //Wood Types
         Atlases.addWoodType(OdysseyWoodType.PALM);
+
+        Minecraft minecraft =  event.getMinecraftSupplier().get();
+        if(minecraft != null){
+            minecraft.gui = new OysseyIngameGui(minecraft);
+        }
     }
 
     @SubscribeEvent
