@@ -22,7 +22,6 @@
     "MixinLayerUtil",
     "MixinServerPlayerEntity",
     "MixinTextFormatting",
-    "MixinCreativeScreen",
     "MixinServerPlayNetHandler",
     "MixinAbstractBlock",
     "MixinFirstPersonRenderer",

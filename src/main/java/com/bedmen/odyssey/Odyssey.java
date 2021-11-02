@@ -80,6 +80,7 @@ public class Odyssey
         MinecraftForge.EVENT_BUS.register(EntityEvents.class);
         MinecraftForge.EVENT_BUS.register(PlayerEntityEvents.class);
         MinecraftForge.EVENT_BUS.register(RenderEvents.class);
+        MinecraftForge.EVENT_BUS.register(GuiEvents.class);
         MinecraftForge.EVENT_BUS.register(OdysseyBiomeEntitySpawn.class);
         MinecraftForge.EVENT_BUS.register(OdysseyStructureEntitySpawn.class);
         MinecraftForge.EVENT_BUS.register(OdysseyFeatureGen.class);
