@@ -7,4 +7,5 @@ import net.minecraft.tags.ITag;
 
 public class OdysseyBlockTags {
     public static final ITag.INamedTag<Block> FOG_TAG = BlockTags.bind(Odyssey.MOD_ID+":fog");
+    public static final ITag.INamedTag<Block> PALM_LOGS_TAG = BlockTags.bind(Odyssey.MOD_ID+":palm_logs");
 }
