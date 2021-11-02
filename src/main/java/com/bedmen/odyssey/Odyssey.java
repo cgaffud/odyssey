@@ -3,12 +3,10 @@ package com.bedmen.odyssey;
 import com.bedmen.odyssey.blocks.INeedsToRegisterRenderType;
 import com.bedmen.odyssey.blocks.OdysseyWoodType;
 import com.bedmen.odyssey.client.gui.*;
-import com.bedmen.odyssey.client.renderer.RenderEvents;
 import com.bedmen.odyssey.client.renderer.entity.renderer.*;
 import com.bedmen.odyssey.client.renderer.tileentity.*;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.container.QuiverContainer;
-import com.bedmen.odyssey.entity.EntityEvents;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
@@ -16,16 +14,13 @@ import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.BabySkeletonEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.bedmen.odyssey.entity.monster.WeaverEntity;
-import com.bedmen.odyssey.entity.player.PlayerEntityEvents;
+import com.bedmen.odyssey.event_listeners.*;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
-import com.bedmen.odyssey.items.OdysseySpawnEggItem;
-import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.potions.OdysseyPotions;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.trades.OdysseyTrades;
 import com.bedmen.odyssey.util.CompostUtil;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.OdysseyFeatureGen;
 import com.bedmen.odyssey.world.gen.OdysseyOreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
@@ -36,12 +31,7 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -53,7 +43,6 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -77,10 +66,11 @@ public class Odyssey
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(RegistryEvents.class);
         MinecraftForge.EVENT_BUS.register(EntityEvents.class);
-        MinecraftForge.EVENT_BUS.register(PlayerEntityEvents.class);
+        MinecraftForge.EVENT_BUS.register(PlayerEvents.class);
         MinecraftForge.EVENT_BUS.register(RenderEvents.class);
-        MinecraftForge.EVENT_BUS.register(GuiEvents.class);
+        MinecraftForge.EVENT_BUS.register(GuiContainerEvents.class);
         MinecraftForge.EVENT_BUS.register(OdysseyBiomeEntitySpawn.class);
         MinecraftForge.EVENT_BUS.register(OdysseyStructureEntitySpawn.class);
         MinecraftForge.EVENT_BUS.register(OdysseyFeatureGen.class);
@@ -175,36 +165,6 @@ public class Odyssey
 
         //Wood Types
         Atlases.addWoodType(OdysseyWoodType.PALM);
-    }
-
-    //Fix Armor Max Value
-    @SubscribeEvent
-    public static void onRegisterAttributes(final RegistryEvent.Register<Attribute> event){
-        ((RangedAttribute)Attributes.ARMOR).maxValue = 80.0d;
-    }
-
-    @SubscribeEvent
-    public static void onRegisterContainers(final RegistryEvent.Register<ContainerType<?>> event){
-        ContainerRegistry.initQuivers();
-    }
-
-    @SubscribeEvent
-    public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
-        OdysseySpawnEggItem.initSpawnEggs();
-    }
-
-    @SubscribeEvent
-    public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
-        EquipmentArmorItem.initEquipment();
-        EquipmentMeleeItem.initEquipment();
-        EquipmentItem.initEquipment();
-        EquipmentPickaxeItem.initEquipment();
-        EquipmentHoeItem.initEquipment();
-        EquipmentShovelItem.initEquipment();
-        EquipmentAxeItem.initEquipment();
-        EquipmentBowItem.initEquipment();
-
-        EnchantmentUtil.init();
     }
 
     @SubscribeEvent

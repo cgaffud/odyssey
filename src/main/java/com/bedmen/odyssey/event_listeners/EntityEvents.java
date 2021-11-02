@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.entity;
+package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;

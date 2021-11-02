@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.client.renderer;
+package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.client.renderer.entity.layers.AmuletLayer;
 import com.bedmen.odyssey.client.renderer.entity.layers.OdysseyElytraLayer;
@@ -80,7 +80,7 @@ public class RenderEvents {
      * Adjusts PlayerRenderer Layers
      */
     @SubscribeEvent
-    public static void RenderHandEventListener(final RenderPlayerEvent.Pre event){
+    public static void RRenderPlayerEvent$PreListener(final RenderPlayerEvent.Pre event){
         PlayerRenderer playerRenderer = event.getRenderer();
         List<LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>>> layers = playerRenderer.layers;
         boolean[] flags = new boolean[3];
@@ -104,5 +104,4 @@ public class RenderEvents {
             layers.add(new OdysseyElytraLayer<>(playerRenderer));
         }
     }
-
 }

@@ -1,5 +1,6 @@
-package com.bedmen.odyssey.entity.player;
+package com.bedmen.odyssey.event_listeners;
 
+import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.block.Block;
@@ -21,18 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class PlayerEntityEvents {
+public class PlayerEvents {
 
+    /**
+     * Sets player on fire unless they are nether immune
+     * Increases max health when eating life fruit
+     */
     @SubscribeEvent
     public static void tickEvent$PlayerTickEventListener(final TickEvent.PlayerTickEvent event){
         PlayerEntity playerEntity =  event.player;
         if(!playerEntity.level.isClientSide && event.phase == TickEvent.Phase.START){
-            //Sets player on fire unless they are nether immune
             if(!(playerEntity.abilities.instabuild || playerEntity.isSpectator()) && playerEntity.level.dimensionType().ultraWarm()){
                 if(!EnchantmentUtil.hasFireProtectionOrResistance(playerEntity))
                     playerEntity.setSecondsOnFire(1);
             }
-            //Increases max health
             if(playerEntity.hasEffect(EffectRegistry.LIFE_INCREASE.get())){
                 IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)playerEntity;
                 playerPermanentBuffs.incrementLifeFruits();
