@@ -25,8 +25,7 @@
     "MixinServerPlayNetHandler",
     "MixinAbstractBlock",
     "MixinFirstPersonRenderer",
-    "MixinSEntityVelocityPacket",
-    "MixinEntityRendererManager"
+    "MixinSEntityVelocityPacket"
   ],
   "injectors": {
     "defaultRequire": 1
