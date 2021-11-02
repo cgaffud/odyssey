@@ -3,7 +3,6 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.recipes.*;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.ShieldRecipes;
 import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -22,4 +21,5 @@ public class RecipeRegistry {
     public static final RegistryObject<IRecipeSerializer<AlloyRecipe>> ALLOYING = RECIPES.register("alloying", AlloyRecipe.Serializer::new);
     public static final RegistryObject<IRecipeSerializer<RecycleRecipe>> RECYCLING = RECIPES.register("recycling", RecycleRecipe.Serializer::new);
     public static final RegistryObject<IRecipeSerializer<ResearchRecipe>> RESEARCH = RECIPES.register("research", ResearchRecipe.Serializer::new);
+    public static final RegistryObject<SpecialRecipeSerializer<OdysseyShieldRecipes>> SHIELD_DECORATION = RECIPES.register("crafting_special_shielddecoration", () -> new SpecialRecipeSerializer<>(OdysseyShieldRecipes::new));
 }

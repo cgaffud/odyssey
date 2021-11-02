@@ -1,17 +1,20 @@
-package com.bedmen.odyssey.mixin;
+package com.bedmen.odyssey.recipes;
 
 import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.registry.RecipeRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShieldItem;
-import net.minecraft.item.crafting.ShieldRecipes;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.SpecialRecipe;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(ShieldRecipes.class)
-public abstract class MixinShieldRecipes {
+public class OdysseyShieldRecipes extends SpecialRecipe {
+    public OdysseyShieldRecipes(ResourceLocation p_i48160_1_) {
+        super(p_i48160_1_);
+    }
 
     public boolean matches(CraftingInventory inv, World worldIn) {
         ItemStack itemstack = ItemStack.EMPTY;
@@ -27,7 +30,7 @@ public abstract class MixinShieldRecipes {
 
                     itemstack1 = itemstack2;
                 } else {
-                    if (!(itemstack2.getItem() instanceof ShieldItem || itemstack2.getItem() instanceof OdysseyShieldItem)) {
+                    if (!(itemstack2.getItem() instanceof OdysseyShieldItem)) {
                         return false;
                     }
 
@@ -56,7 +59,7 @@ public abstract class MixinShieldRecipes {
             if (!itemstack2.isEmpty()) {
                 if (itemstack2.getItem() instanceof BannerItem) {
                     itemstack = itemstack2;
-                } else if (itemstack2.getItem() instanceof ShieldItem || itemstack2.getItem() instanceof OdysseyShieldItem) {
+                } else if (itemstack2.getItem() instanceof OdysseyShieldItem) {
                     itemstack1 = itemstack2.copy();
                 }
             }
@@ -73,4 +76,11 @@ public abstract class MixinShieldRecipes {
         }
     }
 
+    public boolean canCraftInDimensions(int p_194133_1_, int p_194133_2_) {
+        return p_194133_1_ * p_194133_2_ >= 2;
+    }
+
+    public IRecipeSerializer<?> getSerializer() {
+        return RecipeRegistry.SHIELD_DECORATION.get();
+    }
 }

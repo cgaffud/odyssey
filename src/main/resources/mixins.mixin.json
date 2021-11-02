@@ -16,7 +16,6 @@
     "MixinEnchantmentHelper",
     "MixinPotionUtils",
     "MixinEnchantment",
-    "MixinShieldRecipes",
     "MixinClientPlayerEntity",
     "MixinLayerUtil",
     "MixinServerPlayerEntity",
