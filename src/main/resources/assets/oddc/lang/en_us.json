@@ -336,5 +336,8 @@
   "item.oddc.weaver_spawn_egg": "Weaver Spawn Egg",
   "item.oddc.weaver_string": "Weaver String",
   "item.minecraft.string": "Spider String",
-  "item.oddc.bown": "Bown"
+  "item.oddc.bown": "Bown",
+  "item.oddc.greatroot": "Greatroot",
+  "item.oddc.greatroot_long_bow": "Greatroot Long Bow",
+  "item.oddc.greatroot_sniper_bow": "Greatroot Sniper Bow"
 }

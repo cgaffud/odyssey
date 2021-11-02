@@ -220,4 +220,46 @@ public class Odyssey
     public static void onModelRegistryEvent(final ModelRegistryEvent event) {
         ModelLoader.addSpecialModel(new ModelResourceLocation("oddc:boomerang_in_hand#inventory"));
     }
+
+//    /**
+//     * Changes the max armor value from 20 to 80
+//     */
+//    @SubscribeEvent
+//    public static void onRegisterAttributes(final RegistryEvent.Register<Attribute> event){
+//        ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
+//    }
+//
+//    /**
+//     * Initiates the quiver map
+//     */
+//    @SubscribeEvent
+//    public static void onRegisterContainers(final RegistryEvent.Register<ContainerType<?>> event){
+//        ContainerRegistry.initQuivers();
+//    }
+//
+//    /**
+//     * Initiates spawn eggs
+//     */
+//    @SubscribeEvent
+//    public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
+//        OdysseySpawnEggItem.initSpawnEggs();
+//    }
+//
+//    /**
+//     * Initiates Equipment and EnchantmentUtil
+//     */
+//    @SubscribeEvent
+//    public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
+//        System.out.println("beans");
+//        EquipmentArmorItem.initEquipment();
+//        EquipmentMeleeItem.initEquipment();
+//        EquipmentItem.initEquipment();
+//        EquipmentPickaxeItem.initEquipment();
+//        EquipmentHoeItem.initEquipment();
+//        EquipmentShovelItem.initEquipment();
+//        EquipmentAxeItem.initEquipment();
+//        EquipmentBowItem.initEquipment();
+//
+//        EnchantmentUtil.init();
+//    }
 }

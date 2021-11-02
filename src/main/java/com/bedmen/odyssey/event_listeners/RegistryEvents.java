@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.event_listeners;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.OdysseySpawnEggItem;
 import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.registry.ContainerRegistry;
@@ -12,7 +13,9 @@ import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RegistryEvents {
 
     /**
@@ -44,6 +47,7 @@ public class RegistryEvents {
      */
     @SubscribeEvent
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
+        System.out.println("beans");
         EquipmentArmorItem.initEquipment();
         EquipmentMeleeItem.initEquipment();
         EquipmentItem.initEquipment();

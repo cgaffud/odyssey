@@ -113,6 +113,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MALEVOLENT_QUILL = ITEMS.register("malevolent_quill", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> PURGE_TABLET = ITEMS.register("purge_tablet", () -> new PurgeTabletItem((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.RARE)));
     public static final RegistryObject<Item> WEAVER_STRING = ITEMS.register("weaver_string", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> GREATROOT = ITEMS.register("greatroot", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
 
     //Food
     public static final RegistryObject<Item> LIFE_FRUIT = ITEMS.register("life_fruit", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).food(OdysseyFoods.LIFE_FRUIT)));
@@ -300,8 +301,14 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CROSSBOW = ITEMS_VANILLA.register("crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_COMBAT).durability(326),1.05f, 25));
     public static final RegistryObject<Item> NETHERITE_CROSSBOW = ITEMS.register("netherite_crossbow", () -> new OdysseyCrossbowItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT).durability(862).fireResistant(), 1.15f, 25));
 
+    //Long Bows
+    public static final RegistryObject<Item> GREATROOT_LONG_BOW = ITEMS.register("greatroot_long_bow", () -> new EquipmentBowItem((new Item.Properties()).durability(500).tab(OdysseyItemGroup.COMBAT),1.15f, 20, new LevEnchSup(EnchantmentRegistry.PIERCING, 1)));
+
+    //Sniper Bows
+    public static final RegistryObject<Item> GREATROOT_SNIPER_BOW = ITEMS.register("greatroot_sniper_bow", () -> new EquipmentBowItem((new Item.Properties()).durability(500).tab(OdysseyItemGroup.COMBAT),1.14286f, 20, new LevEnchSup(EnchantmentRegistry.SUPER_CHARGE, 1)));
+
     //Repeaters
-    public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new RepeaterItem((new Item.Properties()).durability(250).tab(ItemGroup.TAB_COMBAT),0.5f, 20, new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 3)));
+    public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new RepeaterItem((new Item.Properties()).durability(250).tab(OdysseyItemGroup.COMBAT),0.7f, 10, new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 1)));
 
     //Quivers
     public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE_QUIVER));
