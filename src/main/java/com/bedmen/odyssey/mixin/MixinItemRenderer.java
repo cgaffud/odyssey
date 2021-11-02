@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.OdysseyTridentItem;
-import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -15,7 +14,6 @@ import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
-import net.minecraft.util.HandSide;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,17 +35,6 @@ public abstract class MixinItemRenderer{
     public static IVertexBuilder getFoilBuffer(IRenderTypeBuffer bufferIn, RenderType renderTypeIn, boolean isItemIn, boolean glintIn) {return null;}
     @Shadow
     public void renderModelLists(IBakedModel modelIn, ItemStack stack, int combinedLightIn, int combinedOverlayIn, MatrixStack matrixStackIn, IVertexBuilder bufferIn) {}
-
-    public void renderStatic(@Nullable LivingEntity livingEntityIn, ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean lefthand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, @Nullable World worldIn, int combinedLightIn, int combinedOverlayIn) {
-        boolean offhand = false;
-        if(livingEntityIn != null){
-            offhand = lefthand ^ livingEntityIn.getMainArm() == HandSide.LEFT;
-        }
-        if (!itemStackIn.isEmpty() && !(itemStackIn.getItem() instanceof QuiverItem && offhand)) {
-            IBakedModel ibakedmodel = this.getModel(itemStackIn, worldIn, livingEntityIn);
-            this.render(itemStackIn, transformTypeIn, lefthand, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, ibakedmodel);
-        }
-    }
 
     public void render(ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean leftHand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn, IBakedModel modelIn) {
         if (!itemStackIn.isEmpty()) {
