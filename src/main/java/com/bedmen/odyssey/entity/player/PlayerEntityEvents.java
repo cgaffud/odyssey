@@ -2,12 +2,24 @@ package com.bedmen.odyssey.entity.player;
 
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.TieredItem;
+import net.minecraft.util.Util;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class PlayerEntityEvents {
 
@@ -33,11 +45,46 @@ public class PlayerEntityEvents {
         }
     }
 
+    /**
+     * Sets player health to the appropriate level upon respawn based don life fruits eaten
+     */
     @SubscribeEvent
     public static void PlayerEvent$PlayerRespawnEventListener(final PlayerEvent.PlayerRespawnEvent event){
         PlayerEntity playerEntity =  event.getPlayer();
         if(playerEntity instanceof IOdysseyPlayer && !playerEntity.level.isClientSide){
             playerEntity.setHealth(20.0f + 2.0f * ((IOdysseyPlayer) playerEntity).getLifeFruits());
+        }
+    }
+
+    public static final List<Block> BLOCKS = Util.make(new ArrayList<>(), (list) -> {
+        list.add(Blocks.DIAMOND_BLOCK);
+        list.add(Blocks.DIAMOND_ORE);
+        list.add(Blocks.OBSIDIAN);
+        list.add(Blocks.CRYING_OBSIDIAN);
+        list.add(Blocks.NETHERITE_BLOCK);
+        list.add(Blocks.ANCIENT_DEBRIS);
+        list.add(Blocks.RESPAWN_ANCHOR);
+    });
+
+    /**
+     * Requires the specified blocks to have an additional level of harvest-tier than they normally do in vanilla
+     */
+    @SubscribeEvent
+    public static void PlayerEvent$HarvestCheckListener(final PlayerEvent.HarvestCheck event){
+        BlockState blockState = event.getTargetBlock();
+        Block block = blockState.getBlock();
+        if(BLOCKS.contains(block)){
+            ItemStack itemStack = event.getPlayer().getMainHandItem();
+            Item item = itemStack.getItem();
+            if(item instanceof TieredItem){
+                int harvestLevel = ((TieredItem)item).getTier().getLevel();
+                Set<ToolType> toolTypesSet = item.getToolTypes(itemStack);
+                if(block.getHarvestLevel(blockState) + 1 <= harvestLevel && toolTypesSet.contains(block.getHarvestTool(blockState))){
+                    event.setCanHarvest(true);
+                } else {
+                    event.setCanHarvest(false);
+                }
+            }
         }
     }
 }
