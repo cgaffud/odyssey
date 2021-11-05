@@ -23,7 +23,6 @@ public class EquipmentItem extends Item implements IEquipment {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
-    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
     public EquipmentItem(Item.Properties builderIn, LevEnchSup... levEnchSups) {
         super(builderIn.rarity(OdysseyRarity.EQUIPMENT));

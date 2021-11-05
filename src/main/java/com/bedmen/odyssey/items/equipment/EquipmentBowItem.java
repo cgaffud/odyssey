@@ -21,7 +21,6 @@ public class EquipmentBowItem extends OdysseyBowItem implements IEquipment {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentBowItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
-    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
     public EquipmentBowItem(Item.Properties builder, float velocity, int chargeTime, LevEnchSup... levEnchSups) {
         super(builder.rarity(OdysseyRarity.EQUIPMENT), velocity, chargeTime);

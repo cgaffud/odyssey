@@ -38,7 +38,6 @@ public class EquipmentMeleeItem extends TieredItem implements IVanishable, IEqui
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentMeleeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
-    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
     public EquipmentMeleeItem(IItemTier tier, float attackDamageIn, float attackSpeedIn, Properties builderIn, LevEnchSup... levEnchSups) {
         super(tier, builderIn.rarity(OdysseyRarity.EQUIPMENT));

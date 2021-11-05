@@ -29,7 +29,6 @@ public class EquipmentArmorItem extends ArmorItem implements IEquipment {
     protected final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected final Map<Enchantment, Tuple<Integer, String>> setBonusMap = new HashMap<>();
     protected static final List<EquipmentArmorItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
-    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
     public EquipmentArmorItem(OdysseyArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties properties, LevEnchSup... levEnchSups) {
         super(armorMaterial, slotType, properties.rarity(OdysseyRarity.EQUIPMENT));

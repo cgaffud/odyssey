@@ -310,6 +310,10 @@ public class ItemRegistry {
     //Repeaters
     public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new RepeaterItem((new Item.Properties()).durability(250).tab(OdysseyItemGroup.COMBAT),0.7f, 10, new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 1)));
 
+    //Slug Bows
+
+    //Shot Bows
+
     //Quivers
     public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE_QUIVER));
     public static final RegistryObject<Item> RABBIT_HIDE_ROCKET_BAG = ITEMS.register("rabbit_hide_rocket_bag", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE_ROCKET_BAG));

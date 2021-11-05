@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.items.equipment;
 
+import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.SwordItem;
 
@@ -7,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public interface IEquipment {
+
+    LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
     default int getInnateEnchantmentLevel(Enchantment e) {
         return 0;

@@ -22,7 +22,6 @@ public class EquipmentPickaxeItem extends PickaxeItem implements IEquipment {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentPickaxeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
-    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
     public EquipmentPickaxeItem(IItemTier tier, float damage, float attackSpeed, Item.Properties properties, LevEnchSup... levEnchSups) {
         super(tier, (int)damage, attackSpeed, properties.rarity(OdysseyRarity.EQUIPMENT));
