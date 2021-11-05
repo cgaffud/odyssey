@@ -7,7 +7,7 @@ again = True
 while(again):
     crossbowID = input("Input crossbowID: ")
     langName = input("Lang File Item Name: ")
-    crossbowPath = 'oddc:item/'+bowID
+    crossbowPath = 'oddc:item/'+crossbowID
 
     bowModel = {
     "parent": "item/generated",
