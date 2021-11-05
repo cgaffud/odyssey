@@ -311,6 +311,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new RepeaterItem((new Item.Properties()).durability(250).tab(OdysseyItemGroup.COMBAT),0.7f, 10, new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 1)));
 
     //Slug Bows
+    public static final RegistryObject<Item> GREATROOT_SLUG_BOW = ITEMS.register("greatroot_slug_bow", () -> new EquipmentCrossbowItem((new Item.Properties()).durability(500).tab(OdysseyItemGroup.COMBAT),1.25f, 25, new LevEnchSup(EnchantmentRegistry.PUNCH_ARROWS, 1)));
 
     //Shot Bows
     public static final RegistryObject<Item> GREATROOT_SHOT_BOW = ITEMS.register("greatroot_shot_bow", () -> new EquipmentCrossbowItem((new Item.Properties()).durability(500).tab(OdysseyItemGroup.COMBAT),1.25f, 25, new LevEnchSup(EnchantmentRegistry.MULTISHOT, 1)));
