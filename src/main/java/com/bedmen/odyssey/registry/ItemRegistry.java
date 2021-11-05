@@ -114,6 +114,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> PURGE_TABLET = ITEMS.register("purge_tablet", () -> new PurgeTabletItem((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).stacksTo(1).rarity(Rarity.RARE)));
     public static final RegistryObject<Item> WEAVER_STRING = ITEMS.register("weaver_string", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> GREATROOT = ITEMS.register("greatroot", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> SILVER_STRING = ITEMS.register("silver_string", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> MULTI_CORD = ITEMS.register("multi_cord", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
 
     //Food
     public static final RegistryObject<Item> LIFE_FRUIT = ITEMS.register("life_fruit", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).food(OdysseyFoods.LIFE_FRUIT)));

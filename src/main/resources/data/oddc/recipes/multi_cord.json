@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "oddc:weaver_string"
+    },
+    {
+      "item": "oddc:clover"
+    }
+  ],
+  "result": {
+    "item": "oddc:multi_cord",
+    "count": 1
+  }
+}

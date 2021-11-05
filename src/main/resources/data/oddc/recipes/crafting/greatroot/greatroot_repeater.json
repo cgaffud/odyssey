@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " AB",
+    "A B",
+    " AB"
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:greatroot"
+    },
+    "B": {
+      "item": "oddc:silver_string"
+    }
+  },
+  "result": {
+    "item": "oddc:greatroot_repeater"
+  }
+}

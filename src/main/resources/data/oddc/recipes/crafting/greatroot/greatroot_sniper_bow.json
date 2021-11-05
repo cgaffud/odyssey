@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAB",
+    "C B",
+    "AAB"
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:greatroot"
+    },
+    "B": {
+      "item": "minecraft:string"
+    },
+    "C": {
+      "item": "oddc:copper_ingot"
+    }
+  },
+  "result": {
+    "item": "oddc:greatroot_sniper_bow"
+  }
+}
