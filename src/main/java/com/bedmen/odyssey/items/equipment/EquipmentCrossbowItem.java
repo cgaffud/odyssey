@@ -4,6 +4,7 @@ import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.items.OdysseyCrossbowItem;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
@@ -22,7 +23,7 @@ public class EquipmentCrossbowItem extends OdysseyCrossbowItem implements IEquip
     protected static final List<EquipmentCrossbowItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
     public EquipmentCrossbowItem(Item.Properties propertiesIn, float velocity, int chargeTime, LevEnchSup... levEnchSups) {
-        super(propertiesIn, velocity, chargeTime);
+        super(propertiesIn.rarity(OdysseyRarity.EQUIPMENT), velocity, chargeTime);
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);

@@ -47,7 +47,6 @@ public class RegistryEvents {
      */
     @SubscribeEvent
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
-        System.out.println("beans");
         EquipmentArmorItem.initEquipment();
         EquipmentMeleeItem.initEquipment();
         EquipmentItem.initEquipment();
@@ -56,6 +55,7 @@ public class RegistryEvents {
         EquipmentShovelItem.initEquipment();
         EquipmentAxeItem.initEquipment();
         EquipmentBowItem.initEquipment();
+        EquipmentCrossbowItem.initEquipment();
 
         EnchantmentUtil.init();
     }

@@ -313,6 +313,7 @@ public class ItemRegistry {
     //Slug Bows
 
     //Shot Bows
+    public static final RegistryObject<Item> GREATROOT_SHOT_BOW = ITEMS.register("greatroot_shot_bow", () -> new EquipmentCrossbowItem((new Item.Properties()).durability(500).tab(OdysseyItemGroup.COMBAT),1.25f, 25, new LevEnchSup(EnchantmentRegistry.MULTISHOT, 1)));
 
     //Quivers
     public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.COMBAT), QuiverItem.QuiverType.RABBIT_HIDE_QUIVER));

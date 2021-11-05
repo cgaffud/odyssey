@@ -9,7 +9,7 @@ while(again):
     langName = input("Lang File Item Name: ")
     crossbowPath = 'oddc:item/'+crossbowID
 
-    bowModel = {
+    crossbowModel = {
     "parent": "item/generated",
     "textures": {
         "layer0": "%s/standby" % (crossbowPath)
@@ -41,34 +41,34 @@ while(again):
             "predicate": {
                 "pulling": 1
             },
-            "model": "%s/pulling_0" % (crossbowPath)
+            "model": "%s_pulling_0" % (crossbowPath)
         },
         {
             "predicate": {
                 "pulling": 1,
                 "pull": 0.58
             },
-            "model": "%s/pulling_1" % (crossbowPath)
+            "model": "%s_pulling_1" % (crossbowPath)
         },
         {
             "predicate": {
                 "pulling": 1,
                 "pull": 1.0
             },
-            "model": "%s/pulling_2" % (crossbowPath)
+            "model": "%s_pulling_2" % (crossbowPath)
         },
         {
             "predicate": {
                 "charged": 1
             },
-            "model": "%s/arrow" % (crossbowPath)
+            "model": "%s_arrow" % (crossbowPath)
         },
         {
             "predicate": {
                 "charged": 1,
                 "firework": 1
             },
-            "model": "%s/firework" % (crossbowPath)
+            "model": "%s_firework" % (crossbowPath)
         }
     ]
 }
