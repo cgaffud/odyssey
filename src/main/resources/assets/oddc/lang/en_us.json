@@ -344,5 +344,9 @@
   "item.oddc.greatroot_slug_bow": "Greatroot Slug Bow",
   "item.oddc.greatroot_repeater": "Greatroot Repeater",
   "item.oddc.silver_string": "Silver String",
-  "item.oddc.multi_cord": "Multi Cord"
+  "item.oddc.multi_cord": "Multi Cord",
+  "item.oddc.electrum_ingot": "Electrum Ingot",
+  "item.oddc.electrum_nugget": "Electrum Nugget",
+  "item.oddc.electrum_string": "Electrum String",
+  "block.oddc.electrum_block": "Electrum Block"
 }
