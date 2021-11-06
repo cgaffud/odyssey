@@ -314,7 +314,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATROOT_SNIPER_BOW = ITEMS.register("greatroot_sniper_bow", () -> new EquipmentBowItem((new Item.Properties()).durability(500).tab(OdysseyItemGroup.COMBAT),1.14286f, 20, new LevEnchSup(EnchantmentRegistry.SUPER_CHARGE, 1)));
 
     //Repeaters
-    public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new RepeaterItem((new Item.Properties()).durability(250).tab(OdysseyItemGroup.COMBAT),0.7f, 10, new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 1)));
+    public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new RepeaterItem((new Item.Properties()).durability(250).tab(OdysseyItemGroup.COMBAT),0.7f, 10, new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 1), new LevEnchSup(EnchantmentRegistry.PUNCH_ARROWS, 1), new LevEnchSup(EnchantmentRegistry.PIERCING, 1)));
     public static final RegistryObject<Item> GREATROOT_REPEATER = ITEMS.register("greatroot_repeater", () -> new RepeaterItem((new Item.Properties()).durability(500).tab(OdysseyItemGroup.COMBAT),1.0f, 20, new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 2)));
 
     //Slug Bows

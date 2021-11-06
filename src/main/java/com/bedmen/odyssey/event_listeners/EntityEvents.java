@@ -20,11 +20,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -35,20 +33,27 @@ public class EntityEvents {
 
     @SubscribeEvent
     public static void entityJoinWorldEventListener(final EntityJoinWorldEvent event){
-        Entity entity = event.getEntity();
+        if(!event.getWorld().isClientSide){
+            Entity entity = event.getEntity();
 
-        //Update Max Health Attribute for Player
-        if(entity instanceof IOdysseyPlayer && !event.getWorld().isClientSide){
-            IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)entity;
-            PlayerEntity playerEntity = (PlayerEntity)entity;
-            PacketDistributor.PacketTarget packetTarget = PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) entity);
-            int lifeFruits = playerPermanentBuffs.getLifeFruits();
-            //Sync Client
-            OdysseyNetwork.CHANNEL.send(packetTarget, new PermanentBuffsPacket(lifeFruits));
-            //Increase max health
-            ModifiableAttributeInstance modifiableattributeinstance = playerEntity.getAttributes().getInstance(Attributes.MAX_HEALTH);
-            if (modifiableattributeinstance != null) {
-                modifiableattributeinstance.setBaseValue(20.0d + 2.0d*lifeFruits);
+            //Update Max Health Attribute for Player
+            if(entity instanceof IOdysseyPlayer){
+                IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)entity;
+                PlayerEntity playerEntity = (PlayerEntity)entity;
+                PacketDistributor.PacketTarget packetTarget = PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) entity);
+                int lifeFruits = playerPermanentBuffs.getLifeFruits();
+                //Sync Client
+                OdysseyNetwork.CHANNEL.send(packetTarget, new PermanentBuffsPacket(lifeFruits));
+                //Increase max health
+                ModifiableAttributeInstance modifiableattributeinstance = playerEntity.getAttributes().getInstance(Attributes.MAX_HEALTH);
+                if (modifiableattributeinstance != null) {
+                    modifiableattributeinstance.setBaseValue(20.0d + 2.0d*lifeFruits);
+                }
+            }
+
+            //Skeleton
+            if(entity instanceof SkeletonEntity){
+                reassessSkeletonWeaponGoal((SkeletonEntity)entity);
             }
         }
     }
@@ -73,12 +78,6 @@ public class EntityEvents {
 //    }
 
     @SubscribeEvent
-    public static void BlockEvent$EntityPlaceEventListener(final ProjectileImpactEvent event){
-        Entity entity = event.getEntity();
-        World level = event.getEntity().level;
-    }
-
-    @SubscribeEvent
     public static void livingSpawnEvent$SpecialSpawnListener(final LivingSpawnEvent.SpecialSpawn event){
         Entity entity = event.getEntity();
         if(entity instanceof SkeletonEntity){
@@ -91,11 +90,9 @@ public class EntityEvents {
                 return;
             }
 
-            if(skeletonEntity.getRandom().nextFloat() < 0.05f){
+            if(skeletonEntity.getRandom().nextFloat() < 1f){
                 entity.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
             }
-
-            reassessSkeletonWeaponGoal(skeletonEntity);
         }
     }
 
@@ -116,7 +113,6 @@ public class EntityEvents {
             } else {
                 skeletonEntity.goalSelector.addGoal(4, skeletonEntity.meleeGoal);
             }
-
         }
     }
 }
