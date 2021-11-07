@@ -12,6 +12,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.play.server.SChangeGameStatePacket;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -23,6 +26,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import java.util.Arrays;
 
 public abstract class OdysseyAbstractArrowEntity extends AbstractArrowEntity {
+    private static final DataParameter<Byte> LOOTING_LEVEL = EntityDataManager.defineId(AbstractArrowEntity.class, DataSerializers.BYTE);
 
     protected OdysseyAbstractArrowEntity(EntityType<? extends OdysseyAbstractArrowEntity> type, World world) {
         super(type, world);
@@ -34,6 +38,19 @@ public abstract class OdysseyAbstractArrowEntity extends AbstractArrowEntity {
 
     protected OdysseyAbstractArrowEntity(EntityType<? extends OdysseyAbstractArrowEntity> type, LivingEntity livingEntity, World world) {
         super(type, livingEntity, world);
+    }
+
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(LOOTING_LEVEL, (byte)0);
+    }
+
+    public void setLootingLevel(byte b) {
+        this.entityData.set(LOOTING_LEVEL, b);
+    }
+
+    public byte getLootingLevel() {
+        return this.entityData.get(LOOTING_LEVEL);
     }
 
     protected void onHitEntity(EntityRayTraceResult p_213868_1_) {
@@ -104,6 +121,7 @@ public abstract class OdysseyAbstractArrowEntity extends AbstractArrowEntity {
 
                 if (!entity.isAlive() && this.piercedAndKilledEntities != null) {
                     this.piercedAndKilledEntities.add(livingentity);
+
                 }
 
                 if (!this.level.isClientSide && entity1 instanceof ServerPlayerEntity) {

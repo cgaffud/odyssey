@@ -65,6 +65,7 @@ public class BoomerangItem extends EquipmentItem implements IVanishable, INeedsT
                         player.broadcastBreakEvent(entityLiving.getUsedItemHand());
                     });
                     BoomerangEntity boomerangEntity = new BoomerangEntity(worldIn, playerentity, stack);
+                    boomerangEntity.setLootingLevel((byte)this.getInnateEnchantmentLevel(EnchantmentRegistry.MOB_LOOTING.get()));
                     float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerentity);
                     boomerangEntity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, this.shootSpeed(), inaccuracy);
                     if (playerentity.abilities.instabuild) {
@@ -136,6 +137,7 @@ public class BoomerangItem extends EquipmentItem implements IVanishable, INeedsT
 
     public enum BoomerangType{
         BONE(5.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png")),
+        CHARMED(5.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/charmed_boomerang.png")),
         COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
 
         private final double damage;

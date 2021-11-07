@@ -351,5 +351,21 @@
   "block.oddc.electrum_block": "Electrum Block",
   "item.oddc.bone_long_bow": "Bone Long Bow",
   "item.oddc.bone_repeater": "Bone Repeater",
-  "item.oddc.bone_slug_bow": "Bone Slug Bow"
+  "item.oddc.bone_slug_bow": "Bone Slug Bow",
+  "item.oddc.charmed_pickaxe": "Charmed Pickaxe",
+  "item.oddc.charmed_axe": "Charmed Axe",
+  "item.oddc.charmed_shovel": "Charmed Shovel",
+  "item.oddc.charmed_hoe": "Charmed Hoe",
+  "item.oddc.charmed_sword": "Charmed Sword",
+  "item.oddc.charmed_bat": "Charmed Bat",
+  "item.oddc.charmed_hammer": "Charmed Hammer",
+  "item.oddc.charmed_battle_axe": "Charmed Battle Axe",
+  "item.oddc.charmed_sabre": "Charmed Sabre",
+  "item.oddc.charmed_hatchet": "Charmed Hatchet",
+  "item.oddc.charmed_bow": "Charmed Bow",
+  "item.oddc.charmed_crossbow": "Charmed Crossbow",
+  "item.oddc.charmed_slug_bow": "Charmed Slug Bow",
+  "item.oddc.charmed_long_bow": "Charmed Long Bow",
+  "item.oddc.charmed_repeater": "Charmed Repeater",
+  "item.oddc.charmed_boomerang": "Charmed Boomerang"
 }

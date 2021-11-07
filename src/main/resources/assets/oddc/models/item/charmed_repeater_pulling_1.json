@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/charmed_repeater",
+  "textures": {
+    "layer0": "oddc:item/charmed_repeater/pulling_1"
+  }
+}

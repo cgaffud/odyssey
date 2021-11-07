@@ -90,7 +90,7 @@ public class EntityEvents {
                 return;
             }
 
-            if(skeletonEntity.getRandom().nextFloat() < 1f){
+            if(skeletonEntity.getRandom().nextFloat() < 0.05f){
                 entity.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
             }
         }

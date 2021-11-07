@@ -2,6 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.enchantment.ObsidianWalkerEnchantment;
 import com.bedmen.odyssey.entity.IZephyrArmorEntity;
+import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.equipment.ZephyrArmorItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
@@ -24,6 +25,7 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -39,19 +41,20 @@ import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEntity {
@@ -202,6 +205,16 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     protected boolean shouldRemoveSoulSpeed(BlockState p_230295_1_) {return false;}
     @Shadow
     protected void actuallyHurt(DamageSource p_70665_1_, float p_70665_2_) {}
+    @Shadow
+    protected void dropEquipment() {}
+    @Shadow
+    protected void dropExperience() {}
+    @Shadow
+    protected void dropCustomDeathLoot(DamageSource p_213333_1_, int p_213333_2_, boolean p_213333_3_) {}
+    @Shadow
+    protected void dropFromLootTable(DamageSource p_213354_1_, boolean p_213354_2_) {}
+    @Shadow
+    protected boolean shouldDropLoot() {return false;}
 
     private int zephyrArmorTicks = -1;
 
@@ -746,7 +759,28 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         return airSupply;
     }
 
+    protected void dropAllDeathLoot(DamageSource damageSource) {
+        Entity entity = damageSource.getEntity();
 
+        int i = net.minecraftforge.common.ForgeHooks.getLootingLevel(this, entity, damageSource);
+        if(damageSource.getMsgId().equals("boomerang")){
+            i = Integer.max(i, ((BoomerangEntity)damageSource.getDirectEntity()).getLootingLevel());
+        }
+        this.captureDrops(new java.util.ArrayList<>());
+
+        boolean flag = this.lastHurtByPlayerTime > 0;
+        if (this.shouldDropLoot() && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            this.dropFromLootTable(damageSource, flag);
+            this.dropCustomDeathLoot(damageSource, i, flag);
+        }
+
+        this.dropEquipment();
+        this.dropExperience();
+
+        Collection<ItemEntity> drops = captureDrops(null);
+        if (!net.minecraftforge.common.ForgeHooks.onLivingDrops(getLivingEntity(), damageSource, drops, i, lastHurtByPlayerTime > 0))
+            drops.forEach(e -> level.addFreshEntity(e));
+    }
     
     public int getZephyrArmorTicks(){
         return this.zephyrArmorTicks;

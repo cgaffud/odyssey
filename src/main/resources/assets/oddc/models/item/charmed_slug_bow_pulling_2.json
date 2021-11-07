@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/charmed_slug_bow",
+  "textures": {
+    "layer0": "oddc:item/charmed_slug_bow/pulling_2"
+  }
+}

@@ -24,7 +24,7 @@ public interface IEquipment {
         return 0;
     }
 
-    default boolean isSwordLike(){
+    default boolean canSweep(){
         return this instanceof SwordItem;
     }
 }
