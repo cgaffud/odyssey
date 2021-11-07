@@ -1,11 +1,15 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.boss.AbandonedIronGolemEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.entity.item.OdysseyBoatEntity;
-import com.bedmen.odyssey.entity.monster.*;
+import com.bedmen.odyssey.entity.monster.ArctihornEntity;
+import com.bedmen.odyssey.entity.monster.BabySkeletonEntity;
+import com.bedmen.odyssey.entity.monster.LupineEntity;
+import com.bedmen.odyssey.entity.monster.WeaverEntity;
 import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrowEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyTridentEntity;
@@ -34,9 +38,10 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<WeaverEntity>> WEAVER = ENTITY_TYPE.register("weaver", () -> EntityType.Builder.<WeaverEntity>of(WeaverEntity::new, EntityClassification.MONSTER).sized(1.4F, 0.8F).clientTrackingRange(10).build(new ResourceLocation("weaver").toString()));
 
     //Bosses
+    public static final RegistryObject<EntityType<AbandonedIronGolemEntity>> ABANDONED_IRON_GOLEM = ENTITY_TYPE.register("abandoned_iron_golem", () -> EntityType.Builder.<AbandonedIronGolemEntity>of(AbandonedIronGolemEntity::new, EntityClassification.MISC).sized(1.4F, 2.7F).clientTrackingRange(20).build(new ResourceLocation("abandoned_iron_golem").toString()));
     public static final RegistryObject<EntityType<MineralLeviathanEntity>> MINERAL_LEVIATHAN = ENTITY_TYPE.register("mineral_leviathan", () -> EntityType.Builder.<MineralLeviathanEntity>of(MineralLeviathanEntity::new, EntityClassification.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(20).build(new ResourceLocation("mineral_leviathan").toString()));
     public static final RegistryObject<EntityType<MineralLeviathanBodyEntity>> MINERAL_LEVIATHAN_BODY = ENTITY_TYPE.register("mineral_leviathan_body", () -> EntityType.Builder.<MineralLeviathanBodyEntity>of(MineralLeviathanBodyEntity::new, EntityClassification.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(20).build(new ResourceLocation("mineral_leviathan_body").toString()));
-    public static final RegistryObject<EntityType<PermafrostEntity>> PERMAFROST = ENTITY_TYPE.register("permafrost", () -> EntityType.Builder.<PermafrostEntity>of(PermafrostEntity::new, EntityClassification.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(10).build(new ResourceLocation("permafrost").toString()));
+    public static final RegistryObject<EntityType<PermafrostEntity>> PERMAFROST = ENTITY_TYPE.register("permafrost", () -> EntityType.Builder.<PermafrostEntity>of(PermafrostEntity::new, EntityClassification.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(20).build(new ResourceLocation("permafrost").toString()));
 
     //Projectiles
     public static final RegistryObject<EntityType<OdysseyTridentEntity>> TRIDENT = ENTITY_TYPE.register("trident", () -> EntityType.Builder.<OdysseyTridentEntity>of(OdysseyTridentEntity::new, EntityClassification.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("trident").toString()));

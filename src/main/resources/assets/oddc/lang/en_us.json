@@ -367,5 +367,7 @@
   "item.oddc.charmed_slug_bow": "Charmed Slug Bow",
   "item.oddc.charmed_long_bow": "Charmed Long Bow",
   "item.oddc.charmed_repeater": "Charmed Repeater",
-  "item.oddc.charmed_boomerang": "Charmed Boomerang"
+  "item.oddc.charmed_boomerang": "Charmed Boomerang",
+  "entity.oddc.abandoned_iron_golem": "Abandoned Iron Golem",
+  "block.oddc.abandoned_iron_golem": "Abandoned Iron Golem"
 }

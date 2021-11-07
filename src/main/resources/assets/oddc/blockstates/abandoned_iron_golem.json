@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "oddc:block/abandoned_iron_golem_upper"
+    },
+    "half=lower": {
+      "model": "oddc:block/abandoned_iron_golem_lower"
+    }
+  }
+}

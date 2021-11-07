@@ -68,6 +68,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> AUTUMN_LEAVES_ORANGE = ITEMS.register("autumn_leaves_orange", () -> new BlockItem(BlockRegistry.AUTUMN_LEAVES_ORANGE.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
     public static final RegistryObject<Item> AUTUMN_LEAVES_YELLOW = ITEMS.register("autumn_leaves_yellow", () -> new BlockItem(BlockRegistry.AUTUMN_LEAVES_YELLOW.get(), (new Item.Properties()).tab(ItemGroup.TAB_DECORATIONS)));
 
+    public static final RegistryObject<Item> ABANDONED_IRON_GOLEM = ITEMS.register("abandoned_iron_golem", () -> new TallBlockItem(BlockRegistry.ABANDONED_IRON_GOLEM.get(), (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
+
     public static final RegistryObject<Item> PALM_PLANKS = ITEMS.register("palm_planks", () -> new BlockItem(BlockRegistry.PALM_PLANKS.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> PALM_SAPLING = ITEMS.register("palm_sapling", () -> new BlockItem(BlockRegistry.PALM_SAPLING.get(), (new Item.Properties()).tab(OdysseyItemGroup.DECORATION_BLOCKS)));
     public static final RegistryObject<Item> PALM_LOG = ITEMS.register("palm_log", () -> new BlockItem(BlockRegistry.PALM_LOG.get(), (new Item.Properties()).tab(OdysseyItemGroup.BUILDING_BLOCKS)));
