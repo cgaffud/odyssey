@@ -348,5 +348,8 @@
   "item.oddc.electrum_ingot": "Electrum Ingot",
   "item.oddc.electrum_nugget": "Electrum Nugget",
   "item.oddc.electrum_string": "Electrum String",
-  "block.oddc.electrum_block": "Electrum Block"
+  "block.oddc.electrum_block": "Electrum Block",
+  "item.oddc.bone_long_bow": "Bone Long Bow",
+  "item.oddc.bone_repeater": "Bone Repeater",
+  "item.oddc.bone_slug_bow": "Bone Slug Bow"
 }

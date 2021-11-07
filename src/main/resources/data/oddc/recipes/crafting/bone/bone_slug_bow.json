@@ -7,19 +7,19 @@
   ],
   "key": {
     "A": {
-      "item": "oddc:greatroot"
+      "item": "minecraft:bone"
     },
     "B": {
       "item": "oddc:weaver_string"
     },
     "C": {
-      "item": "minecraft:obsidian"
+      "item": "oddc:copper_ingot"
     },
     "D": {
       "item": "minecraft:tripwire_hook"
     }
   },
   "result": {
-    "item": "oddc:greatroot_slug_bow"
+    "item": "oddc:bone_slug_bow"
   }
 }
