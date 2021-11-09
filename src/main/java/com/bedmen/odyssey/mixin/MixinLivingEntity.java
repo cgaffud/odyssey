@@ -216,6 +216,10 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     @Shadow
     protected boolean shouldDropLoot() {return false;}
 
+    @Shadow protected abstract int decreaseAirSupply(int p_70682_1_);
+
+    @Shadow public abstract void aiStep();
+
     private int zephyrArmorTicks = -1;
 
     public boolean hurt(DamageSource source, float amount) {
@@ -416,11 +420,10 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
             //Drowns extra with drowning curse
             int drowningAmount = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DROWNING.get(), getLivingEntity());
             //Checks if player is in lava too
-            boolean inLava = this.isEyeInFluid(FluidTags.LAVA);
-            drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || inLava) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
+            drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
             if (drowningAmount > 0) {
                 if (!this.canBreatheUnderwater() && !EffectUtils.hasWaterBreathing((LivingEntity) (Object) this) && !flag1) {
-                    this.setAirSupply(this.decreaseAirSupply(this.getAirSupply(), drowningAmount, inLava));
+                    this.setAirSupply(this.decreaseAirSupply(this.getAirSupply(), drowningAmount));
                     if (this.getAirSupply() <= -20) {
                         this.setAirSupply(0);
                         Vector3d vector3d = this.getDeltaMovement();
@@ -743,18 +746,9 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         }
     }
 
-    protected int decreaseAirSupply(int airSupply, int drowningAmount, boolean inLava) {
-        int i;
-        if(inLava){
-            i = EnchantmentUtil.getPyropneumatic(getLivingEntity());
-        } else {
-            i = EnchantmentUtil.getRespiration(getLivingEntity());
-        }
-        if(i == 0){
-            return airSupply - drowningAmount;
-        }
+    protected int decreaseAirSupply(int airSupply, int drowningAmount) {
         for(int j = 0; j < drowningAmount ; j++){
-            airSupply -= this.random.nextInt(i + 1) > 0 ? 0 : 1;
+            airSupply = this.decreaseAirSupply(airSupply);
         }
         return airSupply;
     }

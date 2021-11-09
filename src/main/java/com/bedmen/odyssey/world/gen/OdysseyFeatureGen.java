@@ -24,6 +24,7 @@ public class OdysseyFeatureGen {
 
     // Single Generating Features
     public static ConfiguredFeature<?, ?> PERMAFROST_TOWER;
+    public static ConfiguredFeature<?, ?> ABANDONED_IRON_GOLEM;
     public static ConfiguredFeature<?, ?> FOG;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> AUTUMN_TREE_RED;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> AUTUMN_TREE_ORANGE;
@@ -35,7 +36,8 @@ public class OdysseyFeatureGen {
     public static ConfiguredFeature<?,?> PALM_TREES;
 
     public static void registerFeatures() {
-        PERMAFROST_TOWER = featureGen(FeatureRegistry.PERMAFROST_TOWER);
+        PERMAFROST_TOWER = featureGen(FeatureRegistry.PERMAFROST_TOWER, 1);
+        ABANDONED_IRON_GOLEM = featureGen(FeatureRegistry.ABANDONED_IRON_GOLEM, 1);
 
         FOG = FeatureRegistry.FOG.get().configured(IFeatureConfig.NONE);
 
@@ -57,6 +59,7 @@ public class OdysseyFeatureGen {
         } else if (event.getCategory() == Biome.Category.THEEND) {
 
         } else {
+            gen.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, ABANDONED_IRON_GOLEM);
             gen.addFeature(GenerationStage.Decoration.TOP_LAYER_MODIFICATION, FOG);
             if(event.getName().toString().equals("minecraft:ice_spikes")) {
                 gen.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, PERMAFROST_TOWER);
@@ -73,8 +76,8 @@ public class OdysseyFeatureGen {
         }
     }
 
-    private static ConfiguredFeature<?, ?> featureGen(RegistryObject<Feature<NoFeatureConfig>> feature){
-        return feature.get().configured(IFeatureConfig.NONE).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(1);
+    private static ConfiguredFeature<?, ?> featureGen(RegistryObject<Feature<NoFeatureConfig>> feature, int count){
+        return feature.get().configured(IFeatureConfig.NONE).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(count);
     }
 
 }
