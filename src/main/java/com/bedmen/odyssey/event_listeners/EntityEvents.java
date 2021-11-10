@@ -31,7 +31,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Random;
 
-@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
 
     @SubscribeEvent
