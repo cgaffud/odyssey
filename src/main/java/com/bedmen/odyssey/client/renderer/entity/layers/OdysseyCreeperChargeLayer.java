@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.client.renderer.entity.layers;
 
-import com.bedmen.odyssey.client.renderer.entity.model.AbstractCreeperModel;
-import com.bedmen.odyssey.entity.monster.AbstractCreeperEntity;
+import com.bedmen.odyssey.client.renderer.entity.model.OdysseyCreeperModel;
+import com.bedmen.odyssey.entity.monster.OdysseyCreeperEntity;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.EnergyLayer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -10,11 +10,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class AbstractCreeperChargeLayer extends EnergyLayer<AbstractCreeperEntity, AbstractCreeperModel<AbstractCreeperEntity>> {
+public class OdysseyCreeperChargeLayer<T extends OdysseyCreeperEntity> extends EnergyLayer<T, OdysseyCreeperModel<T>> {
     private static final ResourceLocation POWER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    private final AbstractCreeperModel<AbstractCreeperEntity> model = new AbstractCreeperModel<>(2.0F);
+    private final OdysseyCreeperModel<T> model = new OdysseyCreeperModel<>(2.0F);
 
-    public AbstractCreeperChargeLayer(IEntityRenderer<AbstractCreeperEntity, AbstractCreeperModel<AbstractCreeperEntity>> p_i50947_1_) {
+    public OdysseyCreeperChargeLayer(IEntityRenderer<T, OdysseyCreeperModel<T>> p_i50947_1_) {
         super(p_i50947_1_);
     }
 
@@ -26,7 +26,7 @@ public class AbstractCreeperChargeLayer extends EnergyLayer<AbstractCreeperEntit
         return POWER_LOCATION;
     }
 
-    protected EntityModel<AbstractCreeperEntity> model() {
+    protected EntityModel<T> model() {
         return this.model;
     }
 }

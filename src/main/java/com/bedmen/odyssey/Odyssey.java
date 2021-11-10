@@ -136,7 +136,8 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_CREEPER.get(), AbstractCreeperRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
 
         //Boss Renderings
@@ -186,6 +187,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonEntity.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeperEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperEntity.createAttributes().build());
         event.put(EntityTypeRegistry.WEAVER.get(), WeaverEntity.createAttributes().build());
 
         //Bosses

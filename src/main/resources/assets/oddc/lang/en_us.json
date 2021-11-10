@@ -371,5 +371,7 @@
   "entity.oddc.abandoned_iron_golem": "Abandoned Iron Golem",
   "block.oddc.abandoned_iron_golem": "Abandoned Iron Golem",
   "entity.oddc.baby_creeper": "Baby Creeper",
-  "item.oddc.baby_creeper_spawn_egg": "Baby Creeper Spawn Egg"
+  "item.oddc.baby_creeper_spawn_egg": "Baby Creeper Spawn Egg",
+  "entity.oddc.camo_creeper": "Camo Creeper",
+  "item.oddc.camo_creeper_spawn_egg": "Camo Creeper Spawn Egg"
 }

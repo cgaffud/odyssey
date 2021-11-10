@@ -1,16 +1,16 @@
 package com.bedmen.odyssey.entity.ai;
 
-import com.bedmen.odyssey.entity.monster.AbstractCreeperEntity;
+import com.bedmen.odyssey.entity.monster.OdysseyCreeperEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-public class AbstractCreeperSwellGoal extends Goal {
-    private final AbstractCreeperEntity creeper;
+public class OdysseyCreeperSwellGoal extends Goal {
+    private final OdysseyCreeperEntity creeper;
     private LivingEntity target;
 
-    public AbstractCreeperSwellGoal(AbstractCreeperEntity p_i1655_1_) {
+    public OdysseyCreeperSwellGoal(OdysseyCreeperEntity p_i1655_1_) {
         this.creeper = p_i1655_1_;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }

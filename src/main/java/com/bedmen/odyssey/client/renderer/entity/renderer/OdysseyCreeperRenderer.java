@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.client.renderer.entity.renderer;
 
-import com.bedmen.odyssey.client.renderer.entity.layers.AbstractCreeperChargeLayer;
-import com.bedmen.odyssey.client.renderer.entity.model.AbstractCreeperModel;
-import com.bedmen.odyssey.entity.monster.AbstractCreeperEntity;
+import com.bedmen.odyssey.client.renderer.entity.layers.OdysseyCreeperChargeLayer;
+import com.bedmen.odyssey.client.renderer.entity.model.OdysseyCreeperModel;
+import com.bedmen.odyssey.entity.monster.OdysseyCreeperEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -13,12 +13,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class AbstractCreeperRenderer extends MobRenderer<AbstractCreeperEntity, AbstractCreeperModel<AbstractCreeperEntity>> {
-    private static final ResourceLocation CREEPER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper.png");
+public class OdysseyCreeperRenderer<T extends OdysseyCreeperEntity> extends MobRenderer<T, OdysseyCreeperModel<T>> {
+    protected static final ResourceLocation CREEPER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper.png");
 
-    public AbstractCreeperRenderer(EntityRendererManager p_i46186_1_) {
-        super(p_i46186_1_, new AbstractCreeperModel<>(), 0.5F);
-        this.addLayer(new AbstractCreeperChargeLayer(this));
+    public OdysseyCreeperRenderer(EntityRendererManager p_i46186_1_) {
+        super(p_i46186_1_, new OdysseyCreeperModel<>(), 0.5F);
+        this.addLayer(new OdysseyCreeperChargeLayer<>(this));
     }
 
     protected void scale(CreeperEntity pLivingEntity, MatrixStack pMatrixStack, float pPartialTickTime) {
@@ -32,7 +32,7 @@ public class AbstractCreeperRenderer extends MobRenderer<AbstractCreeperEntity, 
         pMatrixStack.scale(f2, f3, f2);
     }
 
-    protected float getWhiteOverlayProgress(AbstractCreeperEntity pLivingEntity, float pPartialTicks) {
+    protected float getWhiteOverlayProgress(T pLivingEntity, float pPartialTicks) {
         float f = pLivingEntity.getSwelling(pPartialTicks);
         return (int)(f * 10.0F) % 2 == 0 ? 0.0F : MathHelper.clamp(f, 0.5F, 1.0F);
     }
@@ -40,7 +40,7 @@ public class AbstractCreeperRenderer extends MobRenderer<AbstractCreeperEntity, 
     /**
      * Returns the location of an entity's texture.
      */
-    public ResourceLocation getTextureLocation(AbstractCreeperEntity pEntity) {
+    public ResourceLocation getTextureLocation(T pEntity) {
         return CREEPER_LOCATION;
     }
 }

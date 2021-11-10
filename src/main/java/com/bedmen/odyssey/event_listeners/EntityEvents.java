@@ -103,6 +103,12 @@ public class EntityEvents {
             CreeperEntity creeperEntity = (CreeperEntity)entity;
             Random random = creeperEntity.getRandom();
 
+            if(random.nextFloat() < getCamoChance(creeperEntity.level.getDifficulty())){
+                EntityTypeRegistry.CAMO_CREEPER.get().spawn((ServerWorld)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
+                event.setCanceled(true);
+                return;
+            }
+
             if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
                 EntityTypeRegistry.BABY_CREEPER.get().spawn((ServerWorld)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
                 event.setCanceled(true);
@@ -128,6 +134,17 @@ public class EntityEvents {
             } else {
                 skeletonEntity.goalSelector.addGoal(4, skeletonEntity.meleeGoal);
             }
+        }
+    }
+
+    public static float getCamoChance(Difficulty difficulty){
+        switch(difficulty){
+            case HARD:
+                return 1f;
+            case NORMAL:
+                return 0.5f;
+            default:
+                return 0f;
         }
     }
 }

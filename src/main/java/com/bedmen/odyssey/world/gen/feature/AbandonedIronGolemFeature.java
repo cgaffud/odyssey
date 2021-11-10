@@ -21,7 +21,7 @@ public class AbandonedIronGolemFeature extends Feature<NoFeatureConfig> {
 
     public boolean place(ISeedReader seedReader, ChunkGenerator chunkGenerator, Random random, BlockPos pos, NoFeatureConfig noFeatureConfig) {
 
-        if(random.nextInt(100) != 0)
+        if(random.nextInt(400) != 0)
             return false;
         while(seedReader.isEmptyBlock(pos) && pos.getY() > 2) {
             pos = pos.below();

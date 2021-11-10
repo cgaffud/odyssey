@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class AbstractCreeperModel<T extends Entity> extends AgeableModel<T> {
+public class OdysseyCreeperModel<T extends Entity> extends AgeableModel<T> {
     private final ModelRenderer head;
     private final ModelRenderer hair;
     private final ModelRenderer body;
@@ -19,7 +19,7 @@ public class AbstractCreeperModel<T extends Entity> extends AgeableModel<T> {
     private final ModelRenderer leg2;
     private final ModelRenderer leg3;
 
-    public AbstractCreeperModel() {
+    public OdysseyCreeperModel() {
         this(0.0F);
     }
 
@@ -30,10 +30,10 @@ public class AbstractCreeperModel<T extends Entity> extends AgeableModel<T> {
 
     @Override
     protected Iterable<ModelRenderer> bodyParts() {
-        return ImmutableList.of(this.body, this.hair, this.leg0, this.leg1, this.leg2, this.leg3);
+        return ImmutableList.of(this.body, this.leg0, this.leg1, this.leg2, this.leg3);
     }
 
-    public AbstractCreeperModel(float p_i46366_1_) {
+    public OdysseyCreeperModel(float p_i46366_1_) {
         super(RenderType::entityCutoutNoCull, true, 16.0F, 0.0F, 2.0F, 2.0F, 24.0F);
         int i = 6;
         this.head = new ModelRenderer(this, 0, 0);
