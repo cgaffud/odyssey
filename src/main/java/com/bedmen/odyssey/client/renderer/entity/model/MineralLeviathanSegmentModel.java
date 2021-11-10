@@ -2,15 +2,12 @@ package com.bedmen.odyssey.client.renderer.entity.model;
 
 import com.bedmen.odyssey.entity.boss.MineralLeviathanSegmentEntity;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
 public class MineralLeviathanSegmentModel extends SegmentedModel<MineralLeviathanSegmentEntity> {
     private final ImmutableList<ModelRenderer> modelRendererImmutableList;
     private final ModelRenderer innerSegment;
-    private MineralLeviathanSegmentEntity entity;
 
     public MineralLeviathanSegmentModel() {
         this.texWidth = 128;
@@ -24,7 +21,9 @@ public class MineralLeviathanSegmentModel extends SegmentedModel<MineralLeviatha
     }
 
     public void prepareMobModel(MineralLeviathanSegmentEntity entity, float p_212843_2_, float p_212843_3_, float p_212843_4_) {
-        this.entity = entity;
+        this.innerSegment.yRot = entity.getYRot() * (float)Math.PI / -180f;
+        this.innerSegment.xRot = entity.getXRot() * (float)Math.PI / -180f;
+        this.innerSegment.y = 8.0f;
     }
 
     @Override
@@ -33,14 +32,5 @@ public class MineralLeviathanSegmentModel extends SegmentedModel<MineralLeviatha
     }
 
     public void setupAnim(MineralLeviathanSegmentEntity p_225597_1_, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
-    }
-
-    public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
-        matrixStack.pushPose();
-        this.innerSegment.yRot = this.entity.getYRot() * (float)Math.PI / -180f;
-        this.innerSegment.xRot = this.entity.getXRot() * (float)Math.PI / -180f;
-        this.innerSegment.y = 8.0f;
-        matrixStack.popPose();
-        super.renderToBuffer(matrixStack, vertexBuilder, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
     }
 }
