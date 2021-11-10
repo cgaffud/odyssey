@@ -394,6 +394,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ARCTIHORN_SPAWN_EGG = ITEMS.register("arctihorn_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.ARCTIHORN, 0x6e7d90, 0x8ab5eb, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
     public static final RegistryObject<Item> LUPINE_SPAWN_EGG = ITEMS.register("lupine_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.LUPINE, 0x000000, 0x000000, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
     public static final RegistryObject<Item> BABY_SKELETON_SPAWN_EGG = ITEMS.register("baby_skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BABY_SKELETON, 12698049, 4802889, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
+    public static final RegistryObject<Item> BABY_CREEPER_SPAWN_EGG = ITEMS.register("baby_creeper_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BABY_CREEPER, 894731, 0, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
     public static final RegistryObject<Item> WEAVER_SPAWN_EGG = ITEMS.register("weaver_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WEAVER, 0x442512, 0x0096ea, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
 
     // Vanilla

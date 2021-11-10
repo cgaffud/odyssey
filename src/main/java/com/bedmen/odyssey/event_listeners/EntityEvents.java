@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
+import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -95,6 +96,17 @@ public class EntityEvents {
 
             if(skeletonEntity.getRandom().nextFloat() < 0.05f){
                 entity.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
+            }
+        }
+
+        else if(entity instanceof CreeperEntity){
+            CreeperEntity creeperEntity = (CreeperEntity)entity;
+            Random random = creeperEntity.getRandom();
+
+            if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
+                EntityTypeRegistry.BABY_CREEPER.get().spawn((ServerWorld)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
+                event.setCanceled(true);
+                return;
             }
         }
     }

@@ -11,10 +11,7 @@ import com.bedmen.odyssey.entity.boss.AbandonedIronGolemEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
-import com.bedmen.odyssey.entity.monster.ArctihornEntity;
-import com.bedmen.odyssey.entity.monster.BabySkeletonEntity;
-import com.bedmen.odyssey.entity.monster.LupineEntity;
-import com.bedmen.odyssey.entity.monster.WeaverEntity;
+import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.potions.OdysseyPotions;
@@ -139,6 +136,7 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_CREEPER.get(), AbstractCreeperRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
 
         //Boss Renderings
@@ -187,6 +185,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
         event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeperEntity.createAttributes().build());
         event.put(EntityTypeRegistry.WEAVER.get(), WeaverEntity.createAttributes().build());
 
         //Bosses

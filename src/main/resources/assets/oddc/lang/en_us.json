@@ -312,7 +312,7 @@
   "item.oddc.copper_boomerang": "Copper Boomerang",
   "entity.oddc.boomerang": "Boomerang",
   "item.oddc.bone_boomerang": "Bonerang",
-  "entity.oddc.baby_skeleton": "Skeleton",
+  "entity.oddc.baby_skeleton": "Baby Skeleton",
   "item.oddc.baby_skeleton_spawn_egg": "Baby Skeleton Spawn Egg",
   "item.oddc.shield.damage_block": "Damage Block: ",
   "item.oddc.shield.recovery_time": "Recovery Time: ",
@@ -369,5 +369,7 @@
   "item.oddc.charmed_repeater": "Charmed Repeater",
   "item.oddc.charmed_boomerang": "Charmed Boomerang",
   "entity.oddc.abandoned_iron_golem": "Abandoned Iron Golem",
-  "block.oddc.abandoned_iron_golem": "Abandoned Iron Golem"
+  "block.oddc.abandoned_iron_golem": "Abandoned Iron Golem",
+  "entity.oddc.baby_creeper": "Baby Creeper",
+  "item.oddc.baby_creeper_spawn_egg": "Baby Creeper Spawn Egg"
 }
