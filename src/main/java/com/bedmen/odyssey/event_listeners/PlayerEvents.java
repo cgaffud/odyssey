@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.event_listeners;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -17,11 +18,13 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PlayerEvents {
 
     /**

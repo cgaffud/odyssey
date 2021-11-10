@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.world.gen;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -15,7 +16,9 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class OdysseyOreGen {
 
     public static ConfiguredFeature<?, ?> SAPPHIRE_ORE_FEATURE;

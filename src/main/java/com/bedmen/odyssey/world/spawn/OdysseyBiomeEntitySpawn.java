@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.world.spawn;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.world.biome.Biome;
@@ -7,9 +8,11 @@ import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class OdysseyBiomeEntitySpawn {
 
     public static MobSpawnInfo.Spawners LUPINE_SPANWER;

@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.event_listeners;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.OdysseyBowItem;
@@ -25,10 +26,12 @@ import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Random;
 
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EntityEvents {
 
     @SubscribeEvent

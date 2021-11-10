@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.event_listeners;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.layers.AmuletLayer;
 import com.bedmen.odyssey.client.renderer.entity.layers.OdysseyElytraLayer;
 import com.bedmen.odyssey.client.renderer.entity.layers.OdysseyHeldItemLayer;
@@ -26,9 +27,11 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RenderEvents {
 
     /**

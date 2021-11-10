@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.world.gen;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.FeatureRegistry;
 import com.bedmen.odyssey.world.gen.feature.tree.LeaningTrunkPlacer;
@@ -19,7 +20,9 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class OdysseyFeatureGen {
 
     // Single Generating Features

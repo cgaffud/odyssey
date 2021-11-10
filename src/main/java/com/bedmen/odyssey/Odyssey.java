@@ -15,7 +15,6 @@ import com.bedmen.odyssey.entity.monster.ArctihornEntity;
 import com.bedmen.odyssey.entity.monster.BabySkeletonEntity;
 import com.bedmen.odyssey.entity.monster.LupineEntity;
 import com.bedmen.odyssey.entity.monster.WeaverEntity;
-import com.bedmen.odyssey.event_listeners.*;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.potions.OdysseyPotions;
@@ -68,15 +67,6 @@ public class Odyssey
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(RegistryEvents.class);
-        MinecraftForge.EVENT_BUS.register(EntityEvents.class);
-        MinecraftForge.EVENT_BUS.register(PlayerEvents.class);
-        MinecraftForge.EVENT_BUS.register(RenderEvents.class);
-        MinecraftForge.EVENT_BUS.register(GuiContainerEvents.class);
-        MinecraftForge.EVENT_BUS.register(OdysseyBiomeEntitySpawn.class);
-        MinecraftForge.EVENT_BUS.register(OdysseyStructureEntitySpawn.class);
-        MinecraftForge.EVENT_BUS.register(OdysseyFeatureGen.class);
-        MinecraftForge.EVENT_BUS.register(OdysseyOreGen.class);
 
         BlockRegistry.init();
         ItemRegistry.init();
