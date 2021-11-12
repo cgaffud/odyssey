@@ -41,10 +41,12 @@ import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -218,7 +220,7 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
 
     @Shadow protected abstract int decreaseAirSupply(int p_70682_1_);
 
-    @Shadow public abstract void aiStep();
+//    @Shadow public abstract void aiStep();
 
     private int zephyrArmorTicks = -1;
 
@@ -775,7 +777,51 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         if (!net.minecraftforge.common.ForgeHooks.onLivingDrops(getLivingEntity(), damageSource, drops, i, lastHurtByPlayerTime > 0))
             drops.forEach(e -> level.addFreshEntity(e));
     }
-    
+
+    @Shadow
+    private int noJumpDelay;
+    @Shadow
+    protected int lerpSteps;
+    @Shadow
+    protected double lerpX;
+    @Shadow
+    protected double lerpY;
+    @Shadow
+    protected double lerpZ;
+    @Shadow
+    protected double lerpYRot;
+    @Shadow
+    protected double lerpXRot;
+    @Shadow
+    protected int lerpHeadSteps;
+    @Shadow
+    protected double lyHeadRot;
+    @Shadow
+    protected boolean isImmobile() {return false;}
+    @Shadow
+    protected void jumpInLiquid(ITag<Fluid> pFluidTag) {}
+    @Shadow
+    protected void serverAiStep() {}
+    @Shadow
+    public float xxa;
+    @Shadow
+    public float yya;
+    @Shadow
+    public float zza;
+    @Shadow
+    protected void jumpFromGround() {}
+    @Shadow
+    protected int autoSpinAttackTicks;
+    @Shadow
+    public boolean isSensitiveToWater() {return false;}
+    @Shadow
+    protected void checkAutoSpinAttack(AxisAlignedBB p_204801_1_, AxisAlignedBB p_204801_2_) {}
+    @Shadow
+    protected void pushEntities() {}
+
+
+
+
     public int getZephyrArmorTicks(){
         return this.zephyrArmorTicks;
     }

@@ -1,8 +1,12 @@
 package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.items.equipment.EquipmentPickaxeItem;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.item.Item;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.nbt.CompoundNBT;
@@ -16,14 +20,13 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.*;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Random;
 
 public abstract class MineralLeviathanSegmentEntity extends BossEntity {
-    protected static final DataParameter<Float> DATA_YROT_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
-    protected static final DataParameter<Float> DATA_XROT_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected static final DataParameter<String> DATA_SHELL_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.STRING);
     protected static final DataParameter<Float> DATA_SHELL_HEALTH_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected boolean initBody = false;
@@ -36,12 +39,11 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         this.setHealth(this.getMaxHealth());
         this.noPhysics = true;
         this.setNoGravity(true);
+        this.lookControl = new MineralLeviathanSegmentLookController(this);
     }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_YROT_ID, 0.0f);
-        this.entityData.define(DATA_XROT_ID, 0.0f);
         this.entityData.define(DATA_SHELL_ID, "COPPER");
         this.entityData.define(DATA_SHELL_HEALTH_ID, 0.0f);
     }
@@ -78,7 +80,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
                 AxisAlignedBB axisAlignedBB = new AxisAlignedBB(this.getX()-1.0d,this.getY(),this.getZ()-1.0d,this.getX()+1.0d,this.getY()+2.0d,this.getZ()+1.0d);
                 List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, axisAlignedBB);
                 for(LivingEntity livingEntity : livingEntityList){
-                    if(!(livingEntity instanceof MineralLeviathanEntity) && !(livingEntity instanceof MineralLeviathanBodyEntity) && this.isAlive()){
+                    if(!(livingEntity instanceof MineralLeviathanHeadEntity) && !(livingEntity instanceof MineralLeviathanBodyEntity) && this.isAlive()){
                         livingEntity.hurt(DamageSource.mobAttack(this).setScalesWithDifficulty(), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
                     }
                 }
@@ -91,25 +93,9 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
     protected void setRotation(Vector3d vector3d) {
         float f = MathHelper.sqrt(Entity.getHorizontalDistanceSqr(vector3d));
         if (vector3d.lengthSqr() != 0.0D) {
-            this.setYRot((float)(MathHelper.atan2(vector3d.x, vector3d.z) * (double)(180F / (float)Math.PI)));
-            this.setXRot((float)(MathHelper.atan2(f, vector3d.y) * (double)(180F / (float)Math.PI) * -1.0f + 90.0f));
+            this.yRot = (float)(MathHelper.atan2(vector3d.x, vector3d.z) * (double)(180F / (float)Math.PI));
+            this.xRot = (float)(MathHelper.atan2(f, vector3d.y) * (double)(180F / (float)Math.PI) * -1.0f + 90.0f);
         }
-    }
-
-    public void setYRot(float f) {
-        this.entityData.set(DATA_YROT_ID, f);
-    }
-
-    public float getYRot() {
-        return this.entityData.get(DATA_YROT_ID);
-    }
-
-    public void setXRot(float f) {
-        this.entityData.set(DATA_XROT_ID, f);
-    }
-
-    public float getXRot() {
-        return this.entityData.get(DATA_XROT_ID);
     }
 
     public void setShellType(String s) {
@@ -134,20 +120,12 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
 
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.putFloat("TrueYRot", this.getYRot());
-        compoundNBT.putFloat("TrueXRot", this.getXRot());
         compoundNBT.putString("ShellType", this.getShellType().name());
         compoundNBT.putFloat("ShellHealth", this.getShellHealth());
     }
 
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
-        if(compoundNBT.contains("TrueYRot")){
-            this.setYRot(compoundNBT.getFloat("TrueYRot"));
-        }
-        if(compoundNBT.contains("TrueXRot")){
-            this.setXRot(compoundNBT.getFloat("TrueXRot"));
-        }
         if(compoundNBT.contains("ShellType")){
             this.setShellType(compoundNBT.getString("ShellType"));
         }
@@ -213,12 +191,22 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         }
 
         public float getShellMaxHealth(){
-            return this.percentageHealth * (float)MineralLeviathanEntity.BASE_HEALTH;
+            return this.percentageHealth * (float) MineralLeviathanHeadEntity.BASE_HEALTH;
         }
 
         public static ShellType getRandomShellType(Random random){
             ShellType[] values = ShellType.values();
             return values[random.nextInt(values.length-1)+1];
+        }
+    }
+
+    class MineralLeviathanSegmentLookController extends LookController {
+        MineralLeviathanSegmentLookController(MobEntity p_i225729_2_) {
+            super(p_i225729_2_);
+        }
+
+        protected boolean resetXRotOnTick() {
+            return false;
         }
     }
 }

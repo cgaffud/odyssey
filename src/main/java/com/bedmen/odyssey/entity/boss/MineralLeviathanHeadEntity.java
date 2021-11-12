@@ -28,9 +28,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
+public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
     private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(60.0D).selector(BossEntity.ENTITY_SELECTOR);
-    protected static final DataParameter<List<Integer>> DATA_BODY_ID = EntityDataManager.defineId(MineralLeviathanEntity.class, OdysseyDataSerializers.INT_LIST);
+    protected static final DataParameter<List<Integer>> DATA_BODY_ID = EntityDataManager.defineId(MineralLeviathanHeadEntity.class, OdysseyDataSerializers.INT_LIST);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
     private Phase phase = Phase.IDLE;
     private int passingTimer;
@@ -43,7 +43,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     public MineralLeviathanBodyEntity[] bodyEntities = new MineralLeviathanBodyEntity[NUM_SEGMENTS-1];
     public UUID[] bodyEntityUUIDs = new UUID[NUM_SEGMENTS-1];
 
-    public MineralLeviathanEntity(EntityType<? extends MineralLeviathanEntity> entityType, World world) {
+    public MineralLeviathanHeadEntity(EntityType<? extends MineralLeviathanHeadEntity> entityType, World world) {
         super(entityType, world);
         if(!this.level.isClientSide){
             this.setShellType(ShellType.RUBY);
@@ -56,7 +56,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
         if(this.bodyEntityUUIDs[0] == null){
             Vector3d headPosition = this.getPosition(1.0f);
             Vector3d loweringVector = new Vector3d(0.0d,-1.0d, 0.0d);
-            this.setXRot(90.0f);
+            this.xRot = 90.0f;
             for(int i = 0; i < this.bodyEntities.length; i++){
                 if(i == 0){
                     this.bodyEntities[i] = new MineralLeviathanBodyEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), this.level, this, this);
@@ -64,7 +64,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
                     this.bodyEntities[i] = new MineralLeviathanBodyEntity(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), this.level, this, this.bodyEntities[i-1]);
                 }
                 this.bodyEntities[i].moveTo(headPosition.add(loweringVector.scale(i)));
-                this.bodyEntities[i].setXRot(90.0f);
+                this.bodyEntities[i].xRot = 90.0f;
                 this.bodyEntityUUIDs[i] = this.bodyEntities[i].getUUID();
                 this.level.addFreshEntity(this.bodyEntities[i]);
             }
@@ -75,7 +75,7 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     }
 
     protected void registerGoals() {
-        this.targetSelector.addGoal(1, new MineralLeviathanEntity.HurtByTargetGoal(this));
+        this.targetSelector.addGoal(1, new MineralLeviathanHeadEntity.HurtByTargetGoal(this));
     }
 
     protected void defineSynchedData() {
@@ -216,10 +216,10 @@ public class MineralLeviathanEntity extends MineralLeviathanSegmentEntity {
     }
 
     protected void rotateTowards(float dYRot, float dXRot, double speed){
-        this.setYRot(this.getYRot() + dYRot);
-        this.setXRot(this.getXRot() + dXRot);
-        float yRotRadians = this.getYRot() * (float)Math.PI / 180f;
-        float xRotRadians = this.getXRot() * (float)Math.PI / 180f;
+        this.yRot += dYRot;
+        this.xRot += dXRot;
+        float yRotRadians = this.yRot * (float)Math.PI / 180f;
+        float xRotRadians = this.xRot * (float)Math.PI / 180f;
         double x = MathHelper.sin(yRotRadians) * MathHelper.cos(xRotRadians) * speed;
         double y = MathHelper.sin(xRotRadians) * speed;
         double z = MathHelper.cos(yRotRadians) * MathHelper.cos(xRotRadians) * speed;

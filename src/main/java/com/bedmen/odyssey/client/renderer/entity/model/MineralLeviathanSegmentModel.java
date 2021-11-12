@@ -4,6 +4,7 @@ import com.bedmen.odyssey.entity.boss.MineralLeviathanSegmentEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.math.MathHelper;
 
 public class MineralLeviathanSegmentModel extends SegmentedModel<MineralLeviathanSegmentEntity> {
     private final ImmutableList<ModelRenderer> modelRendererImmutableList;
@@ -20,17 +21,14 @@ public class MineralLeviathanSegmentModel extends SegmentedModel<MineralLeviatha
         this.modelRendererImmutableList = builder.build();
     }
 
-    public void prepareMobModel(MineralLeviathanSegmentEntity entity, float p_212843_2_, float p_212843_3_, float p_212843_4_) {
-        this.innerSegment.yRot = entity.getYRot() * (float)Math.PI / -180f;
-        this.innerSegment.xRot = entity.getXRot() * (float)Math.PI / -180f;
-        this.innerSegment.y = 8.0f;
-    }
-
     @Override
     public Iterable<ModelRenderer> parts() {
         return this.modelRendererImmutableList;
     }
 
-    public void setupAnim(MineralLeviathanSegmentEntity p_225597_1_, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
+    public void setupAnim(MineralLeviathanSegmentEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+        this.innerSegment.yRot = MathHelper.rotLerp(pAgeInTicks % 1.0f, pEntity.yRotO, pEntity.yRot) * (float)Math.PI / -90f; //Game automatically rotates models the wrong way based on yrot, so we rotate them back by double
+        this.innerSegment.xRot = MathHelper.rotLerp(pAgeInTicks % 1.0f, pEntity.xRotO, pEntity.xRot) * (float)Math.PI / -180f;
+        this.innerSegment.y = 8.0f;
     }
 }

@@ -9,7 +9,7 @@ import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.container.QuiverContainer;
 import com.bedmen.odyssey.entity.boss.AbandonedIronGolemEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
-import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
+import com.bedmen.odyssey.entity.boss.MineralLeviathanHeadEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
@@ -192,7 +192,7 @@ public class Odyssey
 
         //Bosses
         event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemEntity.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadEntity.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyEntity.createAttributes().build());
         event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
     }
