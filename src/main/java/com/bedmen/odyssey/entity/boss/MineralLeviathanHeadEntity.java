@@ -2,12 +2,11 @@ package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,12 +18,18 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.*;
+import net.minecraft.world.BossInfo;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -289,14 +294,6 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
         this.passingTimer = compoundNBT.getInt("PassingTimer");
         this.dYRot = compoundNBT.getFloat("DYRot");
         this.dXRot = compoundNBT.getFloat("DXRot");
-    }
-
-    protected void dropCustomDeathLoot(DamageSource damageSource, int p_213333_2_, boolean p_213333_3_) {
-        super.dropCustomDeathLoot(damageSource, p_213333_2_, p_213333_3_);
-        ItemEntity itementity = this.spawnAtLocation(ItemRegistry.RUBY.get());
-        if (itementity != null) {
-            itementity.setExtendedLifetime();
-        }
     }
 
     public void die(DamageSource damageSource) {

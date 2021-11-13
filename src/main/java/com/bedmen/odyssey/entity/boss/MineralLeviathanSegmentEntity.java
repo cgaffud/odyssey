@@ -1,12 +1,15 @@
 package com.bedmen.odyssey.entity.boss;
 
+import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.LookController;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -16,7 +19,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -32,8 +34,6 @@ import java.util.Random;
 public abstract class MineralLeviathanSegmentEntity extends BossEntity implements IEntityAdditionalSpawnData {
     protected static final DataParameter<Float> DATA_SHELL_HEALTH_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected boolean initBody = false;
-    protected float clientSideShellHealth;
-    protected boolean clientSideShellHealthUpdated;
     protected float damageReduction = 1.0f;
     protected ShellType shellType;
 
@@ -58,23 +58,6 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
     }
 
     public void aiStep() {
-        if (this.level.isClientSide) {
-            if(!this.clientSideShellHealthUpdated){
-                this.clientSideShellHealth = this.getShellHealth();
-                this.clientSideShellHealthUpdated = true;
-            }
-            if (!this.isSilent()) {
-                float shellHealth = this.getShellHealth();
-                if(shellHealth != this.clientSideShellHealth){
-                    if(shellHealth <= 0.0f){
-                        this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_BREAK, SoundCategory.HOSTILE, 3.0f, 1.0f, false);
-                    } else {
-                        this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.STONE_BREAK, SoundCategory.HOSTILE, 3.0f, 1.0f, false);
-                    }
-                    this.clientSideShellHealth = shellHealth;
-                }
-            }
-        }
 
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
@@ -156,6 +139,20 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
             if(!this.level.isClientSide){
                 this.setShellHealth(shellHealth - amount * this.getDamageReduction());
             }
+            float newShellHealth = this.getShellHealth();
+            if (newShellHealth != shellHealth && !this.isSilent()) {
+                if(newShellHealth > 0f){
+                    this.playSound(SoundEvents.STONE_BREAK, 1.0F, 1.0F);
+                } else {
+                    this.playSound(SoundEvents.IRON_GOLEM_DAMAGE, 1.0F, 1.0F);
+                    if(!this.level.isClientSide){
+                        ItemEntity itementity = this.spawnAtLocation(this.shellType.getItem());
+                        if (itementity != null) {
+                            itementity.setExtendedLifetime();
+                        }
+                    }
+                }
+            }
             return false;
         } else {
             return this.hurtWithoutShell(damageSource, amount);
@@ -164,6 +161,16 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
 
     protected boolean hurtWithoutShell(DamageSource damageSource, float amount){
         return super.hurt(damageSource, amount);
+    }
+
+    protected void dropCustomDeathLoot(DamageSource damageSource, int p_213333_2_, boolean p_213333_3_) {
+        super.dropCustomDeathLoot(damageSource, p_213333_2_, p_213333_3_);
+        if(this.getShellHealth() > 0f){
+            ItemEntity itementity = this.spawnAtLocation(this.shellType.getItem());
+            if (itementity != null) {
+                itementity.setExtendedLifetime();
+            }
+        }
     }
 
     public Difficulty getDifficulty(){
@@ -185,7 +192,6 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
 
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-        System.out.println(this.getShellType());
         buffer.writeInt(this.getShellType().ordinal());
     }
 
@@ -195,20 +201,22 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
     }
 
     public enum ShellType{
-        RUBY(0.3f),
-        COAL(0.1f),
-        COPPER(0.15f),
-        IRON(0.15f),
-        LAPIS(0.15f),
-        GOLD(0.2f),
-        SILVER(0.2f),
-        EMERALD(0.2f),
-        REDSTONE(0.2f);
+        RUBY(0.3f, ItemRegistry.RUBY.get()),
+        COAL(0.1f, Items.COAL),
+        COPPER(0.15f, ItemRegistry.RAW_COPPER.get()),
+        IRON(0.15f, ItemRegistry.RAW_IRON.get()),
+        LAPIS(0.15f, Items.LAPIS_LAZULI),
+        GOLD(0.2f, ItemRegistry.RAW_GOLD.get()),
+        SILVER(0.2f, ItemRegistry.RAW_SILVER.get()),
+        EMERALD(0.2f, Items.EMERALD),
+        REDSTONE(0.2f, Items.REDSTONE);
 
         private final float percentageHealth;
+        private final Item item;
 
-        ShellType(float percentageHealth){
+        ShellType(float percentageHealth, Item item){
             this.percentageHealth = percentageHealth;
+            this.item = item;
         }
 
         public float getShellMaxHealth(){
@@ -218,6 +226,10 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
         public static ShellType getRandomShellType(Random random){
             ShellType[] values = ShellType.values();
             return values[random.nextInt(values.length-1)+1];
+        }
+
+        public Item getItem(){
+            return this.item;
         }
     }
 
