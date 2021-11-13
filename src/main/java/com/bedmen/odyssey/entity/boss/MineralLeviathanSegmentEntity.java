@@ -118,17 +118,20 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
 
     public boolean hurt(DamageSource damageSource, float amount) {
         Entity entity = damageSource.getEntity();
-        if(entity instanceof LivingEntity){
-            Item item = ((LivingEntity) entity).getItemInHand(Hand.MAIN_HAND).getItem();
-            if(item instanceof PickaxeItem){
-                return this.hurtWithShell(damageSource, amount);
-            }
-        }
         if(damageSource.isExplosion()){
             return this.hurtWithShell(damageSource, amount);
         }
-        if(damageSource == DamageSource.OUT_OF_WORLD){
+        else if(damageSource == DamageSource.OUT_OF_WORLD){
             return super.hurt(damageSource, amount);
+        }
+        else if(entity instanceof LivingEntity){
+            Item item = ((LivingEntity) entity).getItemInHand(Hand.MAIN_HAND).getItem();
+            if(item instanceof PickaxeItem){
+                int harvestLevel = ((PickaxeItem) item).getTier().getLevel();
+                if(this.shellType.getHarvestLevel() <= harvestLevel){
+                    return this.hurtWithShell(damageSource, amount);
+                }
+            }
         }
         return false;
     }
@@ -201,21 +204,23 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
     }
 
     public enum ShellType{
-        RUBY(0.3f, ItemRegistry.RUBY.get()),
-        COAL(0.1f, Items.COAL),
-        COPPER(0.15f, ItemRegistry.RAW_COPPER.get()),
-        IRON(0.15f, ItemRegistry.RAW_IRON.get()),
-        LAPIS(0.15f, Items.LAPIS_LAZULI),
-        GOLD(0.2f, ItemRegistry.RAW_GOLD.get()),
-        SILVER(0.2f, ItemRegistry.RAW_SILVER.get()),
-        EMERALD(0.2f, Items.EMERALD),
-        REDSTONE(0.2f, Items.REDSTONE);
+        RUBY(3, ItemRegistry.RUBY.get()),
+        COAL(0, Items.COAL),
+        COPPER(1, ItemRegistry.RAW_COPPER.get()),
+        IRON(1, ItemRegistry.RAW_IRON.get()),
+        LAPIS(1, Items.LAPIS_LAZULI),
+        GOLD(2, ItemRegistry.RAW_GOLD.get()),
+        SILVER(2, ItemRegistry.RAW_SILVER.get()),
+        EMERALD(2, Items.EMERALD),
+        REDSTONE(2, Items.REDSTONE);
 
+        private final int harvestLevel;
         private final float percentageHealth;
         private final Item item;
 
-        ShellType(float percentageHealth, Item item){
-            this.percentageHealth = percentageHealth;
+        ShellType(int harvestLevel, Item item){
+            this.harvestLevel = harvestLevel;
+            this.percentageHealth = (float)harvestLevel * 0.05f + 0.1f;
             this.item = item;
         }
 
@@ -230,6 +235,10 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
 
         public Item getItem(){
             return this.item;
+        }
+
+        public int getHarvestLevel(){
+            return this.harvestLevel;
         }
     }
 
