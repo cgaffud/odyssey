@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.entity.boss;
 
-import com.bedmen.odyssey.items.equipment.EquipmentPickaxeItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -10,6 +9,8 @@ import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.item.Item;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -22,17 +23,19 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.List;
 import java.util.Random;
 
-public abstract class MineralLeviathanSegmentEntity extends BossEntity {
-    protected static final DataParameter<String> DATA_SHELL_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.STRING);
+public abstract class MineralLeviathanSegmentEntity extends BossEntity implements IEntityAdditionalSpawnData {
     protected static final DataParameter<Float> DATA_SHELL_HEALTH_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected boolean initBody = false;
     protected float clientSideShellHealth;
     protected boolean clientSideShellHealthUpdated;
     protected float damageReduction = 1.0f;
+    protected ShellType shellType;
 
     public MineralLeviathanSegmentEntity(EntityType<? extends MineralLeviathanSegmentEntity> entityType, World world) {
         super(entityType, world);
@@ -44,7 +47,6 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_SHELL_ID, "COPPER");
         this.entityData.define(DATA_SHELL_HEALTH_ID, 0.0f);
     }
 
@@ -98,16 +100,13 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         }
     }
 
-    public void setShellType(String s) {
-        this.entityData.set(DATA_SHELL_ID, s);
-    }
-
     public void setShellType(ShellType shellType) {
-        this.entityData.set(DATA_SHELL_ID, shellType.name());
+        this.shellType = shellType;
+        this.setShellHealth(shellType.getShellMaxHealth());
     }
 
     public ShellType getShellType() {
-        return ShellType.valueOf(this.entityData.get(DATA_SHELL_ID));
+        return this.shellType;
     }
 
     public void setShellHealth(float f) {
@@ -127,7 +126,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
         if(compoundNBT.contains("ShellType")){
-            this.setShellType(compoundNBT.getString("ShellType"));
+            this.setShellType(ShellType.valueOf(compoundNBT.getString("ShellType")));
         }
         if(compoundNBT.contains("ShellHealth")){
             this.setShellHealth(compoundNBT.getFloat("ShellHealth"));
@@ -138,7 +137,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         Entity entity = damageSource.getEntity();
         if(entity instanceof LivingEntity){
             Item item = ((LivingEntity) entity).getItemInHand(Hand.MAIN_HAND).getItem();
-            if(item instanceof PickaxeItem || item instanceof EquipmentPickaxeItem){
+            if(item instanceof PickaxeItem){
                 return this.hurtWithShell(damageSource, amount);
             }
         }
@@ -179,10 +178,32 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         return true;
     }
 
+    @Override
+    public IPacket<?> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public void writeSpawnData(PacketBuffer buffer) {
+        System.out.println(this.getShellType());
+        buffer.writeInt(this.getShellType().ordinal());
+    }
+
+    @Override
+    public void readSpawnData(PacketBuffer additionalData) {
+        this.setShellType(ShellType.values()[additionalData.readInt()]);
+    }
+
     public enum ShellType{
         RUBY(0.3f),
-        COPPER(0.1f),
-        SILVER(0.2f);
+        COAL(0.1f),
+        COPPER(0.15f),
+        IRON(0.15f),
+        LAPIS(0.15f),
+        GOLD(0.2f),
+        SILVER(0.2f),
+        EMERALD(0.2f),
+        REDSTONE(0.2f);
 
         private final float percentageHealth;
 

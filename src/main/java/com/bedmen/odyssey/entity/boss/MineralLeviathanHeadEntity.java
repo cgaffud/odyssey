@@ -45,10 +45,7 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
 
     public MineralLeviathanHeadEntity(EntityType<? extends MineralLeviathanHeadEntity> entityType, World world) {
         super(entityType, world);
-        if(!this.level.isClientSide){
-            this.setShellType(ShellType.RUBY);
-            this.setShellHealth(ShellType.RUBY.getShellMaxHealth());
-        }
+        this.setShellType(ShellType.RUBY);
     }
 
     public ILivingEntityData finalizeSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {

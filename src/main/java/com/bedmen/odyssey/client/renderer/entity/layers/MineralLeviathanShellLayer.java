@@ -17,28 +17,21 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ShellLayer extends LayerRenderer<MineralLeviathanSegmentEntity, MineralLeviathanSegmentModel> {
-    private static final ResourceLocation[] RUBY_SHELL_LOCATION = new ResourceLocation[11];
-    private static final ResourceLocation[] COPPER_SHELL_LOCATION = new ResourceLocation[11];
-    private static final ResourceLocation[] SILVER_SHELL_LOCATION = new ResourceLocation[11];
+public class MineralLeviathanShellLayer extends LayerRenderer<MineralLeviathanSegmentEntity, MineralLeviathanSegmentModel> {
+    private static final ResourceLocation[][] SHELL_LOCATION = new ResourceLocation[9][11];
     private final EntityModel<MineralLeviathanSegmentEntity> model = new MineralLeviathanSegmentModel();
 
     static{
-        RUBY_SHELL_LOCATION[0] = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/mineral_leviathan/ruby_shell.png");
-        for(int i = 0; i < 10; i++){
-            RUBY_SHELL_LOCATION[i+1] = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/mineral_leviathan/ruby_shell_"+i+".png");
-        }
-        COPPER_SHELL_LOCATION[0] = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/mineral_leviathan/copper_shell.png");
-        for(int i = 0; i < 10; i++){
-            COPPER_SHELL_LOCATION[i+1] = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/mineral_leviathan/copper_shell_"+i+".png");
-        }
-        SILVER_SHELL_LOCATION[0] = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/mineral_leviathan/silver_shell.png");
-        for(int i = 0; i < 10; i++){
-            SILVER_SHELL_LOCATION[i+1] = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/mineral_leviathan/silver_shell_"+i+".png");
+        String[] names = new String[]{"ruby","coal","copper","iron","lapis","gold","silver","emerald","redstone"};
+        for(int i = 0; i < SHELL_LOCATION.length; i++){
+            SHELL_LOCATION[i][0] = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/mineral_leviathan/"+names[i]+"_shell.png");
+            for(int j = 1; j < SHELL_LOCATION[0].length; j++){
+                SHELL_LOCATION[i][j] = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/mineral_leviathan/"+names[i]+"_shell_"+(j-1)+".png");
+            }
         }
     }
 
-    public ShellLayer(IEntityRenderer<MineralLeviathanSegmentEntity, MineralLeviathanSegmentModel> p_i50923_1_) {
+    public MineralLeviathanShellLayer(IEntityRenderer<MineralLeviathanSegmentEntity, MineralLeviathanSegmentModel> p_i50923_1_) {
         super(p_i50923_1_);
     }
 
@@ -56,14 +49,7 @@ public class ShellLayer extends LayerRenderer<MineralLeviathanSegmentEntity, Min
     }
 
     public ResourceLocation getTextureLocation(MineralLeviathanSegmentEntity entity) {
-        switch(entity.getShellType()){
-            default:
-                return getTextureLocation(RUBY_SHELL_LOCATION, entity);
-            case COPPER:
-                return getTextureLocation(COPPER_SHELL_LOCATION, entity);
-            case SILVER:
-                return getTextureLocation(SILVER_SHELL_LOCATION, entity);
-        }
+        return getTextureLocation(SHELL_LOCATION[entity.getShellType().ordinal()], entity);
     }
 
     public ResourceLocation getTextureLocation(ResourceLocation[] locations, MineralLeviathanSegmentEntity entity) {

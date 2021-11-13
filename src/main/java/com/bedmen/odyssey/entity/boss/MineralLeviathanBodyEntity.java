@@ -32,15 +32,17 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
         this.head = head;
         this.prevSegment = prevSegment;
         if(head != null){
-            List<UUID> uuidList = new ArrayList<>();
             this.dependencyUUIDs[0] = this.head.getUUID();
             this.dependencyUUIDs[1] = this.prevSegment.getUUID();
             this.setBodyIDs(this.head.getId(), this.prevSegment.getId());
             this.initBody = true;
         }
-        ShellType shellType = ShellType.getRandomShellType(this.random);
-        this.setShellType(shellType);
-        this.setShellHealth(shellType.getShellMaxHealth());
+        if(!this.level.isClientSide){
+            ShellType shellType = ShellType.getRandomShellType(this.random);
+            this.setShellType(shellType);
+        } else {
+            this.setShellType(ShellType.COAL);
+        }
     }
 
     protected void defineSynchedData() {
