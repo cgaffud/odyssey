@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
@@ -36,17 +37,20 @@ import java.util.stream.Stream;
 public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
     private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(60.0D).selector(BossEntity.ENTITY_SELECTOR);
     protected static final DataParameter<List<Integer>> DATA_BODY_ID = EntityDataManager.defineId(MineralLeviathanHeadEntity.class, OdysseyDataSerializers.INT_LIST);
+    protected static final DataParameter<Integer> PHASE = EntityDataManager.defineId(MineralLeviathanHeadEntity.class, DataSerializers.INT);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
-    private Phase phase = Phase.IDLE;
     private int passingTimer;
-    private float dYRot;
-    private float dXRot;
+    private Vector3d randomTargetVelocity = new Vector3d(this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-1d);
     public static final int NUM_SEGMENTS = 20;
     public static final double DAMAGE = 8.0d;
     public static final double DODGE_RANGE = 3.5d;
     public static final double BASE_HEALTH = 150.0d;
     public MineralLeviathanBodyEntity[] bodyEntities = new MineralLeviathanBodyEntity[NUM_SEGMENTS-1];
     public UUID[] bodyEntityUUIDs = new UUID[NUM_SEGMENTS-1];
+    private int mouthAngleTimer;
+    private Phase phaseO = Phase.IDLE;
+    private float mouthAngle;
+    private float mouthAngleO;
 
     public MineralLeviathanHeadEntity(EntityType<? extends MineralLeviathanHeadEntity> entityType, World world) {
         super(entityType, world);
@@ -83,6 +87,7 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_BODY_ID, new ArrayList<>());
+        this.entityData.define(PHASE, 0);
     }
 
     public void setBodyIDs(MineralLeviathanBodyEntity[] bodyEntities) {
@@ -95,6 +100,28 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
 
     public List<Integer> getBodyIDs() {
         return this.entityData.get(DATA_BODY_ID);
+    }
+
+    public void setPhase(Phase phase){
+        this.entityData.set(PHASE, phase.ordinal());
+    }
+
+    public Phase getPhase(){
+        return Phase.values()[this.entityData.get(PHASE)];
+    }
+
+    public float getMouthAngle(){
+        return this.mouthAngle;
+    }
+
+    public float getMouthAngleO(){
+        return this.mouthAngleO;
+    }
+
+    public void adjustMouthAngle(float f){
+        this.mouthAngleO = mouthAngle;
+        float alpha = (float)this.mouthAngleTimer / 10f;
+        this.mouthAngle = this.mouthAngle * (1f-alpha) + f * alpha;
     }
 
     public void setCustomName(@Nullable ITextComponent p_200203_1_) {
@@ -125,6 +152,7 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
 
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
+                Phase phase = this.getPhase();
                 //Choose Target
                 if(this.level.getGameTime() % 19 == 0){
                     LivingEntity target = this.getTarget();
@@ -141,11 +169,11 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
                     // Set Phase based on Target
                     if(list.isEmpty()){
                         this.setTarget(null);
-                        this.phase = Phase.IDLE;
-                    } else if(this.phase == Phase.IDLE || this.phase == Phase.PASSING) {
+                        this.setPhase(Phase.IDLE);
+                    } else if(phase == Phase.IDLE || phase == Phase.PASSING) {
                         setTarget(list.get(this.random.nextInt(list.size())));
-                        if(this.phase == Phase.IDLE){
-                            this.phase = Phase.LOOPING;
+                        if(phase == Phase.IDLE){
+                            this.setPhase(Phase.LOOPING);
                         }
                     }
                 }
@@ -153,25 +181,24 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
 
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.5));
                 LivingEntity target = this.getTarget();
-                switch(this.phase){
+                switch(phase){
 
                     case IDLE:
                         if(this.random.nextInt(80) == 0){
-                            this.dYRot = (this.random.nextFloat() - 0.5f) * 4.0f;
-                            this.dXRot = (this.random.nextFloat() - 0.5f) * 4.0f;
+                            this.randomTargetVelocity = new Vector3d(this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-1d);
                         }
-                        this.rotateTowards(this.dYRot, this.dXRot, 0.1d);
+                        this.rotateTowards(this.randomTargetVelocity, 0.1d, 0.002d);
                         break;
 
                     case CHARGING:
                         if(target != null){
                             this.moveTowards(target.getPosition(1.0f).subtract(this.getPosition(1.0f)), 0.3d);
                             if(this.distanceTo(target) < DODGE_RANGE){
-                                this.phase = Phase.PASSING;
+                                this.setPhase(Phase.PASSING);
                                 this.passingTimer = 20;
                             }
                         } else {
-                            this.phase = Phase.IDLE;
+                            this.setPhase(Phase.IDLE);
                         }
                         break;
 
@@ -179,7 +206,7 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
                         this.passingTimer--;
                         this.moveTowards(this.getDeltaMovement(), 0.3d);
                         if(this.passingTimer <= 0){
-                            this.phase = Phase.LOOPING;
+                            this.setPhase(Phase.LOOPING);
                         }
                         break;
 
@@ -189,14 +216,14 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
                             Vector3d targetVector = target.getPosition(1.0f).subtract(this.getPosition(1.0f));
                             double angle = Math.acos(Math.min(1.0d, movementVector.dot(targetVector) / movementVector.length() / targetVector.length()));
                             if(angle < Math.PI / 8.0d){
-                                this.phase = Phase.CHARGING;
+                                this.setPhase(Phase.CHARGING);
                             } else if(this.distanceToSqr(target) < 9.0d){
-                                this.phase = Phase.PASSING;
+                                this.setPhase(Phase.PASSING);
                                 this.passingTimer = 20;
                             }
-                            this.rotateTowards(getdYRot(movementVector, targetVector), getdXRot(movementVector, targetVector), 0.3d);
+                            this.rotateTowards(target.getPosition(1.0f).subtract(this.getPosition(1.0f)), 0.3d, 0.02d);
                         } else {
-                            this.phase = Phase.IDLE;
+                            this.setPhase(Phase.IDLE);
                         }
                         break;
                 }
@@ -206,6 +233,26 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
                     if(mineralLeviathanBodyEntity != null){
                         mineralLeviathanBodyEntity.hurtTime = this.hurtTime;
                     }
+                }
+
+                Phase phase = this.getPhase();
+                if(phase != this.phaseO){
+                    this.mouthAngleTimer = 0;
+                } else {
+                    this.mouthAngleTimer = Integer.min(this.mouthAngleTimer + 1, 10);
+                }
+                this.phaseO = phase;
+
+                switch(phase){
+                    case IDLE:
+                        this.adjustMouthAngle((MathHelper.sin((float) (Math.PI * this.tickCount / 20f))+0.5f)*50f);
+                        break;
+                    case CHARGING:
+                        this.adjustMouthAngle((MathHelper.sin((float) (Math.PI * this.tickCount / 10f))+0.5f)*50f);
+                        break;
+                    default:
+                        this.adjustMouthAngle(-25f);
+                        break;
                 }
             }
         }
@@ -217,35 +264,9 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
         this.setRotation(this.getDeltaMovement());
     }
 
-    protected void rotateTowards(float dYRot, float dXRot, double speed){
-        this.yRot += dYRot;
-        this.xRot += dXRot;
-        float yRotRadians = this.yRot * (float)Math.PI / 180f;
-        float xRotRadians = this.xRot * (float)Math.PI / 180f;
-        double x = MathHelper.sin(yRotRadians) * MathHelper.cos(xRotRadians) * speed;
-        double y = MathHelper.sin(xRotRadians) * speed;
-        double z = MathHelper.cos(yRotRadians) * MathHelper.cos(xRotRadians) * speed;
-        this.setDeltaMovement(new Vector3d(x,y,z));
-    }
-
-    protected static float getdYRot(Vector3d movementVector, Vector3d targetVector){
-        float theta = (float)(MathHelper.atan2(movementVector.x, movementVector.z) * (double)(180F / (float)Math.PI));
-        float phi = (float)(MathHelper.atan2(targetVector.x, targetVector.z) * (double)(180F / (float)Math.PI));
-        float angleDifference = MathHelper.abs(theta - phi);
-        boolean flag1 = angleDifference < 180f;
-        angleDifference = Math.min(5.0f, angleDifference);
-        boolean flag2 = theta > phi;
-        return flag1 ^ flag2 ? angleDifference : -angleDifference;
-    }
-
-    protected static float getdXRot(Vector3d movementVector, Vector3d targetVector){
-        float theta = (float)(MathHelper.atan2(MathHelper.sqrt(Entity.getHorizontalDistanceSqr(movementVector)), movementVector.y) * (double)(180F / (float)Math.PI) * -1.0f + 90.0f);
-        float phi = (float)(MathHelper.atan2(MathHelper.sqrt(Entity.getHorizontalDistanceSqr(targetVector)), targetVector.y) * (double)(180F / (float)Math.PI) * -1.0f + 90.0f);
-        float angleDifference = MathHelper.abs(theta - phi);
-        boolean flag1 = angleDifference < 180f;
-        angleDifference = Math.min(5.0f, angleDifference);
-        boolean flag2 = theta > phi;
-        return flag1 ^ flag2 ? angleDifference : -angleDifference;
+    protected void rotateTowards(Vector3d vector3d, double acceleration, double rotationRate){
+        this.setDeltaMovement(vector3d.normalize().scale(rotationRate).add(this.getDeltaMovement()).normalize().scale(acceleration));
+        this.setRotation(this.getDeltaMovement());
     }
 
     protected void customServerAiStep() {
@@ -270,10 +291,11 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
         for(int i = 0; i < this.bodyEntityUUIDs.length; i++){
             compoundNBT.putUUID("BodyUUID"+i, this.bodyEntityUUIDs[i]);
         }
-        compoundNBT.putString("Phase", this.phase.toString());
+        compoundNBT.putString("Phase", this.getPhase().name());
         compoundNBT.putInt("PassingTimer", this.passingTimer);
-        compoundNBT.putFloat("DYRot", this.dYRot);
-        compoundNBT.putFloat("DXRot", this.dXRot);
+        compoundNBT.putDouble("randomTargetVelocityX", this.randomTargetVelocity.x);
+        compoundNBT.putDouble("randomTargetVelocityY", this.randomTargetVelocity.y);
+        compoundNBT.putDouble("randomTargetVelocityZ", this.randomTargetVelocity.z);
     }
 
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {
@@ -287,13 +309,12 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
             }
         }
         if(compoundNBT.contains("Phase")){
-            this.phase = Phase.valueOf(compoundNBT.getString("Phase"));
+            this.setPhase(Phase.valueOf(compoundNBT.getString("Phase")));
         } else {
-            this.phase = Phase.IDLE;
+            this.setPhase(Phase.IDLE);
         }
         this.passingTimer = compoundNBT.getInt("PassingTimer");
-        this.dYRot = compoundNBT.getFloat("DYRot");
-        this.dXRot = compoundNBT.getFloat("DXRot");
+        this.randomTargetVelocity = new Vector3d(compoundNBT.getDouble("randomTargetVelocityX"),compoundNBT.getDouble("randomTargetVelocityY"),compoundNBT.getDouble("randomTargetVelocityZ"));
     }
 
     public void die(DamageSource damageSource) {

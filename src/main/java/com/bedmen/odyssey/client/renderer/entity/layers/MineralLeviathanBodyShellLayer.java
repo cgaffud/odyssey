@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.client.renderer.entity.layers;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.client.renderer.entity.model.MineralLeviathanSegmentModel;
-import com.bedmen.odyssey.entity.boss.MineralLeviathanSegmentEntity;
+import com.bedmen.odyssey.client.renderer.entity.model.MineralLeviathanBodyModel;
+import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -17,9 +17,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class MineralLeviathanShellLayer extends LayerRenderer<MineralLeviathanSegmentEntity, MineralLeviathanSegmentModel> {
-    private static final ResourceLocation[][] SHELL_LOCATION = new ResourceLocation[9][11];
-    private final EntityModel<MineralLeviathanSegmentEntity> model = new MineralLeviathanSegmentModel();
+public class MineralLeviathanBodyShellLayer extends LayerRenderer<MineralLeviathanBodyEntity, MineralLeviathanBodyModel> {
+    public static final ResourceLocation[][] SHELL_LOCATION = new ResourceLocation[9][11];
+    private final EntityModel<MineralLeviathanBodyEntity> model = new MineralLeviathanBodyModel();
 
     static{
         String[] names = new String[]{"ruby","coal","copper","iron","lapis","gold","silver","emerald","redstone"};
@@ -31,11 +31,11 @@ public class MineralLeviathanShellLayer extends LayerRenderer<MineralLeviathanSe
         }
     }
 
-    public MineralLeviathanShellLayer(IEntityRenderer<MineralLeviathanSegmentEntity, MineralLeviathanSegmentModel> p_i50923_1_) {
+    public MineralLeviathanBodyShellLayer(IEntityRenderer<MineralLeviathanBodyEntity, MineralLeviathanBodyModel> p_i50923_1_) {
         super(p_i50923_1_);
     }
 
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer p_225628_2_, int p_225628_3_, MineralLeviathanSegmentEntity entity, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
+    public void render(MatrixStack matrixStack, IRenderTypeBuffer p_225628_2_, int p_225628_3_, MineralLeviathanBodyEntity entity, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
         if (entity.getShellHealth() > 0.0f) {
             matrixStack.pushPose();
             matrixStack.scale(1.1f,1.1f,1.1f);
@@ -48,11 +48,11 @@ public class MineralLeviathanShellLayer extends LayerRenderer<MineralLeviathanSe
         }
     }
 
-    public ResourceLocation getTextureLocation(MineralLeviathanSegmentEntity entity) {
+    public ResourceLocation getTextureLocation(MineralLeviathanBodyEntity entity) {
         return getTextureLocation(SHELL_LOCATION[entity.getShellType().ordinal()], entity);
     }
 
-    public ResourceLocation getTextureLocation(ResourceLocation[] locations, MineralLeviathanSegmentEntity entity) {
+    public ResourceLocation getTextureLocation(ResourceLocation[] locations, MineralLeviathanBodyEntity entity) {
         float maxHealth = entity.getShellType().getShellMaxHealth();
         float currentHealth = entity.getShellHealth();
         int i = MathHelper.ceil(11.0f - (currentHealth / maxHealth * 10.0f)) - 1;
