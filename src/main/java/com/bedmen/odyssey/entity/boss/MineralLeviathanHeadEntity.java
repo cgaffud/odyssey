@@ -5,9 +5,6 @@ import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.TargetGoal;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -28,14 +25,12 @@ import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
-    private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(60.0D).selector(BossEntity.ENTITY_SELECTOR);
     protected static final DataParameter<List<Integer>> DATA_BODY_ID = EntityDataManager.defineId(MineralLeviathanHeadEntity.class, OdysseyDataSerializers.INT_LIST);
     protected static final DataParameter<Integer> PHASE = EntityDataManager.defineId(MineralLeviathanHeadEntity.class, DataSerializers.INT);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
@@ -45,6 +40,7 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
     public static final double DAMAGE = 8.0d;
     public static final double DODGE_RANGE = 3.5d;
     public static final double BASE_HEALTH = 150.0d;
+    public static final double TARGETING_RANGE = 75.0d;
     public MineralLeviathanBodyEntity[] bodyEntities = new MineralLeviathanBodyEntity[NUM_SEGMENTS-1];
     public UUID[] bodyEntityUUIDs = new UUID[NUM_SEGMENTS-1];
     private int mouthAngleTimer;
@@ -81,7 +77,7 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
     }
 
     protected void registerGoals() {
-        this.targetSelector.addGoal(1, new MineralLeviathanHeadEntity.HurtByTargetGoal(this));
+        //this.targetSelector.addGoal(1, new MineralLeviathanHeadEntity.HurtByTargetGoal(this));
     }
 
     protected void defineSynchedData() {
@@ -93,7 +89,9 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
     public void setBodyIDs(MineralLeviathanBodyEntity[] bodyEntities) {
         List<Integer> idList = new ArrayList<>();
         for(MineralLeviathanBodyEntity bodyEntity : bodyEntities){
-            idList.add(bodyEntity.getId());
+            if(bodyEntity != null){
+                idList.add(bodyEntity.getId());
+            }
         }
         this.entityData.set(DATA_BODY_ID, idList);
     }
@@ -155,30 +153,21 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
                 Phase phase = this.getPhase();
                 //Choose Target
                 if(this.level.getGameTime() % 19 == 0){
-                    LivingEntity target = this.getTarget();
-                    List<LivingEntity> list = this.level.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(60.0D, 60.0D, 60.0D));
-                    if(target != null && target.isAttackable()){
-                        list.add(target);
-                    }
-                    Stream<LivingEntity> stream = list.stream().filter(livingEntity -> {return livingEntity.isAlive() && this != livingEntity;});
-                    list = stream.collect(Collectors.toList());
-                    List<LivingEntity> playerList = list.stream().filter(livingEntity -> {return livingEntity instanceof PlayerEntity && !((PlayerEntity) livingEntity).abilities.invulnerable;}).collect(Collectors.toList());
-                    if(!playerList.isEmpty()){
-                        list = playerList;
-                    }
+                    Collection<ServerPlayerEntity> serverPlayerEntities =  this.bossEvent.getPlayers();
+                    List<ServerPlayerEntity> serverPlayerEntityList = serverPlayerEntities.stream().filter(serverPlayerEntity -> {return serverPlayerEntity.isAlive() && !serverPlayerEntity.abilities.invulnerable && this.distanceToSqr(serverPlayerEntity) < TARGETING_RANGE*TARGETING_RANGE;}).collect(Collectors.toList());
                     // Set Phase based on Target
-                    if(list.isEmpty()){
+                    if(serverPlayerEntityList.isEmpty()){
                         this.setTarget(null);
                         this.setPhase(Phase.IDLE);
                     } else if(phase == Phase.IDLE || phase == Phase.PASSING) {
-                        setTarget(list.get(this.random.nextInt(list.size())));
+                        this.setTarget(serverPlayerEntityList.get(this.random.nextInt(serverPlayerEntityList.size())));
                         if(phase == Phase.IDLE){
                             this.setPhase(Phase.LOOPING);
                         }
                     }
                 }
-                //Movement
 
+                //Movement
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.5));
                 LivingEntity target = this.getTarget();
                 switch(phase){
@@ -217,7 +206,7 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
                             double angle = Math.acos(Math.min(1.0d, movementVector.dot(targetVector) / movementVector.length() / targetVector.length()));
                             if(angle < Math.PI / 8.0d){
                                 this.setPhase(Phase.CHARGING);
-                            } else if(this.distanceToSqr(target) < 9.0d){
+                            } else if(this.distanceToSqr(target) < DODGE_RANGE*DODGE_RANGE){
                                 this.setPhase(Phase.PASSING);
                                 this.passingTimer = 20;
                             }
@@ -340,28 +329,6 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
 
     public ServerBossInfo getBossEvent(){
         return this.bossEvent;
-    }
-
-    static class HurtByTargetGoal extends TargetGoal {
-
-        public HurtByTargetGoal(CreatureEntity p_i50317_1_, Class<?>... p_i50317_2_) {
-            super(p_i50317_1_, true);
-            this.setFlags(EnumSet.of(Goal.Flag.TARGET));
-        }
-
-        public boolean canUse() {
-            return true;
-        }
-
-        public void start() {
-            LivingEntity livingEntity = this.mob.getLastHurtByMob();
-            if(livingEntity != null && livingEntity.isAlive() && livingEntity.isAttackable() && (!(livingEntity instanceof PlayerEntity) || !(((PlayerEntity) livingEntity).abilities.instabuild || ((PlayerEntity) livingEntity).abilities.invulnerable))){
-                this.mob.setTarget(livingEntity);
-            }
-            this.unseenMemoryTicks = 300;
-
-            super.start();
-        }
     }
 
     enum Phase {

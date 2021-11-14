@@ -41,5 +41,4 @@ public abstract class MixinMobEntity extends LivingEntity {
     private MobEntity getMobEntity(){
         return (MobEntity)(Object)this;
     }
-
 }

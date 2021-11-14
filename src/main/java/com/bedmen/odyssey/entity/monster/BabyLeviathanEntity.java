@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.monster;
 
+import com.bedmen.odyssey.entity.boss.MineralLeviathanHeadEntity;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -62,7 +63,7 @@ public class BabyLeviathanEntity extends MonsterEntity {
     public void die(DamageSource damageSource) {
         Entity entity = damageSource.getEntity();
         if(entity instanceof PlayerEntity && !this.level.isClientSide){
-            EntityTypeRegistry.MINERAL_LEVIATHAN.get().spawn((ServerWorld) this.level, null, (PlayerEntity)entity, new BlockPos(entity.getX(), -5, entity.getZ()), SpawnReason.TRIGGERED, true, true);
+            EntityTypeRegistry.MINERAL_LEVIATHAN.get().spawn((ServerWorld) this.level, null, (PlayerEntity)entity, new BlockPos(entity.getX(), Integer.max(-5, (int) (entity.getY() - MineralLeviathanHeadEntity.TARGETING_RANGE * 0.8d)), entity.getZ()), SpawnReason.TRIGGERED, true, true);
         }
         super.die(damageSource);
     }

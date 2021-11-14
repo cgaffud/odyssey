@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -15,7 +14,6 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
@@ -34,10 +32,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PermafrostEntity extends BossEntity {
     private float damageReduction = 1.0f;
@@ -49,7 +47,7 @@ public class PermafrostEntity extends BossEntity {
     private final int MaxMovementPositions = 6;
     private final int[] attackCooldown = new int[2];
     private final int[] attackTimer = new int[2];
-    private static final EntityPredicate TARGETING_CONDITIONS = (new EntityPredicate()).range(20.0D).selector(BossEntity.ENTITY_SELECTOR);
+    private double TARGETING_RANGE = 40d;
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.BLUE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
 
     public PermafrostEntity(EntityType<? extends PermafrostEntity> entityType, World world) {
@@ -150,23 +148,16 @@ public class PermafrostEntity extends BossEntity {
         }
 
         //Choose Target
-        List<LivingEntity> list = this.level.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(40.0D, 40.0D, 40.0D));
-        Stream<LivingEntity> stream = list.stream().filter(livingEntity -> {return livingEntity.isAlive() && this != livingEntity;});
-        list = stream.collect(Collectors.toList());
-        List<LivingEntity> playerList = list.stream().filter(livingEntity -> {return livingEntity instanceof PlayerEntity && !((PlayerEntity) livingEntity).abilities.invulnerable;}).collect(Collectors.toList());
-        if(!playerList.isEmpty()){
-            list = playerList;
-        }
-        if(this.level.getGameTime() % 10 == 9){
-            LivingEntity target = this.getTarget();
-            if(list.isEmpty()){
-                if(target != null && target.isAlive() && (!(target instanceof PlayerEntity) || !((PlayerEntity) target).abilities.invulnerable))
-                    list.add(target);
-                else
-                    this.setTarget(null);
+        Collection<ServerPlayerEntity> serverPlayerEntities =  this.bossEvent.getPlayers();
+        List<ServerPlayerEntity> serverPlayerEntityList = serverPlayerEntities.stream().filter(serverPlayerEntity -> {return serverPlayerEntity.isAlive() && !serverPlayerEntity.abilities.invulnerable && this.distanceToSqr(serverPlayerEntity) < TARGETING_RANGE*TARGETING_RANGE;}).collect(Collectors.toList());
+        // Set Phase based on Target
+        if(this.level.getGameTime() % 18 == 14){
+            if(serverPlayerEntityList.isEmpty()){
+                this.setTarget(null);
             }
-            else
-                setTarget(list.get(this.random.nextInt(list.size())));
+            else {
+                setTarget(serverPlayerEntityList.get(this.random.nextInt(serverPlayerEntityList.size())));
+            }
         }
 
         //Movement
@@ -174,10 +165,10 @@ public class PermafrostEntity extends BossEntity {
             Vector3d location1 = this.getPosition(1);
             double angle = this.movementPosition * Math.PI / this.MaxMovementPositions * 2.0d;
             Vector3d location2 = Vector3d.ZERO;
-            for(LivingEntity livingEntity : list){
-                location2 = location2.add(livingEntity.getPosition(1));
+            for(ServerPlayerEntity serverPlayerEntity : serverPlayerEntities){
+                location2 = location2.add(serverPlayerEntity.getPosition(1));
             }
-            location2 = location2.scale(1.0d / list.size());
+            location2 = location2.scale(1.0d / serverPlayerEntities.size());
             location2 = location2.add(Math.sin(angle) * 10.0d,10.0d,Math.cos(angle) * 10.0d);
             Vector3d direction = location2.subtract(location1);
             double speed = 0.5d;
@@ -192,9 +183,9 @@ public class PermafrostEntity extends BossEntity {
 
             if(this.attackTimer[0] > 0){
                 int targetsAttacked = 0;
-                for(LivingEntity livingEntity : list){
+                for(ServerPlayerEntity serverPlayerEntity : serverPlayerEntityList){
                     if(targetsAttacked < 10){
-                        this.performSpiralAttack(livingEntity);
+                        this.performSpiralAttack(serverPlayerEntity);
                         ++targetsAttacked;
                     }
                 }
