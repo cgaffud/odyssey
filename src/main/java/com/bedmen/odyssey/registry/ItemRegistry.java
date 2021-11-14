@@ -122,6 +122,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SILVER_STRING = ITEMS.register("silver_string", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> MULTI_CORD = ITEMS.register("multi_cord", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
     public static final RegistryObject<Item> ELECTRUM_STRING = ITEMS.register("electrum_string", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MATERIALS)));
+    public static final RegistryObject<Item> BABY_LEVIATHAN_BUCKET = ITEMS.register("baby_leviathan_bucket", () -> new BabyLeviathanBucket((new Item.Properties()).stacksTo(1).tab(OdysseyItemGroup.SPAWN_EGGS)));
 
     //Food
     public static final RegistryObject<Item> LIFE_FRUIT = ITEMS.register("life_fruit", () -> new Item((new Item.Properties()).tab(OdysseyItemGroup.MAGIC).food(OdysseyFoods.LIFE_FRUIT)));
@@ -397,6 +398,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BABY_CREEPER_SPAWN_EGG = ITEMS.register("baby_creeper_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BABY_CREEPER, 894731, 0, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
     public static final RegistryObject<Item> CAMO_CREEPER_SPAWN_EGG = ITEMS.register("camo_creeper_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.CAMO_CREEPER, 0x50692c, 0x79553a, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
     public static final RegistryObject<Item> WEAVER_SPAWN_EGG = ITEMS.register("weaver_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WEAVER, 0x442512, 0x0096ea, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
+    public static final RegistryObject<Item> BABY_LEVIATHAN_SPAWN_EGG = ITEMS.register("baby_leviathan_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BABY_LEVIATHAN, 0x2f2f37, 0x646464, (new Item.Properties()).tab(OdysseyItemGroup.SPAWN_EGGS)));
 
     // Vanilla
 

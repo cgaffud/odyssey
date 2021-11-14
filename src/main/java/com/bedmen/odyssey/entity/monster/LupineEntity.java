@@ -1,29 +1,16 @@
 package com.bedmen.odyssey.entity.monster;
 
-import java.util.Random;
-import java.util.UUID;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LeapAtTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.RangedInteger;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.TickRangeConverter;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -31,6 +18,9 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.Random;
+import java.util.UUID;
 
 public class LupineEntity extends MonsterEntity {
     private float headRotationCourse;
@@ -270,7 +260,7 @@ public class LupineEntity extends MonsterEntity {
         return new Vector3d(0.0D, (double)(0.6F * this.getEyeHeight()), (double)(this.getBbWidth() * 0.4F));
     }
 
-    public static boolean predicate(EntityType<? extends CreatureEntity> type, IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn){
+    public static boolean spawnPredicate(EntityType<? extends CreatureEntity> type, IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn){
         boolean fullmoon = worldIn.getMoonPhase() == 0;
         boolean y = pos.getY() > 63;
         return fullmoon && y;

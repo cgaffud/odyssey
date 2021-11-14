@@ -373,5 +373,8 @@
   "entity.oddc.baby_creeper": "Baby Creeper",
   "item.oddc.baby_creeper_spawn_egg": "Baby Creeper Spawn Egg",
   "entity.oddc.camo_creeper": "Camo Creeper",
-  "item.oddc.camo_creeper_spawn_egg": "Camo Creeper Spawn Egg"
+  "item.oddc.camo_creeper_spawn_egg": "Camo Creeper Spawn Egg",
+  "entity.oddc.baby_leviathan": "Baby Leviathan",
+  "item.oddc.baby_leviathan_spawn_egg": "Baby Leviathan Spawn Egg",
+  "item.oddc.baby_leviathan_bucket": "Baby Leviathan Bucket"
 }

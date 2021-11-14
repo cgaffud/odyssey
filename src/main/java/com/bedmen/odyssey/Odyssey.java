@@ -92,8 +92,9 @@ public class Odyssey
         OdysseyNetwork.init();
         BiomeRegistry.register();
 
-        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::predicate);
-        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::predicate);
+        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
+        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
+        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, BabyLeviathanEntity::spawnPredicate);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)
@@ -139,6 +140,7 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
 
         //Boss Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
@@ -189,6 +191,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeperEntity.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperEntity.createAttributes().build());
         event.put(EntityTypeRegistry.WEAVER.get(), WeaverEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanEntity.createAttributes().build());
 
         //Bosses
         event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemEntity.createAttributes().build());

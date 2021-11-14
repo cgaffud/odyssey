@@ -122,7 +122,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
             return this.hurtWithShell(damageSource, amount);
         }
         else if(damageSource == DamageSource.OUT_OF_WORLD){
-            return super.hurt(damageSource, amount);
+            return super.hurt(damageSource, amount*1000f);
         }
         else if(entity instanceof LivingEntity){
             Item item = ((LivingEntity) entity).getItemInHand(Hand.MAIN_HAND).getItem();

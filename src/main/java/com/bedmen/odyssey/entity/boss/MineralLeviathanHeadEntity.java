@@ -40,7 +40,7 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
     protected static final DataParameter<Integer> PHASE = EntityDataManager.defineId(MineralLeviathanHeadEntity.class, DataSerializers.INT);
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
     private int passingTimer;
-    private Vector3d randomTargetVelocity = new Vector3d(this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-1d);
+    private Vector3d randomTargetVelocity = new Vector3d(this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-2d, this.random.nextDouble()*2d-1d);
     public static final int NUM_SEGMENTS = 20;
     public static final double DAMAGE = 8.0d;
     public static final double DODGE_RANGE = 3.5d;
@@ -185,7 +185,7 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
 
                     case IDLE:
                         if(this.random.nextInt(80) == 0){
-                            this.randomTargetVelocity = new Vector3d(this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-1d);
+                            this.randomTargetVelocity = new Vector3d(this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-2d, this.random.nextDouble()*2d-1d);
                         }
                         this.rotateTowards(this.randomTargetVelocity, 0.1d, 0.002d);
                         break;
