@@ -35,7 +35,6 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
     protected boolean initBody = false;
     protected float damageReduction = 1.0f;
     protected ShellType shellType;
-    protected static final int MAX_SILVER_FISH = 5;
     protected static final float SILVER_FISH_CHANCE = 0.01f;
     private int silverFishSpawned;
 
@@ -72,7 +71,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
                     }
                 }
                 //Spawn SilverFish
-                if(!this.hasShell() && this.silverFishSpawned < MAX_SILVER_FISH && this.random.nextFloat() < SILVER_FISH_CHANCE){
+                if(!this.hasShell() && this.silverFishSpawned < this.getMaxSilverFish() && this.random.nextFloat() < SILVER_FISH_CHANCE){
                     SilverfishEntity silverfishEntity = EntityType.SILVERFISH.spawn((ServerWorld) this.level, null, null, null, this.blockPosition(), SpawnReason.REINFORCEMENT, false, false);
                     silverfishEntity.setPos(this.getX(), this.getY(), this.getZ());
                     this.level.addFreshEntity(silverfishEntity);
@@ -110,6 +109,19 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
 
     public boolean hasShell(){
         return this.getShellHealth() > 0.0f;
+    }
+
+    public int getMaxSilverFish(){
+        int i = 2;
+        switch(this.level.getDifficulty()){
+            case HARD:
+                i = 6;
+                break;
+            case NORMAL:
+                i = 4;
+                break;
+        }
+        return i * this.getBossEvent().getPlayers().size();
     }
 
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
