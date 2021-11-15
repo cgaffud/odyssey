@@ -1,13 +1,11 @@
 package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.registry.ItemRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.PickaxeItem;
@@ -25,6 +23,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -36,6 +35,9 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
     protected boolean initBody = false;
     protected float damageReduction = 1.0f;
     protected ShellType shellType;
+    protected static final int MAX_SILVER_FISH = 5;
+    protected static final float SILVER_FISH_CHANCE = 0.01f;
+    private int silverFishSpawned;
 
     public MineralLeviathanSegmentEntity(EntityType<? extends MineralLeviathanSegmentEntity> entityType, World world) {
         super(entityType, world);
@@ -65,11 +67,17 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
                 AxisAlignedBB axisAlignedBB = new AxisAlignedBB(this.getX()-1.0d,this.getY(),this.getZ()-1.0d,this.getX()+1.0d,this.getY()+2.0d,this.getZ()+1.0d);
                 List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, axisAlignedBB);
                 for(LivingEntity livingEntity : livingEntityList){
-                    if(!(livingEntity instanceof MineralLeviathanHeadEntity) && !(livingEntity instanceof MineralLeviathanBodyEntity) && this.isAlive()){
+                    if(!(livingEntity instanceof MineralLeviathanHeadEntity || livingEntity instanceof SilverfishEntity) && !(livingEntity instanceof MineralLeviathanBodyEntity) && this.isAlive()){
                         livingEntity.hurt(DamageSource.mobAttack(this).setScalesWithDifficulty(), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
                     }
                 }
                 //Spawn SilverFish
+                if(!this.hasShell() && this.silverFishSpawned < MAX_SILVER_FISH && this.random.nextFloat() < SILVER_FISH_CHANCE){
+                    SilverfishEntity silverfishEntity = EntityType.SILVERFISH.spawn((ServerWorld) this.level, null, null, null, this.blockPosition(), SpawnReason.REINFORCEMENT, false, false);
+                    silverfishEntity.setPos(this.getX(), this.getY(), this.getZ());
+                    this.level.addFreshEntity(silverfishEntity);
+                    this.silverFishSpawned++;
+                }
             }
         }
         super.aiStep();
@@ -98,6 +106,10 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
 
     public float getShellHealth() {
         return this.entityData.get(DATA_SHELL_HEALTH_ID);
+    }
+
+    public boolean hasShell(){
+        return this.getShellHealth() > 0.0f;
     }
 
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
@@ -168,7 +180,7 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity implement
 
     protected void dropCustomDeathLoot(DamageSource damageSource, int p_213333_2_, boolean p_213333_3_) {
         super.dropCustomDeathLoot(damageSource, p_213333_2_, p_213333_3_);
-        if(this.getShellHealth() > 0f){
+        if(this.hasShell()){
             ItemEntity itementity = this.spawnAtLocation(this.shellType.getItem());
             if (itementity != null) {
                 itementity.setExtendedLifetime();

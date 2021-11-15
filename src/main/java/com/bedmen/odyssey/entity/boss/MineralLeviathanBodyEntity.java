@@ -128,4 +128,10 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
         }
         return null;
     }
+
+    public void checkDespawn() {
+        if (this.head != null && this.head.removed) {
+            this.remove();
+        }
+    }
 }

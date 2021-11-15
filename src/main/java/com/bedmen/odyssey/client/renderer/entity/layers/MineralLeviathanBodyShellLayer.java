@@ -36,7 +36,7 @@ public class MineralLeviathanBodyShellLayer extends LayerRenderer<MineralLeviath
     }
 
     public void render(MatrixStack matrixStack, IRenderTypeBuffer p_225628_2_, int p_225628_3_, MineralLeviathanBodyEntity entity, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
-        if (entity.getShellHealth() > 0.0f) {
+        if (entity.hasShell()) {
             matrixStack.pushPose();
             matrixStack.scale(1.1f,1.1f,1.1f);
             this.getParentModel().copyPropertiesTo(this.model);
