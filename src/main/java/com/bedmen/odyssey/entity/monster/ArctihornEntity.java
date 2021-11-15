@@ -1,14 +1,6 @@
 package com.bedmen.odyssey.entity.monster;
 
-import java.util.Random;
-
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
@@ -28,6 +20,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.Random;
 
 public class ArctihornEntity extends MonsterWaterEntity {
     public float squidPitch;
@@ -191,7 +185,7 @@ public class ArctihornEntity extends MonsterWaterEntity {
         return this.randomMotionVecX != 0.0F || this.randomMotionVecY != 0.0F || this.randomMotionVecZ != 0.0F;
     }
 
-    public static boolean predicate(EntityType<ArctihornEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {
+    public static boolean spawnPredicate(EntityType<ArctihornEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {
         return pos.getY() < world.getSeaLevel();
     }
 

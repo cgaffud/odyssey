@@ -35,3 +35,4 @@ forge*changelog.txt
 changelog.txt
 updateMappings.md
 /gradle/
+/github_token.txt

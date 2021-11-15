@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.world.spawn;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.world.biome.Biome;
@@ -7,18 +8,22 @@ import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class OdysseyBiomeEntitySpawn {
 
     public static MobSpawnInfo.Spawners LUPINE_SPANWER;
     public static MobSpawnInfo.Spawners ARCTIHORN_SPAWNER;
+    public static MobSpawnInfo.Spawners BABY_LEVIATHAN;
     public static EntityClassification HARD_BIOME =  EntityClassification.create("hard_biome", "hard_biome", 35, false, false, 128);
 
     public static void registerSpawners() {
         LUPINE_SPANWER = new MobSpawnInfo.Spawners(EntityTypeRegistry.LUPINE.get(), 100, 4, 8);
         ARCTIHORN_SPAWNER = new MobSpawnInfo.Spawners(EntityTypeRegistry.ARCTIHORN.get(), 100, 1, 4);
+        BABY_LEVIATHAN = new MobSpawnInfo.Spawners(EntityTypeRegistry.BABY_LEVIATHAN.get(), 20, 1, 1);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -31,6 +36,8 @@ public class OdysseyBiomeEntitySpawn {
         else if(event.getCategory() == Biome.Category.THEEND) {
         }
         else {
+            monsterSpawns.add(BABY_LEVIATHAN);
+
             if(event.getName().toString().equals("oddc:autumn_forest")){
                 hardBiomeSpawns.add(LUPINE_SPANWER);
             }

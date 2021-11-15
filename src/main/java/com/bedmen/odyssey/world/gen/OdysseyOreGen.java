@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.world.gen;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -15,15 +16,19 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class OdysseyOreGen {
 
     public static ConfiguredFeature<?, ?> SAPPHIRE_ORE_FEATURE;
+    public static ConfiguredFeature<?, ?> SILVER_ORE_FEATURE;
     public static final RuleTest PACKED_ICE_RULE = new BlockMatchRuleTest(Blocks.PACKED_ICE);
-    // OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD for generating in stone
+    // OreFeatureConfig.FillerBlockType.NATURAL_STONE for generating in stone
 
     public static void registerOres() {
         SAPPHIRE_ORE_FEATURE = oreGen(128, 20, 20, BlockRegistry.SAPPHIRE_ORE, PACKED_ICE_RULE);
+        SILVER_ORE_FEATURE = oreGen(32, 9, 2, BlockRegistry.SILVER_ORE, OreFeatureConfig.FillerBlockType.NATURAL_STONE);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -37,6 +42,7 @@ public class OdysseyOreGen {
             // End Ore
 
         } else {
+            gen.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SILVER_ORE_FEATURE);
             //Overworld Ore
             if(event.getCategory() == Biome.Category.ICY) {
                 gen.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SAPPHIRE_ORE_FEATURE);

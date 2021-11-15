@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/bone_repeater",
+  "textures": {
+    "layer0": "oddc:item/bone_repeater/pulling_2"
+  }
+}

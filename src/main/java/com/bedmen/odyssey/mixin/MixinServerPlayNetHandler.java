@@ -19,7 +19,6 @@ public abstract class MixinServerPlayNetHandler {
     @Shadow
     private int dropSpamTickCount;
 
-
     public void handleSetCreativeModeSlot(CCreativeInventoryActionPacket p_147344_1_) {
         PacketThreadUtil.ensureRunningOnSameThread(p_147344_1_, (ServerPlayNetHandler)(Object)this, this.player.getLevel());
         if (this.player.gameMode.isCreative()) {
@@ -38,7 +37,7 @@ public abstract class MixinServerPlayNetHandler {
                 }
             }
 
-            boolean flag1 = p_147344_1_.getSlotNum() >= 1 && p_147344_1_.getSlotNum() <= 46;
+            boolean flag1 = p_147344_1_.getSlotNum() >= 1 && p_147344_1_.getSlotNum() <= 46; //Changed 45 to 46 for trinket slot
             boolean flag2 = itemstack.isEmpty() || itemstack.getDamageValue() >= 0 && itemstack.getCount() <= 64 && !itemstack.isEmpty();
             if (flag1 && flag2) {
                 if (itemstack.isEmpty()) {

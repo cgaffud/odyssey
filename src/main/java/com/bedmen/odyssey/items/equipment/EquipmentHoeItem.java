@@ -22,7 +22,6 @@ public class EquipmentHoeItem extends HoeItem implements IEquipment {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentHoeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
-    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
 
     public EquipmentHoeItem(IItemTier tier, float damage, float attackSpeed, Item.Properties properties, LevEnchSup... levEnchSups) {
         super(tier, (int)damage, attackSpeed, properties.rarity(OdysseyRarity.EQUIPMENT));

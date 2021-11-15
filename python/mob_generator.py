@@ -4,6 +4,7 @@ def yes(s):
     return s.__contains__("Y") or s.__contains__("y")
 
 again = True
+
 while(again):
     mobID = input("Mob ID: ")
     spawnEggID = "%s_spawn_egg" % (mobID)

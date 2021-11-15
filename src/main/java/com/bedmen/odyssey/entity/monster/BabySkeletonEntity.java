@@ -4,9 +4,10 @@ import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -72,6 +73,11 @@ public class BabySkeletonEntity extends AbstractSkeletonEntity {
 
     protected float getStandingEyeHeight(Pose p_213348_1_, EntitySize p_213348_2_) {
         return 0.93F;
+    }
+
+    protected int getExperienceReward(PlayerEntity pPlayer) {
+        this.xpReward = (int)((float)this.xpReward * 2.5F);
+        return super.getExperienceReward(pPlayer);
     }
 
     protected void dropCustomDeathLoot(DamageSource p_213333_1_, int p_213333_2_, boolean p_213333_3_) {

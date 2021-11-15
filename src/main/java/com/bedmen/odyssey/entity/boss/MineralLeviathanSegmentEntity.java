@@ -1,48 +1,54 @@
 package com.bedmen.odyssey.entity.boss;
 
-import com.bedmen.odyssey.items.equipment.EquipmentPickaxeItem;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.controller.LookController;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.*;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.List;
 import java.util.Random;
 
-public abstract class MineralLeviathanSegmentEntity extends BossEntity {
-    protected static final DataParameter<Float> DATA_YROT_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
-    protected static final DataParameter<Float> DATA_XROT_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
-    protected static final DataParameter<String> DATA_SHELL_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.STRING);
+public abstract class MineralLeviathanSegmentEntity extends BossEntity implements IEntityAdditionalSpawnData {
     protected static final DataParameter<Float> DATA_SHELL_HEALTH_ID = EntityDataManager.defineId(MineralLeviathanSegmentEntity.class, DataSerializers.FLOAT);
     protected boolean initBody = false;
-    protected float clientSideShellHealth;
-    protected boolean clientSideShellHealthUpdated;
     protected float damageReduction = 1.0f;
+    protected ShellType shellType;
+    protected static final int MAX_SILVER_FISH = 5;
+    protected static final float SILVER_FISH_CHANCE = 0.01f;
+    private int silverFishSpawned;
 
     public MineralLeviathanSegmentEntity(EntityType<? extends MineralLeviathanSegmentEntity> entityType, World world) {
         super(entityType, world);
         this.setHealth(this.getMaxHealth());
         this.noPhysics = true;
         this.setNoGravity(true);
+        this.lookControl = new MineralLeviathanSegmentLookController(this);
     }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_YROT_ID, 0.0f);
-        this.entityData.define(DATA_XROT_ID, 0.0f);
-        this.entityData.define(DATA_SHELL_ID, "COPPER");
         this.entityData.define(DATA_SHELL_HEALTH_ID, 0.0f);
     }
 
@@ -54,23 +60,6 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
     }
 
     public void aiStep() {
-        if (this.level.isClientSide) {
-            if(!this.clientSideShellHealthUpdated){
-                this.clientSideShellHealth = this.getShellHealth();
-                this.clientSideShellHealthUpdated = true;
-            }
-            if (!this.isSilent()) {
-                float shellHealth = this.getShellHealth();
-                if(shellHealth != this.clientSideShellHealth){
-                    if(shellHealth <= 0.0f){
-                        this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_BREAK, SoundCategory.HOSTILE, 3.0f, 1.0f, false);
-                    } else {
-                        this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.STONE_BREAK, SoundCategory.HOSTILE, 3.0f, 1.0f, false);
-                    }
-                    this.clientSideShellHealth = shellHealth;
-                }
-            }
-        }
 
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
@@ -78,11 +67,17 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
                 AxisAlignedBB axisAlignedBB = new AxisAlignedBB(this.getX()-1.0d,this.getY(),this.getZ()-1.0d,this.getX()+1.0d,this.getY()+2.0d,this.getZ()+1.0d);
                 List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, axisAlignedBB);
                 for(LivingEntity livingEntity : livingEntityList){
-                    if(!(livingEntity instanceof MineralLeviathanEntity) && !(livingEntity instanceof MineralLeviathanBodyEntity) && this.isAlive()){
+                    if(!(livingEntity instanceof MineralLeviathanHeadEntity || livingEntity instanceof SilverfishEntity) && !(livingEntity instanceof MineralLeviathanBodyEntity) && this.isAlive()){
                         livingEntity.hurt(DamageSource.mobAttack(this).setScalesWithDifficulty(), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
                     }
                 }
                 //Spawn SilverFish
+                if(!this.hasShell() && this.silverFishSpawned < MAX_SILVER_FISH && this.random.nextFloat() < SILVER_FISH_CHANCE){
+                    SilverfishEntity silverfishEntity = EntityType.SILVERFISH.spawn((ServerWorld) this.level, null, null, null, this.blockPosition(), SpawnReason.REINFORCEMENT, false, false);
+                    silverfishEntity.setPos(this.getX(), this.getY(), this.getZ());
+                    this.level.addFreshEntity(silverfishEntity);
+                    this.silverFishSpawned++;
+                }
             }
         }
         super.aiStep();
@@ -91,37 +86,18 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
     protected void setRotation(Vector3d vector3d) {
         float f = MathHelper.sqrt(Entity.getHorizontalDistanceSqr(vector3d));
         if (vector3d.lengthSqr() != 0.0D) {
-            this.setYRot((float)(MathHelper.atan2(vector3d.x, vector3d.z) * (double)(180F / (float)Math.PI)));
-            this.setXRot((float)(MathHelper.atan2(f, vector3d.y) * (double)(180F / (float)Math.PI) * -1.0f + 90.0f));
+            this.yRot = (float)(MathHelper.atan2(vector3d.x, vector3d.z) * (double)(180F / (float)Math.PI));
+            this.xRot = (float)(MathHelper.atan2(f, vector3d.y) * (double)(180F / (float)Math.PI) * -1.0f + 90.0f);
         }
     }
 
-    public void setYRot(float f) {
-        this.entityData.set(DATA_YROT_ID, f);
-    }
-
-    public float getYRot() {
-        return this.entityData.get(DATA_YROT_ID);
-    }
-
-    public void setXRot(float f) {
-        this.entityData.set(DATA_XROT_ID, f);
-    }
-
-    public float getXRot() {
-        return this.entityData.get(DATA_XROT_ID);
-    }
-
-    public void setShellType(String s) {
-        this.entityData.set(DATA_SHELL_ID, s);
-    }
-
     public void setShellType(ShellType shellType) {
-        this.entityData.set(DATA_SHELL_ID, shellType.name());
+        this.shellType = shellType;
+        this.setShellHealth(shellType.getShellMaxHealth());
     }
 
     public ShellType getShellType() {
-        return ShellType.valueOf(this.entityData.get(DATA_SHELL_ID));
+        return this.shellType;
     }
 
     public void setShellHealth(float f) {
@@ -132,24 +108,20 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         return this.entityData.get(DATA_SHELL_HEALTH_ID);
     }
 
+    public boolean hasShell(){
+        return this.getShellHealth() > 0.0f;
+    }
+
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.putFloat("TrueYRot", this.getYRot());
-        compoundNBT.putFloat("TrueXRot", this.getXRot());
         compoundNBT.putString("ShellType", this.getShellType().name());
         compoundNBT.putFloat("ShellHealth", this.getShellHealth());
     }
 
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
-        if(compoundNBT.contains("TrueYRot")){
-            this.setYRot(compoundNBT.getFloat("TrueYRot"));
-        }
-        if(compoundNBT.contains("TrueXRot")){
-            this.setXRot(compoundNBT.getFloat("TrueXRot"));
-        }
         if(compoundNBT.contains("ShellType")){
-            this.setShellType(compoundNBT.getString("ShellType"));
+            this.setShellType(ShellType.valueOf(compoundNBT.getString("ShellType")));
         }
         if(compoundNBT.contains("ShellHealth")){
             this.setShellHealth(compoundNBT.getFloat("ShellHealth"));
@@ -158,17 +130,20 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
 
     public boolean hurt(DamageSource damageSource, float amount) {
         Entity entity = damageSource.getEntity();
-        if(entity instanceof LivingEntity){
-            Item item = ((LivingEntity) entity).getItemInHand(Hand.MAIN_HAND).getItem();
-            if(item instanceof PickaxeItem || item instanceof EquipmentPickaxeItem){
-                return this.hurtWithShell(damageSource, amount);
-            }
-        }
         if(damageSource.isExplosion()){
             return this.hurtWithShell(damageSource, amount);
         }
-        if(damageSource == DamageSource.OUT_OF_WORLD){
-            return super.hurt(damageSource, amount);
+        else if(damageSource == DamageSource.OUT_OF_WORLD){
+            return super.hurt(damageSource, amount*1000f);
+        }
+        else if(entity instanceof LivingEntity){
+            Item item = ((LivingEntity) entity).getItemInHand(Hand.MAIN_HAND).getItem();
+            if(item instanceof PickaxeItem){
+                int harvestLevel = ((PickaxeItem) item).getTier().getLevel();
+                if(this.shellType.getHarvestLevel() <= harvestLevel){
+                    return this.hurtWithShell(damageSource, amount);
+                }
+            }
         }
         return false;
     }
@@ -179,6 +154,20 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
             if(!this.level.isClientSide){
                 this.setShellHealth(shellHealth - amount * this.getDamageReduction());
             }
+            float newShellHealth = this.getShellHealth();
+            if (newShellHealth != shellHealth && !this.isSilent()) {
+                if(newShellHealth > 0f){
+                    this.playSound(SoundEvents.STONE_BREAK, 1.0F, 1.0F);
+                } else {
+                    this.playSound(SoundEvents.IRON_GOLEM_DAMAGE, 1.0F, 1.0F);
+                    if(!this.level.isClientSide){
+                        ItemEntity itementity = this.spawnAtLocation(this.shellType.getItem());
+                        if (itementity != null) {
+                            itementity.setExtendedLifetime();
+                        }
+                    }
+                }
+            }
             return false;
         } else {
             return this.hurtWithoutShell(damageSource, amount);
@@ -187,6 +176,16 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
 
     protected boolean hurtWithoutShell(DamageSource damageSource, float amount){
         return super.hurt(damageSource, amount);
+    }
+
+    protected void dropCustomDeathLoot(DamageSource damageSource, int p_213333_2_, boolean p_213333_3_) {
+        super.dropCustomDeathLoot(damageSource, p_213333_2_, p_213333_3_);
+        if(this.hasShell()){
+            ItemEntity itementity = this.spawnAtLocation(this.shellType.getItem());
+            if (itementity != null) {
+                itementity.setExtendedLifetime();
+            }
+        }
     }
 
     public Difficulty getDifficulty(){
@@ -201,24 +200,67 @@ public abstract class MineralLeviathanSegmentEntity extends BossEntity {
         return true;
     }
 
+    @Override
+    public IPacket<?> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public void writeSpawnData(PacketBuffer buffer) {
+        buffer.writeInt(this.getShellType().ordinal());
+    }
+
+    @Override
+    public void readSpawnData(PacketBuffer additionalData) {
+        this.setShellType(ShellType.values()[additionalData.readInt()]);
+    }
+
     public enum ShellType{
-        RUBY(0.3f),
-        COPPER(0.1f),
-        SILVER(0.2f);
+        RUBY(3, ItemRegistry.RUBY.get()),
+        COAL(0, Items.COAL),
+        COPPER(1, ItemRegistry.RAW_COPPER.get()),
+        IRON(1, ItemRegistry.RAW_IRON.get()),
+        LAPIS(1, Items.LAPIS_LAZULI),
+        GOLD(2, ItemRegistry.RAW_GOLD.get()),
+        SILVER(2, ItemRegistry.RAW_SILVER.get()),
+        EMERALD(2, Items.EMERALD),
+        REDSTONE(2, Items.REDSTONE);
 
+        private final int harvestLevel;
         private final float percentageHealth;
+        private final Item item;
 
-        ShellType(float percentageHealth){
-            this.percentageHealth = percentageHealth;
+        ShellType(int harvestLevel, Item item){
+            this.harvestLevel = harvestLevel;
+            this.percentageHealth = (float)harvestLevel * 0.05f + 0.1f;
+            this.item = item;
         }
 
         public float getShellMaxHealth(){
-            return this.percentageHealth * (float)MineralLeviathanEntity.BASE_HEALTH;
+            return this.percentageHealth * (float) MineralLeviathanHeadEntity.BASE_HEALTH;
         }
 
         public static ShellType getRandomShellType(Random random){
             ShellType[] values = ShellType.values();
             return values[random.nextInt(values.length-1)+1];
+        }
+
+        public Item getItem(){
+            return this.item;
+        }
+
+        public int getHarvestLevel(){
+            return this.harvestLevel;
+        }
+    }
+
+    class MineralLeviathanSegmentLookController extends LookController {
+        MineralLeviathanSegmentLookController(MobEntity p_i225729_2_) {
+            super(p_i225729_2_);
+        }
+
+        protected boolean resetXRotOnTick() {
+            return false;
         }
     }
 }

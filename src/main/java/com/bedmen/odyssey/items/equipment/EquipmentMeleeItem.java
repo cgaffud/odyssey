@@ -38,9 +38,9 @@ public class EquipmentMeleeItem extends TieredItem implements IVanishable, IEqui
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentMeleeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
-    private static final LevEnchSup UNENCHANTABLE = new LevEnchSup(EnchantmentRegistry.UNENCHANTABLE);
+    private final boolean canSweep;
 
-    public EquipmentMeleeItem(IItemTier tier, float attackDamageIn, float attackSpeedIn, Properties builderIn, LevEnchSup... levEnchSups) {
+    public EquipmentMeleeItem(IItemTier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, Properties builderIn, LevEnchSup... levEnchSups) {
         super(tier, builderIn.rarity(OdysseyRarity.EQUIPMENT));
         this.attackDamage = attackDamageIn + tier.getAttackDamageBonus();
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -50,6 +50,7 @@ public class EquipmentMeleeItem extends TieredItem implements IVanishable, IEqui
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);
+        this.canSweep = canSweep;
     }
 
     public float getAttackDamage() {
@@ -60,12 +61,12 @@ public class EquipmentMeleeItem extends TieredItem implements IVanishable, IEqui
         return !player.isCreative();
     }
 
-    public boolean isSwordLike(){
-        return this.getInnateEnchantmentLevel(EnchantmentRegistry.SWEEPING_EDGE.get()) > 0;
+    public boolean canSweep(){
+        return this.canSweep;
     }
 
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (state.is(Blocks.COBWEB) && this.isSwordLike()) {
+        if (state.is(Blocks.COBWEB) && this.canSweep()) {
             return 15.0F;
         } else {
             Material material = state.getMaterial();
@@ -101,7 +102,7 @@ public class EquipmentMeleeItem extends TieredItem implements IVanishable, IEqui
      * Check whether this Item can harvest the given Block
      */
     public boolean isCorrectToolForDrops(BlockState blockIn) {
-        return blockIn.is(Blocks.COBWEB) && this.isSwordLike();
+        return blockIn.is(Blocks.COBWEB) && this.canSweep();
     }
 
     /**

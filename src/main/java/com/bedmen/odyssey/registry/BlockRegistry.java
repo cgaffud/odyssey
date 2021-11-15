@@ -42,6 +42,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> SILVER_ORE = BLOCKS.register("silver_ore", () -> new OreBlock(AbstractBlock.Properties.of(Material.STONE).harvestLevel(2).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops().strength(3.0F, 3.0F).sound(SoundType.STONE)));
     public static final RegistryObject<Block> SILVER_BLOCK = BLOCKS.register("silver_block", () -> new Block(AbstractBlock.Properties.of(Material.METAL, MaterialColor.COLOR_LIGHT_GRAY).harvestLevel(2).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops().strength(3.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> STERLING_SILVER_BLOCK = BLOCKS.register("sterling_silver_block", () -> new Block(AbstractBlock.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).harvestLevel(2).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops().strength(4.0F, 6.0F).sound(SoundType.METAL)));
+    public static final RegistryObject<Block> ELECTRUM_BLOCK = BLOCKS.register("electrum_block", () -> new Block(AbstractBlock.Properties.of(Material.METAL, MaterialColor.COLOR_YELLOW).harvestLevel(2).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops().strength(4.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> LEATHER_PILE = BLOCKS.register("leather_pile", () -> new Block(AbstractBlock.Properties.of((new Material.Builder(MaterialColor.COLOR_BROWN)).build(), MaterialColor.COLOR_BROWN).harvestTool(ToolType.HOE).strength(1.0F, 1.0F).sound(SoundType.WOOL)));
     public static final RegistryObject<Block> RUBY_ORE = BLOCKS.register("ruby_ore", () -> new OreBlock(AbstractBlock.Properties.of(Material.STONE).harvestLevel(3).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops().strength(3.0F, 3.0F).sound(SoundType.STONE)));
     public static final RegistryObject<Block> SAPPHIRE_ORE = BLOCKS.register("sapphire_ore", () -> new OreBlock(AbstractBlock.Properties.of(Material.ICE_SOLID).harvestLevel(3).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops().strength(0.5F, 0.5F).sound(SoundType.GLASS)));
@@ -93,6 +94,8 @@ public class BlockRegistry {
     public static final RegistryObject<Block> FROSTED_OBSIDIAN = BLOCKS.register("frosted_obsidian", () -> new FrostedObsidianBlock(AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).randomTicks().strength(50.0F, 1200.0F).lightLevel(FrostedObsidianBlock.litBlockEmission())));
 
     public static final RegistryObject<Block> STERLING_SILVER_CHEST = BLOCKS.register("sterling_silver_chest", () -> new SterlingSilverChestBlock(AbstractBlock.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(4.0F, 6.0F).harvestLevel(3).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops().sound(SoundType.METAL)));
+
+    public static final RegistryObject<Block> ABANDONED_IRON_GOLEM = BLOCKS.register("abandoned_iron_golem", () -> new AbandonedIronGolemBlock(AbstractBlock.Properties.of(Material.DIRT, MaterialColor.COLOR_GRAY).harvestTool(ToolType.SHOVEL).requiresCorrectToolForDrops().strength(1.0f).sound(SoundType.GRAVEL)));
 
     // Default Leaf Maker
     private static LeavesBlock leaves() {

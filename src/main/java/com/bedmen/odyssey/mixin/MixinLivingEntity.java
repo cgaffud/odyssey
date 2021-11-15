@@ -2,6 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.enchantment.ObsidianWalkerEnchantment;
 import com.bedmen.odyssey.entity.IZephyrArmorEntity;
+import com.bedmen.odyssey.entity.projectile.BoomerangEntity;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.equipment.ZephyrArmorItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
@@ -24,6 +25,7 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -39,19 +41,22 @@ import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.*;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEntity {
@@ -202,6 +207,20 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
     protected boolean shouldRemoveSoulSpeed(BlockState p_230295_1_) {return false;}
     @Shadow
     protected void actuallyHurt(DamageSource p_70665_1_, float p_70665_2_) {}
+    @Shadow
+    protected void dropEquipment() {}
+    @Shadow
+    protected void dropExperience() {}
+    @Shadow
+    protected void dropCustomDeathLoot(DamageSource p_213333_1_, int p_213333_2_, boolean p_213333_3_) {}
+    @Shadow
+    protected void dropFromLootTable(DamageSource p_213354_1_, boolean p_213354_2_) {}
+    @Shadow
+    protected boolean shouldDropLoot() {return false;}
+
+    @Shadow protected abstract int decreaseAirSupply(int p_70682_1_);
+
+//    @Shadow public abstract void aiStep();
 
     private int zephyrArmorTicks = -1;
 
@@ -403,11 +422,10 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
             //Drowns extra with drowning curse
             int drowningAmount = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DROWNING.get(), getLivingEntity());
             //Checks if player is in lava too
-            boolean inLava = this.isEyeInFluid(FluidTags.LAVA);
-            drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || inLava) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
+            drowningAmount += ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA)) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;
             if (drowningAmount > 0) {
                 if (!this.canBreatheUnderwater() && !EffectUtils.hasWaterBreathing((LivingEntity) (Object) this) && !flag1) {
-                    this.setAirSupply(this.decreaseAirSupply(this.getAirSupply(), drowningAmount, inLava));
+                    this.setAirSupply(this.decreaseAirSupply(this.getAirSupply(), drowningAmount));
                     if (this.getAirSupply() <= -20) {
                         this.setAirSupply(0);
                         Vector3d vector3d = this.getDeltaMovement();
@@ -730,24 +748,80 @@ public abstract class MixinLivingEntity extends Entity implements IZephyrArmorEn
         }
     }
 
-    protected int decreaseAirSupply(int airSupply, int drowningAmount, boolean inLava) {
-        int i;
-        if(inLava){
-            i = EnchantmentUtil.getPyropneumatic(getLivingEntity());
-        } else {
-            i = EnchantmentUtil.getRespiration(getLivingEntity());
-        }
-        if(i == 0){
-            return airSupply - drowningAmount;
-        }
+    protected int decreaseAirSupply(int airSupply, int drowningAmount) {
         for(int j = 0; j < drowningAmount ; j++){
-            airSupply -= this.random.nextInt(i + 1) > 0 ? 0 : 1;
+            airSupply = this.decreaseAirSupply(airSupply);
         }
         return airSupply;
     }
 
+    protected void dropAllDeathLoot(DamageSource damageSource) {
+        Entity entity = damageSource.getEntity();
 
-    
+        int i = net.minecraftforge.common.ForgeHooks.getLootingLevel(this, entity, damageSource);
+        if(damageSource.getMsgId().equals("boomerang")){
+            i = Integer.max(i, ((BoomerangEntity)damageSource.getDirectEntity()).getLootingLevel());
+        }
+        this.captureDrops(new java.util.ArrayList<>());
+
+        boolean flag = this.lastHurtByPlayerTime > 0;
+        if (this.shouldDropLoot() && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            this.dropFromLootTable(damageSource, flag);
+            this.dropCustomDeathLoot(damageSource, i, flag);
+        }
+
+        this.dropEquipment();
+        this.dropExperience();
+
+        Collection<ItemEntity> drops = captureDrops(null);
+        if (!net.minecraftforge.common.ForgeHooks.onLivingDrops(getLivingEntity(), damageSource, drops, i, lastHurtByPlayerTime > 0))
+            drops.forEach(e -> level.addFreshEntity(e));
+    }
+
+    @Shadow
+    private int noJumpDelay;
+    @Shadow
+    protected int lerpSteps;
+    @Shadow
+    protected double lerpX;
+    @Shadow
+    protected double lerpY;
+    @Shadow
+    protected double lerpZ;
+    @Shadow
+    protected double lerpYRot;
+    @Shadow
+    protected double lerpXRot;
+    @Shadow
+    protected int lerpHeadSteps;
+    @Shadow
+    protected double lyHeadRot;
+    @Shadow
+    protected boolean isImmobile() {return false;}
+    @Shadow
+    protected void jumpInLiquid(ITag<Fluid> pFluidTag) {}
+    @Shadow
+    protected void serverAiStep() {}
+    @Shadow
+    public float xxa;
+    @Shadow
+    public float yya;
+    @Shadow
+    public float zza;
+    @Shadow
+    protected void jumpFromGround() {}
+    @Shadow
+    protected int autoSpinAttackTicks;
+    @Shadow
+    public boolean isSensitiveToWater() {return false;}
+    @Shadow
+    protected void checkAutoSpinAttack(AxisAlignedBB p_204801_1_, AxisAlignedBB p_204801_2_) {}
+    @Shadow
+    protected void pushEntities() {}
+
+
+
+
     public int getZephyrArmorTicks(){
         return this.zephyrArmorTicks;
     }

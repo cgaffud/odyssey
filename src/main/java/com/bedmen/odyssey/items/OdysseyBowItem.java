@@ -83,11 +83,6 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                             abstractArrowEntity.setRemainingFireTicks(100*k);
                         }
 
-
-                        if (EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), stack) > 0) {
-                            abstractArrowEntity.setSecondsOnFire(100);
-                        }
-
                         stack.hurtAndBreak(1, playerentity, (p_220009_1_) -> {
                             p_220009_1_.broadcastBreakEvent(playerentity.getUsedItemHand());
                         });

@@ -111,10 +111,10 @@ while(again):
         print("Directory "+bowID+" already exists")
 
     bowTemplateTextures = [
-        "bow.png",
-        "pulling_0.png",
-        "pulling_1.png",
-        "pulling_2.png"]
+        "bow_template/bow.png",
+        "bow_template/pulling_0.png",
+        "bow_template/pulling_1.png",
+        "bow_template/pulling_2.png"]
 
     for texture in bowTemplateTextures:
         shutil.copy(texture, textureDirectory)

@@ -7,28 +7,22 @@
   "mixins": [
     "MixinMinecraft",
     "MixinBlockItem",
-    "MixinForgeHooks",
     "MixinPlayerEntity",
-    "MixinForgeIngameGui",
     "MixinCombatRules",
     "MixinItemRenderer",
     "MixinMobEntity",
     "MixinLivingEntity",
-    "MixinFogRenderer",
     "MixinEnchantmentHelper",
     "MixinPotionUtils",
     "MixinEnchantment",
-    "MixinShieldRecipes",
     "MixinClientPlayerEntity",
     "MixinLayerUtil",
     "MixinServerPlayerEntity",
     "MixinTextFormatting",
-    "MixinCreativeScreen",
     "MixinServerPlayNetHandler",
     "MixinAbstractBlock",
     "MixinFirstPersonRenderer",
-    "MixinSEntityVelocityPacket",
-    "MixinEntityRendererManager"
+    "MixinSEntityVelocityPacket"
   ],
   "injectors": {
     "defaultRequire": 1

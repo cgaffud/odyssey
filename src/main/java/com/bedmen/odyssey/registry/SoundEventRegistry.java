@@ -1,11 +1,8 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.tileentity.*;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.registry.Registry;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -23,4 +20,9 @@ public class SoundEventRegistry {
 
     public static final RegistryObject<SoundEvent> KEY_UNLOCK = SOUND_EVENTS.register("key_unlock", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "block.key_unlock")));
     public static final RegistryObject<SoundEvent> LOCKED_CHEST = SOUND_EVENTS.register("locked_chest", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "block.locked_chest")));
+
+    //Mineral Leviathan
+    public static final RegistryObject<SoundEvent> MINERAL_LEVIATHAN_ROAR = SOUND_EVENTS.register("mineral_leviathan_roar", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.mineral_leviathan.roar")));
+    public static final RegistryObject<SoundEvent> MINERAL_LEVIATHAN_HURT = SOUND_EVENTS.register("mineral_leviathan_hurt", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.mineral_leviathan.hurt")));
+    public static final RegistryObject<SoundEvent> MINERAL_LEVIATHAN_DEATH = SOUND_EVENTS.register("mineral_leviathan_death", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.mineral_leviathan.death")));
 }

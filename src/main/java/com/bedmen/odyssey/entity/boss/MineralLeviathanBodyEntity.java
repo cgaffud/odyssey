@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
     protected static final DataParameter<List<Integer>> DATA_DEPENDENCIES_ID = EntityDataManager.defineId(MineralLeviathanBodyEntity.class, OdysseyDataSerializers.INT_LIST);
-    public  MineralLeviathanEntity head;
+    public MineralLeviathanHeadEntity head;
     public MineralLeviathanSegmentEntity prevSegment;
     public UUID[] dependencyUUIDs = new UUID[2];
 
@@ -27,20 +27,22 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
         this(entityType, world, null, null);
     }
 
-    public MineralLeviathanBodyEntity(EntityType<? extends MineralLeviathanBodyEntity> entityType, World world, MineralLeviathanEntity head, MineralLeviathanSegmentEntity prevSegment) {
+    public MineralLeviathanBodyEntity(EntityType<? extends MineralLeviathanBodyEntity> entityType, World world, MineralLeviathanHeadEntity head, MineralLeviathanSegmentEntity prevSegment) {
         super(entityType, world);
         this.head = head;
         this.prevSegment = prevSegment;
         if(head != null){
-            List<UUID> uuidList = new ArrayList<>();
             this.dependencyUUIDs[0] = this.head.getUUID();
             this.dependencyUUIDs[1] = this.prevSegment.getUUID();
             this.setBodyIDs(this.head.getId(), this.prevSegment.getId());
             this.initBody = true;
         }
-        ShellType shellType = ShellType.getRandomShellType(this.random);
-        this.setShellType(shellType);
-        this.setShellHealth(shellType.getShellMaxHealth());
+        if(!this.level.isClientSide){
+            ShellType shellType = ShellType.getRandomShellType(this.random);
+            this.setShellType(shellType);
+        } else {
+            this.setShellType(ShellType.COAL);
+        }
     }
 
     protected void defineSynchedData() {
@@ -63,7 +65,7 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
         //Server side Init Body
         if(!this.initBody && !this.level.isClientSide && this.dependencyUUIDs[0] != null){
             ServerWorld serverWorld = (ServerWorld) this.level;
-            this.head = (MineralLeviathanEntity) serverWorld.getEntity(this.dependencyUUIDs[0]);
+            this.head = (MineralLeviathanHeadEntity) serverWorld.getEntity(this.dependencyUUIDs[0]);
             this.prevSegment = (MineralLeviathanSegmentEntity) serverWorld.getEntity(this.dependencyUUIDs[1]);
             this.initBody = true;
         }
@@ -71,7 +73,7 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
         else if(!this.initBody){
             List<Integer> idList = this.getBodyIDs();
             if(idList.size() >= 2){
-                this.head = (MineralLeviathanEntity) this.level.getEntity(idList.get(0));
+                this.head = (MineralLeviathanHeadEntity) this.level.getEntity(idList.get(0));
                 this.prevSegment = (MineralLeviathanSegmentEntity) this.level.getEntity(idList.get(1));
                 this.initBody = true;
             }
@@ -117,7 +119,7 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 1.0D).add(Attributes.ATTACK_DAMAGE, MineralLeviathanEntity.DAMAGE * 0.5d);
+        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 1.0D).add(Attributes.ATTACK_DAMAGE, MineralLeviathanHeadEntity.DAMAGE * 0.5d);
     }
 
     public ServerBossInfo getBossEvent(){
@@ -125,5 +127,11 @@ public class MineralLeviathanBodyEntity extends MineralLeviathanSegmentEntity {
             return this.head.getBossEvent();
         }
         return null;
+    }
+
+    public void checkDespawn() {
+        if (this.head != null && this.head.removed) {
+            this.remove();
+        }
     }
 }

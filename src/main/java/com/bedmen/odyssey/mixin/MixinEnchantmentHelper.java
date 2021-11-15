@@ -10,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
@@ -128,5 +129,14 @@ public abstract class MixinEnchantmentHelper {
     @Overwrite
     public static float getSweepingDamageRatio(LivingEntity livingEntity) {
         return EnchantmentUtil.getSweepingDamageRatio(livingEntity);
+    }
+
+    @Overwrite
+    public static int getRespiration(LivingEntity livingEntity) {
+        if(livingEntity.isEyeInFluid(FluidTags.LAVA)){
+            return EnchantmentUtil.getPyropneumatic(livingEntity);
+        } else {
+            return EnchantmentUtil.getRespiration(livingEntity);
+        }
     }
 }

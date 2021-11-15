@@ -1,0 +1,17 @@
+{
+  "type": "oddc:alloying",
+  "ingredient1":[
+    {
+      "tag": "minecraft:gold_ores"
+    },
+    {
+      "item": "oddc:raw_gold"
+    }
+  ],
+  "ingredient2":{
+      "item": "oddc:silver_ingot"
+  },
+  "result": "oddc:electrum_ingot",
+  "experience": 1.5,
+  "cookingtime": 200
+}

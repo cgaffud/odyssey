@@ -3,8 +3,8 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
@@ -15,16 +15,16 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(MobEntity.class)
-public abstract class MixinMobEntity extends Entity{
+public abstract class MixinMobEntity extends LivingEntity {
 
-    public MixinMobEntity(EntityType<?> entityTypeIn, World worldIn) {
+    public MixinMobEntity(EntityType<? extends LivingEntity> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     //Disables all kinds of shields
     private void maybeDisableShield(PlayerEntity player, ItemStack mainhand, ItemStack activePlayerStack) {
         if (!mainhand.isEmpty() && !activePlayerStack.isEmpty() && (mainhand.getItem() instanceof AxeItem)){
-            float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(getMobEntity(this)) * 0.05F;
+            float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(getMobEntity()) * 0.05F;
             Item item = activePlayerStack.getItem();
             if (this.random.nextFloat() < f) {
                 if(item instanceof OdysseyShieldItem || item instanceof ShieldItem){
@@ -38,8 +38,7 @@ public abstract class MixinMobEntity extends Entity{
         }
     }
 
-    private MobEntity getMobEntity(MixinMobEntity mixinMobEntity){
-        return (MobEntity)(Object)mixinMobEntity;
+    private MobEntity getMobEntity(){
+        return (MobEntity)(Object)this;
     }
-
 }

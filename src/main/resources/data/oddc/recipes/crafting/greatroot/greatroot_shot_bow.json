@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ACA",
+    "BDB",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:greatroot"
+    },
+    "B": {
+      "item": "oddc:multi_cord"
+    },
+    "C": {
+      "item": "oddc:sterling_silver_ingot"
+    },
+    "D": {
+      "item": "minecraft:tripwire_hook"
+    }
+  },
+  "result": {
+    "item": "oddc:greatroot_shot_bow"
+  }
+}

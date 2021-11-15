@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import java.util.function.Predicate;
 
 public abstract class BossEntity extends MonsterEntity implements IBossEventEntity {
+    private int despawnTimer;
     protected static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
         return entity.attackable() && !(entity instanceof MonsterEntity);
     };
@@ -20,8 +21,15 @@ public abstract class BossEntity extends MonsterEntity implements IBossEventEnti
         super(p_i48576_1_, p_i48576_2_);
     }
 
+    public void tick(){
+        super.tick();
+        if(this.getTarget() == null){
+            this.despawnTimer++;
+        }
+    }
+
     public void checkDespawn() {
-        if (this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
+        if ((this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) || this.despawnTimer > 1200) {
             this.remove();
         } else {
             this.noActionTime = 0;

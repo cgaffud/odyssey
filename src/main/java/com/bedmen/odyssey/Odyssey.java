@@ -7,40 +7,29 @@ import com.bedmen.odyssey.client.renderer.entity.renderer.*;
 import com.bedmen.odyssey.client.renderer.tileentity.*;
 import com.bedmen.odyssey.container.OdysseyPlayerContainer;
 import com.bedmen.odyssey.container.QuiverContainer;
-import com.bedmen.odyssey.entity.EntityEvents;
+import com.bedmen.odyssey.entity.boss.AbandonedIronGolemEntity;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBodyEntity;
-import com.bedmen.odyssey.entity.boss.MineralLeviathanEntity;
+import com.bedmen.odyssey.entity.boss.MineralLeviathanHeadEntity;
 import com.bedmen.odyssey.entity.boss.PermafrostEntity;
-import com.bedmen.odyssey.entity.monster.ArctihornEntity;
-import com.bedmen.odyssey.entity.monster.BabySkeletonEntity;
-import com.bedmen.odyssey.entity.monster.LupineEntity;
-import com.bedmen.odyssey.entity.monster.WeaverEntity;
-import com.bedmen.odyssey.entity.player.PlayerEntityEvents;
+import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
-import com.bedmen.odyssey.items.OdysseySpawnEggItem;
-import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.potions.OdysseyPotions;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.trades.OdysseyTrades;
 import com.bedmen.odyssey.util.CompostUtil;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.OdysseyFeatureGen;
 import com.bedmen.odyssey.world.gen.OdysseyOreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.bedmen.odyssey.world.spawn.OdysseyStructureEntitySpawn;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -52,7 +41,6 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -76,12 +64,6 @@ public class Odyssey
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(EntityEvents.class);
-        MinecraftForge.EVENT_BUS.register(PlayerEntityEvents.class);
-        MinecraftForge.EVENT_BUS.register(OdysseyBiomeEntitySpawn.class);
-        MinecraftForge.EVENT_BUS.register(OdysseyStructureEntitySpawn.class);
-        MinecraftForge.EVENT_BUS.register(OdysseyFeatureGen.class);
-        MinecraftForge.EVENT_BUS.register(OdysseyOreGen.class);
 
         BlockRegistry.init();
         ItemRegistry.init();
@@ -110,8 +92,9 @@ public class Odyssey
         OdysseyNetwork.init();
         BiomeRegistry.register();
 
-        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::predicate);
-        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::predicate);
+        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
+        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
+        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, BabyLeviathanEntity::spawnPredicate);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)
@@ -154,12 +137,16 @@ public class Odyssey
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
 
         //Boss Renderings
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanSegmentRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanSegmentRenderer::new);
 
         //Projectile Renderings
         RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
@@ -172,36 +159,11 @@ public class Odyssey
 
         //Wood Types
         Atlases.addWoodType(OdysseyWoodType.PALM);
-    }
 
-    //Fix Armor Max Value
-    @SubscribeEvent
-    public static void onRegisterAttributes(final RegistryEvent.Register<Attribute> event){
-        ((RangedAttribute)Attributes.ARMOR).maxValue = 80.0d;
-    }
-
-    @SubscribeEvent
-    public static void onRegisterContainers(final RegistryEvent.Register<ContainerType<?>> event){
-        ContainerRegistry.initQuivers();
-    }
-
-    @SubscribeEvent
-    public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
-        OdysseySpawnEggItem.initSpawnEggs();
-    }
-
-    @SubscribeEvent
-    public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
-        EquipmentArmorItem.initEquipment();
-        EquipmentMeleeItem.initEquipment();
-        EquipmentItem.initEquipment();
-        EquipmentPickaxeItem.initEquipment();
-        EquipmentHoeItem.initEquipment();
-        EquipmentShovelItem.initEquipment();
-        EquipmentAxeItem.initEquipment();
-        EquipmentBowItem.initEquipment();
-
-        EnchantmentUtil.init();
+        Minecraft minecraft =  event.getMinecraftSupplier().get();
+        if(minecraft != null){
+            minecraft.gui = new OysseyIngameGui(minecraft);
+        }
     }
 
     @SubscribeEvent
@@ -226,10 +188,16 @@ public class Odyssey
         event.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
         event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonEntity.createAttributes().build());
-        event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanEntity.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeperEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperEntity.createAttributes().build());
         event.put(EntityTypeRegistry.WEAVER.get(), WeaverEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanEntity.createAttributes().build());
+
+        //Bosses
+        event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
     }
 
     @SubscribeEvent

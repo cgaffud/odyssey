@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A B",
+    "AB "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:greatroot"
+    },
+    "B": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "oddc:greatroot_long_bow"
+  }
+}

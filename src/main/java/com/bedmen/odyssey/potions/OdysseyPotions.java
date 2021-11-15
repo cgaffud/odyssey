@@ -22,7 +22,7 @@ public class OdysseyPotions {
         PotionBrewing.addMix(Potions.SLOWNESS, Items.REDSTONE, Potions.LONG_SLOWNESS);
         PotionBrewing.addMix(Potions.SLOWNESS, Items.QUARTZ, Potions.STRONG_SLOWNESS);
         //Haste
-        PotionBrewing.addMix(Potions.AWKWARD, Items.PRISMARINE_CRYSTALS, PotionRegistry.HASTE.get());
+        PotionBrewing.addMix(Potions.AWKWARD, ItemRegistry.ELECTRUM_INGOT.get(), PotionRegistry.HASTE.get());
         PotionBrewing.addMix(PotionRegistry.HASTE.get(), Items.REDSTONE, PotionRegistry.LONG_HASTE.get());
         PotionBrewing.addMix(PotionRegistry.HASTE.get(), Items.QUARTZ, PotionRegistry.STRONG_HASTE.get());
         //Mining Fatigue

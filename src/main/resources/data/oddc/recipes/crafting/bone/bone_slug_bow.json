@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ACA",
+    "BDB",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:bone"
+    },
+    "B": {
+      "item": "oddc:weaver_string"
+    },
+    "C": {
+      "item": "oddc:copper_ingot"
+    },
+    "D": {
+      "item": "minecraft:tripwire_hook"
+    }
+  },
+  "result": {
+    "item": "oddc:bone_slug_bow"
+  }
+}
