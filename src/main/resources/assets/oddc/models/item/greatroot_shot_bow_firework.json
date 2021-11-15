@@ -1,6 +1,0 @@
-{
-  "parent": "oddc:item/greatroot_shot_bow",
-  "textures": {
-    "layer0": "oddc:item/greatroot_shot_bow/firework"
-  }
-}

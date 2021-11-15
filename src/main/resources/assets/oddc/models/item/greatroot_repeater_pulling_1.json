@@ -1,6 +1,0 @@
-{
-  "parent": "oddc:item/greatroot_repeater",
-  "textures": {
-    "layer0": "oddc:item/greatroot_repeater/pulling_1"
-  }
-}

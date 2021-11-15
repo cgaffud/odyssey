@@ -1,6 +1,0 @@
-{
-  "parent": "oddc:item/bown",
-  "textures": {
-    "layer0": "oddc:item/bown/pulling_2"
-  }
-}

@@ -1,8 +1,5 @@
 {
   "replace": false,
   "values": [
-    "oddc:amethyst_arrow",
-    "oddc:quartz_arrow",
-    "oddc:razor_arrow"
   ]
 }

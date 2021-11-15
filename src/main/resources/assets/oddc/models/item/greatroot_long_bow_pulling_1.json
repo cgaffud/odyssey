@@ -1,6 +1,0 @@
-{
-  "parent": "oddc:item/greatroot_long_bow",
-  "textures": {
-    "layer0": "oddc:item/greatroot_long_bow/pulling_1"
-  }
-}

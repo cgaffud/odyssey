@@ -1,6 +1,0 @@
-{
-  "parent": "oddc:item/charmed_bow",
-  "textures": {
-    "layer0": "oddc:item/charmed_bow/pulling_1"
-  }
-}

@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "oddc:block/silver_ore" }
+    "": {
+      "model": "oddc:block/silver_ore"
+    }
   }
 }

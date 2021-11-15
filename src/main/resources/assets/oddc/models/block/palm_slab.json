@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "oddc:block/palm_planks",
-    "top": "oddc:block/palm_planks",
-    "side": "oddc:block/palm_planks"
-  }
-}

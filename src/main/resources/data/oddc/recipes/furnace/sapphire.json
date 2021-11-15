@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "oddc:sapphire_ore"
-  },
-  "result": "oddc:sapphire",
-  "experience": 1.0,
-  "cookingtime": 200
-}

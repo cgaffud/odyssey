@@ -1,6 +1,0 @@
-{
-  "parent": "oddc:item/bone_slug_bow",
-  "textures": {
-    "layer0": "oddc:item/bone_slug_bow/pulling_1"
-  }
-}
