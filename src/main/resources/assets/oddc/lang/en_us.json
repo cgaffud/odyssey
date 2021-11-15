@@ -107,8 +107,6 @@
   "container.oddc.bookshelf": "Bookshelf",
   "container.oddc.research_table": "Research",
   "enchantment.oddc.accuracy": "Accuracy",
-  "enchantment.oddc.blocking": "Blocking",
-  "enchantment.oddc.recovery": "Recovery",
   "enchantment.oddc.vulcan_strider": "Vulcan Strider",
   "enchantment.oddc.obsidian_walker": "Obsidian Walker",
   "enchantment.oddc.molten_affinity": "Molten Affinity",
@@ -376,5 +374,8 @@
   "item.oddc.camo_creeper_spawn_egg": "Camo Creeper Spawn Egg",
   "entity.oddc.baby_leviathan": "Baby Leviathan",
   "item.oddc.baby_leviathan_spawn_egg": "Baby Leviathan Spawn Egg",
-  "item.oddc.baby_leviathan_bucket": "Baby Leviathan Bucket"
+  "item.oddc.baby_leviathan_bucket": "Baby Leviathan Bucket",
+  "entity.mineral_leviathan.roar.sub": "Mineral Leviathan Roar",
+  "entity.mineral_leviathan.hurt.sub": "Mineral Leviathan Hurt",
+  "entity.mineral_leviathan.death.sub": "Mineral Leviathan Death"
 }

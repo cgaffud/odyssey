@@ -2,6 +2,8 @@ package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.SoundEventRegistry;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -12,7 +14,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -244,6 +245,13 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
                         break;
                 }
             }
+            BlockState blockState = this.level.getBlockState(this.blockPosition());
+            if(!blockState.isAir()){
+                this.playSound(blockState.getSoundType().getBreakSound(), 4.0F, this.random.nextFloat()*0.2f+0.5f);
+            }
+//            if(Math.round(this.mouthAngle) >= 75 && this.mouthAngle != this.mouthAngleO && this.level.isClientSide){
+//                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENDER_DRAGON_GROWL, this.getSoundSource(), 4.0F, 0.5F, false);
+//            }
         }
         super.aiStep();
     }
@@ -264,15 +272,19 @@ public class MineralLeviathanHeadEntity extends MineralLeviathanSegmentEntity {
     }
 
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SILVERFISH_AMBIENT;
+        return SoundEventRegistry.MINERAL_LEVIATHAN_ROAR.get();
     }
 
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.SILVERFISH_HURT;
+        return SoundEventRegistry.MINERAL_LEVIATHAN_HURT.get();
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SILVERFISH_DEATH;
+        return SoundEventRegistry.MINERAL_LEVIATHAN_DEATH.get();
+    }
+
+    protected float getSoundVolume() {
+        return 3.0F;
     }
 
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
