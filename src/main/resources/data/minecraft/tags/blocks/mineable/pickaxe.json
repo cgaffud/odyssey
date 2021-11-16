@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "#oddc:silver_ores"
+    "#oddc:silver_ores",
+    "oddc:raw_silver_block",
+    "oddc:silver_block"
   ]
 }

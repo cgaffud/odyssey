@@ -3,5 +3,9 @@
   "itemGroup.oddc_materials": "Odyssey Materials",
   "block.oddc.silver_ore": "Silver Ore",
   "block.oddc.deepslate_silver_ore": "Deepslate Silver Ore",
-  "item.oddc.raw_silver": "Raw Silver"
+  "item.oddc.raw_silver": "Raw Silver",
+  "item.oddc.silver_nugget": "Silver Nugget",
+  "item.oddc.silver_ingot": "Silver Ingot",
+  "block.oddc.silver_block": "Block of Silver",
+  "block.oddc.raw_silver_block": "Block of Raw Silver"
 }

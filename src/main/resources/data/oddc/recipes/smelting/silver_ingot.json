@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "group": "silver_ingot",
+  "ingredient": {
+    "tag": "oddc:raw_silvers"
+  },
+  "result": "oddc:silver_ingot",
+  "experience": 1.0,
+  "cookingtime": 200
+}

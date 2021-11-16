@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "oddc:raw_silver_block"
+    }
+  ],
+  "result": {
+    "item": "oddc:raw_silver",
+    "count": 9
+  }
+}

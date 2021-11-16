@@ -10,6 +10,8 @@
     "minecraft:deepslate_gold_ore",
     "minecraft:redstone_ore",
     "minecraft:deepslate_redstone_ore",
-    "#oddc:silver_ores"
+    "#oddc:silver_ores",
+    "oddc:raw_silver_block",
+    "oddc:silver_block"
   ]
 }
