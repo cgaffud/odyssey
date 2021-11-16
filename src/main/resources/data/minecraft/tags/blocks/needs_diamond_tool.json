@@ -1,8 +1,10 @@
 {
-  "replace": true,
+  "replace": false,
   "values": [
-    "minecraft:diamond_block",
-    "minecraft:diamond_ore",
-    "minecraft:deepslate_diamond_ore"
+    "minecraft:obsidian",
+    "minecraft:crying_obsidian",
+    "minecraft:netherite_block",
+    "minecraft:respawn_anchor",
+    "minecraft:ancient_debris"
   ]
 }

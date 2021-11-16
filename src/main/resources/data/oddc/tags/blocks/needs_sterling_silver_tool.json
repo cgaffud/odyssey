@@ -1,0 +1,8 @@
+{
+  "replace": true,
+  "values": [
+    "minecraft:diamond_block",
+    "minecraft:diamond_ore",
+    "minecraft:deepslate_diamond_ore"
+  ]
+}
