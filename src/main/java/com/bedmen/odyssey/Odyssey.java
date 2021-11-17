@@ -4,6 +4,7 @@ package com.bedmen.odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.world.gen.OreGen;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -29,7 +30,9 @@ public class Odyssey
     public static final String MOD_ID = "oddc";
 
     public Odyssey() {
-        FMLJavaModLoadingContext.get().getModEventBus().register(this);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::ready);
         MinecraftForge.EVENT_BUS.register(this);
 
         BlockRegistry.init();
@@ -49,7 +52,7 @@ public class Odyssey
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-//        OdysseyOreGen.registerOres();
+        OreGen.registerOres();
 //        OdysseyFeatureGen.registerFeatures();
 //        OdysseyBiomeEntitySpawn.registerSpawners();
 //        OdysseyStructureEntitySpawn.registerSpawners();
