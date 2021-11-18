@@ -16,6 +16,7 @@ public class OdysseyCreativeModeTab extends CreativeModeTab {
     public static final CreativeModeTab MATERIALS = new OdysseyCreativeModeTab("oddc_materials", Lazy.of(ItemRegistry.RAW_SILVER));
 //    public static final CreativeModeTab TOOLS = new OdysseyCreativeModeTab("oddc_tools", Lazy.of(ItemRegistry.STERLING_SILVER_AXE));
 //    public static final CreativeModeTab COMBAT = new OdysseyCreativeModeTab("oddc_combat", Lazy.of(ItemRegistry.STERLING_SILVER_SWORD));
+    public static final CreativeModeTab ARMOR = new OdysseyCreativeModeTab("oddc_armor", Lazy.of(ItemRegistry.TURTLE_CHESTPLATE));
 //    public static final CreativeModeTab MAGIC = new OdysseyCreativeModeTab("oddc_magic", Lazy.of(ItemRegistry.PURGE_TABLET));
 //    public static final CreativeModeTab SPAWN_EGGS = new OdysseyCreativeModeTab("oddc_spawn_eggs", Lazy.of(ItemRegistry.ARCTIHORN_SPAWN_EGG));
 

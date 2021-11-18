@@ -17,7 +17,7 @@ while(again):
     langName = input("Lang File Block Name: ")
     while(True):
         toolType = int(input("Tool Type? (0 : None, 1 : Pickaxe, 2 : Axe, 3 : Shovel, 4 : Hoe): "))
-        if(toolType in toolTypes):
+        if(toolType in toolTypes): 
             toolType = toolTypes[toolType]
             break
         print("(Enter a valid number)")
