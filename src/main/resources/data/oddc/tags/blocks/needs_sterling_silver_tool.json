@@ -1,8 +1,14 @@
 {
-  "replace": true,
+  "replace": false,
   "values": [
     "minecraft:diamond_block",
     "minecraft:diamond_ore",
-    "minecraft:deepslate_diamond_ore"
+    "minecraft:deepslate_diamond_ore",
+    "minecraft:small_amethyst_bud",
+    "minecraft:medium_amethyst_bud",
+    "minecraft:large_amethyst_bud",
+    "minecraft:amethyst_cluster",
+    "minecraft:amethyst_block",
+    "minecraft:budding_amethyst"
   ]
 }
