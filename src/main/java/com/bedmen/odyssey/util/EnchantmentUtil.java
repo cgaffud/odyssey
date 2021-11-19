@@ -154,7 +154,7 @@ public class EnchantmentUtil {
     }
 
     public static int getDepthStrider(LivingEntity entity) {
-        return getVulcanStrider(entity) + EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DEPTH_STRIDER.get(), entity);
+        return Integer.max(getVulcanStrider(entity), EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DEPTH_STRIDER.get(), entity));
     }
 
     public static int getVulcanStrider(LivingEntity entity) {
@@ -162,7 +162,7 @@ public class EnchantmentUtil {
     }
 
     public static int getFrostWalker(LivingEntity entity) {
-        return getObsidianWalker(entity) + EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FROST_WALKER.get(), entity);
+        return Integer.max(getObsidianWalker(entity), EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FROST_WALKER.get(), entity));
     }
 
     public static int getObsidianWalker(LivingEntity entity) {
@@ -170,7 +170,7 @@ public class EnchantmentUtil {
     }
 
     public static int getRespiration(LivingEntity entity) {
-        return getPyropneumatic(entity) + EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.RESPIRATION.get(), entity);
+        return Integer.max(getPyropneumatic(entity), EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.RESPIRATION.get(), entity));
     }
 
     public static int getPyropneumatic(LivingEntity entity) {
@@ -178,7 +178,7 @@ public class EnchantmentUtil {
     }
 
     public static int getRiptide(ItemStack itemStack) {
-        return getEruption(itemStack) + EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.RIPTIDE.get(), itemStack);
+        return Integer.max(getEruption(itemStack), EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.RIPTIDE.get(), itemStack));
     }
 
     public static int getEruption(ItemStack itemStack) {
@@ -197,24 +197,28 @@ public class EnchantmentUtil {
 //        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SHATTERING.get(), entity);
 //    }
 
-    public static int getQuickChargeTime(int chargeTime, ItemStack itemStack) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.QUICK_CHARGE.get(), itemStack);
-        return chargeTime - (chargeTime / 5) * i;
-    }
-
-    public static int getPiercing(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), itemStack);
-    }
-
-    public static int getPunch(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get(), itemStack);
-    }
-
-    public static int getFlame(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), itemStack);
-    }
+//    public static int getQuickChargeTime(int chargeTime, ItemStack itemStack) {
+//        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.QUICK_CHARGE.get(), itemStack);
+//        return chargeTime - (chargeTime / 5) * i;
+//    }
+//
+//    public static int getPiercing(ItemStack itemStack) {
+//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), itemStack);
+//    }
+//
+//    public static int getPunch(ItemStack itemStack) {
+//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get(), itemStack);
+//    }
+//
+//    public static int getFlame(ItemStack itemStack) {
+//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), itemStack);
+//    }
 
 //    public static float getSuperChargeMultiplier(ItemStack itemStack) {
 //        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.SUPER_CHARGE.get(), itemStack) * 0.5f + 1.0f;
 //    }
+
+    public static int getKnockback(LivingEntity livingEntity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.KNOCKBACK.get(), livingEntity);
+    }
 }

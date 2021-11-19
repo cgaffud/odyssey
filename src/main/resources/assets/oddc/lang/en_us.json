@@ -1,6 +1,7 @@
 {
   "itemGroup.oddc_building_blocks": "Odyssey Building Blocks",
   "itemGroup.oddc_materials": "Odyssey Materials",
+  "itemGroup.oddc_melee": "Odyssey Melee Weapons",
   "itemGroup.oddc_armor": "Odyssey Armor",
   "block.oddc.silver_ore": "Silver Ore",
   "block.oddc.deepslate_silver_ore": "Deepslate Silver Ore",
@@ -60,5 +61,11 @@
   "enchantment.oddc.unenchantable": "Unenchantable",
   "item.oddc.equipment.setbonus": "Set Bonus: ",
   "item.oddc.equipment.key": " Key]",
-  "item.oddc.equipment.passive": " [Passive]"
+  "item.oddc.equipment.passive": " [Passive]",
+  "item.oddc.feathered_helmet": "Feathered Cap",
+  "item.oddc.feathered_chestplate": "Feathered Tunic",
+  "item.oddc.feathered_leggings": "Feathered Pants",
+  "item.oddc.feathered_boots": "Chicken Feet",
+  "item.oddc.copper_hammer": "Copper Hammer",
+  "item.oddc.copper_bat": "Copper Bat"
 }

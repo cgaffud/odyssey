@@ -2,6 +2,7 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
+import com.bedmen.odyssey.items.equipment.EquipmentMeleeItem;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
@@ -43,7 +44,7 @@ public class RegistryEvents {
     @SubscribeEvent
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
-//        EquipmentMeleeItem.initEquipment();
+        EquipmentMeleeItem.initEquipment();
 //        EquipmentItem.initEquipment();
 //        EquipmentPickaxeItem.initEquipment();
 //        EquipmentHoeItem.initEquipment();

@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.equipment.IEquipment;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -163,5 +165,13 @@ public abstract class MixinEnchantmentHelper {
             return EnchantmentUtil.getVulcanStrider(livingEntity);
         }
         return EnchantmentUtil.getDepthStrider(livingEntity);
+    }
+
+    /**
+     * @author JemBren
+     */
+    @Overwrite
+    public static int getKnockbackBonus(LivingEntity livingEntity) {
+        return EnchantmentUtil.getKnockback(livingEntity);
     }
 }
