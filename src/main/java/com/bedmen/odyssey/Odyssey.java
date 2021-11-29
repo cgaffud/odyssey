@@ -1,12 +1,14 @@
 package com.bedmen.odyssey;
 
 
+import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.world.gen.OreGen;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -129,10 +131,8 @@ public class Odyssey
 //        //Wood Types
 //        Atlases.addWoodType(OdysseyWoodType.PALM);
 //
-//        Minecraft minecraft =  event.getMinecraftSupplier().get();
-//        if(minecraft != null){
-//            minecraft.gui = new OysseyIngameGui(minecraft);
-//        }
+        Minecraft minecraft = Minecraft.getInstance();
+        minecraft.gui = new OdysseyIngameGui(minecraft);
     }
 
     @SubscribeEvent
