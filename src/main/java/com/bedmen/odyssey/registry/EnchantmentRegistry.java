@@ -60,6 +60,9 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> MENDING = ENCHANTMENTS.register("mending", () -> new MendingEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.values()));
     public static final RegistryObject<Enchantment> VANISHING_CURSE = ENCHANTMENTS.register("vanishing_curse", () -> new VanishingCurseEnchantment(Enchantment.Rarity.VERY_RARE, EquipmentSlot.values()));
 
+    //Odyssey Enchantments
+    public static final RegistryObject<Enchantment> SHATTERING = ENCHANTMENTS.register("shattering", () -> new ShatteringEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));
+
     //Volcanic Enchantments
     public static final RegistryObject<Enchantment> VULCAN_STRIDER = ENCHANTMENTS.register("vulcan_strider", () -> new VulcanStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
     public static final RegistryObject<Enchantment> OBSIDIAN_WALKER = ENCHANTMENTS.register("obsidian_walker", () -> new ObsidianWalkerEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.FEET));

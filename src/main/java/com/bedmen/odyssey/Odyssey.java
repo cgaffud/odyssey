@@ -2,6 +2,7 @@ package com.bedmen.odyssey;
 
 
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tools.OdysseyTiers;
@@ -39,7 +40,7 @@ public class Odyssey
 //        BiomeRegistry.init();
 //        ContainerRegistry.init();
 //        DataSerializerRegistry.init();
-//        EffectRegistry.init();
+        EffectRegistry.init();
         EnchantmentRegistry.init();
 //        EntityTypeRegistry.init();
 //        FeatureRegistry.init();

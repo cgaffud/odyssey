@@ -19,6 +19,7 @@ public class RegistryEvents {
      */
     @SubscribeEvent
     public static void onRegisterAttributes(final RegistryEvent.Register<Attribute> event){
+        ((RangedAttribute) Attributes.ARMOR).minValue = -20.0d;
         ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
     }
 

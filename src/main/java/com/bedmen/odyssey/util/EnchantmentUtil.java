@@ -193,9 +193,9 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SWEEPING_EDGE.get(), entity) * 0.2f;
     }
 
-//    public static int getShattering(LivingEntity entity) {
-//        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SHATTERING.get(), entity);
-//    }
+    public static int getShattering(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SHATTERING.get(), entity);
+    }
 
 //    public static int getQuickChargeTime(int chargeTime, ItemStack itemStack) {
 //        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.QUICK_CHARGE.get(), itemStack);
