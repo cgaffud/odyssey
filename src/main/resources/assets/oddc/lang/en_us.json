@@ -70,5 +70,8 @@
   "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.copper_bat": "Copper Bat",
   "item.oddc.copper_battle_axe": "Copper Battle Axe",
-  "effect.oddc.shattered": "Shattered"
+  "effect.oddc.shattered": "Shattered",
+  "item.oddc.obsidian_battle_axe": "Obsidian Battle Axe",
+  "item.oddc.obsidian_hammer": "Obsidian Hammer",
+  "item.oddc.obsidian_bat": "Obsidian Bat"
 }

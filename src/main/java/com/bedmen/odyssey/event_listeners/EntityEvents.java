@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 public class EntityEvents {
 
     @SubscribeEvent
-    public static void entityJoinWorldEventListener(final AttackEntityEvent event){
+    public static void attackEntityEventListener(final AttackEntityEvent event){
         Player player = (Player) event.getEntity();
         int shatteringLevel = EnchantmentUtil.getShattering(player);
         Entity target = event.getTarget();
