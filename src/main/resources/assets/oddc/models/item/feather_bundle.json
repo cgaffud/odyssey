@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "oddc:item/feathered_helmet"
+    "layer0": "oddc:item/feather_bundle"
   }
 }

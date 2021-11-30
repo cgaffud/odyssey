@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "oddc:item/feathered_chestplate"
+    "layer0": "oddc:item/chicken_boots"
   }
 }

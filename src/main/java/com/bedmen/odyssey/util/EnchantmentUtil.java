@@ -132,10 +132,10 @@ public class EnchantmentUtil {
 //    public static boolean hasGliding(LivingEntity entity) {
 //        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.GLIDING.get(), entity) > 0;
 //    }
-//
-//    public static boolean hasSlowFalling(LivingEntity entity) {
-//        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SLOW_FALLING.get(), entity) > 0;
-//    }
+
+    public static boolean hasSlowFalling(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SLOW_FALLING.get(), entity) > 0;
+    }
 
     public static boolean hasTurtling(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.TURTLING.get(), entity) > 0;

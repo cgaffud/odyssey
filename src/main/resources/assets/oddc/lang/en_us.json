@@ -64,10 +64,6 @@
   "item.oddc.equipment.setbonus": "Set Bonus: ",
   "item.oddc.equipment.key": " Key]",
   "item.oddc.equipment.passive": " [Passive]",
-  "item.oddc.feathered_helmet": "Feathered Cap",
-  "item.oddc.feathered_chestplate": "Feathered Tunic",
-  "item.oddc.feathered_leggings": "Feathered Pants",
-  "item.oddc.feathered_boots": "Chicken Feet",
   "item.oddc.copper_hammer": "Copper Hammer",
   "item.oddc.copper_bat": "Copper Bat",
   "item.oddc.copper_battle_axe": "Copper Battle Axe",
@@ -81,5 +77,11 @@
   "item.oddc.camo_creeper_spawn_egg": "Camo Creeper Spawn Egg",
   "entity.oddc.baby_leviathan": "Baby Leviathan",
   "item.oddc.baby_leviathan_spawn_egg": "Baby Leviathan Spawn Egg",
-  "item.oddc.baby_leviathan_bucket": "Bucket of Baby Leviathan"
+  "item.oddc.baby_leviathan_bucket": "Bucket of Baby Leviathan",
+  "item.oddc.feather_bundle": "Feather Bundle",
+  "item.oddc.chicken_helmet": "Feathered Cap",
+  "item.oddc.chicken_chestplate": "Feathered Tunic",
+  "item.oddc.chicken_leggings": "Feathered Pants",
+  "item.oddc.chicken_boots": "Feathered Boots",
+  "enchantment.oddc.slow_falling": "Slow Falling"
 }

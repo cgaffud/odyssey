@@ -6,40 +6,39 @@ import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SneakingPacket {
+public class JumpingPacket {
 
-    public boolean sneaking;
+    public boolean jumping;
 
-    public SneakingPacket(){
+    public JumpingPacket(){
     }
 
-    public SneakingPacket(boolean sneaking){
-        this.sneaking = sneaking;
+    public JumpingPacket(boolean jumping){
+        this.jumping = jumping;
     }
 
     /**
      * Reads the raw packet data from the data stream.
      */
-    public static void encode(SneakingPacket sneakingPacket, FriendlyByteBuf buf){
-        buf.writeBoolean(sneakingPacket.sneaking);
+    public static void encode(JumpingPacket jumpingPacket, FriendlyByteBuf buf){
+        buf.writeBoolean(jumpingPacket.jumping);
     }
 
     /**
      * Writes the raw packet data to the data stream.
      */
-    public static SneakingPacket decode(FriendlyByteBuf buf){
-        return new SneakingPacket(buf.readBoolean());
+    public static JumpingPacket decode(FriendlyByteBuf buf){
+        return new JumpingPacket(buf.readBoolean());
     }
 
     /**
      * Passes this Packet on to the NetHandler for processing.
      */
-    public static void handle(SneakingPacket sneakingPacket, Supplier<NetworkEvent.Context> supplier) {
+    public static void handle(JumpingPacket jumpingPacket, Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             ServerPlayer serverPlayerEntity = context.getSender();
-            if(serverPlayerEntity != null)
-                serverPlayerEntity.setShiftKeyDown(sneakingPacket.sneaking);
+            serverPlayerEntity.setJumping(jumpingPacket.jumping);
         });
         context.setPacketHandled(true);
     }
