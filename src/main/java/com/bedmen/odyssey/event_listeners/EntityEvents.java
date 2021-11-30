@@ -7,6 +7,7 @@ import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -112,11 +113,11 @@ public class EntityEvents {
             Creeper creeperEntity = (Creeper)entity;
             Random random = creeperEntity.getRandom();
 
-//            if(random.nextFloat() < getCamoChance(creeperEntity.level.getDifficulty())){
-//                EntityTypeRegistry.CAMO_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-//                event.setCanceled(true);
-//                return;
-//            }
+            if(random.nextFloat() < getCamoChance(creeperEntity.level.getDifficulty())){
+                EntityTypeRegistry.CAMO_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
+                event.setCanceled(true);
+                return;
+            }
 
             if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
                 EntityTypeRegistry.BABY_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
@@ -145,15 +146,12 @@ public class EntityEvents {
 //            }
 //        }
 //    }
-//
-//    public static float getCamoChance(Difficulty difficulty){
-//        switch(difficulty){
-//            case HARD:
-//                return 1f;
-//            case NORMAL:
-//                return 0.5f;
-//            default:
-//                return 0f;
-//        }
-//    }
+
+    public static float getCamoChance(Difficulty difficulty){
+        return switch (difficulty) {
+            case HARD -> 1f;
+            case NORMAL -> 0.5f;
+            default -> 0.25f;
+        };
+    }
 }

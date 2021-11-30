@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class OdysseyCreeperRenderer extends MobRenderer<OdysseyCreeper, OdysseyCreeperModel<OdysseyCreeper>> {
-    private static final ResourceLocation CREEPER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper.png");
+    protected static final ResourceLocation CREEPER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper.png");
 
     public OdysseyCreeperRenderer(EntityRendererProvider.Context p_173958_) {
         super(p_173958_, new OdysseyCreeperModel<>(p_173958_.bakeLayer(ModelLayers.CREEPER)), 0.5F);

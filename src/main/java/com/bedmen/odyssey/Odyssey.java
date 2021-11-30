@@ -2,8 +2,10 @@ package com.bedmen.odyssey;
 
 
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
+import com.bedmen.odyssey.client.renderer.entity.renderer.CamoCreeperRenderer;
 import com.bedmen.odyssey.client.renderer.entity.renderer.OdysseyCreeperRenderer;
 import com.bedmen.odyssey.entity.monster.BabyCreeper;
+import com.bedmen.odyssey.entity.monster.CamoCreeper;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.world.gen.OreGen;
@@ -110,7 +112,7 @@ public class Odyssey
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
 
         EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
+        EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
 //
@@ -164,7 +166,7 @@ public class Odyssey
 //        event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
 //        event.put(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonEntity.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
-//        event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());
 //        event.put(EntityTypeRegistry.WEAVER.get(), WeaverEntity.createAttributes().build());
 //        event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanEntity.createAttributes().build());
 //
