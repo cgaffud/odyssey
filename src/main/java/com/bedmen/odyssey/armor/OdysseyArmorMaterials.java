@@ -12,19 +12,19 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum OdysseyArmorMaterials implements ArmorMaterial {
-//    LEATHER("leather", 5, new int[]{2,3,3,2}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> { return Ingredient.of(Items.LEATHER);}),
+    LEATHER("leather", 5, new int[]{2,3,3,2}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> { return Ingredient.of(Items.LEATHER);}),
 //    COCONUT("oddc:coconut", 0, new int[]{0,0,0,3}, 0, SoundEvents.WOOD_BREAK, 0.0f, () -> { return Ingredient.EMPTY;}),
 //    CHICKEN("oddc:chicken", 4, new int[]{2,3,3,2}, 0, SoundEvents.CHICKEN_HURT, 0.0f, () -> { return Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get());}, new SetBonusEnchSup(EnchantmentRegistry.SLOW_FALLING, "key.jump")),
-//    CHAIN("chainmail", 15, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
-//    IRON("iron", 15, new int[]{4,7,8,5}, 0, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
-    TURTLE("oddc:turtle", 25, new int[]{4,7,8,5}, 0, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, () -> { return Ingredient.of(Items.SCUTE); }, new SetBonusEnchSup(EnchantmentRegistry.TURTLING, "key.sneak"));
-//    GOLD("gold", 7, new int[]{5,8,9,6}, 10, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, () -> { return Ingredient.of(Items.GOLD_INGOT); }),
+    CHAIN("chainmail", 15, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
+    IRON("iron", 15, new int[]{4,7,8,5}, 0, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
+    TURTLE("oddc:turtle", 25, new int[]{4,7,8,5}, 0, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, () -> { return Ingredient.of(Items.SCUTE); }, new SetBonusEnchSup(EnchantmentRegistry.TURTLING, "key.sneak")),
+    GOLD("gold", 7, new int[]{5,8,9,6}, 10, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, () -> { return Ingredient.of(Items.GOLD_INGOT); }),
 //    STERLING_SILVER("oddc:sterling_silver", 20, new int[]{5,9,10,6}, 7, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, () -> {return Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get());}),
 //    REINFORCED("oddc:reinforced", 25, new int[]{6,10,11,7}, 0, SoundEvents.ARMOR_EQUIP_IRON, 0.1F, () -> { return Ingredient.of(Items.OBSIDIAN); }),
-//    DIAMOND("diamond", 33, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(Items.DIAMOND); }),
+    DIAMOND("diamond", 33, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(Items.DIAMOND); }),
 //    ARCTIC("oddc:arctic", 20, new int[]{6,10,11,7}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()); }, new SetBonusEnchSup(EnchantmentRegistry.FROST_WALKER, "passive")),
 //    MARINE("oddc:marine", 25, new int[]{7,13,14,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(ItemRegistry.PEARL.get()); }),
-//    NETHERITE("netherite", 37, new int[]{7,13,15,9}, 5, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.1F, () -> { return Ingredient.of(Items.NETHERITE_INGOT); }),
+    NETHERITE("netherite", 37, new int[]{7,13,15,9}, 5, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.1F, () -> { return Ingredient.of(Items.NETHERITE_INGOT); });
 //    ZEPHYR("oddc:zephyr", 15, new int[]{5,9,10,6}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0F, () -> { return Ingredient.of(Items.PHANTOM_MEMBRANE); }, new SetBonusEnchSup(EnchantmentRegistry.GLIDING, "key.jump")),
 //    LEVIATHAN("oddc:leviathan", 30, new int[]{8,14,16,10}, 0, SoundEvents.ARMOR_EQUIP_TURTLE , 0.0F, () -> { return Ingredient.of(ItemRegistry.LEVIATHAN_SCALE.get()); }, new SetBonusEnchSup(EnchantmentRegistry.FIREPROOF, "key.sneak"));
 
@@ -93,5 +93,15 @@ public enum OdysseyArmorMaterials implements ArmorMaterial {
 
     public SetBonusEnchSup[] getSetBonusEnchSups(){
         return this.setBonusEnchSups;
+    }
+
+    public int getTotalDefense(){
+        int total = 0;
+        for(EquipmentSlot equipmentSlot : EquipmentSlot.values()){
+            if(equipmentSlot.getType() == EquipmentSlot.Type.ARMOR){
+                total += this.getDefenseForSlot(equipmentSlot);
+            }
+        }
+        return total;
     }
 }
