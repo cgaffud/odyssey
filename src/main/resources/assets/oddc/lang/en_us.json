@@ -3,6 +3,7 @@
   "itemGroup.oddc_materials": "Odyssey Materials",
   "itemGroup.oddc_melee": "Odyssey Melee Weapons",
   "itemGroup.oddc_armor": "Odyssey Armor",
+  "itemGroup.oddc_spawning": "Odyssey Spawning",
   "block.oddc.silver_ore": "Silver Ore",
   "block.oddc.deepslate_silver_ore": "Deepslate Silver Ore",
   "item.oddc.raw_silver": "Raw Silver",
@@ -73,5 +74,7 @@
   "effect.oddc.shattered": "Shattered",
   "item.oddc.obsidian_battle_axe": "Obsidian Battle Axe",
   "item.oddc.obsidian_hammer": "Obsidian Hammer",
-  "item.oddc.obsidian_bat": "Obsidian Bat"
+  "item.oddc.obsidian_bat": "Obsidian Bat",
+  "entity.oddc.baby_creeper": "Baby Creeper",
+  "item.oddc.baby_creeper_spawn_egg": "Baby Creeper Spawn Egg"
 }

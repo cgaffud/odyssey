@@ -2,13 +2,13 @@ package com.bedmen.odyssey;
 
 
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
-import com.bedmen.odyssey.registry.BlockRegistry;
-import com.bedmen.odyssey.registry.EffectRegistry;
-import com.bedmen.odyssey.registry.EnchantmentRegistry;
-import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.client.renderer.entity.renderer.OdysseyCreeperRenderer;
+import com.bedmen.odyssey.entity.monster.BabyCreeper;
+import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.world.gen.OreGen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -44,7 +44,7 @@ public class Odyssey
 //        DataSerializerRegistry.init();
         EffectRegistry.init();
         EnchantmentRegistry.init();
-//        EntityTypeRegistry.init();
+        EntityTypeRegistry.init();
 //        FeatureRegistry.init();
 //        PotionRegistry.init();
 //        RecipeRegistry.init();
@@ -108,7 +108,8 @@ public class Odyssey
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
+
+        EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
@@ -162,7 +163,7 @@ public class Odyssey
 //        event.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
 //        event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
 //        event.put(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonEntity.createAttributes().build());
-//        event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeperEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
 //        event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperEntity.createAttributes().build());
 //        event.put(EntityTypeRegistry.WEAVER.get(), WeaverEntity.createAttributes().build());
 //        event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanEntity.createAttributes().build());

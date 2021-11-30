@@ -1,8 +1,10 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.items.OdysseySpawnEggItem;
 import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
 import com.bedmen.odyssey.items.equipment.EquipmentMeleeItem;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
@@ -34,10 +36,10 @@ public class RegistryEvents {
     /**
      * Initiates spawn eggs
      */
-//    @SubscribeEvent
-//    public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
-//        OdysseySpawnEggItem.initSpawnEggs();
-//    }
+    @SubscribeEvent
+    public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
+        OdysseySpawnEggItem.initSpawnEggs();
+    }
 
     /**
      * Initiates Equipment and EnchantmentUtil

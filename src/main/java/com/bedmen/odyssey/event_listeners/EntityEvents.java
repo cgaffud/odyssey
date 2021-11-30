@@ -2,14 +2,25 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.ForgeConfig;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
@@ -79,41 +90,41 @@ public class EntityEvents {
 //        }
 //    }
 
-//    @SubscribeEvent
-//    public static void livingSpawnEvent$SpecialSpawnListener(final LivingSpawnEvent.SpecialSpawn event){
-//        Entity entity = event.getEntity();
-//        if(entity instanceof Skeleton){
-//            Skeleton skeletonEntity = (Skeleton)entity;
-//            Random random = skeletonEntity.getRandom();
-//
-//            if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
-//                EntityTypeRegistry.BABY_SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-//                event.setCanceled(true);
-//                return;
-//            }
-//
-//            if(skeletonEntity.getRandom().nextFloat() < 0.05f){
-//                entity.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
-//            }
-//        }
-//
-//        else if(entity instanceof Creeper){
-//            Creeper creeperEntity = (Creeper)entity;
-//            Random random = creeperEntity.getRandom();
-//
+    @SubscribeEvent
+    public static void livingSpawnEvent$SpecialSpawnListener(final LivingSpawnEvent.SpecialSpawn event){
+        Entity entity = event.getEntity();
+/*        if(entity instanceof Skeleton){
+            Skeleton skeletonEntity = (Skeleton)entity;
+            Random random = skeletonEntity.getRandom();
+
+            if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
+                EntityTypeRegistry.BABY_SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
+                event.setCanceled(true);
+                return;
+            }
+
+            if(skeletonEntity.getRandom().nextFloat() < 0.05f){
+                entity.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
+            }
+        }
+
+        else*/ if(entity instanceof Creeper){
+            Creeper creeperEntity = (Creeper)entity;
+            Random random = creeperEntity.getRandom();
+
 //            if(random.nextFloat() < getCamoChance(creeperEntity.level.getDifficulty())){
 //                EntityTypeRegistry.CAMO_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
 //                event.setCanceled(true);
 //                return;
 //            }
-//
-//            if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
-//                EntityTypeRegistry.BABY_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-//                event.setCanceled(true);
-//                return;
-//            }
-//        }
-//    }
+
+            if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
+                EntityTypeRegistry.BABY_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
+                event.setCanceled(true);
+                return;
+            }
+        }
+    }
 //
 //    public static void reassessSkeletonWeaponGoal(Skeleton skeletonEntity) {
 //        if (skeletonEntity.level != null && !skeletonEntity.level.isClientSide) {
