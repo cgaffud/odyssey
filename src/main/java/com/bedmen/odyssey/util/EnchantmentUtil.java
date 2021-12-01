@@ -120,10 +120,12 @@ public class EnchantmentUtil {
         return new TranslatableComponent("enchantment.oddc.unenchantable").withStyle(ChatFormatting.DARK_RED);
     }
 
-//    public static float getAccuracyMultiplier(LivingEntity entity){
+    //TODO add Accuracy Enchantment
+    public static float getAccuracyMultiplier(LivingEntity entity){
+        return 1.0f;
 //        int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.ACCURACY.get(), entity);
 //        return i > 0 ? 0.1f : 1.0f;
-//    }
+    }
 
     public static boolean hasFireProtectionOrResistance(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FIRE_PROTECTION.get(), entity) > 0 || entity.hasEffect(MobEffects.FIRE_RESISTANCE);
@@ -197,26 +199,30 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SHATTERING.get(), entity);
     }
 
-//    public static int getQuickChargeTime(int chargeTime, ItemStack itemStack) {
-//        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.QUICK_CHARGE.get(), itemStack);
-//        return chargeTime - (chargeTime / 5) * i;
-//    }
-//
-//    public static int getPiercing(ItemStack itemStack) {
-//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), itemStack);
-//    }
-//
-//    public static int getPunch(ItemStack itemStack) {
-//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get(), itemStack);
-//    }
-//
-//    public static int getFlame(ItemStack itemStack) {
-//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), itemStack);
-//    }
+    public static int getQuickChargeTime(int chargeTime, ItemStack itemStack) {
+        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.QUICK_CHARGE.get(), itemStack);
+        return chargeTime - (chargeTime / 5) * i;
+    }
 
-//    public static float getSuperChargeMultiplier(ItemStack itemStack) {
-//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.SUPER_CHARGE.get(), itemStack) * 0.5f + 1.0f;
-//    }
+    public static int getPiercing(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), itemStack);
+    }
+
+    public static int getPower(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.POWER_ARROWS.get(), itemStack);
+    }
+
+    public static int getPunch(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get(), itemStack);
+    }
+
+    public static int getFlame(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), itemStack);
+    }
+
+    public static float getSuperChargeMultiplier(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.SUPER_CHARGE.get(), itemStack) * 0.5f + 1.0f;
+    }
 
     public static int getKnockback(LivingEntity livingEntity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.KNOCKBACK.get(), livingEntity);

@@ -7,6 +7,6 @@ public class Launcher implements IMixinConnector {
 
     @Override
     public void connect() {
-        Mixins.addConfiguration("mixins.mixin.json");
+        Mixins.addConfiguration("mixins.oddc.json");
     }
 }

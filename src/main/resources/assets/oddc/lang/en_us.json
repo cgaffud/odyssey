@@ -83,5 +83,8 @@
   "item.oddc.chicken_chestplate": "Feathered Tunic",
   "item.oddc.chicken_leggings": "Feathered Pants",
   "item.oddc.chicken_boots": "Feathered Boots",
-  "enchantment.oddc.slow_falling": "Slow Falling"
+  "enchantment.oddc.slow_falling": "Slow Falling",
+  "enchantment.oddc.super_charge": "Super Charge",
+  "item.oddc.bow.velocity": "Velocity: ",
+  "item.oddc.bow.charge_time": "Charge Time: "
 }

@@ -1,9 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "package": "com.bedmen.odyssey.mixin",
-  "refmap": "mixins.mixin.refmap.json",
+  "refmap": "mixins.oddc.refmap.json",
   "mixins": [
 //    "MixinMinecraft",
 //    "MixinBlockItem",
@@ -18,11 +18,11 @@
 //    "MixinClientPlayerEntity",
 //    "MixinLayerUtil",
 //    "MixinServerPlayerEntity",
-    "MixinChatFormatting"
+    "MixinChatFormatting",
 //    "MixinServerPlayNetHandler",
 //    "MixinAbstractBlock",
 //    "MixinFirstPersonRenderer",
-//    "MixinSEntityVelocityPacket"
+    "MixinClientboundSetEntityMotionPacket"
   ],
   "injectors": {
     "defaultRequire": 1

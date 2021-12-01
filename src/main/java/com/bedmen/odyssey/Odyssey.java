@@ -9,6 +9,7 @@ import com.bedmen.odyssey.client.renderer.entity.renderer.OdysseyCreeperRenderer
 import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
+import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
@@ -17,6 +18,8 @@ import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -30,6 +33,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,19 +84,19 @@ public class Odyssey
 
     private void doClientStuff(final FMLClientSetupEvent event)
     {
-//        //Item Model Properties
+//        //Block Render Types
 //        for(Block block : ForgeRegistries.BLOCKS.getValues()){
 //            if(block instanceof INeedsToRegisterRenderType){
 //                RenderTypeLookup.setRenderLayer(block, ((INeedsToRegisterRenderType) block).getRenderType());
 //            }
 //        }
-//
-//        //Block Render Types
-//        for(Item item : ForgeRegistries.ITEMS.getValues()){
-//            if(item instanceof INeedsToRegisterItemModelProperty){
-//                ((INeedsToRegisterItemModelProperty) item).registerItemModelProperties();
-//            }
-//        }
+
+        //Item Model Properties
+        for(Item item : ForgeRegistries.ITEMS.getValues()){
+            if(item instanceof INeedsToRegisterItemModelProperty){
+                ((INeedsToRegisterItemModelProperty) item).registerItemModelProperties();
+            }
+        }
 //
 //        //Tile Entity Renderings
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
