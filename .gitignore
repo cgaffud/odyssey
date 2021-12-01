@@ -17,7 +17,6 @@ out
 *\gradle-wrapper.*
 .gradle
 build
-build.gradle
 gradle.properties
 gradlew
 gradlew.bat

@@ -2,7 +2,7 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.network.OdysseyNetwork;
-import com.bedmen.odyssey.network.packet.JumpingPacket;
+import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,7 +24,6 @@ public class PlayerEvents {
     @SubscribeEvent
     public static void tickEvent$PlayerTickEventListener(final TickEvent.PlayerTickEvent event){
         Player player =  event.player;
-        //Server Side
         if(event.side == LogicalSide.SERVER){
             if(event.phase == TickEvent.Phase.START){
                 if(!(player.isCreative() || player.isSpectator()) && player.level.dimensionType().ultraWarm()){
@@ -45,19 +44,7 @@ public class PlayerEvents {
                 if (EnchantmentUtil.hasTurtling(player) && player.isShiftKeyDown()) {
                     player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1, 0, false, false, true));
                 }
-                else if (EnchantmentUtil.hasSlowFalling(player) && player.jumping && player.getDeltaMovement().y <= 0.0D && !player.getCooldowns().isOnCooldown(ItemRegistry.CHICKEN_CHESTPLATE.get())) {
-                    player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 40, 0, false, false, true));
-                    player.getCooldowns().addCooldown(ItemRegistry.CHICKEN_CHESTPLATE.get(), 200);
-                }
             }
-        }
-        //Client Side
-        else if(event.side == LogicalSide.CLIENT){
-//            if(event.phase == TickEvent.Phase.END) {
-//                if (EnchantmentUtil.hasSlowFalling(player)) {
-//                    OdysseyNetwork.CHANNEL.sendToServer(new JumpingPacket(player.jumping));
-//                }
-//            }
         }
     }
 

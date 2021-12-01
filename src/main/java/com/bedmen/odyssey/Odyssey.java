@@ -9,6 +9,7 @@ import com.bedmen.odyssey.client.renderer.entity.renderer.OdysseyCreeperRenderer
 import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
+import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.world.gen.OreGen;
@@ -69,7 +70,7 @@ public class Odyssey
 //        OdysseyPotions.addBrewingRecipes();
 //        CompostUtil.addCompostingRecipes();
 //        OdysseyTrades.addTrades();
-//        OdysseyNetwork.init();
+        OdysseyNetwork.init();
 //        BiomeRegistry.register();
 //
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
