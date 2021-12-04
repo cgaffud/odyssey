@@ -65,7 +65,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                         AbstractArrow abstractarrow = arrowitem.createArrow(level, itemstack, player);
 
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(livingEntity);
-                        if(maxVelocityFlag.value && superCharge > 1.0f){
+                        if(maxVelocityFlag.value){
                             abstractarrow.setCritArrow(true);
                             inaccuracy /= superCharge;
                         }
