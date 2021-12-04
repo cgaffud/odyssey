@@ -227,4 +227,8 @@ public class EnchantmentUtil {
     public static int getKnockback(LivingEntity livingEntity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.KNOCKBACK.get(), livingEntity);
     }
+
+    public static int getMobLooting(LivingEntity livingEntity){
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MOB_LOOTING.get(), livingEntity);
+    }
 }

@@ -2,6 +2,7 @@
   "itemGroup.oddc_building_blocks": "Odyssey Building Blocks",
   "itemGroup.oddc_materials": "Odyssey Materials",
   "itemGroup.oddc_melee": "Odyssey Melee Weapons",
+  "itemGroup.oddc_ranged": "Odyssey Ranged Weapons",
   "itemGroup.oddc_armor": "Odyssey Armor",
   "itemGroup.oddc_spawning": "Odyssey Spawning",
   "block.oddc.silver_ore": "Silver Ore",
@@ -86,5 +87,7 @@
   "enchantment.oddc.slow_falling": "Slow Falling",
   "enchantment.oddc.super_charge": "Super Charge",
   "item.oddc.bow.velocity": "Velocity: ",
-  "item.oddc.bow.charge_time": "Charge Time: "
+  "item.oddc.bow.charge_time": "Charge Time: ",
+  "item.oddc.amethyst_arrow": "Amethyst Arrow",
+  "item.oddc.arrow.damage": "Damage: "
 }

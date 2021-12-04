@@ -5,6 +5,7 @@ import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.renderer.entity.model.BabyLeviathanModel;
 import com.bedmen.odyssey.client.renderer.entity.renderer.BabyLeviathanRenderer;
 import com.bedmen.odyssey.client.renderer.entity.renderer.CamoCreeperRenderer;
+import com.bedmen.odyssey.client.renderer.entity.renderer.OdysseyArrowRenderer;
 import com.bedmen.odyssey.client.renderer.entity.renderer.OdysseyCreeperRenderer;
 import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
@@ -19,7 +20,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -137,7 +137,7 @@ public class Odyssey
 //        //Projectile Renderings
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
+        EntityRenderers.register(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
 //
 //        //Boat Renderings

@@ -174,4 +174,12 @@ public abstract class MixinEnchantmentHelper {
     public static int getKnockbackBonus(LivingEntity livingEntity) {
         return EnchantmentUtil.getKnockback(livingEntity);
     }
+
+    /**
+     * @author JemBren
+     */
+    @Overwrite
+    public static int getMobLooting(LivingEntity livingEntity) {
+        return EnchantmentUtil.getMobLooting(livingEntity);
+    }
 }

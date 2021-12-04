@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
+import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -38,7 +39,7 @@ public class EntityTypeRegistry {
     //Projectiles
 //    public static final RegistryObject<EntityType<OdysseyTrident>> TRIDENT = ENTITY_TYPE.register("trident", () -> EntityType.Builder.<OdysseyTrident>of(OdysseyTrident::new, MobCategory.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("trident").toString()));
 //    public static final RegistryObject<EntityType<PermafrostIcicle>> PERMAFROST_ICICLE = ENTITY_TYPE.register("permafrost_icicle", () -> EntityType.Builder.<PermafrostIcicle>of(PermafrostIcicle::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_icicle").toString()));
-//    public static final RegistryObject<EntityType<OdysseyArrow>> ARROW = ENTITY_TYPE.register("arrow", () -> EntityType.Builder.<OdysseyArrow>of(OdysseyArrow::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("arrow").toString()));
+    public static final RegistryObject<EntityType<OdysseyArrow>> ARROW = ENTITY_TYPE.register("arrow", () -> EntityType.Builder.<OdysseyArrow>of(OdysseyArrow::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("arrow").toString()));
 //    public static final RegistryObject<EntityType<Boomerang>> BOOMERANG = ENTITY_TYPE.register("boomerang", () -> EntityType.Builder.<Boomerang>of(Boomerang::new, MobCategory.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("boomerang").toString()));
 
     //Boat

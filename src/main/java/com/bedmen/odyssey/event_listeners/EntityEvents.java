@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -8,6 +9,7 @@ import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -126,6 +129,16 @@ public class EntityEvents {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void lootingLevelEventListener(final LootingLevelEvent event){
+        DamageSource damageSource = event.getDamageSource();
+        Entity directEntity = damageSource.getDirectEntity();
+        if(directEntity instanceof OdysseyAbstractArrow){
+            event.setLootingLevel(((OdysseyAbstractArrow) directEntity).getLootingLevel());
+        }
+    }
+
 //
 //    public static void reassessSkeletonWeaponGoal(Skeleton skeletonEntity) {
 //        if (skeletonEntity.level != null && !skeletonEntity.level.isClientSide) {
