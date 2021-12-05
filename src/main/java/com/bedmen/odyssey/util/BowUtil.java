@@ -5,7 +5,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 
 public class BowUtil {
-    public static final float BASE_ARROW_VELOCITY = 3.0f;
+    public static final float BASE_ARROW_VELOCITY = 2.5f;
 
     //TODO add Quivers
 //    public static boolean consumeQuiverAmmo(Player playerEntity, ItemStack ammo, Random random){

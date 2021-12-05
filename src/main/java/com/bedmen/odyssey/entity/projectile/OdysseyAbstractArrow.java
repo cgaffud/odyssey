@@ -55,8 +55,8 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     protected void onHitEntity(EntityHitResult p_213868_1_) {
         Entity entity = p_213868_1_.getEntity();
-        double length = this.getDeltaMovement().length();
-        double damage = Mth.clamp(length * this.getBaseDamage() / BowUtil.BASE_ARROW_VELOCITY, 0.0D, 2.147483647E9D);
+        double velocity = this.getDeltaMovement().length();
+        double damage = Mth.clamp(velocity * this.getBaseDamage() / BowUtil.BASE_ARROW_VELOCITY, 0.0D, 2.147483647E9D);
         if (this.getPierceLevel() > 0) {
             if (this.piercingIgnoreEntityIds == null) {
                 this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
