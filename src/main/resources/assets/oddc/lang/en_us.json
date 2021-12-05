@@ -89,5 +89,6 @@
   "item.oddc.bow.velocity": "Velocity: ",
   "item.oddc.bow.charge_time": "Charge Time: ",
   "item.oddc.amethyst_arrow": "Amethyst Arrow",
-  "item.oddc.arrow.damage": "Damage: "
+  "item.oddc.arrow.damage": "Damage: ",
+  "item.oddc.bone_long_bow": "Bone Long Bow"
 }

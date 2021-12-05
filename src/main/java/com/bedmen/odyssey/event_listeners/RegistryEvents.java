@@ -3,6 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.OdysseySpawnEggItem;
 import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
+import com.bedmen.odyssey.items.equipment.EquipmentBowItem;
 import com.bedmen.odyssey.items.equipment.EquipmentMeleeItem;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -53,7 +54,7 @@ public class RegistryEvents {
 //        EquipmentHoeItem.initEquipment();
 //        EquipmentShovelItem.initEquipment();
 //        EquipmentAxeItem.initEquipment();
-//        EquipmentBowItem.initEquipment();
+        EquipmentBowItem.initEquipment();
 //        EquipmentCrossbowItem.initEquipment();
 //
 //        EnchantmentUtil.init();
