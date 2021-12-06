@@ -228,6 +228,10 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.KNOCKBACK.get(), livingEntity);
     }
 
+    public static int getMobLooting(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MOB_LOOTING.get(), itemStack);
+    }
+
     public static int getMobLooting(LivingEntity livingEntity){
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MOB_LOOTING.get(), livingEntity);
     }

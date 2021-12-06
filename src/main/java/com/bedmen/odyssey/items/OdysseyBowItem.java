@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
@@ -62,42 +63,46 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                     boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, bowItemStack, player));
                     if (!level.isClientSide) {
                         ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
-                        AbstractArrow abstractarrow = arrowitem.createArrow(level, itemstack, player);
+                        AbstractArrow abstractArrow = arrowitem.createArrow(level, itemstack, player);
 
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(livingEntity);
                         if(maxVelocityFlag.value && superCharge > 1.0f){
-                            abstractarrow.setCritArrow(true);
+                            abstractArrow.setCritArrow(true);
                             inaccuracy /= superCharge;
                         }
 
-                        abstractarrow = customArrow(abstractarrow);
-                        abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
+                        abstractArrow = customArrow(abstractArrow);
+                        abstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
 
                         int j = EnchantmentUtil.getPower(bowItemStack);
                         if (j > 0) {
-                            abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
+                            abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
                         }
                         j = EnchantmentUtil.getPunch(bowItemStack);
                         if (j > 0) {
-                            abstractarrow.setKnockback(j);
+                            abstractArrow.setKnockback(j);
                         }
                         j = EnchantmentUtil.getFlame(bowItemStack);
                         if (j > 0) {
-                            abstractarrow.setSecondsOnFire(100*j);
+                            abstractArrow.setSecondsOnFire(100*j);
                         }
                         j = EnchantmentUtil.getPiercing(bowItemStack);
                         if (j > 0) {
-                            abstractarrow.setPierceLevel((byte)j);
+                            abstractArrow.setPierceLevel((byte)j);
+                        }
+                        j = EnchantmentUtil.getMobLooting(bowItemStack);
+                        if(j > 0 && abstractArrow instanceof OdysseyAbstractArrow){
+                            ((OdysseyAbstractArrow) abstractArrow).setLootingLevel((byte)j);
                         }
 
                         bowItemStack.hurtAndBreak(1, player, (p_40665_) -> {
                             p_40665_.broadcastBreakEvent(player.getUsedItemHand());
                         });
                         if (flag1 || player.getAbilities().instabuild && (itemstack.is(Items.SPECTRAL_ARROW) || itemstack.is(Items.TIPPED_ARROW))) {
-                            abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                            abstractArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
 
-                        level.addFreshEntity(abstractarrow);
+                        level.addFreshEntity(abstractArrow);
                     }
 
                     level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.4F + 1.2F) + f * 0.5F);

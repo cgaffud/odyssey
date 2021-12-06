@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -18,7 +19,6 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -355,6 +355,11 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         k = EnchantmentUtil.getPower(crossbow);
         if (k > 0) {
             abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() + (double)k * 0.5D + 0.5D);
+        }
+        k = EnchantmentUtil.getMobLooting(crossbow);
+        System.out.println(k);
+        if(k > 0 && abstractArrow instanceof OdysseyAbstractArrow){
+            ((OdysseyAbstractArrow) abstractArrow).setLootingLevel((byte)k);
         }
 
         return abstractArrow;

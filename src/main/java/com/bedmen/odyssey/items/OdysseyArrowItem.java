@@ -25,7 +25,7 @@ public class OdysseyArrowItem extends ArrowItem {
         this.arrowType = arrowType;
     }
 
-    public AbstractArrow createArrow(Level world, ItemStack itemStack, LivingEntity livingEntity) {
+    public AbstractArrow createArrow(Level world, ItemStack ammo, LivingEntity livingEntity) {
         return new OdysseyArrow(world, livingEntity, arrowType);
     }
 
