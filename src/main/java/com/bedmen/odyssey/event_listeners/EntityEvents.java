@@ -133,9 +133,11 @@ public class EntityEvents {
     @SubscribeEvent
     public static void lootingLevelEventListener(final LootingLevelEvent event){
         DamageSource damageSource = event.getDamageSource();
-        Entity directEntity = damageSource.getDirectEntity();
-        if(directEntity instanceof OdysseyAbstractArrow){
-            event.setLootingLevel(((OdysseyAbstractArrow) directEntity).getLootingLevel());
+        if(damageSource != null){
+            Entity directEntity = damageSource.getDirectEntity();
+            if(directEntity instanceof OdysseyAbstractArrow){
+                event.setLootingLevel(((OdysseyAbstractArrow) directEntity).getLootingLevel());
+            }
         }
     }
 

@@ -5,26 +5,16 @@
   "package": "com.bedmen.odyssey.mixin",
   "refmap": "mixins.oddc.refmap.json",
   "mixins": [
-//    "MixinMinecraft",
-//    "MixinBlockItem",
-//    "MixinPlayerEntity",
-    "MixinCombatRules",
-//    "MixinItemRenderer",
-//    "MixinMobEntity",
-//    "MixinLivingEntity",
-    "MixinEnchantmentHelper",
-//    "MixinPotionUtils",
-//    "MixinEnchantment",
-//    "MixinClientPlayerEntity",
-//    "MixinLayerUtil",
-//    "MixinServerPlayerEntity",
     "MixinChatFormatting",
-//    "MixinServerPlayNetHandler",
-//    "MixinAbstractBlock",
-//    "MixinFirstPersonRenderer",
-    "MixinClientboundSetEntityMotionPacket"
+    "MixinClientboundSetEntityMotionPacket",
+    "MixinCombatRules",
+    "MixinEnchantmentHelper"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "MixinItemInHandRenderer",
+    "MixinPlayerRenderer"
+  ]
 }
