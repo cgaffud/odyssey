@@ -204,7 +204,7 @@ public class Odyssey
     public static void onColorHandlerEvent(final ColorHandlerEvent.Block event) {
         event.getBlockColors().register((p_228061_0_, p_228061_1_, p_228061_2_, p_228061_3_) -> {
             return p_228061_1_ != null && p_228061_2_ != null ? BiomeColors.getAverageFoliageColor(p_228061_1_, p_228061_2_) : FoliageColor.getDefaultColor();
-        }, BlockRegistry.PALM_LEAVES.get());
+        }, BlockRegistry.PALM_LEAVES.get(), BlockRegistry.PALM_CORNER_LEAVES.get());
     }
 
     @SubscribeEvent
@@ -212,7 +212,7 @@ public class Odyssey
         event.getItemColors().register((p_210235_1_, p_210235_2_) -> {
             BlockState blockstate = ((BlockItem)(p_210235_1_).getItem()).getBlock().defaultBlockState();
             return event.getBlockColors().getColor(blockstate, null, null, p_210235_2_);
-        }, BlockRegistry.PALM_LEAVES.get());
+        }, BlockRegistry.PALM_LEAVES.get(), BlockRegistry.PALM_CORNER_LEAVES.get());
     }
 
     @SubscribeEvent

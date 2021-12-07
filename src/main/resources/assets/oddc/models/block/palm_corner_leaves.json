@@ -1,0 +1,6 @@
+{
+	"parent": "oddc:block/corner_leaves",
+	"textures": {
+		"all": "oddc:block/palm_leaves"
+	}
+}
