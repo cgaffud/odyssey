@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.client.renderer.entity.renderer;
+package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import net.minecraft.client.renderer.entity.ArrowRenderer;

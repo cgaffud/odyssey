@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.client.renderer.entity.layer;
 
-import com.bedmen.odyssey.client.renderer.entity.model.OdysseyCreeperModel;
+import com.bedmen.odyssey.client.model.OdysseyCreeperModel;
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;

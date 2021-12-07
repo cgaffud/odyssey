@@ -2,14 +2,13 @@ package com.bedmen.odyssey;
 
 
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
-import com.bedmen.odyssey.client.renderer.entity.model.BabyLeviathanModel;
-import com.bedmen.odyssey.client.renderer.entity.renderer.BabyLeviathanRenderer;
-import com.bedmen.odyssey.client.renderer.entity.renderer.CamoCreeperRenderer;
-import com.bedmen.odyssey.client.renderer.entity.renderer.OdysseyArrowRenderer;
-import com.bedmen.odyssey.client.renderer.entity.renderer.OdysseyCreeperRenderer;
+import com.bedmen.odyssey.client.model.BabyLeviathanModel;
+import com.bedmen.odyssey.client.model.OdysseyBoatModel;
+import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
+import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
@@ -144,10 +143,10 @@ public class Odyssey
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
-//
-//        //Boat Renderings
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
-//
+
+        //Boat Renderings
+        EntityRenderers.register(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
+
 //        //Wood Types
 //        Atlases.addWoodType(OdysseyWoodType.PALM);
 //
@@ -197,6 +196,9 @@ public class Odyssey
     @SubscribeEvent
     public static void onEntityRenderersEvent$RegisterLayerDefinitions(final EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(BabyLeviathanModel.LAYER_LOCATION, BabyLeviathanModel::createBodyLayer);
+        for(OdysseyBoat.Type type : OdysseyBoat.Type.values()){
+            event.registerLayerDefinition(OdysseyBoatModel.LAYER_LOCATION.get(type), OdysseyBoatModel::createBodyModel);
+        }
     }
 
     @SubscribeEvent

@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.client.renderer.entity.model;
+package com.bedmen.odyssey.client.model;
 
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import com.google.common.collect.ImmutableList;
