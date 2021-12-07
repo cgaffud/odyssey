@@ -1,9 +1,9 @@
 package com.bedmen.odyssey;
 
-
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.model.BabyLeviathanModel;
 import com.bedmen.odyssey.client.model.OdysseyBoatModel;
+import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
@@ -18,6 +18,7 @@ import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.item.BlockItem;
@@ -58,6 +59,7 @@ public class Odyssey
         ItemRegistry.init();
 //        AttributeRegistry.init();
 //        BiomeRegistry.init();
+        BlockEntityTypeRegistry.init();
 //        ContainerRegistry.init();
 //        DataSerializerRegistry.init();
         EffectRegistry.init();
@@ -67,7 +69,6 @@ public class Odyssey
 //        PotionRegistry.init();
 //        RecipeRegistry.init();
 //        SoundEventRegistry.init();
-//        TileEntityTypeRegistry.init();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -101,14 +102,14 @@ public class Odyssey
                 ((INeedsToRegisterItemModelProperty) item).registerItemModelProperties();
             }
         }
-//
-//        //Tile Entity Renderings
+
+        //Block Entity Renderings
+        BlockEntityRenderers.register(BlockEntityTypeRegistry.SIGN.get(), OdysseySignRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.STERLING_SILVER_CHEST.get(), SterlingSilverChestTileEntityRenderer::new);
-//        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.SIGN.get(), OdysseySignTileEntityRenderer::new);
-//
-//        //Container Screens
+
+        //Screens
 //        ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
 //        ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), OdysseySmithingTableScreen::new);
 //        ScreenManager.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
@@ -147,9 +148,6 @@ public class Odyssey
         //Boat Renderings
         EntityRenderers.register(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
 
-//        //Wood Types
-//        Atlases.addWoodType(OdysseyWoodType.PALM);
-//
         Minecraft minecraft = Minecraft.getInstance();
         minecraft.gui = new OdysseyIngameGui(minecraft);
     }
