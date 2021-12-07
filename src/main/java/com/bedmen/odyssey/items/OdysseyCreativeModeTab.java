@@ -10,9 +10,7 @@ public class OdysseyCreativeModeTab extends CreativeModeTab {
 
     private final Lazy<Item> iconLazy;
     public static final CreativeModeTab BUILDING_BLOCKS = new OdysseyCreativeModeTab("oddc_building_blocks", Lazy.of(ItemRegistry.SILVER_ORE));
-//    public static final CreativeModeTab DECORATION_BLOCKS = new OdysseyCreativeModeTab("oddc_decoration_blocks", Lazy.of(ItemRegistry.RESEARCH_TABLE));
-//    public static final CreativeModeTab REDSTONE = new OdysseyCreativeModeTab("oddc_redstone", Lazy.of(ItemRegistry.PALM_PRESSURE_PLATE));
-//    public static final CreativeModeTab TRANSPORTATION = new OdysseyCreativeModeTab("oddc_transportation", Lazy.of(ItemRegistry.PALM_BOAT));
+    public static final CreativeModeTab WOOD = new OdysseyCreativeModeTab("oddc_wood", Lazy.of(ItemRegistry.PALM_LOG));
     public static final CreativeModeTab MATERIALS = new OdysseyCreativeModeTab("oddc_materials", Lazy.of(ItemRegistry.RAW_SILVER));
 //    public static final CreativeModeTab TOOLS = new OdysseyCreativeModeTab("oddc_tools", Lazy.of(ItemRegistry.STERLING_SILVER_AXE));
     public static final CreativeModeTab MELEE = new OdysseyCreativeModeTab("oddc_melee", Lazy.of(ItemRegistry.COPPER_BATTLE_AXE));

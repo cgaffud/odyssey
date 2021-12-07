@@ -1,5 +1,6 @@
 {
   "itemGroup.oddc_building_blocks": "Odyssey Building Blocks",
+  "itemGroup.oddc_wood": "Odyssey Woods",
   "itemGroup.oddc_materials": "Odyssey Materials",
   "itemGroup.oddc_melee": "Odyssey Melee Weapons",
   "itemGroup.oddc_ranged": "Odyssey Ranged Weapons",
@@ -92,5 +93,24 @@
   "item.oddc.arrow.damage": "Damage: ",
   "item.oddc.bone_long_bow": "Bone Long Bow",
   "item.oddc.bone_repeater": "Bone Repeater",
-  "item.oddc.bone_slug_bow": "Bone Slug Bow"
+  "item.oddc.bone_slug_bow": "Bone Slug Bow",
+  "block.oddc.palm_button": "Palm Button",
+  "block.oddc.palm_door": "Palm Door",
+  "block.oddc.palm_fence": "Palm Fence",
+  "block.oddc.palm_fence_gate": "Palm Fence Gate",
+  "block.oddc.palm_leaves": "Palm Leaves",
+  "block.oddc.palm_log": "Palm Log",
+  "block.oddc.palm_planks": "Palm Planks",
+  "block.oddc.palm_pressure_plate": "Palm Pressure Plate",
+  "block.oddc.palm_sapling": "Palm Sapling",
+  "block.oddc.palm_sign": "Palm Sign",
+  "block.oddc.palm_slab": "Palm Slab",
+  "block.oddc.palm_stairs": "Palm Stairs",
+  "block.oddc.palm_trapdoor": "Palm Trapdoor",
+  "block.oddc.palm_wall_sign": "Palm Wall Sign",
+  "block.oddc.palm_wood": "Palm Wood",
+  "block.oddc.potted_palm_sapling": "Potted Palm Sapling",
+  "block.oddc.stripped_palm_log": "Stripped Palm Log",
+  "block.oddc.stripped_palm_wood": "Stripped Palm Wood",
+  "item.oddc.palm_boat": "Palm Boat"
 }
