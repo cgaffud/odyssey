@@ -357,7 +357,6 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() + (double)k * 0.5D + 0.5D);
         }
         k = EnchantmentUtil.getMobLooting(crossbow);
-        System.out.println(k);
         if(k > 0 && abstractArrow instanceof OdysseyAbstractArrow){
             ((OdysseyAbstractArrow) abstractArrow).setLootingLevel((byte)k);
         }
