@@ -1,7 +1,7 @@
-package com.bedmen.odyssey.client.renderer.entity.renderer;
+package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.client.renderer.entity.layer.OdysseyCreeperPowerLayer;
-import com.bedmen.odyssey.client.renderer.entity.model.OdysseyCreeperModel;
+import com.bedmen.odyssey.client.model.OdysseyCreeperModel;
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.geom.ModelLayers;

@@ -5,6 +5,7 @@ import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
+import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -43,5 +44,5 @@ public class EntityTypeRegistry {
 //    public static final RegistryObject<EntityType<Boomerang>> BOOMERANG = ENTITY_TYPE.register("boomerang", () -> EntityType.Builder.<Boomerang>of(Boomerang::new, MobCategory.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("boomerang").toString()));
 
     //Boat
-//    public static final RegistryObject<EntityType<OdysseyBoat>> BOAT = ENTITY_TYPE.register("boat", () -> EntityType.Builder.<OdysseyBoat>of(OdysseyBoat::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).build(new ResourceLocation("boat").toString()));
+    public static final RegistryObject<EntityType<OdysseyBoat>> BOAT = ENTITY_TYPE.register("boat", () -> EntityType.Builder.<OdysseyBoat>of(OdysseyBoat::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).build(new ResourceLocation("boat").toString()));
 }

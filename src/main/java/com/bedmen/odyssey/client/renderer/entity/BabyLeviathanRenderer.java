@@ -1,7 +1,7 @@
-package com.bedmen.odyssey.client.renderer.entity.renderer;
+package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.client.renderer.entity.model.BabyLeviathanModel;
+import com.bedmen.odyssey.client.model.BabyLeviathanModel;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

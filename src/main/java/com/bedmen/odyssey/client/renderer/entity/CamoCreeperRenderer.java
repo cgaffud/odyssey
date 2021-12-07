@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.client.renderer.entity.renderer;
+package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
