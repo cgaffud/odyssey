@@ -14,6 +14,7 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.CompostUtil;
+import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import net.minecraft.client.Minecraft;
@@ -73,7 +74,7 @@ public class Odyssey
 
     private void setup(final FMLCommonSetupEvent event) {
         OreGen.registerOres();
-//        OdysseyFeatureGen.registerFeatures();
+        FeatureGen.registerFeatures();
         OdysseyBiomeEntitySpawn.registerSpawners();
 //        OdysseyStructureEntitySpawn.registerSpawners();
 //        OdysseyPotions.addBrewingRecipes();

@@ -136,7 +136,6 @@ public class EntityEvents {
         if(damageSource != null){
             Entity directEntity = damageSource.getDirectEntity();
             if(directEntity instanceof OdysseyAbstractArrow){
-                System.out.println(((OdysseyAbstractArrow) directEntity).getLootingLevel());
                 event.setLootingLevel(((OdysseyAbstractArrow) directEntity).getLootingLevel());
             }
         }
