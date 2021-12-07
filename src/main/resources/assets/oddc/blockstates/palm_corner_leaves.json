@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "oddc:block/palm_corner_leaves"
+    },
+    "facing=east": {
+      "model": "oddc:block/palm_corner_leaves",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "oddc:block/palm_corner_leaves",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "oddc:block/palm_corner_leaves",
+      "y": 270
+    }
+  }
+}
