@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.block.wood;
 
+import com.bedmen.odyssey.block.entity.OdysseySignBlockEntity;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -61,7 +62,7 @@ public abstract class OdysseySignBlock extends BaseEntityBlock implements Simple
     }
 
     public BlockEntity newBlockEntity(BlockPos p_154556_, BlockState p_154557_) {
-        return new SignBlockEntity(p_154556_, p_154557_);
+        return new OdysseySignBlockEntity(p_154556_, p_154557_);
     }
 
     public InteractionResult use(BlockState p_56278_, Level p_56279_, BlockPos p_56280_, Player p_56281_, InteractionHand p_56282_, BlockHitResult p_56283_) {
