@@ -14,12 +14,17 @@ import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -72,7 +77,7 @@ public class Odyssey
         OdysseyBiomeEntitySpawn.registerSpawners();
 //        OdysseyStructureEntitySpawn.registerSpawners();
 //        OdysseyPotions.addBrewingRecipes();
-//        CompostUtil.addCompostingRecipes();
+        CompostUtil.addCompostingRecipes();
 //        OdysseyTrades.addTrades();
         OdysseyNetwork.init();
 //        BiomeRegistry.register();
@@ -196,17 +201,17 @@ public class Odyssey
 
     @SubscribeEvent
     public static void onColorHandlerEvent(final ColorHandlerEvent.Block event) {
-//        event.getBlockColors().register((p_228061_0_, p_228061_1_, p_228061_2_, p_228061_3_) -> {
-//            return p_228061_1_ != null && p_228061_2_ != null ? BiomeColors.getAverageFoliageColor(p_228061_1_, p_228061_2_) : FoliageColors.getDefaultColor();
-//        }, BlockRegistry.PALM_LEAVES.get());
+        event.getBlockColors().register((p_228061_0_, p_228061_1_, p_228061_2_, p_228061_3_) -> {
+            return p_228061_1_ != null && p_228061_2_ != null ? BiomeColors.getAverageFoliageColor(p_228061_1_, p_228061_2_) : FoliageColor.getDefaultColor();
+        }, BlockRegistry.PALM_LEAVES.get());
     }
 
     @SubscribeEvent
     public static void onColorHandlerEvent(final ColorHandlerEvent.Item event) {
-//        event.getItemColors().register((p_210235_1_, p_210235_2_) -> {
-//            BlockState blockstate = ((BlockItem)(p_210235_1_).getItem()).getBlock().defaultBlockState();
-//            return event.getBlockColors().getColor(blockstate, null, null, p_210235_2_);
-//        }, BlockRegistry.PALM_LEAVES.get());
+        event.getItemColors().register((p_210235_1_, p_210235_2_) -> {
+            BlockState blockstate = ((BlockItem)(p_210235_1_).getItem()).getBlock().defaultBlockState();
+            return event.getBlockColors().getColor(blockstate, null, null, p_210235_2_);
+        }, BlockRegistry.PALM_LEAVES.get());
     }
 
     @SubscribeEvent
