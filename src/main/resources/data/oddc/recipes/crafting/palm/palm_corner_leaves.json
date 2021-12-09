@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "item": "oddc:palm_leaves"
+    }
+  ],
+  "result": {
+    "item": "oddc:palm_corner_leaves",
+    "count": 4
+  }
+}
