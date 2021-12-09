@@ -315,10 +315,9 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             ItemStack itemstack;
             if (!flag && !inCreative && !multishotArrow) {
                 boolean quiverFlag = false;
-                //TODO add quivers
-//                if(livingEntity instanceof Player){
-//                    quiverFlag = BowUtil.consumeQuiverAmmo((Player)livingEntity,ammo, livingEntity.getRandom());
-//                }
+                if(livingEntity instanceof Player){
+                    quiverFlag = BowUtil.consumeQuiverAmmo((Player)livingEntity,ammo, livingEntity.getRandom());
+                }
                 itemstack = ammo.split(1);
                 if(!quiverFlag) {
                     if (ammo.isEmpty() && livingEntity instanceof Player) {

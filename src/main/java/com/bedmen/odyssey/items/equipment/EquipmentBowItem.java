@@ -53,9 +53,6 @@ public class EquipmentBowItem extends OdysseyBowItem implements IEquipment {
         return this.enchantmentMap;
     }
 
-    /**
-     * allows items to add custom lines of information to the mouseover description
-     */
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         for(Enchantment e : this.enchantmentMap.keySet()){

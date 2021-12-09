@@ -43,8 +43,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
             Player player = (Player)livingEntity;
             boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bowItemStack) > 0;
             ItemStack itemstack = player.getProjectile(bowItemStack);
-            //TODO add Quivers
-            //BowUtil.consumeQuiverAmmo(player, itemstack, livingEntity.getRandom());
+            BowUtil.consumeQuiverAmmo(player, itemstack, livingEntity.getRandom());
 
             int i = this.getUseDuration(bowItemStack) - useTime;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bowItemStack, level, player, i, !itemstack.isEmpty() || flag);

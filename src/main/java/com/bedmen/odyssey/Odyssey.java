@@ -1,6 +1,7 @@
 package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
+import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
 import com.bedmen.odyssey.client.model.BabyLeviathanModel;
 import com.bedmen.odyssey.client.model.OdysseyBoatModel;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
@@ -9,6 +10,7 @@ import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
+import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
@@ -18,10 +20,12 @@ import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.FoliageColor;
@@ -61,7 +65,7 @@ public class Odyssey
 //        AttributeRegistry.init();
 //        BiomeRegistry.init();
         BlockEntityTypeRegistry.init();
-//        ContainerRegistry.init();
+        ContainerRegistry.init();
 //        DataSerializerRegistry.init();
         EffectRegistry.init();
         EnchantmentRegistry.init();
@@ -120,9 +124,9 @@ public class Odyssey
 //        ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
 //        ScreenManager.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
 //        ScreenManager.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
-//        for(ContainerType<QuiverContainer> containerType : ContainerRegistry.QUIVER_MAP.values()){
-//            ScreenManager.register(containerType, QuiverScreen::new);
-//        }
+        for(MenuType<QuiverMenu> containerType : ContainerRegistry.QUIVER_MAP.values()){
+            MenuScreens.register(containerType, QuiverScreen::new);
+        }
 //
 //        //Mob Renderings
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
