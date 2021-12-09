@@ -66,7 +66,7 @@ public class Odyssey
         EffectRegistry.init();
         EnchantmentRegistry.init();
         EntityTypeRegistry.init();
-//        FeatureRegistry.init();
+        FeatureRegistry.init();
 //        PotionRegistry.init();
 //        RecipeRegistry.init();
 //        SoundEventRegistry.init();

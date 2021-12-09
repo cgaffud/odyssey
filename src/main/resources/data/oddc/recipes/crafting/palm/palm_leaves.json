@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "boat",
+  "pattern": [
+    "AA",
+    "AA"
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:palm_corner_leaves"
+    }
+  },
+  "result": {
+    "item": "oddc:palm_leaves"
+  }
+}
