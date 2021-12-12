@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "sterling_silver_ingot",
+  "ingredients": [
+    {
+      "item": "oddc:sterling_silver_block"
+    }
+  ],
+  "result": {
+    "item": "oddc:sterling_silver_ingot",
+    "count": 9
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "leather_pile",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "oddc:leather_pile"
+  }
+}
