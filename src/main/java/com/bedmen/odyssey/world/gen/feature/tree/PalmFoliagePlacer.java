@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.world.gen.feature.tree;
 
+import com.bedmen.odyssey.block.CoconutBlock;
+import com.bedmen.odyssey.block.HollowCoconutBlock;
 import com.bedmen.odyssey.block.wood.CornerLeavesBlock;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.mojang.serialization.Codec;
@@ -55,6 +57,33 @@ public class PalmFoliagePlacer extends FoliagePlacer {
                         tryPlaceCornerLeaf(levelSimulatedReader, biConsumer, blockpos$mutable, flip, j > 0, k > 0);
                     }
                 }
+                if(height == -1){
+                    int absj = Math.abs(j);
+                    int absk = Math.abs(k);
+                    if((absj == 0 && absk == 1) || (absj == 1 && absk == 0)){
+                        blockpos$mutable.setWithOffset(blockPos, j, height, k);
+                        int r = random.nextInt(20);
+                        BlockState blockState = BlockRegistry.COCONUT.get().defaultBlockState();
+                        switch(r){
+                            case 0:
+                                blockState = blockState.setValue(CoconutBlock.AGE, 0);
+                                break;
+                            case 1:
+                                blockState = blockState.setValue(CoconutBlock.AGE, 1);
+                                break;
+                            case 2:
+                                blockState = blockState.setValue(CoconutBlock.AGE, 2);
+                                break;
+                            case 3:
+                            case 4:
+                            case 5:
+                                blockState = BlockRegistry.HOLLOW_COCONUT.get().defaultBlockState().setValue(HollowCoconutBlock.HANGING, Boolean.TRUE);
+                                break;
+
+                        }
+                        biConsumer.accept(blockpos$mutable, blockState);
+                    }
+                }
 
                 if (!this.shouldSkipLocationSigned(random, j, height, k, foliageRadius, isDoubleTrunk)) {
                     blockpos$mutable.setWithOffset(blockPos, j, height, k);
@@ -62,26 +91,6 @@ public class PalmFoliagePlacer extends FoliagePlacer {
                 }
             }
         }
-//                int absj = Math.abs(j);
-//                int absk = Math.abs(k);
-//                if(height == -1 && ((absj == 0 && absk == 1) || (absj == 1 && absk == 0))){
-//                    blockpos$mutable.setWithOffset(blockPos, j, height, k);
-//                    int r = random.nextInt(16);
-//                    if(r < 9){
-//                        BlockState blockState = BlockRegistry.COCONUT.get().defaultBlockState();
-//                        if(r >= 6){
-//                            blockState = blockState.setValue(CoconutBlock.AGE, 2);
-//                        } else if(r >= 3) {
-//                            blockState = blockState.setValue(CoconutBlock.AGE, 1);
-//                        } else {
-//                            blockState = blockState.setValue(CoconutBlock.AGE, 0);
-//                        }
-//                        worldGenerationReader.setBlock(blockpos$mutable, blockState, 19);
-//                    } else if (r < 12){
-//                        BlockState blockState = BlockRegistry.HOLLOW_COCONUT.get().defaultBlockState().setValue(HollowCoconutBlock.HANGING, Boolean.TRUE);
-//                        worldGenerationReader.setBlock(blockpos$mutable, blockState, 19);
-//                    }
-//                }
     }
 
     @Override
@@ -97,7 +106,6 @@ public class PalmFoliagePlacer extends FoliagePlacer {
             }
             biConsumer.accept(blockPos, BlockRegistry.PALM_CORNER_LEAVES.get().defaultBlockState().setValue(CornerLeavesBlock.FACING, direction));
         }
-
     }
 
     @Override

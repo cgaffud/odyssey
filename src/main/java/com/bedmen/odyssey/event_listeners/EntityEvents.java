@@ -6,8 +6,10 @@ import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.google.common.eventbus.Subscribe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -16,9 +18,11 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -26,6 +30,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Random;
+import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
@@ -46,6 +51,26 @@ public class EntityEvents {
                 effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, 0, false, true, true);
             }
             livingTarget.addEffect(effectInstance);
+        }
+    }
+
+    @SubscribeEvent
+    public static void LivingHurtEventListener(final LivingHurtEvent event){
+        float amount = event.getAmount();
+        LivingEntity livingEntity = event.getEntityLiving();
+        DamageSource damageSource = event.getSource();
+        if(amount >= 10.0f && livingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
+            Consumer<LivingEntity> consumer = (p_233653_0_) -> {
+                p_233653_0_.broadcastBreakEvent(EquipmentSlot.HEAD);
+            };
+            ItemStack itemStack = livingEntity.getItemBySlot(EquipmentSlot.HEAD);
+            Item item = itemStack.getItem();
+            item.damageItem(itemStack, 100, livingEntity, consumer);
+            consumer.accept(livingEntity);
+            itemStack.shrink(1);
+            if(livingEntity instanceof Player player){
+                player.awardStat(Stats.ITEM_BROKEN.get(item));
+            }
         }
     }
 

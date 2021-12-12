@@ -43,6 +43,7 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -102,6 +103,13 @@ public class Odyssey
 
     private void doClientStuff(final FMLClientSetupEvent event)
     {
+        OverlayRegistry.registerOverlayTop("OdysseyHelmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            gui.setupOverlayRenderState(true, false);
+            if(gui instanceof OdysseyIngameGui odysseyIngameGui){
+                odysseyIngameGui.renderOdysseyHelmet(partialTicks, mStack);
+            }
+        });
+
         EntityRenderers.PLAYER_PROVIDERS = ImmutableMap.of("default", (context) -> {
             return new OdysseyPlayerRenderer(context, false);
         }, "slim", (context) -> {

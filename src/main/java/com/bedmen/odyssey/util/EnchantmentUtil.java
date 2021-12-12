@@ -235,4 +235,8 @@ public class EnchantmentUtil {
     public static int getMobLooting(LivingEntity livingEntity){
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MOB_LOOTING.get(), livingEntity);
     }
+
+    public static int getBindingCurse(ItemStack itemStack){
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.BINDING_CURSE.get(), itemStack);
+    }
 }
