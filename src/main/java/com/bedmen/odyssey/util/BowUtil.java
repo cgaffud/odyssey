@@ -40,7 +40,6 @@ public class BowUtil {
                             } else {
                                 ammo = ammoInQuiver.copy();
                                 ammo.setCount(1);
-                                System.out.println("beans");
                             }
                             ItemStack newQuiver = offhand.copy();
                             ContainerHelper.saveAllItems(compoundNBT, nonnulllist, true);

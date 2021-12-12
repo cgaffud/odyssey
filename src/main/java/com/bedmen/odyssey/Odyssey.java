@@ -4,6 +4,7 @@ import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
 import com.bedmen.odyssey.client.model.BabyLeviathanModel;
 import com.bedmen.odyssey.client.model.OdysseyBoatModel;
+import com.bedmen.odyssey.client.model.QuiverModel;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.entity.monster.BabyCreeper;
@@ -19,11 +20,14 @@ import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -94,6 +98,12 @@ public class Odyssey
 
     private void doClientStuff(final FMLClientSetupEvent event)
     {
+        EntityRenderers.PLAYER_PROVIDERS = ImmutableMap.of("default", (context) -> {
+            return new OdysseyPlayerRenderer(context, false);
+        }, "slim", (context) -> {
+            return new OdysseyPlayerRenderer(context, true);
+        });
+
 //        //Block Render Types
 //        for(Block block : ForgeRegistries.BLOCKS.getValues()){
 //            if(block instanceof INeedsToRegisterRenderType){
@@ -202,6 +212,7 @@ public class Odyssey
         for(OdysseyBoat.Type type : OdysseyBoat.Type.values()){
             event.registerLayerDefinition(OdysseyBoatModel.LAYER_LOCATION.get(type), OdysseyBoatModel::createBodyModel);
         }
+        event.registerLayerDefinition(QuiverModel.LAYER_LOCATION, QuiverModel::createBodyLayer);
     }
 
     @SubscribeEvent

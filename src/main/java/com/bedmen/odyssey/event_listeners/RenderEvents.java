@@ -1,7 +1,23 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
+import com.bedmen.odyssey.client.renderer.entity.layer.QuiverLayer;
+import com.bedmen.odyssey.items.QuiverItem;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.layers.ElytraLayer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RenderEvents {
@@ -28,19 +44,22 @@ public class RenderEvents {
 //            }
 //        }
 //    }
-//
-//    /**
-//     * Prevents Quiver from being rendered in hand
-//     */
-//    @SubscribeEvent
-//    public static void RenderHandEventListener(final RenderHandEvent event){
-//        Item item = event.getItemStack().getItem();
-//        InteractionHand hand = event.getHand();
-//        if(item instanceof QuiverItem && hand == InteractionHand.OFF_HAND){
-//            event.setCanceled(true);
-//        }
-//    }
-//
+
+    /**
+     * Prevents Quiver from being rendered in hand
+     */
+    @SubscribeEvent
+    public static void RenderHandEventListener(final RenderHandEvent event){
+        Item item = event.getItemStack().getItem();
+        InteractionHand hand = event.getHand();
+        System.out.println(item);
+        System.out.println(hand);
+        if(item instanceof QuiverItem && hand == InteractionHand.OFF_HAND){
+            System.out.println("beans");
+            event.setCanceled(true);
+        }
+    }
+
 //    @SubscribeEvent
 //    public static <T extends LivingEntity, M extends EntityModel<T> & ArmedModel> void RenderLivingEvent$PreListener(final RenderLivingEvent.Pre<T,M> event){
 //        LivingEntityRenderer<T,M> renderer = event.getRenderer();
@@ -50,33 +69,16 @@ public class RenderEvents {
 //            }
 //        }
 //    }
-//
-//    /**
-//     * Adjusts PlayerRenderer Layers
-//     */
-//    @SubscribeEvent
-//    public static void RRenderPlayerEvent$PreListener(final RenderPlayerEvent.Pre event){
-//        PlayerRenderer playerRenderer = event.getRenderer();
-//        List<RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>> layers = playerRenderer.layers;
-//        boolean[] flags = new boolean[3];
-//        layers.removeIf((layer) -> layer instanceof ElytraLayer);
-//        for(int i = 0; i < layers.size(); i++){
-//            if(layers.get(i) instanceof QuiverLayer){
-//                flags[0] = true;
-//            } else if(layers.get(i) instanceof AmuletLayer){
-//                flags[1] = true;
-//            } else if(layers.get(i) instanceof OdysseyElytraLayer){
-//                flags[2] = true;
-//            }
-//        }
-//        if(!flags[0]){
-//            layers.add(new QuiverLayer<>(playerRenderer));
-//        }
-//        if(!flags[1]){
-//            layers.add(new AmuletLayer<>(playerRenderer));
-//        }
-//        if(!flags[2]){
-//            layers.add(new OdysseyElytraLayer<>(playerRenderer));
-//        }
-//    }
+
+    /**
+     * Adjusts PlayerRenderer Layers
+     */
+    @SubscribeEvent
+    public static void RenderPlayerEvent$PreListener(final RenderPlayerEvent.Pre event){
+        PlayerRenderer playerRenderer = event.getRenderer();
+        Player player = event.getPlayer();
+        if(playerRenderer instanceof OdysseyPlayerRenderer odysseyPlayerRenderer && player instanceof AbstractClientPlayer abstractClientPlayer){
+            odysseyPlayerRenderer.setModelProperties(abstractClientPlayer);
+        }
+    }
 }
