@@ -52,10 +52,7 @@ public class RenderEvents {
     public static void RenderHandEventListener(final RenderHandEvent event){
         Item item = event.getItemStack().getItem();
         InteractionHand hand = event.getHand();
-        System.out.println(item);
-        System.out.println(hand);
         if(item instanceof QuiverItem && hand == InteractionHand.OFF_HAND){
-            System.out.println("beans");
             event.setCanceled(true);
         }
     }

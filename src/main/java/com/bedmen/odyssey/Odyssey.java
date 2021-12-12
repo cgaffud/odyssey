@@ -108,7 +108,7 @@ public class Odyssey
             return new OdysseyPlayerRenderer(context, true);
         });
 
-//        //Block Render Types
+        //Block Render Types
        for(Block block : ForgeRegistries.BLOCKS.getValues()) {
            if (block instanceof INeedsToRegisterRenderType) {
                ItemBlockRenderTypes.setRenderLayer(block, ((INeedsToRegisterRenderType) block).getRenderType());

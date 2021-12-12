@@ -56,9 +56,9 @@ public class QuiverItem extends Item {
     }
 
     public enum QuiverType{
-        RABBIT_HIDE_QUIVER(3, 0.1f, false, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/rabbit_hide.png")),
-        RABBIT_HIDE_ROCKET_BAG(2, 0.3f, true, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/rabbit_hide.png")),
-        LEVIATHAN_QUIVER(5, 0.2f, false, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/leviathan.png"));
+        RABBIT_HIDE_QUIVER(3, 0.1f, false, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/rabbit_hide_quiver.png")),
+        RABBIT_HIDE_ROCKET_BAG(2, 0.3f, true, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/rabbit_hide_rocket_bag.png")),
+        LEVIATHAN_QUIVER(5, 0.2f, false, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/leviathan_quiver.png"));
 
         private final int size;
         private final float freeAmmoChance;
