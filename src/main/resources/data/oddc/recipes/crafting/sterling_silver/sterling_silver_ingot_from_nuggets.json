@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "sterling_silver_ingot",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "oddc:sterling_silver_nugget"
+    }
+  },
+  "result": {
+    "item": "oddc:sterling_silver_ingot"
+  }
+}
