@@ -15,6 +15,6 @@ public class CompostUtil {
 //        add(0.3f, ItemRegistry.AUTUMN_LEAVES_ORANGE.get());
 //        add(0.3f, ItemRegistry.AUTUMN_LEAVES_YELLOW.get());
         add(0.3f, ItemRegistry.PALM_LEAVES.get());
-        add(0.3f, ItemRegistry.PALM_CORNER_LEAVES.get());
+        add(0.075f, ItemRegistry.PALM_CORNER_LEAVES.get());
     }
 }

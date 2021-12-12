@@ -18,29 +18,110 @@ import java.util.function.Predicate;
 
 public class BowUtil {
     public static final float BASE_ARROW_VELOCITY = 2.5f;
-
-    public static boolean consumeQuiverAmmo(Player playerEntity, ItemStack ammo, Random random){
-        NonNullList<ItemStack> offhand = playerEntity.getInventory().offhand;
-        for(ItemStack itemstack1 : offhand) {
-            Item item = itemstack1.getItem();
-            if (item instanceof QuiverItem) {
-                CompoundTag compoundNBT = itemstack1.getOrCreateTag();
+    public static AmmoStack getAmmo(Player player, ItemStack bow, boolean consume){
+        if (!(bow.getItem() instanceof ProjectileWeaponItem)) {
+            return new AmmoStack(ItemStack.EMPTY, false);
+        } else {
+            Predicate<ItemStack> predicate = ((ProjectileWeaponItem)bow.getItem()).getSupportedHeldProjectiles();
+            ItemStack offhand = player.getOffhandItem();
+            if(offhand.getItem() instanceof QuiverItem){
+                QuiverItem quiverItem = (QuiverItem)offhand.getItem();
+                CompoundTag compoundNBT = offhand.getOrCreateTag();
                 if (compoundNBT.contains("Items", 9)) {
-                    NonNullList<ItemStack> nonnulllist = NonNullList.withSize(((QuiverItem) item).getQuiverType().getSize(), ItemStack.EMPTY);
+                    NonNullList<ItemStack> nonnulllist = NonNullList.withSize(quiverItem.getQuiverType().getSize(), ItemStack.EMPTY);
                     ContainerHelper.loadAllItems(compoundNBT, nonnulllist);
                     for(int j = 0; j < nonnulllist.size(); j++){
-                        ItemStack itemstack2 = nonnulllist.get(j);
-                        if (ammo.getItem() == itemstack2.getItem()) {
-                            if(((QuiverItem) item).getQuiverType().getFreeAmmoChance() < random.nextFloat()){
-                                itemstack2.shrink(1);
+                        ItemStack ammoInQuiver = nonnulllist.get(j);
+                        if (predicate.test(ammoInQuiver)) {
+                            ItemStack ammo;
+                            boolean canPickup = (quiverItem.getQuiverType().getFreeAmmoChance() < player.getRandom().nextFloat());
+                            if(consume && canPickup){
+                                ammo = ammoInQuiver.split(1);
+                            } else {
+                                ammo = ammoInQuiver.copy();
+                                ammo.setCount(1);
+                                System.out.println("beans");
                             }
-                            nonnulllist.set(j, itemstack2.copy());
-                            ItemStack itemstack3 = itemstack1.copy();
+                            ItemStack newQuiver = offhand.copy();
                             ContainerHelper.saveAllItems(compoundNBT, nonnulllist, true);
-                            itemstack3.setTag(compoundNBT);
-                            offhand.set(0, itemstack3);
+                            newQuiver.setTag(compoundNBT);
+                            player.getInventory().offhand.set(0, newQuiver);
+                            return new AmmoStack(ammo, canPickup);
+                        }
+                    }
+                }
+            }
+            ItemStack itemstack = ProjectileWeaponItem.getHeldProjectile(player, predicate);
+            if (!itemstack.isEmpty()) {
+                return new AmmoStack(itemstack, true);
+            } else {
+                predicate = ((ProjectileWeaponItem)bow.getItem()).getAllSupportedProjectiles();
+
+                for(int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+                    ItemStack itemstack1 = player.getInventory().getItem(i);
+                    if (predicate.test(itemstack1)) {
+                        return new AmmoStack(itemstack1, true);
+                    }
+                }
+                return player.getAbilities().instabuild ? new AmmoStack(new ItemStack(Items.ARROW), true) : new AmmoStack(ItemStack.EMPTY, false);
+            }
+        }
+    }
+
+    public static boolean hasAmmo(Player player, ItemStack bow){
+        if (!(bow.getItem() instanceof ProjectileWeaponItem)) {
+            return false;
+        } else {
+            Predicate<ItemStack> predicate = ((ProjectileWeaponItem)bow.getItem()).getSupportedHeldProjectiles();
+            ItemStack offhand = player.getOffhandItem();
+            if(offhand.getItem() instanceof QuiverItem){
+                QuiverItem quiverItem = (QuiverItem)offhand.getItem();
+                CompoundTag compoundNBT = offhand.getOrCreateTag();
+                if (compoundNBT.contains("Items", 9)) {
+                    NonNullList<ItemStack> nonnulllist = NonNullList.withSize(quiverItem.getQuiverType().getSize(), ItemStack.EMPTY);
+                    ContainerHelper.loadAllItems(compoundNBT, nonnulllist);
+                    for(int j = 0; j < nonnulllist.size(); j++){
+                        ItemStack ammoInQuiver = nonnulllist.get(j);
+                        if (predicate.test(ammoInQuiver)) {
                             return true;
                         }
+                    }
+                }
+            }
+            ItemStack itemstack = ProjectileWeaponItem.getHeldProjectile(player, predicate);
+            if (!itemstack.isEmpty()) {
+                return true;
+            } else {
+                predicate = ((ProjectileWeaponItem)bow.getItem()).getAllSupportedProjectiles();
+
+                for(int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+                    ItemStack itemstack1 = player.getInventory().getItem(i);
+                    if (predicate.test(itemstack1)) {
+                        return true;
+                    }
+                }
+                return player.getAbilities().instabuild;
+            }
+        }
+    }
+
+    public static boolean tryToConsumeFromQuiver(Player player, ItemStack ammo){
+        ItemStack offhand = player.getOffhandItem();
+        if(offhand.getItem() instanceof QuiverItem){
+            QuiverItem quiverItem = (QuiverItem)offhand.getItem();
+            CompoundTag compoundNBT = offhand.getOrCreateTag();
+            if (compoundNBT.contains("Items", 9)) {
+                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(quiverItem.getQuiverType().getSize(), ItemStack.EMPTY);
+                ContainerHelper.loadAllItems(compoundNBT, nonnulllist);
+                for(int j = 0; j < nonnulllist.size(); j++){
+                    ItemStack ammoInQuiver = nonnulllist.get(j);
+                    if (ammoInQuiver.is(ammo.getItem())) {
+                        ammoInQuiver.shrink(1);
+                        ItemStack newQuiver = offhand.copy();
+                        ContainerHelper.saveAllItems(compoundNBT, nonnulllist, true);
+                        newQuiver.setTag(compoundNBT);
+                        player.getInventory().offhand.set(0, newQuiver);
+                        return true;
                     }
                 }
             }
@@ -50,5 +131,15 @@ public class BowUtil {
 
     public static InteractionHand getHandHoldingBow(LivingEntity pLiving) {
         return pLiving.getMainHandItem().getItem() instanceof OdysseyBowItem ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+    }
+
+    public static class AmmoStack{
+        public final ItemStack ammo;
+        public final boolean canPickUp;
+
+        AmmoStack(ItemStack ammo, boolean canPickUp){
+            this.ammo = ammo;
+            this.canPickUp = canPickUp;
+        }
     }
 }
