@@ -182,4 +182,12 @@ public abstract class MixinEnchantmentHelper {
     public static int getMobLooting(LivingEntity livingEntity) {
         return EnchantmentUtil.getMobLooting(livingEntity);
     }
+
+    /**
+     * @author JemBren
+     */
+    @Overwrite
+    public static boolean hasBindingCurse(ItemStack itemStack) {
+        return EnchantmentUtil.getBindingCurse(itemStack) > 0;
+    }
 }

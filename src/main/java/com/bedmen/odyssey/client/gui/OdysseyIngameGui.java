@@ -1,16 +1,24 @@
 package com.bedmen.odyssey.client.gui;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.OverlayRegistry;
 
 public class OdysseyIngameGui extends ForgeIngameGui
 {
-    public static final ResourceLocation ODYSSEY_GUI_ICONS_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/icons.png");
+    private static final ResourceLocation COCONUT_BLUR_LOCATION = new ResourceLocation(Odyssey.MOD_ID , "textures/misc/coconutblur.png");
 
     public OdysseyIngameGui(Minecraft mc) {
         super(mc);
@@ -62,5 +70,22 @@ public class OdysseyIngameGui extends ForgeIngameGui
 
         RenderSystem.disableBlend();
         minecraft.getProfiler().pop();
+    }
+
+    public void renderOdysseyHelmet(float partialTicks, PoseStack mStack)
+    {
+        ItemStack itemstack = this.minecraft.player.getInventory().getArmor(3);
+
+        if (this.minecraft.options.getCameraType().isFirstPerson() && !itemstack.isEmpty())
+        {
+            Item item = itemstack.getItem();
+            if (item == ItemRegistry.HOLLOW_COCONUT.get()){
+                renderTextureOverlay(COCONUT_BLUR_LOCATION, 1.0F);
+            }
+            else
+            {
+                RenderProperties.get(item).renderHelmetOverlay(itemstack, minecraft.player, this.screenWidth, this.screenHeight, partialTicks);
+            }
+        }
     }
 }
