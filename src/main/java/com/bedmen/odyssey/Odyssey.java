@@ -1,5 +1,6 @@
 package com.bedmen.odyssey;
 
+import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
 import com.bedmen.odyssey.client.model.BabyLeviathanModel;
@@ -24,6 +25,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -33,6 +35,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -105,11 +109,11 @@ public class Odyssey
         });
 
 //        //Block Render Types
-//        for(Block block : ForgeRegistries.BLOCKS.getValues()){
-//            if(block instanceof INeedsToRegisterRenderType){
-//                RenderTypeLookup.setRenderLayer(block, ((INeedsToRegisterRenderType) block).getRenderType());
-//            }
-//        }
+       for(Block block : ForgeRegistries.BLOCKS.getValues()) {
+           if (block instanceof INeedsToRegisterRenderType) {
+               ItemBlockRenderTypes.setRenderLayer(block, ((INeedsToRegisterRenderType) block).getRenderType());
+           }
+       }
 
         //Item Model Properties
         for(Item item : ForgeRegistries.ITEMS.getValues()){
