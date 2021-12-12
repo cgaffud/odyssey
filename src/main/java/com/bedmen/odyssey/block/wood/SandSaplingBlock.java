@@ -21,5 +21,4 @@ public class SandSaplingBlock extends SaplingBlock implements INeedsToRegisterRe
     public RenderType getRenderType() {
         return RenderType.cutout();
     }
-
 }

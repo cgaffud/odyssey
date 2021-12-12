@@ -38,16 +38,15 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         this.chargeTime = chargeTime;
     }
 
-    public void releaseUsing(ItemStack bowItemStack, Level level, LivingEntity livingEntity, int useTime) {
+    public void releaseUsing(ItemStack bow, Level level, LivingEntity livingEntity, int useTime) {
         if (livingEntity instanceof Player) {
             Player player = (Player)livingEntity;
-            boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bowItemStack) > 0;
-            ItemStack itemstack = player.getProjectile(bowItemStack);
-            //TODO add Quivers
-            //BowUtil.consumeQuiverAmmo(player, itemstack, livingEntity.getRandom());
+            boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bow) > 0;
+            BowUtil.AmmoStack ammoStack = BowUtil.getAmmo(player, bow, true);
+            ItemStack itemstack = ammoStack.ammo;
 
-            int i = this.getUseDuration(bowItemStack) - useTime;
-            i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bowItemStack, level, player, i, !itemstack.isEmpty() || flag);
+            int i = this.getUseDuration(bow) - useTime;
+            i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bow, level, player, i, !itemstack.isEmpty() || flag);
             if (i < 0) return;
 
             if (!itemstack.isEmpty() || flag) {
@@ -55,12 +54,12 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                     itemstack = new ItemStack(Items.ARROW);
                 }
 
-                float superCharge = EnchantmentUtil.getSuperChargeMultiplier(bowItemStack);
+                float superCharge = EnchantmentUtil.getSuperChargeMultiplier(bow);
                 Flag maxVelocityFlag = new Flag();
-                float f = getPowerForTime(i, bowItemStack, superCharge, maxVelocityFlag);
+                float f = getPowerForTime(i, bow, superCharge, maxVelocityFlag);
 
                 if (!((double)f < 0.1D)) {
-                    boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, bowItemStack, player));
+                    boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, bow, player));
                     if (!level.isClientSide) {
                         ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
                         AbstractArrow abstractArrow = arrowitem.createArrow(level, itemstack, player);
@@ -74,31 +73,31 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                         abstractArrow = customArrow(abstractArrow);
                         abstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
 
-                        int j = EnchantmentUtil.getPower(bowItemStack);
+                        int j = EnchantmentUtil.getPower(bow);
                         if (j > 0) {
                             abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
                         }
-                        j = EnchantmentUtil.getPunch(bowItemStack);
+                        j = EnchantmentUtil.getPunch(bow);
                         if (j > 0) {
                             abstractArrow.setKnockback(j);
                         }
-                        j = EnchantmentUtil.getFlame(bowItemStack);
+                        j = EnchantmentUtil.getFlame(bow);
                         if (j > 0) {
                             abstractArrow.setSecondsOnFire(100*j);
                         }
-                        j = EnchantmentUtil.getPiercing(bowItemStack);
+                        j = EnchantmentUtil.getPiercing(bow);
                         if (j > 0) {
                             abstractArrow.setPierceLevel((byte)j);
                         }
-                        j = EnchantmentUtil.getMobLooting(bowItemStack);
+                        j = EnchantmentUtil.getMobLooting(bow);
                         if(j > 0 && abstractArrow instanceof OdysseyAbstractArrow){
                             ((OdysseyAbstractArrow) abstractArrow).setLootingLevel((byte)j);
                         }
 
-                        bowItemStack.hurtAndBreak(1, player, (p_40665_) -> {
+                        bow.hurtAndBreak(1, player, (p_40665_) -> {
                             p_40665_.broadcastBreakEvent(player.getUsedItemHand());
                         });
-                        if (flag1 || player.getAbilities().instabuild && (itemstack.is(Items.SPECTRAL_ARROW) || itemstack.is(Items.TIPPED_ARROW))) {
+                        if (!ammoStack.canPickUp || flag1 || player.getAbilities().instabuild && (itemstack.is(Items.SPECTRAL_ARROW) || itemstack.is(Items.TIPPED_ARROW))) {
                             abstractArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
 
@@ -135,17 +134,17 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         return (f * f + f * 2.0F) / 3.0F;
     }
 
-    public InteractionResultHolder<ItemStack> use(Level p_40672_, Player p_40673_, InteractionHand p_40674_) {
-        ItemStack itemstack = p_40673_.getItemInHand(p_40674_);
-        boolean flag = !p_40673_.getProjectile(itemstack).isEmpty();
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+        ItemStack itemstack = player.getItemInHand(interactionHand);
+        boolean flag = BowUtil.hasAmmo(player, itemstack);
 
-        InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, p_40672_, p_40673_, p_40674_, flag);
+        InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, level, player, interactionHand, flag);
         if (ret != null) return ret;
 
-        if (!p_40673_.getAbilities().instabuild && !flag) {
+        if (!player.getAbilities().instabuild && !flag) {
             return InteractionResultHolder.fail(itemstack);
         } else {
-            p_40673_.startUsingItem(p_40674_);
+            player.startUsingItem(interactionHand);
             return InteractionResultHolder.consume(itemstack);
         }
     }

@@ -117,7 +117,9 @@
   "item.oddc.copper_nugget": "Copper Nugget",
   "item.oddc.sterling_silver_nugget": "Sterling Silver Nugget",
   "item.oddc.sterling_silver_ingot": "Sterling Silver Ingot",
-  "item.oddc.sterling_silver_nugget": "Sterling Silver Nugget",
+  "block.oddc.sterling_silver_block": "Block of Sterling Silver",
   "block.oddc.leather_pile": "Leather Pile",
-  "block.oddc.sterling_silver_block": "Block of Sterling Silver"
+  "item.oddc.rabbit_hide_quiver": "Rabbit Hide Quiver",
+  "item.oddc.rabbit_hide_rocket_bag": "Rabbit Hide Rocket Bag",
+  "item.oddc.quiver.free_ammo_chance": "Free Ammo Chance: "
 }

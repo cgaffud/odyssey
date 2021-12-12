@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    "C C",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:rabbit_hide"
+    },
+    "B": {
+      "item": "minecraft:string"
+    },
+    "C": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "result": {
+    "item": "oddc:rabbit_hide_rocket_bag"
+  }
+}
