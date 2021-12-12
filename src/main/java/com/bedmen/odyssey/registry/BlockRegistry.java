@@ -53,6 +53,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> POTTED_PALM_SAPLING = BLOCKS.register("potted_palm_sapling", () -> new OdysseyFlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, PALM_SAPLING, BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
 //    public static final RegistryObject<Block> COCONUT = BLOCKS.register("coconut", () -> new CoconutBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
 //    public static final RegistryObject<Block> HOLLOW_COCONUT = BLOCKS.register("hollow_coconut", () -> new HollowCoconutBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
+    public static final RegistryObject<Block> LEATHER_PILE = BLOCKS.register("leather_pile", () -> new Block(BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.COLOR_BROWN).strength(1.0F, 1.0F).sound(SoundType.WOOL)));
 
     //Vanilla Overrides
     public static final RegistryObject<Block> AMETHYST_CLUSTER = BLOCKS_VANILLA.register("amethyst_cluster", () -> new AmethystClusterBlock(7, 3, BlockBehaviour.Properties.of(Material.AMETHYST).noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).strength(1.5F).requiresCorrectToolForDrops().lightLevel((p_152651_) -> {
