@@ -46,23 +46,23 @@ public class CoconutBlock extends Block implements BonemealableBlock, INeedsToRe
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
     }
 
-    public InteractionResult use(BlockState p_225533_1_, Level p_225533_2_, BlockPos p_225533_3_, Player p_225533_4_, InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
-        ItemStack itemstack = p_225533_4_.getItemInHand(p_225533_5_);
-        if (itemstack.getItem() == Items.SHEARS) {
-            if (!p_225533_2_.isClientSide) {
-                p_225533_2_.playSound((Player)null, p_225533_3_, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                p_225533_2_.setBlock(p_225533_3_, BlockRegistry.HOLLOW_COCONUT.get().defaultBlockState().setValue(HollowCoconutBlock.HANGING, Boolean.TRUE), 11);
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        ItemStack itemstack = player.getItemInHand(interactionHand);
+        if (itemstack.getItem() == Items.SHEARS && blockState.getValue(AGE) == 2) {
+            if (!level.isClientSide) {
+                level.playSound((Player)null, blockPos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.setBlock(blockPos, BlockRegistry.HOLLOW_COCONUT.get().defaultBlockState().setValue(HollowCoconutBlock.HANGING, Boolean.TRUE), 11);
                 Direction direction1 = Direction.DOWN;
-                ItemEntity itementity = new ItemEntity(p_225533_2_, (double)p_225533_3_.getX() + 0.5D + (double)direction1.getStepX() * 0.65D, (double)p_225533_3_.getY() + 0.1D, (double)p_225533_3_.getZ() + 0.5D + (double)direction1.getStepZ() * 0.65D, new ItemStack(ItemRegistry.COCONUT_FLOWER.get(), 2));
-                itementity.setDeltaMovement(0.05D * (double)direction1.getStepX() + p_225533_2_.random.nextDouble() * 0.02D, 0.05D, 0.05D * (double)direction1.getStepZ() + p_225533_2_.random.nextDouble() * 0.02D);
-                p_225533_2_.addFreshEntity(itementity);
-                itemstack.hurtAndBreak(1, p_225533_4_, (p_220282_1_) -> {
-                    p_220282_1_.broadcastBreakEvent(p_225533_5_);
+                ItemEntity itementity = new ItemEntity(level, (double)blockPos.getX() + 0.5D + (double)direction1.getStepX() * 0.65D, (double)blockPos.getY() + 0.1D, (double)blockPos.getZ() + 0.5D + (double)direction1.getStepZ() * 0.65D, new ItemStack(ItemRegistry.COCONUT_FLOWER.get(), 2));
+                itementity.setDeltaMovement(0.05D * (double)direction1.getStepX() + level.random.nextDouble() * 0.02D, 0.05D, 0.05D * (double)direction1.getStepZ() + level.random.nextDouble() * 0.02D);
+                level.addFreshEntity(itementity);
+                itemstack.hurtAndBreak(1, player, (p_220282_1_) -> {
+                    p_220282_1_.broadcastBreakEvent(interactionHand);
                 });
             }
-            return InteractionResult.sidedSuccess(p_225533_2_.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         } else {
-            return super.use(p_225533_1_, p_225533_2_, p_225533_3_, p_225533_4_, p_225533_5_, p_225533_6_);
+            return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
         }
     }
 

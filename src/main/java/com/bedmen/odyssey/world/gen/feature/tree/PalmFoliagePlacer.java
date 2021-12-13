@@ -62,17 +62,16 @@ public class PalmFoliagePlacer extends FoliagePlacer {
                     int absk = Math.abs(k);
                     if((absj == 0 && absk == 1) || (absj == 1 && absk == 0)){
                         blockpos$mutable.setWithOffset(blockPos, j, height, k);
-                        int r = random.nextInt(20);
-                        BlockState blockState = BlockRegistry.COCONUT.get().defaultBlockState();
-                        switch(r){
+                        BlockState blockState = null;
+                        switch(random.nextInt(20)){
                             case 0:
-                                blockState = blockState.setValue(CoconutBlock.AGE, 0);
+                                blockState = BlockRegistry.COCONUT.get().defaultBlockState().setValue(CoconutBlock.AGE, 0);
                                 break;
                             case 1:
-                                blockState = blockState.setValue(CoconutBlock.AGE, 1);
+                                blockState = BlockRegistry.COCONUT.get().defaultBlockState().setValue(CoconutBlock.AGE, 1);
                                 break;
                             case 2:
-                                blockState = blockState.setValue(CoconutBlock.AGE, 2);
+                                blockState = BlockRegistry.COCONUT.get().defaultBlockState().setValue(CoconutBlock.AGE, 2);
                                 break;
                             case 3:
                             case 4:
@@ -81,7 +80,9 @@ public class PalmFoliagePlacer extends FoliagePlacer {
                                 break;
 
                         }
-                        biConsumer.accept(blockpos$mutable, blockState);
+                        if(blockState != null){
+                            biConsumer.accept(blockpos$mutable, blockState);
+                        }
                     }
                 }
 
