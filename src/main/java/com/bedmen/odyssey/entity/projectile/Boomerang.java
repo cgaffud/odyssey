@@ -243,21 +243,27 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     }
 
     public enum BoomerangType{
-        WOOD(4.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/wooden_boomerang.png"));
-//        BONE(5.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png")),
+        WOOD(4.0d, 500, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/wooden_boomerang.png")),
+        BONE(5.0d, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png"));
 //        CHARMED(5.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/charmed_boomerang.png")),
 //        COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
 
         private final double damage;
+        private final int burnTime;
         private final ResourceLocation resourceLocation;
 
-        BoomerangType(double damage, ResourceLocation resourceLocation){
+        BoomerangType(double damage, int burnTime, ResourceLocation resourceLocation){
             this.damage = damage;
+            this.burnTime = burnTime;
             this.resourceLocation = resourceLocation;
         }
 
         public double getDamage(){
             return this.damage;
+        }
+
+        public int getBurnTime(){
+            return this.burnTime;
         }
 
         public ResourceLocation getResourceLocation(){
