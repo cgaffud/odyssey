@@ -7,10 +7,10 @@
   ],
   "key": {
     "A": {
-      "item": "minecraft:stick"
+      "item": "minecraft:bone"
     }
   },
   "result": {
-    "item": "oddc:wooden_boomerang"
+    "item": "oddc:bone_boomerang"
   }
 }
