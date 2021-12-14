@@ -124,5 +124,9 @@
   "item.oddc.quiver.free_ammo_chance": "Free Ammo Chance: ",
   "block.oddc.coconut": "Coconut",
   "block.oddc.hollow_coconut": "Hollow Coconut",
-  "item.oddc.coconut_flower": "Coconut Flower"
+  "item.oddc.coconut_flower": "Coconut Flower",
+  "death.attack.boomerang": "%1$s was bonked by %2$s",
+  "death.attack.boomerang.item": "%1$s was bonked by %2$s using %3$s",
+  "entity.oddc.boomerang": "Boomerang",
+  "item.oddc.wooden_boomerang": "Wooden Boomerang"
 }

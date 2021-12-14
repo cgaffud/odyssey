@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "boat",
+  "pattern": [
+    "AAA",
+    "A  ",
+    "A  "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "oddc:wooden_boomerang"
+  }
+}

@@ -3,6 +3,7 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.armor.OdysseyArmorMaterials;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.entity.projectile.Boomerang;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.items.*;
@@ -125,6 +126,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.RANGED), QuiverItem.QuiverType.RABBIT_HIDE_QUIVER));
     public static final RegistryObject<Item> RABBIT_HIDE_ROCKET_BAG = ITEMS.register("rabbit_hide_rocket_bag", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.RANGED), QuiverItem.QuiverType.RABBIT_HIDE_ROCKET_BAG));
 
+    public static final RegistryObject<Item> WOODEN_BOOMERANG = ITEMS.register("wooden_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.WOOD.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.WOOD, LOYALTY_1));
 
     //Armors
     public static final RegistryObject<Item> HOLLOW_COCONUT = ITEMS.register("hollow_coconut", () -> new HollowCoconutItem(OdysseyArmorMaterials.COCONUT, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), BINDING));

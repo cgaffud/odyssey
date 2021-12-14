@@ -3,10 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.wood.OdysseyFlowerPotBlock;
 import com.bedmen.odyssey.items.OdysseySpawnEggItem;
-import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
-import com.bedmen.odyssey.items.equipment.EquipmentBowItem;
-import com.bedmen.odyssey.items.equipment.EquipmentCrossbowItem;
-import com.bedmen.odyssey.items.equipment.EquipmentMeleeItem;
+import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.world.entity.EntityType;
@@ -66,7 +63,7 @@ public class RegistryEvents {
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
         EquipmentMeleeItem.initEquipment();
-//        EquipmentItem.initEquipment();
+        EquipmentItem.initEquipment();
 //        EquipmentPickaxeItem.initEquipment();
 //        EquipmentHoeItem.initEquipment();
 //        EquipmentShovelItem.initEquipment();
