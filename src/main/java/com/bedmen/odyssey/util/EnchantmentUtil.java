@@ -239,4 +239,8 @@ public class EnchantmentUtil {
     public static int getBindingCurse(ItemStack itemStack){
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.BINDING_CURSE.get(), itemStack);
     }
+
+    public static int getLoyalty(ItemStack itemStack){
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.LOYALTY.get(), itemStack);
+    }
 }
