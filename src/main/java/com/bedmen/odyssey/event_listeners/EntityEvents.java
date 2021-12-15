@@ -17,6 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -123,7 +124,7 @@ public class EntityEvents {
     @SubscribeEvent
     public static void livingSpawnEvent$SpecialSpawnListener(final LivingSpawnEvent.SpecialSpawn event){
         Entity entity = event.getEntity();
-/*        if(entity instanceof Skeleton){
+        if(entity instanceof Skeleton){
             Skeleton skeletonEntity = (Skeleton)entity;
             Random random = skeletonEntity.getRandom();
 
@@ -133,12 +134,12 @@ public class EntityEvents {
                 return;
             }
 
-            if(skeletonEntity.getRandom().nextFloat() < 0.05f){
-                entity.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
-            }
+//            if(skeletonEntity.getRandom().nextFloat() < 0.05f){
+//                entity.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
+//            }
         }
 
-        else*/ if(entity instanceof Creeper){
+        else if(entity instanceof Creeper){
             Creeper creeperEntity = (Creeper)entity;
             Random random = creeperEntity.getRandom();
 
