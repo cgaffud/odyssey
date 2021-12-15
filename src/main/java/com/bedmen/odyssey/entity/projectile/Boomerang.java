@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.OdysseyDamageSource;
+import com.bedmen.odyssey.entity.monster.BabySkeleton;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -15,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -23,11 +25,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
+
+import javax.annotation.Nullable;
 
 public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
     private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(Boomerang.class, EntityDataSerializers.BYTE);
@@ -109,31 +114,31 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return this.entityData.get(ID_FOIL);
     }
 
-//    @Nullable
-//    protected EntityHitResult findHitEntity(Vec3 startVec, Vec3 endVec) {
-//        if(this.dealtDamage){
-//            if(!this.level.isClientSide){
-//                AABB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
-//                for(Entity entity : this.level.getEntities(this, box, this::isBabySkeletonOwner)) {
-//                    BabySkeleton babySkeleton = (BabySkeleton)entity;
-//                    if(babySkeleton.getMainHandItem().isEmpty()){
-//                        babySkeleton.setItemInHand(InteractionHand.MAIN_HAND, this.thrownStack);
-//                    } else if (babySkeleton.getOffhandItem().isEmpty()){
-//                        babySkeleton.setItemInHand(InteractionHand.OFF_HAND, this.thrownStack);
-//                    }
-//                    this.discard();
-//                    break;
-//                }
-//            }
-//            return null;
-//        } else {
-//            return super.findHitEntity(startVec, endVec);
-//        }
-//    }
+    @Nullable
+    protected EntityHitResult findHitEntity(Vec3 startVec, Vec3 endVec) {
+        if(this.dealtDamage){
+            if(!this.level.isClientSide){
+                AABB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
+                for(Entity entity : this.level.getEntities(this, box, this::isBabySkeletonOwner)) {
+                    BabySkeleton babySkeleton = (BabySkeleton)entity;
+                    if(babySkeleton.getMainHandItem().isEmpty()){
+                        babySkeleton.setItemInHand(InteractionHand.MAIN_HAND, this.thrownStack);
+                    } else if (babySkeleton.getOffhandItem().isEmpty()){
+                        babySkeleton.setItemInHand(InteractionHand.OFF_HAND, this.thrownStack);
+                    }
+                    this.discard();
+                    break;
+                }
+            }
+            return null;
+        } else {
+            return super.findHitEntity(startVec, endVec);
+        }
+    }
 
-//    private boolean isBabySkeletonOwner(Entity entity){
-//        return entity instanceof BabySkeleton && entity.getUUID() == this.getOwner().getUUID();
-//    }
+    private boolean isBabySkeletonOwner(Entity entity){
+        return entity instanceof BabySkeleton && entity.getUUID() == this.getOwner().getUUID();
+    }
 
     /**
      * Called when the arrow hits an entity

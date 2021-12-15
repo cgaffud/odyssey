@@ -129,5 +129,7 @@
   "death.attack.boomerang.item": "%1$s was bonked by %2$s using %3$s",
   "entity.oddc.boomerang": "Boomerang",
   "item.oddc.wooden_boomerang": "Wooden Boomerang",
-  "item.oddc.bone_boomerang": "Bone Boomerang"
+  "item.oddc.bone_boomerang": "Bone Boomerang",
+  "entity.oddc.baby_skeleton": "Baby Skeleton",
+  "item.oddc.baby_skeleton_spawn_egg": "Baby Skeleton Spawn Egg"
 }
