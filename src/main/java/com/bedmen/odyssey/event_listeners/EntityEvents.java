@@ -7,6 +7,7 @@ import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.eventbus.Subscribe;
+import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
@@ -29,11 +31,23 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
+
+    @SubscribeEvent
+    public static void updateEntityEventListener(final LivingEvent.LivingUpdateEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
+        if (!livingEntity.level.isClientSide &&  livingEntity.tickCount % 25 == 0) {
+            List<Integer> bleedingNums = EnchantmentUtil.getBleeding(livingEntity);
+            if ((bleedingNums.get(1) > 0) && (livingEntity.tickCount % (100 >> bleedingNums.get(1)) == 0))
+                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLEEDING.get(), 1,
+                        bleedingNums.get(0),false, false, false));
+        }
+    }
 
     @SubscribeEvent
     public static void attackEntityEventListener(final AttackEntityEvent event){

@@ -1,13 +1,18 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import it.unimi.dsi.fastutil.ints.IntPriorityQueue;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+
+import java.util.*;
 
 public class EnchantmentUtil {
 //    private static final Map<Enchantment, Integer> ENCHANTMENT_TO_INTEGER_MAP = new HashMap<>();
@@ -115,6 +120,18 @@ public class EnchantmentUtil {
 //    public static void writeEnchantment(Enchantment e, FriendlyByteBuf buffer) {
 //        buffer.writeVarInt(enchantmentToInt(e));
 //    }
+    public static List<Integer> getAllEnchantmentLevels(Enchantment enchantment, LivingEntity entity){
+        Map<EquipmentSlot,ItemStack> itemSlots = enchantment.getSlotItems(entity);
+        List<Integer> enchlvls = Arrays.asList(0,0,0,0,0,0);
+        if (itemSlots == null) {
+            return enchlvls;
+        }
+        else {
+            itemSlots.forEach((slot,stack) ->
+                    enchlvls.set(slot.getFilterFlag(),EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack)));
+        }
+        return enchlvls;
+    }
 
     public static Component getUnenchantableName(){
         return new TranslatableComponent("enchantment.oddc.unenchantable").withStyle(ChatFormatting.DARK_RED);
@@ -185,6 +202,14 @@ public class EnchantmentUtil {
 
     public static int getEruption(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.ERUPTION.get(), itemStack);
+    }
+
+    public static List<Integer> getBleeding(LivingEntity entity) {
+        List<Integer> enchLvls = getAllEnchantmentLevels(EnchantmentRegistry.BLEEDING.get(),entity);
+        int max = Collections.max(enchLvls);
+        int amnt = 6-Collections.frequency(enchLvls,0);
+        System.out.println(max);
+        return Arrays.asList(max,amnt);
     }
 
 //    public static boolean hasVolatile(ItemStack itemStack) {
