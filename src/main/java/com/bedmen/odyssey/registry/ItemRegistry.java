@@ -105,7 +105,7 @@ public class ItemRegistry {
     public static final LevEnchSup PUNCH_1 = new LevEnchSup(EnchantmentRegistry.PUNCH_ARROWS, 1);
     public static final LevEnchSup PUNCH_2 = new LevEnchSup(EnchantmentRegistry.PUNCH_ARROWS, 2);
     public static final LevEnchSup LOYALTY_1 = new LevEnchSup(EnchantmentRegistry.LOYALTY, 1);
-    public static final LevEnchSup LOYALTY_2 = new LevEnchSup(EnchantmentRegistry.LOYALTY, 2);
+    public static final LevEnchSup LOYALTY_3 = new LevEnchSup(EnchantmentRegistry.LOYALTY, 3);
 
     //Melee Weapons
     public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 8, -3.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_1));
@@ -120,6 +120,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BONE_LONG_BOW = ITEMS.register("bone_long_bow", () -> new EquipmentBowItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.2f, 20, PIERCING_1));
     public static final RegistryObject<Item> BONE_REPEATER = ITEMS.register("bone_repeater", () -> new RepeaterItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.0f, 20, QUICK_CHARGE_1));
     public static final RegistryObject<Item> BONE_SLUG_BOW = ITEMS.register("bone_slug_bow", () -> new EquipmentCrossbowItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 25, PUNCH_1));
+    public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new RepeaterItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.2f, 15, QUICK_CHARGE_1, PUNCH_1, PIERCING_1));
 
     public static final RegistryObject<Item> AMETHYST_ARROW = ITEMS.register("amethyst_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyArrow.ArrowType.AMETHYST));
 
@@ -128,6 +129,7 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> WOODEN_BOOMERANG = ITEMS.register("wooden_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.WOOD.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.WOOD, LOYALTY_1));
     public static final RegistryObject<Item> BONE_BOOMERANG = ITEMS.register("bone_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.BONE, LOYALTY_1));
+    public static final RegistryObject<Item> BONERANG = ITEMS.register("bonerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.BONERANG, LOYALTY_3));
 
     //Armors
     public static final RegistryObject<Item> HOLLOW_COCONUT = ITEMS.register("hollow_coconut", () -> new HollowCoconutItem(OdysseyArmorMaterials.COCONUT, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), BINDING));

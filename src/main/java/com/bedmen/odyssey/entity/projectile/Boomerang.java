@@ -70,23 +70,23 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
      */
     public void tick() {
         this.setNoGravity(true);
-        if (this.inGroundTime > 0 || this.tickCount > 20) {
+        if (this.inGroundTime > 0 || this.tickCount > this.getBoomerangType().getReturnTime()) {
             this.dealtDamage = true;
         }
 
         Entity entity = this.getOwner();
         if ((this.dealtDamage || this.isNoPhysics()) && entity != null) {
-            int i = this.entityData.get(ID_LOYALTY);
-            if (i > 0 && !this.shouldReturnToThrower()) {
+            int loyalty = this.getLoyalty();
+            if (!this.isAcceptibleReturnOwner()) {
                 if (!this.level.isClientSide && this.pickup == Pickup.ALLOWED) {
                     this.spawnAtLocation(this.getPickupItem(), 0.1F);
                 }
 
                 this.discard();
-            } else if (i > 0) {
+            } else {
                 this.setNoPhysics(true);
                 Vec3 vector3d = new Vec3(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
-                double d0 = 0.05D * (double)i;
+                double d0 = 0.03D * (double)(loyalty+1);
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
 
                 ++this.returningTicks;
@@ -96,7 +96,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         super.tick();
     }
 
-    private boolean shouldReturnToThrower() {
+    private boolean isAcceptibleReturnOwner() {
         Entity entity = this.getOwner();
         if (entity != null && entity.isAlive()) {
             return !(entity instanceof ServerPlayer) || !entity.isSpectator();
@@ -112,6 +112,10 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     @OnlyIn(Dist.CLIENT)
     public boolean isFoil() {
         return this.entityData.get(ID_FOIL);
+    }
+
+    public int getLoyalty() {
+        return this.entityData.get(ID_LOYALTY);
     }
 
     @Nullable
@@ -174,26 +178,20 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         this.playSound(SoundEvents.TRIDENT_HIT, 1.0f, 1.0F);
     }
 
-    /**
-     * The sound made when an entity is hit by this projectile
-     */
     protected SoundEvent getDefaultHitGroundSoundEvent() {
         return SoundEvents.TRIDENT_HIT_GROUND;
     }
 
-    /**
-     * Called by a player entity when they collide with an entity
-     */
-    public void playerTouch(Player entityIn) {
-        Entity entity = this.getOwner();
-        if (entity == null || entity.getUUID() == entityIn.getUUID()) {
-            super.playerTouch(entityIn);
+    public void playerTouch(Player player) {
+        if (this.ownedBy(player) || this.getOwner() == null) {
+            super.playerTouch(player);
         }
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
+    protected boolean tryPickup(Player p_150196_) {
+        return super.tryPickup(p_150196_) || this.isNoPhysics() && this.ownedBy(p_150196_) && p_150196_.getInventory().add(this.getPickupItem());
+    }
+
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
         if (compoundNBT.contains("Boomerang", 10)) {
@@ -248,23 +246,34 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     }
 
     public enum BoomerangType{
-        WOOD(4.0d, 500, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/wooden_boomerang.png")),
-        BONE(5.0d, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png"));
+        WOOD(4.0d, 20, 500, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/wooden_boomerang.png")),
+        BONE(5.0d, 20, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png")),
+        BONERANG(5.0d, 10, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bonerang.png"));
 //        CHARMED(5.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/charmed_boomerang.png")),
 //        COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
 
         private final double damage;
+        private final int returnTime;
         private final int burnTime;
         private final ResourceLocation resourceLocation;
 
-        BoomerangType(double damage, int burnTime, ResourceLocation resourceLocation){
+        BoomerangType(double damage, int returnTime, int burnTime, ResourceLocation resourceLocation){
             this.damage = damage;
+            this.returnTime = returnTime;
             this.burnTime = burnTime;
             this.resourceLocation = resourceLocation;
         }
 
         public double getDamage(){
             return this.damage;
+        }
+
+        public int getReturnTime(){
+            return this.returnTime;
+        }
+
+        public float getAttackTime(){
+            return Math.round(10f * 20f / (float)this.getReturnTime()) / 10f - 4f;
         }
 
         public int getBurnTime(){
