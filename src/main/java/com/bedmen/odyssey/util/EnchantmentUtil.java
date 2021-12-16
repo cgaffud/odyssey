@@ -120,17 +120,17 @@ public class EnchantmentUtil {
 //    public static void writeEnchantment(Enchantment e, FriendlyByteBuf buffer) {
 //        buffer.writeVarInt(enchantmentToInt(e));
 //    }
-    public static List<Integer> getAllEnchantmentLevels(Enchantment enchantment, LivingEntity entity){
-        Map<EquipmentSlot,ItemStack> itemSlots = enchantment.getSlotItems(entity);
-        List<Integer> enchlvls = Arrays.asList(0,0,0,0,0,0);
+    public static Integer getSumEnchantmentLevels(Enchantment enchantment, LivingEntity entity){
+        Iterable<ItemStack> itemSlots = enchantment.getSlotItems(entity).values();
         if (itemSlots == null) {
-            return enchlvls;
+            return 0;
         }
         else {
-            itemSlots.forEach((slot,stack) ->
-                    enchlvls.set(slot.getFilterFlag(),EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack)));
+            int sum = 0;
+            for(ItemStack itemstack : itemSlots)
+                sum += EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemstack);
+            return sum;
         }
-        return enchlvls;
     }
 
     public static Component getUnenchantableName(){
@@ -204,12 +204,8 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.ERUPTION.get(), itemStack);
     }
 
-    public static List<Integer> getBleeding(LivingEntity entity) {
-        List<Integer> enchLvls = getAllEnchantmentLevels(EnchantmentRegistry.BLEEDING.get(),entity);
-        int max = Collections.max(enchLvls);
-        int amnt = 6-Collections.frequency(enchLvls,0);
-        System.out.println(max);
-        return Arrays.asList(max,amnt);
+    public static int getBleeding(LivingEntity entity) {
+        return getSumEnchantmentLevels(EnchantmentRegistry.BLEEDING.get(),entity);
     }
 
 //    public static boolean hasVolatile(ItemStack itemStack) {

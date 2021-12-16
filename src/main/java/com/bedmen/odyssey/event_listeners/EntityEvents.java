@@ -41,11 +41,11 @@ public class EntityEvents {
     @SubscribeEvent
     public static void updateEntityEventListener(final LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
-        if (!livingEntity.level.isClientSide &&  livingEntity.tickCount % 25 == 0) {
-            List<Integer> bleedingNums = EnchantmentUtil.getBleeding(livingEntity);
-            if ((bleedingNums.get(1) > 0) && (livingEntity.tickCount % (100 >> bleedingNums.get(1)) == 0))
+        if (!livingEntity.level.isClientSide) {
+            int bleedLvl = EnchantmentUtil.getBleeding(livingEntity);
+            if ((bleedLvl > 0) && (livingEntity.tickCount % (100 / (bleedLvl+2)) == 0))
                 livingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLEEDING.get(), 1,
-                        bleedingNums.get(0),false, false, false));
+                        1,false, false, false));
         }
     }
 
