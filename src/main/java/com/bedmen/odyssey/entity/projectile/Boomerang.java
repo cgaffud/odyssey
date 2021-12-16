@@ -42,12 +42,12 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     private boolean dealtDamage;
     public int returningTicks;
 
-    public Boomerang(EntityType<? extends Boomerang> type, Level worldIn) {
-        super(type, worldIn);
+    public Boomerang(EntityType<? extends Boomerang> type, Level level) {
+        super(type, level);
     }
 
-    public Boomerang(Level worldIn, LivingEntity thrower, ItemStack thrownStackIn) {
-        super(EntityTypeRegistry.BOOMERANG.get(), thrower, worldIn);
+    public Boomerang(Level level, LivingEntity thrower, ItemStack thrownStackIn) {
+        super(EntityTypeRegistry.BOOMERANG.get(), thrower, level);
         this.thrownStack = thrownStackIn.copy();
         this.entityData.set(ID_LOYALTY, (byte) EnchantmentUtil.getLoyalty(thrownStackIn));
         this.entityData.set(ID_FOIL, thrownStackIn.hasFoil());
@@ -235,13 +235,14 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
 
     @Override
     public void writeSpawnData(FriendlyByteBuf buffer) {
-        buffer.writeInt(this.getOwner().getId());
+        buffer.writeInt(this.getOwner() == null ? -1 : this.getOwner().getId());
         buffer.writeInt(this.boomerangType.ordinal());
     }
 
     @Override
     public void readSpawnData(FriendlyByteBuf additionalData) {
-        this.setOwner(this.level.getEntity(additionalData.readInt()));
+        int id = additionalData.readInt();
+        this.setOwner(id == -1 ? null : this.level.getEntity(id));
         this.boomerangType = BoomerangType.values()[additionalData.readInt()];
     }
 

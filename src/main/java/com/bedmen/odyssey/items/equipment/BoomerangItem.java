@@ -61,31 +61,30 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
     /**
      * Called when the player stops using an Item (stops holding the right mouse button).
      */
-    public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
-        if (entityLiving instanceof Player) {
-            Player playerentity = (Player)entityLiving;
+    public void releaseUsing(ItemStack stack, Level level, LivingEntity entityLiving, int timeLeft) {
+        if (entityLiving instanceof Player player) {
             int i = this.getUseDuration(stack) - timeLeft;
             if (i >= 10) {
-                if (!worldIn.isClientSide) {
-                    stack.hurtAndBreak(1, playerentity, (player) -> {
-                        player.broadcastBreakEvent(entityLiving.getUsedItemHand());
+                if (!level.isClientSide) {
+                    stack.hurtAndBreak(1, player, (player1) -> {
+                        player1.broadcastBreakEvent(entityLiving.getUsedItemHand());
                     });
-                    Boomerang boomerang = new Boomerang(worldIn, playerentity, stack);
+                    Boomerang boomerang = new Boomerang(level, player, stack);
                     boomerang.setLootingLevel((byte)this.getInnateEnchantmentLevel(EnchantmentRegistry.MOB_LOOTING.get()));
-                    float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(playerentity);
-                    boomerang.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot(), 0.0F, this.shootSpeed(), inaccuracy);
-                    if (playerentity.isCreative()) {
+                    float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(player);
+                    boomerang.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, this.shootSpeed(), inaccuracy);
+                    if (player.isCreative()) {
                         boomerang.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                     }
 
-                    worldIn.addFreshEntity(boomerang);
-                    worldIn.playSound(null, boomerang, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.0F, 1.0F);
-                    if (!playerentity.isCreative()) {
-                        playerentity.getInventory().removeItem(stack);
+                    level.addFreshEntity(boomerang);
+                    level.playSound(null, boomerang, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.0F, 1.0F);
+                    if (!player.isCreative()) {
+                        player.getInventory().removeItem(stack);
                     }
                 }
 
-                playerentity.awardStat(Stats.ITEM_USED.get(this));
+                player.awardStat(Stats.ITEM_USED.get(this));
             }
         }
     }
@@ -94,7 +93,7 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         return (Float.max((float)this.getInnateEnchantmentLevel(EnchantmentRegistry.LOYALTY.get()), 1.0f)+1.0f)*0.4f;
     }
 
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         if (itemstack.getDamageValue() >= itemstack.getMaxDamage() - 1) {
             return InteractionResultHolder.fail(itemstack);
@@ -122,8 +121,8 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
     /**
      * Called when a Block is destroyed using this Item. Return true to trigger the "Use Item" statistic.
      */
-    public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
-        if ((double)state.getDestroySpeed(worldIn, pos) != 0.0D) {
+    public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+        if ((double)state.getDestroySpeed(level, pos) != 0.0D) {
             stack.hurtAndBreak(2, entityLiving, (entity) -> {
                 entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
             });

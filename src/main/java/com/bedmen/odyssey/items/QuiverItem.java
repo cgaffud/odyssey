@@ -51,7 +51,7 @@ public class QuiverItem extends Item {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.add(new TranslatableComponent("item.oddc.quiver.free_ammo_chance").append(StringUtil.percentFormat(this.getQuiverType().getFreeAmmoChance())).withStyle(ChatFormatting.BLUE));
     }
 

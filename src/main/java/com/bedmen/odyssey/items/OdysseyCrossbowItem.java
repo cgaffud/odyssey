@@ -346,9 +346,9 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         }
     }
 
-    public static AbstractArrow getArrow(Level worldIn, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
+    public static AbstractArrow getArrow(Level level, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
         ArrowItem arrowItem = (ArrowItem)(ammo.getItem() instanceof ArrowItem ? ammo.getItem() : Items.ARROW);
-        AbstractArrow abstractArrow = arrowItem.createArrow(worldIn, ammo, shooter);
+        AbstractArrow abstractArrow = arrowItem.createArrow(level, ammo, shooter);
 
         abstractArrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractArrow.setShotFromCrossbow(true);

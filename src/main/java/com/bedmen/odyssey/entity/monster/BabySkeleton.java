@@ -114,7 +114,6 @@ public class BabySkeleton extends AbstractSkeleton {
         Optional<InteractionHand> hand = this.hasBoomerang();
         ItemStack itemstack = hand.map(value -> new ItemStack(this.getItemInHand(value).getItem())).orElseGet(() -> new ItemStack(ItemRegistry.BONE_BOOMERANG.get()));
         Boomerang boomerang = new Boomerang(this.level, this, itemstack);
-        boomerang.setOwner(this);
         double d0 = target.getX() - this.getX();
         double d1 = target.getEyeHeight() - this.getEyeHeight() + target.getY() - this.getY();
         double d2 = target.getZ() - this.getZ();
