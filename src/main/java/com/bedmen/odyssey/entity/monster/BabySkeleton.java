@@ -29,7 +29,7 @@ public class BabySkeleton extends AbstractSkeleton {
 
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(4, new RangedBoomerangAttackGoal(this, 1.0D, 40, 15.0F));
+        this.goalSelector.addGoal(4, new RangedBoomerangAttackGoal(this, 1.0D, 15.0F));
     }
 
     public void tick(){
@@ -128,7 +128,6 @@ public class BabySkeleton extends AbstractSkeleton {
     public class RangedBoomerangAttackGoal extends Goal {
         private final BabySkeleton mob;
         private final double speedModifier;
-        private int attackIntervalMin;
         private final float attackRadiusSqr;
         private int attackTime = -1;
         private int seeTime;
@@ -136,10 +135,9 @@ public class BabySkeleton extends AbstractSkeleton {
         private boolean strafingBackwards;
         private int strafingTime = -1;
 
-        public RangedBoomerangAttackGoal(BabySkeleton p_i47515_1_, double p_i47515_2_, int p_i47515_4_, float p_i47515_5_) {
+        public RangedBoomerangAttackGoal(BabySkeleton p_i47515_1_, double p_i47515_2_, float p_i47515_5_) {
             this.mob = p_i47515_1_;
             this.speedModifier = p_i47515_2_;
-            this.attackIntervalMin = p_i47515_4_;
             this.attackRadiusSqr = p_i47515_5_ * p_i47515_5_;
             this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }
@@ -217,6 +215,7 @@ public class BabySkeleton extends AbstractSkeleton {
                 Optional<InteractionHand> hand = mob.hasBoomerang();
 
                 if(hand.isPresent()){
+                    int attackTimeMinimum = ((BoomerangItem)this.mob.getItemInHand(hand.get()).getItem()).getBoomerangType().getReturnTime();
                     if (this.mob.isUsingItem()) {
                         if (!flag && this.seeTime < -60) {
                             this.mob.stopUsingItem();
@@ -225,7 +224,7 @@ public class BabySkeleton extends AbstractSkeleton {
                             if (i >= 20) {
                                 this.mob.stopUsingItem();
                                 this.mob.performRangedAttack(livingentity, 0.0f);
-                                this.attackTime = this.attackIntervalMin;
+                                this.attackTime = attackTimeMinimum;
                             }
                         }
                     } else if (--this.attackTime <= 0 && this.seeTime >= -60) {

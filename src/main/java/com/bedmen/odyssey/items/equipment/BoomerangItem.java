@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.items.equipment;
 
-import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.projectile.Boomerang;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
@@ -30,10 +29,8 @@ import net.minecraft.world.item.Vanishable;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
-import java.util.function.Consumer;
 
 public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsToRegisterItemModelProperty {
     private final Multimap<Attribute, AttributeModifier> boomerangAttributes;
@@ -42,7 +39,7 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         super(builderIn, levEnchSups);
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", boomerangType.getDamage()-1.0f, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", -2.9F, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", boomerangType.getAttackTime(), AttributeModifier.Operation.ADDITION));
         this.boomerangAttributes = builder.build();
         this.boomerangType = boomerangType;
     }
@@ -94,7 +91,7 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
     }
 
     public float shootSpeed(){
-        return Float.max((float)this.getInnateEnchantmentLevel(EnchantmentRegistry.LOYALTY.get()), 1.0f);
+        return (Float.max((float)this.getInnateEnchantmentLevel(EnchantmentRegistry.LOYALTY.get()), 1.0f)+1.0f)*0.4f;
     }
 
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
