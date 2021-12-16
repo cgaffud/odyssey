@@ -1,0 +1,14 @@
+{
+  "type": "oddc:alloying",
+  "ingredient1":
+  {
+    "item": "minecraft:copper_ingot"
+  },
+  "ingredient2":
+  {
+    "item": "oddc:silver_ingot"
+  },
+  "result": "oddc:sterling_silver_ingot",
+  "experience": 0.3,
+  "cookingtime": 200
+}
