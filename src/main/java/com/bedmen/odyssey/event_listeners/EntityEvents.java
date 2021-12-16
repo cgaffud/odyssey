@@ -3,6 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -13,7 +14,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,9 +46,15 @@ public class EntityEvents {
         LivingEntity livingEntity = event.getEntityLiving();
         if (!livingEntity.level.isClientSide) {
             int bleedLvl = EnchantmentUtil.getBleeding(livingEntity);
+            int heavyLvl = EnchantmentUtil.getHeavy(livingEntity);
+
             if ((bleedLvl > 0) && (livingEntity.tickCount % (100 / (bleedLvl+2)) == 0))
                 livingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLEEDING.get(), 1,
                         1,false, false, false));
+
+            if (heavyLvl > 0)
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, heavyLvl-1
+                ,true, true, true));
         }
     }
 

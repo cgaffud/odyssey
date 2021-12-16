@@ -208,6 +208,10 @@ public class EnchantmentUtil {
         return getSumEnchantmentLevels(EnchantmentRegistry.BLEEDING.get(),entity);
     }
 
+    public static int getHeavy(LivingEntity entity){
+        return getSumEnchantmentLevels(EnchantmentRegistry.HEAVY.get(),entity);
+    }
+
 //    public static boolean hasVolatile(ItemStack itemStack) {
 //        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.VOLATILE.get(), itemStack) > 0;
 //    }
