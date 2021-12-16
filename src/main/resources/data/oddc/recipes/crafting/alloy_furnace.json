@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SRS",
+    "SBS",
+    "XXX"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:blast_furnace"
+    },
+    "S": {
+      "item": "oddc:silver_ingot"
+    },
+    "X": {
+      "item": "minecraft:smooth_stone"
+    },
+    "R": {
+      "item": "oddc:ruby"
+    }
+  },
+  "result": {
+    "item": "oddc:alloy_furnace"
+  }
+}
