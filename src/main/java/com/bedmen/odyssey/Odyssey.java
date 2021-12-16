@@ -1,6 +1,7 @@
 package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
+import com.bedmen.odyssey.client.gui.AlloyFurnaceScreen;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
 import com.bedmen.odyssey.client.model.BabyLeviathanModel;
@@ -24,6 +25,7 @@ import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.google.common.collect.ImmutableMap;
+import com.mojang.blaze3d.platform.ScreenManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
@@ -79,7 +81,7 @@ public class Odyssey
         EntityTypeRegistry.init();
         FeatureRegistry.init();
 //        PotionRegistry.init();
-//        RecipeRegistry.init();
+        RecipeRegistry.init();
 //        SoundEventRegistry.init();
     }
 
@@ -137,9 +139,9 @@ public class Odyssey
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.STERLING_SILVER_CHEST.get(), SterlingSilverChestTileEntityRenderer::new);
 
         //Screens
+        MenuScreens.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
 //        ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
 //        ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), OdysseySmithingTableScreen::new);
-//        ScreenManager.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
 //        ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), OdysseyEnchantmentScreen::new);
 //        ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
 //        ScreenManager.register(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);

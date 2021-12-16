@@ -54,13 +54,13 @@ public class EquipmentBowItem extends OdysseyBowItem implements IEquipment {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         for(Enchantment e : this.enchantmentMap.keySet()){
             if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
                 tooltip.add(1, EnchantmentUtil.getUnenchantableName());
             else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
                 tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
         }
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, level, tooltip, flagIn);
     }
 }

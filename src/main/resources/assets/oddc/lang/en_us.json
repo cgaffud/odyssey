@@ -133,5 +133,7 @@
   "entity.oddc.baby_skeleton": "Baby Skeleton",
   "item.oddc.baby_skeleton_spawn_egg": "Baby Skeleton Spawn Egg",
   "item.oddc.bown": "Bown",
-  "item.oddc.bonerang": "Bonerang"
+  "item.oddc.bonerang": "Bonerang",
+  "block.oddc.alloy_furnace": "Alloy Furnace",
+  "container.oddc.alloy_furnace": "Alloy Furnace"
 }

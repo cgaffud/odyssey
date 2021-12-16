@@ -56,13 +56,13 @@ public class EquipmentCrossbowItem extends OdysseyCrossbowItem implements IEquip
      * allows items to add custom lines of information to the mouseover description
      */
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         for(Enchantment e : this.enchantmentMap.keySet()){
             if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
                 tooltip.add(1, EnchantmentUtil.getUnenchantableName());
             else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
                 tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
         }
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, level, tooltip, flagIn);
     }
 }
