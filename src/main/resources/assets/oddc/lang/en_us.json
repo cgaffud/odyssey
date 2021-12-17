@@ -129,5 +129,7 @@
   "death.attack.boomerang.item": "%1$s was bonked by %2$s using %3$s",
   "entity.oddc.boomerang": "Boomerang",
   "item.oddc.wooden_boomerang": "Wooden Boomerang",
-  "item.oddc.bone_boomerang": "Bone Boomerang"
+  "item.oddc.bone_boomerang": "Bone Boomerang",
+  "enchantment.oddc.bleeding": "Bleeding",
+  "enchantment.oddc.heavy": "Heaviness"
 }

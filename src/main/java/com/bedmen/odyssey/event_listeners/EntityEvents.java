@@ -44,7 +44,7 @@ public class EntityEvents {
     @SubscribeEvent
     public static void updateEntityEventListener(final LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
-        if (!livingEntity.level.isClientSide) {
+        if (!livingEntity.level.isClientSide && livingEntity.isAlive()) {
             int bleedLvl = EnchantmentUtil.getBleeding(livingEntity);
             int heavyLvl = EnchantmentUtil.getHeavy(livingEntity);
 
@@ -55,6 +55,8 @@ public class EntityEvents {
             if (heavyLvl > 0)
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, heavyLvl-1
                 ,true, true, true));
+
+
         }
     }
 
