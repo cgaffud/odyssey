@@ -10,6 +10,7 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.eventbus.Subscribe;

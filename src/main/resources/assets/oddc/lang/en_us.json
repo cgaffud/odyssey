@@ -136,5 +136,7 @@
   "item.oddc.bonerang": "Bonerang",
   "block.oddc.alloy_furnace": "Alloy Furnace",
   "container.oddc.alloy_furnace": "Alloy Furnace",
-  "item.oddc.ruby": "Ruby"
+  "item.oddc.ruby": "Ruby",
+  "item.oddc.flint_hatchet": "Flint Hatchet",
+  "item.oddc.dualwield": "Dual Wield"
 }

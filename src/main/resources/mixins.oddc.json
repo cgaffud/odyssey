@@ -8,12 +8,14 @@
     "MixinChatFormatting",
     "MixinClientboundSetEntityMotionPacket",
     "MixinCombatRules",
-    "MixinEnchantmentHelper"
+    "MixinEnchantmentHelper",
+    "MixinPlayer"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "MixinItemInHandRenderer"
+    "MixinItemInHandRenderer",
+    "MixinLocalPlayer"
   ]
 }
