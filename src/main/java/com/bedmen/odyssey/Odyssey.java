@@ -4,12 +4,12 @@ import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
 import com.bedmen.odyssey.client.gui.AlloyFurnaceScreen;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
-import com.bedmen.odyssey.client.model.BabyLeviathanModel;
-import com.bedmen.odyssey.client.model.BoomerangModel;
-import com.bedmen.odyssey.client.model.OdysseyBoatModel;
-import com.bedmen.odyssey.client.model.QuiverModel;
+import com.bedmen.odyssey.client.model.*;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
+import com.bedmen.odyssey.client.renderer.entity.MineralLeviathanBodyRenderer;
+import com.bedmen.odyssey.entity.boss.MineralLeviathanBody;
+import com.bedmen.odyssey.entity.boss.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
 import com.bedmen.odyssey.entity.monster.BabySkeleton;
@@ -25,7 +25,6 @@ import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.google.common.collect.ImmutableMap;
-import com.mojang.blaze3d.platform.ScreenManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
@@ -75,14 +74,14 @@ public class Odyssey
 //        BiomeRegistry.init();
         BlockEntityTypeRegistry.init();
         ContainerRegistry.init();
-//        DataSerializerRegistry.init();
+        DataSerializerRegistry.init();
         EffectRegistry.init();
         EnchantmentRegistry.init();
         EntityTypeRegistry.init();
         FeatureRegistry.init();
 //        PotionRegistry.init();
         RecipeRegistry.init();
-//        SoundEventRegistry.init();
+        SoundEventRegistry.init();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -153,24 +152,24 @@ public class Odyssey
         }
 //
 //        //Mob Renderings
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
+//        EntityRenderers.register(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
+//        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
 
         EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
+//        EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
 //
 //        //Boss Renderings
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
+//        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
+        EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadRenderer::new);
+        EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyRenderer::new);
+//        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
 //
 //        //Projectile Renderings
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
+//        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
+//        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
 
@@ -216,8 +215,8 @@ public class Odyssey
 //
 //        //Bosses
 //        event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemEntity.createAttributes().build());
-//        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadEntity.createAttributes().build());
-//        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHead.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBody.createAttributes().build());
 //        event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
     }
 
@@ -229,6 +228,8 @@ public class Odyssey
         }
         event.registerLayerDefinition(QuiverModel.LAYER_LOCATION, QuiverModel::createBodyLayer);
         event.registerLayerDefinition(BoomerangModel.LAYER_LOCATION, BoomerangModel::createBodyLayer);
+        event.registerLayerDefinition(MineralLeviathanHeadModel.LAYER_LOCATION, MineralLeviathanHeadModel::createBodyLayer);
+        event.registerLayerDefinition(MineralLeviathanBodyModel.LAYER_LOCATION, MineralLeviathanBodyModel::createBodyLayer);
     }
 
     @SubscribeEvent

@@ -138,5 +138,13 @@
   "container.oddc.alloy_furnace": "Alloy Furnace",
   "item.oddc.ruby": "Ruby",
   "item.oddc.flint_hatchet": "Flint Hatchet",
-  "item.oddc.dualwield": "Dual Wield"
+  "item.oddc.dualwield": "Dual Wield",
+  "item.oddc.amethyst_hatchet": "Amethyst Hatchet",
+  "entity.oddc.mineral_leviathan": "Mineral Leviathan",
+  "entity.oddc.mineral_leviathan_body": "Mineral Leviathan",
+  "entity.mineral_leviathan.roar.sub": "Mineral Leviathan Roar",
+  "entity.mineral_leviathan.hurt.sub": "Mineral Leviathan Hurt",
+  "entity.mineral_leviathan.death.sub": "Mineral Leviathan Death",
+  "block.key_unlock.sub": "Chest Unlock",
+  "block.locked_chest.sub": "Locked Chest"
 }

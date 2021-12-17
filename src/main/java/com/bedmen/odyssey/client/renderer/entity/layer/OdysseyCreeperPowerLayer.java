@@ -16,9 +16,9 @@ public class OdysseyCreeperPowerLayer extends EnergySwirlLayer<OdysseyCreeper, O
     private static final ResourceLocation POWER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     private final OdysseyCreeperModel<OdysseyCreeper> model;
 
-    public OdysseyCreeperPowerLayer(RenderLayerParent<OdysseyCreeper, OdysseyCreeperModel<OdysseyCreeper>> p_174471_, EntityModelSet p_174472_) {
-        super(p_174471_);
-        this.model = new OdysseyCreeperModel<>(p_174472_.bakeLayer(ModelLayers.CREEPER_ARMOR));
+    public OdysseyCreeperPowerLayer(RenderLayerParent<OdysseyCreeper, OdysseyCreeperModel<OdysseyCreeper>> renderLayerParent, EntityModelSet entityModelSet) {
+        super(renderLayerParent);
+        this.model = new OdysseyCreeperModel<>(entityModelSet.bakeLayer(ModelLayers.CREEPER_ARMOR));
     }
 
     protected float xOffset(float p_116683_) {

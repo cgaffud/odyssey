@@ -1,14 +1,18 @@
 package com.bedmen.odyssey.entity.monster;
 
+import com.bedmen.odyssey.entity.boss.MineralLeviathanHead;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MobType;
@@ -61,10 +65,10 @@ public class BabyLeviathan extends Monster {
     }
 
     public void die(DamageSource damageSource) {
-//        Entity entity = damageSource.getEntity();
-//        if(entity instanceof Player && !this.level.isClientSide){
-//            EntityTypeRegistry.MINERAL_LEVIATHAN.get().spawn((ServerLevel) this.level, null, (Player)entity, new BlockPos(entity.getX(), Integer.max(-5, (int) (entity.getY() - MineralLeviathanHead.TARGETING_RANGE * 0.8d)), entity.getZ()), MobSpawnType.TRIGGERED, true, true);
-//        }
+        Entity entity = damageSource.getEntity();
+        if(entity instanceof Player && !this.level.isClientSide){
+            EntityTypeRegistry.MINERAL_LEVIATHAN.get().spawn((ServerLevel) this.level, null, (Player)entity, new BlockPos(entity.getX(), Integer.max(-5, (int) (entity.getY() - MineralLeviathanHead.TARGETING_RANGE * 0.8d)), entity.getZ()), MobSpawnType.TRIGGERED, true, true);
+        }
         super.die(damageSource);
     }
 
