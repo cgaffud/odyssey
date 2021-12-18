@@ -15,7 +15,10 @@ public class InputEvents {
     @SubscribeEvent
     public static void KeyboardKeyPressedEventListener(final InputEvent.KeyInputEvent event){
         if(event.getKey() == Minecraft.getInstance().options.keyJump.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS){
-            OdysseyNetwork.CHANNEL.sendToServer(new JumpKeyPressedPacket());
+            try{
+                OdysseyNetwork.CHANNEL.sendToServer(new JumpKeyPressedPacket());
+            } catch(NullPointerException e){
+            }
         }
     }
 }

@@ -146,5 +146,7 @@
   "entity.mineral_leviathan.hurt.sub": "Mineral Leviathan Hurt",
   "entity.mineral_leviathan.death.sub": "Mineral Leviathan Death",
   "block.key_unlock.sub": "Chest Unlock",
-  "block.locked_chest.sub": "Locked Chest"
+  "block.locked_chest.sub": "Locked Chest",
+  "entity.oddc.weaver": "Weaver",
+  "item.oddc.weaver_spawn_egg": "Weaver Spawn Egg"
 }

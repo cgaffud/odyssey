@@ -5,15 +5,13 @@ import com.bedmen.odyssey.client.gui.AlloyFurnaceScreen;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
 import com.bedmen.odyssey.client.model.*;
+import com.bedmen.odyssey.client.renderer.entity.WeaverRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.client.renderer.entity.MineralLeviathanBodyRenderer;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanHead;
-import com.bedmen.odyssey.entity.monster.BabyCreeper;
-import com.bedmen.odyssey.entity.monster.BabyLeviathan;
-import com.bedmen.odyssey.entity.monster.BabySkeleton;
-import com.bedmen.odyssey.entity.monster.CamoCreeper;
+import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
@@ -158,7 +156,7 @@ public class Odyssey
 
         EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
-//        EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
+        EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
 //
 //        //Boss Renderings
@@ -210,7 +208,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());
-//        event.put(EntityTypeRegistry.WEAVER.get(), WeaverEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.WEAVER.get(), Weaver.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathan.createAttributes().build());
 //
 //        //Bosses
@@ -230,6 +228,7 @@ public class Odyssey
         event.registerLayerDefinition(BoomerangModel.LAYER_LOCATION, BoomerangModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanHeadModel.LAYER_LOCATION, MineralLeviathanHeadModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanBodyModel.LAYER_LOCATION, MineralLeviathanBodyModel::createBodyLayer);
+        event.registerLayerDefinition(WeaverModel.LAYER_LOCATION, WeaverModel::createBodyLayer);
     }
 
     @SubscribeEvent
