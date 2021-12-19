@@ -54,7 +54,7 @@ public class EntityEvents {
                         1,false, false, false));
             if (heavyLvl > 0)
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, heavyLvl-1
-                ,true, true, true));
+                ,false, false, false));
             if (drowningLvl > 0)
                 livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 1, drowningLvl
                         ,false,false,false));

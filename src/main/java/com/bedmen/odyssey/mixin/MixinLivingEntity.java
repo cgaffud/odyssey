@@ -100,7 +100,6 @@ public abstract class MixinLivingEntity extends Entity {
 
         super.baseTick();
         this.level.getProfiler().push("livingEntityBaseTick");
-        //TODO: is this flag always false because of the casting?
         boolean flag = ((LivingEntity) (Object) this) instanceof Player;
         if (this.isAlive()) {
             if (this.isInWall()) {
