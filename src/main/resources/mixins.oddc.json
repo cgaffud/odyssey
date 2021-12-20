@@ -8,7 +8,8 @@
     "MixinChatFormatting",
     "MixinClientboundSetEntityMotionPacket",
     "MixinCombatRules",
-    "MixinEnchantmentHelper"
+    "MixinEnchantmentHelper",
+    "MixinLivingEntity"
   ],
   "injectors": {
     "defaultRequire": 1

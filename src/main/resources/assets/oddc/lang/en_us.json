@@ -130,6 +130,12 @@
   "entity.oddc.boomerang": "Boomerang",
   "item.oddc.wooden_boomerang": "Wooden Boomerang",
   "item.oddc.bone_boomerang": "Bone Boomerang",
+  "enchantment.oddc.bleeding": "Bleeding",
+  "enchantment.oddc.heavy": "Heaviness",
+  "enchantment.oddc.drowning": "Drowning",
+  "enchantment.oddc.volatile": "Volatility",
+  "effect.oddc.bleeding": "Bleeding",
+  "effect.oddc.drowning": "Drowning"
   "entity.oddc.baby_skeleton": "Baby Skeleton",
   "item.oddc.baby_skeleton_spawn_egg": "Baby Skeleton Spawn Egg",
   "item.oddc.bown": "Bown",
