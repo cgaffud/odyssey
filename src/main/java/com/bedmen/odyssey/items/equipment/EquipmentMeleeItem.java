@@ -48,7 +48,7 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
         this.canSweep = canSweep;
     }
 
-    public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
         return !player.isCreative();
     }
 
@@ -79,8 +79,8 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
     /**
      * Called when a Block is destroyed using this Item. Return true to trigger the "Use Item" statistic.
      */
-    public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
-        if (state.getDestroySpeed(worldIn, pos) != 0.0F) {
+    public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+        if (state.getDestroySpeed(level, pos) != 0.0F) {
             stack.hurtAndBreak(2, entityLiving, (entity) -> {
                 entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
             });
@@ -132,7 +132,7 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
      * allows items to add custom lines of information to the mouseover description
      */
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         for(Enchantment e : this.enchantmentMap.keySet()){
             if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
                 tooltip.add(1, EnchantmentUtil.getUnenchantableName());

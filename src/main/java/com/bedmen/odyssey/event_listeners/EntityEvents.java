@@ -1,16 +1,23 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
+import com.bedmen.odyssey.entity.monster.BabySkeleton;
+import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.items.OdysseyBowItem;
+import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.eventbus.Subscribe;
 import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,19 +27,25 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.util.List;
 import java.util.Random;
@@ -100,12 +113,12 @@ public class EntityEvents {
         }
     }
 
-//    @SubscribeEvent
-//    public static void entityJoinWorldEventListener(final EntityJoinWorldEvent event){
-//        if(!event.getWorld().isClientSide){
-//            Entity entity = event.getEntity();
-//
-//            //Update Max Health Attribute for Player
+    @SubscribeEvent
+    public static void entityJoinWorldEventListener(final EntityJoinWorldEvent event){
+        if(!event.getWorld().isClientSide){
+            Entity entity = event.getEntity();
+
+            //Update Max Health Attribute for Player
 //            if(entity instanceof IOdysseyPlayer){
 //                IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)entity;
 //                Player playerEntity = (Player)entity;
@@ -119,13 +132,13 @@ public class EntityEvents {
 //                    modifiableattributeinstance.setBaseValue(20.0d + 2.0d*lifeFruits);
 //                }
 //            }
-//
-//            //Skeleton
-//            if(entity instanceof Skeleton){
-//                reassessSkeletonWeaponGoal((Skeleton)entity);
-//            }
-//        }
-//    }
+
+            //Skeleton
+            if(entity instanceof Skeleton){
+                reassessSkeletonWeaponGoal((Skeleton)entity);
+            }
+        }
+    }
 
 //Attempt at moving Building Fatigue out of Mixins
 //    @SubscribeEvent
@@ -149,9 +162,8 @@ public class EntityEvents {
     @SubscribeEvent
     public static void livingSpawnEvent$SpecialSpawnListener(final LivingSpawnEvent.SpecialSpawn event){
         Entity entity = event.getEntity();
-/*        if(entity instanceof Skeleton){
-            Skeleton skeletonEntity = (Skeleton)entity;
-            Random random = skeletonEntity.getRandom();
+        if(entity instanceof Skeleton skeleton){
+            Random random = skeleton.getRandom();
 
             if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
                 EntityTypeRegistry.BABY_SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
@@ -159,16 +171,22 @@ public class EntityEvents {
                 return;
             }
 
-            if(skeletonEntity.getRandom().nextFloat() < 0.05f){
+            if(random.nextFloat() < 0.05f){
                 entity.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
             }
         }
 
-        else*/ if(entity instanceof Creeper){
-            Creeper creeperEntity = (Creeper)entity;
-            Random random = creeperEntity.getRandom();
+        else if(entity instanceof BabySkeleton babySkeleton){
+            Random random = babySkeleton.getRandom();
+            if(random.nextFloat() < 0.2f){
+                entity.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.BONERANG.get()));
+            }
+        }
 
-            if(random.nextFloat() < getCamoChance(creeperEntity.level.getDifficulty())){
+        else if(entity instanceof Creeper creeper){
+            Random random = creeper.getRandom();
+
+            if(random.nextFloat() < getCamoChance(creeper.level.getDifficulty())){
                 EntityTypeRegistry.CAMO_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
                 event.setCanceled(true);
                 return;
@@ -193,26 +211,26 @@ public class EntityEvents {
         }
     }
 
-//
-//    public static void reassessSkeletonWeaponGoal(Skeleton skeletonEntity) {
-//        if (skeletonEntity.level != null && !skeletonEntity.level.isClientSide) {
-//            skeletonEntity.goalSelector.removeGoal(skeletonEntity.meleeGoal);
-//            skeletonEntity.goalSelector.removeGoal(skeletonEntity.bowGoal);
-//            ItemStack itemstack = skeletonEntity.getItemInHand(BowUtil.getHandHoldingBow(skeletonEntity));
-//            Item item = itemstack.getItem();
-//            if (item instanceof OdysseyBowItem) {
-//                int i = ((OdysseyBowItem) item).getChargeTime(itemstack);
-//                if (itemstack.getItem() == ItemRegistry.BOW.get() && skeletonEntity.level.getDifficulty() != Difficulty.HARD) {
-//                    i = 40;
-//                }
-//                OdysseyRangedBowAttackGoal<AbstractSkeleton> odysseyBowGoal = new OdysseyRangedBowAttackGoal<AbstractSkeleton>(skeletonEntity, 1.0D, i, 15.0F);
-//
-//                skeletonEntity.goalSelector.addGoal(4, odysseyBowGoal);
-//            } else {
-//                skeletonEntity.goalSelector.addGoal(4, skeletonEntity.meleeGoal);
-//            }
-//        }
-//    }
+
+    public static void reassessSkeletonWeaponGoal(Skeleton skeletonEntity) {
+        if (skeletonEntity.level != null && !skeletonEntity.level.isClientSide) {
+            skeletonEntity.goalSelector.removeGoal(skeletonEntity.meleeGoal);
+            skeletonEntity.goalSelector.removeGoal(skeletonEntity.bowGoal);
+            ItemStack itemstack = skeletonEntity.getItemInHand(BowUtil.getHandHoldingBow(skeletonEntity));
+            Item item = itemstack.getItem();
+            if (item instanceof OdysseyBowItem) {
+                int i = ((OdysseyBowItem) item).getChargeTime(itemstack);
+                if (itemstack.getItem() == ItemRegistry.BOW.get() && skeletonEntity.level.getDifficulty() != Difficulty.HARD) {
+                    i = 40;
+                }
+                OdysseyRangedBowAttackGoal<AbstractSkeleton> odysseyBowGoal = new OdysseyRangedBowAttackGoal<AbstractSkeleton>(skeletonEntity, 1.0D, i, 15.0F);
+
+                skeletonEntity.goalSelector.addGoal(4, odysseyBowGoal);
+            } else {
+                skeletonEntity.goalSelector.addGoal(4, skeletonEntity.meleeGoal);
+            }
+        }
+    }
 
     public static float getCamoChance(Difficulty difficulty){
         return switch (difficulty) {

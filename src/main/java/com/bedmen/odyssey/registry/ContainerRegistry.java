@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.QuiverItem;
 import net.minecraft.world.inventory.MenuType;
@@ -20,9 +21,9 @@ public class ContainerRegistry {
         CONTAINER.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
+    public static final RegistryObject<MenuType<AlloyFurnaceMenu>> ALLOY_FURNACE = CONTAINER.register("alloy_furnace", () -> new MenuType<AlloyFurnaceMenu>(AlloyFurnaceMenu::new));
 //    public static final RegistryObject<MenuType<OdysseyBeaconContainer>> BEACON = CONTAINER.register("beacon", () -> new MenuType<OdysseyBeaconContainer>(OdysseyBeaconContainer::new));
 //    public static final RegistryObject<MenuType<OdysseySmithingTableContainer>> SMITHING_TABLE = CONTAINER.register("smithing_table", () -> new MenuType<OdysseySmithingTableContainer>(OdysseySmithingTableContainer::new));
-//    public static final RegistryObject<MenuType<AlloyFurnaceContainer>> ALLOY_FURNACE = CONTAINER.register("alloy_furnace", () -> new MenuType<AlloyFurnaceContainer>(AlloyFurnaceContainer::new));
 //    public static final RegistryObject<MenuType<OdysseyEnchantmentContainer>> ENCHANTMENT = CONTAINER.register("enchantment", () -> new MenuType<OdysseyEnchantmentContainer>(OdysseyEnchantmentContainer::new));
 //    public static final RegistryObject<MenuType<BookshelfContainer>> BOOKSHELF = CONTAINER.register("bookshelf", () -> new MenuType<BookshelfContainer>(BookshelfContainer::new));
 //    public static final RegistryObject<MenuType<RecycleFurnaceContainer>> RECYCLE_FURNACE = CONTAINER.register("recycle_furnace", () -> new MenuType<RecycleFurnaceContainer>(RecycleFurnaceContainer::new));

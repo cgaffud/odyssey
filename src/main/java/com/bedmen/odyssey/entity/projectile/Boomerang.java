@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.OdysseyDamageSource;
+import com.bedmen.odyssey.entity.monster.BabySkeleton;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -15,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -23,11 +25,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
+
+import javax.annotation.Nullable;
 
 public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
     private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(Boomerang.class, EntityDataSerializers.BYTE);
@@ -37,12 +42,12 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     private boolean dealtDamage;
     public int returningTicks;
 
-    public Boomerang(EntityType<? extends Boomerang> type, Level worldIn) {
-        super(type, worldIn);
+    public Boomerang(EntityType<? extends Boomerang> type, Level level) {
+        super(type, level);
     }
 
-    public Boomerang(Level worldIn, LivingEntity thrower, ItemStack thrownStackIn) {
-        super(EntityTypeRegistry.BOOMERANG.get(), thrower, worldIn);
+    public Boomerang(Level level, LivingEntity thrower, ItemStack thrownStackIn) {
+        super(EntityTypeRegistry.BOOMERANG.get(), thrower, level);
         this.thrownStack = thrownStackIn.copy();
         this.entityData.set(ID_LOYALTY, (byte) EnchantmentUtil.getLoyalty(thrownStackIn));
         this.entityData.set(ID_FOIL, thrownStackIn.hasFoil());
@@ -65,23 +70,23 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
      */
     public void tick() {
         this.setNoGravity(true);
-        if (this.inGroundTime > 0 || this.tickCount > 20) {
+        if (this.inGroundTime > 0 || this.tickCount > this.getBoomerangType().getReturnTime()) {
             this.dealtDamage = true;
         }
 
         Entity entity = this.getOwner();
         if ((this.dealtDamage || this.isNoPhysics()) && entity != null) {
-            int i = this.entityData.get(ID_LOYALTY);
-            if (i > 0 && !this.shouldReturnToThrower()) {
+            int loyalty = this.getLoyalty();
+            if (!this.isAcceptibleReturnOwner()) {
                 if (!this.level.isClientSide && this.pickup == Pickup.ALLOWED) {
                     this.spawnAtLocation(this.getPickupItem(), 0.1F);
                 }
 
                 this.discard();
-            } else if (i > 0) {
+            } else {
                 this.setNoPhysics(true);
                 Vec3 vector3d = new Vec3(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
-                double d0 = 0.05D * (double)i;
+                double d0 = 0.03D * (double)(loyalty+1);
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
 
                 ++this.returningTicks;
@@ -91,7 +96,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         super.tick();
     }
 
-    private boolean shouldReturnToThrower() {
+    private boolean isAcceptibleReturnOwner() {
         Entity entity = this.getOwner();
         if (entity != null && entity.isAlive()) {
             return !(entity instanceof ServerPlayer) || !entity.isSpectator();
@@ -109,31 +114,35 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return this.entityData.get(ID_FOIL);
     }
 
-//    @Nullable
-//    protected EntityHitResult findHitEntity(Vec3 startVec, Vec3 endVec) {
-//        if(this.dealtDamage){
-//            if(!this.level.isClientSide){
-//                AABB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
-//                for(Entity entity : this.level.getEntities(this, box, this::isBabySkeletonOwner)) {
-//                    BabySkeleton babySkeleton = (BabySkeleton)entity;
-//                    if(babySkeleton.getMainHandItem().isEmpty()){
-//                        babySkeleton.setItemInHand(InteractionHand.MAIN_HAND, this.thrownStack);
-//                    } else if (babySkeleton.getOffhandItem().isEmpty()){
-//                        babySkeleton.setItemInHand(InteractionHand.OFF_HAND, this.thrownStack);
-//                    }
-//                    this.discard();
-//                    break;
-//                }
-//            }
-//            return null;
-//        } else {
-//            return super.findHitEntity(startVec, endVec);
-//        }
-//    }
+    public int getLoyalty() {
+        return this.entityData.get(ID_LOYALTY);
+    }
 
-//    private boolean isBabySkeletonOwner(Entity entity){
-//        return entity instanceof BabySkeleton && entity.getUUID() == this.getOwner().getUUID();
-//    }
+    @Nullable
+    protected EntityHitResult findHitEntity(Vec3 startVec, Vec3 endVec) {
+        if(this.dealtDamage){
+            if(!this.level.isClientSide){
+                AABB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
+                for(Entity entity : this.level.getEntities(this, box, this::isBabySkeletonOwner)) {
+                    BabySkeleton babySkeleton = (BabySkeleton)entity;
+                    if(babySkeleton.getMainHandItem().isEmpty()){
+                        babySkeleton.setItemInHand(InteractionHand.MAIN_HAND, this.thrownStack);
+                    } else if (babySkeleton.getOffhandItem().isEmpty()){
+                        babySkeleton.setItemInHand(InteractionHand.OFF_HAND, this.thrownStack);
+                    }
+                    this.discard();
+                    break;
+                }
+            }
+            return null;
+        } else {
+            return super.findHitEntity(startVec, endVec);
+        }
+    }
+
+    private boolean isBabySkeletonOwner(Entity entity){
+        return entity instanceof BabySkeleton && entity.getUUID() == this.getOwner().getUUID();
+    }
 
     /**
      * Called when the arrow hits an entity
@@ -169,26 +178,20 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         this.playSound(SoundEvents.TRIDENT_HIT, 1.0f, 1.0F);
     }
 
-    /**
-     * The sound made when an entity is hit by this projectile
-     */
     protected SoundEvent getDefaultHitGroundSoundEvent() {
         return SoundEvents.TRIDENT_HIT_GROUND;
     }
 
-    /**
-     * Called by a player entity when they collide with an entity
-     */
-    public void playerTouch(Player entityIn) {
-        Entity entity = this.getOwner();
-        if (entity == null || entity.getUUID() == entityIn.getUUID()) {
-            super.playerTouch(entityIn);
+    public void playerTouch(Player player) {
+        if (this.ownedBy(player) || this.getOwner() == null) {
+            super.playerTouch(player);
         }
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
+    protected boolean tryPickup(Player p_150196_) {
+        return super.tryPickup(p_150196_) || this.isNoPhysics() && this.ownedBy(p_150196_) && p_150196_.getInventory().add(this.getPickupItem());
+    }
+
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
         if (compoundNBT.contains("Boomerang", 10)) {
@@ -232,34 +235,46 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
 
     @Override
     public void writeSpawnData(FriendlyByteBuf buffer) {
-        buffer.writeInt(this.getOwner().getId());
+        buffer.writeInt(this.getOwner() == null ? -1 : this.getOwner().getId());
         buffer.writeInt(this.boomerangType.ordinal());
     }
 
     @Override
     public void readSpawnData(FriendlyByteBuf additionalData) {
-        this.setOwner(this.level.getEntity(additionalData.readInt()));
+        int id = additionalData.readInt();
+        this.setOwner(id == -1 ? null : this.level.getEntity(id));
         this.boomerangType = BoomerangType.values()[additionalData.readInt()];
     }
 
     public enum BoomerangType{
-        WOOD(4.0d, 500, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/wooden_boomerang.png")),
-        BONE(5.0d, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png"));
+        WOOD(4.0d, 20, 500, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/wooden_boomerang.png")),
+        BONE(5.0d, 20, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png")),
+        BONERANG(5.0d, 10, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bonerang.png"));
 //        CHARMED(5.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/charmed_boomerang.png")),
 //        COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
 
         private final double damage;
+        private final int returnTime;
         private final int burnTime;
         private final ResourceLocation resourceLocation;
 
-        BoomerangType(double damage, int burnTime, ResourceLocation resourceLocation){
+        BoomerangType(double damage, int returnTime, int burnTime, ResourceLocation resourceLocation){
             this.damage = damage;
+            this.returnTime = returnTime;
             this.burnTime = burnTime;
             this.resourceLocation = resourceLocation;
         }
 
         public double getDamage(){
             return this.damage;
+        }
+
+        public int getReturnTime(){
+            return this.returnTime;
+        }
+
+        public float getAttackTime(){
+            return Math.round(10f * 20f / (float)this.getReturnTime()) / 10f - 4f;
         }
 
         public int getBurnTime(){
