@@ -15,8 +15,8 @@ public class OdysseyEffect extends MobEffect{
 
     @Override
     public void applyEffectTick(LivingEntity livingEntity, int amplifier) {
-        if (this == EffectRegistry.BLEEDING.get()) {
-            livingEntity.hurt(DamageSource.MAGIC, amplifier);
+        if ((this == EffectRegistry.BLEEDING.get()) && (livingEntity.tickCount % (100 / (amplifier+3)) == 0)) {
+            livingEntity.hurt(DamageSource.MAGIC, 1.0F);
         } else {
             super.applyEffectTick(livingEntity, amplifier);
         }

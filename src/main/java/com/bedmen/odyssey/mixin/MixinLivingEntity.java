@@ -123,7 +123,7 @@ public abstract class MixinLivingEntity extends Entity {
         if (this.isAlive()) {
             int drowningAmnt = 0;
             if (((LivingEntity) (Object) this).hasEffect(EffectRegistry.DROWNING.get()))
-                drowningAmnt = ((LivingEntity) (Object) this).getEffect(EffectRegistry.DROWNING.get()).getAmplifier();
+                drowningAmnt = ((LivingEntity) (Object) this).getEffect(EffectRegistry.DROWNING.get()).getAmplifier()+1;
 
             drowningAmnt += ((this.isEyeInFluid(FluidTags.WATER) || this.isEyeInFluid(FluidTags.LAVA))
                     && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)) ? 1 : 0;

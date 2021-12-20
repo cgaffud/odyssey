@@ -49,14 +49,14 @@ public class EntityEvents {
             int heavyLvl = EnchantmentUtil.getHeavy(livingEntity);
             int drowningLvl = EnchantmentUtil.getDrowning(livingEntity);
 
-            if ((bleedLvl > 0) && (livingEntity.tickCount % (100 / (bleedLvl+2)) == 0))
-                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLEEDING.get(), 1,
-                        1,false, false, false));
+            if (bleedLvl > 0)
+                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLEEDING.get(), 2,
+                        bleedLvl-1,false, false, false));
             if (heavyLvl > 0)
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, heavyLvl-1
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, heavyLvl-1
                 ,false, false, false));
             if (drowningLvl > 0)
-                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 1, drowningLvl
+                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 2, drowningLvl-1
                         ,false,false,false));
         }
     }

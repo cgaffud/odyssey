@@ -4,6 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
@@ -25,7 +26,6 @@ public class SwungWithVolatilePacket{
      * Writes the raw packet data to the data stream.
      */
     public static SwungWithVolatilePacket decode(FriendlyByteBuf buf){
-
         return new SwungWithVolatilePacket();
     }
 
