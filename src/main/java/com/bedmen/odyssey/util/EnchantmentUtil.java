@@ -216,9 +216,9 @@ public class EnchantmentUtil {
         return getSumEnchantmentLevels(EnchantmentRegistry.DROWNING.get(),entity);
     }
 
-//    public static boolean hasVolatile(ItemStack itemStack) {
-//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.VOLATILE.get(), itemStack) > 0;
-//    }
+    public static boolean hasVolatile(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.VOLATILE.get(), itemStack) > 0;
+    }
 
     public static float getSweepingDamageRatio(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SWEEPING_EDGE.get(), entity) * 0.2f;
