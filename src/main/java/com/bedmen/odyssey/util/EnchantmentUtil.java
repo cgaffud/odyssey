@@ -1,13 +1,18 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import it.unimi.dsi.fastutil.ints.IntPriorityQueue;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+
+import java.util.*;
 
 public class EnchantmentUtil {
 //    private static final Map<Enchantment, Integer> ENCHANTMENT_TO_INTEGER_MAP = new HashMap<>();
@@ -115,6 +120,18 @@ public class EnchantmentUtil {
 //    public static void writeEnchantment(Enchantment e, FriendlyByteBuf buffer) {
 //        buffer.writeVarInt(enchantmentToInt(e));
 //    }
+    public static Integer getSumEnchantmentLevels(Enchantment enchantment, LivingEntity entity){
+        Iterable<ItemStack> itemSlots = enchantment.getSlotItems(entity).values();
+        if (itemSlots == null) {
+            return 0;
+        }
+        else {
+            int sum = 0;
+            for(ItemStack itemstack : itemSlots)
+                sum += EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemstack);
+            return sum;
+        }
+    }
 
     public static Component getUnenchantableName(){
         return new TranslatableComponent("enchantment.oddc.unenchantable").withStyle(ChatFormatting.DARK_RED);
@@ -187,9 +204,21 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.ERUPTION.get(), itemStack);
     }
 
-//    public static boolean hasVolatile(ItemStack itemStack) {
-//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.VOLATILE.get(), itemStack) > 0;
-//    }
+    public static int getBleeding(LivingEntity entity) {
+        return getSumEnchantmentLevels(EnchantmentRegistry.BLEEDING.get(),entity);
+    }
+
+    public static int getHeavy(LivingEntity entity){
+        return getSumEnchantmentLevels(EnchantmentRegistry.HEAVY.get(),entity);
+    }
+
+    public static int getDrowning(LivingEntity entity){
+        return getSumEnchantmentLevels(EnchantmentRegistry.DROWNING.get(),entity);
+    }
+
+    public static boolean hasVolatile(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.VOLATILE.get(), itemStack) > 0;
+    }
 
     public static float getSweepingDamageRatio(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SWEEPING_EDGE.get(), entity) * 0.2f;
