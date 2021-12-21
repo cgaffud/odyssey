@@ -2,6 +2,7 @@
   "itemGroup.oddc_building_blocks": "Odyssey Building Blocks",
   "itemGroup.oddc_wood": "Odyssey Wood and Plants",
   "itemGroup.oddc_materials": "Odyssey Materials",
+  "itemGroup.oddc_tools": "Odyssey Tools",
   "itemGroup.oddc_melee": "Odyssey Melee Weapons",
   "itemGroup.oddc_ranged": "Odyssey Ranged Weapons",
   "itemGroup.oddc_armor": "Odyssey Armor",
@@ -142,5 +143,9 @@
   "item.oddc.bonerang": "Bonerang",
   "block.oddc.alloy_furnace": "Alloy Furnace",
   "container.oddc.alloy_furnace": "Alloy Furnace",
-  "item.oddc.ruby": "Ruby"
+  "item.oddc.ruby": "Ruby",
+  "item.oddc.sterling_silver_axe": "Sterling Silver Axe",
+  "item.oddc.sterling_silver_pickaxe": "Sterling Silver Pickaxe",
+  "item.oddc.sterling_silver_shovel": "Sterling Silver Shovel",
+  "item.oddc.sterling_silver_hoe": "Sterling Silver Hoe"
 }
