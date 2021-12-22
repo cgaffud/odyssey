@@ -136,7 +136,7 @@
   "enchantment.oddc.drowning": "Drowning",
   "enchantment.oddc.volatile": "Volatility",
   "effect.oddc.bleeding": "Bleeding",
-  "effect.oddc.drowning": "Drowning"
+  "effect.oddc.drowning": "Drowning",
   "entity.oddc.baby_skeleton": "Baby Skeleton",
   "item.oddc.baby_skeleton_spawn_egg": "Baby Skeleton Spawn Egg",
   "item.oddc.bown": "Bown",
@@ -147,5 +147,9 @@
   "item.oddc.sterling_silver_axe": "Sterling Silver Axe",
   "item.oddc.sterling_silver_pickaxe": "Sterling Silver Pickaxe",
   "item.oddc.sterling_silver_shovel": "Sterling Silver Shovel",
-  "item.oddc.sterling_silver_hoe": "Sterling Silver Hoe"
+  "item.oddc.sterling_silver_hoe": "Sterling Silver Hoe",
+  "item.oddc.sterling_silver_helmet": "Sterling Silver Helmet",
+  "item.oddc.sterling_silver_chestplate": "Sterling Silver Chestplate",
+  "item.oddc.sterling_silver_leggings": "Sterling Silver Leggings",
+  "item.oddc.sterling_silver_boots": "Sterling Silver Boots"
 }
