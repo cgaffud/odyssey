@@ -120,8 +120,7 @@
   "item.oddc.sterling_silver_ingot": "Sterling Silver Ingot",
   "block.oddc.sterling_silver_block": "Block of Sterling Silver",
   "block.oddc.leather_pile": "Leather Pile",
-  "block.oddc.sterling_silver_block": "Block of Sterling Silver",
-  "item.oddc.sterling_silver_sword": "Sterling Silver Sword"
+  "item.oddc.sterling_silver_sword": "Sterling Silver Sword",
   "item.oddc.rabbit_hide_quiver": "Rabbit Hide Quiver",
   "item.oddc.rabbit_hide_rocket_bag": "Rabbit Hide Rocket Bag",
   "item.oddc.quiver.free_ammo_chance": "Free Ammo Chance: ",
@@ -138,7 +137,7 @@
   "enchantment.oddc.drowning": "Drowning",
   "enchantment.oddc.volatile": "Volatility",
   "effect.oddc.bleeding": "Bleeding",
-  "effect.oddc.drowning": "Drowning"
+  "effect.oddc.drowning": "Drowning",
   "entity.oddc.baby_skeleton": "Baby Skeleton",
   "item.oddc.baby_skeleton_spawn_egg": "Baby Skeleton Spawn Egg",
   "item.oddc.bown": "Bown",
@@ -149,5 +148,7 @@
   "item.oddc.sterling_silver_axe": "Sterling Silver Axe",
   "item.oddc.sterling_silver_pickaxe": "Sterling Silver Pickaxe",
   "item.oddc.sterling_silver_shovel": "Sterling Silver Shovel",
-  "item.oddc.sterling_silver_hoe": "Sterling Silver Hoe"
+  "item.oddc.sterling_silver_hoe": "Sterling Silver Hoe",
+  "item.oddc.sterling_silver_horse_armor": "Sterling Silver Horse Armor",
+  "item.oddc.netherite_horse_armor": "Netherite Horse Armor"
 }
