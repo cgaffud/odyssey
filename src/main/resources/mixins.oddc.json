@@ -9,7 +9,7 @@
     "MixinClientboundSetEntityMotionPacket",
     "MixinCombatRules",
     "MixinEnchantmentHelper",
-    "MixinPlayer"
+    "MixinPlayer",
     "MixinEnchantmentHelper",
     "MixinLivingEntity"
   ],
