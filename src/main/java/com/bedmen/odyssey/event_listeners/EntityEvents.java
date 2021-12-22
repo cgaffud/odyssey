@@ -8,19 +8,23 @@ import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.eventbus.Subscribe;
+import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,6 +38,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -43,11 +48,32 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
+import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
+
+    @SubscribeEvent
+    public static void updateEntityEventListener(final LivingEvent.LivingUpdateEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
+        if (!livingEntity.level.isClientSide && livingEntity.isAlive()) {
+            int bleedLvl = EnchantmentUtil.getBleeding(livingEntity);
+            int heavyLvl = EnchantmentUtil.getHeavy(livingEntity);
+            int drowningLvl = EnchantmentUtil.getDrowning(livingEntity);
+
+            if (bleedLvl > 0)
+                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLEEDING.get(), 2,
+                        bleedLvl-1,false, false, false));
+            if (heavyLvl > 0)
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, heavyLvl-1
+                ,false, false, false));
+            if (drowningLvl > 0)
+                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 2, drowningLvl-1
+                        ,false,false,false));
+        }
+    }
 
     @SubscribeEvent
     public static void attackEntityEventListener(final AttackEntityEvent event){

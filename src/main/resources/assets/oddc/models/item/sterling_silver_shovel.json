@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "oddc:item/sterling_silver_shovel"
+  }
+}

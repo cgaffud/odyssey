@@ -10,6 +10,8 @@
     "MixinCombatRules",
     "MixinEnchantmentHelper",
     "MixinPlayer"
+    "MixinEnchantmentHelper",
+    "MixinLivingEntity"
   ],
   "injectors": {
     "defaultRequire": 1
