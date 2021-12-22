@@ -86,7 +86,6 @@ public class CornerLeavesBlock extends LeavesBlock {
 
         i = Math.max(1, i);
 
-        System.out.println(i);
         return p_54436_.setValue(DISTANCE, i);
     }
 

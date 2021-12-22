@@ -63,17 +63,17 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         return ARROW_ONLY;
     }
 
-    public InteractionResultHolder<ItemStack> use(Level p_40920_, Player p_40921_, InteractionHand p_40922_) {
-        ItemStack itemstack = p_40921_.getItemInHand(p_40922_);
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+        ItemStack itemstack = player.getItemInHand(interactionHand);
         if (isCharged(itemstack)) {
-            performShooting(p_40920_, p_40921_, p_40922_, itemstack, getShootingPower(itemstack), 1.0F);
+            performShooting(level, player, interactionHand, itemstack, getShootingPower(itemstack), 1.0F);
             setCharged(itemstack, false);
             return InteractionResultHolder.consume(itemstack);
-        } else if (!p_40921_.getProjectile(itemstack).isEmpty()) {
+        } else if (BowUtil.hasAmmo(player,itemstack)) {
             if (!isCharged(itemstack)) {
                 this.startSoundPlayed = false;
                 this.midLoadSoundPlayed = false;
-                p_40921_.startUsingItem(p_40922_);
+                player.startUsingItem(interactionHand);
             }
 
             return InteractionResultHolder.consume(itemstack);
@@ -93,11 +93,24 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
     }
 
-    public static boolean tryLoadProjectiles(LivingEntity p_40860_, ItemStack p_40861_) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MULTISHOT.get(), p_40861_);
+    public static boolean tryLoadProjectiles(LivingEntity livingEntity, ItemStack crossbow) {
+        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MULTISHOT.get(), crossbow);
         int j = i == 0 ? 1 : 3;
-        boolean flag = p_40860_ instanceof Player && ((Player)p_40860_).getAbilities().instabuild;
-        ItemStack itemstack = p_40860_.getProjectile(p_40861_);
+        boolean isPlayer = livingEntity instanceof Player;
+        boolean flag = isPlayer && ((Player)livingEntity).getAbilities().instabuild;
+        BowUtil.AmmoStack ammoStack;
+        ItemStack itemstack;
+        if(isPlayer){
+            ammoStack = BowUtil.getAmmo((Player)livingEntity, crossbow, false);
+            itemstack = ammoStack.ammo;
+            CompoundTag compoundTag = crossbow.getOrCreateTag();
+            compoundTag.putBoolean("QuiverFreeAmmo", !ammoStack.canPickUp);
+        } else {
+            itemstack = livingEntity.getProjectile(crossbow);
+            CompoundTag compoundTag = crossbow.getOrCreateTag();
+            compoundTag.putBoolean("QuiverFreeAmmo", false);
+        }
+
         ItemStack itemstack1 = itemstack.copy();
 
         for(int k = 0; k < j; ++k) {
@@ -110,7 +123,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
                 itemstack1 = itemstack.copy();
             }
 
-            if (!loadProjectile(p_40860_, p_40861_, itemstack, k > 0, flag)) {
+            if (!loadProjectile(livingEntity, crossbow, itemstack, k > 0, flag)) {
                 return false;
             }
         }
@@ -175,58 +188,58 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         });
     }
 
-    private static void shootProjectile(Level p_40895_, LivingEntity p_40896_, InteractionHand p_40897_, ItemStack p_40898_, ItemStack p_40899_, float p_40900_, boolean p_40901_, float p_40902_, float p_40903_, float p_40904_) {
-        if (!p_40895_.isClientSide) {
-            boolean flag = p_40899_.is(Items.FIREWORK_ROCKET);
+    private static void shootProjectile(Level level, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, ItemStack ammo, float pitch, boolean multishotFlag, float power, float p_40903_, float angle) {
+        if (!level.isClientSide) {
+            boolean flag = ammo.is(Items.FIREWORK_ROCKET);
             Projectile projectile;
             if (flag) {
-                projectile = new FireworkRocketEntity(p_40895_, p_40899_, p_40896_, p_40896_.getX(), p_40896_.getEyeY() - (double)0.15F, p_40896_.getZ(), true);
+                projectile = new FireworkRocketEntity(level, ammo, livingEntity, livingEntity.getX(), livingEntity.getEyeY() - (double)0.15F, livingEntity.getZ(), true);
             } else {
-                projectile = getArrow(p_40895_, p_40896_, p_40898_, p_40899_);
-                if (p_40901_ || p_40904_ != 0.0F) {
+                projectile = getArrow(level, livingEntity, crossbow, ammo);
+                if (multishotFlag || angle != 0.0F || (crossbow.getOrCreateTag().contains("QuiverFreeAmmo") && crossbow.getOrCreateTag().getBoolean("QuiverFreeAmmo"))) {
                     ((AbstractArrow)projectile).pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
             }
 
-            if (p_40896_ instanceof CrossbowAttackMob) {
-                CrossbowAttackMob crossbowattackmob = (CrossbowAttackMob)p_40896_;
-                crossbowattackmob.shootCrossbowProjectile(crossbowattackmob.getTarget(), p_40898_, projectile, p_40904_);
+            if (livingEntity instanceof CrossbowAttackMob) {
+                CrossbowAttackMob crossbowattackmob = (CrossbowAttackMob)livingEntity;
+                crossbowattackmob.shootCrossbowProjectile(crossbowattackmob.getTarget(), crossbow, projectile, angle);
             } else {
-                Vec3 vec31 = p_40896_.getUpVector(1.0F);
-                Quaternion quaternion = new Quaternion(new Vector3f(vec31), p_40904_, true);
-                Vec3 vec3 = p_40896_.getViewVector(1.0F);
+                Vec3 vec31 = livingEntity.getUpVector(1.0F);
+                Quaternion quaternion = new Quaternion(new Vector3f(vec31), angle, true);
+                Vec3 vec3 = livingEntity.getViewVector(1.0F);
                 Vector3f vector3f = new Vector3f(vec3);
                 vector3f.transform(quaternion);
-                projectile.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), p_40902_, p_40903_);
+                projectile.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), power, p_40903_);
             }
 
-            p_40898_.hurtAndBreak(flag ? 3 : 1, p_40896_, (p_40858_) -> {
-                p_40858_.broadcastBreakEvent(p_40897_);
+            crossbow.hurtAndBreak(flag ? 3 : 1, livingEntity, (p_40858_) -> {
+                p_40858_.broadcastBreakEvent(interactionHand);
             });
-            p_40895_.addFreshEntity(projectile);
-            p_40895_.playSound((Player)null, p_40896_.getX(), p_40896_.getY(), p_40896_.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, p_40900_);
+            level.addFreshEntity(projectile);
+            level.playSound((Player)null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, pitch);
         }
     }
 
-    public static void performShooting(Level p_40888_, LivingEntity p_40889_, InteractionHand p_40890_, ItemStack p_40891_, float p_40892_, float p_40893_) {
-        List<ItemStack> list = getChargedProjectiles(p_40891_);
-        float[] afloat = getShotPitches(p_40889_.getRandom());
+    public static void performShooting(Level p_40888_, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, float power, float p_40893_) {
+        List<ItemStack> list = getChargedProjectiles(crossbow);
+        float[] afloat = getShotPitches(livingEntity.getRandom());
 
         for(int i = 0; i < list.size(); ++i) {
             ItemStack itemstack = list.get(i);
-            boolean flag = p_40889_ instanceof Player && ((Player)p_40889_).getAbilities().instabuild;
+            boolean flag = livingEntity instanceof Player && ((Player)livingEntity).getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
                 if (i == 0) {
-                    shootProjectile(p_40888_, p_40889_, p_40890_, p_40891_, itemstack, afloat[i], flag, p_40892_, p_40893_, 0.0F);
+                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, p_40893_, 0.0F);
                 } else if (i == 1) {
-                    shootProjectile(p_40888_, p_40889_, p_40890_, p_40891_, itemstack, afloat[i], flag, p_40892_, p_40893_, -10.0F);
+                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, p_40893_, -10.0F);
                 } else if (i == 2) {
-                    shootProjectile(p_40888_, p_40889_, p_40890_, p_40891_, itemstack, afloat[i], flag, p_40892_, p_40893_, 10.0F);
+                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, p_40893_, 10.0F);
                 }
             }
         }
 
-        onCrossbowShot(p_40888_, p_40889_, p_40891_);
+        onCrossbowShot(p_40888_, livingEntity, crossbow);
     }
 
     private static float[] getShotPitches(Random p_40924_) {
@@ -313,12 +326,11 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         } else {
             boolean flag = inCreative && ammo.getItem() instanceof ArrowItem;
             ItemStack itemstack;
-            if (!flag && !inCreative && !multishotArrow) {
+            if (!flag && !inCreative && !multishotArrow && !crossbow.getOrCreateTag().getBoolean("QuiverFreeAmmo")) {
                 boolean quiverFlag = false;
-                //TODO add quivers
-//                if(livingEntity instanceof Player){
-//                    quiverFlag = BowUtil.consumeQuiverAmmo((Player)livingEntity,ammo, livingEntity.getRandom());
-//                }
+                if(livingEntity instanceof Player){
+                    quiverFlag = BowUtil.tryToConsumeFromQuiver((Player)livingEntity, ammo);
+                }
                 itemstack = ammo.split(1);
                 if(!quiverFlag) {
                     if (ammo.isEmpty() && livingEntity instanceof Player) {
@@ -334,9 +346,9 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         }
     }
 
-    public static AbstractArrow getArrow(Level worldIn, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
+    public static AbstractArrow getArrow(Level level, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
         ArrowItem arrowItem = (ArrowItem)(ammo.getItem() instanceof ArrowItem ? ammo.getItem() : Items.ARROW);
-        AbstractArrow abstractArrow = arrowItem.createArrow(worldIn, ammo, shooter);
+        AbstractArrow abstractArrow = arrowItem.createArrow(level, ammo, shooter);
 
         abstractArrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractArrow.setShotFromCrossbow(true);
@@ -385,6 +397,9 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.add(new TranslatableComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(ChatFormatting.BLUE));
         tooltip.add(new TranslatableComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(getChargeDuration(stack)/20f)).append("s").withStyle(ChatFormatting.BLUE));
+        if(stack.getOrCreateTag().contains("QuiverFreeAmmo")){
+            tooltip.add(new TranslatableComponent(Boolean.valueOf(stack.getOrCreateTag().getBoolean("QuiverFreeAmmo")).toString()).withStyle(ChatFormatting.BLUE));
+        }
         super.appendHoverText(stack, level, tooltip, flagIn);
     }
 

@@ -1,0 +1,14 @@
+{
+  "type": "oddc:alloying",
+  "ingredient1":
+  {
+    "item": "minecraft:ancient_debris"
+  },
+  "ingredient2":
+  {
+    "tag": "oddc:raw_golds"
+  },
+  "result": "minecraft:netherite_ingot",
+  "experience": 3.0,
+  "cookingtime": 200
+}

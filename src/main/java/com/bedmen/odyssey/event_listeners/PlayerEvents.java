@@ -3,13 +3,17 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
+import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
@@ -58,5 +62,12 @@ public class PlayerEvents {
 //        if(player instanceof IOdysseyPlayer && !player.level.isClientSide){
 //            player.setHealth(20.0f + 2.0f * ((IOdysseyPlayer) player).getLifeFruits());
 //        }
+    }
+
+    @SubscribeEvent
+    public static void PlayerInteractEventListener (final PlayerInteractEvent event){
+        if (EnchantmentUtil.hasVolatile(event.getItemStack())){
+            OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket());
+        }
     }
 }

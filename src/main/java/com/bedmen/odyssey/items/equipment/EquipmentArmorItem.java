@@ -73,10 +73,10 @@ public class EquipmentArmorItem extends ArmorItem implements IEquipment {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-//        if(this instanceof HollowCoconutItem){
-//            super.appendHoverText(stack, worldIn, tooltip, flagIn);
-//        } else {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+        if(this instanceof HollowCoconutItem){
+            super.appendHoverText(stack, level, tooltip, flagIn);
+        } else {
             for(Enchantment e : this.enchantmentMap.keySet()){
                 if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
                     tooltip.add(1, EnchantmentUtil.getUnenchantableName());
@@ -97,6 +97,6 @@ public class EquipmentArmorItem extends ArmorItem implements IEquipment {
                 }
                 tooltip.add(mutableComponent);
             }
-//        }
+        }
     }
 }

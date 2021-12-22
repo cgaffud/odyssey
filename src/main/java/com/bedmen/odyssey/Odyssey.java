@@ -1,14 +1,21 @@
 package com.bedmen.odyssey;
 
+import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
+import com.bedmen.odyssey.client.gui.AlloyFurnaceScreen;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
+import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
 import com.bedmen.odyssey.client.model.BabyLeviathanModel;
+import com.bedmen.odyssey.client.model.BoomerangModel;
 import com.bedmen.odyssey.client.model.OdysseyBoatModel;
+import com.bedmen.odyssey.client.model.QuiverModel;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.BabyLeviathan;
+import com.bedmen.odyssey.entity.monster.BabySkeleton;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
+import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
@@ -17,20 +24,26 @@ import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
+import com.google.common.collect.ImmutableMap;
+import com.mojang.blaze3d.platform.ScreenManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -61,14 +74,14 @@ public class Odyssey
 //        AttributeRegistry.init();
 //        BiomeRegistry.init();
         BlockEntityTypeRegistry.init();
-//        ContainerRegistry.init();
+        ContainerRegistry.init();
 //        DataSerializerRegistry.init();
         EffectRegistry.init();
         EnchantmentRegistry.init();
         EntityTypeRegistry.init();
         FeatureRegistry.init();
 //        PotionRegistry.init();
-//        RecipeRegistry.init();
+        RecipeRegistry.init();
 //        SoundEventRegistry.init();
     }
 
@@ -90,12 +103,27 @@ public class Odyssey
 
     private void doClientStuff(final FMLClientSetupEvent event)
     {
-//        //Block Render Types
-//        for(Block block : ForgeRegistries.BLOCKS.getValues()){
-//            if(block instanceof INeedsToRegisterRenderType){
-//                RenderTypeLookup.setRenderLayer(block, ((INeedsToRegisterRenderType) block).getRenderType());
-//            }
-//        }
+        //For Coconut vision overlay
+        OverlayRegistry.registerOverlayTop("OdysseyHelmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            gui.setupOverlayRenderState(true, false);
+            if(gui instanceof OdysseyIngameGui odysseyIngameGui){
+                odysseyIngameGui.renderOdysseyHelmet(partialTicks, mStack);
+            }
+        });
+
+        //Override PlayerRenderer with OdysseyPlayerRenderer
+        EntityRenderers.PLAYER_PROVIDERS = ImmutableMap.of("default", (context) -> {
+            return new OdysseyPlayerRenderer(context, false);
+        }, "slim", (context) -> {
+            return new OdysseyPlayerRenderer(context, true);
+        });
+
+        //Block Render Types
+       for(Block block : ForgeRegistries.BLOCKS.getValues()) {
+           if (block instanceof INeedsToRegisterRenderType) {
+               ItemBlockRenderTypes.setRenderLayer(block, ((INeedsToRegisterRenderType) block).getRenderType());
+           }
+       }
 
         //Item Model Properties
         for(Item item : ForgeRegistries.ITEMS.getValues()){
@@ -111,23 +139,23 @@ public class Odyssey
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.STERLING_SILVER_CHEST.get(), SterlingSilverChestTileEntityRenderer::new);
 
         //Screens
+        MenuScreens.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
 //        ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
 //        ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), OdysseySmithingTableScreen::new);
-//        ScreenManager.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
 //        ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), OdysseyEnchantmentScreen::new);
 //        ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
 //        ScreenManager.register(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);
 //        ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
 //        ScreenManager.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
 //        ScreenManager.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
-//        for(ContainerType<QuiverContainer> containerType : ContainerRegistry.QUIVER_MAP.values()){
-//            ScreenManager.register(containerType, QuiverScreen::new);
-//        }
+        for(MenuType<QuiverMenu> containerType : ContainerRegistry.QUIVER_MAP.values()){
+            MenuScreens.register(containerType, QuiverScreen::new);
+        }
 //
 //        //Mob Renderings
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
+        EntityRenderers.register(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
 
         EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
@@ -144,13 +172,14 @@ public class Odyssey
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
+        EntityRenderers.register(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
 
         //Boat Renderings
         EntityRenderers.register(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
 
         Minecraft minecraft = Minecraft.getInstance();
         minecraft.gui = new OdysseyIngameGui(minecraft);
+//        minecraft.itemRenderer = new OdysseyItemRenderer(minecraft.getTextureManager(), minecraft.getModelManager(), minecraft.getItemColors());
     }
 
     @SubscribeEvent
@@ -179,7 +208,7 @@ public class Odyssey
     public static void onEntityAttributeCreation(final EntityAttributeCreationEvent event){
 //        event.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
 //        event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
-//        event.put(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());
 //        event.put(EntityTypeRegistry.WEAVER.get(), WeaverEntity.createAttributes().build());
@@ -198,6 +227,8 @@ public class Odyssey
         for(OdysseyBoat.Type type : OdysseyBoat.Type.values()){
             event.registerLayerDefinition(OdysseyBoatModel.LAYER_LOCATION.get(type), OdysseyBoatModel::createBodyModel);
         }
+        event.registerLayerDefinition(QuiverModel.LAYER_LOCATION, QuiverModel::createBodyLayer);
+        event.registerLayerDefinition(BoomerangModel.LAYER_LOCATION, BoomerangModel::createBodyLayer);
     }
 
     @SubscribeEvent
@@ -213,10 +244,5 @@ public class Odyssey
             BlockState blockstate = ((BlockItem)(p_210235_1_).getItem()).getBlock().defaultBlockState();
             return event.getBlockColors().getColor(blockstate, null, null, p_210235_2_);
         }, BlockRegistry.PALM_LEAVES.get(), BlockRegistry.PALM_CORNER_LEAVES.get());
-    }
-
-    @SubscribeEvent
-    public static void onModelRegistryEvent(final ModelRegistryEvent event) {
-//        ModelLoader.addSpecialModel(new ModelResourceLocation("oddc:boomerang_in_hand#inventory"));
     }
 }

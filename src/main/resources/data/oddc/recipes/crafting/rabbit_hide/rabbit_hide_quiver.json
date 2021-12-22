@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    "A A",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:rabbit_hide"
+    },
+    "B": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "oddc:rabbit_hide_quiver"
+  }
+}

@@ -4,6 +4,7 @@
     "#oddc:silver_ores",
     "oddc:raw_silver_block",
     "oddc:silver_block",
-    "oddc:sterling_silver_block"
+    "oddc:sterling_silver_block",
+    "oddc:alloy_furnace"
   ]
 }

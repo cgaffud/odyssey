@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public enum OdysseyArmorMaterials implements ArmorMaterial {
     LEATHER("leather", 5, new int[]{2,3,3,2}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> { return Ingredient.of(Items.LEATHER);}),
-//    COCONUT("oddc:coconut", 0, new int[]{0,0,0,3}, 0, SoundEvents.WOOD_BREAK, 0.0f, () -> { return Ingredient.EMPTY;}),
+    COCONUT("oddc:coconut", 0, new int[]{0,0,0,3}, 0, SoundEvents.WOOD_BREAK, 0.0f, () -> { return Ingredient.of(ItemRegistry.HOLLOW_COCONUT.get()) ;}),
     CHICKEN("oddc:chicken", 4, new int[]{2,4,4,3}, 0, SoundEvents.CHICKEN_HURT, 0.0f, () -> { return Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get());}, new SetBonusEnchSup(EnchantmentRegistry.SLOW_FALLING, "key.jump")),
     CHAIN("chainmail", 15, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
     IRON("iron", 15, new int[]{4,7,8,5}, 0, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),

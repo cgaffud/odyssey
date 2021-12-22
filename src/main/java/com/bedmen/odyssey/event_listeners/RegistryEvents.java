@@ -3,15 +3,14 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.wood.OdysseyFlowerPotBlock;
 import com.bedmen.odyssey.items.OdysseySpawnEggItem;
-import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
-import com.bedmen.odyssey.items.equipment.EquipmentBowItem;
-import com.bedmen.odyssey.items.equipment.EquipmentCrossbowItem;
-import com.bedmen.odyssey.items.equipment.EquipmentMeleeItem;
+import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -44,10 +43,10 @@ public class RegistryEvents {
     /**
      * Initiates the quiver map
      */
-//    @SubscribeEvent
-//    public static void onRegisterContainers(final RegistryEvent.Register<MenuType<?>> event){
-//        ContainerRegistry.initQuivers();
-//    }
+    @SubscribeEvent
+    public static void onRegisterContainers(final RegistryEvent.Register<MenuType<?>> event){
+        ContainerRegistry.initQuivers();
+    }
 
     /**
      * Initiates spawn eggs
@@ -64,7 +63,7 @@ public class RegistryEvents {
     public static void onRegisterEnchantments(final RegistryEvent.Register<Enchantment> event){
         EquipmentArmorItem.initEquipment();
         EquipmentMeleeItem.initEquipment();
-//        EquipmentItem.initEquipment();
+        EquipmentItem.initEquipment();
 //        EquipmentPickaxeItem.initEquipment();
 //        EquipmentHoeItem.initEquipment();
 //        EquipmentShovelItem.initEquipment();
