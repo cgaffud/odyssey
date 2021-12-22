@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  A",
+    "AAA",
+    "A A"
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:sterling_silver_block"
+    }
+  },
+  "result": {
+    "item": "oddc:sterling_silver_horse_armor"
+  }
+}
