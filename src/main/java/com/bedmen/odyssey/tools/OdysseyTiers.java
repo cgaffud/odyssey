@@ -35,7 +35,7 @@ public class OdysseyTiers {
 
     //Main-line; Require an associated blocktag
     public static final Tag.Named<Block> STERLING_SILVER_TAG = BlockTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "needs_sterling_silver_tool"));
-    public static final Tier STERLING_SILVER = new ForgeTier(2, 500,7.0F, 2.5f, 10, STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.SILVER_INGOT.get()));
+    public static final Tier STERLING_SILVER = new ForgeTier(2, 500,7.0F, -1.0f, 10, STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.SILVER_INGOT.get()));
 
     public static void init(){
         TierSortingRegistry.registerTier(STERLING_SILVER, new ResourceLocation(Odyssey.MOD_ID,"sterling_silver"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));
