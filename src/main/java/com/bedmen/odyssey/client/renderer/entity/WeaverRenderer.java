@@ -2,10 +2,16 @@ package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.model.WeaverModel;
+import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import com.bedmen.odyssey.entity.monster.Weaver;
+import com.bedmen.odyssey.entity.monster.WeaverQueen;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -15,6 +21,11 @@ public class WeaverRenderer<T extends Weaver> extends MobRenderer<T, WeaverModel
 
     public WeaverRenderer(EntityRendererProvider.Context context) {
         super(context, new WeaverModel(context.bakeLayer(WeaverModel.LAYER_LOCATION)), 0.8F);
+    }
+
+    protected void scale(T entity, PoseStack poseStack, float partialTicks) {
+        float f = entity.getScale();
+        poseStack.scale(f,f,f);
     }
 
     protected float getFlipDegrees(T pLivingEntity) {

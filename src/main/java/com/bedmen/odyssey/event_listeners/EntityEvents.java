@@ -54,8 +54,7 @@ public class EntityEvents {
         Player player = (Player) event.getEntity();
         int shatteringLevel = EnchantmentUtil.getShattering(player);
         Entity target = event.getTarget();
-        if(!player.level.isClientSide && target instanceof LivingEntity && player.getAttackStrengthScale(0.5F) > 0.9f && shatteringLevel > 0){
-            LivingEntity livingTarget = (LivingEntity)target;
+        if(!player.level.isClientSide && target instanceof LivingEntity livingTarget && player.getAttackStrengthScale(0.5F) > 0.9f && shatteringLevel > 0){
             MobEffectInstance effectInstance = livingTarget.getEffect(EffectRegistry.SHATTERED.get());
             if(effectInstance != null){
                 livingTarget.removeEffect(EffectRegistry.SHATTERED.get());

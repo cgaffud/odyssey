@@ -148,5 +148,8 @@
   "block.key_unlock.sub": "Chest Unlock",
   "block.locked_chest.sub": "Locked Chest",
   "entity.oddc.weaver": "Weaver",
-  "item.oddc.weaver_spawn_egg": "Weaver Spawn Egg"
+  "item.oddc.weaver_spawn_egg": "Weaver Spawn Egg",
+  "entity.oddc.weaver_queen": "Weaver Queen",
+  "item.oddc.weaver_queen_spawn_egg": "Weaver Queen Spawn Egg",
+  "item.oddc.weaver_egg": "Weaver Egg"
 }

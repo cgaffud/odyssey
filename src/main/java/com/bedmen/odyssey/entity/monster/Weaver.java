@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.monster;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -29,14 +30,18 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class Weaver extends Monster {
-    private static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(Weaver.class, EntityDataSerializers.BYTE);
+    protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(Weaver.class, EntityDataSerializers.BYTE);
 
-    public Weaver(EntityType<? extends Weaver> p_i48550_1_, Level p_i48550_2_) {
-        super(p_i48550_1_, p_i48550_2_);
+    public Weaver(EntityType<? extends Weaver> entityType, Level level) {
+        super(entityType, level);
     }
 
     protected void registerGoals() {
@@ -167,6 +172,10 @@ public class Weaver extends Monster {
 
     protected float getStandingEyeHeight(Pose pPose, EntityDimensions pSize) {
         return 0.65F;
+    }
+
+    public static boolean spawnPredicate(EntityType<? extends Monster> pType, ServerLevelAccessor pLevel, MobSpawnType pReason, BlockPos pPos, Random pRandom) {
+        return Monster.checkMonsterSpawnRules(pType, pLevel, pReason, pPos, pRandom) && pPos.getY() <= 56;
     }
 
     static class AttackGoal extends MeleeAttackGoal {

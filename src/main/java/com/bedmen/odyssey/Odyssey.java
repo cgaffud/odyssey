@@ -21,6 +21,8 @@ import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OreGen;
+import com.bedmen.odyssey.world.gen.StructureGen;
+import com.bedmen.odyssey.world.gen.feature.WeaverColonyFeature;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
@@ -80,12 +82,16 @@ public class Odyssey
 //        PotionRegistry.init();
         RecipeRegistry.init();
         SoundEventRegistry.init();
+        StructureFeatureRegistry.init();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         OreGen.registerOres();
         FeatureGen.registerFeatures();
+        StructureGen.registerStructures();
+        StructureFeatureRegistry.setupStructures();
         OdysseyBiomeEntitySpawn.registerSpawners();
+        //WeaverColonyFeature.init();
 //        OdysseyStructureEntitySpawn.registerSpawners();
 //        OdysseyPotions.addBrewingRecipes();
         CompostUtil.addCompostingRecipes();
@@ -96,6 +102,7 @@ public class Odyssey
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
         SpawnPlacements.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BabyLeviathan::spawnPredicate);
+        SpawnPlacements.register(EntityTypeRegistry.WEAVER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Weaver::spawnPredicate);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)
@@ -157,6 +164,7 @@ public class Odyssey
         EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
+        EntityRenderers.register(EntityTypeRegistry.WEAVER_QUEEN.get(), WeaverRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
 //
 //        //Boss Renderings
@@ -209,6 +217,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.WEAVER.get(), Weaver.createAttributes().build());
+        event.put(EntityTypeRegistry.WEAVER_QUEEN.get(), WeaverQueen.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathan.createAttributes().build());
 //
 //        //Bosses
