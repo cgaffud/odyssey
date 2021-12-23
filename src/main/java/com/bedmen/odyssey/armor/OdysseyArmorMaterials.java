@@ -20,7 +20,7 @@ public enum OdysseyArmorMaterials implements ArmorMaterial {
     IRON("iron", 15, new int[]{4,7,8,5}, 0, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
     TURTLE("oddc:turtle", 25, new int[]{4,7,8,5}, 0, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, () -> { return Ingredient.of(Items.SCUTE); }, new SetBonusEnchSup(EnchantmentRegistry.TURTLING, "key.sneak")),
     GOLD("gold", 7, new int[]{5,8,9,6}, 10, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, () -> { return Ingredient.of(Items.GOLD_INGOT); }),
-//    STERLING_SILVER("oddc:sterling_silver", 20, new int[]{5,9,10,6}, 7, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, () -> {return Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get());}),
+    STERLING_SILVER("oddc:sterling_silver", 20, new int[]{5,9,10,6}, 7, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, () -> {return Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get());}),
 //    REINFORCED("oddc:reinforced", 25, new int[]{6,10,11,7}, 0, SoundEvents.ARMOR_EQUIP_IRON, 0.1F, () -> { return Ingredient.of(Items.OBSIDIAN); }),
     DIAMOND("diamond", 33, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(Items.DIAMOND); }),
 //    ARCTIC("oddc:arctic", 20, new int[]{6,10,11,7}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()); }, new SetBonusEnchSup(EnchantmentRegistry.FROST_WALKER, "passive")),
