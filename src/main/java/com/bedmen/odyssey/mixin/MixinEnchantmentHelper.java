@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.bedmen.odyssey.items.equipment.IEquipment;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -9,11 +10,17 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import org.apache.commons.lang3.mutable.MutableFloat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -189,5 +196,17 @@ public abstract class MixinEnchantmentHelper {
     @Overwrite
     public static boolean hasBindingCurse(ItemStack itemStack) {
         return EnchantmentUtil.getBindingCurse(itemStack) > 0;
+    }
+
+    /**
+     * @author JemBren
+     */
+    @Overwrite
+    public static float getDamageBonus(ItemStack itemStack, MobType mobType) {
+        MutableFloat mutablefloat = new MutableFloat();
+        runIterationOnItem((p_44887_, p_44888_) -> {
+            mutablefloat.add(p_44887_.getDamageBonus(p_44888_, mobType));
+        }, itemStack);
+        return mutablefloat.floatValue() * (itemStack.getItem() instanceof DualWieldItem ? 0.5f : 1f);
     }
 }
