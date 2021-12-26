@@ -167,7 +167,12 @@
   "block.locked_chest.sub": "Locked Chest",
   "entity.oddc.weaver": "Weaver",
   "item.oddc.weaver_spawn_egg": "Weaver Spawn Egg",
-  "entity.oddc.weaver_queen": "Weaver Queen",
-  "item.oddc.weaver_queen_spawn_egg": "Weaver Queen Spawn Egg",
-  "item.oddc.weaver_egg": "Weaver Egg"
+  "item.oddc.weaver_egg": "Weaver Egg",
+  "block.oddc.weaver_egg_cobweb": "Weaver Egg Cobweb",
+  "block.oddc.copper_cobweb": "Copper Cobweb",
+  "item.oddc.copper_fiber": "Copper Fiber",
+  "item.oddc.silver_fiber": "Silver Fiber",
+  "block.oddc.silver_cobweb": "Silver Cobweb",
+  "entity.oddc.passive_weaver": "Passive Weaver",
+  "item.oddc.passive_weaver_spawn_egg": "Passive Weaver Spawn Egg"
 }

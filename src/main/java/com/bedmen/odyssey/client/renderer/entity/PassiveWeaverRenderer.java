@@ -2,6 +2,7 @@ package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.model.WeaverModel;
+import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -11,10 +12,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class WeaverRenderer<T extends Weaver> extends MobRenderer<T, WeaverModel<T>> {
-    private static final ResourceLocation WEAVER_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/weaver/hostile.png");
+public class PassiveWeaverRenderer<T extends PassiveWeaver> extends MobRenderer<T, WeaverModel<T>> {
+    private static final ResourceLocation WEAVER_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/weaver/passive.png");
 
-    public WeaverRenderer(EntityRendererProvider.Context context) {
+    public PassiveWeaverRenderer(EntityRendererProvider.Context context) {
         super(context, new WeaverModel(context.bakeLayer(WeaverModel.LAYER_LOCATION)), 0.8F);
     }
 

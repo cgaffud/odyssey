@@ -14,6 +14,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -28,17 +30,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
 import java.util.Random;
+import java.util.UUID;
 
 public class Weaver extends Monster {
     protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(Weaver.class, EntityDataSerializers.BYTE);
+    private static final UUID SPEED_MODIFIER_QUEEN_UUID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
+    private static final AttributeModifier SPEED_MODIFIER_QUEEN = new AttributeModifier(SPEED_MODIFIER_QUEEN_UUID, "Queen speed boost", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
+    private static final UUID HEALTH_MODIFIER_QUEEN_UUID = UUID.fromString("c03c6f3c-95ff-43b0-88e1-01d6a780c61b");
+    private static final AttributeModifier HEALTH_MODIFIER_QUEEN = new AttributeModifier(HEALTH_MODIFIER_QUEEN_UUID, "Queen health boost", 4.0D, AttributeModifier.Operation.MULTIPLY_BASE);
+    private static final UUID DAMAGE_MODIFIER_QUEEN_UUID = UUID.fromString("aae4f1af-b9c8-4221-ba0e-f4794f87a651");
+    private static final AttributeModifier DAMAGE_MODIFIER_QUEEN = new AttributeModifier(DAMAGE_MODIFIER_QUEEN_UUID, "Queen damage boost", 1.0D, AttributeModifier.Operation.MULTIPLY_BASE);
 
     public Weaver(EntityType<? extends Weaver> entityType, Level level) {
         super(entityType, level);
@@ -106,46 +113,24 @@ public class Weaver extends Monster {
         this.playSound(SoundEvents.SPIDER_STEP, 0.15F, 1.0F);
     }
 
-    /**
-     * Returns true if this entity should move as if it were on a ladder (either because it's actually on a ladder, or
-     * for AI reasons)
-     */
     public boolean onClimbable() {
         return this.isClimbing();
     }
 
     public void makeStuckInBlock(BlockState pState, Vec3 pMotionMultiplier) {
-        if (!pState.is(Blocks.COBWEB)) {
+        if (!(pState.getBlock() instanceof WebBlock)) {
             super.makeStuckInBlock(pState, pMotionMultiplier);
         }
-
     }
 
     public MobType getMobType() {
         return MobType.ARTHROPOD;
     }
 
-    public boolean canBeAffected(MobEffectInstance pPotioneffect) {
-        if (pPotioneffect.getEffect() == MobEffects.POISON) {
-            net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent event = new net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent(this, pPotioneffect);
-            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
-            return event.getResult() == net.minecraftforge.eventbus.api.Event.Result.ALLOW;
-        }
-        return super.canBeAffected(pPotioneffect);
-    }
-
-    /**
-     * Returns true if the WatchableObject (Byte) is 0x01 otherwise returns false. The WatchableObject is updated using
-     * setBesideClimableBlock.
-     */
     public boolean isClimbing() {
         return (this.entityData.get(DATA_FLAGS_ID) & 1) != 0;
     }
 
-    /**
-     * Updates the WatchableObject (Byte) created in entityInit(), setting it to 0x01 if par1 is true or 0x00 if it is
-     * false.
-     */
     public void setClimbing(boolean pClimbing) {
         byte b0 = this.entityData.get(DATA_FLAGS_ID);
         if (pClimbing) {
@@ -155,6 +140,40 @@ public class Weaver extends Monster {
         }
 
         this.entityData.set(DATA_FLAGS_ID, b0);
+    }
+
+    public boolean isQueen() {
+        return (this.entityData.get(DATA_FLAGS_ID) & 2) != 0;
+    }
+
+    public void setQueen(boolean isQueen) {
+        byte b0 = this.entityData.get(DATA_FLAGS_ID);
+        if (!this.level.isClientSide) {
+            AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
+            attributeinstance.removeModifier(SPEED_MODIFIER_QUEEN);
+            attributeinstance.removeModifier(HEALTH_MODIFIER_QUEEN);
+            attributeinstance.removeModifier(DAMAGE_MODIFIER_QUEEN);
+            if (isQueen) {
+                b0 = (byte)(b0 | 2);
+                attributeinstance.addTransientModifier(SPEED_MODIFIER_QUEEN);
+                attributeinstance.addTransientModifier(HEALTH_MODIFIER_QUEEN);
+                attributeinstance.addTransientModifier(DAMAGE_MODIFIER_QUEEN);
+            } else {
+                b0 = (byte)(b0 & -3);
+            }
+            this.entityData.set(DATA_FLAGS_ID, b0);
+        }
+    }
+
+    public float getScale(){
+        return this.isQueen() ? 2.0f : 1.0f;
+    }
+
+    public void onSyncedDataUpdated(EntityDataAccessor<?> entityDataAccessor) {
+        if (DATA_FLAGS_ID.equals(entityDataAccessor)) {
+            this.refreshDimensions();
+        }
+        super.onSyncedDataUpdated(entityDataAccessor);
     }
 
     @Nullable
@@ -227,15 +246,6 @@ public class Weaver extends Monster {
     static class TargetGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
         public TargetGoal(Weaver p_i45818_1_, Class<T> p_i45818_2_) {
             super(p_i45818_1_, p_i45818_2_, true);
-        }
-
-        /**
-         * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-         * method as well.
-         */
-        public boolean canUse() {
-            float f = this.mob.getBrightness();
-            return !(f >= 0.5F) && super.canUse();
         }
     }
 }

@@ -10,10 +10,10 @@
       "item": "minecraft:bone"
     },
     "B": {
-      "item": "oddc:weaver_string"
+      "item": "oddc:copper_fiber"
     },
     "C": {
-      "item": "oddc:copper_ingot"
+      "item": "minecraft:copper_ingot"
     },
     "D": {
       "item": "minecraft:tripwire_hook"
