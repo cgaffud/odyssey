@@ -5,9 +5,11 @@ import com.bedmen.odyssey.client.model.WeaverModel;
 import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.Turtle;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -22,6 +24,13 @@ public class PassiveWeaverRenderer<T extends PassiveWeaver> extends MobRenderer<
     protected void scale(T entity, PoseStack poseStack, float partialTicks) {
         float f = entity.getScale();
         poseStack.scale(f,f,f);
+    }
+
+    public void render(T entity, float p_116262_, float p_116263_, PoseStack p_116264_, MultiBufferSource p_116265_, int p_116266_) {
+        if (entity.isBaby()) {
+            this.shadowRadius *= 0.5F;
+        }
+        super.render(entity, p_116262_, p_116263_, p_116264_, p_116265_, p_116266_);
     }
 
     protected float getFlipDegrees(T pLivingEntity) {

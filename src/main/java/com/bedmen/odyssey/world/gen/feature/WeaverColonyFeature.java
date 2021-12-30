@@ -7,8 +7,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -26,6 +28,13 @@ public class WeaverColonyFeature extends StructureFeature<NoneFeatureConfigurati
 
     public StructureFeature.StructureStartFactory<NoneFeatureConfiguration> getStartFactory() {
         return WeaverColonyFeature.FeatureStart::new;
+    }
+
+    protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, WorldgenRandom worldgenRandom, ChunkPos chunkPos, Biome biome, ChunkPos chunkPos1, NoneFeatureConfiguration noneFeatureConfiguration, LevelHeightAccessor levelHeightAccessor) {
+        if(biome.getBiomeCategory() == Biome.BiomeCategory.OCEAN){
+            return false;
+        }
+        return true;
     }
 
     public static class FeatureStart extends StructureStart<NoneFeatureConfiguration> {

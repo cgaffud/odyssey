@@ -1,5 +1,9 @@
 package com.bedmen.odyssey.entity.monster;
 
+import com.bedmen.odyssey.registry.ItemRegistry;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,19 +18,19 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
@@ -35,6 +39,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -46,6 +52,13 @@ public class Weaver extends Monster {
     private static final AttributeModifier HEALTH_MODIFIER_QUEEN = new AttributeModifier(HEALTH_MODIFIER_QUEEN_UUID, "Queen health boost", 4.0D, AttributeModifier.Operation.MULTIPLY_BASE);
     private static final UUID DAMAGE_MODIFIER_QUEEN_UUID = UUID.fromString("aae4f1af-b9c8-4221-ba0e-f4794f87a651");
     private static final AttributeModifier DAMAGE_MODIFIER_QUEEN = new AttributeModifier(DAMAGE_MODIFIER_QUEEN_UUID, "Queen damage boost", 1.0D, AttributeModifier.Operation.MULTIPLY_BASE);
+    private static final Multimap<Attribute, AttributeModifier> QUEEN_MODIFIER_MAP = Util.make(() -> {
+        Multimap<Attribute, AttributeModifier> map = HashMultimap.create();
+        map.put(Attributes.MOVEMENT_SPEED, SPEED_MODIFIER_QUEEN);
+        map.put(Attributes.MAX_HEALTH, HEALTH_MODIFIER_QUEEN);
+        map.put(Attributes.ATTACK_DAMAGE, DAMAGE_MODIFIER_QUEEN);
+        return map;
+    });
 
     public Weaver(EntityType<? extends Weaver> entityType, Level level) {
         super(entityType, level);
@@ -63,9 +76,6 @@ public class Weaver extends Monster {
         this.targetSelector.addGoal(3, new TargetGoal<>(this, IronGolem.class));
     }
 
-    /**
-     * Returns the Y offset from the entity's position for any entity riding this one.
-     */
     public double getPassengersRidingOffset() {
         return (double)(this.getBbHeight() * 0.5F);
     }
@@ -90,11 +100,10 @@ public class Weaver extends Monster {
         if (!this.level.isClientSide) {
             this.setClimbing(this.horizontalCollision);
         }
-
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 16.0D).add(Attributes.MOVEMENT_SPEED, (double)0.3F);
+        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 16D).add(Attributes.MOVEMENT_SPEED, (double)0.3F).add(Attributes.ATTACK_DAMAGE, 2D);
     }
 
     protected SoundEvent getAmbientSound() {
@@ -146,21 +155,12 @@ public class Weaver extends Monster {
         return (this.entityData.get(DATA_FLAGS_ID) & 2) != 0;
     }
 
-    public void setQueen(boolean isQueen) {
+    public void makeQueen() {
         byte b0 = this.entityData.get(DATA_FLAGS_ID);
         if (!this.level.isClientSide) {
-            AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-            attributeinstance.removeModifier(SPEED_MODIFIER_QUEEN);
-            attributeinstance.removeModifier(HEALTH_MODIFIER_QUEEN);
-            attributeinstance.removeModifier(DAMAGE_MODIFIER_QUEEN);
-            if (isQueen) {
-                b0 = (byte)(b0 | 2);
-                attributeinstance.addTransientModifier(SPEED_MODIFIER_QUEEN);
-                attributeinstance.addTransientModifier(HEALTH_MODIFIER_QUEEN);
-                attributeinstance.addTransientModifier(DAMAGE_MODIFIER_QUEEN);
-            } else {
-                b0 = (byte)(b0 & -3);
-            }
+            this.getAttributes().addTransientAttributeModifiers(QUEEN_MODIFIER_MAP);
+            this.setHealth((float) this.getAttribute(Attributes.MAX_HEALTH).getValue());
+            b0 = (byte)(b0 | 2);
             this.entityData.set(DATA_FLAGS_ID, b0);
         }
     }
@@ -195,6 +195,28 @@ public class Weaver extends Monster {
 
     public static boolean spawnPredicate(EntityType<? extends Monster> pType, ServerLevelAccessor pLevel, MobSpawnType pReason, BlockPos pPos, Random pRandom) {
         return Monster.checkMonsterSpawnRules(pType, pLevel, pReason, pPos, pRandom) && pPos.getY() <= 56;
+    }
+
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean recentlyHit) {
+        super.dropCustomDeathLoot(damageSource, looting, recentlyHit);
+        if(this.isQueen()){
+            ItemEntity itementity = this.spawnAtLocation(ItemRegistry.WEAVER_EGG.get());
+            if (itementity != null) {
+                itementity.setExtendedLifetime();
+            }
+        }
+    }
+
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putBoolean("IsQueen", this.isQueen());
+    }
+
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        if(compoundTag.getBoolean("IsQueen")){
+            this.makeQueen();
+        }
     }
 
     static class AttackGoal extends MeleeAttackGoal {

@@ -2,6 +2,7 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.wood.OdysseyFlowerPotBlock;
+import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.items.OdysseySpawnEggItem;
 import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.registry.BlockRegistry;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -30,6 +32,14 @@ public class RegistryEvents {
     @SubscribeEvent
     public static void onRegisterBlocks(final RegistryEvent.Register<Block> event){
         OdysseyFlowerPotBlock.registerFlowerPots();
+    }
+
+    /**
+     * Registers Weave Mappings
+     */
+    @SubscribeEvent
+    public static void onRegisterItems(final RegistryEvent.Register<Item> event){
+        PassiveWeaver.init();
     }
 
 

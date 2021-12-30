@@ -11,7 +11,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureFeatureManager;
@@ -97,7 +96,7 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
                     Weaver weaver = EntityTypeRegistry.WEAVER.get().create(serverLevelAccessor.getLevel());
                     if(weaver != null){
                         if(i == 0){
-                            weaver.setQueen(true);
+                            weaver.makeQueen();
                         }
                         weaver.setPersistenceRequired();
                         weaver.moveTo((double)blockPos.getX() + 0.5D, blockPos.getY(), (double)blockPos.getZ() + 0.5D, 0.0F, 0.0F);
