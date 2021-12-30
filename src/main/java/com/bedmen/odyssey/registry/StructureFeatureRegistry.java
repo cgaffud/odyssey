@@ -42,8 +42,8 @@ public class StructureFeatureRegistry {
     public static void setupStructures() {
         setupMapSpacingAndLand(
                 WEAVER_COLONY.get(),
-                new StructureFeatureConfiguration(10 /* average distance apart in chunks between spawn attempts */,
-                        4 /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/,
+                new StructureFeatureConfiguration(16 /* average distance apart in chunks between spawn attempts */,
+                        8 /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/,
                         24357620 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 false);
     }
@@ -81,8 +81,5 @@ public class StructureFeatureRegistry {
                 structureMap.put(structure, structureFeatureConfiguration);
             }
         });
-
-        System.out.println("beans");
-        System.out.println(StructureSettings.DEFAULTS.get(structure).salt());
     }
 }

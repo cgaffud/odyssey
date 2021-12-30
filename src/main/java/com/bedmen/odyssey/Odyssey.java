@@ -9,6 +9,7 @@ import com.bedmen.odyssey.client.renderer.entity.WeaverRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.client.renderer.entity.MineralLeviathanBodyRenderer;
+import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.monster.*;
@@ -91,7 +92,6 @@ public class Odyssey
         StructureGen.registerStructures();
         StructureFeatureRegistry.setupStructures();
         OdysseyBiomeEntitySpawn.registerSpawners();
-        //WeaverColonyFeature.init();
 //        OdysseyStructureEntitySpawn.registerSpawners();
 //        OdysseyPotions.addBrewingRecipes();
         CompostUtil.addCompostingRecipes();
@@ -164,7 +164,8 @@ public class Odyssey
         EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.WEAVER_QUEEN.get(), WeaverRenderer::new);
+        EntityRenderers.register(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaverRenderer::new);
+
         EntityRenderers.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
 //
 //        //Boss Renderings
@@ -217,7 +218,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.WEAVER.get(), Weaver.createAttributes().build());
-        event.put(EntityTypeRegistry.WEAVER_QUEEN.get(), WeaverQueen.createAttributes().build());
+        event.put(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaver.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathan.createAttributes().build());
 //
 //        //Bosses
