@@ -36,8 +36,8 @@ public class OdysseyStandingSignBlock extends OdysseySignBlock {
         return this.defaultBlockState().setValue(ROTATION, Integer.valueOf(Mth.floor((double)((180.0F + p_56993_.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15)).setValue(WATERLOGGED, Boolean.valueOf(fluidstate.getType() == Fluids.WATER));
     }
 
-    public BlockState updateShape(BlockState p_57005_, Direction p_57006_, BlockState p_57007_, LevelAccessor p_57008_, BlockPos p_57009_, BlockPos p_57010_) {
-        return p_57006_ == Direction.DOWN && !this.canSurvive(p_57005_, p_57008_, p_57009_) ? Blocks.AIR.defaultBlockState() : super.updateShape(p_57005_, p_57006_, p_57007_, p_57008_, p_57009_, p_57010_);
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState1, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos1) {
+        return direction == Direction.DOWN && !this.canSurvive(blockState, levelAccessor, blockPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(blockState, direction, blockState1, levelAccessor, blockPos, blockPos1);
     }
 
     public BlockState rotate(BlockState p_57002_, Rotation p_57003_) {

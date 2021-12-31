@@ -6,7 +6,7 @@ import com.bedmen.odyssey.client.gui.screens.OdysseySignEditScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.SignEditScreen;
-import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -17,10 +17,10 @@ public class GuiEvents {
      * Custom Creative Screen
      */
     @SubscribeEvent
-    public static void GuiOpenEventListener(final GuiOpenEvent event){
-        Screen gui = event.getGui();
-        if(gui instanceof SignEditScreen signEditScreen && signEditScreen.sign instanceof OdysseySignBlockEntity odysseySignBlockEntity){
-            event.setGui(new OdysseySignEditScreen(odysseySignBlockEntity, Minecraft.getInstance().isTextFilteringEnabled()));
+    public static void GuiOpenEventListener(final ScreenOpenEvent event){
+        Screen screen = event.getScreen();
+        if(screen instanceof SignEditScreen signEditScreen && signEditScreen.sign instanceof OdysseySignBlockEntity odysseySignBlockEntity){
+            event.setScreen(new OdysseySignEditScreen(odysseySignBlockEntity, Minecraft.getInstance().isTextFilteringEnabled()));
         }
 //        if(gui instanceof CreativeModeInventoryScreen){
 //            event.setGui(new OdysseyCreativeScreen(((CreativeModeInventoryScreen) gui).inventory.player));

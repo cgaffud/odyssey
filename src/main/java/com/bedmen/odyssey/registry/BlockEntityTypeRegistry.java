@@ -4,18 +4,11 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.entity.AlloyFurnaceBlockEntity;
 import com.bedmen.odyssey.block.entity.HollowCoconutBlockEntity;
 import com.bedmen.odyssey.block.entity.OdysseySignBlockEntity;
-import com.bedmen.odyssey.potions.OdysseyEffect;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class BlockEntityTypeRegistry {
 

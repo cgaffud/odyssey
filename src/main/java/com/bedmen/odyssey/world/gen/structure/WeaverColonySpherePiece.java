@@ -18,33 +18,35 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.ScatteredFeaturePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 
 public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
     private final double r0;
     private boolean spawnedWeavers;
 
     public WeaverColonySpherePiece(Random random, int x, int z, double r0, int boundlingLength) {
-        super(OdysseyStructurePieceType.WEAVER_COLONY, x, 10+random.nextInt(20), z, boundlingLength, boundlingLength, boundlingLength, Direction.UP);
+        super(OdysseyStructurePieceType.WEAVER_COLONY, x, -32+random.nextInt(64), z, boundlingLength, boundlingLength, boundlingLength, Direction.UP);
         this.r0 = r0;
     }
 
-    public WeaverColonySpherePiece(ServerLevel serverLevel, CompoundTag compoundTag) {
+    public WeaverColonySpherePiece(CompoundTag compoundTag) {
         super(OdysseyStructurePieceType.WEAVER_COLONY, compoundTag);
         this.r0 = compoundTag.getDouble("r0");
         this.spawnedWeavers = compoundTag.getBoolean("spawnedWeavers");
     }
 
-    protected void addAdditionalSaveData(ServerLevel serverLevel, CompoundTag compoundTag) {
-        super.addAdditionalSaveData(serverLevel, compoundTag);
+    protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag compoundTag) {
+        super.addAdditionalSaveData(context, compoundTag);
         compoundTag.putDouble("r0", this.r0);
         compoundTag.putBoolean("spawnedWeavers", this.spawnedWeavers);
     }
 
-    public boolean postProcess(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos origin) {
+    public void postProcess(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos origin) {
         if(chunkPos.getMinBlockX() > origin.getX() || chunkPos.getMaxBlockX() < origin.getX() || chunkPos.getMinBlockZ() > origin.getZ() || chunkPos.getMaxBlockZ() < origin.getZ())
-            return false;
+            return;
         double r1 = this.r0 * 0.9d;
         double r2 = this.r0 * 0.5d;
         origin = origin.above((int) Math.round(this.r0));
@@ -85,8 +87,6 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
         }
 
         this.spawnWeavers(worldGenLevel, origin.below(2), boundingBox);
-
-        return true;
     }
 
     private void spawnWeavers(ServerLevelAccessor serverLevelAccessor, BlockPos blockPos, BoundingBox boundingBox) {

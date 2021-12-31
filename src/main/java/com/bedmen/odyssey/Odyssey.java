@@ -60,7 +60,7 @@ import org.apache.logging.log4j.Logger;
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Odyssey
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "oddc";
 
     public Odyssey() {

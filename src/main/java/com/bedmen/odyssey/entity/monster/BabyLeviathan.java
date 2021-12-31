@@ -102,8 +102,7 @@ public class BabyLeviathan extends Monster {
         }
     }
 
-    //TODO 1.18 Change to <= 0
     public static boolean spawnPredicate(EntityType<? extends Monster> pType, ServerLevelAccessor pLevel, MobSpawnType pReason, BlockPos pPos, Random pRandom) {
-        return Monster.checkMonsterSpawnRules(pType, pLevel, pReason, pPos, pRandom) && pPos.getY() <= 24;
+        return Monster.checkMonsterSpawnRules(pType, pLevel, pReason, pPos, pRandom) && pPos.getY() <= 0;
     }
 }

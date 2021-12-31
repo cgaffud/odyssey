@@ -1,33 +1,21 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.world.gen.StructureGen;
 import com.bedmen.odyssey.world.gen.feature.WeaverColonyFeature;
-import com.bedmen.odyssey.world.gen.feature.tree.CornerLeafTreeFeature;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.sun.jna.Structure;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.level.levelgen.StructureSettings;
-import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
-import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
-import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class StructureFeatureRegistry {
 
@@ -48,15 +36,22 @@ public class StructureFeatureRegistry {
                 false);
     }
 
+    /**
+     * Adds the provided structure to the registry, and adds the separation settings.
+     * The rarity of the structure is determined based on the values passed into
+     * this method in the StructureFeatureConfiguration argument.
+     * This method is called by setupStructures above.
+     */
     public static <F extends StructureFeature<?>> void setupMapSpacingAndLand(
             F structure,
             StructureFeatureConfiguration structureFeatureConfiguration,
             boolean transformSurroundingLand)
     {
+
         StructureFeature.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
 
         if(transformSurroundingLand){
-            StructureFeature.NOISE_AFFECTING_FEATURES  =
+            StructureFeature.NOISE_AFFECTING_FEATURES =
                     ImmutableList.<StructureFeature<?>>builder()
                             .addAll(StructureFeature.NOISE_AFFECTING_FEATURES)
                             .add(structure)
@@ -71,7 +66,6 @@ public class StructureFeatureRegistry {
 
         BuiltinRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
             Map<StructureFeature<?>, StructureFeatureConfiguration> structureMap = settings.getValue().structureSettings().structureConfig();
-
             if(structureMap instanceof ImmutableMap){
                 Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(structureMap);
                 tempMap.put(structure, structureFeatureConfiguration);

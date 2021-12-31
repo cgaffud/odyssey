@@ -74,26 +74,22 @@ public class CornerLeafTreeFeature extends Feature<TreeConfiguration> {
         return isAirOrLeaves(p_67273_, p_67274_) || isReplaceablePlant(p_67273_, p_67274_) || isBlockWater(p_67273_, p_67274_);
     }
 
-    private boolean doPlace(WorldGenLevel p_160511_, Random p_160512_, BlockPos p_160513_, BiConsumer<BlockPos, BlockState> p_160514_, BiConsumer<BlockPos, BlockState> p_160515_, TreeConfiguration p_160516_) {
-        int i = p_160516_.trunkPlacer.getTreeHeight(p_160512_);
-        int j = p_160516_.foliagePlacer.foliageHeight(p_160512_, i, p_160516_);
+    private boolean doPlace(WorldGenLevel worldGenLevel, Random random, BlockPos blockPos, BiConsumer<BlockPos, BlockState> biConsumer, BiConsumer<BlockPos, BlockState> biConsumer1, TreeConfiguration treeConfiguration) {
+        int i = treeConfiguration.trunkPlacer.getTreeHeight(random);
+        int j = treeConfiguration.foliagePlacer.foliageHeight(random, i, treeConfiguration);
         int k = i - j;
-        int l = p_160516_.foliagePlacer.foliageRadius(p_160512_, k);
-        if (p_160513_.getY() >= p_160511_.getMinBuildHeight() + 1 && p_160513_.getY() + i + 1 <= p_160511_.getMaxBuildHeight()) {
-            if (!p_160516_.saplingProvider.getState(p_160512_, p_160513_).canSurvive(p_160511_, p_160513_)) {
-                return false;
+        int l = treeConfiguration.foliagePlacer.foliageRadius(random, k);
+        if (blockPos.getY() >= worldGenLevel.getMinBuildHeight() + 1 && blockPos.getY() + i + 1 <= worldGenLevel.getMaxBuildHeight()) {
+            OptionalInt optionalint = treeConfiguration.minimumSize.minClippedHeight();
+            int i1 = this.getMaxFreeTreeHeight(worldGenLevel, i, blockPos, treeConfiguration);
+            if (i1 >= i || optionalint.isPresent() && i1 >= optionalint.getAsInt()) {
+                List<FoliagePlacer.FoliageAttachment> list = treeConfiguration.trunkPlacer.placeTrunk(worldGenLevel, biConsumer, random, i1, blockPos, treeConfiguration);
+                list.forEach((p_160539_) -> {
+                    treeConfiguration.foliagePlacer.createFoliage(worldGenLevel, biConsumer1, random, treeConfiguration, i1, p_160539_, j, l);
+                });
+                return true;
             } else {
-                OptionalInt optionalint = p_160516_.minimumSize.minClippedHeight();
-                int i1 = this.getMaxFreeTreeHeight(p_160511_, i, p_160513_, p_160516_);
-                if (i1 >= i || optionalint.isPresent() && i1 >= optionalint.getAsInt()) {
-                    List<FoliagePlacer.FoliageAttachment> list = p_160516_.trunkPlacer.placeTrunk(p_160511_, p_160514_, p_160512_, i1, p_160513_, p_160516_);
-                    list.forEach((p_160539_) -> {
-                        p_160516_.foliagePlacer.createFoliage(p_160511_, p_160515_, p_160512_, p_160516_, i1, p_160539_, j, l);
-                    });
-                    return true;
-                } else {
-                    return false;
-                }
+                return false;
             }
         } else {
             return false;
