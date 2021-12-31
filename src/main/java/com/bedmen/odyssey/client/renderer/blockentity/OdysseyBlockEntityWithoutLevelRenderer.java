@@ -1,7 +1,11 @@
 package com.bedmen.odyssey.client.renderer.blockentity;
 
+import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.client.model.BoomerangModel;
+import com.bedmen.odyssey.items.BEWLRBlockItem;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
+import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -65,8 +69,8 @@ import org.apache.commons.lang3.StringUtils;
 @OnlyIn(Dist.CLIENT)
 public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLevelRenderer {
     private static OdysseyBlockEntityWithoutLevelRenderer instance = null;
-    private BoomerangModel boomerangModel;
     private final EntityModelSet entityModelSet;
+    private final ChestBlockEntity sterlingSilverChest = new TreasureChestBlockEntity(TreasureChestMaterial.STERLING_SILVER, BlockPos.ZERO, Blocks.CHEST.defaultBlockState());
 
     public OdysseyBlockEntityWithoutLevelRenderer(BlockEntityRenderDispatcher blockEntityRenderDispatcher, EntityModelSet entityModelSet) {
         super(blockEntityRenderDispatcher, entityModelSet);
@@ -83,9 +87,22 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
     }
 
     public void onResourceManagerReload(ResourceManager resourceManager) {
-        this.boomerangModel = new BoomerangModel(this.entityModelSet.bakeLayer(BoomerangModel.LAYER_LOCATION));
     }
 
     public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource multiBufferSource, int p_108834_, int p_108835_) {
+        Item item = itemStack.getItem();
+        if(item instanceof BEWLRBlockItem bewlrBlockItem){
+            Block block = bewlrBlockItem.getBlock();
+            BlockState blockstate = block.defaultBlockState();
+            BlockEntity blockEntity = null;
+            if (blockstate.is(BlockRegistry.STERLING_SILVER_CHEST.get())) {
+                blockEntity = this.sterlingSilverChest;
+            }
+            if(blockEntity != null){
+                this.blockEntityRenderDispatcher.renderItem(blockEntity, poseStack, multiBufferSource, p_108834_, p_108835_);
+            }
+        } else {
+            super.renderByItem(itemStack, transformType, poseStack, multiBufferSource, p_108834_, p_108835_);
+        }
     }
 }

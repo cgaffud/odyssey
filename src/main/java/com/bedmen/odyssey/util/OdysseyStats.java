@@ -9,6 +9,7 @@ import net.minecraft.stats.Stats;
 public class OdysseyStats {
 
     public static final ResourceLocation INTERACT_WITH_ALLOY_FURNACE = makeCustomStat("interact_with_alloy_furnace", StatFormatter.DEFAULT);
+    public static final ResourceLocation OPEN_STERLING_SILVER_CHEST = makeCustomStat("open_sterling_silver_chest", StatFormatter.DEFAULT);
 
     private static ResourceLocation makeCustomStat(String p_13008_, StatFormatter p_13009_) {
         ResourceLocation resourcelocation = new ResourceLocation(p_13008_);

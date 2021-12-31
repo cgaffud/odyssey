@@ -5,6 +5,7 @@
     "oddc:raw_silver_block",
     "oddc:silver_block",
     "oddc:sterling_silver_block",
-    "oddc:alloy_furnace"
+    "oddc:alloy_furnace",
+    "oddc:sterling_silver_chest"
   ]
 }
