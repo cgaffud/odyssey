@@ -176,5 +176,7 @@
   "entity.oddc.passive_weaver": "Passive Weaver",
   "item.oddc.passive_weaver_spawn_egg": "Passive Weaver Spawn Egg",
   "item.oddc.sterling_silver_key": "Sterling Silver Key",
-  "block.oddc.sterling_silver_chest": "Sterling Silver Chest"
+  "block.oddc.sterling_silver_chest": "Sterling Silver Chest",
+  "item.oddc.flint_sabre": "Flint Sabre",
+  "item.oddc.amethyst_sabre": "Amethyst Sabre"
 }

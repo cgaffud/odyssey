@@ -23,6 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -52,8 +54,12 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
         return !player.isCreative();
     }
 
-    public boolean canSweep(){
-        return this.canSweep;
+    public boolean canPerformAction(ItemStack stack, ToolAction toolAction)
+    {
+        if(toolAction == ToolActions.SWORD_SWEEP){
+            return this.canSweep;
+        }
+        return super.canPerformAction(stack, toolAction);
     }
 
     public float getDestroySpeed(ItemStack itemStack, BlockState blockState) {
@@ -65,10 +71,6 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
         }
     }
 
-    /**
-     * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
-     * the damage on the stack.
-     */
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         stack.hurtAndBreak(1, attacker, (entity) -> {
             entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
@@ -76,9 +78,6 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
         return true;
     }
 
-    /**
-     * Called when a Block is destroyed using this Item. Return true to trigger the "Use Item" statistic.
-     */
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entityLiving) {
         if (state.getDestroySpeed(level, pos) != 0.0F) {
             stack.hurtAndBreak(2, entityLiving, (entity) -> {
@@ -89,20 +88,13 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
         return true;
     }
 
-    /**
-     * Check whether this Item can harvest the given Block
-     */
     public boolean isCorrectToolForDrops(BlockState blockIn) {
-        return blockIn.is(Blocks.COBWEB) && this.canSweep();
+        return blockIn.is(Blocks.COBWEB) && this.canSweep;
     }
 
-    /**
-     * Gets a map of item attribute modifiers, used by ItemSword to increase hit damage.
-     */
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
         return equipmentSlot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getDefaultAttributeModifiers(equipmentSlot);
     }
-
 
     public static void initEquipment(){
         for(final EquipmentMeleeItem equipmentMeleeItem : UNFINISHED_EQUIPMENT){
