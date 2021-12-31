@@ -1,10 +1,12 @@
 package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
+import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.client.gui.AlloyFurnaceScreen;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
 import com.bedmen.odyssey.client.model.*;
+import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
 import com.bedmen.odyssey.client.renderer.entity.WeaverRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
@@ -16,6 +18,7 @@ import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
+import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
@@ -28,6 +31,7 @@ import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -40,6 +44,7 @@ import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -140,7 +145,7 @@ public class Odyssey
         BlockEntityRenderers.register(BlockEntityTypeRegistry.SIGN.get(), OdysseySignRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
-//        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.STERLING_SILVER_CHEST.get(), SterlingSilverChestTileEntityRenderer::new);
+        BlockEntityRenderers.register(BlockEntityTypeRegistry.STERLING_SILVER_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestMaterial.STERLING_SILVER, context));
 
         //Screens
         MenuScreens.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
@@ -198,12 +203,8 @@ public class Odyssey
 //        event.addSprite(OdysseyItemStackTileEntityRenderer.LEVIATHAN_SHIELD_BASE_LOCATION);
 //        event.addSprite(OdysseyItemStackTileEntityRenderer.LEVIATHAN_SHIELD_BASE_NOPATTERN_LOCATION);
 //        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
-//        event.addSprite(SterlingSilverChestTileEntityRenderer.SINGLE_RESOURCE_LOCATION);
-//        event.addSprite(SterlingSilverChestTileEntityRenderer.SINGLE_LOCKED_RESOURCE_LOCATION);
-//        event.addSprite(SterlingSilverChestTileEntityRenderer.LEFT_RESOURCE_LOCATION);
-//        event.addSprite(SterlingSilverChestTileEntityRenderer.LEFT_LOCKED_RESOURCE_LOCATION);
-//        event.addSprite(SterlingSilverChestTileEntityRenderer.RIGHT_RESOURCE_LOCATION);
-//        event.addSprite(SterlingSilverChestTileEntityRenderer.RIGHT_LOCKED_RESOURCE_LOCATION);
+        event.addSprite(TreasureChestRenderer.STERLING_SILVER_RESOURCE_LOCATION);
+        event.addSprite(TreasureChestRenderer.STERLING_SILVER_LOCKED_RESOURCE_LOCATION);
 //        event.addSprite(PermafrostRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
 //        event.addSprite(PermafrostRenderer.WIND_RESOURCE_LOCATION);
 //        event.addSprite(PermafrostRenderer.VERTICAL_WIND_RESOURCE_LOCATION);

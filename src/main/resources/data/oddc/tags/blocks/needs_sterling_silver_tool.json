@@ -10,6 +10,7 @@
     "minecraft:amethyst_cluster",
     "minecraft:amethyst_block",
     "minecraft:budding_amethyst",
-    "oddc:sterling_silver_block"
+    "oddc:sterling_silver_block",
+    "oddc:sterling_silver_chest"
   ]
 }

@@ -3,6 +3,7 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.*;
 import com.bedmen.odyssey.block.wood.*;
+import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
@@ -34,6 +35,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> RAW_SILVER_BLOCK = BLOCKS.register("raw_silver_block", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.SNOW).requiresCorrectToolForDrops().strength(5.0F, 6.0F)));
     public static final RegistryObject<Block> SILVER_BLOCK = BLOCKS.register("silver_block", () -> new Block(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.SNOW).requiresCorrectToolForDrops().strength(3.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> ALLOY_FURNACE = BLOCKS.register("alloy_furnace", () -> new AlloyFurnaceBlock(BlockBehaviour.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(3.5F).lightLevel((state) -> {return state.getValue(BlockStateProperties.LIT) ? 13 : 0;})));
+    public static final RegistryObject<Block> STERLING_SILVER_CHEST = BLOCKS.register("sterling_silver_chest", () -> new TreasureChestBlock(TreasureChestMaterial.STERLING_SILVER, BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(4.0F, 6.0F).requiresCorrectToolForDrops().sound(SoundType.METAL)));
     public static final RegistryObject<Block> STERLING_SILVER_BLOCK = BLOCKS.register("sterling_silver_block", () -> new Block(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(4.0F, 6.0F).sound(SoundType.METAL)));
 
     public static final RegistryObject<Block> PALM_PLANKS = BLOCKS.register("palm_planks", () -> new FlammableBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_LIGHT_GRAY).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
