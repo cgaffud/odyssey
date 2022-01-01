@@ -1,0 +1,8 @@
+{
+  "parent": "oddc:block/cube_column_different_ends",
+  "textures": {
+    "top": "oddc:block/electrum_block_top",
+    "bottom": "oddc:block/electrum_block_bottom",
+    "side": "oddc:block/electrum_block_side"
+  }
+}

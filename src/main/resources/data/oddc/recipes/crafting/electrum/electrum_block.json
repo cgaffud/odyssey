@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "oddc:electrum_ingot"
+    }
+  },
+  "result": {
+    "item": "oddc:electrum_block"
+  }
+}
