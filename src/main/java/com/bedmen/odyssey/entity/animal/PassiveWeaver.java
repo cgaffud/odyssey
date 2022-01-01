@@ -63,7 +63,8 @@ public class PassiveWeaver extends Animal {
 
     public static void init(){
         WEAVE_MAP = Map.of(Items.COPPER_INGOT, BlockRegistry.COPPER_COBWEB.get(),
-                ItemRegistry.SILVER_INGOT.get(), BlockRegistry.SILVER_COBWEB.get());
+                ItemRegistry.SILVER_INGOT.get(), BlockRegistry.SILVER_COBWEB.get(),
+                ItemRegistry.ELECTRUM_INGOT.get(), BlockRegistry.ELECTRUM_COBWEB.get());
     }
 
     protected void registerGoals() {
