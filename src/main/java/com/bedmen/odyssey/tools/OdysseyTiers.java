@@ -20,6 +20,10 @@ import java.util.List;
 
 public class OdysseyTiers {
 
+    //Main-line; Require an associated blocktag
+    public static final Tag.Named<Block> STERLING_SILVER_TAG = BlockTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "needs_sterling_silver_tool"));
+    public static final Tier STERLING_SILVER = new ForgeTier(2, 500,7.0F, -1.0f, 2, STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.SILVER_INGOT.get()));
+
     //Vanilla Overrides
     public static final Tier WOOD = new ForgeTier(0, 59,2.0F, -1.0f, 0, Tags.Blocks.NEEDS_WOOD_TOOL, () -> Ingredient.of(ItemTags.PLANKS));
     public static final Tier STONE = new ForgeTier(1, 131,4.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(ItemTags.STONE_TOOL_MATERIALS));
@@ -29,13 +33,11 @@ public class OdysseyTiers {
     public static final Tier NETHERITE = new ForgeTier(4, 2031,9.0F, -1.0f, 3, Tags.Blocks.NEEDS_NETHERITE_TOOL, () -> Ingredient.of(Items.NETHERITE_INGOT));
 
     //Equipment; These don't need to be sorted because we don't mine with them
+    public static final Tier FLINT = new ForgeTier(0, 150,2.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(Items.FLINT));
     public static final Tier BONE = new ForgeTier(0, 175,2.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(Items.BONE));
     public static final Tier COPPER = new ForgeTier(0, 200,2.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(Items.COPPER_INGOT));
+    public static final Tier AMETHYST = new ForgeTier(0, 750,2.0F, -1.0f, 0, STERLING_SILVER_TAG, () -> Ingredient.of(Items.AMETHYST_SHARD));
     public static final Tier OBSIDIAN = new ForgeTier(0, 2000,2.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(Items.OBSIDIAN));
-
-    //Main-line; Require an associated blocktag
-    public static final Tag.Named<Block> STERLING_SILVER_TAG = BlockTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "needs_sterling_silver_tool"));
-    public static final Tier STERLING_SILVER = new ForgeTier(2, 500,7.0F, -1.0f, 10, STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.SILVER_INGOT.get()));
 
     public static void init(){
         TierSortingRegistry.registerTier(STERLING_SILVER, new ResourceLocation(Odyssey.MOD_ID,"sterling_silver"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));

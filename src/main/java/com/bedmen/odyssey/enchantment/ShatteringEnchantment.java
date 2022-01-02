@@ -1,5 +1,13 @@
 package com.bedmen.odyssey.enchantment;
 
+import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.entity.EquipmentSlot;
 

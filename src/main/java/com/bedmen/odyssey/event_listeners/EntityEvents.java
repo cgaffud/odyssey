@@ -11,6 +11,7 @@ import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.BowUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.eventbus.Subscribe;
@@ -79,8 +80,7 @@ public class EntityEvents {
         Player player = (Player) event.getEntity();
         int shatteringLevel = EnchantmentUtil.getShattering(player);
         Entity target = event.getTarget();
-        if(!player.level.isClientSide && target instanceof LivingEntity && player.getAttackStrengthScale(0.5F) > 0.9f && shatteringLevel > 0){
-            LivingEntity livingTarget = (LivingEntity)target;
+        if(!player.level.isClientSide && target instanceof LivingEntity livingTarget && player.getAttackStrengthScale(0.5F) > 0.9f && shatteringLevel > 0){
             MobEffectInstance effectInstance = livingTarget.getEffect(EffectRegistry.SHATTERED.get());
             if(effectInstance != null){
                 livingTarget.removeEffect(EffectRegistry.SHATTERED.get());

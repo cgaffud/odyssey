@@ -10,7 +10,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WebBlock;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -34,7 +39,7 @@ public class PlayerEvents {
                     if(!EnchantmentUtil.hasFireProtectionOrResistance(player))
                         player.setSecondsOnFire(1);
                 }
-                //Todo life fruits
+                //TODO life fruits
 //                if(player.hasEffect(EffectRegistry.LIFE_INCREASE.get())){
 //                    IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)player;
 //                    playerPermanentBuffs.incrementLifeFruits();
@@ -68,6 +73,15 @@ public class PlayerEvents {
     public static void PlayerInteractEventListener (final PlayerInteractEvent event){
         if (EnchantmentUtil.hasVolatile(event.getItemStack())){
             OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket());
+        }
+    }
+
+    @SubscribeEvent
+    public static void PlayerEvent$HarvestCheckListener(final PlayerEvent.HarvestCheck event){
+        Block block = event.getTargetBlock().getBlock();
+        Item item = event.getPlayer().getMainHandItem().getItem();
+        if(block instanceof WebBlock && item instanceof SwordItem || item == Items.SHEARS){
+            event.setCanHarvest(true);
         }
     }
 }

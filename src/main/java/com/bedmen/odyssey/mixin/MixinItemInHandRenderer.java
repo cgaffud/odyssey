@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,6 +36,7 @@ public abstract class MixinItemInHandRenderer {
     @Shadow
     private void applyItemArmTransform(PoseStack p_109383_, HumanoidArm p_109384_, float p_109385_) {}
     @Shadow
+    @Final
     private Minecraft minecraft;
     @Shadow
     private void applyEatTransform(PoseStack p_109331_, float p_109332_, HumanoidArm p_109333_, ItemStack p_109334_) {}
@@ -41,7 +44,16 @@ public abstract class MixinItemInHandRenderer {
     private void applyItemArmAttackTransform(PoseStack p_109336_, HumanoidArm p_109337_, float p_109338_) {}
     @Shadow
     public void renderItem(LivingEntity p_109323_, ItemStack p_109324_, ItemTransforms.TransformType p_109325_, boolean p_109326_, PoseStack p_109327_, MultiBufferSource p_109328_, int p_109329_) {}
-
+    @Shadow
+    private float mainHandHeight;
+    @Shadow
+    private float oMainHandHeight;
+    @Shadow
+    private float offHandHeight;
+    @Shadow
+    private float oOffHandHeight;
+    @Shadow
+    private ItemStack mainHandItem;
 
     private static boolean isChargedCrossbow(ItemStack itemStack) {
         return itemStack.getItem() instanceof CrossbowItem && CrossbowItem.isCharged(itemStack);
@@ -214,5 +226,47 @@ public abstract class MixinItemInHandRenderer {
 
             p_109379_.popPose();
         }
+    }
+
+    public void tick() {
+        this.oMainHandHeight = this.mainHandHeight;
+        this.oOffHandHeight = this.offHandHeight;
+        LocalPlayer localplayer = this.minecraft.player;
+        ItemStack itemstack = localplayer.getMainHandItem();
+        ItemStack itemstack1 = localplayer.getOffhandItem();
+        if (ItemStack.matches(this.mainHandItem, itemstack)) {
+            this.mainHandItem = itemstack;
+        }
+
+        if (ItemStack.matches(this.offHandItem, itemstack1)) {
+            this.offHandItem = itemstack1;
+        }
+
+        if (localplayer.isHandsBusy()) {
+            this.mainHandHeight = Mth.clamp(this.mainHandHeight - 0.4F, 0.0F, 1.0F);
+            this.offHandHeight = Mth.clamp(this.offHandHeight - 0.4F, 0.0F, 1.0F);
+        } else {
+            //Makes it so that when dual wielding hatchets the main hand doesn't move when offhand is swung
+            float f = DualWieldItem.isDualWielding(this.minecraft.player) ? 1.0f : localplayer.getAttackStrengthScale(1.0F);
+            boolean requipM = net.minecraftforge.client.ForgeHooksClient.shouldCauseReequipAnimation(this.mainHandItem, itemstack, localplayer.getInventory().selected);
+            boolean requipO = net.minecraftforge.client.ForgeHooksClient.shouldCauseReequipAnimation(this.offHandItem, itemstack1, -1);
+
+            if (!requipM && this.mainHandItem != itemstack)
+                this.mainHandItem = itemstack;
+            if (!requipO && this.offHandItem != itemstack1)
+                this.offHandItem = itemstack1;
+
+            this.mainHandHeight += Mth.clamp((!requipM ? f * f * f : 0.0F) - this.mainHandHeight, -0.4F, 0.4F);
+            this.offHandHeight += Mth.clamp((float)(!requipO ? 1 : 0) - this.offHandHeight, -0.4F, 0.4F);
+        }
+
+        if (this.mainHandHeight < 0.1F) {
+            this.mainHandItem = itemstack;
+        }
+
+        if (this.offHandHeight < 0.1F) {
+            this.offHandItem = itemstack1;
+        }
+
     }
 }
