@@ -85,6 +85,7 @@ public class Odyssey
         EnchantmentRegistry.init();
         EntityTypeRegistry.init();
         FeatureRegistry.init();
+        LootModifierRegistry.init();
 //        PotionRegistry.init();
         RecipeRegistry.init();
         SoundEventRegistry.init();

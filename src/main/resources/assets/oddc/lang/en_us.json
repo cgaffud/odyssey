@@ -183,5 +183,6 @@
   "item.oddc.electrum_fiber": "Electrum Fiber",
   "block.oddc.electrum_cobweb": "Electrum Cobweb",
   "block.oddc.electrum_block": "Block of Electrum",
-  "item.oddc.electrum_nugget": "Electrum Nugget"
+  "item.oddc.electrum_nugget": "Electrum Nugget",
+  "block.oddc.clover_stone": "Clover Stone"
 }

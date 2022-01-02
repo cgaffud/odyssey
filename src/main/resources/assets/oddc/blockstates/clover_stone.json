@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "oddc:block/clover_stone"
+      },
+      {
+        "model": "oddc:block/clover_stone_mirrored"
+      },
+      {
+        "model": "oddc:block/clover_stone",
+        "y": 90
+      },
+      {
+        "model": "oddc:block/clover_stone_mirrored",
+        "y": 90
+      },
+      {
+        "model": "oddc:block/clover_stone",
+        "y": 180
+      },
+      {
+        "model": "oddc:block/clover_stone_mirrored",
+        "y": 180
+      },
+      {
+        "model": "oddc:block/clover_stone",
+        "y": 270
+      },
+      {
+        "model": "oddc:block/clover_stone_mirrored",
+        "y": 270
+      }
+    ]
+  }
+}
