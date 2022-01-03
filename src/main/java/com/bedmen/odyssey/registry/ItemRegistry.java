@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -95,7 +96,7 @@ public class ItemRegistry {
 //    public static final LevEnchSup VULCAN_STRIDER_1 = new LevEnchSup(EnchantmentRegistry.VULCAN_STRIDER, 1);
     public static final LevEnchSup AQUA_AFFINITY = new LevEnchSup(EnchantmentRegistry.AQUA_AFFINITY);
     public static final LevEnchSup BINDING = new LevEnchSup(EnchantmentRegistry.BINDING_CURSE);
-    public static final LevEnchSup FORTUNE_1 = new LevEnchSup(EnchantmentRegistry.BLOCK_FORTUNE, 1);
+    public static final LevEnchSup FORTUNE_1 = new LevEnchSup(() -> Enchantments.BLOCK_FORTUNE, 1);
     public static final LevEnchSup LOOTING_1 = new LevEnchSup(EnchantmentRegistry.MOB_LOOTING, 1);
     public static final LevEnchSup KNOCKBACK_1 = new LevEnchSup(EnchantmentRegistry.KNOCKBACK, 1);
     public static final LevEnchSup KNOCKBACK_2 = new LevEnchSup(EnchantmentRegistry.KNOCKBACK, 2);
@@ -121,6 +122,11 @@ public class ItemRegistry {
     public static final LevEnchSup LOYALTY_3 = new LevEnchSup(EnchantmentRegistry.LOYALTY, 3);
 
     //Tools
+    public static final RegistryObject<Item> CLOVER_STONE_AXE = ITEMS.register("clover_stone_axe", () -> new EquipmentAxeItem(OdysseyTiers.CLOVER_STONE, 9f, -3.0f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), FORTUNE_1));
+    public static final RegistryObject<Item> CLOVER_STONE_PICKAXE = ITEMS.register("clover_stone_pickaxe", () -> new EquipmentPickaxeItem(OdysseyTiers.CLOVER_STONE, 5, -2.8f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), FORTUNE_1));
+    public static final RegistryObject<Item> CLOVER_STONE_SHOVEL = ITEMS.register("clover_stone_shovel", () -> new EquipmentShovelItem(OdysseyTiers.CLOVER_STONE, 4.5f, -2.6f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), FORTUNE_1));
+    public static final RegistryObject<Item> CLOVER_STONE_HOE = ITEMS.register("clover_stone_hoe", () -> new EquipmentHoeItem(OdysseyTiers.CLOVER_STONE, 4, -2, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), FORTUNE_1));
+    
     public static final RegistryObject<Item> STERLING_SILVER_AXE = ITEMS.register("sterling_silver_axe", () -> new AxeItem(OdysseyTiers.STERLING_SILVER, 9.0f, -3.0f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS)));
     public static final RegistryObject<Item> STERLING_SILVER_PICKAXE = ITEMS.register("sterling_silver_pickaxe", () -> new PickaxeItem(OdysseyTiers.STERLING_SILVER, 5, -2.8f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS)));
     public static final RegistryObject<Item> STERLING_SILVER_SHOVEL = ITEMS.register("sterling_silver_shovel", () -> new ShovelItem(OdysseyTiers.STERLING_SILVER, 4.5f, -2.6f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS)));
@@ -129,21 +135,28 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem(TreasureChestMaterial.STERLING_SILVER, (new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS)));
 
     //Melee Weapons
-    public static final RegistryObject<Item> FLINT_HATCHET = ITEMS.register("flint_hatchet", () -> new DualWieldItem(OdysseyTiers.FLINT, 4.0f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_1));
-    public static final RegistryObject<Item> FLINT_SABRE = ITEMS.register("flint_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.FLINT, 4.5f, -2.0f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1));
+    public static final RegistryObject<Item> FLINT_HATCHET = ITEMS.register("flint_hatchet", () -> new DualWieldItem(OdysseyTiers.FLINT, 4.5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_1));
+    public static final RegistryObject<Item> FLINT_SABRE = ITEMS.register("flint_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.FLINT, 5f, -2.0f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1));
 
-    public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 8, -3.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_1));
-    public static final RegistryObject<Item> COPPER_BAT = ITEMS.register("copper_bat", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 6, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_1));
-    public static final RegistryObject<Item> COPPER_BATTLE_AXE = ITEMS.register("copper_battle_axe", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 8, -3.1f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1));
+    public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 8f, -3.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_1));
+    public static final RegistryObject<Item> COPPER_BAT = ITEMS.register("copper_bat", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 6f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_1));
+    public static final RegistryObject<Item> COPPER_BATTLE_AXE = ITEMS.register("copper_battle_axe", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 8f, -3.1f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1));
 
+    public static final RegistryObject<Item> CLOVER_STONE_SWORD = ITEMS.register("clover_stone_sword", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 7f, -1.6f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), LOOTING_1));
+    public static final RegistryObject<Item> CLOVER_STONE_HATCHET = ITEMS.register("clover_stone_hatchet", () -> new DualWieldItem(OdysseyTiers.CLOVER_STONE, 5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_1, LOOTING_1));
+    public static final RegistryObject<Item> CLOVER_STONE_SABRE = ITEMS.register("clover_stone_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 6f, -2.0f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1, LOOTING_1));
+    public static final RegistryObject<Item> CLOVER_STONE_HAMMER = ITEMS.register("clover_stone_hammer", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 9f, -3.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_1, LOOTING_1));
+    public static final RegistryObject<Item> CLOVER_STONE_BAT = ITEMS.register("clover_stone_bat", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 7f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_1, LOOTING_1));
+    public static final RegistryObject<Item> CLOVER_STONE_BATTLE_AXE = ITEMS.register("clover_stone_battle_axe", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 9f, -3.1f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1, LOOTING_1));
+    
     public static final RegistryObject<Item> STERLING_SILVER_SWORD = ITEMS.register("sterling_silver_sword", () -> new SwordItem(OdysseyTiers.STERLING_SILVER, 7, -2.4f, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
 
-    public static final RegistryObject<Item> AMETHYST_HATCHET = ITEMS.register("amethyst_hatchet", () -> new DualWieldItem(OdysseyTiers.AMETHYST, 5.0f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_2));
-    public static final RegistryObject<Item> AMETHYST_SABRE = ITEMS.register("amethyst_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.AMETHYST, 6.5f, -2.0f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_2));
+    public static final RegistryObject<Item> AMETHYST_HATCHET = ITEMS.register("amethyst_hatchet", () -> new DualWieldItem(OdysseyTiers.AMETHYST, 5.5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_2));
+    public static final RegistryObject<Item> AMETHYST_SABRE = ITEMS.register("amethyst_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.AMETHYST, 7f, -2.0f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_2));
 
-    public static final RegistryObject<Item> OBSIDIAN_HAMMER = ITEMS.register("obsidian_hammer", () -> new EquipmentMeleeItem(OdysseyTiers.OBSIDIAN, 10, -3.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_2));
-    public static final RegistryObject<Item> OBSIDIAN_BAT = ITEMS.register("obsidian_bat", () -> new EquipmentMeleeItem(OdysseyTiers.OBSIDIAN, 8, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_2));
-    public static final RegistryObject<Item> OBSIDIAN_BATTLE_AXE = ITEMS.register("obsidian_battle_axe", () -> new EquipmentMeleeItem(OdysseyTiers.OBSIDIAN, 10, -3.1f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_2));
+    public static final RegistryObject<Item> OBSIDIAN_HAMMER = ITEMS.register("obsidian_hammer", () -> new EquipmentMeleeItem(OdysseyTiers.OBSIDIAN, 10f, -3.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_2));
+    public static final RegistryObject<Item> OBSIDIAN_BAT = ITEMS.register("obsidian_bat", () -> new EquipmentMeleeItem(OdysseyTiers.OBSIDIAN, 8f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_2));
+    public static final RegistryObject<Item> OBSIDIAN_BATTLE_AXE = ITEMS.register("obsidian_battle_axe", () -> new EquipmentMeleeItem(OdysseyTiers.OBSIDIAN, 10f, -3.1f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_2));
 
     //Ranged Weapons
     public static final RegistryObject<Item> WOODEN_BOOMERANG = ITEMS.register("wooden_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.WOOD.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.WOOD, LOYALTY_1));

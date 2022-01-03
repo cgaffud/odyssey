@@ -43,7 +43,7 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> BLOCK_EFFICIENCY = ENCHANTMENTS.register("efficiency", () -> new OdysseyEfficiencyEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> SILK_TOUCH = ENCHANTMENTS.register("silk_touch", () -> new OdysseySilkTouchEnchantment(Enchantment.Rarity.VERY_RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> UNBREAKING = ENCHANTMENTS.register("unbreaking", () -> new OdysseyUnbreakingEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND));
-    public static final RegistryObject<Enchantment> BLOCK_FORTUNE = ENCHANTMENTS.register("fortune", () -> new OdysseyLootBonusEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.DIGGER, EquipmentSlot.MAINHAND));
+    //public static final RegistryObject<Enchantment> BLOCK_FORTUNE = ENCHANTMENTS.register("fortune", () -> new OdysseyLootBonusEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.DIGGER, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> POWER_ARROWS = ENCHANTMENTS.register("power", () -> new OdysseyPowerEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> PUNCH_ARROWS = ENCHANTMENTS.register("punch", () -> new OdysseyPunchEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> FLAMING_ARROWS = ENCHANTMENTS.register("flame", () -> new OdysseyFlameEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));

@@ -124,10 +124,22 @@ def apply_pattern(image, pattern, offset, f):
                 if(pattern[p_j][p_i]):
                     image.putpixel(pos, f(image.getpixel(pos)))
 
+def recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2):
+    r = random.random()
+    colorMult = [colorMult1[i] + r*(colorMult2[i]-colorMult1[i]) for i in range(3)]
+    colorAdd = [colorAdd1[i] + r*(colorAdd2[i]-colorAdd1[i]) for i in range(3)]
+    print(colorMult)
+    return recolor_pixel(pixel, colorMult, colorAdd)
+
+def recolor_image_randomly(image, colorMult1, colorAdd1, colorMult2, colorAdd2):
+     at_every_pixel(image, lambda pos, pixel : recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2))
+     return image
+
 pattern = [[0,1,0,1,0],[1,1,0,1,1],[0,0,1,0,0],[1,1,0,1,1],[0,1,0,1,0]]
-open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/item/stone_sword.png"
+open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/block/stone.png"
+#open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/clover_stone_battle_axe_0.png"
 image1 = open_image(open_path1)
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/clover_stone_sword.png"
-recolor_image(image1, [0.9,1.0,0.9], [0,0,0])
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/clover_stone_0.png"
+recolor_image_randomly(image1, [1.0,0.9,0.8], [0,0,0],[0.85,1.0,0.85],[0,0,0])
 save_image(image1, save_path)
 print("Done")

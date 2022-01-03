@@ -184,5 +184,15 @@
   "block.oddc.electrum_cobweb": "Electrum Cobweb",
   "block.oddc.electrum_block": "Block of Electrum",
   "item.oddc.electrum_nugget": "Electrum Nugget",
-  "block.oddc.clover_stone": "Clover Stone"
+  "block.oddc.clover_stone": "Clover Stone",
+  "item.oddc.clover_stone_sword": "Clover Stone Sword",
+  "item.oddc.clover_stone_axe": "Clover Stone Axe",
+  "item.oddc.clover_stone_hoe": "Clover Stone Hoe",
+  "item.oddc.clover_stone_pickaxe": "Clover Stone Pickaxe",
+  "item.oddc.clover_stone_shovel": "Clover Stone Shovel",
+  "item.oddc.clover_stone_hatchet": "Clover Stone Hatchet",
+  "item.oddc.clover_stone_sabre": "Clover Stone Sabre",
+  "item.oddc.clover_stone_hammer": "Clover Stone Hammer",
+  "item.oddc.clover_stone_battle_axe": "Clover Stone Battle Axe",
+  "item.oddc.clover_stone_bat": "Clover Stone Bat"
 }
