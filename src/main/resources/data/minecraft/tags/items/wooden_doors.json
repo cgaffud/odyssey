@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "oddc:palm_door"
+    "oddc:palm_door",
+    "oddc:greatwood_door"
   ]
 }

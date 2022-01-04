@@ -100,7 +100,8 @@ public class OdysseyBoat extends Boat {
     }
 
     public enum Type {
-        PALM(BlockRegistry.PALM_PLANKS.get(), "palm", new ResourceLocation(Odyssey.MOD_ID, "textures/entity/boat/palm.png"));
+        PALM(BlockRegistry.PALM_PLANKS.get(), "palm", new ResourceLocation(Odyssey.MOD_ID, "textures/entity/boat/palm.png")),
+        GREATWOOD(BlockRegistry.GREATWOOD_PLANKS.get(),"greatwood", new ResourceLocation(Odyssey.MOD_ID, "textures/entity/boat/greatwood.png"));
 
         private final String name;
         private final Block planks;
