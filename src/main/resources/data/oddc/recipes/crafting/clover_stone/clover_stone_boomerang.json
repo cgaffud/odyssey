@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A  ",
+    "A  "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:clover_stone"
+    }
+  },
+  "result": {
+    "item": "oddc:clover_stone_boomerang"
+  }
+}

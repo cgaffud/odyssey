@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,11 +27,17 @@ public class OdysseyArrowItem extends ArrowItem {
     }
 
     public AbstractArrow createArrow(Level world, ItemStack ammo, LivingEntity livingEntity) {
-        return new OdysseyArrow(world, livingEntity, arrowType);
+        OdysseyArrow odysseyArrow = new OdysseyArrow(world, livingEntity, arrowType);
+        odysseyArrow.setLootingLevel((byte)this.arrowType.getLooting());
+        return odysseyArrow;
     }
 
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.add(new TranslatableComponent("item.oddc.arrow.damage").append(StringUtil.doubleFormat(this.arrowType.getDamage())).withStyle(ChatFormatting.BLUE));
+        int looting = this.arrowType.getLooting();
+        if(looting > 0){
+            tooltip.add(EnchantmentRegistry.MOB_LOOTING.get().getFullname(looting));
+        }
     }
 }

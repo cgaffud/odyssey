@@ -1,35 +1,43 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
-import com.bedmen.odyssey.client.model.BoomerangModel;
 import com.bedmen.odyssey.entity.projectile.Boomerang;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class BoomerangRenderer extends EntityRenderer<Boomerang> {
-    private final BoomerangModel boomerangModel;
+    private final ItemRenderer itemRenderer;
 
     public BoomerangRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.boomerangModel = new BoomerangModel(context.bakeLayer(BoomerangModel.LAYER_LOCATION));
+        this.itemRenderer = context.getItemRenderer();
     }
 
     public void render(Boomerang boomerang, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+        float f = (float)boomerang.tickCount + partialTicks;
+        f *= (boomerang.getLoyalty()+1) * 30f;
         matrixStackIn.pushPose();
-        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(((float)boomerang.tickCount + partialTicks) * (boomerang.getLoyalty()+1) * 30));
-        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(0));
-        VertexConsumer ivertexbuilder = net.minecraft.client.renderer.entity.ItemRenderer.getFoilBufferDirect(bufferIn, this.boomerangModel.renderType(getTextureLocation(boomerang)), false, boomerang.isFoil());
-        this.boomerangModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        matrixStackIn.translate(1/4d * Mth.sin((float) (f*Math.PI/180d)),1d/32d,-1/4d * Mth.cos((float) (f*Math.PI/180d)));
+        matrixStackIn.scale(2f, 2f, 2f);
+        matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(90f));
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(f));
+        ItemStack itemStack = boomerang.getThrownStack();
+        BakedModel bakedmodel = this.itemRenderer.getModel(itemStack, boomerang.level, (LivingEntity)null, boomerang.getId());
+        this.itemRenderer.render(itemStack, ItemTransforms.TransformType.GROUND, false, matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, bakedmodel);
         matrixStackIn.popPose();
-        super.render(boomerang, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
     public ResourceLocation getTextureLocation(Boomerang boomerang) {

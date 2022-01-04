@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 
 import java.util.*;
 
@@ -181,7 +182,7 @@ public class EnchantmentUtil {
     }
 
     public static int getFrostWalker(LivingEntity entity) {
-        return Integer.max(getObsidianWalker(entity), EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FROST_WALKER.get(), entity));
+        return Integer.max(getObsidianWalker(entity), EnchantmentHelper.getEnchantmentLevel(Enchantments.FROST_WALKER, entity));
     }
 
     public static int getObsidianWalker(LivingEntity entity) {

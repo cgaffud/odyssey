@@ -1,16 +1,13 @@
 package com.bedmen.odyssey;
 
 import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
-import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.client.gui.AlloyFurnaceScreen;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
 import com.bedmen.odyssey.client.model.*;
-import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
-import com.bedmen.odyssey.client.renderer.entity.WeaverRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
+import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
-import com.bedmen.odyssey.client.renderer.entity.MineralLeviathanBodyRenderer;
 import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanHead;
@@ -26,12 +23,10 @@ import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.gen.StructureGen;
-import com.bedmen.odyssey.world.gen.feature.WeaverColonyFeature;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -44,7 +39,6 @@ import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -85,6 +79,7 @@ public class Odyssey
         EnchantmentRegistry.init();
         EntityTypeRegistry.init();
         FeatureRegistry.init();
+        LootModifierRegistry.init();
 //        PotionRegistry.init();
         RecipeRegistry.init();
         SoundEventRegistry.init();
@@ -236,7 +231,6 @@ public class Odyssey
             event.registerLayerDefinition(OdysseyBoatModel.LAYER_LOCATION.get(type), OdysseyBoatModel::createBodyModel);
         }
         event.registerLayerDefinition(QuiverModel.LAYER_LOCATION, QuiverModel::createBodyLayer);
-        event.registerLayerDefinition(BoomerangModel.LAYER_LOCATION, BoomerangModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanHeadModel.LAYER_LOCATION, MineralLeviathanHeadModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanBodyModel.LAYER_LOCATION, MineralLeviathanBodyModel::createBodyLayer);
         event.registerLayerDefinition(WeaverModel.LAYER_LOCATION, WeaverModel::createBodyLayer);

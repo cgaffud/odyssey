@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X X",
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "oddc:permafrost_shard"
+    }
+  },
+  "result": {
+    "item": "oddc:arctic_chestplate"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "oddc:no_loot_on_explosion",
+  "conditions": [
+    {
+      "condition": "minecraft:alternative",
+      "terms": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "minecraft:diamond_ore"
+        },
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "minecraft:deepslate_diamond_ore"
+        },
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "oddc:clover_stone"
+        }
+      ]
+    }
+  ]
+}

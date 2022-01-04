@@ -9,6 +9,11 @@
           "type": "minecraft:item",
           "name": "oddc:leather_pile"
         }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
       ]
     }
   ]

@@ -76,10 +76,10 @@ public class RegistryEvents {
         EquipmentArmorItem.initEquipment();
         EquipmentMeleeItem.initEquipment();
         EquipmentItem.initEquipment();
-//        EquipmentPickaxeItem.initEquipment();
-//        EquipmentHoeItem.initEquipment();
-//        EquipmentShovelItem.initEquipment();
-//        EquipmentAxeItem.initEquipment();
+        EquipmentPickaxeItem.initEquipment();
+        EquipmentHoeItem.initEquipment();
+        EquipmentShovelItem.initEquipment();
+        EquipmentAxeItem.initEquipment();
         EquipmentBowItem.initEquipment();
         EquipmentCrossbowItem.initEquipment();
 //
