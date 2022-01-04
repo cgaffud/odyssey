@@ -9,6 +9,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -22,7 +23,7 @@ public class ObsidianWalkerEnchantment extends AbstractFrostWalkerEnchantment im
     }
 
     public Enchantment getDowngrade(){
-        return EnchantmentRegistry.FROST_WALKER.get();
+        return Enchantments.FROST_WALKER;
     }
 
     //TODO Implement this

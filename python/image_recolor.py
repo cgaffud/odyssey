@@ -3,6 +3,7 @@ import random
 
 def open_image(path):
     newImage = Image.open(path)
+    newImage = newImage.convert("RGBA")
     return newImage
 
 def save_image(image, path):
@@ -96,17 +97,20 @@ def color_towards_average(image, w):
     r = 0
     g = 0
     b = 0
+    num = 0;
     for i in range(width):
         for j in range(height):
             pos = (i,j)
             r1,g1,b1,a = image.getpixel(pos)
-            r += r1
-            g += g1
-            b += b1
-    r = clamp(r/256)
-    g = clamp(g/256)
-    b = clamp(b/256)
-    at_every_pixel(image, lambda pos,pixel : combine_pixel(pixel,(r,g,b,0),w))
+            if(a == 255):
+                r += r1
+                g += g1
+                b += b1
+                num += 1
+    r = clamp(r/num)
+    g = clamp(g/num)
+    b = clamp(b/num)
+    at_every_pixel(image, lambda pos,pixel : combine_pixel(pixel,(r,g,b,255),w))
 
 def apply_pattern(image, pattern, offset, f):
     width, height = image.size
@@ -128,18 +132,37 @@ def recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2):
     r = random.random()
     colorMult = [colorMult1[i] + r*(colorMult2[i]-colorMult1[i]) for i in range(3)]
     colorAdd = [colorAdd1[i] + r*(colorAdd2[i]-colorAdd1[i]) for i in range(3)]
-    print(colorMult)
     return recolor_pixel(pixel, colorMult, colorAdd)
 
 def recolor_image_randomly(image, colorMult1, colorAdd1, colorMult2, colorAdd2):
      at_every_pixel(image, lambda pos, pixel : recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2))
      return image
 
-pattern = [[0,1,0,1,0],[1,1,0,1,1],[0,0,1,0,0],[1,1,0,1,1],[0,1,0,1,0]]
-open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/block/stone.png"
-#open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/clover_stone_battle_axe_0.png"
+pattern1 = [[0,0,0,1,1,1,1,1,0,0,0],
+           [0,0,1,1,0,1,0,1,1,0,0],
+           [0,1,1,0,0,0,0,0,1,1,0],
+           [1,1,0,0,0,0,0,0,0,1,1],
+           [1,0,0,0,0,0,0,0,0,0,1],
+           [1,1,0,0,0,0,0,0,0,1,1],
+           [1,0,0,0,0,0,0,0,0,0,1],
+           [1,1,0,0,0,0,0,0,0,1,1],
+           [0,1,1,0,0,0,0,0,1,1,0],
+           [0,0,1,1,0,1,0,1,1,0,0],
+           [0,0,0,1,1,1,1,1,0,0,0]]
+pattern2 = [[0,0,0,1,0,1,0,0,0],
+            [0,0,1,1,1,1,1,0,0],
+            [0,1,1,0,1,0,1,1,0],
+            [1,1,0,0,1,0,0,1,1],
+            [0,1,1,1,0,1,1,1,0],
+            [1,1,0,0,1,0,0,1,1],
+            [0,1,1,0,1,0,1,1,0],
+            [0,0,1,1,1,1,1,0,0],
+            [0,0,0,1,0,1,0,0,0]]
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/clover_stone.png"
+save_path =r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/clover_stone_top_1.png"
 image1 = open_image(open_path1)
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/clover_stone_0.png"
-recolor_image_randomly(image1, [1.0,0.9,0.8], [0,0,0],[0.85,1.0,0.85],[0,0,0])
+recolor_image_randomly(image1, [1,1,1], [0,0,0], [0.85,1,0.85], [0,0,0])
+#apply_pattern(image1, pattern1, (2,2), lambda pixel : recolor_pixel(pixel, [0.8,0.8,0.8], [0,0,0]))
+#apply_pattern(image1, pattern2, (3,3), lambda pixel : recolor_pixel(pixel, [0.8,0.8,0.8], [0,0,0]))
 save_image(image1, save_path)
 print("Done")

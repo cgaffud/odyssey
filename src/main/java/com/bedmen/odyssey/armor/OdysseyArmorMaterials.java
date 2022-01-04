@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.Enchantments;
 
 import java.util.function.Supplier;
 
@@ -23,7 +24,7 @@ public enum OdysseyArmorMaterials implements ArmorMaterial {
     STERLING_SILVER("oddc:sterling_silver", 20, new int[]{5,9,10,6}, 7, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, () -> {return Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get());}),
 //    REINFORCED("oddc:reinforced", 25, new int[]{6,10,11,7}, 0, SoundEvents.ARMOR_EQUIP_IRON, 0.1F, () -> { return Ingredient.of(Items.OBSIDIAN); }),
     DIAMOND("diamond", 33, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(Items.DIAMOND); }),
-//    ARCTIC("oddc:arctic", 20, new int[]{6,10,11,7}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()); }, new SetBonusEnchSup(EnchantmentRegistry.FROST_WALKER, "passive")),
+    ARCTIC("oddc:arctic", 20, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.EMPTY/*Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get())*/; }, new SetBonusEnchSup(() -> Enchantments.FROST_WALKER, "passive")),
 //    MARINE("oddc:marine", 25, new int[]{7,13,14,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> { return Ingredient.of(ItemRegistry.PEARL.get()); }),
     NETHERITE("netherite", 37, new int[]{7,13,15,9}, 5, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.1F, () -> { return Ingredient.of(Items.NETHERITE_INGOT); });
 //    ZEPHYR("oddc:zephyr", 15, new int[]{5,9,10,6}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0F, () -> { return Ingredient.of(Items.PHANTOM_MEMBRANE); }, new SetBonusEnchSup(EnchantmentRegistry.GLIDING, "key.jump")),

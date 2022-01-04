@@ -1,6 +1,9 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "oddc:block/cube_column_different_ends",
   "textures": {
-    "all": "oddc:block/clover_stone"
+    "all": "oddc:block/clover_stone",
+    "top": "oddc:block/clover_stone_top",
+    "bottom": "oddc:block/clover_stone_side",
+    "side": "oddc:block/clover_stone_side"
   }
 }

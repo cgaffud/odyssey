@@ -194,5 +194,10 @@
   "item.oddc.clover_stone_sabre": "Clover Stone Sabre",
   "item.oddc.clover_stone_hammer": "Clover Stone Hammer",
   "item.oddc.clover_stone_battle_axe": "Clover Stone Battle Axe",
-  "item.oddc.clover_stone_bat": "Clover Stone Bat"
+  "item.oddc.clover_stone_bat": "Clover Stone Bat",
+  "item.oddc.arctic_helmet": "Arctic Helmet",
+  "item.oddc.arctic_chestplate": "Arctic Chestplate",
+  "item.oddc.arctic_leggings": "Arctic Leggings",
+  "item.oddc.arctic_boots": "Arctic Boots",
+  "item.oddc.permafrost_shard": "Permafrost Shard"
 }
