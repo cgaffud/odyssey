@@ -158,10 +158,10 @@ pattern2 = [[0,0,0,1,0,1,0,0,0],
             [0,1,1,0,1,0,1,1,0],
             [0,0,1,1,1,1,1,0,0],
             [0,0,0,1,0,1,0,0,0]]
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/clover_stone.png"
-save_path =r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/clover_stone_top_1.png"
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/depreciated/stone_boomerang.png"
+save_path =r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/clover_stone_boomerang.png"
 image1 = open_image(open_path1)
-recolor_image_randomly(image1, [1,1,1], [0,0,0], [0.85,1,0.85], [0,0,0])
+recolor_image_randomly(image1, [0.95,1,0.95], [0,0,0], [0.8,1,0.8], [0,0,0])
 #apply_pattern(image1, pattern1, (2,2), lambda pixel : recolor_pixel(pixel, [0.8,0.8,0.8], [0,0,0]))
 #apply_pattern(image1, pattern2, (3,3), lambda pixel : recolor_pixel(pixel, [0.8,0.8,0.8], [0,0,0]))
 save_image(image1, save_path)
