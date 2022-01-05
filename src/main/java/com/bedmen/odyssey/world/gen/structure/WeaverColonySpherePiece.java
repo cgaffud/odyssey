@@ -74,7 +74,7 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
 
         BlockPos.MutableBlockPos blockPosMutable = origin.above((int)r1).mutable();
         BlockState lastReplaced = Blocks.STONE.defaultBlockState();
-        while(blockPosMutable.getY() <= 64 || lastReplaced.getBlock() != Blocks.AIR){
+        while(blockPosMutable.getY() <= 63 || lastReplaced.getBlock() != Blocks.AIR){
             if(random.nextBoolean()){
                 blockPosMutable.move(getRandomHorizontalDirection(random));
             }
@@ -86,11 +86,12 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
             blockPosMutable.move(Direction.UP);
         }
 
-        this.spawnWeavers(worldGenLevel, origin.below(2), boundingBox);
+        this.spawnWeavers(worldGenLevel, origin.below(2), blockPosMutable.above(), boundingBox);
     }
 
-    private void spawnWeavers(ServerLevelAccessor serverLevelAccessor, BlockPos blockPos, BoundingBox boundingBox) {
+    private void spawnWeavers(ServerLevelAccessor serverLevelAccessor, BlockPos blockPos, BlockPos blockPos1, BoundingBox boundingBox) {
         if (!this.spawnedWeavers) {
+            //Weavers inside colony
             if (boundingBox.isInside(blockPos)) {
                 for(int i = 0; i < 6; i++){
                     Weaver weaver = EntityTypeRegistry.WEAVER.get().create(serverLevelAccessor.getLevel());
@@ -105,6 +106,14 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
                     }
                 }
                 this.spawnedWeavers = true;
+            }
+            //Single weaver at tunnel entrance
+            Weaver weaver = EntityTypeRegistry.WEAVER.get().create(serverLevelAccessor.getLevel());
+            if(weaver != null){
+                weaver.setPersistenceRequired();
+                weaver.moveTo((double)blockPos1.getX() + 0.5D, blockPos1.getY(), (double)blockPos1.getZ() + 0.5D, 0.0F, 0.0F);
+                weaver.finalizeSpawn(serverLevelAccessor, serverLevelAccessor.getCurrentDifficultyAt(blockPos1), MobSpawnType.STRUCTURE, null, null);
+                serverLevelAccessor.addFreshEntityWithPassengers(weaver);
             }
         }
 

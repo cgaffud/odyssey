@@ -107,7 +107,7 @@ public class Odyssey
 
     private void doClientStuff(final FMLClientSetupEvent event)
     {
-        //For Coconut vision overlay
+        //For hollow coconut vision overlay
         OverlayRegistry.registerOverlayTop("OdysseyHelmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
             gui.setupOverlayRenderState(true, false);
             if(gui instanceof OdysseyIngameGui odysseyIngameGui){
