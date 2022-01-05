@@ -41,6 +41,7 @@ public class OdysseyTiers {
 
     //Equipment, Diggers
     public static final Tier CLOVER_STONE = new ForgeTier(2, 131,9.0F, -1.0f, 0, STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.CLOVER_STONE.get()));
+    public static final Tier MARINE = new ForgeTier(2, 1000,10.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(ItemRegistry.PEARL.get()));
 
     public static void init(){
         TierSortingRegistry.registerTier(STERLING_SILVER, new ResourceLocation(Odyssey.MOD_ID,"sterling_silver"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));

@@ -54,7 +54,7 @@ public abstract class MixinEnchantmentHelper {
     }
 
     /**
-     * @author Jem
+     * @author JemBren
      */
     @Overwrite
     public static int getEnchantmentLevel(Enchantment enchantment, LivingEntity livingEntity) {
@@ -133,6 +133,14 @@ public abstract class MixinEnchantmentHelper {
             map.putAll(((IEquipment)(itemStack.getItem())).getInnateEnchantmentMap());
         }
         return map;
+    }
+
+    /**
+     * @author JemBren
+     */
+    @Overwrite
+    public static boolean hasAquaAffinity(LivingEntity livingEntity) {
+        return getEnchantmentLevel(Enchantments.AQUA_AFFINITY, livingEntity) > 0 || EnchantmentUtil.hasAquaAffinity(livingEntity);
     }
 
     //Used in Magma and Campfire Blocks

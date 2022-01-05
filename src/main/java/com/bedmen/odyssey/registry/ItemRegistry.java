@@ -82,6 +82,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ELECTRUM_NUGGET = ITEMS.register("electrum_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> ELECTRUM_INGOT = ITEMS.register("electrum_ingot", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> ELECTRUM_FIBER = ITEMS.register("electrum_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> PEARL = ITEMS.register("pearl", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> PERMAFROST_SHARD = ITEMS.register("permafrost_shard", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
 
     // LevEnchSups for Equipment
@@ -132,8 +133,12 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_PICKAXE = ITEMS.register("sterling_silver_pickaxe", () -> new PickaxeItem(OdysseyTiers.STERLING_SILVER, 5, -2.8f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS)));
     public static final RegistryObject<Item> STERLING_SILVER_SHOVEL = ITEMS.register("sterling_silver_shovel", () -> new ShovelItem(OdysseyTiers.STERLING_SILVER, 4.5f, -2.6f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS)));
     public static final RegistryObject<Item> STERLING_SILVER_HOE = ITEMS.register("sterling_silver_hoe", () -> new HoeItem(OdysseyTiers.STERLING_SILVER, 4, -2, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS)));
-
     public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem(TreasureChestMaterial.STERLING_SILVER, (new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS)));
+
+    public static final RegistryObject<Item> MARINE_AXE = ITEMS.register("marine_axe", () -> new EquipmentAxeItem(OdysseyTiers.MARINE, 8.0f, -2.5f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), AQUA_AFFINITY));
+    public static final RegistryObject<Item> MARINE_PICKAXE = ITEMS.register("marine_pickaxe", () -> new EquipmentPickaxeItem(OdysseyTiers.MARINE, 4, -2.2f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), AQUA_AFFINITY));
+    public static final RegistryObject<Item> MARINE_SHOVEL = ITEMS.register("marine_shovel", () -> new EquipmentShovelItem(OdysseyTiers.MARINE, 3.5f, -1.9f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), AQUA_AFFINITY));
+    public static final RegistryObject<Item> MARINE_HOE = ITEMS.register("marine_hoe", () -> new EquipmentHoeItem(OdysseyTiers.MARINE, 3, -1.0f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), AQUA_AFFINITY));
 
     //Melee Weapons
     public static final RegistryObject<Item> FLINT_HATCHET = ITEMS.register("flint_hatchet", () -> new DualWieldItem(OdysseyTiers.FLINT, 4.5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_1));
