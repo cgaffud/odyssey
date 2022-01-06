@@ -206,5 +206,11 @@
   "item.oddc.marine_shovel": "Marine Shovel",
   "item.oddc.marine_hoe": "Marine Hoe",
   "item.oddc.marine_axe": "Marine Axe",
-  "item.oddc.pearl": "Pearl"
+  "item.oddc.pearl": "Pearl",
+  "block.oddc.golden_cobweb": "Golden Cobweb",
+  "item.oddc.golden_fiber": "Golden Fiber",
+  "item.oddc.netherite_nugget": "Netherite Nugget",
+  "item.oddc.triweave_fiber": "Triweave Fiber",
+  "item.oddc.sterling_silver_fiber": "Sterling Silver Fiber",
+  "block.oddc.sterling_silver_cobweb": "Sterling Silver Cobweb"
 }

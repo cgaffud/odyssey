@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "oddc:copper_fiber"
+    },
+    {
+      "item": "oddc:silver_fiber"
+    },
+    {
+      "item": "oddc:golden_fiber"
+    }
+  ],
+  "result": {
+    "item": "oddc:triweave_fiber",
+    "count": 2
+  }
+}

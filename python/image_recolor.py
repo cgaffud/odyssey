@@ -158,11 +158,13 @@ pattern2 = [[0,0,0,1,0,1,0,0,0],
             [0,1,1,0,1,0,1,1,0],
             [0,0,1,1,1,1,1,0,0],
             [0,0,0,1,0,1,0,0,0]]
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/depreciated/stone_arrow_entity.png"
-save_path =r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/projectiles/clover_stone_arrow_0.png"
+open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/block/cobweb.png"
+save_path =r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/sterling_silver_cobweb.png"
 image1 = open_image(open_path1)
-recolor_image_randomly(image1, [0.95,1,0.95], [0,0,0], [0.8,1,0.8], [0,0,0])
-#apply_pattern(image1, pattern1, (2,2), lambda pixel : recolor_pixel(pixel, [0.8,0.8,0.8], [0,0,0]))
-#apply_pattern(image1, pattern2, (3,3), lambda pixel : recolor_pixel(pixel, [0.8,0.8,0.8], [0,0,0]))
+D = {}
+D[color(255,255,255)] = (255,255,255)
+D[color(228,233,233)] = (215,215,215)
+D[color(196,206,210)] = (175,175,175)
+colormap_image(image1, D)
 save_image(image1, save_path)
 print("Done")

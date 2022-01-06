@@ -4,7 +4,7 @@ assetsPath = "../src/main/resources/assets/oddc"
 dataPath = "../src/main/resources/data"
 blockTagsPath = "/tags/blocks"
 minecraftTagsPath = "%s/minecraft%s" % (dataPath,blockTagsPath)
-minecraftTagsPath = "%s/forge%s" % (dataPath,blockTagsPath)
+forgeTagsPath = "%s/forge%s" % (dataPath,blockTagsPath)
 oddcTagsPath = "%s/oddc%s" % (dataPath,blockTagsPath)
 
 toolTypes = {0:"none", 1:"pickaxe", 2:"axe", 3:"shovel", 4:"hoe"}
