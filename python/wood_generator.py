@@ -2104,7 +2104,7 @@ def doCopyables(name, color = "MaterialColor.COLOR_BROWN"):
     ]
     for (itemType, factory) in itemInputs:
         if factory == None:
-            out.write(itemBase.format(upperType=itemType.upper(), lowerType = itemType, factory = standardFactory.format(upperType = blockType.upper())) + "\n")
+            out.write(itemBase.format(upperType=itemType.upper(), lowerType = itemType, factory = standardFactory.format(upperType = itemType.upper())) + "\n")
         else:
             out.write(itemBase.format(upperType=itemType.upper(), lowerType = itemType, factory = factory)+"\n")
             
@@ -2123,14 +2123,14 @@ if color == "":
     doCopyables(name)
 else:
     doCopyables(name,color)
-doBlockStates(name)
-doBlockModels(name)
-doItemModels(name)
-doLootTables(name)
-doRecipes(name)
-doBlockTags(name)
-doItemTags(name)
-doLang(name, lang_name)
+#doBlockStates(name)
+#doBlockModels(name)
+#doItemModels(name)
+#doLootTables(name)
+#doRecipes(name)
+#doBlockTags(name)
+#doItemTags(name)
+#doLang(name, lang_name)
 
 
 # Missing funcitonality
