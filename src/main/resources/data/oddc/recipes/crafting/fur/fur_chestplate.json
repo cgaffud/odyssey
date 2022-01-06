@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X X",
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "oddc:polar_bear_fur"
+    }
+  },
+  "result": {
+    "item": "oddc:fur_chestplate"
+  }
+}

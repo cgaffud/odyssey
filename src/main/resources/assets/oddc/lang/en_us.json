@@ -214,5 +214,10 @@
   "item.oddc.sterling_silver_fiber": "Sterling Silver Fiber",
   "block.oddc.sterling_silver_cobweb": "Sterling Silver Cobweb",
   "entity.oddc.polar_bear": "Polar Bear",
-  "item.oddc.polar_bear_fur": "Polar Bear Fur"
+  "item.oddc.polar_bear_fur": "Polar Bear Fur",
+  "item.oddc.fur_helmet": "Fur Cap",
+  "item.oddc.fur_chestplate": "Fur Tunic",
+  "item.oddc.fur_leggings": "Fur Leggings",
+  "item.oddc.fur_boots": "Fur Boots",
+  "enchantment.oddc.ice_protection": "Ice Protection"
 }

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "oddc:fur_boots",
+    "oddc:fur_leggings",
+    "oddc:fur_chestplate",
+    "oddc:fur_helmet"
+  ]
+}

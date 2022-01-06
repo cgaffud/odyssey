@@ -7,9 +7,9 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 
 public class OdysseyProtectionEnchantment extends Enchantment {
-    public final ProtectionEnchantment.Type type;
+    public final OdysseyProtectionEnchantment.Type type;
 
-    public OdysseyProtectionEnchantment(Rarity p_i46723_1_, ProtectionEnchantment.Type type, EnchantmentCategory enchantmentType, EquipmentSlot... p_i46723_3_) {
+    public OdysseyProtectionEnchantment(Rarity p_i46723_1_, OdysseyProtectionEnchantment.Type type, EnchantmentCategory enchantmentType, EquipmentSlot... p_i46723_3_) {
         super(p_i46723_1_, enchantmentType, p_i46723_3_);
         this.type = type;
     }
@@ -18,18 +18,18 @@ public class OdysseyProtectionEnchantment extends Enchantment {
      * Returns the minimal value of enchantability needed on the enchantment level passed.
      */
     public int getMinCost(int pEnchantmentLevel) {
-        return this.type.getMinCost() + (pEnchantmentLevel - 1) * this.type.getLevelCost();
+        return 0;
     }
 
     public int getMaxCost(int pEnchantmentLevel) {
-        return this.getMinCost(pEnchantmentLevel) + this.type.getLevelCost();
+        return 50;
     }
 
     /**
      * Returns the maximum level that the enchantment can have.
      */
     public int getMaxLevel() {
-        return 4;
+        return 5;
     }
 
     /**
@@ -38,13 +38,15 @@ public class OdysseyProtectionEnchantment extends Enchantment {
     public int getDamageProtection(int pLevel, DamageSource pSource) {
         if (pSource.isBypassInvul()) {
             return 0;
-        } else if (this.type == ProtectionEnchantment.Type.ALL) {
+        } else if (this.type == OdysseyProtectionEnchantment.Type.ALL) {
             return pLevel;
-        } else if (this.type == ProtectionEnchantment.Type.FIRE && pSource.isFire()) {
+        } else if (this.type == OdysseyProtectionEnchantment.Type.FIRE && pSource.isFire()) {
             return pLevel * 5;
-        } else if (this.type == ProtectionEnchantment.Type.FALL && pSource == DamageSource.FALL) {
+        } else if (this.type == OdysseyProtectionEnchantment.Type.ICE && pSource == DamageSource.FREEZE) {
             return pLevel * 5;
-        } else if (this.type == ProtectionEnchantment.Type.EXPLOSION && pSource.isExplosion()) {
+        } else if (this.type == OdysseyProtectionEnchantment.Type.FALL && pSource == DamageSource.FALL) {
+            return pLevel * 5;
+        } else if (this.type == OdysseyProtectionEnchantment.Type.EXPLOSION && pSource.isExplosion()) {
             return pLevel * 5;
         } else {
             return 0;
@@ -56,5 +58,13 @@ public class OdysseyProtectionEnchantment extends Enchantment {
      */
     public boolean checkCompatibility(Enchantment pEnch) {
         return !(pEnch instanceof OdysseyProtectionEnchantment);
+    }
+
+    public enum Type {
+        ALL,
+        FIRE,
+        ICE,
+        FALL,
+        EXPLOSION,
     }
 }
