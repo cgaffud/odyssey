@@ -2,6 +2,7 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
+import com.bedmen.odyssey.entity.animal.OdysseyPolarBear;
 import com.bedmen.odyssey.entity.monster.BabySkeleton;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyBowItem;
@@ -18,8 +19,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Skeleton;
@@ -148,8 +151,9 @@ public class EntityEvents {
     @SubscribeEvent
     public static void livingSpawnEvent$SpecialSpawnListener(final LivingSpawnEvent.SpecialSpawn event){
         Entity entity = event.getEntity();
-        if(entity instanceof Skeleton skeleton){
-            Random random = skeleton.getRandom();
+
+        if(entity.getType() == EntityType.SKELETON){
+            Random random = entity.level.random;
 
             if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
                 EntityTypeRegistry.BABY_SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
@@ -169,20 +173,23 @@ public class EntityEvents {
             }
         }
 
-        else if(entity instanceof Creeper creeper){
-            Random random = creeper.getRandom();
+        else if(entity.getType() == EntityType.CREEPER){
+            Random random = entity.level.getRandom();
 
-            if(random.nextFloat() < getCamoChance(creeper.level.getDifficulty())){
+            if(random.nextFloat() < getCamoChance(entity.level.getDifficulty())){
                 EntityTypeRegistry.CAMO_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
                 event.setCanceled(true);
-                return;
             }
 
-            if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
+            else if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
                 EntityTypeRegistry.BABY_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
                 event.setCanceled(true);
-                return;
             }
+        }
+
+        else if(entity.getType() == EntityType.POLAR_BEAR){
+            EntityTypeRegistry.POLAR_BEAR.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
+            event.setCanceled(true);
         }
     }
 

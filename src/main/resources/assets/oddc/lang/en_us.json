@@ -212,5 +212,7 @@
   "item.oddc.netherite_nugget": "Netherite Nugget",
   "item.oddc.triweave_fiber": "Triweave Fiber",
   "item.oddc.sterling_silver_fiber": "Sterling Silver Fiber",
-  "block.oddc.sterling_silver_cobweb": "Sterling Silver Cobweb"
+  "block.oddc.sterling_silver_cobweb": "Sterling Silver Cobweb",
+  "entity.oddc.polar_bear": "Polar Bear",
+  "item.oddc.polar_bear_fur": "Polar Bear Fur"
 }

@@ -31,7 +31,9 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.entity.PolarBearRenderer;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -155,26 +157,25 @@ public class Odyssey
         for(MenuType<QuiverMenu> containerType : ContainerRegistry.QUIVER_MAP.values()){
             MenuScreens.register(containerType, QuiverScreen::new);
         }
-//
-//        //Mob Renderings
+
+        //Mob Renderings
 //        EntityRenderers.register(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
-
         EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaverRenderer::new);
-
         EntityRenderers.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
-//
-//        //Boss Renderings
+        EntityRenderers.register(EntityTypeRegistry.POLAR_BEAR.get(), PolarBearRenderer::new);
+
+        //Boss Renderings
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
-//
-//        //Projectile Renderings
+
+        //Projectile Renderings
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
@@ -216,6 +217,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.WEAVER.get(), Weaver.createAttributes().build());
         event.put(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaver.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathan.createAttributes().build());
+        event.put(EntityTypeRegistry.POLAR_BEAR.get(), PolarBear.createAttributes().build());
 //
 //        //Bosses
 //        event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemEntity.createAttributes().build());
