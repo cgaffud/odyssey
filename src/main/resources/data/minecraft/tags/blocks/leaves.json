@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "oddc:palm_leaves",
-    "oddc:palm_corner_leaves",
-    "oddc:greatwood_leaves"
+    "oddc:palm_corner_leaves"
   ]
 }

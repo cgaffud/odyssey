@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/leaves",
-  "textures": {
-    "all": "oddc:block/greatwood_leaves"
-  }
-}

@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "oddc:palm_stairs",
-    "oddc:greatwood_stairs"
+    "oddc:palm_stairs"
   ]
 }

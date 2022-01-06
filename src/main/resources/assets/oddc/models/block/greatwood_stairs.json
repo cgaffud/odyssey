@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "oddc:block/greatwood_planks",
-    "top": "oddc:block/greatwood_planks",
-    "side": "oddc:block/greatwood_planks"
-  }
-}

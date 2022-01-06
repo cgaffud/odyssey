@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "oddc:block/stripped_greatwood_log",
-    "side": "oddc:block/stripped_greatwood_log"
-  }
-}

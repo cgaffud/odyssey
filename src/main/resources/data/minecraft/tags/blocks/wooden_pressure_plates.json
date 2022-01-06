@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "oddc:palm_pressure_plate",
-    "oddc:greatwood_pressure_plate"
+    "oddc:palm_pressure_plate"
   ]
 }
