@@ -63,8 +63,7 @@ public abstract class MineralLeviathanSegment extends Boss implements IEntityAdd
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
                 //Damage
-                AABB axisAlignedBB = new AABB(this.getX()-1.0d,this.getY(),this.getZ()-1.0d,this.getX()+1.0d,this.getY()+2.0d,this.getZ()+1.0d);
-                List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, axisAlignedBB);
+                List<LivingEntity> livingEntityList =  this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox());
                 for(LivingEntity livingEntity : livingEntityList){
                     if(!(livingEntity instanceof MineralLeviathanHead || livingEntity instanceof Silverfish) && !(livingEntity instanceof MineralLeviathanBody) && this.isAlive()){
                         livingEntity.hurt(DamageSource.mobAttack(this).setScalesWithDifficulty(), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
@@ -74,7 +73,6 @@ public abstract class MineralLeviathanSegment extends Boss implements IEntityAdd
                 if(!this.hasShell() && this.silverFishSpawned < this.getMaxSilverFish() && this.random.nextFloat() < SILVER_FISH_CHANCE){
                     Silverfish silverfishEntity = EntityType.SILVERFISH.spawn((ServerLevel) this.level, null, null, null, this.blockPosition(), MobSpawnType.REINFORCEMENT, false, false);
                     silverfishEntity.setPos(this.getX(), this.getY(), this.getZ());
-                    this.level.addFreshEntity(silverfishEntity);
                     this.silverFishSpawned++;
                 }
             }
