@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "oddc:block/greatwood_slab"
+    },
+    "type=double": {
+      "model": "oddc:block/greatwood_planks"
+    },
+    "type=top": {
+      "model": "oddc:block/greatwood_slab_top"
+    }
+  }
+}

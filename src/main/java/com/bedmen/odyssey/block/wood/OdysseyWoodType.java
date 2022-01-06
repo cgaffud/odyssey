@@ -9,6 +9,7 @@ import java.util.Set;
 public class OdysseyWoodType {
     public static final Set<WoodType> WOOD_TYPES = new HashSet<>();
     public static final WoodType PALM = registerWood("palm");
+    public static final WoodType GREATWOOD = registerWood("greatwood");
 
     public static WoodType registerWood(String name){
         name = Odyssey.MOD_ID+":"+name;

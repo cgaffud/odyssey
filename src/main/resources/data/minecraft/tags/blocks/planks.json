@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "oddc:palm_planks"
+    "oddc:palm_planks",
+    "oddc:greatwood_planks"
   ]
 }

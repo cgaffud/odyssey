@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "oddc:palm_sign"
+    "oddc:palm_sign",
+    "oddc:greatwood_sign"
   ]
 }
