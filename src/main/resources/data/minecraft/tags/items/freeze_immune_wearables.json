@@ -4,6 +4,10 @@
     "oddc:fur_boots",
     "oddc:fur_leggings",
     "oddc:fur_chestplate",
-    "oddc:fur_helmet"
+    "oddc:fur_helmet",
+    "oddc:parka_boots",
+    "oddc:parka_leggings",
+    "oddc:parka_chestplate",
+    "oddc:parka_helmet"
   ]
 }

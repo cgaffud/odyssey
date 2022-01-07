@@ -11,7 +11,8 @@
     "MixinEnchantmentHelper",
     "MixinExplosion",
     "MixinLivingEntity",
-    "MixinPlayer"
+    "MixinPlayer",
+    "MixinPowderSnowBlock"
   ],
   "injectors": {
     "defaultRequire": 1

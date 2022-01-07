@@ -21,6 +21,7 @@ public enum OdysseyArmorMaterials implements ArmorMaterial {
     CHAIN("chainmail", 15, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
     IRON("iron", 15, new int[]{4,7,8,5}, 0, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, () -> { return Ingredient.of(Items.IRON_INGOT); }),
     TURTLE("oddc:turtle", 25, new int[]{4,7,8,5}, 0, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, () -> { return Ingredient.of(Items.SCUTE); }, new SetBonusEnchSup(EnchantmentRegistry.TURTLING, "key.sneak")),
+    PARKA("oddc:parka", 12, new int[]{4,7,8,5}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> Ingredient.EMPTY),
     GOLD("gold", 7, new int[]{5,8,9,6}, 10, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, () -> { return Ingredient.of(Items.GOLD_INGOT); }),
     STERLING_SILVER("oddc:sterling_silver", 20, new int[]{5,9,10,6}, 7, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, () -> {return Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get());}),
 //    REINFORCED("oddc:reinforced", 25, new int[]{6,10,11,7}, 0, SoundEvents.ARMOR_EQUIP_IRON, 0.1F, () -> { return Ingredient.of(Items.OBSIDIAN); }),

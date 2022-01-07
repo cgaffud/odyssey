@@ -219,5 +219,9 @@
   "item.oddc.fur_chestplate": "Fur Tunic",
   "item.oddc.fur_leggings": "Fur Leggings",
   "item.oddc.fur_boots": "Fur Boots",
-  "enchantment.oddc.ice_protection": "Ice Protection"
+  "enchantment.oddc.ice_protection": "Ice Protection",
+  "item.oddc.parka_helmet": "Parka Hood",
+  "item.oddc.parka_chestplate": "Parka",
+  "item.oddc.parka_leggings": "Snow Pants",
+  "item.oddc.parka_boots": "Snow Boots"
 }
