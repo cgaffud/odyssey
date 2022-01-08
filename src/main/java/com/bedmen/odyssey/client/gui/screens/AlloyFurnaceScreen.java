@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.client.gui;
+package com.bedmen.odyssey.client.gui.screens;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;

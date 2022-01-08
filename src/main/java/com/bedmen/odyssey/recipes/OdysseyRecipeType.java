@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 import java.util.Optional;
 
 public interface OdysseyRecipeType<T extends Recipe<?>> {
+    RecipeType<StitchingRecipe> STITCHING = register("stitching");
     RecipeType<AlloyRecipe> ALLOYING = register("alloying");
 //    RecipeType<OdysseySmithingRecipe> ODYSSEY_SMITHING = register("odyssey_smithing");
 //    RecipeType<RecycleRecipe> RECYCLING = register("recycling");

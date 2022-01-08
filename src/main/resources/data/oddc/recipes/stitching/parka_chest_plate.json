@@ -1,0 +1,16 @@
+{
+  "type": "oddc:stitching",
+  "ingredient1":
+  {
+    "item": "minecraft:leather_chestplate"
+  },
+  "ingredient2":
+  {
+    "item": "oddc:fur_chestplate"
+  },
+  "fiber":
+  {
+    "item": "oddc:copper_fiber"
+  },
+  "result": "oddc:parka_chestplate"
+}

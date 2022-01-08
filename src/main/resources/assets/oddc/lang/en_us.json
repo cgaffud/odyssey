@@ -223,5 +223,7 @@
   "item.oddc.parka_helmet": "Parka Hood",
   "item.oddc.parka_chestplate": "Parka",
   "item.oddc.parka_leggings": "Snow Pants",
-  "item.oddc.parka_boots": "Snow Boots"
+  "item.oddc.parka_boots": "Snow Boots",
+  "block.oddc.stitching_table": "Stitching Table",
+  "container.oddc.stitching": "Stitching Table"
 }

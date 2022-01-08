@@ -3,6 +3,7 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;
 import com.bedmen.odyssey.inventory.QuiverMenu;
+import com.bedmen.odyssey.inventory.StitchingMenu;
 import com.bedmen.odyssey.items.QuiverItem;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -21,6 +22,7 @@ public class ContainerRegistry {
         CONTAINER.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
+    public static final RegistryObject<MenuType<StitchingMenu>> STITCHING_TABLE = CONTAINER.register("stitching_table", () -> new MenuType<StitchingMenu>(StitchingMenu::new));
     public static final RegistryObject<MenuType<AlloyFurnaceMenu>> ALLOY_FURNACE = CONTAINER.register("alloy_furnace", () -> new MenuType<AlloyFurnaceMenu>(AlloyFurnaceMenu::new));
 //    public static final RegistryObject<MenuType<OdysseyBeaconContainer>> BEACON = CONTAINER.register("beacon", () -> new MenuType<OdysseyBeaconContainer>(OdysseyBeaconContainer::new));
 //    public static final RegistryObject<MenuType<OdysseySmithingTableContainer>> SMITHING_TABLE = CONTAINER.register("smithing_table", () -> new MenuType<OdysseySmithingTableContainer>(OdysseySmithingTableContainer::new));

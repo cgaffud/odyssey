@@ -138,33 +138,10 @@ def recolor_image_randomly(image, colorMult1, colorAdd1, colorMult2, colorAdd2):
      at_every_pixel(image, lambda pos, pixel : recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2))
      return image
 
-pattern1 = [[0,0,0,1,1,1,1,1,0,0,0],
-           [0,0,1,1,0,1,0,1,1,0,0],
-           [0,1,1,0,0,0,0,0,1,1,0],
-           [1,1,0,0,0,0,0,0,0,1,1],
-           [1,0,0,0,0,0,0,0,0,0,1],
-           [1,1,0,0,0,0,0,0,0,1,1],
-           [1,0,0,0,0,0,0,0,0,0,1],
-           [1,1,0,0,0,0,0,0,0,1,1],
-           [0,1,1,0,0,0,0,0,1,1,0],
-           [0,0,1,1,0,1,0,1,1,0,0],
-           [0,0,0,1,1,1,1,1,0,0,0]]
-pattern2 = [[0,0,0,1,0,1,0,0,0],
-            [0,0,1,1,1,1,1,0,0],
-            [0,1,1,0,1,0,1,1,0],
-            [1,1,0,0,1,0,0,1,1],
-            [0,1,1,1,0,1,1,1,0],
-            [1,1,0,0,1,0,0,1,1],
-            [0,1,1,0,1,0,1,1,0],
-            [0,0,1,1,1,1,1,0,0],
-            [0,0,0,1,0,1,0,0,0]]
-open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/block/cobweb.png"
-save_path =r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/sterling_silver_cobweb.png"
+open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/block/green_wool.png"
+save_path =r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/stitching_table_top_1.png"
 image1 = open_image(open_path1)
-D = {}
-D[color(255,255,255)] = (255,255,255)
-D[color(228,233,233)] = (215,215,215)
-D[color(196,206,210)] = (175,175,175)
-colormap_image(image1, D)
+color_towards_average(image1, 0.4)
+recolor_image(image1, [0.8,0.8,0.8],[0,0,0])
 save_image(image1, save_path)
 print("Done")
