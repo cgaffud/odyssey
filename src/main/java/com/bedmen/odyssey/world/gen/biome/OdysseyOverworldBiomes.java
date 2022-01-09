@@ -26,7 +26,7 @@ public class OdysseyOverworldBiomes {
         BiomeDefaultFeatures.addDefaultGrass(biomegenerationsettings$builder);
         BiomeDefaultFeatures.addDefaultMushrooms(biomegenerationsettings$builder);
         biomegenerationsettings$builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_SUGAR_CANE_DESERT);
-        return biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.DESERT, 1.5F, 0.8F, 4445678, 270131, mobspawnsettings$builder, biomegenerationsettings$builder, NORMAL_MUSIC);
+        return biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.BEACH, 1.5F, 0.8F, 4445678, 270131, mobspawnsettings$builder, biomegenerationsettings$builder, NORMAL_MUSIC);
     }
 
     protected static int calculateSkyColor(float p_194844_) {

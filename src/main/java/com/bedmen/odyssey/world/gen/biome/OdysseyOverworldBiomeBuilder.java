@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.world.gen;
+package com.bedmen.odyssey.world.gen.biome;
 
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.mojang.datafixers.util.Pair;
@@ -53,7 +53,7 @@ public class OdysseyOverworldBiomeBuilder {
         return List.of(new Climate.ParameterPoint(this.FULL_RANGE, this.FULL_RANGE, Climate.Parameter.span(this.inlandContinentalness, this.FULL_RANGE), this.FULL_RANGE, climate$parameter, Climate.Parameter.span(-1.0F, -0.16F), 0L), new Climate.ParameterPoint(this.FULL_RANGE, this.FULL_RANGE, Climate.Parameter.span(this.inlandContinentalness, this.FULL_RANGE), this.FULL_RANGE, climate$parameter, Climate.Parameter.span(0.16F, 1.0F), 0L));
     }
 
-    protected void addBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> p_187176_) {
+    public void addBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> p_187176_) {
         if (SharedConstants.debugGenerateSquareTerrainWithoutNoise) {
             TerrainProvider.overworld(false).addDebugBiomesToVisualizeSplinePoints(p_187176_);
         } else {

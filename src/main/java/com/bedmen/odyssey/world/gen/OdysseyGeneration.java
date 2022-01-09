@@ -3,6 +3,7 @@ package com.bedmen.odyssey.world.gen;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.WorldTypeRegistry;
+import com.bedmen.odyssey.world.gen.biome.OdysseyOverworldBiomeBuilder;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Registry;

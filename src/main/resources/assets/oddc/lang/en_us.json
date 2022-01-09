@@ -227,5 +227,6 @@
   "block.oddc.stitching_table": "Stitching Table",
   "container.oddc.stitching": "Stitching Table",
   "biome.oddc.tropics": "Tropics",
-  "generator.oddc.oddc": "Odyssey"
+  "generator.oddc.oddc": "Odyssey",
+  "block.oddc.abandoned_iron_golem": "Abandoned Iron Golem"
 }
