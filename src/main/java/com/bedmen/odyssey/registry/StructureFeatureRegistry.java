@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.world.gen.feature.WeaverColonyFeature;
+import com.bedmen.odyssey.world.gen.structure.WeaverColonyFeature;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.data.BuiltinRegistries;

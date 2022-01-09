@@ -1,6 +1,5 @@
-package com.bedmen.odyssey.world.gen;
+package com.bedmen.odyssey.world.gen.structure;
 
-import com.bedmen.odyssey.world.gen.structure.WeaverColonySpherePiece;
 import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 
 public class OdysseyStructurePieceType {

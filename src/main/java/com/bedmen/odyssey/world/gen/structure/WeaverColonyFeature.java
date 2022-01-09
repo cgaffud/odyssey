@@ -1,6 +1,5 @@
-package com.bedmen.odyssey.world.gen.feature;
+package com.bedmen.odyssey.world.gen.structure;
 
-import com.bedmen.odyssey.world.gen.structure.WeaverColonySpherePiece;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
