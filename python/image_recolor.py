@@ -138,10 +138,12 @@ def recolor_image_randomly(image, colorMult1, colorAdd1, colorMult2, colorAdd2):
      at_every_pixel(image, lambda pos, pixel : recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2))
      return image
 
-open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/block/green_wool.png"
-save_path =r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/stitching_table_top_1.png"
+#open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/block/green_wool.png"
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/polar_bear_fur.png"
+open_path2 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/polar_bear_fur_0.png"
+save_path =  r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/polar_bear_fur.png"
 image1 = open_image(open_path1)
-color_towards_average(image1, 0.4)
-recolor_image(image1, [0.8,0.8,0.8],[0,0,0])
+image2 = open_image(open_path2)
+combine_image(image1, image2, 0.5)
 save_image(image1, save_path)
 print("Done")

@@ -4,6 +4,7 @@ import com.bedmen.odyssey.block.CoconutBlock;
 import com.bedmen.odyssey.block.HollowCoconutBlock;
 import com.bedmen.odyssey.block.wood.CornerLeavesBlock;
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.FoliagePlacerTypeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.TreeFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.AcaciaFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -34,7 +36,7 @@ public class PalmFoliagePlacer extends FoliagePlacer {
     }
 
     protected FoliagePlacerType<?> type() {
-        return FoliagePlacerType.FANCY_FOLIAGE_PLACER;
+        return FoliagePlacerTypeRegistry.PALM_FOLIAGE_PLACER;
     }
 
     @Override

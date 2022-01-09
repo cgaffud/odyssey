@@ -225,5 +225,7 @@
   "item.oddc.parka_leggings": "Snow Pants",
   "item.oddc.parka_boots": "Snow Boots",
   "block.oddc.stitching_table": "Stitching Table",
-  "container.oddc.stitching": "Stitching Table"
+  "container.oddc.stitching": "Stitching Table",
+  "biome.oddc.tropics": "Tropics",
+  "generator.oddc.oddc": "Odyssey"
 }

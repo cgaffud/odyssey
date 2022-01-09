@@ -21,9 +21,7 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.CompostUtil;
-import com.bedmen.odyssey.world.gen.FeatureGen;
-import com.bedmen.odyssey.world.gen.OreGen;
-import com.bedmen.odyssey.world.gen.StructureGen;
+import com.bedmen.odyssey.world.gen.*;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
@@ -33,6 +31,9 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.inventory.MenuType;
@@ -42,6 +43,7 @@ import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -73,8 +75,7 @@ public class Odyssey
 
         BlockRegistry.init();
         ItemRegistry.init();
-//        AttributeRegistry.init();
-//        BiomeRegistry.init();
+        BiomeRegistry.init();
         BlockEntityTypeRegistry.init();
         ContainerRegistry.init();
         DataSerializerRegistry.init();
@@ -82,16 +83,19 @@ public class Odyssey
         EnchantmentRegistry.init();
         EntityTypeRegistry.init();
         FeatureRegistry.init();
+        FoliagePlacerTypeRegistry.init();
         LootModifierRegistry.init();
 //        PotionRegistry.init();
         RecipeRegistry.init();
         SoundEventRegistry.init();
         StructureFeatureRegistry.init();
+        WorldTypeRegistry.init();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         OreGen.registerOres();
         FeatureGen.registerFeatures();
+        TreeGen.registerTrees();
         StructureGen.registerStructures();
         StructureFeatureRegistry.setupStructures();
         OdysseyBiomeEntitySpawn.registerSpawners();
@@ -100,8 +104,11 @@ public class Odyssey
         CompostUtil.addCompostingRecipes();
 //        OdysseyTrades.addTrades();
         OdysseyNetwork.init();
-//        BiomeRegistry.register();
-//
+        BiomeRegistry.register();
+        FoliagePlacerTypeRegistry.registerFoliagePlacerTypes();
+
+        NoiseGeneratorSettings.register(WorldTypeRegistry.ODYSSEY_RESOURCE_KEY, OdysseyGeneration.odysseyOverworld(false, false));
+
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
         SpawnPlacements.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BabyLeviathan::spawnPredicate);
