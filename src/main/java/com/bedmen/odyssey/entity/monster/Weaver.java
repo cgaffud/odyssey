@@ -106,6 +106,13 @@ public class Weaver extends Monster {
         return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 16D).add(Attributes.MOVEMENT_SPEED, (double)0.3F).add(Attributes.ATTACK_DAMAGE, 2D);
     }
 
+    public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource damageSource) {
+        if(this.isQueen()){
+            return false;
+        }
+        return super.causeFallDamage(distance, damageMultiplier, damageSource);
+    }
+
     protected SoundEvent getAmbientSound() {
         return SoundEvents.SPIDER_AMBIENT;
     }
