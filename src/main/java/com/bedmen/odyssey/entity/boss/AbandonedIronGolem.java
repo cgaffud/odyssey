@@ -197,6 +197,9 @@ public class AbandonedIronGolem extends Boss {
     }
 
     public boolean hurt(DamageSource damageSource, float amount) {
+        if(damageSource.isExplosion()){
+            return false;
+        }
         if(damageSource.isProjectile()){
             amount *= 0.5f;
         }

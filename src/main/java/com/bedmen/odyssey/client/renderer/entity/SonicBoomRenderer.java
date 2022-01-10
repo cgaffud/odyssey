@@ -49,10 +49,10 @@ public class SonicBoomRenderer<T extends SonicBoom> extends EntityRenderer<T> {
 
         for(int j = 0; j < 4; ++j) {
             poseStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
-            this.vertex(matrix4f, matrix3f, vertexconsumer, -8, -2, 0, 0.0F, 0.0F, 0, 1, 0, p_113844_);
-            this.vertex(matrix4f, matrix3f, vertexconsumer, 8, -2, 0, 0.5F, 0.0F, 0, 1, 0, p_113844_);
-            this.vertex(matrix4f, matrix3f, vertexconsumer, 8, 2, 0, 0.5F, 0.15625F, 0, 1, 0, p_113844_);
-            this.vertex(matrix4f, matrix3f, vertexconsumer, -8, 2, 0, 0.0F, 0.15625F, 0, 1, 0, p_113844_);
+            this.vertex(matrix4f, matrix3f, vertexconsumer, -8, -8, 0, 0.0F, 0.0F, 0, 1, 0, p_113844_);
+            this.vertex(matrix4f, matrix3f, vertexconsumer, 8, -8, 0, 1F, 0.0F, 0, 1, 0, p_113844_);
+            this.vertex(matrix4f, matrix3f, vertexconsumer, 8, 8, 0, 1F, 1F, 0, 1, 0, p_113844_);
+            this.vertex(matrix4f, matrix3f, vertexconsumer, -8, 8, 0, 0.0F, 1F, 0, 1, 0, p_113844_);
         }
 
         poseStack.popPose();
