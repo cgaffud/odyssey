@@ -2085,22 +2085,22 @@ def doCopyables(name, color = "MaterialColor.COLOR_BROWN"):
     
     itemInputs = [
         (name+"_planks", None),
+        (name+"_sapling",None),
         (name+"_log", None),
         ("stripped_"+name+"_log",None),
-        (name+"_wood", None),
         ("stripped_"+name+"_wood",None),
-        (name+"_sapling",None),
+        (name+"_wood", None),
         (name+"_leaves", None),
         (name+"_slab",None),
-        (name+"_stairs",None),
-        (name+"_pressure_plate",None),
-        (name+"_trapdoor",None),
         (name+"_fence","new BurnableFenceItem(BlockRegistry."+upper+"_FENCE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD))"),
-        (name+"_fencegate","new BurnableFenceItem(BlockRegistry."+upper+"_FENCE_GATE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD))"),
+        (name+"_stairs",None),
         (name+"_button", None),
+        (name+"_pressure_plate",None),
         (name+"_door", None),
-        (name+"_sign","new SignItem((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD), BlockRegistry."+upper+"_SIGN.get(), BlockRegistry."+upper+"_WALL_SIGN.get())"),
-        (name+"_boat","new OdysseyBoatItem(OdysseyBoat.Type."+upper+", (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.WOOD))")
+        (name+"_trapdoor",None),
+        (name+"_fencegate","new BurnableFenceItem(BlockRegistry."+upper+"_FENCE_GATE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD))"),
+                (name+"_boat","new OdysseyBoatItem(OdysseyBoat.Type."+upper+", (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.WOOD))"),
+        (name+"_sign","new SignItem((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD), BlockRegistry."+upper+"_SIGN.get(), BlockRegistry."+upper+"_WALL_SIGN.get())")
     ]
     for (itemType, factory) in itemInputs:
         if factory == None:
