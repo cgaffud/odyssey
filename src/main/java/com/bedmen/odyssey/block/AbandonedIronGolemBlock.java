@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.block;
 
+import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -98,15 +100,15 @@ public class AbandonedIronGolemBlock extends Block implements INeedsToRegisterRe
 
     public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
         //Spawn Golem
-//        if (!pLevel.isClientSide) {
-//            double d0 = pState.getValue(HALF) == DoubleBlockHalf.LOWER ? 0d : -1d;
-//            AbandonedIronGolem abandonedIronGolem = EntityTypeRegistry.ABANDONED_IRON_GOLEM.get().create(pLevel);
-//            abandonedIronGolem.setPos(pPos.getX() + 0.5d, pPos.getY()+d0, pPos.getZ() + 0.5d);
-//            float f0 = pState.getValue(FACING).getOpposite().toYRot();
-//            abandonedIronGolem.setYBodyRot(f0);
-//            abandonedIronGolem.setYHeadRot(f0);
-//            pLevel.addFreshEntity(abandonedIronGolem);
-//        }
+        if (!pLevel.isClientSide) {
+            double d0 = pState.getValue(HALF) == DoubleBlockHalf.LOWER ? 0d : -1d;
+            AbandonedIronGolem abandonedIronGolem = EntityTypeRegistry.ABANDONED_IRON_GOLEM.get().create(pLevel);
+            abandonedIronGolem.setPos(pPos.getX() + 0.5d, pPos.getY()+d0, pPos.getZ() + 0.5d);
+            float f0 = pState.getValue(FACING).toYRot();
+            abandonedIronGolem.setYBodyRot(f0);
+            abandonedIronGolem.setYHeadRot(f0);
+            pLevel.addFreshEntity(abandonedIronGolem);
+        }
 
         super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
     }

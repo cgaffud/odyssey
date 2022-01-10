@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.boss;
 
+import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -41,6 +42,10 @@ public abstract class Boss extends Monster implements IBossEventEntity {
         return false;
     }
 
+    protected int decreaseAirSupply(int pAir) {
+        return pAir;
+    }
+
     public MobType getMobType() {
         return MobType.UNDEFINED;
     }
@@ -54,7 +59,7 @@ public abstract class Boss extends Monster implements IBossEventEntity {
     }
 
     public boolean canBeAffected(MobEffectInstance mobEffectInstance) {
-        return false;
+        return mobEffectInstance.getEffect() == EffectRegistry.SHATTERED.get();
     }
 
     public boolean hurt(DamageSource damageSource, float amount) {

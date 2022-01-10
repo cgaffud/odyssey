@@ -139,11 +139,9 @@ def recolor_image_randomly(image, colorMult1, colorAdd1, colorMult2, colorAdd2):
      return image
 
 #open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/block/green_wool.png"
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/polar_bear_fur.png"
-open_path2 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/polar_bear_fur_0.png"
-save_path =  r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/polar_bear_fur.png"
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/abandoned_iron_golem/golem.png"
+save_path =  r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/abandoned_iron_golem/golem_1.png"
 image1 = open_image(open_path1)
-image2 = open_image(open_path2)
-combine_image(image1, image2, 0.5)
+recolor_image_randomly(image1, [0.94,0.84,0.74],[0,0,0],[0.92,0.82,0.72],[0,0,0])
 save_image(image1, save_path)
 print("Done")

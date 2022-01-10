@@ -3,8 +3,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "oddc:block/abandoned_iron_golem",
-		"particle": "oddc:block/abandoned_iron_golem"
+		"0": "oddc:entity/abandoned_iron_golem/golem",
+		"particle": "oddc:entity/abandoned_iron_golem/golem"
 	},
 	"elements": [
 		{

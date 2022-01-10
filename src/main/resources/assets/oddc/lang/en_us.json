@@ -228,5 +228,6 @@
   "container.oddc.stitching": "Stitching Table",
   "biome.oddc.tropics": "Tropics",
   "generator.oddc.oddc": "Odyssey",
-  "block.oddc.abandoned_iron_golem": "Abandoned Iron Golem"
+  "block.oddc.abandoned_iron_golem": "Abandoned Iron Golem",
+  "entity.oddc.abandoned_iron_golem": "Abandoned Iron Golem"
 }

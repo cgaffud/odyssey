@@ -83,9 +83,9 @@ public abstract class MixinLivingEntity extends Entity {
     @Shadow
     protected void onChangedBlock(BlockPos p_21175_) {}
 
-    protected int decreaseAirSupply(int amount, int additional){
+    protected int decreaseAirSupply(int amount){
         int i = EnchantmentHelper.getRespiration((LivingEntity) (Object) this);
-        return i > 0 && this.random.nextInt(i + 1) > 0 ? amount : amount - additional;
+        return i > 0 && this.random.nextInt(i + 1) > 0 ? amount : amount - 1;
     }
 
     public void baseTick() {
@@ -100,7 +100,7 @@ public abstract class MixinLivingEntity extends Entity {
 
         super.baseTick();
         this.level.getProfiler().push("livingEntityBaseTick");
-        boolean flag = ((LivingEntity) (Object) this) instanceof Player;
+        boolean flag = getLivingEntity() instanceof Player;
         if (this.isAlive()) {
             if (this.isInWall()) {
                 this.hurt(DamageSource.IN_WALL, 1.0F);
@@ -119,7 +119,7 @@ public abstract class MixinLivingEntity extends Entity {
             this.clearFire();
         }
 
-        boolean flag1 = flag && ((Player) (Object) this).getAbilities().invulnerable;
+        boolean flag1 = flag && ((Player) getLivingEntity()).getAbilities().invulnerable;
         if (this.isAlive()) {
             int drowningAmnt = 0;
             if (((LivingEntity) (Object) this).hasEffect(EffectRegistry.DROWNING.get()))
@@ -130,7 +130,9 @@ public abstract class MixinLivingEntity extends Entity {
 
             if (drowningAmnt > 0) {
                 if (!this.canBreatheUnderwater() && !MobEffectUtil.hasWaterBreathing((LivingEntity) (Object) this) && !flag1) {
-                    this.setAirSupply(this.decreaseAirSupply(this.getAirSupply(),drowningAmnt));
+                    for(int i = 0; i < drowningAmnt; i++){
+                        this.setAirSupply(this.decreaseAirSupply(this.getAirSupply()));
+                    }
                     if (this.getAirSupply() <= -20) {
                         this.setAirSupply(0);
                         Vec3 vec3 = this.getDeltaMovement();
@@ -174,7 +176,7 @@ public abstract class MixinLivingEntity extends Entity {
             --this.hurtTime;
         }
 
-        if (this.invulnerableTime > 0 && !(((LivingEntity) (Object) this) instanceof ServerPlayer)) {
+        if (this.invulnerableTime > 0 && !(getLivingEntity() instanceof ServerPlayer)) {
             --this.invulnerableTime;
         }
 
@@ -207,5 +209,9 @@ public abstract class MixinLivingEntity extends Entity {
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
         this.level.getProfiler().pop();
+    }
+
+    public LivingEntity getLivingEntity(){
+        return (LivingEntity)(Object)this;
     }
 }
