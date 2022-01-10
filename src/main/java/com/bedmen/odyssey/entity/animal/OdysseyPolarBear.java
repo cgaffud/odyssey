@@ -34,7 +34,7 @@ public class OdysseyPolarBear extends PolarBear {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Pig.class, 10, true, true, (Predicate<LivingEntity>)null));
+        this.targetSelector.addGoal(4, new PolarBearNearestAttackableTargetGoal(this));
     }
 
     public boolean doHurtTarget(Entity entity) {
@@ -69,6 +69,17 @@ public class OdysseyPolarBear extends PolarBear {
             }
         }
         return super.mobInteract(player, interactionHand);
+    }
+
+    static class PolarBearNearestAttackableTargetGoal extends NearestAttackableTargetGoal<Pig>{
+
+        public PolarBearNearestAttackableTargetGoal(OdysseyPolarBear odysseyPolarBear) {
+            super(odysseyPolarBear, Pig.class, 10, true, true, null);
+        }
+
+        public boolean canUse() {
+            return !this.mob.isBaby() && super.canUse();
+        }
     }
 
 }

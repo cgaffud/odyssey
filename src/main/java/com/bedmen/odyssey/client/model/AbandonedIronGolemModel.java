@@ -25,6 +25,9 @@ public class AbandonedIronGolemModel<T extends AbandonedIronGolem> extends Hiera
     private final ModelPart leftArm;
     private final ModelPart rightLeg;
     private final ModelPart leftLeg;
+    private static final float[] targetX = new float[]{toRadians(0), toRadians(-90), toRadians(-90)};
+    private static final float[] targetY = new float[]{toRadians(0), toRadians(30), toRadians(-20)};
+    public static final int[] KEY_CLAP_TICKS = AbandonedIronGolem.KEY_CLAP_TICKS;
 
     public AbandonedIronGolemModel(ModelPart modelPart) {
         this.root = modelPart;
@@ -60,24 +63,45 @@ public class AbandonedIronGolemModel<T extends AbandonedIronGolem> extends Hiera
         this.leftLeg.yRot = 0.0F;
     }
 
-    public void prepareMobModel(T abandonedIronGolem, float p_102958_, float p_102959_, float p_102960_) {
+    public void prepareMobModel(T abandonedIronGolem, float p_102958_, float p_102959_, float partialTicks) {
         int attackAnimationTick = abandonedIronGolem.getAttackAnimationTick();
         int clapCooldown = abandonedIronGolem.getClapCooldown();
         if (attackAnimationTick > 0) {
-            this.rightArm.xRot = -2.0F + 1.5F * Mth.triangleWave((float)attackAnimationTick - p_102960_, 10.0F);
-            this.leftArm.xRot = -2.0F + 1.5F * Mth.triangleWave((float)attackAnimationTick - p_102960_, 10.0F);
+            this.rightArm.xRot = -2.0F + 1.5F * Mth.triangleWave((float)attackAnimationTick - partialTicks, 10.0F);
+            this.leftArm.xRot = -2.0F + 1.5F * Mth.triangleWave((float)attackAnimationTick - partialTicks, 10.0F);
         } else if (clapCooldown > 0){
-            this.rightArm.xRot = -(float)(Math.PI / 2d) * modifiedTriangleWave((float)clapCooldown - p_102960_, 10.0F);
-            this.leftArm.xRot = -(float)(Math.PI / 2d) * modifiedTriangleWave((float)clapCooldown - p_102960_, 10.0F);
-            this.rightArm.yRot = -.35f * modifiedTriangleWave((float)clapCooldown - p_102960_, 10.0F);
-            this.leftArm.yRot = .35f * modifiedTriangleWave((float)clapCooldown - p_102960_, 10.0F);
+            float f = (float)clapCooldown - partialTicks;
+            if(clapCooldown > KEY_CLAP_TICKS[1]){
+                f = 1f-Mth.inverseLerp(f, KEY_CLAP_TICKS[1], KEY_CLAP_TICKS[0]);
+                this.rightArm.xRot = Mth.lerp(f, targetX[0], targetX[1]);
+                this.leftArm.xRot = Mth.lerp(f, targetX[0], targetX[1]);
+                this.rightArm.yRot = Mth.lerp(f, targetY[0], targetY[1]);
+                this.leftArm.yRot = -Mth.lerp(f, targetY[0], targetY[1]);
+            } else if(clapCooldown > KEY_CLAP_TICKS[2]){
+                f = 1f-Mth.inverseLerp(f, KEY_CLAP_TICKS[2], KEY_CLAP_TICKS[1]);
+                this.rightArm.xRot = Mth.lerp(f, targetX[1], targetX[2]);
+                this.leftArm.xRot = Mth.lerp(f, targetX[1], targetX[2]);
+                this.rightArm.yRot = Mth.lerp(f, targetY[1], targetY[2]);
+                this.leftArm.yRot = -Mth.lerp(f, targetY[1], targetY[2]);
+            } else if(clapCooldown > KEY_CLAP_TICKS[3]){
+                this.rightArm.xRot = targetX[2];
+                this.leftArm.xRot = targetX[2];
+                this.rightArm.yRot = targetY[2];
+                this.leftArm.yRot = -targetY[2];
+            } else {
+                f = 1f-Mth.inverseLerp(f, 0f, KEY_CLAP_TICKS[3]);
+                this.rightArm.xRot = Mth.lerp(f, targetX[2], targetX[0]);
+                this.leftArm.xRot = Mth.lerp(f, targetX[2], targetX[0]);
+                this.rightArm.yRot = Mth.lerp(f, targetY[2], targetY[0]);
+                this.leftArm.yRot = -Mth.lerp(f, targetY[2], targetY[0]);
+            }
         } else {
             this.rightArm.xRot = (-0.2F + 1.5F * Mth.triangleWave(p_102958_, 13.0F)) * p_102959_;
             this.leftArm.xRot = (-0.2F - 1.5F * Mth.triangleWave(p_102958_, 13.0F)) * p_102959_;
         }
     }
-    
-    public float modifiedTriangleWave(float f, float wavelength){
-        return 0.5f - 0.5f * Mth.triangleWave(f, wavelength);
+
+    private static float toRadians(float degrees){
+        return (float)(degrees * Math.PI / 180f);
     }
 }

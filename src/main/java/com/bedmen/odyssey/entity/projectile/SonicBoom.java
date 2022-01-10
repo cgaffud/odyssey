@@ -1,13 +1,12 @@
 package com.bedmen.odyssey.entity.projectile;
 
+import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -15,9 +14,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,19 +22,18 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 
 public class SonicBoom extends AbstractHurtingProjectile {
-    private float damage = 6.0f;
-    private static final int maxTicks = 40;
+    private static final int MAX_TICKS = 40;
+    private static final double INITIAL_SPEED = 1.2d;
 
     public SonicBoom(EntityType<? extends SonicBoom> entityType, Level world) {
         super(entityType, world);
     }
 
-    public SonicBoom(Level p_i1794_1_, LivingEntity p_i1794_2_, double x, double y, double z, float damage) {
+    public SonicBoom(Level p_i1794_1_, LivingEntity p_i1794_2_, double x, double y, double z) {
         super(EntityTypeRegistry.SONIC_BOOM.get(), p_i1794_2_, x, y, z, p_i1794_1_);
-        this.damage = damage;
         Vec3 vector3d = new Vec3(x,y,z);
         this.setRotation(vector3d);
-        this.setDeltaMovement(vector3d.normalize().scale(0.8));
+        this.setDeltaMovement(vector3d.normalize().scale(INITIAL_SPEED));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -61,7 +57,7 @@ public class SonicBoom extends AbstractHurtingProjectile {
 
     public void tick() {
         Entity entity = this.getOwner();
-        if ((this.level.isClientSide || (entity == null || !entity.isRemoved()) && this.level.hasChunkAt(this.blockPosition())) && this.tickCount <= maxTicks) {
+        if ((this.level.isClientSide || (entity == null || !entity.isRemoved()) && this.level.hasChunkAt(this.blockPosition())) && this.tickCount <= MAX_TICKS) {
             if (!this.leftOwner) {
                 this.leftOwner = this.checkLeftOwner();
             }
@@ -113,12 +109,12 @@ public class SonicBoom extends AbstractHurtingProjectile {
     }
 
     protected float getInertia() {
-        return 0.8F;
+        return 0.85F;
     }
 
     public void addAdditionalSaveData(CompoundTag p_213281_1_) {
         super.addAdditionalSaveData(p_213281_1_);
-        p_213281_1_.put("power", this.newDoubleList(new double[]{this.xPower, this.yPower, this.zPower}));
+        p_213281_1_.put("power", this.newDoubleList(this.xPower, this.yPower, this.zPower));
     }
 
     public void readAdditionalSaveData(CompoundTag p_70037_1_) {
@@ -142,7 +138,7 @@ public class SonicBoom extends AbstractHurtingProjectile {
         return 1.0F;
     }
 
-    public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
+    public boolean hurt(DamageSource damageSource, float amount) {
         return false;
     }
 
@@ -151,7 +147,7 @@ public class SonicBoom extends AbstractHurtingProjectile {
     }
 
     protected void onHit(HitResult hitResult) {
-        this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.25f, Explosion.BlockInteraction.NONE);
+        this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.25f, AbandonedIronGolem.getBlockInteraction(this));
         super.onHit(hitResult);
         if (!this.level.isClientSide) {
             this.discard();
@@ -161,20 +157,6 @@ public class SonicBoom extends AbstractHurtingProjectile {
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    protected void onHitEntity(EntityHitResult p_213868_1_) {
-        super.onHitEntity(p_213868_1_);
-//        if (!this.level.isClientSide) {
-//            Entity entity = p_213868_1_.getEntity();
-//            Entity entity1 = this.getOwner();
-//            if (entity1 instanceof LivingEntity) {
-//                LivingEntity livingentity = (LivingEntity)entity1;
-//                entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setScalesWithDifficulty(), this.damage);
-//            } else {
-//                entity.hurt(DamageSource.MAGIC, 0.0F);
-//            }
-//        }
     }
 
     public void setRotation(Vec3 vector3d) {

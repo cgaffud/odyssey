@@ -12,6 +12,7 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public abstract class Boss extends Monster implements IBossEventEntity {
@@ -65,5 +66,12 @@ public abstract class Boss extends Monster implements IBossEventEntity {
     public boolean hurt(DamageSource damageSource, float amount) {
         amount *= this.getDamageReduction();
         return super.hurt(damageSource, amount);
+    }
+
+    public void setTarget(@Nullable LivingEntity livingEntity) {
+        if(livingEntity instanceof Boss){
+            return;
+        }
+        super.setTarget(livingEntity);
     }
 }

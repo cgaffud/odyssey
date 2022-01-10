@@ -18,10 +18,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Creeper;
@@ -123,7 +120,7 @@ public class EntityEvents {
 //            }
 
             //Skeleton
-            if(entity instanceof Skeleton){
+            if(entity.getType() == EntityType.SKELETON){
                 reassessSkeletonWeaponGoal((Skeleton)entity);
             }
         }
@@ -188,7 +185,8 @@ public class EntityEvents {
         }
 
         else if(entity.getType() == EntityType.POLAR_BEAR){
-            EntityTypeRegistry.POLAR_BEAR.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
+            OdysseyPolarBear odysseyPolarBear = (OdysseyPolarBear) EntityTypeRegistry.POLAR_BEAR.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
+            odysseyPolarBear.setBaby(((PolarBear)entity).isBaby());
             event.setCanceled(true);
         }
     }

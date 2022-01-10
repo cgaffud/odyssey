@@ -33,6 +33,7 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,10 +47,12 @@ public class AbandonedIronGolem extends Boss {
     private float damageReduction = 1.0f;
     private int attackAnimationTick;
     private int clapCooldown = 0;
-    private final float CLAP_CHANCE = 0.015f;
-    private final int CLAP_COOLDOWN_MAX = 100;
-    private final int CLAP_DURATION = 10;
-    private final double SONIC_BOOM_RANGE = 20d;
+    private static final float CLAP_CHANCE = 0.03f;
+    private static final int CLAP_COOLDOWN_MAX = 80;
+    public static final int[] KEY_CLAP_TICKS = new int[]{22,12,10,8};
+    private static final int TICKS_UNTIL_CLAP = KEY_CLAP_TICKS[0] - KEY_CLAP_TICKS[2];
+    private static final int CLAP_DURATION = KEY_CLAP_TICKS[0];
+    private static final double SONIC_BOOM_RANGE = 20d;
     protected static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(AbandonedIronGolem.class, EntityDataSerializers.INT);
 
     public AbandonedIronGolem(EntityType<? extends Monster> p_i48576_1_, Level p_i48576_2_) {
@@ -124,7 +127,7 @@ public class AbandonedIronGolem extends Boss {
                     case CLAPPING:
                         if(this.clapCooldown <= CLAP_COOLDOWN_MAX-CLAP_DURATION){
                             this.setPhase(Phase.NORMAL);
-                        } else if(this.clapCooldown == CLAP_COOLDOWN_MAX - CLAP_DURATION/2 && target != null && this.distanceTo(target) <= SONIC_BOOM_RANGE){
+                        } else if(this.clapCooldown == CLAP_COOLDOWN_MAX - TICKS_UNTIL_CLAP && target != null && this.distanceTo(target) <= SONIC_BOOM_RANGE){
                             this.performSonicBoom();
                         }
                         break;
@@ -162,24 +165,29 @@ public class AbandonedIronGolem extends Boss {
     }
 
     private void performSonicBoom() {
+        double angle = (double)this.getYRot() * Math.PI / 180d;
+        double r = 14d/8d;
+        double d0 = this.getX() - Math.sin(angle) * r;
+        double d1 = this.getY() + 31d/16d;
+        double d2 = this.getZ() + Math.cos(angle) * r;
+        this.level.explode(this, d0, d1, d2, 1.25f, getBlockInteraction(this));
         List<Player> playerList = this.level.getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(SONIC_BOOM_RANGE));
         for(Player player : playerList){
             double targetX = player.getX();
             double targetY = player.getY();
             double targetZ = player.getZ();
-            double angle = (double)this.getYRot() * Math.PI / 180d;
-            double r = 14d/8d;
-            double d0 = this.getX() - Math.sin(angle) * r;
-            double d1 = this.getY() + 31d/16d;
-            double d2 = this.getZ() + Math.cos(angle) * r;
             double d3 = targetX - d0;
             double d4 = targetY - d1;
             double d5 = targetZ - d2;
-            SonicBoom sonicBoom = new SonicBoom(this.level, this, d3, d4, d5,6.0f);
+            SonicBoom sonicBoom = new SonicBoom(this.level, this, d3, d4, d5);
             sonicBoom.setOwner(this);
             sonicBoom.setPosRaw(d0, d1, d2);
             this.level.addFreshEntity(sonicBoom);
         }
+    }
+
+    public static Explosion.BlockInteraction getBlockInteraction(Entity entity){
+        return entity.level.getDifficulty() == Difficulty.HARD ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
     }
 
     public boolean doHurtTarget(Entity pEntity) {
