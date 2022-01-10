@@ -10,6 +10,7 @@ import com.bedmen.odyssey.world.gen.feature.tree.LeaningTrunkPlacer;
 import com.bedmen.odyssey.world.gen.feature.tree.PalmFoliagePlacer;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -51,7 +52,7 @@ public class FeatureGen {
 //        AUTUMN_TREE_YELLOW = Feature.TREE.configured((new TreeConfiguration.TreeConfigurationBuilder(new SimpleStateProvider(Blocks.BIRCH_LOG.defaultBlockState()), new SimpleStateProvider(BlockRegistry.AUTUMN_LEAVES_YELLOW.get().defaultBlockState()), new BlobFoliagePlacer(UniformInt.fixed(2), UniformInt.fixed(0), 3), new StraightTrunkPlacer(6, 1, 0), new TwoLayersFeatureSize(1, 0, 1))).ignoreVines().build());
 //        AUTUMN_FOREST = Feature.RANDOM_SELECTOR.configured(new RandomFeatureConfiguration(ImmutableList.of(Features.BIRCH.weighted(0.05F), AUTUMN_TREE_YELLOW.weighted(0.05F), AUTUMN_TREE_RED.weighted(0.5F)), AUTUMN_TREE_ORANGE)).decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(50, 0.1F, 1)));
         PALM_TREE = FeatureRegistry.CORNER_LEAF_TREE.get().configured((new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(BlockRegistry.PALM_LOG.get()), new LeaningTrunkPlacer(6, 1, 0), BlockStateProvider.simple(BlockRegistry.PALM_LEAVES.get()), new PalmFoliagePlacer(ConstantInt.of(5), ConstantInt.of(0)), new TwoLayersFeatureSize(1, 0, 1))).ignoreVines().build());
-        GREATWOOD_TREE = Feature.TREE.configured((new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(Blocks.OAK_LOG), new GreatTrunkPlacer(17,0,0, BlockStateProvider.simple(Blocks.SPRUCE_LOG.defaultBlockState())), BlockStateProvider.simple(Blocks.OAK_LEAVES), new GreatFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0),2), new TwoLayersFeatureSize(1, 1, 2))).ignoreVines().build());
+        GREATWOOD_TREE = Feature.TREE.configured((new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(BlockRegistry.GREATWOOD_LOG.get()), new GreatTrunkPlacer(17,0,0, BlockStateProvider.simple(Blocks.SPRUCE_LOG.defaultBlockState())), BlockStateProvider.simple(BlockRegistry.GREATWOOD_LEAVES.get()), new GreatFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0),2), new TwoLayersFeatureSize(1, 1, 2))).ignoreVines().build());
 
         //        PALM_TREES = Feature.RANDOM_SELECTOR.configured(new RandomFeatureConfiguration(ImmutableList.of(PALM_TREE.weighted(1.0F)), PALM_TREE)).decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(1, 0.1F, 1)));
     }

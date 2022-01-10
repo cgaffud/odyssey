@@ -82,6 +82,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATWOOD_DOOR = ITEMS.register("greatwood_door", () -> new BlockItem(BlockRegistry.GREATWOOD_DOOR.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_SIGN = ITEMS.register("greatwood_sign", () -> new SignItem((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD), BlockRegistry.GREATWOOD_SIGN.get(), BlockRegistry.GREATWOOD_WALL_SIGN.get()));
     public static final RegistryObject<Item> GREATWOOD_BOAT = ITEMS.register("greatwood_boat", () -> new OdysseyBoatItem(OdysseyBoat.Type.GREATWOOD, (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.WOOD)));
+    public static final RegistryObject<Item> GREATROOT = ITEMS.register("greatroot", () -> new BlockItem(BlockRegistry.GREATROOT.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
 
     //Materials
     public static final RegistryObject<Item> COCONUT_FLOWER = ITEMS.register("coconut_flower", () -> new ItemNameBlockItem(BlockRegistry.COCONUT.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
