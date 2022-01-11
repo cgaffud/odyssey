@@ -72,7 +72,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STRIPPED_GREATWOOD_WOOD = ITEMS.register("stripped_greatwood_wood", () -> new BlockItem(BlockRegistry.STRIPPED_GREATWOOD_WOOD.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_WOOD = ITEMS.register("greatwood_wood", () -> new BlockItem(BlockRegistry.GREATWOOD_WOOD.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_LEAVES = ITEMS.register("greatwood_leaves", () -> new BlockItem(BlockRegistry.GREATWOOD_LEAVES.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
-    public static final RegistryObject<Item> GREATROOT = ITEMS.register("greatroot", () -> new BlockItem(BlockRegistry.GREATROOT.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
+    public static final RegistryObject<Item> GREATROOTS = ITEMS.register("greatroots", () -> new BlockItem(BlockRegistry.GREATROOTS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_SLAB = ITEMS.register("greatwood_slab", () -> new BlockItem(BlockRegistry.GREATWOOD_SLAB.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_FENCE = ITEMS.register("greatwood_fence", () -> new BurnableFenceItem(BlockRegistry.GREATWOOD_FENCE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_STAIRS = ITEMS.register("greatwood_stairs", () -> new BlockItem(BlockRegistry.GREATWOOD_STAIRS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
@@ -83,6 +83,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATWOOD_FENCE_GATE = ITEMS.register("greatwood_fence_gate", () -> new BurnableFenceItem(BlockRegistry.GREATWOOD_FENCE_GATE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_BOAT = ITEMS.register("greatwood_boat", () -> new OdysseyBoatItem(OdysseyBoat.Type.GREATWOOD, (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_SIGN = ITEMS.register("greatwood_sign", () -> new SignItem((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD), BlockRegistry.GREATWOOD_SIGN.get(), BlockRegistry.GREATWOOD_WALL_SIGN.get()));
+    public static final RegistryObject<Item> GREATROOT = ITEMS.register("greatroot", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
 
     //Materials
     public static final RegistryObject<Item> COCONUT_FLOWER = ITEMS.register("coconut_flower", () -> new ItemNameBlockItem(BlockRegistry.COCONUT.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));

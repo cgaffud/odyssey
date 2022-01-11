@@ -203,5 +203,6 @@
   "block.oddc.stripped_greatwood_log": "Stripped Greatwood Log",
   "block.oddc.stripped_greatwood_wood": "Stripped Greatwood Wood",
   "item.oddc.greatwood_boat": "Greatwood Boat",
-  "block.oddc.greatroot": "Greatroot"
+  "block.oddc.greatroots": "Greatroots",
+  "item.oddc.greatroot": "Greatroot"
 }

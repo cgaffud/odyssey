@@ -1,3 +1,6 @@
 {
-  "parent": "oddc:block/greatroot"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "oddc:item/greatroot"
+  }
 }

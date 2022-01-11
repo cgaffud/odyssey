@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "oddc:block/greatroot"
+      "model": "oddc:block/greatroots"
     }
   }
 }
