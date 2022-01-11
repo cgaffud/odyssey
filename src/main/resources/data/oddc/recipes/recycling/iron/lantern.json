@@ -1,0 +1,17 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "minecraft:lantern"
+    },
+    {
+      "item": "minecraft:soul_lantern"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 8
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
 import com.bedmen.odyssey.client.gui.screens.AlloyFurnaceScreen;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
+import com.bedmen.odyssey.client.gui.screens.RecyclingFurnaceScreen;
 import com.bedmen.odyssey.client.gui.screens.StitchingTableScreen;
 import com.bedmen.odyssey.client.model.*;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
@@ -151,6 +152,7 @@ public class Odyssey
         BlockEntityRenderers.register(BlockEntityTypeRegistry.STERLING_SILVER_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestMaterial.STERLING_SILVER, context));
 
         //Screens
+        MenuScreens.register(ContainerRegistry.RECYCLING_FURNACE.get(), RecyclingFurnaceScreen::new);
         MenuScreens.register(ContainerRegistry.STITCHING_TABLE.get(), StitchingTableScreen::new);
         MenuScreens.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
 //        ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);

@@ -32,7 +32,6 @@ public class OdysseyBiomeEntitySpawn {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void spawnMobs(BiomeLoadingEvent event){
-        System.out.println("beans");
         List<MobSpawnSettings.SpawnerData> monsterSpawns = event.getSpawns().getSpawner(MobCategory.MONSTER);
         List<MobSpawnSettings.SpawnerData> creatureSpawns = event.getSpawns().getSpawner(MobCategory.CREATURE);
         List<MobSpawnSettings.SpawnerData> polarBearSpawns = new ArrayList<>();

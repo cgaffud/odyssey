@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:golden_hoe"
+  },
+  "metalCounts": [
+    {
+      "metal": "gold",
+      "count": 18
+    }
+  ]
+}

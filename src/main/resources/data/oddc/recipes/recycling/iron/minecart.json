@@ -1,0 +1,20 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "minecraft:minecart"
+    },
+    {
+      "item": "minecraft:chest_minecart"
+    },
+    {
+      "item": "minecraft:furnace_minecart"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 45
+    }
+  ]
+}

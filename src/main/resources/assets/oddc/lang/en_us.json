@@ -229,5 +229,7 @@
   "biome.oddc.tropics": "Tropics",
   "generator.oddc.oddc": "Odyssey",
   "block.oddc.abandoned_iron_golem": "Abandoned Iron Golem",
-  "entity.oddc.abandoned_iron_golem": "Abandoned Iron Golem"
+  "entity.oddc.abandoned_iron_golem": "Abandoned Iron Golem",
+  "block.oddc.recycling_furnace": "Recycling Furnace",
+  "container.oddc.recycling_furnace": "Recycling Furnace"
 }

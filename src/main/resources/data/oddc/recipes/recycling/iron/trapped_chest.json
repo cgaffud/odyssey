@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:trapped_chest"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 5
+    }
+  ]
+}

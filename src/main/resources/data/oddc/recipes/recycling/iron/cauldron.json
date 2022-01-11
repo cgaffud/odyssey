@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:cauldron"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 63
+    }
+  ]
+}

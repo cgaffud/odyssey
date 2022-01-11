@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:detector_rail"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 9
+    }
+  ]
+}

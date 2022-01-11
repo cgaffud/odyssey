@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:tripwire_hook"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 4.5
+    }
+  ]
+}

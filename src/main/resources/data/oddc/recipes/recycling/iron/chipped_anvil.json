@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:chipped_anvil"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 186
+    }
+  ]
+}

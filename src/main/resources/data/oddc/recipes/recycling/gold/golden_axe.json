@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:golden_axe"
+  },
+  "metalCounts": [
+    {
+      "metal": "gold",
+      "count": 27
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "minecraft:piston"
+    },
+    {
+      "item": "minecraft:sticky_piston"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 9
+    }
+  ]
+}

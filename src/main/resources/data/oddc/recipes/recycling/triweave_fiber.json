@@ -1,0 +1,20 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:triweave_fiber"
+  },
+  "metalCounts": [
+    {
+      "metal": "copper",
+      "count": 4.5
+    },
+    {
+      "metal": "silver",
+      "count": 4.5
+    },
+    {
+      "metal": "gold",
+      "count": 4.5
+    }
+  ]
+}

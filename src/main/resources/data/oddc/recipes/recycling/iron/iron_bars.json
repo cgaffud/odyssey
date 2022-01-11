@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:iron_bars"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 3
+    }
+  ]
+}

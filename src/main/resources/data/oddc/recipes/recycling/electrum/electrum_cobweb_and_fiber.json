@@ -1,0 +1,17 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "oddc:electrum_cobweb"
+    },
+    {
+      "item": "oddc:electrum_fiber"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "electrum",
+      "count": 9
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:heavy_weighted_pressure_plate"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 18
+    }
+  ]
+}

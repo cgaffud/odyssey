@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:chainmail_leggings"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 42
+    }
+  ]
+}

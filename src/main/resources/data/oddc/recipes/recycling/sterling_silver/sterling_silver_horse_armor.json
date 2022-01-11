@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:sterling_silver_horse_armor"
+  },
+  "metalCounts": [
+    {
+      "metal": "sterling_silver",
+      "count": 486
+    }
+  ]
+}

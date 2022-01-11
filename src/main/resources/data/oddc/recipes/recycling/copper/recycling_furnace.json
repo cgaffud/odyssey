@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:recycling_furnace"
+  },
+  "metalCounts": [
+    {
+      "metal": "copper",
+      "count": 45
+    }
+  ]
+}
