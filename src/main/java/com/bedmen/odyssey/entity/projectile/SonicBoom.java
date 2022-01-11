@@ -147,9 +147,9 @@ public class SonicBoom extends AbstractHurtingProjectile {
     }
 
     protected void onHit(HitResult hitResult) {
-        this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.25f, AbandonedIronGolem.getBlockInteraction(this));
         super.onHit(hitResult);
         if (!this.level.isClientSide) {
+            this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.25f, AbandonedIronGolem.getExplosionBlockInteraction(this));
             this.discard();
         }
     }

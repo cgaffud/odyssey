@@ -9,7 +9,7 @@ import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.util.BowUtil;
+import com.bedmen.odyssey.util.WeaponUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -21,7 +21,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -207,7 +206,7 @@ public class EntityEvents {
         if (skeletonEntity.level != null && !skeletonEntity.level.isClientSide) {
             skeletonEntity.goalSelector.removeGoal(skeletonEntity.meleeGoal);
             skeletonEntity.goalSelector.removeGoal(skeletonEntity.bowGoal);
-            ItemStack itemstack = skeletonEntity.getItemInHand(BowUtil.getHandHoldingBow(skeletonEntity));
+            ItemStack itemstack = skeletonEntity.getItemInHand(WeaponUtil.getHandHoldingBow(skeletonEntity));
             Item item = itemstack.getItem();
             if (item instanceof OdysseyBowItem) {
                 int i = ((OdysseyBowItem) item).getChargeTime(itemstack);

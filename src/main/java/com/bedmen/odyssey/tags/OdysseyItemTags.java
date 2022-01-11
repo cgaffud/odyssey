@@ -15,5 +15,6 @@ public class OdysseyItemTags {
     public static final Tag.Named<Item> RAW_COPPERS = ItemTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "raw_coppers"));
     public static final Tag.Named<Item> RAW_GOLDS = ItemTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "raw_golds"));
     public static final Tag.Named<Item> RAW_SILVERS = ItemTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "raw_silvers"));
+    public static final Tag.Named<Item> SHIELDS = ItemTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "shields"));
     public static final Tag.Named<Item> SILVER_ORES = ItemTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "silver_ores"));
 }

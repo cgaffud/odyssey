@@ -16,7 +16,8 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public class BowUtil {
+public class WeaponUtil {
+    public static final int DEFAULT_RECOVERY_TIME = 100;
     public static final float BASE_ARROW_VELOCITY = 2.5f;
     public static AmmoStack getAmmo(Player player, ItemStack bow, boolean consume){
         if (!(bow.getItem() instanceof ProjectileWeaponItem)) {

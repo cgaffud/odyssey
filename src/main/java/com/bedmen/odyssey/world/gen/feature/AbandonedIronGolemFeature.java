@@ -18,7 +18,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import java.util.Random;
 
 public class AbandonedIronGolemFeature extends Feature<NoneFeatureConfiguration> {
-    private static final double RARITY_RADIUS = 250d;
+    private static final double RARITY_RADIUS = 400;
+    private static final int RARITY = 300;
     public AbandonedIronGolemFeature(Codec<NoneFeatureConfiguration> p_i231962_1_) {
         super(p_i231962_1_);
     }
@@ -28,7 +29,7 @@ public class AbandonedIronGolemFeature extends Feature<NoneFeatureConfiguration>
         Random random = context.random();
         WorldGenLevel worldGenLevel = context.level();
         BlockPos origin = context.origin();
-        int rarity = origin.distSqr(Vec3i.ZERO) > RARITY_RADIUS * RARITY_RADIUS ? 400 : 200;
+        int rarity = origin.distSqr(Vec3i.ZERO) > RARITY_RADIUS * RARITY_RADIUS ? RARITY : RARITY/2;
         if(random.nextInt(rarity) != 0){
             return false;
         }

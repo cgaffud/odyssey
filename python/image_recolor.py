@@ -138,11 +138,22 @@ def recolor_image_randomly(image, colorMult1, colorAdd1, colorMult2, colorAdd2):
      at_every_pixel(image, lambda pos, pixel : recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2))
      return image
 
-#open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/block/green_wool.png"
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/alloy_furnace_front.png"
-save_path =  r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/recycling_furnace_front_0.png"
+def stripe_pixel(pos, pixel, w):
+    x,y = pos
+    if(x%2 == 0):
+        return recolor_pixel(pixel, [w,w,w], [0,0,0])
+    return pixel
+
+open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/models/armor/iron_layer_2.png"
+#open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/shields/iron_shield_back.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/models/armor/obsidian_2.png"
 image1 = open_image(open_path1)
-grayscale_recolor_image(image1, [1.0,0.8,0.75],[0,0,0])
-recolor_image(image1, [1.15,1.15,1.15],[0,0,0])
+'''color_towards_average(image1,0.3)
+recolor_image(image1,[0.95,0.95,0.95],[0,0,0])
+at_every_pixel(image1, lambda pos,pixel : stripe_pixel(pos,pixel,0.90))'''
+a = 40/72
+b = 30/72
+c = 60/72
+recolor_image(image1, [a,b,c],[-183*a,-183*b,-183*c])
 save_image(image1, save_path)
 print("Done")

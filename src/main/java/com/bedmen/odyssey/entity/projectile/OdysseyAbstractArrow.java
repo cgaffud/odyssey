@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.util.BowUtil;
+import com.bedmen.odyssey.util.WeaponUtil;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -56,7 +56,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     protected void onHitEntity(EntityHitResult p_213868_1_) {
         Entity entity = p_213868_1_.getEntity();
         double velocity = this.getDeltaMovement().length();
-        double damage = Mth.clamp(velocity * this.getBaseDamage() / BowUtil.BASE_ARROW_VELOCITY, 0.0D, 2.147483647E9D);
+        double damage = Mth.clamp(velocity * this.getBaseDamage() / WeaponUtil.BASE_ARROW_VELOCITY, 0.0D, 2.147483647E9D);
         if (this.getPierceLevel() > 0) {
             if (this.piercingIgnoreEntityIds == null) {
                 this.piercingIgnoreEntityIds = new IntOpenHashSet(5);

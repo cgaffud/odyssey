@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
-import com.bedmen.odyssey.util.BowUtil;
+import com.bedmen.odyssey.util.WeaponUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
@@ -42,7 +42,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         if (livingEntity instanceof Player) {
             Player player = (Player)livingEntity;
             boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bow) > 0;
-            BowUtil.AmmoStack ammoStack = BowUtil.getAmmo(player, bow, true);
+            WeaponUtil.AmmoStack ammoStack = WeaponUtil.getAmmo(player, bow, true);
             ItemStack itemstack = ammoStack.ammo;
 
             int i = this.getUseDuration(bow) - useTime;
@@ -71,7 +71,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                         }
 
                         abstractArrow = customArrow(abstractArrow);
-                        abstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, f * this.velocity * BowUtil.BASE_ARROW_VELOCITY, inaccuracy);
+                        abstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, f * this.velocity * WeaponUtil.BASE_ARROW_VELOCITY, inaccuracy);
 
                         int j = EnchantmentUtil.getPower(bow);
                         if (j > 0) {
@@ -136,7 +136,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemstack = player.getItemInHand(interactionHand);
-        boolean flag = BowUtil.hasAmmo(player, itemstack);
+        boolean flag = WeaponUtil.hasAmmo(player, itemstack);
 
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, level, player, interactionHand, flag);
         if (ret != null) return ret;

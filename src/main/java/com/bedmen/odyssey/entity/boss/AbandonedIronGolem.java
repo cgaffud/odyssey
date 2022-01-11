@@ -88,7 +88,7 @@ public class AbandonedIronGolem extends Boss {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 12.0D).add(Attributes.FOLLOW_RANGE, 25.0D);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.FOLLOW_RANGE, 25.0D);
     }
 
     protected void doPush(Entity pEntity) {
@@ -170,7 +170,7 @@ public class AbandonedIronGolem extends Boss {
         double d0 = this.getX() - Math.sin(angle) * r;
         double d1 = this.getY() + 31d/16d;
         double d2 = this.getZ() + Math.cos(angle) * r;
-        this.level.explode(this, d0, d1, d2, 1.25f, getBlockInteraction(this));
+        this.level.explode(this, d0, d1, d2, 1.25f, getExplosionBlockInteraction(this));
         List<Player> playerList = this.level.getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(SONIC_BOOM_RANGE));
         for(Player player : playerList){
             double targetX = player.getX();
@@ -186,8 +186,8 @@ public class AbandonedIronGolem extends Boss {
         }
     }
 
-    public static Explosion.BlockInteraction getBlockInteraction(Entity entity){
-        return entity.level.getDifficulty() == Difficulty.HARD ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+    public static Explosion.BlockInteraction getExplosionBlockInteraction(Entity entity){
+        return entity.level.getDifficulty() == Difficulty.HARD && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(entity.level, entity) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
     }
 
     public boolean doHurtTarget(Entity pEntity) {
@@ -263,8 +263,8 @@ public class AbandonedIronGolem extends Boss {
 
     protected void dropCustomDeathLoot(DamageSource damageSource, int p_213333_2_, boolean p_213333_3_) {
         super.dropCustomDeathLoot(damageSource, p_213333_2_, p_213333_3_);
-        int i = 5 + this.random.nextInt(6);
-        int j = 5 + this.random.nextInt(6);
+        int i = 7 + this.random.nextInt(4);
+        int j = 7 + this.random.nextInt(4);
         for(int i1 = 0; i1 < i; i1++){
             ItemEntity itementity = this.spawnAtLocation(Items.IRON_INGOT);
             if (itementity != null) {

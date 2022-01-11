@@ -2,7 +2,7 @@ package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
-import com.bedmen.odyssey.util.BowUtil;
+import com.bedmen.odyssey.util.WeaponUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import java.util.List;
@@ -69,7 +69,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             performShooting(level, player, interactionHand, itemstack, getShootingPower(itemstack), 1.0F);
             setCharged(itemstack, false);
             return InteractionResultHolder.consume(itemstack);
-        } else if (BowUtil.hasAmmo(player,itemstack)) {
+        } else if (WeaponUtil.hasAmmo(player,itemstack)) {
             if (!isCharged(itemstack)) {
                 this.startSoundPlayed = false;
                 this.midLoadSoundPlayed = false;
@@ -98,10 +98,10 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         int j = i == 0 ? 1 : 3;
         boolean isPlayer = livingEntity instanceof Player;
         boolean flag = isPlayer && ((Player)livingEntity).getAbilities().instabuild;
-        BowUtil.AmmoStack ammoStack;
+        WeaponUtil.AmmoStack ammoStack;
         ItemStack itemstack;
         if(isPlayer){
-            ammoStack = BowUtil.getAmmo((Player)livingEntity, crossbow, false);
+            ammoStack = WeaponUtil.getAmmo((Player)livingEntity, crossbow, false);
             itemstack = ammoStack.ammo;
             CompoundTag compoundTag = crossbow.getOrCreateTag();
             compoundTag.putBoolean("QuiverFreeAmmo", !ammoStack.canPickUp);
@@ -315,7 +315,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     }
 
     public float getShootingPower(ItemStack itemStack) {
-        float f = BowUtil.BASE_ARROW_VELOCITY * this.velocity;
+        float f = WeaponUtil.BASE_ARROW_VELOCITY * this.velocity;
         f *= containsChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 0.5f : 1.0f;
         return f;
     }
@@ -329,7 +329,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             if (!flag && !inCreative && !multishotArrow && !crossbow.getOrCreateTag().getBoolean("QuiverFreeAmmo")) {
                 boolean quiverFlag = false;
                 if(livingEntity instanceof Player){
-                    quiverFlag = BowUtil.tryToConsumeFromQuiver((Player)livingEntity, ammo);
+                    quiverFlag = WeaponUtil.tryToConsumeFromQuiver((Player)livingEntity, ammo);
                 }
                 itemstack = ammo.split(1);
                 if(!quiverFlag) {

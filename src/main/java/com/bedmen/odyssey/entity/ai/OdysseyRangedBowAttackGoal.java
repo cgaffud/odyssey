@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.entity.ai;
 
 import com.bedmen.odyssey.items.OdysseyBowItem;
-import com.bedmen.odyssey.util.BowUtil;
+import com.bedmen.odyssey.util.WeaponUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -137,7 +137,7 @@ public class OdysseyRangedBowAttackGoal<T extends Monster & RangedAttackMob> ext
                     }
                 }
             } else if (--this.attackTime <= 0 && this.seeTime >= -60) {
-                this.mob.startUsingItem(BowUtil.getHandHoldingBow(this.mob));
+                this.mob.startUsingItem(WeaponUtil.getHandHoldingBow(this.mob));
             }
 
         }

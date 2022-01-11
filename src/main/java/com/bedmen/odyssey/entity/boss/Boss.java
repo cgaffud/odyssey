@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public abstract class Boss extends Monster implements IBossEventEntity {
+    private static final int DESPAWN_TIME = 2400;
     private int despawnTimer;
     protected static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
         return entity.attackable() && !(entity instanceof Monster);
@@ -32,7 +33,7 @@ public abstract class Boss extends Monster implements IBossEventEntity {
     }
 
     public void checkDespawn() {
-        if ((this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) || this.despawnTimer > 1200) {
+        if ((this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) || this.despawnTimer > DESPAWN_TIME) {
             this.discard();
         } else {
             this.noActionTime = 0;

@@ -7,6 +7,7 @@ import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
 import com.bedmen.odyssey.client.gui.screens.RecyclingFurnaceScreen;
 import com.bedmen.odyssey.client.gui.screens.StitchingTableScreen;
 import com.bedmen.odyssey.client.model.*;
+import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
@@ -18,6 +19,7 @@ import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
+import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
@@ -206,11 +208,14 @@ public class Odyssey
 
     @SubscribeEvent
     public static void onTextureStitch(final TextureStitchEvent.Pre event){
-//        event.addSprite(OdysseyItemStackTileEntityRenderer.LEVIATHAN_SHIELD_BASE_LOCATION);
-//        event.addSprite(OdysseyItemStackTileEntityRenderer.LEVIATHAN_SHIELD_BASE_NOPATTERN_LOCATION);
-//        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
+        //Shield Textures
+        for(OdysseyShieldItem.ShieldType shieldType : OdysseyShieldItem.ShieldType.values()){
+            event.addSprite(shieldType.getRenderMaterial(false).texture());
+            event.addSprite(shieldType.getRenderMaterial(true).texture());
+        }
         event.addSprite(TreasureChestRenderer.STERLING_SILVER_RESOURCE_LOCATION);
         event.addSprite(TreasureChestRenderer.STERLING_SILVER_LOCKED_RESOURCE_LOCATION);
+//        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
 //        event.addSprite(PermafrostRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
 //        event.addSprite(PermafrostRenderer.WIND_RESOURCE_LOCATION);
 //        event.addSprite(PermafrostRenderer.VERTICAL_WIND_RESOURCE_LOCATION);
