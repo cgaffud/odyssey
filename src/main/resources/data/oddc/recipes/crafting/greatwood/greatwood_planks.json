@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "oddc:greatwood_logs"
+    }
+  ],
+  "result": {
+    "item": "oddc:greatwood_planks",
+    "count": 4
+  }
+}

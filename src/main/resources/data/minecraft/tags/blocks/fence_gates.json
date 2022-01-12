@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "oddc:palm_fence_gate"
+    "oddc:palm_fence_gate",
+    "oddc:greatwood_fence_gate"
   ]
 }
