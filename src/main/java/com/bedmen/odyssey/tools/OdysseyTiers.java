@@ -53,6 +53,5 @@ public class OdysseyTiers {
         TierSortingRegistry.registerTier(GOLD, new ResourceLocation(Odyssey.MOD_ID,"gold"), List.of(IRON), List.of(STERLING_SILVER));
         TierSortingRegistry.registerTier(DIAMOND, new ResourceLocation(Odyssey.MOD_ID,"diamond"), List.of(Tiers.DIAMOND), List.of(Tiers.NETHERITE));
         TierSortingRegistry.registerTier(NETHERITE, new ResourceLocation(Odyssey.MOD_ID,"netherite"), List.of(Tiers.NETHERITE), List.of());
-
     }
 }
