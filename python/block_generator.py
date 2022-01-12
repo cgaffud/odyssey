@@ -2,11 +2,18 @@ import json, os
 
 assetsPath = "../src/main/resources/assets/oddc"
 dataPath = "../src/main/resources/data"
-minecraftTagsPath = "%s/minecraft/tags/blocks" % (dataPath)
-oddcTagsPath = "%s/oddc/tags/blocks" % (dataPath)
+blockTagsPath = "/tags/blocks"
+minecraftTagsPath = "%s/minecraft%s" % (dataPath,blockTagsPath)
+minecraftTagsPath = "%s/forge%s" % (dataPath,blockTagsPath)
+oddcTagsPath = "%s/oddc%s" % (dataPath,blockTagsPath)
 
 toolTypes = {0:"none", 1:"pickaxe", 2:"axe", 3:"shovel", 4:"hoe"}
-harvestLevelPaths = {0:"none", 1:"%s/needs_stone_tool.json" % (minecraftTagsPath), 2:"%s/needs_iron_tool.json" % (minecraftTagsPath), 3:"%s/needs_sterling_silver_tool.json" % (oddcTagsPath), 4:"%s/needs_diamond_tool.json" % (minecraftTagsPath)}
+harvestLevelPaths = {0:"none",
+                     1:"%s/needs_stone_tool.json" % (minecraftTagsPath),
+                     2:"%s/needs_iron_tool.json" % (minecraftTagsPath),
+                     3:"%s/needs_sterling_silver_tool.json" % (oddcTagsPath),
+                     4:"%s/needs_diamond_tool.json" % (minecraftTagsPath),
+                     5:"%s/needs_netherite_tool.json" % (forgeTagsPath)}
 
 def yes(s):
     return s.__contains__("Y") or s.__contains__("y")
@@ -25,7 +32,7 @@ while(again):
         harvestLevel = 0
     else:
         while(True):
-            harvestLevel = int(input("Harvest Level? (0 : Wood, 1 : Stone, 2 : Iron, 3 : Sterling Silver, 4 : Diamond): "))
+            harvestLevel = int(input("Harvest Level? (0 : Wood, 1 : Stone, 2 : Iron, 3 : Sterling Silver, 4 : Diamond, 5: Netherite): "))
             if(harvestLevel in harvestLevelPaths):
                 break
             print("(Enter a valid number)")
@@ -45,21 +52,25 @@ while(again):
         }
 
     lootTable = {
-      "type": "minecraft:block",
-      "pools": [
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
         {
-          "rolls": 1.0,
-          "bonus_rolls": 0.0,
-          "entries": [
-            {
-              "type": "minecraft:item",
-              "name": "oddc:"+blockID
-            }
-          ]
+          "type": "minecraft:item",
+          "name": "oddc:"+blockID
         }
-        
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
       ]
     }
+  ]
+}
 
     blockState = {
         'variants':{

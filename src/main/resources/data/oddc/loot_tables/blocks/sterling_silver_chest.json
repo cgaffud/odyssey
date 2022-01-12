@@ -9,6 +9,11 @@
           "type": "minecraft:item",
           "name": "oddc:sterling_silver_chest"
         }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
       ]
     }
   ]

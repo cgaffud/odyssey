@@ -9,6 +9,11 @@
           "type": "minecraft:item",
           "name": "oddc:electrum_block"
         }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
       ]
     }
   ]

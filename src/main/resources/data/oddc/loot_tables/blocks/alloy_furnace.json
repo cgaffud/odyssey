@@ -9,6 +9,11 @@
           "type": "minecraft:item",
           "name": "oddc:alloy_furnace"
         }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
       ]
     }
   ]

@@ -22,6 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -216,6 +217,11 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return this.boomerangType;
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public ItemStack getThrownStack(){
+        return this.thrownStack;
+    }
+
     public void tickDespawn() {
         int i = this.entityData.get(ID_LOYALTY);
         if (this.pickup != Pickup.ALLOWED || i <= 0) {
@@ -236,21 +242,25 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     @Override
     public void writeSpawnData(FriendlyByteBuf buffer) {
         buffer.writeInt(this.getOwner() == null ? -1 : this.getOwner().getId());
-        buffer.writeInt(this.boomerangType.ordinal());
+        buffer.writeItem(this.thrownStack);
     }
 
     @Override
     public void readSpawnData(FriendlyByteBuf additionalData) {
         int id = additionalData.readInt();
         this.setOwner(id == -1 ? null : this.level.getEntity(id));
-        this.boomerangType = BoomerangType.values()[additionalData.readInt()];
+        this.thrownStack = additionalData.readItem();
+        Item item = this.thrownStack.getItem();
+        if(item instanceof BoomerangItem boomerangItem){
+            this.boomerangType = boomerangItem.getBoomerangType();
+        }
     }
 
     public enum BoomerangType{
         WOOD(4.0d, 20, 500, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/wooden_boomerang.png")),
         BONE(5.0d, 20, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png")),
-        BONERANG(5.0d, 10, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bonerang.png"));
-//        CHARMED(5.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/charmed_boomerang.png")),
+        BONERANG(5.0d, 10, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bonerang.png")),
+        CLOVER_STONE(6.0d, 20, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/clover_stone_boomerang.png"));
 //        COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
 
         private final double damage;

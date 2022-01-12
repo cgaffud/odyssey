@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "oddc:clover_stone_arrow",
     "oddc:amethyst_arrow"
   ]
 }

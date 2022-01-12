@@ -70,16 +70,19 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
     }
 
     public enum ArrowType{
-        FLINT(ItemRegistry.ARROW, 5.0d, new ResourceLocation("textures/entity/projectiles/arrow.png")),
-        AMETHYST(ItemRegistry.AMETHYST_ARROW, 6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/amethyst_arrow.png"));
+        FLINT(ItemRegistry.ARROW, 5.0d, 0, new ResourceLocation("textures/entity/projectiles/arrow.png")),
+        CLOVER_STONE(ItemRegistry.CLOVER_STONE, 500.5d, 1, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/clover_stone_arrow.png")),
+        AMETHYST(ItemRegistry.AMETHYST_ARROW, 6.0d, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/amethyst_arrow.png"));
 
         private final Lazy<Item> itemSupplier;
         private final double damage;
+        private int looting;
         private final ResourceLocation resourceLocation;
 
-        ArrowType(Supplier<Item> itemSupplier, double damage, ResourceLocation resourceLocation){
+        ArrowType(Supplier<Item> itemSupplier, double damage, int looting, ResourceLocation resourceLocation){
             this.itemSupplier = Lazy.of(itemSupplier);
             this.damage = damage;
+            this.looting = looting;
             this.resourceLocation = resourceLocation;
         }
 
@@ -89,6 +92,10 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
 
         public double getDamage(){
             return this.damage;
+        }
+
+        public int getLooting(){
+            return this.looting;
         }
 
         public ResourceLocation getResourceLocation(){

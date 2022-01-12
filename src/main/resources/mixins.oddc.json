@@ -9,9 +9,9 @@
     "MixinClientboundSetEntityMotionPacket",
     "MixinCombatRules",
     "MixinEnchantmentHelper",
-    "MixinPlayer",
-    "MixinEnchantmentHelper",
-    "MixinLivingEntity"
+    "MixinExplosion",
+    "MixinLivingEntity",
+    "MixinPlayer"
   ],
   "injectors": {
     "defaultRequire": 1

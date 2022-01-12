@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " AA",
+    " BA",
+    "B  "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:pearl"
+    },
+    "B": {
+      "item": "minecraft:prismarine_shard"
+    }
+  },
+  "result": {
+    "item": "minecraft:trident"
+  }
+}

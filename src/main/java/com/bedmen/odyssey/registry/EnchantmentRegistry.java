@@ -27,10 +27,10 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> BLAST_PROTECTION = ENCHANTMENTS.register("blast_protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.RARE, ProtectionEnchantment.Type.EXPLOSION, EnchantmentCategory.ARMOR_LEGS, EquipmentSlot.LEGS));
     public static final RegistryObject<Enchantment> PROJECTILE_PROTECTION = ENCHANTMENTS.register("projectile_protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.UNCOMMON, ProtectionEnchantment.Type.PROJECTILE, OdysseyEnchantmentCategory.NONE, ARMOR_SLOTS));
     public static final RegistryObject<Enchantment> RESPIRATION = ENCHANTMENTS.register("respiration", () -> new OdysseyRespirationEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
-    public static final RegistryObject<Enchantment> AQUA_AFFINITY = ENCHANTMENTS.register("aqua_affinity", () -> new OdysseyAquaAffinityEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
+    public static final RegistryObject<Enchantment> AQUA_AFFINITY = ENCHANTMENTS.register("aqua_affinity", () -> new OdysseyAquaAffinityEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> THORNS = ENCHANTMENTS.register("thorns", () -> new ThornsEnchantment(Enchantment.Rarity.VERY_RARE, ARMOR_SLOTS));
     public static final RegistryObject<Enchantment> DEPTH_STRIDER = ENCHANTMENTS.register("depth_strider", () -> new OdysseyDepthStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
-    public static final RegistryObject<Enchantment> FROST_WALKER = ENCHANTMENTS.register("frost_walker", () -> new OdysseyFrostWalkerEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.FEET));
+    //public static final RegistryObject<Enchantment> FROST_WALKER = ENCHANTMENTS.register("frost_walker", () -> new OdysseyFrostWalkerEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.FEET));
     public static final RegistryObject<Enchantment> BINDING_CURSE = ENCHANTMENTS.register("binding_curse", () -> new BindingCurseEnchantment(Enchantment.Rarity.VERY_RARE, ARMOR_SLOTS));
     public static final RegistryObject<Enchantment> SOUL_SPEED = ENCHANTMENTS.register("soul_speed", () -> new SoulSpeedEnchantment(Enchantment.Rarity.VERY_RARE, EquipmentSlot.FEET));
     public static final RegistryObject<Enchantment> SHARPNESS = ENCHANTMENTS.register("sharpness", () -> new OdysseyDamageEnchantment(Enchantment.Rarity.COMMON, OdysseyDamageEnchantment.DamageType.ALL, EquipmentSlot.MAINHAND));
@@ -43,7 +43,7 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> BLOCK_EFFICIENCY = ENCHANTMENTS.register("efficiency", () -> new OdysseyEfficiencyEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> SILK_TOUCH = ENCHANTMENTS.register("silk_touch", () -> new OdysseySilkTouchEnchantment(Enchantment.Rarity.VERY_RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> UNBREAKING = ENCHANTMENTS.register("unbreaking", () -> new OdysseyUnbreakingEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND));
-    public static final RegistryObject<Enchantment> BLOCK_FORTUNE = ENCHANTMENTS.register("fortune", () -> new OdysseyLootBonusEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.DIGGER, EquipmentSlot.MAINHAND));
+    //public static final RegistryObject<Enchantment> BLOCK_FORTUNE = ENCHANTMENTS.register("fortune", () -> new OdysseyLootBonusEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.DIGGER, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> POWER_ARROWS = ENCHANTMENTS.register("power", () -> new OdysseyPowerEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> PUNCH_ARROWS = ENCHANTMENTS.register("punch", () -> new OdysseyPunchEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> FLAMING_ARROWS = ENCHANTMENTS.register("flame", () -> new OdysseyFlameEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
