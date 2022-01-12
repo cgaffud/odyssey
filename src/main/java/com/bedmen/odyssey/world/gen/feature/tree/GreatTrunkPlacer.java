@@ -157,28 +157,30 @@ public class GreatTrunkPlacer extends TrunkPlacer {
         // standing roots
         if (threeLog) {
             this.placeRootsIfFreeWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,0,0,0);
-            this.placeRootsIfFreeWithAxis(levelSimulatedReader,biConsumer,random,mutable,config,pos,0,1,0, axis);
-            if (random.nextBoolean())
-                this.placeRootsIfFreeWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,zOffset,0,-1*xOffset);
-            else
-                this.placeRootsIfFreeWithAxis(levelSimulatedReader,biConsumer,random,mutable,config,pos,zOffset,0,-1*xOffset, (xOffset == 0) ? Direction.Axis.X : Direction.Axis.Z);
+            this.placeRootsIfFreeWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,0,1,0);
+            this.placeRootsIfFreeWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,zOffset,0,-1*xOffset);
+//            if (random.nextBoolean())
+//                this.placeRootsIfFreeWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,zOffset,0,-1*xOffset);
+//            else
+//                this.placeRootsIfFreeWithAxis(levelSimulatedReader,biConsumer,random,mutable,config,pos,zOffset,0,-1*xOffset, (xOffset == 0) ? Direction.Axis.X : Direction.Axis.Z);
         }
         else {
             boolean posBool = random.nextBoolean();
-            if (random.nextBoolean())
-                this.placeRootsIfFreeWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,posBool ? 0 : zOffset,0,posBool ? 0 : -1*xOffset);
-            else {
-                this.placeRootsIfFreeWithAxis(levelSimulatedReader,biConsumer,random,mutable,config,pos, posBool ? 0 : zOffset,0,posBool ? 0 : -1*xOffset, axis);
-            }
+            this.placeRootsIfFreeWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,posBool ? 0 : zOffset,0,posBool ? 0 : -1*xOffset);
+//            if (random.nextBoolean())
+//                this.placeRootsIfFreeWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,posBool ? 0 : zOffset,0,posBool ? 0 : -1*xOffset);
+//            else {
+//                this.placeRootsIfFreeWithAxis(levelSimulatedReader,biConsumer,random,mutable,config,pos, posBool ? 0 : zOffset,0,posBool ? 0 : -1*xOffset, axis);
+//            }
         }
         // below ground roots
-        this.placeRootsWithAxis(levelSimulatedReader,biConsumer,random,mutable,config,pos,0,-1,0, axis);
-        this.placeRootsWithAxis(levelSimulatedReader,biConsumer,random,mutable,config,pos,zOffset,-1,-1*xOffset, axis);
+        this.placeRootsWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,0,-1,0);
+        this.placeRootsWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,zOffset,-1,-1*xOffset);
         if (random.nextBoolean()) {
             if (random.nextBoolean())
-                this.placeRootsWithAxis(levelSimulatedReader,biConsumer,random,mutable,config,pos,xOffset,-1,zOffset, axis);
+                this.placeRootsWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,xOffset,-1,zOffset);
             else
-                this.placeRootsWithAxis(levelSimulatedReader,biConsumer,random,mutable,config,pos,xOffset+zOffset,-1,zOffset-xOffset, axis);
+                this.placeRootsWithOffset(levelSimulatedReader,biConsumer,random,mutable,config,pos,xOffset+zOffset,-1,zOffset-xOffset);
         }
     }
 
