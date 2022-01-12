@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#oddc:palm_logs"
+    "#oddc:palm_logs",
+    "#oddc:greatwood_logs"
   ]
 }

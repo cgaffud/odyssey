@@ -2,8 +2,13 @@ package com.bedmen.odyssey.world.gen;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.FeatureRegistry;
+import com.bedmen.odyssey.world.gen.feature.tree.GreatFoliagePlacer;
+import com.bedmen.odyssey.world.gen.feature.tree.GreatTrunkPlacer;
+import com.bedmen.odyssey.world.gen.feature.tree.LeaningTrunkPlacer;
+import com.bedmen.odyssey.world.gen.feature.tree.PalmFoliagePlacer;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
@@ -22,6 +27,11 @@ public class FeatureGen {
 
 //    public static ConfiguredFeature<?, ?> PERMAFROST_TOWER;
 //    public static ConfiguredFeature<?, ?> FOG;
+//    public static ConfiguredFeature<TreeConfiguration, ?> AUTUMN_TREE_RED;
+//    public static ConfiguredFeature<TreeConfiguration, ?> AUTUMN_TREE_ORANGE;
+//    public static ConfiguredFeature<TreeConfiguration, ?> AUTUMN_TREE_YELLOW;
+    public static ConfiguredFeature<TreeConfiguration, ?> PALM_TREE;
+    public static ConfiguredFeature<TreeConfiguration, ?> GREATWOOD_TREE;
     public static ConfiguredFeature<?, ?> TREASURE_CHEST;
     public static PlacedFeature PLACED_TREASURE_CHEST;
     public static ConfiguredFeature<?, ?> ABANDONED_IRON_GOLEM;
@@ -36,6 +46,10 @@ public class FeatureGen {
         PLACED_TREASURE_CHEST = PlacementUtils.register("placed_treasure_chest", TREASURE_CHEST.placed(CountPlacement.of(1), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome()));
         ABANDONED_IRON_GOLEM = FeatureRegistry.ABANDONED_IRON_GOLEM.get().configured(FeatureConfiguration.NONE);
         PLACED_ABANDONED_IRON_GOLEM = PlacementUtils.register("placed_abandoned_iron_golem", ABANDONED_IRON_GOLEM.placed(CountPlacement.of(1), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome()));
+        PLACED_TREASURE_CHEST = PlacementUtils.register("treasure_chest", TREASURE_CHEST.placed(CountPlacement.of(1), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome()));
+        GREATWOOD_TREE = Feature.TREE.configured((new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(BlockRegistry.GREATWOOD_LOG.get()), new GreatTrunkPlacer(17,0,0, BlockStateProvider.simple(BlockRegistry.GREATROOTS.get())), BlockStateProvider.simple(BlockRegistry.GREATWOOD_LEAVES.get()), new GreatFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0),2), new TwoLayersFeatureSize(1, 1, 2))).ignoreVines().build());
+
+        //        PALM_TREES = Feature.RANDOM_SELECTOR.configured(new RandomFeatureConfiguration(ImmutableList.of(PALM_TREE.weighted(1.0F)), PALM_TREE)).decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(1, 0.1F, 1)));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

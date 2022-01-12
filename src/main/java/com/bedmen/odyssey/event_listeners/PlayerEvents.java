@@ -69,6 +69,7 @@ public class PlayerEvents {
 //        }
     }
 
+    //TODO add SwungWithVolatile to also send when attacking mobs
     @SubscribeEvent
     public static void PlayerInteractEventListener (final PlayerInteractEvent event){
         if (EnchantmentUtil.hasVolatile(event.getItemStack())){

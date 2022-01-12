@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "oddc:greatwood_log",
+    "oddc:greatwood_wood",
+    "oddc:stripped_greatwood_log",
+    "oddc:stripped_greatwood_wood"
+  ]
+}

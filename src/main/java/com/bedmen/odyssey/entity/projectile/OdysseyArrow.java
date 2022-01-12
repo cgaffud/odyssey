@@ -71,7 +71,7 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
 
     public enum ArrowType{
         FLINT(ItemRegistry.ARROW, 5.0d, 0, new ResourceLocation("textures/entity/projectiles/arrow.png")),
-        CLOVER_STONE(ItemRegistry.CLOVER_STONE, 500.5d, 1, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/clover_stone_arrow.png")),
+        CLOVER_STONE(ItemRegistry.CLOVER_STONE, 5.5d, 1, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/clover_stone_arrow.png")),
         AMETHYST(ItemRegistry.AMETHYST_ARROW, 6.0d, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/amethyst_arrow.png"));
 
         private final Lazy<Item> itemSupplier;

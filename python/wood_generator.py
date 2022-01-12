@@ -2046,17 +2046,92 @@ def doLang(name, lang_name):
             if(key not in langDictionary):
                 langDictionary[key] = value
         json.dump(langDictionary, langFile, indent = 2)
+
+def doCopyables(name, color = "MaterialColor.COLOR_BROWN"):
+    out = open("wood_generator_register_items.txt", "w")
+    out.write("BLOCK REGISTRY:\n")
+    
+    blockBase = "public static final RegistryObject<Block> {upperType} = BLOCKS.register(\"{lowerType}\", () -> {factory});"
+    upper = name.upper()
+    
+    blockInputs = [
+        ("stripped_"+name+"_log","new FlammableLogBlock(BlockBehaviour.Properties.of(Material.WOOD, "+color+").strength(2.0F).sound(SoundType.WOOD))"),
+        ("stripped_"+name+"_wood","new FlammableLogBlock(BlockBehaviour.Properties.of(Material.WOOD, "+color+").strength(2.0F).sound(SoundType.WOOD))"),
+        (name+"_log", "log("+color+", "+color+", STRIPPED_"+upper+"_LOG)"),
+        (name+"_wood", "new StripableLogBlock(BlockBehaviour.Properties.of(Material.WOOD, "+color+").strength(2.0F).sound(SoundType.WOOD), STRIPPED_"+upper+"_WOOD))"),
+        (name+"_planks","new FlammableBlock(BlockBehaviour.Properties.of(Material.WOOD, "+color+").strength(2.0F, 3.0F).sound(SoundType.WOOD))"),
+        (name+"_button","new WoodButtonBlock(BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD))"),
+        (name+"_door","new TransparentDoorBlock(BlockBehaviour.Properties.of(Material.WOOD, "+upper+"_PLANKS.get().defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion())"),
+        (name+"_fence","new FlammableFenceBlock(BlockBehaviour.Properties.of(Material.WOOD, "+upper+"_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD))"),
+        (name+"_fencegate","new FlammableFenceGateBlock(BlockBehaviour.Properties.of(Material.WOOD, PALM_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD))"),
+        (name+"_leaves", "BlockRegistry.leaves(false)"),
+        (name+"_pressure_plate","new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.of(Material.WOOD, "+upper+"_PLANKS.get().defaultMaterialColor()).noCollission().strength(0.5F).sound(SoundType.WOOD))"),
+        (name+"_sapling","new SaplingBlock(new "+name.capitalize()+"TreeGrower(), BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS))"),
+        (name+"_sign","new OdysseyStandingSignBlock(BlockBehaviour.Properties.of(Material.WOOD, "+color+").noCollission().strength(1.0F).sound(SoundType.WOOD), OdysseyWoodType."+upper+"))"),
+        (name+"_slab","new FlammableSlabBlock(BlockBehaviour.Properties.of(Material.WOOD, "+upper+"_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD))"),
+        (name+"_stairs","new FlammableStairsBlock(() -> "+upper+"_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy("+upper+"_PLANKS.get()))"),
+        (name+"_trapdoor","new TrapDoorBlock(BlockBehaviour.Properties.of(Material.WOOD, "+color+").strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn(BlockRegistry::never))"),
+        (name+"_wall_sign","new OdysseyWallSignBlock(BlockBehaviour.Properties.of(Material.WOOD, "+color+").noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom("+upper+"_SIGN), OdysseyWoodType."+upper+")"),
+        ("potted_"+name+"_sapling","new OdysseyFlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, "+upper+"_SAPLING, BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion())")
+    ]
+    
+    for (blockType, factory) in blockInputs:
+        out.write(blockBase.format(upperType = blockType.upper(), lowerType = blockType, factory = factory)+"\n")
+
+    out.write("\nITEM REGISTRY:\n")
+
+    itemBase = "public static final RegistryObject<Item> {upperType} = ITEMS.register(\"{lowerType}\", () -> {factory});"
+    standardFactory = "new BlockItem(BlockRegistry.{upperType}.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD))"
+    
+    itemInputs = [
+        (name+"_planks", None),
+        (name+"_sapling",None),
+        (name+"_log", None),
+        ("stripped_"+name+"_log",None),
+        ("stripped_"+name+"_wood",None),
+        (name+"_wood", None),
+        (name+"_leaves", None),
+        (name+"_slab",None),
+        (name+"_fence","new BurnableFenceItem(BlockRegistry."+upper+"_FENCE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD))"),
+        (name+"_stairs",None),
+        (name+"_button", None),
+        (name+"_pressure_plate",None),
+        (name+"_door", None),
+        (name+"_trapdoor",None),
+        (name+"_fencegate","new BurnableFenceItem(BlockRegistry."+upper+"_FENCE_GATE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD))"),
+                (name+"_boat","new OdysseyBoatItem(OdysseyBoat.Type."+upper+", (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.WOOD))"),
+        (name+"_sign","new SignItem((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD), BlockRegistry."+upper+"_SIGN.get(), BlockRegistry."+upper+"_WALL_SIGN.get())")
+    ]
+    for (itemType, factory) in itemInputs:
+        if factory == None:
+            out.write(itemBase.format(upperType=itemType.upper(), lowerType = itemType, factory = standardFactory.format(upperType = itemType.upper())) + "\n")
+        else:
+            out.write(itemBase.format(upperType=itemType.upper(), lowerType = itemType, factory = factory)+"\n")
+            
+    out.close()
+              
+
+        
+
+    
         
 name = input("Input Wood ID: ")
+color = input("Color (if none specified, hit Enter):")
 lang_name = input("Lang File Wood Name: ")
-doBlockStates(name)
-doBlockModels(name)
-doItemModels(name)
-doLootTables(name)
-doRecipes(name)
-doBlockTags(name)
-doItemTags(name)
-doLang(name, lang_name)
+
+if color == "":
+    doCopyables(name)
+else:
+    doCopyables(name,color)
+#doBlockStates(name)
+#doBlockModels(name)
+#doItemModels(name)
+#doLootTables(name)
+#doRecipes(name)
+#doBlockTags(name)
+#doItemTags(name)
+#doLang(name, lang_name)
+
 
 # Missing funcitonality
 # Block Registration

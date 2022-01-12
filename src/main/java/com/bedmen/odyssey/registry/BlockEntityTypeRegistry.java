@@ -17,7 +17,7 @@ public class BlockEntityTypeRegistry {
         BLOCK_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<BlockEntityType<OdysseySignBlockEntity>> SIGN = BLOCK_ENTITY_TYPES.register("sign",() -> BlockEntityType.Builder.of(OdysseySignBlockEntity::new, BlockRegistry.PALM_SIGN.get(), BlockRegistry.PALM_WALL_SIGN.get()).build(null));
+    public static final RegistryObject<BlockEntityType<OdysseySignBlockEntity>> SIGN = BLOCK_ENTITY_TYPES.register("sign",() -> BlockEntityType.Builder.of(OdysseySignBlockEntity::new, BlockRegistry.PALM_SIGN.get(), BlockRegistry.PALM_WALL_SIGN.get(), BlockRegistry.GREATWOOD_SIGN.get(), BlockRegistry.GREATWOOD_WALL_SIGN.get()).build(null));
     public static final RegistryObject<BlockEntityType<HollowCoconutBlockEntity>> HOLLOW_COCONUT = BLOCK_ENTITY_TYPES.register("hollow_coconut", () -> BlockEntityType.Builder.of(HollowCoconutBlockEntity::new, BlockRegistry.HOLLOW_COCONUT.get()).build(null));
     public static final RegistryObject<BlockEntityType<RecyclingFurnaceBlockEntity>> RECYCLING_FURNACE = BLOCK_ENTITY_TYPES.register("recycling_furnace", () -> BlockEntityType.Builder.of(RecyclingFurnaceBlockEntity::new, BlockRegistry.RECYCLING_FURNACE.get()).build(null));
     public static final RegistryObject<BlockEntityType<AlloyFurnaceBlockEntity>> ALLOY_FURNACE = BLOCK_ENTITY_TYPES.register("alloy_furnace", () -> BlockEntityType.Builder.of(AlloyFurnaceBlockEntity::new, BlockRegistry.ALLOY_FURNACE.get()).build(null));
