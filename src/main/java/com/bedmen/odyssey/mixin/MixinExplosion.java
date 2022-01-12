@@ -39,7 +39,7 @@ public abstract class MixinExplosion {
     private Explosion.BlockInteraction blockInteraction;
     @Shadow
     @Final
-    private final Random random = new Random();
+    private Random random;
     @Shadow
     @Final
     private Level level;
@@ -60,7 +60,7 @@ public abstract class MixinExplosion {
     private float radius;
     @Shadow
     @Final
-    private final List<BlockPos> toBlow = Lists.newArrayList();
+    private List<BlockPos> toBlow;
     @Shadow
     private static void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> p_46068_, ItemStack p_46069_, BlockPos p_46070_) {}
 
