@@ -144,16 +144,17 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/models/armor/iron_layer_2.png"
+open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/models/armor/iron_layer_1.png"
 #open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/shields/iron_shield_back.png"
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/models/armor/obsidian_2.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/models/armor/iron_1_no_stripes.png"
 image1 = open_image(open_path1)
-'''color_towards_average(image1,0.3)
-recolor_image(image1,[0.95,0.95,0.95],[0,0,0])
-at_every_pixel(image1, lambda pos,pixel : stripe_pixel(pos,pixel,0.90))'''
-a = 40/72
-b = 30/72
-c = 60/72
-recolor_image(image1, [a,b,c],[-183*a,-183*b,-183*c])
+color_towards_average(image1,0.3)
+recolor_image(image1,[0.8,0.8,0.8],[0,0,0])
+#at_every_pixel(image1, lambda pos,pixel : stripe_pixel(pos,pixel,0.90))
+'''a = 14/11
+bs = [2/3,1/2,1]
+cs = [a*b for b in bs]
+ds = [-183*a*b+36*b for b in bs]
+recolor_image(image1, cs, ds)'''
 save_image(image1, save_path)
 print("Done")

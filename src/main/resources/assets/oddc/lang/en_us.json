@@ -217,7 +217,7 @@
   "item.oddc.polar_bear_fur": "Polar Bear Fur",
   "item.oddc.fur_helmet": "Fur Cap",
   "item.oddc.fur_chestplate": "Fur Tunic",
-  "item.oddc.fur_leggings": "Fur Leggings",
+  "item.oddc.fur_leggings": "Fur Pants",
   "item.oddc.fur_boots": "Fur Boots",
   "enchantment.oddc.ice_protection": "Ice Protection",
   "item.oddc.parka_helmet": "Parka Hood",
@@ -284,5 +284,9 @@
   "item.oddc.reinforced_shield.white": "White Reinforced Shield",
   "item.oddc.reinforced_shield.light_gray": "Light Gray Reinforced Shield",
   "item.oddc.reinforced_shield.gray": "Gray Reinforced Shield",
-  "item.oddc.reinforced_shield.black": "Black Reinforced Shield"
+  "item.oddc.reinforced_shield.black": "Black Reinforced Shield",
+  "item.oddc.reinforced_helmet": "Reinforced Helmet",
+  "item.oddc.reinforced_chestplate": "Reinforced Chestplate",
+  "item.oddc.reinforced_leggings": "Reinforced Leggings",
+  "item.oddc.reinforced_boots": "Reinforced Boots"
 }
