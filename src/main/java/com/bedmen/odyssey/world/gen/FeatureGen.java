@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.world.gen;
 
-
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.FeatureRegistry;
@@ -11,17 +10,14 @@ import com.bedmen.odyssey.world.gen.feature.tree.PalmFoliagePlacer;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import net.minecraft.world.level.levelgen.feature.stateproviders.SimpleStateProvider;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.CountPlacement;
 import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
@@ -43,9 +39,9 @@ public class FeatureGen {
 //    public static ConfiguredFeature<TreeConfiguration, ?> AUTUMN_TREE_ORANGE;
 //    public static ConfiguredFeature<TreeConfiguration, ?> AUTUMN_TREE_YELLOW;
     public static ConfiguredFeature<TreeConfiguration, ?> PALM_TREE;
+    public static ConfiguredFeature<TreeConfiguration, ?> GREATWOOD_TREE;
     public static ConfiguredFeature<?, ?> TREASURE_CHEST;
     public static PlacedFeature PLACED_TREASURE_CHEST;
-    public static ConfiguredFeature<TreeConfiguration, ?> GREATWOOD_TREE;
 
     // Groups
 //    public static ConfiguredFeature<?,?> AUTUMN_FOREST;
