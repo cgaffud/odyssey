@@ -3,6 +3,8 @@ package com.bedmen.odyssey.world.gen;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.FeatureRegistry;
+import com.bedmen.odyssey.world.gen.feature.tree.GreatFoliagePlacer;
+import com.bedmen.odyssey.world.gen.feature.tree.GreatTrunkPlacer;
 import com.bedmen.odyssey.world.gen.feature.tree.LeaningTrunkPlacer;
 import com.bedmen.odyssey.world.gen.feature.tree.PalmFoliagePlacer;
 import net.minecraft.data.worldgen.features.FeatureUtils;
@@ -39,6 +41,8 @@ public class TreeGen {
     public static ConfiguredFeature<RandomFeatureConfiguration, ?> TREES_TROPICS;
     public static PlacedFeature PLACED_TREES_TROPICS;
 
+    public static ConfiguredFeature<TreeConfiguration, ?> GREATWOOD_TREE;
+
     // Groups
 //    public static ConfiguredFeature<?,?> AUTUMN_FOREST;
 
@@ -52,6 +56,8 @@ public class TreeGen {
         PLACED_PALM_TREE = PlacementUtils.register("placed_palm_tree", PALM_TREE.filteredByBlockSurvival(BlockRegistry.PALM_SAPLING.get()));
         TREES_TROPICS = FeatureUtils.register("trees_tropics", Feature.RANDOM_SELECTOR.configured(new RandomFeatureConfiguration(List.of(new WeightedPlacedFeature(PLACED_PALM_TREE, 1.0F)), PLACED_PALM_TREE)));
         PLACED_TREES_TROPICS = PlacementUtils.register("placed_trees_tropics", TREES_TROPICS.placed(VegetationPlacements.treePlacement(PlacementUtils.countExtra(1, 0.1F, 1))));
+
+        GREATWOOD_TREE = Feature.TREE.configured((new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(BlockRegistry.GREATWOOD_LOG.get()), new GreatTrunkPlacer(17,0,0, BlockStateProvider.simple(BlockRegistry.GREATROOTS.get())), BlockStateProvider.simple(BlockRegistry.GREATWOOD_LEAVES.get()), new GreatFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0),2), new TwoLayersFeatureSize(1, 1, 2))).ignoreVines().build());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
