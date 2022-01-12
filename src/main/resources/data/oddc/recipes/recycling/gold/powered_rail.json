@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:powered_rail"
+  },
+  "metalCounts": [
+    {
+      "metal": "gold",
+      "count": 9
+    }
+  ]
+}

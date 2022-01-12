@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:flint_and_steel"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 9
+    }
+  ]
+}

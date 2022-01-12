@@ -1,0 +1,17 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "oddc:sterling_silver_cobweb"
+    },
+    {
+      "item": "oddc:sterling_silver_fiber"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "sterling_silver",
+      "count": 9
+    }
+  ]
+}

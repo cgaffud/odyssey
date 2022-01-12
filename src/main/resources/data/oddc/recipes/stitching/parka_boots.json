@@ -1,0 +1,16 @@
+{
+  "type": "oddc:stitching",
+  "ingredient1":
+  {
+    "item": "minecraft:leather_boots"
+  },
+  "ingredient2":
+  {
+    "item": "oddc:fur_boots"
+  },
+  "fiber":
+  {
+    "item": "oddc:copper_fiber"
+  },
+  "result": "oddc:parka_boots"
+}

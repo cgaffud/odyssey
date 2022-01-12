@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:golden_carrot"
+  },
+  "metalCounts": [
+    {
+      "metal": "gold",
+      "count": 8
+    }
+  ]
+}

@@ -2,6 +2,7 @@ package com.bedmen.odyssey.world.spawn;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -10,6 +11,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -31,6 +33,8 @@ public class OdysseyBiomeEntitySpawn {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void spawnMobs(BiomeLoadingEvent event){
         List<MobSpawnSettings.SpawnerData> monsterSpawns = event.getSpawns().getSpawner(MobCategory.MONSTER);
+        List<MobSpawnSettings.SpawnerData> creatureSpawns = event.getSpawns().getSpawner(MobCategory.CREATURE);
+        List<MobSpawnSettings.SpawnerData> polarBearSpawns = new ArrayList<>();
 //        List<MobSpawnSettings.SpawnerData> hardBiomeSpawns = event.getSpawns().getSpawner(HARD_BIOME);
 
         if(event.getCategory() == Biome.BiomeCategory.NETHER){
@@ -40,7 +44,12 @@ public class OdysseyBiomeEntitySpawn {
         else {
             monsterSpawns.add(BABY_LEVIATHAN);
             monsterSpawns.add(WEAVER);
-
+            for(MobSpawnSettings.SpawnerData spawnerData : creatureSpawns){
+                if(spawnerData.type == EntityType.POLAR_BEAR){
+                    polarBearSpawns.add(new MobSpawnSettings.SpawnerData(EntityTypeRegistry.POLAR_BEAR.get(), spawnerData.getWeight(), spawnerData.minCount, spawnerData.maxCount));
+                }
+            }
+            creatureSpawns.addAll(polarBearSpawns);
 //            if(event.getName().toString().equals("oddc:autumn_forest")){
 //                hardBiomeSpawns.add(LUPINE_SPANWER);
 //            }
@@ -54,4 +63,9 @@ public class OdysseyBiomeEntitySpawn {
 
     }
 
+    @SubscribeEvent(priority = EventPriority.NORMAL)
+    public static void removeMobs(BiomeLoadingEvent event){
+        List<MobSpawnSettings.SpawnerData> creatureSpawns = event.getSpawns().getSpawner(MobCategory.CREATURE);
+        creatureSpawns.removeIf(spawnerData -> spawnerData.type == EntityType.POLAR_BEAR);
+    }
 }

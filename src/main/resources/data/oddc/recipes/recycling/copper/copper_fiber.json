@@ -1,0 +1,17 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "oddc:copper_cobweb"
+    },
+    {
+      "item": "oddc:copper_fiber"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "copper",
+      "count": 9
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:copper_battle_axe"
+  },
+  "metalCounts": [
+    {
+      "metal": "copper",
+      "count": 36
+    }
+  ]
+}

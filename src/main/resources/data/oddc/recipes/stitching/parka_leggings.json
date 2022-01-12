@@ -1,0 +1,16 @@
+{
+  "type": "oddc:stitching",
+  "ingredient1":
+  {
+    "item": "minecraft:leather_leggings"
+  },
+  "ingredient2":
+  {
+    "item": "oddc:fur_leggings"
+  },
+  "fiber":
+  {
+    "item": "oddc:copper_fiber"
+  },
+  "result": "oddc:parka_leggings"
+}

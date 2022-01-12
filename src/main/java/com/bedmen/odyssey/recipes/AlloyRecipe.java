@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-public class AlloyRecipe implements Recipe<Container> {
+public class AlloyRecipe extends OdysseyFurnaceRecipe {
     protected final ResourceLocation id;
     protected final Ingredient ingredient1;
     protected final Ingredient ingredient2;

@@ -1,0 +1,17 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "oddc:golden_cobweb"
+    },
+    {
+      "item": "oddc:golden_fiber"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "gold",
+      "count": 9
+    }
+  ]
+}

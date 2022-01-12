@@ -4,14 +4,14 @@ assetsPath = "../src/main/resources/assets/oddc"
 dataPath = "../src/main/resources/data"
 blockTagsPath = "/tags/blocks"
 minecraftTagsPath = "%s/minecraft%s" % (dataPath,blockTagsPath)
-minecraftTagsPath = "%s/forge%s" % (dataPath,blockTagsPath)
+forgeTagsPath = "%s/forge%s" % (dataPath,blockTagsPath)
 oddcTagsPath = "%s/oddc%s" % (dataPath,blockTagsPath)
 
 toolTypes = {0:"none", 1:"pickaxe", 2:"axe", 3:"shovel", 4:"hoe"}
 harvestLevelPaths = {0:"none",
                      1:"%s/needs_stone_tool.json" % (minecraftTagsPath),
                      2:"%s/needs_iron_tool.json" % (minecraftTagsPath),
-                     3:"%s/needs_sterling_silver_tool.json" % (oddcTagsPath),
+                     3:"%s/needs_sterling_silver_tool.json" % (oddcTagsPath),
                      4:"%s/needs_diamond_tool.json" % (minecraftTagsPath),
                      5:"%s/needs_netherite_tool.json" % (forgeTagsPath)}
 

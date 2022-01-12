@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:sterling_silver_shovel"
+  },
+  "metalCounts": [
+    {
+      "metal": "sterling_silver",
+      "count": 9
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:lightning_rod"
+  },
+  "metalCounts": [
+    {
+      "metal": "copper",
+      "count": 27
+    }
+  ]
+}

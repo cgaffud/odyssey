@@ -1,0 +1,17 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "oddc:parka_chestplate"
+    },
+    {
+      "item": "oddc:parka_leggings"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "copper",
+      "count": 36
+    }
+  ]
+}

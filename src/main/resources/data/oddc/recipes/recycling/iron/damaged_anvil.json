@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:damaged_anvil"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 93
+    }
+  ]
+}

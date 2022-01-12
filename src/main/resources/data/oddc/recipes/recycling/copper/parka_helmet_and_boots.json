@@ -1,0 +1,17 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "oddc:parka_helmet"
+    },
+    {
+      "item": "oddc:parka_boots"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "copper",
+      "count": 18
+    }
+  ]
+}

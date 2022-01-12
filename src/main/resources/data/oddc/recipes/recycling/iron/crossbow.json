@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:crossbow"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 13.5
+    }
+  ]
+}

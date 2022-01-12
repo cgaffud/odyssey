@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "oddc:block/sterling_silver_cobweb"
+  }
+}

@@ -1,15 +1,6 @@
 {
-  "parent": "oddc:item/bonerang",
-  "display": {
-    "firstperson_righthand": {
-      "rotation": [ 180, -90, 25 ],
-      "translation": [ 3, 3.2, -1 ],
-      "scale": [ 0.68, 0.68, 0.68 ]
-    },
-    "firstperson_lefthand": {
-      "rotation": [ 180, 90, -25 ],
-      "translation": [ 3, 3.2, -1 ],
-      "scale": [ 0.68, 0.68, 0.68 ]
-    }
+  "parent": "oddc:item/boomerang_throwing",
+  "textures": {
+    "layer0": "oddc:item/bonerang"
   }
 }

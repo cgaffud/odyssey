@@ -138,31 +138,23 @@ def recolor_image_randomly(image, colorMult1, colorAdd1, colorMult2, colorAdd2):
      at_every_pixel(image, lambda pos, pixel : recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2))
      return image
 
-pattern1 = [[0,0,0,1,1,1,1,1,0,0,0],
-           [0,0,1,1,0,1,0,1,1,0,0],
-           [0,1,1,0,0,0,0,0,1,1,0],
-           [1,1,0,0,0,0,0,0,0,1,1],
-           [1,0,0,0,0,0,0,0,0,0,1],
-           [1,1,0,0,0,0,0,0,0,1,1],
-           [1,0,0,0,0,0,0,0,0,0,1],
-           [1,1,0,0,0,0,0,0,0,1,1],
-           [0,1,1,0,0,0,0,0,1,1,0],
-           [0,0,1,1,0,1,0,1,1,0,0],
-           [0,0,0,1,1,1,1,1,0,0,0]]
-pattern2 = [[0,0,0,1,0,1,0,0,0],
-            [0,0,1,1,1,1,1,0,0],
-            [0,1,1,0,1,0,1,1,0],
-            [1,1,0,0,1,0,0,1,1],
-            [0,1,1,1,0,1,1,1,0],
-            [1,1,0,0,1,0,0,1,1],
-            [0,1,1,0,1,0,1,1,0],
-            [0,0,1,1,1,1,1,0,0],
-            [0,0,0,1,0,1,0,0,0]]
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/depreciated/stone_arrow_entity.png"
-save_path =r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/projectiles/clover_stone_arrow_0.png"
+def stripe_pixel(pos, pixel, w):
+    x,y = pos
+    if(x%2 == 0):
+        return recolor_pixel(pixel, [w,w,w], [0,0,0])
+    return pixel
+
+open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/models/armor/iron_layer_1.png"
+#open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/shields/iron_shield_back.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/models/armor/iron_1_no_stripes.png"
 image1 = open_image(open_path1)
-recolor_image_randomly(image1, [0.95,1,0.95], [0,0,0], [0.8,1,0.8], [0,0,0])
-#apply_pattern(image1, pattern1, (2,2), lambda pixel : recolor_pixel(pixel, [0.8,0.8,0.8], [0,0,0]))
-#apply_pattern(image1, pattern2, (3,3), lambda pixel : recolor_pixel(pixel, [0.8,0.8,0.8], [0,0,0]))
+color_towards_average(image1,0.3)
+recolor_image(image1,[0.8,0.8,0.8],[0,0,0])
+#at_every_pixel(image1, lambda pos,pixel : stripe_pixel(pos,pixel,0.90))
+'''a = 14/11
+bs = [2/3,1/2,1]
+cs = [a*b for b in bs]
+ds = [-183*a*b+36*b for b in bs]
+recolor_image(image1, cs, ds)'''
 save_image(image1, save_path)
 print("Done")

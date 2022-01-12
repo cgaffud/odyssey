@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:shield"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 9
+    }
+  ]
+}

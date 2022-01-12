@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:golden_leggings"
+  },
+  "metalCounts": [
+    {
+      "metal": "gold",
+      "count": 63
+    }
+  ]
+}

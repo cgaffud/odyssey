@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "minecraft:hopper"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 45
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "oddc:block/cube_column_different_ends",
+  "textures": {
+    "top": "oddc:block/stitching_table_top",
+    "bottom": "minecraft:block/acacia_planks",
+    "side": "oddc:block/stitching_table_side"
+  }
+}
