@@ -45,7 +45,6 @@ public class OdysseyTiers {
 
     public static void init(){
         TierSortingRegistry.registerTier(STERLING_SILVER, new ResourceLocation(Odyssey.MOD_ID,"sterling_silver"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));
-        TierSortingRegistry.registerTier(CLOVER_STONE, new ResourceLocation(Odyssey.MOD_ID,"clover_stone"), List.of(STERLING_SILVER), List.of(Tiers.DIAMOND));
 
         TierSortingRegistry.registerTier(WOOD, new ResourceLocation(Odyssey.MOD_ID,"wood"), List.of(Tiers.WOOD), List.of(Tiers.STONE));
         TierSortingRegistry.registerTier(STONE, new ResourceLocation(Odyssey.MOD_ID,"stone"), List.of(Tiers.STONE), List.of(Tiers.IRON));
