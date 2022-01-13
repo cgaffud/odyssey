@@ -114,9 +114,18 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
     }
 
     public enum ShieldType {
-        WOODEN(200, 4.0f, 100, new TagItemChecker(ItemTags.PLANKS), OdysseyBlockEntityWithoutLevelRenderer.WOODEN_SHIELD_BASE_MATERIAL, OdysseyBlockEntityWithoutLevelRenderer.WOODEN_SHIELD_BASE_NOPATTERN_MATERIAL),
-        COPPER(400, 6.0f, 100, new IndividualItemChecker(Lazy.of(() -> Items.COPPER_INGOT)), OdysseyBlockEntityWithoutLevelRenderer.COPPER_SHIELD_BASE_MATERIAL, OdysseyBlockEntityWithoutLevelRenderer.COPPER_SHIELD_BASE_NOPATTERN_MATERIAL),
-        REINFORCED(800, 8.0f, 100, new IndividualItemChecker(Lazy.of(() -> Items.IRON_INGOT)), OdysseyBlockEntityWithoutLevelRenderer.REINFORCED_SHIELD_BASE_MATERIAL, OdysseyBlockEntityWithoutLevelRenderer.REINFORCED_SHIELD_BASE_NOPATTERN_MATERIAL);
+        WOODEN(200, 4.0f, 100,
+                new TagItemChecker(ItemTags.PLANKS),
+                OdysseyBlockEntityWithoutLevelRenderer.WOODEN_SHIELD_BASE_MATERIAL,
+                OdysseyBlockEntityWithoutLevelRenderer.WOODEN_SHIELD_BASE_NOPATTERN_MATERIAL),
+        COPPER(400, 6.0f, 100,
+                new IndividualItemChecker(Lazy.of(() -> Items.COPPER_INGOT)),
+                OdysseyBlockEntityWithoutLevelRenderer.COPPER_SHIELD_BASE_MATERIAL,
+                OdysseyBlockEntityWithoutLevelRenderer.COPPER_SHIELD_BASE_NOPATTERN_MATERIAL),
+        REINFORCED(800, 8.0f, 100,
+                new IndividualItemChecker(Lazy.of(() -> Items.IRON_INGOT)),
+                OdysseyBlockEntityWithoutLevelRenderer.REINFORCED_SHIELD_BASE_MATERIAL,
+                OdysseyBlockEntityWithoutLevelRenderer.REINFORCED_SHIELD_BASE_NOPATTERN_MATERIAL);
 
         public final int durability;
         public final float damageBlock;
@@ -134,8 +143,8 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
             this.renderMaterialNoPattern = renderMaterialNoPattern;
         }
 
-        public Material getRenderMaterial(boolean flag){
-            return flag ? this.renderMaterial : this.renderMaterialNoPattern;
+        public Material getRenderMaterial(boolean pattern){
+            return pattern ? this.renderMaterial : this.renderMaterialNoPattern;
         }
     }
 }

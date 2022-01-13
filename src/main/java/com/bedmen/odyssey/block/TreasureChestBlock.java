@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.*;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -30,11 +31,13 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 public class TreasureChestBlock extends AbstractChestBlock<TreasureChestBlockEntity> implements SimpleWaterloggedBlock {
@@ -78,7 +81,13 @@ public class TreasureChestBlock extends AbstractChestBlock<TreasureChestBlockEnt
                 if(!player.getAbilities().instabuild){
                     itemStack.shrink(1);
                 }
+            } else {
+                level.playSound(player, blockPos, SoundEventRegistry.LOCKED_CHEST.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+                return InteractionResult.FAIL;
             }
+        }
+        if(isChestBlockedAt(level, blockPos)){
+            return InteractionResult.sidedSuccess(true);
         }
         if(!blockState.getValue(LOCKED)){
             if (level.isClientSide) {
@@ -93,10 +102,8 @@ public class TreasureChestBlock extends AbstractChestBlock<TreasureChestBlockEnt
 
                 return InteractionResult.CONSUME;
             }
-        } else {
-            level.playSound(player, blockPos, SoundEventRegistry.LOCKED_CHEST.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
-            return InteractionResult.FAIL;
         }
+        return InteractionResult.FAIL;
     }
 
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -153,5 +160,27 @@ public class TreasureChestBlock extends AbstractChestBlock<TreasureChestBlockEnt
 
             super.onRemove(blockState, level, blockPos, blockState1, flag);
         }
+    }
+
+    public static boolean isChestBlockedAt(LevelAccessor levelAccessor, BlockPos blockPos) {
+        return isBlockedChestByBlock(levelAccessor, blockPos) || isCatSittingOnChest(levelAccessor, blockPos);
+    }
+
+    private static boolean isBlockedChestByBlock(BlockGetter blockGetter, BlockPos blockPos) {
+        BlockPos blockpos = blockPos.above();
+        return blockGetter.getBlockState(blockpos).isRedstoneConductor(blockGetter, blockpos);
+    }
+
+    private static boolean isCatSittingOnChest(LevelAccessor levelAccessor, BlockPos blockPos) {
+        List<Cat> list = levelAccessor.getEntitiesOfClass(Cat.class, new AABB((double)blockPos.getX(), (double)(blockPos.getY() + 1), (double)blockPos.getZ(), (double)(blockPos.getX() + 1), (double)(blockPos.getY() + 2), (double)(blockPos.getZ() + 1)));
+        if (!list.isEmpty()) {
+            for(Cat cat : list) {
+                if (cat.isInSittingPose()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
