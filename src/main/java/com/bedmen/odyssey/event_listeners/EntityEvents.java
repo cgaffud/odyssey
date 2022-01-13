@@ -65,11 +65,8 @@ public class EntityEvents {
     public static void attackEntityEventListener(final AttackEntityEvent event){
         Player player = (Player) event.getEntity();
         int shatteringLevel = EnchantmentUtil.getShattering(player);
-        int torrentLevel = EnchantmentUtil.getTorrent(player);
         Entity target = event.getTarget();
         if(!player.level.isClientSide && target instanceof LivingEntity livingTarget) {
-//            if (torrentLevel > 0 && OdysseyEntityTags.HYDROPHOBIC.contains(target.getType())) {
-//            }
             if (player.getAttackStrengthScale(0.5F) > 0.9f && shatteringLevel > 0) {
                 MobEffectInstance effectInstance = livingTarget.getEffect(EffectRegistry.SHATTERED.get());
                 if (effectInstance != null) {
@@ -93,9 +90,9 @@ public class EntityEvents {
         if (damageSource.getEntity() instanceof LivingEntity ) {
             LivingEntity attackingEntity = (LivingEntity) damageSource.getEntity();
             // torrential damage booster
-            int torrentLevel = EnchantmentUtil.getTorrent(attackingEntity);
-            if (torrentLevel > 0 && OdysseyEntityTags.HYDROPHOBIC.contains(livingEntity.getType()))
-                amount += (float)torrentLevel * 2.5f;
+            int downpourLevel = EnchantmentUtil.getDownpour(attackingEntity);
+            if (downpourLevel > 0 && OdysseyEntityTags.HYDROPHOBIC.contains(livingEntity.getType()))
+                amount += (float)downpourLevel * 2.5f;
         }
 
         if(amount >= 10.0f && livingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){

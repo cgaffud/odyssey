@@ -311,5 +311,6 @@
   "item.oddc.reinforced_leggings": "Reinforced Leggings",
   "item.oddc.reinforced_boots": "Reinforced Boots",
   "item.oddc.rusty_sonic_fork": "Rusty Sonic Fork",
-  "enchantment.oddc.torrent": "Downpour"
+  "enchantment.oddc.downpour": "Downpour",
+  "item.oddc.broken_sea_sword": "Broken Sword of the Sea"
 }
