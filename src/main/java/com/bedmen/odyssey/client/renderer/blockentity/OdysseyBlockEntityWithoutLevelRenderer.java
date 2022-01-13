@@ -1,11 +1,11 @@
 package com.bedmen.odyssey.client.renderer.blockentity;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.items.BEWLRBlockItem;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
-import com.bedmen.odyssey.registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
@@ -20,47 +20,36 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLevelRenderer {
-    public static final ResourceLocation WOODEN_SHIELD_BASE_NOPATTERN_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/shields/wooden_shield_base_nopattern");
-    public static final ResourceLocation WOODEN_SHIELD_BASE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/shields/wooden_shield_base");
-    public static final Material WOODEN_SHIELD_BASE_NOPATTERN_MATERIAL = new Material(Sheets.SHIELD_SHEET, WOODEN_SHIELD_BASE_NOPATTERN_LOCATION);
-    public static final Material WOODEN_SHIELD_BASE_MATERIAL = new Material(Sheets.SHIELD_SHEET, WOODEN_SHIELD_BASE_LOCATION);
-    public static final ResourceLocation COPPER_SHIELD_BASE_NOPATTERN_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base_nopattern");
-    public static final ResourceLocation COPPER_SHIELD_BASE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base");
-    public static final Material COPPER_SHIELD_BASE_NOPATTERN_MATERIAL = new Material(Sheets.SHIELD_SHEET, COPPER_SHIELD_BASE_NOPATTERN_LOCATION);
-    public static final Material COPPER_SHIELD_BASE_MATERIAL = new Material(Sheets.SHIELD_SHEET, COPPER_SHIELD_BASE_LOCATION);
-    public static final ResourceLocation REINFORCED_SHIELD_BASE_NOPATTERN_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/shields/reinforced_shield_base_nopattern");
-    public static final ResourceLocation REINFORCED_SHIELD_BASE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/shields/reinforced_shield_base");
-    public static final Material REINFORCED_SHIELD_BASE_NOPATTERN_MATERIAL = new Material(Sheets.SHIELD_SHEET, REINFORCED_SHIELD_BASE_NOPATTERN_LOCATION);
-    public static final Material REINFORCED_SHIELD_BASE_MATERIAL = new Material(Sheets.SHIELD_SHEET, REINFORCED_SHIELD_BASE_LOCATION);
     private static OdysseyBlockEntityWithoutLevelRenderer instance = null;
     private final EntityModelSet entityModelSet;
-    private final ChestBlockEntity sterlingSilverChest = new TreasureChestBlockEntity(TreasureChestMaterial.STERLING_SILVER, BlockPos.ZERO, Blocks.CHEST.defaultBlockState());
+    private final Map<TreasureChestMaterial, TreasureChestBlockEntity> treasureChestMap = new HashMap<>();
 
     public OdysseyBlockEntityWithoutLevelRenderer(BlockEntityRenderDispatcher blockEntityRenderDispatcher, EntityModelSet entityModelSet) {
         super(blockEntityRenderDispatcher, entityModelSet);
         this.entityModelSet = entityModelSet;
         this.shieldModel = new ShieldModel(this.entityModelSet.bakeLayer(ModelLayers.SHIELD));
+        for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
+            this.treasureChestMap.put(treasureChestMaterial, new TreasureChestBlockEntity(BlockPos.ZERO, treasureChestMaterial.getBlockState()));
+        }
     }
 
     public static OdysseyBlockEntityWithoutLevelRenderer getInstance(){
@@ -73,6 +62,10 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
     }
 
     public void onResourceManagerReload(ResourceManager resourceManager) {
+        this.treasureChestMap.clear();
+        for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
+            this.treasureChestMap.put(treasureChestMaterial, new TreasureChestBlockEntity(BlockPos.ZERO, treasureChestMaterial.getBlockState()));
+        }
         super.onResourceManagerReload(resourceManager);
     }
 
@@ -82,8 +75,8 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
             Block block = bewlrBlockItem.getBlock();
             BlockState blockstate = block.defaultBlockState();
             BlockEntity blockEntity = null;
-            if (blockstate.is(BlockRegistry.STERLING_SILVER_CHEST.get())) {
-                blockEntity = this.sterlingSilverChest;
+            if (blockstate.getBlock() instanceof TreasureChestBlock treasureChestBlock) {
+                blockEntity = this.treasureChestMap.get(treasureChestBlock.treasureChestMaterial);
             }
             if(blockEntity != null){
                 this.blockEntityRenderDispatcher.renderItem(blockEntity, poseStack, multiBufferSource, p_108834_, p_108835_);

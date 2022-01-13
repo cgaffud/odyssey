@@ -28,7 +28,7 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         Random random = context.random();
-        if(random.nextInt(30) != 0){
+        if(random.nextInt(20) != 0){
             return false;
         }
         WorldGenLevel worldgenlevel = context.level();
@@ -50,9 +50,9 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
                         BlockPos blockPosBelow = blockpos$mutableblockpos.below();
                         if (isSolid(worldgenlevel, blockpos$mutableblockpos) && !isSolid(worldgenlevel, blockPosBelow)) {
                             if(blockpos$mutableblockpos.getY() >= 0){
-                                BlockState blockState = Blocks.CHEST.defaultBlockState().setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
+                                BlockState blockState = BlockRegistry.COPPER_CHEST.get().defaultBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
                                 worldgenlevel.setBlock(blockpos$mutableblockpos, blockState, 2);
-                                RandomizableContainerBlockEntity.setLootTable(worldgenlevel, random, blockpos$mutableblockpos, OdysseyLootTables.WOODEN_TREASURE_CHEST);
+                                RandomizableContainerBlockEntity.setLootTable(worldgenlevel, random, blockpos$mutableblockpos, OdysseyLootTables.COPPER_TREASURE_CHEST);
                                 return true;
                             } else {
                                 BlockState blockState = BlockRegistry.STERLING_SILVER_CHEST.get().defaultBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));

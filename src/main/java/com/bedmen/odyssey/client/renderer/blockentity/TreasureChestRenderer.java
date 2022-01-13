@@ -4,20 +4,13 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
-import com.bedmen.odyssey.registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
-import java.util.Calendar;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
@@ -45,14 +38,8 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
     private final ModelPart lid;
     private final ModelPart bottom;
     private final ModelPart lock;
-    private final TreasureChestMaterial treasureChestMaterial;
-    public static final ResourceLocation STERLING_SILVER_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/single");
-    public static final ResourceLocation STERLING_SILVER_LOCKED_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/sterling_silver_chest/single_locked");
-    public static final Material STERLING_SILVER_RENDER_MATERIAL = new Material(Sheets.CHEST_SHEET, STERLING_SILVER_RESOURCE_LOCATION);
-    public static final Material STERLING_SILVER_LOCKED_RENDER_MATERIAL = new Material(Sheets.CHEST_SHEET, STERLING_SILVER_LOCKED_RESOURCE_LOCATION);
 
     public TreasureChestRenderer(TreasureChestMaterial treasureChestMaterial, BlockEntityRendererProvider.Context context) {
-        this.treasureChestMaterial = treasureChestMaterial;
         ModelPart modelpart = context.bakeLayer(ModelLayers.CHEST);
         this.bottom = modelpart.getChild(BOTTOM);
         this.lid = modelpart.getChild(LID);
@@ -62,7 +49,9 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
     public void render(T blockEntity, float p_112364_, PoseStack poseStack, MultiBufferSource multiBufferSource, int p_112367_, int p_112368_) {
         Level level = blockEntity.getLevel();
         boolean flag = level != null;
-        BlockState blockstate = flag ? blockEntity.getBlockState() : this.treasureChestMaterial.getBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
+
+        BlockState blockstate = flag ? blockEntity.getBlockState() : blockEntity.getBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
+        TreasureChestMaterial treasureChestMaterial = ((TreasureChestBlock)blockstate.getBlock()).treasureChestMaterial;
         Block block = blockstate.getBlock();
         if (block instanceof AbstractChestBlock) {
             AbstractChestBlock<?> abstractchestblock = (AbstractChestBlock)block;
@@ -82,8 +71,7 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
             f1 = 1.0F - f1;
             f1 = 1.0F - f1 * f1 * f1;
             int i = neighborcombineresult.<Int2IntFunction>apply(new BrightnessCombiner<>()).applyAsInt(p_112367_);
-            Material material = this.getMaterial(blockstate.getValue(TreasureChestBlock.LOCKED));
-            VertexConsumer vertexconsumer = material.buffer(multiBufferSource, RenderType::entityCutout);
+            VertexConsumer vertexconsumer = treasureChestMaterial.getRenderMaterial(blockstate.getValue(TreasureChestBlock.LOCKED)).buffer(multiBufferSource, RenderType::entityCutout);
             this.render(poseStack, vertexconsumer, this.lid, this.lock, this.bottom, f1, i, p_112368_);
 
             poseStack.popPose();
@@ -96,13 +84,5 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
         p_112372_.render(p_112370_, p_112371_, p_112376_, p_112377_);
         p_112373_.render(p_112370_, p_112371_, p_112376_, p_112377_);
         p_112374_.render(p_112370_, p_112371_, p_112376_, p_112377_);
-    }
-
-    protected Material getMaterial(boolean locked) {
-        switch(this.treasureChestMaterial){
-            default:
-            case STERLING_SILVER:
-                return locked ? STERLING_SILVER_LOCKED_RENDER_MATERIAL : STERLING_SILVER_RENDER_MATERIAL;
-        }
     }
 }
