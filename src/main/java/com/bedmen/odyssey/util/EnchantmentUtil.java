@@ -229,6 +229,10 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SHATTERING.get(), entity);
     }
 
+    public static int getTorrent(LivingEntity entity){
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.TORRENT.get(),entity);
+    }
+
     public static int getQuickChargeTime(int chargeTime, ItemStack itemStack) {
         int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.QUICK_CHARGE.get(), itemStack);
         return chargeTime - (chargeTime / 5) * i;

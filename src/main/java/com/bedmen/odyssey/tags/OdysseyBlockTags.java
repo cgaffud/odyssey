@@ -11,4 +11,5 @@ public class OdysseyBlockTags {
     public static final Tag.Named<Block> SILVER_ORES = BlockTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "silver_ores"));
     public static final Tag.Named<Block> STERLING_SILVER_TAG = BlockTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "needs_sterling_silver_tool"));
     public static final Tag.Named<Block> PALM_LOGS = BlockTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "palm_logs"));
+    public static final Tag.Named<Block> GREATWOOD_LOGS = BlockTags.createOptional(new ResourceLocation(Odyssey.MOD_ID, "greatwood_logs"));
 }

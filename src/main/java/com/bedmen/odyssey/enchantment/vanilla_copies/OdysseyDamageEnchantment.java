@@ -73,7 +73,8 @@ public class OdysseyDamageEnchantment extends Enchantment {
     public enum DamageType{
         ALL(1,11,20),
         UNDEAD(5,8,20),
-        ARTHROPOD(5,8,20);
+        ARTHROPOD(5,8,20),
+        HYDROPHOBIC(5,8,20);
 
         private final int minCost;
         private final int levelCost;
