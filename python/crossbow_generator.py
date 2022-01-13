@@ -10,31 +10,9 @@ while(again):
     crossbowPath = 'oddc:item/'+crossbowID
 
     crossbowModel = {
-    "parent": "item/generated",
+    "parent": "minecraft:item/crossbow",
     "textures": {
         "layer0": "%s/standby" % (crossbowPath)
-    },
-    "display": {
-        "thirdperson_righthand": {
-            "rotation": [ -90, 0, -60 ],
-            "translation": [ 2, 0.1, -3 ],
-            "scale": [ 0.9, 0.9, 0.9 ]
-        },
-        "thirdperson_lefthand": {
-            "rotation": [ -90, 0, 30 ],
-            "translation": [ 2, 0.1, -3 ],
-            "scale": [ 0.9, 0.9, 0.9 ]
-        },
-        "firstperson_righthand": {
-            "rotation": [ -90, 0, -55 ],
-            "translation": [ 1.13, 3.2, 1.13],
-            "scale": [ 0.68, 0.68, 0.68 ]
-        },
-        "firstperson_lefthand": {
-            "rotation": [ -90, 0, 35 ],
-            "translation": [ 1.13, 3.2, 1.13],
-            "scale": [ 0.68, 0.68, 0.68 ]
-        }
     },
     "overrides": [
         {

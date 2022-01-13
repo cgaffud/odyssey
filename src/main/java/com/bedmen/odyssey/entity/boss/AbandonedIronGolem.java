@@ -55,9 +55,10 @@ public class AbandonedIronGolem extends Boss {
     private static final double SONIC_BOOM_RANGE = 20d;
     protected static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(AbandonedIronGolem.class, EntityDataSerializers.INT);
 
-    public AbandonedIronGolem(EntityType<? extends Monster> p_i48576_1_, Level p_i48576_2_) {
-        super(p_i48576_1_, p_i48576_2_);
+    public AbandonedIronGolem(EntityType<? extends Boss> entityType, Level level) {
+        super(entityType, level);
         this.maxUpStep = 1.0F;
+        this.xpReward = 50;
     }
 
     protected void registerGoals() {
@@ -170,7 +171,7 @@ public class AbandonedIronGolem extends Boss {
         double d0 = this.getX() - Math.sin(angle) * r;
         double d1 = this.getY() + 31d/16d;
         double d2 = this.getZ() + Math.cos(angle) * r;
-        this.level.explode(this, d0, d1, d2, 1.25f, getExplosionBlockInteraction(this));
+        this.level.explode(this, d0, d1, d2, 1.25f, getExplosionBlockInteraction());
         List<Player> playerList = this.level.getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(SONIC_BOOM_RANGE));
         for(Player player : playerList){
             double targetX = player.getX();
@@ -179,15 +180,13 @@ public class AbandonedIronGolem extends Boss {
             double d3 = targetX - d0;
             double d4 = targetY - d1;
             double d5 = targetZ - d2;
-            SonicBoom sonicBoom = new SonicBoom(this.level, this, d3, d4, d5);
-            sonicBoom.setOwner(this);
-            sonicBoom.setPosRaw(d0, d1, d2);
+            SonicBoom sonicBoom = new SonicBoom(this.level, this, d0, d1, d2, d3, d4, d5);
             this.level.addFreshEntity(sonicBoom);
         }
     }
 
-    public static Explosion.BlockInteraction getExplosionBlockInteraction(Entity entity){
-        return entity.level.getDifficulty() == Difficulty.HARD && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(entity.level, entity) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+    public Explosion.BlockInteraction getExplosionBlockInteraction(){
+        return this.level.getDifficulty() == Difficulty.HARD && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
     }
 
     public boolean doHurtTarget(Entity pEntity) {
@@ -259,24 +258,6 @@ public class AbandonedIronGolem extends Boss {
 
     public void die(DamageSource pCause) {
         super.die(pCause);
-    }
-
-    protected void dropCustomDeathLoot(DamageSource damageSource, int p_213333_2_, boolean p_213333_3_) {
-        super.dropCustomDeathLoot(damageSource, p_213333_2_, p_213333_3_);
-        int i = 7 + this.random.nextInt(4);
-        int j = 7 + this.random.nextInt(4);
-        for(int i1 = 0; i1 < i; i1++){
-            ItemEntity itementity = this.spawnAtLocation(Items.IRON_INGOT);
-            if (itementity != null) {
-                itementity.setExtendedLifetime();
-            }
-        }
-        for(int j1 = 0; j1 < j; j1++){
-            ItemEntity itementity = this.spawnAtLocation(Items.RAW_IRON);
-            if (itementity != null) {
-                itementity.setExtendedLifetime();
-            }
-        }
     }
 
     public IronGolem.Crackiness getCrackiness() {

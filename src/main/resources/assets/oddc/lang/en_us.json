@@ -205,7 +205,6 @@
   "item.oddc.greatwood_boat": "Greatwood Boat",
   "block.oddc.greatroots": "Greatroots",
   "item.oddc.greatroot": "Greatroot",
-  "block.oddc.greatroot": "Greatroot",
   "block.oddc.clover_stone": "Clover Stone",
   "item.oddc.clover_stone_sword": "Clover Stone Sword",
   "item.oddc.clover_stone_axe": "Clover Stone Axe",
@@ -310,5 +309,6 @@
   "item.oddc.reinforced_helmet": "Reinforced Helmet",
   "item.oddc.reinforced_chestplate": "Reinforced Chestplate",
   "item.oddc.reinforced_leggings": "Reinforced Leggings",
-  "item.oddc.reinforced_boots": "Reinforced Boots"
+  "item.oddc.reinforced_boots": "Reinforced Boots",
+  "item.oddc.rusty_sonic_fork": "Rusty Sonic Fork"
 }
