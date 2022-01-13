@@ -19,7 +19,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.network.NetworkHooks;
+
+import java.util.Locale;
 
 public class OdysseyBoat extends Boat {
 
@@ -55,10 +58,7 @@ public class OdysseyBoat extends Boat {
     }
 
     public Item getDropItem() {
-        switch(this.getOdysseyBoatType()) {
-            default:
-                return ItemRegistry.PALM_BOAT.get();
-        }
+        return this.getOdysseyBoatType().getLazyItem();
     }
 
     @Override
@@ -81,7 +81,7 @@ public class OdysseyBoat extends Boat {
                         this.kill();
                         if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                             for(int i = 0; i < 3; ++i) {
-                                this.spawnAtLocation(this.getOdysseyBoatType().getPlanks());
+                                this.spawnAtLocation(this.getOdysseyBoatType().getLazyPlanks());
                             }
 
                             for(int j = 0; j < 2; ++j) {
@@ -100,25 +100,31 @@ public class OdysseyBoat extends Boat {
     }
 
     public enum Type {
-        PALM(BlockRegistry.PALM_PLANKS.get(), "palm", new ResourceLocation(Odyssey.MOD_ID, "textures/entity/boat/palm.png")),
-        GREATWOOD(BlockRegistry.GREATWOOD_PLANKS.get(),"greatwood",new ResourceLocation(Odyssey.MOD_ID,"textures/entity/boat/greatwood.png"));
+        PALM(BlockRegistry.PALM_PLANKS::get, ItemRegistry.PALM_BOAT::get),
+        GREATWOOD(BlockRegistry.GREATWOOD_PLANKS::get, ItemRegistry.GREATWOOD_BOAT::get);
 
         private final String name;
-        private final Block planks;
+        private final Lazy<Block> lazyPlanks;
+        private final Lazy<Item> lazyItem;
         private final ResourceLocation resourceLocation;
 
-        Type(Block p_i48146_3_, String p_i48146_4_, ResourceLocation resourceLocation) {
-            this.name = p_i48146_4_;
-            this.planks = p_i48146_3_;
-            this.resourceLocation = resourceLocation;
+        Type(Lazy<Block> planks, Lazy<Item> lazyItem) {
+            this.name = this.name().toLowerCase(Locale.ROOT);
+            this.lazyPlanks = planks;
+            this.lazyItem = lazyItem;
+            this.resourceLocation = new ResourceLocation(Odyssey.MOD_ID,String.format("textures/entity/boat/%s.png", this.name));
         }
 
         public String getName() {
             return this.name;
         }
 
-        public Block getPlanks() {
-            return this.planks;
+        public Block getLazyPlanks() {
+            return this.lazyPlanks.get();
+        }
+
+        public Item getLazyItem() {
+            return this.lazyItem.get();
         }
 
         public ResourceLocation getResourceLocation(){

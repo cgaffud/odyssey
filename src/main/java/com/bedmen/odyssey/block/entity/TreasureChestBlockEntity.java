@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.block.entity;
 
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -42,8 +43,8 @@ public class TreasureChestBlockEntity extends ChestBlockEntity {
         };
     }
 
-    public TreasureChestBlockEntity(TreasureChestMaterial chestMaterial, BlockPos blockPos, BlockState blockState) {
-        this(chestMaterial.getBlockEntityType(), blockPos, blockState);
+    public TreasureChestBlockEntity(BlockPos blockPos, BlockState blockState) {
+        this(BlockEntityTypeRegistry.TREASURE_CHEST.get(), blockPos, blockState);
     }
 
     static void playSound(Level level, BlockPos blockPos, SoundEvent soundEvent) {

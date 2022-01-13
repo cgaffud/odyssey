@@ -1,9 +1,11 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.network.chat.Component;
@@ -22,6 +24,7 @@ import net.minecraftforge.common.util.Lazy;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -114,18 +117,9 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
     }
 
     public enum ShieldType {
-        WOODEN(200, 4.0f, 100,
-                new TagItemChecker(ItemTags.PLANKS),
-                OdysseyBlockEntityWithoutLevelRenderer.WOODEN_SHIELD_BASE_MATERIAL,
-                OdysseyBlockEntityWithoutLevelRenderer.WOODEN_SHIELD_BASE_NOPATTERN_MATERIAL),
-        COPPER(400, 6.0f, 100,
-                new IndividualItemChecker(Lazy.of(() -> Items.COPPER_INGOT)),
-                OdysseyBlockEntityWithoutLevelRenderer.COPPER_SHIELD_BASE_MATERIAL,
-                OdysseyBlockEntityWithoutLevelRenderer.COPPER_SHIELD_BASE_NOPATTERN_MATERIAL),
-        REINFORCED(800, 8.0f, 100,
-                new IndividualItemChecker(Lazy.of(() -> Items.IRON_INGOT)),
-                OdysseyBlockEntityWithoutLevelRenderer.REINFORCED_SHIELD_BASE_MATERIAL,
-                OdysseyBlockEntityWithoutLevelRenderer.REINFORCED_SHIELD_BASE_NOPATTERN_MATERIAL);
+        WOODEN(200, 4.0f, 100, new TagItemChecker(ItemTags.PLANKS)),
+        COPPER(400, 6.0f, 100, new IndividualItemChecker(() -> Items.COPPER_INGOT)),
+        REINFORCED(800, 8.0f, 100, new IndividualItemChecker(() -> Items.IRON_INGOT));
 
         public final int durability;
         public final float damageBlock;
@@ -134,13 +128,14 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
         private final Material renderMaterial;
         private final Material renderMaterialNoPattern;
 
-        ShieldType(int durability, float damageBlock, int recoveryTime, ItemChecker itemChecker, Material renderMaterial, Material renderMaterialNoPattern){
+        ShieldType(int durability, float damageBlock, int recoveryTime, ItemChecker itemChecker){
             this.durability = durability;
             this.damageBlock = damageBlock;
             this.recoveryTime = recoveryTime;
             this.itemChecker = itemChecker;
-            this.renderMaterial = renderMaterial;
-            this.renderMaterialNoPattern = renderMaterialNoPattern;
+            String name = this.name().toLowerCase(Locale.ROOT);
+            this.renderMaterial = new Material(Sheets.SHIELD_SHEET, new ResourceLocation(Odyssey.MOD_ID, String.format("entity/shields/%s_shield_base", name)));
+            this.renderMaterialNoPattern = new Material(Sheets.SHIELD_SHEET, new ResourceLocation(Odyssey.MOD_ID, String.format("entity/shields/%s_shield_base_nopattern", name)));
         }
 
         public Material getRenderMaterial(boolean pattern){

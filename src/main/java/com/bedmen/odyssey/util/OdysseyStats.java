@@ -11,9 +11,8 @@ public class OdysseyStats {
     public static final ResourceLocation INTERACT_WITH_RECYCLING_FURNACE = makeCustomStat("interact_with_recycling_furnace", StatFormatter.DEFAULT);
     public static final ResourceLocation INTERACT_WITH_STITCHING_TABLE = makeCustomStat("interact_with_stitching_table", StatFormatter.DEFAULT);
     public static final ResourceLocation INTERACT_WITH_ALLOY_FURNACE = makeCustomStat("interact_with_alloy_furnace", StatFormatter.DEFAULT);
-    public static final ResourceLocation OPEN_STERLING_SILVER_CHEST = makeCustomStat("open_sterling_silver_chest", StatFormatter.DEFAULT);
 
-    private static ResourceLocation makeCustomStat(String s, StatFormatter statFormatter) {
+    public static ResourceLocation makeCustomStat(String s, StatFormatter statFormatter) {
         ResourceLocation resourcelocation = new ResourceLocation(s);
         Registry.register(Registry.CUSTOM_STAT, s, resourcelocation);
         Stats.CUSTOM.get(resourcelocation, statFormatter);

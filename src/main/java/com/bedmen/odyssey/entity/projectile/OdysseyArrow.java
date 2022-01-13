@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.items.OdysseyArrowItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
-import java.util.function.Supplier;
+import java.util.Locale;
 
 public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
     private ArrowType arrowType = ArrowType.AMETHYST;
@@ -70,24 +69,31 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
     }
 
     public enum ArrowType{
-        FLINT(ItemRegistry.ARROW, 5.0d, 0, new ResourceLocation("textures/entity/projectiles/arrow.png")),
-        CLOVER_STONE(ItemRegistry.CLOVER_STONE, 5.5d, 1, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/clover_stone_arrow.png")),
-        AMETHYST(ItemRegistry.AMETHYST_ARROW, 6.0d, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/amethyst_arrow.png"));
+        FLINT(ItemRegistry.ARROW::get, 5.0d, 0, new ResourceLocation("textures/entity/projectiles/arrow.png")),
+        CLOVER_STONE(ItemRegistry.CLOVER_STONE_ARROW::get, 5.5d, 1),
+        AMETHYST(ItemRegistry.AMETHYST_ARROW::get, 6.0d, 0);
 
-        private final Lazy<Item> itemSupplier;
+        private final Lazy<Item> lazyItem;
         private final double damage;
-        private int looting;
+        private final int looting;
         private final ResourceLocation resourceLocation;
 
-        ArrowType(Supplier<Item> itemSupplier, double damage, int looting, ResourceLocation resourceLocation){
-            this.itemSupplier = Lazy.of(itemSupplier);
+        ArrowType(Lazy<Item> lazyItem, double damage, int looting){
+            this.lazyItem = lazyItem;
+            this.damage = damage;
+            this.looting = looting;
+            this.resourceLocation = new ResourceLocation(Odyssey.MOD_ID, String.format("textures/entity/projectiles/%s_arrow.png", this.name().toLowerCase(Locale.ROOT)));
+        }
+
+        ArrowType(Lazy<Item> lazyItem, double damage, int looting, ResourceLocation resourceLocation){
+            this.lazyItem = lazyItem;
             this.damage = damage;
             this.looting = looting;
             this.resourceLocation = resourceLocation;
         }
 
         public Item getItem(){
-            return this.itemSupplier.get();
+            return this.lazyItem.get();
         }
 
         public double getDamage(){

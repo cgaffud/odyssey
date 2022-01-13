@@ -1,11 +1,11 @@
 {
   "type": "oddc:recycling",
   "ingredient": {
-    "item": "oddc:sterling_silver_key"
+    "item": "oddc:copper_key"
   },
   "metalCounts": [
     {
-      "metal": "sterling_silver",
+      "metal": "copper",
       "count": 9
     }
   ]

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/chest",
   "textures": {
-    "particle": "oddc:block/sterling_silver_block"
+    "particle": "minecraft:block/raw_copper_block"
   }
 }

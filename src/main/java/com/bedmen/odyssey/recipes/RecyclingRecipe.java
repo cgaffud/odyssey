@@ -6,8 +6,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -18,10 +16,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import org.lwjgl.system.CallbackI;
+import net.minecraftforge.common.util.Lazy;
 
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -160,14 +157,14 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
         STERLING_SILVER(ItemRegistry.STERLING_SILVER_NUGGET::get, ItemRegistry.STERLING_SILVER_INGOT::get, ItemRegistry.STERLING_SILVER_BLOCK::get),
         ELECTRUM(ItemRegistry.ELECTRUM_NUGGET::get, ItemRegistry.ELECTRUM_INGOT::get, ItemRegistry.ELECTRUM_BLOCK::get);
 
-        private final Supplier<Item> nuggetSupplier;
-        private final Supplier<Item> ingotSupplier;
-        private final Supplier<Item> blockSupplier;
+        private final Lazy<Item> lazyNugget;
+        private final Lazy<Item> lazyIngot;
+        private final Lazy<Item> lazyBlock;
 
-        Metal(Supplier<Item> nuggetSupplier, Supplier<Item> ingotSupplier,Supplier<Item> blockSupplier){
-            this.nuggetSupplier = nuggetSupplier;
-            this.ingotSupplier = ingotSupplier;
-            this.blockSupplier = blockSupplier;
+        Metal(Lazy<Item> lazyNugget, Lazy<Item> lazyIngot, Lazy<Item> lazyBlock){
+            this.lazyNugget = lazyNugget;
+            this.lazyIngot = lazyIngot;
+            this.lazyBlock = lazyBlock;
         }
 
         public Item getItemFromColumn(int col){
@@ -179,15 +176,15 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
         }
 
         public Item getNugget(){
-            return this.nuggetSupplier.get();
+            return this.lazyNugget.get();
         }
 
         public Item getIngot(){
-            return this.ingotSupplier.get();
+            return this.lazyIngot.get();
         }
 
         public Item getBlock(){
-            return this.blockSupplier.get();
+            return this.lazyBlock.get();
         }
 
         public static Metal getMetal(String s){
