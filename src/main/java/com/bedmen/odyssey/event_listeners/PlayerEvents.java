@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.projectile.SonicBoom;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
@@ -67,14 +68,6 @@ public class PlayerEvents {
 //        if(player instanceof IOdysseyPlayer && !player.level.isClientSide){
 //            player.setHealth(20.0f + 2.0f * ((IOdysseyPlayer) player).getLifeFruits());
 //        }
-    }
-
-    //TODO add SwungWithVolatile to also send when attacking mobs
-    @SubscribeEvent
-    public static void PlayerInteractEventListener (final PlayerInteractEvent event){
-        if (EnchantmentUtil.hasVolatile(event.getItemStack())){
-            OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket());
-        }
     }
 
     @SubscribeEvent

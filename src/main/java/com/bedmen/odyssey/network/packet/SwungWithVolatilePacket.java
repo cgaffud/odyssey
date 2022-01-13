@@ -15,13 +15,13 @@ public class SwungWithVolatilePacket{
     }
 
     /**
-     * Reads the raw packet data from the data stream.
+     * Writes the raw packet data to the data stream.
      */
     public static void encode(SwungWithVolatilePacket SwungWithVolatilePacket, FriendlyByteBuf buf){
     }
 
     /**
-     * Writes the raw packet data to the data stream.
+     * Reads the raw packet data from the data stream.
      */
     public static SwungWithVolatilePacket decode(FriendlyByteBuf buf){
         return new SwungWithVolatilePacket();

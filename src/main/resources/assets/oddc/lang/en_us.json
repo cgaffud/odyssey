@@ -205,7 +205,6 @@
   "item.oddc.greatwood_boat": "Greatwood Boat",
   "block.oddc.greatroots": "Greatroots",
   "item.oddc.greatroot": "Greatroot",
-  "block.oddc.greatroot": "Greatroot",
   "block.oddc.clover_stone": "Clover Stone",
   "item.oddc.clover_stone_sword": "Clover Stone Sword",
   "item.oddc.clover_stone_axe": "Clover Stone Axe",
@@ -314,5 +313,6 @@
   "item.oddc.battle_pickaxe": "Battle Pickaxe",
   "item.oddc.slime_bat": "Slime Bat",
   "item.oddc.dual_wield_hammers": "Dual Wield Hammers",
-  "item.oddc.swift_sabre": "Swift Sabre"
+  "item.oddc.swift_sabre": "Swift Sabre",
+  "item.oddc.rusty_sonic_fork": "Rusty Sonic Fork"
 }
