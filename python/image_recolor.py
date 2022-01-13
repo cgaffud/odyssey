@@ -144,17 +144,10 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/models/armor/iron_layer_1.png"
-#open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/shields/iron_shield_back.png"
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/models/armor/iron_1_no_stripes.png"
+#open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/models/armor/iron_layer_1.png"
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/depreciated/iron_fork.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/rusty_sonic_fork_1.png"
 image1 = open_image(open_path1)
-color_towards_average(image1,0.3)
-recolor_image(image1,[0.8,0.8,0.8],[0,0,0])
-#at_every_pixel(image1, lambda pos,pixel : stripe_pixel(pos,pixel,0.90))
-'''a = 14/11
-bs = [2/3,1/2,1]
-cs = [a*b for b in bs]
-ds = [-183*a*b+36*b for b in bs]
-recolor_image(image1, cs, ds)'''
+recolor_image_randomly(image1, [1,1,1],[0,0,0],[0.85,0.7,0.55],[0,0,0])
 save_image(image1, save_path)
 print("Done")

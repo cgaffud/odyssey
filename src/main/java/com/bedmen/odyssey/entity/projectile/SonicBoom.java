@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -14,6 +13,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -23,22 +23,27 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class SonicBoom extends AbstractHurtingProjectile {
     private static final int MAX_TICKS = 40;
-    private static final double INITIAL_SPEED = 1.2d;
+    public static final double INITIAL_SPEED = 1.2d;
 
     public SonicBoom(EntityType<? extends SonicBoom> entityType, Level world) {
         super(entityType, world);
     }
 
-    public SonicBoom(Level p_i1794_1_, LivingEntity p_i1794_2_, double x, double y, double z) {
-        super(EntityTypeRegistry.SONIC_BOOM.get(), p_i1794_2_, x, y, z, p_i1794_1_);
-        Vec3 vector3d = new Vec3(x,y,z);
+    public SonicBoom(Level level, LivingEntity livingEntity) {
+        this(level, livingEntity, livingEntity.getX(), livingEntity.getEyeY(), livingEntity.getZ(), 1d, 1d, 1d);
+    }
+
+    public SonicBoom(Level level, LivingEntity livingEntity, double x, double y, double z, double dx, double dy, double dz) {
+        super(EntityTypeRegistry.SONIC_BOOM.get(), livingEntity, dx, dy, dz, level);
+        this.setPos(x, y, z);
+        Vec3 vector3d = new Vec3(dx,dy,dz);
         this.setRotation(vector3d);
         this.setDeltaMovement(vector3d.normalize().scale(INITIAL_SPEED));
     }
 
     @OnlyIn(Dist.CLIENT)
-    public SonicBoom(Level p_i1795_1_, double p_i1795_2_, double p_i1795_4_, double p_i1795_6_, double p_i1795_8_, double p_i1795_10_, double p_i1795_12_) {
-        super(EntityTypeRegistry.SONIC_BOOM.get(), p_i1795_2_, p_i1795_4_, p_i1795_6_, p_i1795_8_, p_i1795_10_, p_i1795_12_, p_i1795_1_);
+    public SonicBoom(Level level, double x, double y, double z, double dx, double dy, double dz) {
+        super(EntityTypeRegistry.SONIC_BOOM.get(), x, y, z, dx, dy, dz, level);
     }
 
     protected void defineSynchedData() {
@@ -149,7 +154,7 @@ public class SonicBoom extends AbstractHurtingProjectile {
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
         if (!this.level.isClientSide) {
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.25f, AbandonedIronGolem.getExplosionBlockInteraction(this));
+            this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.25f, Explosion.BlockInteraction.NONE);
             this.discard();
         }
     }
