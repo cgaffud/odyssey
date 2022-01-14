@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.entity.animal.OdysseyPolarBear;
 import com.bedmen.odyssey.entity.monster.BabySkeleton;
+import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.registry.EffectRegistry;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -63,18 +65,26 @@ public class EntityEvents {
     @SubscribeEvent
     public static void attackEntityEventListener(final AttackEntityEvent event){
         Player player = (Player) event.getEntity();
-        int shatteringLevel = EnchantmentUtil.getShattering(player);
         Entity target = event.getTarget();
-        if(!player.level.isClientSide && target instanceof LivingEntity livingTarget && player.getAttackStrengthScale(0.5F) > 0.9f && shatteringLevel > 0){
-            MobEffectInstance effectInstance = livingTarget.getEffect(EffectRegistry.SHATTERED.get());
-            if(effectInstance != null){
-                livingTarget.removeEffect(EffectRegistry.SHATTERED.get());
-                int amp = effectInstance.getAmplifier();
-                effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, Integer.min(amp+1,1+2*shatteringLevel), false, true, true);
-            } else {
-                effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, 0, false, true, true);
+        if(!player.level.isClientSide && player.getAttackStrengthScale(0.5F) > 0.9f && target instanceof LivingEntity livingTarget){
+            int shatteringLevel = EnchantmentUtil.getShattering(player);
+            if(!player.level.isClientSide  && shatteringLevel > 0){
+                MobEffectInstance effectInstance = livingTarget.getEffect(EffectRegistry.SHATTERED.get());
+                if(effectInstance != null){
+                    livingTarget.removeEffect(EffectRegistry.SHATTERED.get());
+                    int amp = effectInstance.getAmplifier();
+                    effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, Integer.min(amp+1,1+2*shatteringLevel), false, true, true);
+                } else {
+                    effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, 0, false, true, true);
+                }
+                livingTarget.addEffect(effectInstance);
             }
-            livingTarget.addEffect(effectInstance);
+            if(player.getMainHandItem().is(ItemRegistry.WEAVER_FANG.get()) && player.getRandom().nextFloat() < Weaver.WEB_ATTACK_CHANCE){
+                BlockPos blockPos = new BlockPos(livingTarget.getPosition(1f));
+                if(livingTarget.level.getBlockState(blockPos).getBlock() == Blocks.AIR){
+                    livingTarget.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
+                }
+            }
         }
     }
 

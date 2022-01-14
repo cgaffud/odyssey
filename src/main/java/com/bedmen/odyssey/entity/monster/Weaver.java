@@ -59,6 +59,8 @@ public class Weaver extends Monster {
         map.put(Attributes.ATTACK_DAMAGE, DAMAGE_MODIFIER_QUEEN);
         return map;
     });
+    public static final float WEB_ATTACK_CHANCE = 0.1f;
+    private static final float WEAVER_FANG_DROP_CHANCE = 0.25f;
 
     public Weaver(EntityType<? extends Weaver> entityType, Level level) {
         super(entityType, level);
@@ -211,6 +213,12 @@ public class Weaver extends Monster {
             if (itementity != null) {
                 itementity.setExtendedLifetime();
             }
+            if(this.random.nextFloat() < WEAVER_FANG_DROP_CHANCE){
+                itementity = this.spawnAtLocation(ItemRegistry.WEAVER_FANG.get());
+                if (itementity != null) {
+                    itementity.setExtendedLifetime();
+                }
+            }
         }
     }
 
@@ -257,7 +265,7 @@ public class Weaver extends Monster {
                 this.resetAttackCooldown();
                 this.mob.swing(InteractionHand.MAIN_HAND);
                 this.mob.doHurtTarget(pEnemy);
-                if(this.mob.getRandom().nextFloat() < 0.1f){
+                if(this.mob.getRandom().nextFloat() < WEB_ATTACK_CHANCE){
                     BlockPos blockPos = new BlockPos(pEnemy.getPosition(1f));
                     if(this.mob.level.getBlockState(blockPos).getBlock() == Blocks.AIR){
                         this.mob.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
