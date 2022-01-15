@@ -1,5 +1,6 @@
-package com.bedmen.odyssey.enchantment;
+package com.bedmen.odyssey.enchantment.odyssey;
 
+import com.bedmen.odyssey.enchantment.OdysseyEnchantmentCategory;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.world.effect.MobEffectInstance;

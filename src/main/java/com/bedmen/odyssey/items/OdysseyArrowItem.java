@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,7 +38,7 @@ public class OdysseyArrowItem extends ArrowItem {
         tooltip.add(new TranslatableComponent("item.oddc.arrow.damage").append(StringUtil.doubleFormat(this.arrowType.getDamage())).withStyle(ChatFormatting.BLUE));
         int looting = this.arrowType.getLooting();
         if(looting > 0){
-            tooltip.add(EnchantmentRegistry.MOB_LOOTING.get().getFullname(looting));
+            tooltip.add(Enchantments.MOB_LOOTING.getFullname(looting));
         }
     }
 }

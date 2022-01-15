@@ -19,7 +19,9 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.loot.functions.EnchantWithTierFunction;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
@@ -93,116 +95,122 @@ public class Odyssey
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        OreGen.registerOres();
-        FeatureGen.registerFeatures();
-        TreeGen.registerTrees();
-        StructureGen.registerStructures();
-        StructureFeatureRegistry.setupStructures();
-        OdysseyBiomeEntitySpawn.registerSpawners();
+        event.enqueueWork(() -> {
+            OreGen.registerOres();
+            FeatureGen.registerFeatures();
+            TreeGen.registerTrees();
+            StructureGen.registerStructures();
+            StructureFeatureRegistry.setupStructures();
+            OdysseyBiomeEntitySpawn.registerSpawners();
 //        OdysseyStructureEntitySpawn.registerSpawners();
 //        OdysseyPotions.addBrewingRecipes();
-        CompostUtil.addCompostingRecipes();
+            CompostUtil.addCompostingRecipes();
 //        OdysseyTrades.addTrades();
-        OdysseyNetwork.init();
-        BiomeRegistry.register();
-        FoliagePlacerTypeRegistry.registerFoliagePlacerTypes();
+            OdysseyNetwork.init();
+            BiomeRegistry.register();
+            FoliagePlacerTypeRegistry.registerFoliagePlacerTypes();
 
-        NoiseGeneratorSettings.register(WorldTypeRegistry.ODYSSEY_RESOURCE_KEY, OdysseyGeneration.odysseyOverworld(false, false));
+            NoiseGeneratorSettings.register(WorldTypeRegistry.ODYSSEY_RESOURCE_KEY, OdysseyGeneration.odysseyOverworld(false, false));
 
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
-        SpawnPlacements.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BabyLeviathan::spawnPredicate);
-        SpawnPlacements.register(EntityTypeRegistry.WEAVER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Weaver::spawnPredicate);
+            SpawnPlacements.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BabyLeviathan::spawnPredicate);
+            SpawnPlacements.register(EntityTypeRegistry.WEAVER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Weaver::spawnPredicate);
+            OdysseyLootItemFunctions.ENCHANT_WITH_TIER = OdysseyLootItemFunctions.register("enchant_with_tier", new EnchantWithTierFunction.Serializer());
+        });
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)
     {
-        //For hollow coconut vision overlay
-        OverlayRegistry.registerOverlayTop("OdysseyHelmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-            gui.setupOverlayRenderState(true, false);
-            if(gui instanceof OdysseyIngameGui odysseyIngameGui){
-                odysseyIngameGui.renderOdysseyHelmet(partialTicks, mStack);
+        event.enqueueWork(() -> {
+            //For hollow coconut vision overlay
+            OverlayRegistry.registerOverlayTop("OdysseyHelmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+                gui.setupOverlayRenderState(true, false);
+                if(gui instanceof OdysseyIngameGui odysseyIngameGui){
+                    odysseyIngameGui.renderOdysseyHelmet(partialTicks, mStack);
+                }
+            });
+
+            //Override PlayerRenderer with OdysseyPlayerRenderer
+            EntityRenderers.PLAYER_PROVIDERS = ImmutableMap.of("default", (context) -> {
+                return new OdysseyPlayerRenderer(context, false);
+            }, "slim", (context) -> {
+                return new OdysseyPlayerRenderer(context, true);
+            });
+
+            //Block Render Types
+            for(Block block : ForgeRegistries.BLOCKS.getValues()) {
+                if (block instanceof INeedsToRegisterRenderType) {
+                    ItemBlockRenderTypes.setRenderLayer(block, ((INeedsToRegisterRenderType) block).getRenderType());
+                }
             }
-        });
 
-        //Override PlayerRenderer with OdysseyPlayerRenderer
-        EntityRenderers.PLAYER_PROVIDERS = ImmutableMap.of("default", (context) -> {
-            return new OdysseyPlayerRenderer(context, false);
-        }, "slim", (context) -> {
-            return new OdysseyPlayerRenderer(context, true);
-        });
-
-        //Block Render Types
-       for(Block block : ForgeRegistries.BLOCKS.getValues()) {
-           if (block instanceof INeedsToRegisterRenderType) {
-               ItemBlockRenderTypes.setRenderLayer(block, ((INeedsToRegisterRenderType) block).getRenderType());
-           }
-       }
-
-        //Item Model Properties
-        for(Item item : ForgeRegistries.ITEMS.getValues()){
-            if(item instanceof INeedsToRegisterItemModelProperty){
-                ((INeedsToRegisterItemModelProperty) item).registerItemModelProperties();
+            //Item Model Properties
+            for(Item item : ForgeRegistries.ITEMS.getValues()){
+                if(item instanceof INeedsToRegisterItemModelProperty){
+                    ((INeedsToRegisterItemModelProperty) item).registerItemModelProperties();
+                }
             }
-        }
 
-        //Block Entity Renderings
-        BlockEntityRenderers.register(BlockEntityTypeRegistry.SIGN.get(), OdysseySignRenderer::new);
+            //Block Entity Renderings
+            BlockEntityRenderers.register(BlockEntityTypeRegistry.SIGN.get(), OdysseySignRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
-        BlockEntityRenderers.register(BlockEntityTypeRegistry.TREASURE_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestMaterial.STERLING_SILVER, context));
+            BlockEntityRenderers.register(BlockEntityTypeRegistry.TREASURE_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestMaterial.STERLING_SILVER, context));
 
-        //Screens
-        MenuScreens.register(ContainerRegistry.RECYCLING_FURNACE.get(), RecyclingFurnaceScreen::new);
-        MenuScreens.register(ContainerRegistry.STITCHING_TABLE.get(), StitchingTableScreen::new);
-        MenuScreens.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
+            //Screens
+            MenuScreens.register(ContainerRegistry.RECYCLING_FURNACE.get(), RecyclingFurnaceScreen::new);
+            MenuScreens.register(ContainerRegistry.STITCHING_TABLE.get(), StitchingTableScreen::new);
+            MenuScreens.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
 //        ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
 //        ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), OdysseySmithingTableScreen::new);
 //        ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), OdysseyEnchantmentScreen::new);
 //        ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
-//        ScreenManager.register(ContainerRegistry.RECYCLE_FURNACE.get(), RecycleFurnaceScreen::new);
 //        ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
 //        ScreenManager.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
 //        ScreenManager.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
-        for(MenuType<QuiverMenu> containerType : ContainerRegistry.QUIVER_MAP.values()){
-            MenuScreens.register(containerType, QuiverScreen::new);
-        }
+            for(MenuType<QuiverMenu> containerType : ContainerRegistry.QUIVER_MAP.values()){
+                MenuScreens.register(containerType, QuiverScreen::new);
+            }
 
-        //Mob Renderings
+            //Mob Renderings
 //        EntityRenderers.register(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaverRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.POLAR_BEAR.get(), PolarBearRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaverRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.POLAR_BEAR.get(), PolarBearRenderer::new);
 
-        //Boss Renderings
-        EntityRenderers.register(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyRenderer::new);
+            //Boss Renderings
+            EntityRenderers.register(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
 
-        //Projectile Renderings
+            //Projectile Renderings
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
-        EntityRenderers.register(EntityTypeRegistry.SONIC_BOOM.get(), SonicBoomRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.SONIC_BOOM.get(), SonicBoomRenderer::new);
 
-        //Boat Renderings
-        EntityRenderers.register(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
+            //Boat Renderings
+            EntityRenderers.register(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
 
-        Minecraft minecraft = Minecraft.getInstance();
-        minecraft.gui = new OdysseyIngameGui(minecraft);
+            Minecraft minecraft = Minecraft.getInstance();
+            minecraft.gui = new OdysseyIngameGui(minecraft);
 //        minecraft.itemRenderer = new OdysseyItemRenderer(minecraft.getTextureManager(), minecraft.getModelManager(), minecraft.getItemColors());
+        });
     }
 
     @SubscribeEvent
     public void ready(FMLLoadCompleteEvent event){
-        OdysseyTiers.init();
+        event.enqueueWork(() -> {
+            OdysseyTiers.init();
+        });
     }
 
     @SubscribeEvent

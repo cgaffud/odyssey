@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.client.renderer.blockentity;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.items.BEWLRBlockItem;
@@ -15,14 +14,12 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;

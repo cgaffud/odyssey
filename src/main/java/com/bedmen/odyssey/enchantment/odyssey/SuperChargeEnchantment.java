@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.enchantment;
+package com.bedmen.odyssey.enchantment.odyssey;
 
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;

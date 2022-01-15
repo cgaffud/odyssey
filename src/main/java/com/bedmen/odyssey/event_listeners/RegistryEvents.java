@@ -8,6 +8,7 @@ import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.registry.StructureFeatureRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -82,7 +83,7 @@ public class RegistryEvents {
         EquipmentAxeItem.initEquipment();
         EquipmentBowItem.initEquipment();
         EquipmentCrossbowItem.initEquipment();
-//
-//        EnchantmentUtil.init();
+
+        EnchantmentUtil.init();
     }
 }
