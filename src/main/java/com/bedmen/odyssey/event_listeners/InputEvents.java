@@ -36,7 +36,6 @@ public class InputEvents {
         if(localPlayer != null){
             ItemStack itemStack = localPlayer.getItemInHand(hand);
             if (EnchantmentUtil.hasVolatile(itemStack)){
-                //TODO add SwungWithVolatile to also send when attacking mobs
                 OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket());
             }
             if(event.isAttack()){
