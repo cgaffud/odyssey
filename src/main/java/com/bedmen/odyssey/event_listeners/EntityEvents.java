@@ -92,7 +92,7 @@ public class EntityEvents {
             // torrential damage booster
             int downpourLevel = EnchantmentUtil.getDownpour(attackingEntity);
             if (downpourLevel > 0 && OdysseyEntityTags.HYDROPHOBIC.contains(livingEntity.getType()))
-                amount += (float)downpourLevel * 2.5f;
+                amount += (float)downpourLevel * 3f;
         }
 
         if(amount >= 10.0f && livingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
