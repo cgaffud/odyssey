@@ -42,6 +42,7 @@
   "enchantment.oddc.shattering": "Shattering",
   "enchantment.oddc.super_charge": "Super Charge",
   "enchantment.oddc.ice_protection": "Ice Protection",
+  "enchantment.oddc.downpour": "Downpour",
   "enchantment.oddc.vulcan_strider": "Vulcan Strider",
   "enchantment.oddc.obsidian_walker": "Obsidian Walker",
   "enchantment.oddc.pyropneumatic": "Pyropneumatic",
@@ -294,7 +295,6 @@
   "item.oddc.reinforced_leggings": "Reinforced Leggings",
   "item.oddc.reinforced_boots": "Reinforced Boots",
   "item.oddc.rusty_sonic_fork": "Rusty Sonic Fork",
-  "enchantment.oddc.downpour": "Downpour",
   "item.oddc.broken_sea_sword": "Broken Sword of the Sea",
   "item.oddc.copper_key": "Copper Key",
   "block.oddc.copper_chest": "Copper Chest",
@@ -302,12 +302,10 @@
   "item.oddc.slime_bat": "Slime Bat",
   "item.oddc.mini_hammer": "Mini Hammer",
   "item.oddc.swift_sabre": "Swift Sabre",
-  "item.oddc.rusty_sonic_fork": "Rusty Sonic Fork",
   "item.oddc.weaver_fang": "Weaver Fang",
   "stat.oddc.interact_with_alloy_furnace": "Interactions with Alloy Furnace",
   "stat.oddc.interact_with_recycling_furnace": "Interactions with Recycling Furnace",
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
   "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened"
-  "item.oddc.swift_sabre": "Swift Sabre"
 }
