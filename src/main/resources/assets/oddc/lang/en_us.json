@@ -312,12 +312,11 @@
   "item.oddc.reinforced_boots": "Reinforced Boots",
   "item.oddc.rusty_sonic_fork": "Rusty Sonic Fork",
   "enchantment.oddc.downpour": "Downpour",
-  "item.oddc.broken_sea_sword": "Broken Sword of the Sea"
+  "item.oddc.broken_sea_sword": "Broken Sword of the Sea",
   "item.oddc.copper_key": "Copper Key",
   "block.oddc.copper_chest": "Copper Chest",
   "item.oddc.battle_pickaxe": "Battle Pickaxe",
   "item.oddc.slime_bat": "Slime Bat",
   "item.oddc.mini_hammer": "Mini Hammer",
-  "item.oddc.swift_sabre": "Swift Sabre",
-  "item.oddc.rusty_sonic_fork": "Rusty Sonic Fork"
+  "item.oddc.swift_sabre": "Swift Sabre"
 }
