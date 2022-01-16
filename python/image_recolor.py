@@ -145,9 +145,9 @@ def stripe_pixel(pos, pixel, w):
     return pixel
 
 #open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/models/armor/iron_layer_1.png"
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/depreciated/iron_fork.png"
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/rusty_sonic_fork_1.png"
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/sterling_silver_key.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/copper_key.png"
 image1 = open_image(open_path1)
-recolor_image_randomly(image1, [1,1,1],[0,0,0],[0.85,0.7,0.55],[0,0,0])
+recolor_image(image1, [1,0.6,0.4],[0,0,0],)
 save_image(image1, save_path)
 print("Done")

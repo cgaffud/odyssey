@@ -7,7 +7,6 @@ import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
 import com.bedmen.odyssey.client.gui.screens.RecyclingFurnaceScreen;
 import com.bedmen.odyssey.client.gui.screens.StitchingTableScreen;
 import com.bedmen.odyssey.client.model.*;
-import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
@@ -151,7 +150,7 @@ public class Odyssey
         BlockEntityRenderers.register(BlockEntityTypeRegistry.SIGN.get(), OdysseySignRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
-        BlockEntityRenderers.register(BlockEntityTypeRegistry.STERLING_SILVER_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestMaterial.STERLING_SILVER, context));
+        BlockEntityRenderers.register(BlockEntityTypeRegistry.TREASURE_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestMaterial.STERLING_SILVER, context));
 
         //Screens
         MenuScreens.register(ContainerRegistry.RECYCLING_FURNACE.get(), RecyclingFurnaceScreen::new);
@@ -213,8 +212,11 @@ public class Odyssey
             event.addSprite(shieldType.getRenderMaterial(false).texture());
             event.addSprite(shieldType.getRenderMaterial(true).texture());
         }
-        event.addSprite(TreasureChestRenderer.STERLING_SILVER_RESOURCE_LOCATION);
-        event.addSprite(TreasureChestRenderer.STERLING_SILVER_LOCKED_RESOURCE_LOCATION);
+        //Treasure Chest Textures
+        for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
+            event.addSprite(treasureChestMaterial.getRenderMaterial(false).texture());
+            event.addSprite(treasureChestMaterial.getRenderMaterial(true).texture());
+        }
 //        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
 //        event.addSprite(PermafrostRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
 //        event.addSprite(PermafrostRenderer.WIND_RESOURCE_LOCATION);

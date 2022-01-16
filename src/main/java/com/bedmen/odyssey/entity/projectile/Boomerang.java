@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
     private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(Boomerang.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Boolean> ID_FOIL = SynchedEntityData.defineId(Boomerang.class, EntityDataSerializers.BOOLEAN);
-    private BoomerangType boomerangType = BoomerangType.WOOD;
+    private BoomerangType boomerangType = BoomerangType.WOODEN;
     private ItemStack thrownStack = new ItemStack(ItemRegistry.WOODEN_BOOMERANG.get());
     private boolean dealtDamage;
     public int returningTicks;
@@ -257,22 +257,20 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     }
 
     public enum BoomerangType{
-        WOOD(4.0d, 20, 500, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/wooden_boomerang.png")),
-        BONE(5.0d, 20, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bone_boomerang.png")),
-        BONERANG(5.0d, 10, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/bonerang.png")),
-        CLOVER_STONE(6.0d, 20, 0, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/clover_stone_boomerang.png"));
+        WOODEN(4.0d, 20, 500),
+        BONE(5.0d, 20, 0),
+        BONERANG(5.0d, 10, 0),
+        CLOVER_STONE(6.0d, 20, 0);
 //        COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
 
         private final double damage;
         private final int returnTime;
         private final int burnTime;
-        private final ResourceLocation resourceLocation;
 
-        BoomerangType(double damage, int returnTime, int burnTime, ResourceLocation resourceLocation){
+        BoomerangType(double damage, int returnTime, int burnTime){
             this.damage = damage;
             this.returnTime = returnTime;
             this.burnTime = burnTime;
-            this.resourceLocation = resourceLocation;
         }
 
         public double getDamage(){
@@ -289,10 +287,6 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
 
         public int getBurnTime(){
             return this.burnTime;
-        }
-
-        public ResourceLocation getResourceLocation(){
-            return this.resourceLocation;
         }
     }
 }

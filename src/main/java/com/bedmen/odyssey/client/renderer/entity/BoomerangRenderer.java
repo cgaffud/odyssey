@@ -40,7 +40,11 @@ public class BoomerangRenderer extends EntityRenderer<Boomerang> {
         matrixStackIn.popPose();
     }
 
+    /**
+     * Should never be called because we render the boomerang using the item texture.
+     * Has to be here because EntityRenderer requires it be defined.
+     */
     public ResourceLocation getTextureLocation(Boomerang boomerang) {
-        return boomerang.getBoomerangType().getResourceLocation();
+        return null;
     }
 }
