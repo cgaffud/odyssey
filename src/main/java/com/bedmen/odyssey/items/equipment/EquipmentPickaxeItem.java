@@ -53,6 +53,11 @@ public class EquipmentPickaxeItem extends PickaxeItem implements IEquipment {
         return this.enchantmentMap;
     }
 
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
+    {
+        return this.getInnateEnchantmentLevel(enchantment) == 0 && enchantment.category.canEnchant(stack.getItem());
+    }
+
     /**
      * allows items to add custom lines of information to the mouseover description
      */

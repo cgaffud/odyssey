@@ -67,6 +67,11 @@ public class EquipmentItem extends Item implements IEquipment {
         return this.enchantmentMap;
     }
 
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
+    {
+        return false;
+    }
+
     /**
      * allows items to add custom lines of information to the mouseover description
      */

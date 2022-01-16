@@ -136,6 +136,17 @@
               "tier": 1
             }
           ],
+          "name": "oddc:mini_hammer"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
           "name": "minecraft:golden_boots"
         },
         {

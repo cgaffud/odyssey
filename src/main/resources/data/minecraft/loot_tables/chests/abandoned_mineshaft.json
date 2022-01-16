@@ -7,6 +7,73 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "weight": 2,
+          "name": "oddc:battle_pickaxe",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:reinforced_helmet"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:reinforced_chestplate"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:reinforced_leggings"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:reinforced_boots"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:reinforced_shield"
+        }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "weight": 20,
           "name": "minecraft:golden_apple"
         },

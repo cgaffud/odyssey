@@ -23,6 +23,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 
 public class EnchantWithTierFunction extends LootItemConditionalFunction {
+    private static final int[] ENCHANTMENT_RARITY = new int[]{2, 5};
+    private static final int[] CURSE_RARITY = new int[]{3, 5};
     final NumberProvider tier;
 
     EnchantWithTierFunction(LootItemCondition[] lootItemConditions, NumberProvider numberProvider) {
@@ -41,21 +43,27 @@ public class EnchantWithTierFunction extends LootItemConditionalFunction {
     public ItemStack run(ItemStack itemStack, LootContext lootContext) {
         Random random = lootContext.getRandom();
         //Enchantments
-        if(random.nextBoolean()){
-            List<Pair<Enchantment, Integer>> enchantmentList = EnchantmentUtil.getEnchantmentsByTier(this.tier.getInt(lootContext));
+        List<Pair<Enchantment, Integer>> enchantmentList = EnchantmentUtil.getEnchantmentsByTier(this.tier.getInt(lootContext));
+        for(int i = 0; i < ENCHANTMENT_RARITY.length && enchantmentList.size() > 0; i++){
             enchantmentList = enchantmentList.stream().filter((pair) -> pair.getFirst().canEnchant(itemStack)).collect(Collectors.toList());
-            if(enchantmentList.size() > 0){
+            if(random.nextInt(ENCHANTMENT_RARITY[i]) == 0){
                 Pair<Enchantment, Integer> enchantmentIntegerPair = enchantmentList.get(random.nextInt(enchantmentList.size()));
+                enchantmentList.remove(enchantmentIntegerPair);
                 itemStack.enchant(enchantmentIntegerPair.getFirst(), enchantmentIntegerPair.getSecond());
+            } else {
+                break;
             }
         }
         //Curses
-        if(random.nextBoolean()){
-            List<Pair<Enchantment, Integer>> enchantmentList = EnchantmentUtil.getCursesByTier(this.tier.getInt(lootContext));
-            enchantmentList = enchantmentList.stream().filter((pair) -> pair.getFirst().canEnchant(itemStack)).collect(Collectors.toList());
-            if(enchantmentList.size() > 0){
-                Pair<Enchantment, Integer> enchantmentIntegerPair = enchantmentList.get(random.nextInt(enchantmentList.size()));
-                itemStack.enchant(enchantmentIntegerPair.getFirst(), enchantmentIntegerPair.getSecond());
+        List<Pair<Enchantment, Integer>> curseList = EnchantmentUtil.getCursesByTier(this.tier.getInt(lootContext));
+        for(int i = 0; i < CURSE_RARITY.length && curseList.size() > 0; i++){
+            curseList = curseList.stream().filter((pair) -> pair.getFirst().canEnchant(itemStack)).collect(Collectors.toList());
+            if(random.nextInt(CURSE_RARITY[i]) == 0){
+                Pair<Enchantment, Integer> curseIntegerPair = curseList.get(random.nextInt(curseList.size()));
+                curseList.remove(curseIntegerPair);
+                itemStack.enchant(curseIntegerPair.getFirst(), curseIntegerPair.getSecond());
+            } else {
+                break;
             }
         }
         return itemStack;
