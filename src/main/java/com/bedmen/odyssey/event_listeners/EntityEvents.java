@@ -10,6 +10,7 @@ import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import com.bedmen.odyssey.util.WeaponUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.BlockPos;
@@ -65,6 +66,7 @@ public class EntityEvents {
     @SubscribeEvent
     public static void attackEntityEventListener(final AttackEntityEvent event){
         Player player = (Player) event.getEntity();
+        int shatteringLevel = EnchantmentUtil.getShattering(player);
         Entity target = event.getTarget();
         if(!player.level.isClientSide && player.getAttackStrengthScale(0.5F) > 0.9f && target instanceof LivingEntity livingTarget){
             int shatteringLevel = EnchantmentUtil.getShattering(player);
@@ -85,6 +87,18 @@ public class EntityEvents {
                     livingTarget.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
                 }
             }
+        if(!player.level.isClientSide && target instanceof LivingEntity livingTarget) {
+            if (player.getAttackStrengthScale(0.5F) > 0.9f && shatteringLevel > 0) {
+                MobEffectInstance effectInstance = livingTarget.getEffect(EffectRegistry.SHATTERED.get());
+                if (effectInstance != null) {
+                    livingTarget.removeEffect(EffectRegistry.SHATTERED.get());
+                    int amp = effectInstance.getAmplifier();
+                    effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, Integer.min(amp + 1, 1 + 2 * shatteringLevel), false, true, true);
+                } else {
+                    effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, 0, false, true, true);
+                }
+                livingTarget.addEffect(effectInstance);
+            }
         }
     }
 
@@ -93,6 +107,15 @@ public class EntityEvents {
         float amount = event.getAmount();
         LivingEntity livingEntity = event.getEntityLiving();
         DamageSource damageSource = event.getSource();
+
+        if (damageSource.getEntity() instanceof LivingEntity ) {
+            LivingEntity attackingEntity = (LivingEntity) damageSource.getEntity();
+            // torrential damage booster
+            int downpourLevel = EnchantmentUtil.getDownpour(attackingEntity);
+            if (downpourLevel > 0 && OdysseyEntityTags.HYDROPHOBIC.contains(livingEntity.getType()))
+                amount += (float)downpourLevel * 3f;
+        }
+
         if(amount >= 10.0f && livingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
             Consumer<LivingEntity> consumer = (p_233653_0_) -> {
                 p_233653_0_.broadcastBreakEvent(EquipmentSlot.HEAD);
@@ -106,6 +129,7 @@ public class EntityEvents {
                 player.awardStat(Stats.ITEM_BROKEN.get(item));
             }
         }
+        event.setAmount(amount);
     }
 
     @SubscribeEvent

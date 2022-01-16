@@ -61,6 +61,7 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> SHATTERING = ENCHANTMENTS.register("shattering", () -> new ShatteringEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> SUPER_CHARGE = ENCHANTMENTS.register("super_charge", () -> new SuperChargeEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> ICE_PROTECTION = ENCHANTMENTS.register("ice_protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.UNCOMMON, OdysseyProtectionEnchantment.Type.ICE, EnchantmentCategory.ARMOR_CHEST, EquipmentSlot.CHEST));
+    public static final RegistryObject<Enchantment> DOWNPOUR = ENCHANTMENTS.register("downpour", () -> new OdysseyDamageEnchantment(Enchantment.Rarity.RARE, OdysseyDamageEnchantment.DamageType.HYDROPHOBIC, EquipmentSlot.MAINHAND));
 
     //Volcanic Enchantments
     public static final RegistryObject<Enchantment> VULCAN_STRIDER = ENCHANTMENTS.register("vulcan_strider", () -> new VulcanStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));

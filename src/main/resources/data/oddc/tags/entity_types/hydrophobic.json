@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:strider",
+    "minecraft:blaze",
+    "minecraft:magma_cube",
+    "minecraft:enderman",
+    "minecraft:endermite",
+    "minecraft:ender_dragon"
+  ]
+}

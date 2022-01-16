@@ -293,6 +293,9 @@
   "item.oddc.reinforced_chestplate": "Reinforced Chestplate",
   "item.oddc.reinforced_leggings": "Reinforced Leggings",
   "item.oddc.reinforced_boots": "Reinforced Boots",
+  "item.oddc.rusty_sonic_fork": "Rusty Sonic Fork",
+  "enchantment.oddc.downpour": "Downpour",
+  "item.oddc.broken_sea_sword": "Broken Sword of the Sea",
   "item.oddc.copper_key": "Copper Key",
   "block.oddc.copper_chest": "Copper Chest",
   "item.oddc.battle_pickaxe": "Battle Pickaxe",
@@ -306,4 +309,5 @@
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
   "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened"
+  "item.oddc.swift_sabre": "Swift Sabre"
 }
