@@ -10,26 +10,11 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 public class OdysseyDamageEnchantment extends Enchantment {
-    private static final String[] NAMES = new String[]{"all", "undead", "arthropods"};
-    private static final int[] MIN_COST = new int[]{1, 5, 5};
-    private static final int[] LEVEL_COST = new int[]{11, 8, 8};
-    private static final int[] LEVEL_COST_SPAN = new int[]{20, 20, 20};
     public final DamageType damageType;
 
     public OdysseyDamageEnchantment(Rarity p_i46734_1_, DamageType damageType, EquipmentSlot... p_i46734_3_) {
         super(p_i46734_1_, OdysseyEnchantmentCategory.MAIN_MELEE, p_i46734_3_);
         this.damageType = damageType;
-    }
-
-    /**
-     * Returns the minimal value of enchantability needed on the enchantment level passed.
-     */
-    public int getMinCost(int pEnchantmentLevel) {
-        return this.damageType.getMinCost() + (pEnchantmentLevel - 1) * this.damageType.getLevelCost();
-    }
-
-    public int getMaxCost(int pEnchantmentLevel) {
-        return this.getMinCost(pEnchantmentLevel) + this.damageType.getLevelCostSpan();
     }
 
     /**
@@ -43,8 +28,11 @@ public class OdysseyDamageEnchantment extends Enchantment {
      * Calculates the additional damage that will be dealt by an item with this enchantment. This alternative to
      * calcModifierDamage is sensitive to the targets EnumCreatureAttribute.
      */
-    public float getDamageBonus(int pLevel, MobType pCreatureType) {
-        if (this.damageType == DamageType.ALL || (this.damageType == DamageType.UNDEAD && pCreatureType == MobType.UNDEAD) || (this.damageType == DamageType.ARTHROPOD && pCreatureType == MobType.ARTHROPOD)) {
+    public float getDamageBonus(int pLevel, MobType mobType) {
+        if (this.damageType == DamageType.ALL) {
+            return Float.max(0f, (float) pLevel);
+        }
+        if ((this.damageType == DamageType.UNDEAD && mobType == MobType.UNDEAD) || (this.damageType == DamageType.ARTHROPOD && mobType == MobType.ARTHROPOD)) {
             return Float.max(0f, (float)pLevel) * 2.0f;
         }
         return 0f;
@@ -71,31 +59,9 @@ public class OdysseyDamageEnchantment extends Enchantment {
     }
 
     public enum DamageType{
-        ALL(1,11,20),
-        UNDEAD(5,8,20),
-        ARTHROPOD(5,8,20),
-        HYDROPHOBIC(5,8,20);
-
-        private final int minCost;
-        private final int levelCost;
-        private final int levelCostSpan;
-
-        DamageType(int minCost, int levelCost, int levelCostSpan){
-            this.minCost = minCost;
-            this.levelCost = levelCost;
-            this.levelCostSpan = levelCostSpan;
-        }
-
-        public int getMinCost(){
-            return this.minCost;
-        }
-
-        public int getLevelCost(){
-            return this.levelCost;
-        }
-
-        public int getLevelCostSpan(){
-            return this.levelCostSpan;
-        }
+        ALL,
+        UNDEAD,
+        ARTHROPOD,
+        HYDROPHOBIC
     }
 }

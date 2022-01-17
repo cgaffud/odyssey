@@ -48,7 +48,6 @@ public class ClientEvents {
     @SubscribeEvent
     public static void doClientStuff(final FMLClientSetupEvent event)
     {
-        System.out.println("beans");
         event.enqueueWork(() -> {
             //For hollow coconut vision overlay
             OverlayRegistry.registerOverlayTop("OdysseyHelmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {

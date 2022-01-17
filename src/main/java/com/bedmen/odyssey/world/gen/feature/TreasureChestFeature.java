@@ -2,6 +2,7 @@ package com.bedmen.odyssey.world.gen.feature;
 
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
+import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
@@ -22,10 +23,16 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
-    private static final int RARITY = 10;
+    private static final int RARITY = 15;
+    public final TreasureChestMaterial treasureChestMaterial;
+    private final int minY;
+    private final int maxY;
 
-    public TreasureChestFeature(Codec<NoneFeatureConfiguration> codec) {
+    public TreasureChestFeature(Codec<NoneFeatureConfiguration> codec, TreasureChestMaterial treasureChestMaterial, int minY, int maxY) {
         super(codec);
+        this.treasureChestMaterial = treasureChestMaterial;
+        this.minY = minY;
+        this.maxY = maxY;
     }
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
@@ -39,7 +46,7 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
         Collections.shuffle(list, random);
         List<Integer> list1 = IntStream.rangeClosed(chunkpos.getMinBlockZ(), chunkpos.getMaxBlockZ()).boxed().collect(Collectors.toList());
         Collections.shuffle(list1, random);
-        List<Integer> yList = IntStream.rangeClosed(-7, 7).boxed().map((i) -> i*8) .collect(Collectors.toList());
+        List<Integer> yList = IntStream.rangeClosed(this.minY / 8, this.maxY / 8).boxed().map((i) -> i*8) .collect(Collectors.toList());
         Collections.shuffle(yList, random);
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
@@ -52,14 +59,9 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
                         BlockPos blockPosBelow = blockpos$mutableblockpos.below();
                         if (isSolid(worldgenlevel, blockpos$mutableblockpos) && !isSolid(worldgenlevel, blockPosBelow)) {
                             if(blockpos$mutableblockpos.getY() >= 0){
-                                BlockState blockState = BlockRegistry.COPPER_CHEST.get().defaultBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
+                                BlockState blockState = this.treasureChestMaterial.getBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
                                 worldgenlevel.setBlock(blockpos$mutableblockpos, blockState, 2);
                                 RandomizableContainerBlockEntity.setLootTable(worldgenlevel, random, blockpos$mutableblockpos, OdysseyLootTables.COPPER_TREASURE_CHEST);
-                                return true;
-                            } else {
-                                BlockState blockState = BlockRegistry.STERLING_SILVER_CHEST.get().defaultBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
-                                worldgenlevel.setBlock(blockpos$mutableblockpos, blockState, 2);
-                                RandomizableContainerBlockEntity.setLootTable(worldgenlevel, random, blockpos$mutableblockpos, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
                                 return true;
                             }
                         }
