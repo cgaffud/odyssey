@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "oddc:item/weaver_fang"
+    "layer0": "oddc:item/weaver_fang_arrow"
   }
 }

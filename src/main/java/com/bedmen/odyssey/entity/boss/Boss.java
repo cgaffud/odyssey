@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.registry.EffectRegistry;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 
@@ -67,9 +69,15 @@ public abstract class Boss extends Monster implements IBossEventEntity {
     }
 
     public void setTarget(@Nullable LivingEntity livingEntity) {
-        if(livingEntity instanceof Boss){
+        if(livingEntity instanceof Monster){
             return;
         }
         super.setTarget(livingEntity);
     }
+
+    public boolean validTargetPredicate(ServerPlayer serverPlayer){
+        double followRange = this.getAttributeValue(Attributes.FOLLOW_RANGE);
+        return serverPlayer.isAlive() && !serverPlayer.isInvulnerable() && !serverPlayer.isCreative() && this.distanceToSqr(serverPlayer) <= followRange * followRange;
+    }
+
 }

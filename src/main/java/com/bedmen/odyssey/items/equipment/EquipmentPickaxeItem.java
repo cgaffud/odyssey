@@ -61,7 +61,6 @@ public class EquipmentPickaxeItem extends PickaxeItem implements IEquipment {
     /**
      * allows items to add custom lines of information to the mouseover description
      */
-    @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         for(Enchantment e : this.enchantmentMap.keySet()){
             if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())

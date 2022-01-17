@@ -77,7 +77,6 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
         });
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         Difficulty difficulty = worldIn == null ? null : worldIn.getDifficulty();
         tooltip.add(new TranslatableComponent("item.oddc.shield.damage_block").append(StringUtil.floatFormat(this.getDamageBlock(difficulty))).withStyle(ChatFormatting.BLUE));

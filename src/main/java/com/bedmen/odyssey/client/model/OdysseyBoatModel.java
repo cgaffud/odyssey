@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-@OnlyIn(Dist.CLIENT)
 public class OdysseyBoatModel extends ListModel<OdysseyBoat> {
     public static final Map<OdysseyBoat.Type, ModelLayerLocation> LAYER_LOCATION = Stream.of(OdysseyBoat.Type.values()).collect(ImmutableMap.toImmutableMap((odysseyBoatType) -> {
         return odysseyBoatType;

@@ -22,7 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class OdysseyPlayerItemInHandLayer<T extends Player, M extends EntityModel<T> & ArmedModel & HeadedModel> extends ItemInHandLayer<T, M> {
     private static final float X_ROT_MIN = (-(float)Math.PI / 6F);
     private static final float X_ROT_MAX = ((float)Math.PI / 2F);

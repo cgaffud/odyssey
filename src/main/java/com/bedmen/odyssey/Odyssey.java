@@ -1,19 +1,25 @@
 package com.bedmen.odyssey;
 
+import com.bedmen.odyssey.block.wood.OdysseyFlowerPotBlock;
 import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.monster.*;
+import com.bedmen.odyssey.items.OdysseySpawnEggItem;
+import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.loot.functions.EnchantWithTierFunction;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.CompostUtil;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.*;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
@@ -60,12 +66,31 @@ public class Odyssey
 
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            ContainerRegistry.initQuivers();
+            FeatureRegistry.initTreasureChests();
+            OdysseySpawnEggItem.initSpawnEggs();
+            PassiveWeaver.init();
+            OdysseyFlowerPotBlock.registerFlowerPots();
+            EquipmentArmorItem.initEquipment();
+            EquipmentMeleeItem.initEquipment();
+            EquipmentItem.initEquipment();
+            EquipmentPickaxeItem.initEquipment();
+            EquipmentHoeItem.initEquipment();
+            EquipmentShovelItem.initEquipment();
+            EquipmentAxeItem.initEquipment();
+            EquipmentBowItem.initEquipment();
+            EquipmentCrossbowItem.initEquipment();
+            EnchantmentUtil.init();
+
             OreGen.registerOres();
             FeatureGen.registerFeatures();
             TreeGen.registerTrees();
             StructureGen.registerStructures();
             StructureFeatureRegistry.setupStructures();
             OdysseyBiomeEntitySpawn.registerSpawners();
+
+            ((RangedAttribute) Attributes.ARMOR).minValue = -40.0d;
+            ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
 //        OdysseyStructureEntitySpawn.registerSpawners();
 //        OdysseyPotions.addBrewingRecipes();
             CompostUtil.addCompostingRecipes();

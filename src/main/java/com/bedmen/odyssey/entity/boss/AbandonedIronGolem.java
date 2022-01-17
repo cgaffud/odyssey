@@ -40,7 +40,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AbandonedIronGolem extends Boss {
     private final ServerBossEvent bossEvent = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
@@ -116,6 +119,18 @@ public class AbandonedIronGolem extends Boss {
 
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
+
+                //Choose Target
+                if(this.level.getGameTime() % 19 == 0){
+                    Collection<ServerPlayer> serverPlayerEntities =  this.bossEvent.getPlayers();
+                    List<ServerPlayer> serverPlayerEntityList = serverPlayerEntities.stream().filter(this::validTargetPredicate).sorted(Comparator.comparingDouble(this::distanceToSqr)).collect(Collectors.toList());
+                    if(serverPlayerEntityList.isEmpty()){
+                        this.setTarget(null);
+                    } else {
+                        this.setTarget(serverPlayerEntityList.get(0));
+                    }
+                }
+
                 LivingEntity target = this.getTarget();
                 switch(this.getPhase()){
                     case NORMAL:
@@ -219,7 +234,6 @@ public class AbandonedIronGolem extends Boss {
         return flag;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void handleEntityEvent(byte b) {
         switch(b){
             case 4:
@@ -234,12 +248,10 @@ public class AbandonedIronGolem extends Boss {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public int getAttackAnimationTick() {
         return this.attackAnimationTick;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public int getClapCooldown() {
         return this.clapCooldown;
     }

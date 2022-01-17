@@ -1,5 +1,5 @@
 {
   "textures": {
-    "particle": "minecraft:block/raw_copper_block"
+    "particle": "minecraft:block/copper_block"
   }
 }

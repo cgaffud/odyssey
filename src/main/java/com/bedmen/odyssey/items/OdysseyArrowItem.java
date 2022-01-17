@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.StringUtil;
@@ -33,12 +34,14 @@ public class OdysseyArrowItem extends ArrowItem {
         return odysseyArrow;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.add(new TranslatableComponent("item.oddc.arrow.damage").append(StringUtil.doubleFormat(this.arrowType.getDamage())).withStyle(ChatFormatting.BLUE));
         int looting = this.arrowType.getLooting();
         if(looting > 0){
             tooltip.add(Enchantments.MOB_LOOTING.getFullname(looting));
+        }
+        if(this.arrowType == OdysseyArrow.ArrowType.WEAVER_FANG){
+            tooltip.add(new TranslatableComponent("item.oddc.weaver_fang.web_chance").append(StringUtil.percentFormat(Weaver.WEB_ATTACK_CHANCE * OdysseyArrow.WEAVER_FANG_ARROW_WEB_AMPLIFY)).withStyle(ChatFormatting.BLUE));
         }
     }
 }

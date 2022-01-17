@@ -13,7 +13,6 @@ import net.minecraft.world.entity.animal.Turtle;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class PassiveWeaverRenderer<T extends PassiveWeaver> extends MobRenderer<T, WeaverModel<T>> {
     private static final ResourceLocation WEAVER_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/weaver/passive.png");
 

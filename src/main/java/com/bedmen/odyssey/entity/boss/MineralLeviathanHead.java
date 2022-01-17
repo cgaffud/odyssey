@@ -39,9 +39,9 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
     private Vec3 randomTargetVelocity = new Vec3(this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-2d, this.random.nextDouble()*2d-1d);
     public static final int NUM_SEGMENTS = 20;
     public static final double DAMAGE = 8.0d;
+    public static final double FOLLOW_RANGE = 75d;
     public static final double DODGE_RANGE = 3.5d;
     public static final double BASE_HEALTH = 150.0d;
-    public static final double TARGETING_RANGE = 75.0d;
     public MineralLeviathanBody[] bodyEntities = new MineralLeviathanBody[NUM_SEGMENTS-1];
     public UUID[] bodyEntityUUIDs = new UUID[NUM_SEGMENTS-1];
     private int mouthAngleTimer;
@@ -156,7 +156,7 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
                 //Choose Target
                 if(this.level.getGameTime() % 19 == 0){
                     Collection<ServerPlayer> serverPlayerEntities =  this.bossEvent.getPlayers();
-                    List<ServerPlayer> serverPlayerEntityList = serverPlayerEntities.stream().filter(serverPlayerEntity -> {return serverPlayerEntity.isAlive() && !serverPlayerEntity.isInvulnerable() && !serverPlayerEntity.isCreative() && this.distanceToSqr(serverPlayerEntity) < TARGETING_RANGE*TARGETING_RANGE;}).collect(Collectors.toList());
+                    List<ServerPlayer> serverPlayerEntityList = serverPlayerEntities.stream().filter(this::validTargetPredicate).collect(Collectors.toList());
                     // Set Phase based on Target
                     if(serverPlayerEntityList.isEmpty()){
                         this.setTarget(null);
@@ -334,7 +334,7 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, BASE_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, BASE_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE).add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
     }
 
     public ServerBossEvent getBossEvent(){

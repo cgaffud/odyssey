@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class BabySkeletonRenderer extends HumanoidMobRenderer<BabySkeleton, SkeletonModel<BabySkeleton>> {
     private static final ResourceLocation SKELETON_LOCATION = new ResourceLocation("textures/entity/skeleton/skeleton.png");
     

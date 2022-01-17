@@ -26,8 +26,8 @@ public class OdysseyBiomeEntitySpawn {
     public static void registerSpawners() {
 //        LUPINE_SPANWER = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.LUPINE.get(), 100, 4, 8);
 //        ARCTIHORN_SPAWNER = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.ARCTIHORN.get(), 100, 1, 4);
-        BABY_LEVIATHAN = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.BABY_LEVIATHAN.get(), 20, 1, 1);
-        WEAVER = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.WEAVER.get(), 40, 1, 4);
+        BABY_LEVIATHAN = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.BABY_LEVIATHAN.get(), 40, 1, 1);
+        WEAVER = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.WEAVER.get(), 50, 1, 4);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

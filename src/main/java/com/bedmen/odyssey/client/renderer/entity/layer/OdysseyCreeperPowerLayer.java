@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class OdysseyCreeperPowerLayer extends EnergySwirlLayer<OdysseyCreeper, OdysseyCreeperModel<OdysseyCreeper>> {
     private static final ResourceLocation POWER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     private final OdysseyCreeperModel<OdysseyCreeper> model;

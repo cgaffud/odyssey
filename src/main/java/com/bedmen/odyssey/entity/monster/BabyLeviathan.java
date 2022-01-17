@@ -67,7 +67,7 @@ public class BabyLeviathan extends Monster {
     public void die(DamageSource damageSource) {
         Entity entity = damageSource.getEntity();
         if(entity instanceof Player && !this.level.isClientSide){
-            EntityTypeRegistry.MINERAL_LEVIATHAN.get().spawn((ServerLevel) this.level, null, (Player)entity, new BlockPos(entity.getX(), Integer.max(-5, (int) (entity.getY() - MineralLeviathanHead.TARGETING_RANGE * 0.8d)), entity.getZ()), MobSpawnType.TRIGGERED, true, true);
+            EntityTypeRegistry.MINERAL_LEVIATHAN.get().spawn((ServerLevel) this.level, null, (Player)entity, new BlockPos(entity.getX(), Integer.max(-70, (int) (entity.getY() - MineralLeviathanHead.FOLLOW_RANGE * 0.8d)), entity.getZ()), MobSpawnType.TRIGGERED, true, true);
         }
         super.die(damageSource);
     }
