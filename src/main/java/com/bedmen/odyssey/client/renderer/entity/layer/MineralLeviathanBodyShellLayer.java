@@ -20,7 +20,6 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class MineralLeviathanBodyShellLayer extends RenderLayer<MineralLeviathanBody, MineralLeviathanBodyModel> {
     public static final ResourceLocation[][] SHELL_LOCATION = new ResourceLocation[9][11];
     private final EntityModel<MineralLeviathanBody> model;

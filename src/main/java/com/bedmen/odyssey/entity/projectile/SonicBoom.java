@@ -41,7 +41,6 @@ public class SonicBoom extends AbstractHurtingProjectile {
         this.setDeltaMovement(vector3d.normalize().scale(INITIAL_SPEED));
     }
 
-    @OnlyIn(Dist.CLIENT)
     public SonicBoom(Level level, double x, double y, double z, double dx, double dy, double dz) {
         super(EntityTypeRegistry.SONIC_BOOM.get(), x, y, z, dx, dy, dz, level);
     }
@@ -49,7 +48,6 @@ public class SonicBoom extends AbstractHurtingProjectile {
     protected void defineSynchedData() {
     }
 
-    @OnlyIn(Dist.CLIENT)
     public boolean shouldRenderAtSqrDistance(double p_70112_1_) {
         double d0 = this.getBoundingBox().getSize() * 4.0D;
         if (Double.isNaN(d0)) {

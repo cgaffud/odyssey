@@ -20,7 +20,6 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class QuiverLayer<T extends Player, M extends PlayerModel<T>> extends RenderLayer<T, M> {
     private final QuiverModel<T> quiverModel;
 

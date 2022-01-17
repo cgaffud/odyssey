@@ -80,7 +80,7 @@ public class EntityEvents {
                 }
                 livingTarget.addEffect(effectInstance);
             }
-            if (player.getMainHandItem().is(ItemRegistry.WEAVER_FANG.get()) && player.getRandom().nextFloat() < Weaver.WEB_ATTACK_CHANCE) {
+            if (player.getMainHandItem().is(ItemRegistry.WEAVER_FANG_DAGGER.get()) && player.getRandom().nextFloat() < Weaver.WEB_ATTACK_CHANCE) {
                 BlockPos blockPos = new BlockPos(livingTarget.getPosition(1f));
                 if (livingTarget.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
                     livingTarget.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);

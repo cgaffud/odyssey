@@ -12,7 +12,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class AlloyFurnaceScreen extends AbstractContainerScreen<AlloyFurnaceMenu> {
     private final ResourceLocation guiTexture;
 

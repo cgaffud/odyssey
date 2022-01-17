@@ -1,9 +1,12 @@
 package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -11,12 +14,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import java.util.Locale;
 
 public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
+    public static final float WEAVER_FANG_ARROW_WEB_AMPLIFY = 2f;
     private ArrowType arrowType = ArrowType.AMETHYST;
 
     public OdysseyArrow(EntityType<? extends OdysseyArrow> p_i50158_1_, Level p_i50158_2_) {
@@ -68,8 +74,20 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         this.arrowType = ArrowType.values()[additionalData.readInt()];
     }
 
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        if(this.arrowType == ArrowType.WEAVER_FANG && this.random.nextFloat() < Weaver.WEB_ATTACK_CHANCE * WEAVER_FANG_ARROW_WEB_AMPLIFY){
+            Entity entity = entityHitResult.getEntity();
+            BlockPos blockPos = new BlockPos(entity.getPosition(1f));
+            if (entity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
+                entity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
+            }
+        }
+        super.onHitEntity(entityHitResult);
+    }
+
     public enum ArrowType{
         FLINT(ItemRegistry.ARROW::get, 5.0d, 0, new ResourceLocation("textures/entity/projectiles/arrow.png")),
+        WEAVER_FANG(ItemRegistry.WEAVER_FANG_ARROW::get, 5.5d, 0),
         CLOVER_STONE(ItemRegistry.CLOVER_STONE_ARROW::get, 5.5d, 1),
         AMETHYST(ItemRegistry.AMETHYST_ARROW::get, 6.0d, 0);
 

@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 
 public class StringUtil {
     public static final DecimalFormat df = new DecimalFormat("#.##");
+
     public static String floatFormat(float f)
     {
         if(f == (int) f)

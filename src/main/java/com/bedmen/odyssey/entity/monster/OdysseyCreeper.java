@@ -51,10 +51,6 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 
-@OnlyIn(
-        value = Dist.CLIENT,
-        _interface = PowerableMob.class
-)
 public class OdysseyCreeper extends Monster implements PowerableMob {
     private static final UUID SPEED_MODIFIER_BABY_UUID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
     private static final AttributeModifier SPEED_MODIFIER_BABY = new AttributeModifier(SPEED_MODIFIER_BABY_UUID, "Baby speed boost", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
@@ -254,7 +250,6 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
     /**
      * Params: (Float)Render tick. Returns the intensity of the creeper's flash when it is ignited.
      */
-    @OnlyIn(Dist.CLIENT)
     public float getSwelling(float pPartialTicks) {
         return Mth.lerp(pPartialTicks, (float)this.oldSwell, (float)this.swell) / (float)(this.getMaxSwell() - 2);
     }

@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class BabyLeviathanRenderer extends MobRenderer<BabyLeviathan, BabyLeviathanModel> {
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/baby_leviathan.png");
     public BabyLeviathanRenderer(EntityRendererProvider.Context context) {

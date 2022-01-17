@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class OdysseyArrowRenderer extends ArrowRenderer<OdysseyArrow> {
 
     public OdysseyArrowRenderer(EntityRendererProvider.Context p_174422_) {

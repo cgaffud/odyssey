@@ -20,7 +20,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class OdysseyCreeperModel<T extends OdysseyCreeper> extends AgeableListModel<T> {
     private final ModelPart root;
     private final ModelPart head;

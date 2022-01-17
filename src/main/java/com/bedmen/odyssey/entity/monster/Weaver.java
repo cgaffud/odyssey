@@ -6,7 +6,6 @@ import com.google.common.collect.Multimap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,22 +14,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.TargetGoal;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.navigation.WallClimberNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
@@ -39,8 +32,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -49,7 +40,7 @@ public class Weaver extends Monster {
     private static final UUID SPEED_MODIFIER_QUEEN_UUID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
     private static final AttributeModifier SPEED_MODIFIER_QUEEN = new AttributeModifier(SPEED_MODIFIER_QUEEN_UUID, "Queen speed boost", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
     private static final UUID HEALTH_MODIFIER_QUEEN_UUID = UUID.fromString("c03c6f3c-95ff-43b0-88e1-01d6a780c61b");
-    private static final AttributeModifier HEALTH_MODIFIER_QUEEN = new AttributeModifier(HEALTH_MODIFIER_QUEEN_UUID, "Queen health boost", 4.0D, AttributeModifier.Operation.MULTIPLY_BASE);
+    private static final AttributeModifier HEALTH_MODIFIER_QUEEN = new AttributeModifier(HEALTH_MODIFIER_QUEEN_UUID, "Queen health boost", 9.0D, AttributeModifier.Operation.MULTIPLY_BASE);
     private static final UUID DAMAGE_MODIFIER_QUEEN_UUID = UUID.fromString("aae4f1af-b9c8-4221-ba0e-f4794f87a651");
     private static final AttributeModifier DAMAGE_MODIFIER_QUEEN = new AttributeModifier(DAMAGE_MODIFIER_QUEEN_UUID, "Queen damage boost", 1.0D, AttributeModifier.Operation.MULTIPLY_BASE);
     private static final Multimap<Attribute, AttributeModifier> QUEEN_MODIFIER_MAP = Util.make(() -> {
@@ -60,7 +51,6 @@ public class Weaver extends Monster {
         return map;
     });
     public static final float WEB_ATTACK_CHANCE = 0.1f;
-    private static final float WEAVER_FANG_DROP_CHANCE = 0.25f;
 
     public Weaver(EntityType<? extends Weaver> entityType, Level level) {
         super(entityType, level);
@@ -82,26 +72,9 @@ public class Weaver extends Monster {
         return (double)(this.getBbHeight() * 0.5F);
     }
 
-    /**
-     * Returns new PathNavigateGround instance
-     */
-    protected PathNavigation createNavigation(Level pLevel) {
-        return new WallClimberNavigation(this, pLevel);
-    }
-
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_FLAGS_ID, (byte)0);
-    }
-
-    /**
-     * Called to update the entity's position/logic.
-     */
-    public void tick() {
-        super.tick();
-        if (!this.level.isClientSide) {
-            this.setClimbing(this.horizontalCollision);
-        }
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -131,10 +104,6 @@ public class Weaver extends Monster {
         this.playSound(SoundEvents.SPIDER_STEP, 0.15F, 1.0F);
     }
 
-    public boolean onClimbable() {
-        return this.isClimbing();
-    }
-
     public void makeStuckInBlock(BlockState pState, Vec3 pMotionMultiplier) {
         if (!(pState.getBlock() instanceof WebBlock)) {
             super.makeStuckInBlock(pState, pMotionMultiplier);
@@ -143,21 +112,6 @@ public class Weaver extends Monster {
 
     public MobType getMobType() {
         return MobType.ARTHROPOD;
-    }
-
-    public boolean isClimbing() {
-        return (this.entityData.get(DATA_FLAGS_ID) & 1) != 0;
-    }
-
-    public void setClimbing(boolean pClimbing) {
-        byte b0 = this.entityData.get(DATA_FLAGS_ID);
-        if (pClimbing) {
-            b0 = (byte)(b0 | 1);
-        } else {
-            b0 = (byte)(b0 & -2);
-        }
-
-        this.entityData.set(DATA_FLAGS_ID, b0);
     }
 
     public boolean isQueen() {
@@ -213,11 +167,9 @@ public class Weaver extends Monster {
             if (itementity != null) {
                 itementity.setExtendedLifetime();
             }
-            if(this.random.nextFloat() < WEAVER_FANG_DROP_CHANCE){
-                itementity = this.spawnAtLocation(ItemRegistry.WEAVER_FANG.get());
-                if (itementity != null) {
-                    itementity.setExtendedLifetime();
-                }
+            itementity = this.spawnAtLocation(ItemRegistry.WEAVER_FANG.get());
+            if (itementity != null) {
+                itementity.setExtendedLifetime();
             }
         }
     }

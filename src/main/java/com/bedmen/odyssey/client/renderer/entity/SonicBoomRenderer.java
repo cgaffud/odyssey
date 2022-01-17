@@ -17,7 +17,6 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class SonicBoomRenderer<T extends SonicBoom> extends EntityRenderer<T> {
     public static final ResourceLocation SONIC_BOOM_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/abandoned_iron_golem/sonic_boom.png");
     public SonicBoomRenderer(EntityRendererProvider.Context context) {

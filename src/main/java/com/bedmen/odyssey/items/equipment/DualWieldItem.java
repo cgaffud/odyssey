@@ -38,7 +38,6 @@ public class DualWieldItem extends EquipmentMeleeItem {
         return mainHandItem instanceof DualWieldItem && player.getOffhandItem().is(mainHandItem);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.add(new TranslatableComponent("item.oddc.dualwield").withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, level, tooltip, flagIn);

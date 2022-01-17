@@ -80,11 +80,9 @@ public class HollowCoconutBlock extends FallingBlock implements EntityBlock, INe
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState p_180655_1_, Level p_180655_2_, BlockPos p_180655_3_, Random p_180655_4_) {
     }
 
-    @OnlyIn(Dist.CLIENT)
     public int getDustColor(BlockState p_189876_1_, BlockGetter p_189876_2_, BlockPos p_189876_3_) {
         return 0x000000;
     }

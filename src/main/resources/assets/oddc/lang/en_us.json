@@ -302,10 +302,13 @@
   "item.oddc.slime_bat": "Slime Bat",
   "item.oddc.mini_hammer": "Mini Hammer",
   "item.oddc.swift_sabre": "Swift Sabre",
-  "item.oddc.weaver_fang": "Weaver Fang",
+  "item.oddc.weaver_fang_dagger": "Weaver Fang Dagger",
   "stat.oddc.interact_with_alloy_furnace": "Interactions with Alloy Furnace",
   "stat.oddc.interact_with_recycling_furnace": "Interactions with Recycling Furnace",
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
-  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened"
+  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
+  "item.oddc.weaver_fang": "Weaver Fang",
+  "item.oddc.weaver_fang_arrow": "Weaver Fang Arrow",
+  "item.oddc.weaver_fang.web_chance": "Cobweb Chance: "
 }

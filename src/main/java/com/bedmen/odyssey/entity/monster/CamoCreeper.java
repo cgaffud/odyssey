@@ -17,7 +17,6 @@ public class CamoCreeper extends OdysseyCreeper {
         this.biome = this.level.getBiome(this.blockPosition());
     }
 
-    @OnlyIn(Dist.CLIENT)
     public Biome getBiome(){
         return this.biome;
     }

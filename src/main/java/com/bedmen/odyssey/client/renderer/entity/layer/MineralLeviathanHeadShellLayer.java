@@ -16,7 +16,6 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class MineralLeviathanHeadShellLayer extends RenderLayer<MineralLeviathanHead, MineralLeviathanHeadModel> {
     private final EntityModel<MineralLeviathanHead> model;
 

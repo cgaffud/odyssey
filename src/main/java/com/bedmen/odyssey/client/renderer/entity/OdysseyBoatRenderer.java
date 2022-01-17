@@ -22,7 +22,6 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class OdysseyBoatRenderer extends EntityRenderer<OdysseyBoat> {
     public final Map<OdysseyBoat.Type, Pair<ResourceLocation, OdysseyBoatModel>> boatResources;
 

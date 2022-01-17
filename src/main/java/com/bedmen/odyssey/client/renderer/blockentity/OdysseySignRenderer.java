@@ -42,7 +42,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class OdysseySignRenderer implements BlockEntityRenderer<OdysseySignBlockEntity> {
     public static final int MAX_LINE_WIDTH = 90;
     private static final int LINE_HEIGHT = 10;
@@ -173,7 +172,6 @@ public class OdysseySignRenderer implements BlockEntityRenderer<OdysseySignBlock
         return new ModelLayerLocation(new ResourceLocation(Odyssey.MOD_ID, "sign/" + location.getPath()), "main");
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static final class OdysseySignModel extends Model {
         public static final Map<WoodType, ModelLayerLocation> LAYER_LOCATION = WoodType.values().collect(ImmutableMap.toImmutableMap((woodType) -> {
             return woodType;

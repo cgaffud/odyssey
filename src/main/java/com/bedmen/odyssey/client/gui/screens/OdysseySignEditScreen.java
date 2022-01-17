@@ -34,7 +34,6 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class OdysseySignEditScreen extends Screen {
     private final OdysseySignBlockEntity sign;
     private int frame;

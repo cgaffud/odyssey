@@ -55,7 +55,6 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         this.boomerangType = ((BoomerangItem)this.thrownStack.getItem()).getBoomerangType();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public Boomerang(Level p_i48791_1_, double p_i48791_2_, double p_i48791_4_, double p_i48791_6_) {
         super(EntityTypeRegistry.BOOMERANG.get(), p_i48791_2_, p_i48791_4_, p_i48791_6_, p_i48791_1_);
     }
@@ -110,7 +109,6 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return this.thrownStack.copy();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public boolean isFoil() {
         return this.entityData.get(ID_FOIL);
     }
@@ -217,7 +215,6 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return this.boomerangType;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public ItemStack getThrownStack(){
         return this.thrownStack;
     }
@@ -234,7 +231,6 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return 0.99F;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public boolean shouldRender(double x, double y, double z) {
         return true;
     }
