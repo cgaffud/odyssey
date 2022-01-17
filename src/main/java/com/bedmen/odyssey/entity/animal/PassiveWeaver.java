@@ -24,8 +24,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.navigation.WallClimberNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
@@ -46,7 +44,6 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Map;
 
 public class PassiveWeaver extends Animal {
-    protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(PassiveWeaver.class, EntityDataSerializers.BYTE);
     private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BEETROOT);
     private static Map<Item, Block> WEAVE_MAP;
     private final SimpleContainer inventory = new SimpleContainer(1);
@@ -90,21 +87,12 @@ public class PassiveWeaver extends Animal {
         return (double)(this.getBbHeight() * 0.5F);
     }
 
-    protected PathNavigation createNavigation(Level pLevel) {
-        return new WallClimberNavigation(this, pLevel);
-    }
-
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_FLAGS_ID, (byte)0);
     }
 
     public void tick() {
         super.tick();
-        if (!this.level.isClientSide) {
-            this.setClimbing(this.horizontalCollision);
-        }
-
         if(this.random.nextFloat() < STRING_CHANCE && this.stringTimer < MAX_STRING_TIMER){
             this.stringTimer++;
         }
@@ -177,10 +165,6 @@ public class PassiveWeaver extends Animal {
         }
     }
 
-    public boolean onClimbable() {
-        return this.isClimbing();
-    }
-
     public void makeStuckInBlock(BlockState pState, Vec3 pMotionMultiplier) {
         if (!(pState.getBlock() instanceof WebBlock)) {
             super.makeStuckInBlock(pState, pMotionMultiplier);
@@ -189,21 +173,6 @@ public class PassiveWeaver extends Animal {
 
     public MobType getMobType() {
         return MobType.ARTHROPOD;
-    }
-
-    public boolean isClimbing() {
-        return (this.entityData.get(DATA_FLAGS_ID) & 1) != 0;
-    }
-
-    public void setClimbing(boolean pClimbing) {
-        byte b0 = this.entityData.get(DATA_FLAGS_ID);
-        if (pClimbing) {
-            b0 = (byte)(b0 | 1);
-        } else {
-            b0 = (byte)(b0 & -2);
-        }
-
-        this.entityData.set(DATA_FLAGS_ID, b0);
     }
 
     protected float getStandingEyeHeight(Pose pPose, EntityDimensions pSize) {
