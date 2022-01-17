@@ -21,6 +21,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.util.Lazy;
+import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -46,10 +47,6 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
         });
     }
 
-    public Material getRenderMaterial(boolean flag){
-        return this.shieldType.getRenderMaterial(flag);
-    }
-
     public float getDamageBlock(Difficulty difficulty){
         if(difficulty == null){
             return this.shieldType.damageBlock;
@@ -59,6 +56,10 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
             case NORMAL -> this.shieldType.damageBlock;
             case HARD -> this.shieldType.damageBlock * 1.5f;
         };
+    }
+
+    public ShieldType getShieldType(){
+        return this.shieldType;
     }
 
     public int getRecoveryTime(){
@@ -125,21 +126,12 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
         public final float damageBlock;
         public final int recoveryTime;
         public final ItemChecker itemChecker;
-        private final Material renderMaterial;
-        private final Material renderMaterialNoPattern;
 
         ShieldType(int durability, float damageBlock, int recoveryTime, ItemChecker itemChecker){
             this.durability = durability;
             this.damageBlock = damageBlock;
             this.recoveryTime = recoveryTime;
             this.itemChecker = itemChecker;
-            String name = this.name().toLowerCase(Locale.ROOT);
-            this.renderMaterial = new Material(Sheets.SHIELD_SHEET, new ResourceLocation(Odyssey.MOD_ID, String.format("entity/shields/%s_shield_base", name)));
-            this.renderMaterialNoPattern = new Material(Sheets.SHIELD_SHEET, new ResourceLocation(Odyssey.MOD_ID, String.format("entity/shields/%s_shield_base_nopattern", name)));
-        }
-
-        public Material getRenderMaterial(boolean pattern){
-            return pattern ? this.renderMaterial : this.renderMaterialNoPattern;
         }
     }
 }

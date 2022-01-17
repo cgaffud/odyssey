@@ -23,7 +23,7 @@ public class ObsidianWalkerEnchantment extends AbstractFrostWalkerEnchantment im
     }
 
     public Enchantment getDowngrade(){
-        return Enchantments.FROST_WALKER;
+        return EnchantmentRegistry.FROST_WALKER.get();
     }
 
     //TODO Implement this

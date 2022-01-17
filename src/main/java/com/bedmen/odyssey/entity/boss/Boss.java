@@ -18,10 +18,6 @@ import java.util.function.Predicate;
 public abstract class Boss extends Monster implements IBossEventEntity {
     private static final int DESPAWN_TIME = 2400;
     private int despawnTimer;
-    protected static final float RARE_LOOT_CHANCE = 0.25f;
-    protected static final Predicate<LivingEntity> ENTITY_SELECTOR = (entity) -> {
-        return entity.attackable() && !(entity instanceof Monster);
-    };
     protected Boss(EntityType<? extends Monster> p_i48576_1_, Level p_i48576_2_) {
         super(p_i48576_1_, p_i48576_2_);
     }

@@ -125,23 +125,19 @@ public class ItemRegistry {
     public static final LevEnchSup BLAST_PROTECTION_1 = new LevEnchSup(EnchantmentRegistry.BLAST_PROTECTION, 1);
     public static final LevEnchSup FIRE_PROTECTION_1 = new LevEnchSup(EnchantmentRegistry.FIRE_PROTECTION, 1);
     public static final LevEnchSup FALL_PROTECTION_2 = new LevEnchSup(EnchantmentRegistry.FALL_PROTECTION, 2);
-    //    public static final LevEnchSup PYROPNEUMATIC_1 = new LevEnchSup(EnchantmentRegistry.PYROPNEUMATIC , 1);
-//    public static final LevEnchSup VULCAN_STRIDER_1 = new LevEnchSup(EnchantmentRegistry.VULCAN_STRIDER, 1);
     public static final LevEnchSup AQUA_AFFINITY = new LevEnchSup(EnchantmentRegistry.AQUA_AFFINITY);
-    public static final LevEnchSup BINDING = new LevEnchSup(EnchantmentRegistry.BINDING_CURSE);
+    public static final LevEnchSup BINDING = new LevEnchSup(() -> Enchantments.BINDING_CURSE);
     public static final LevEnchSup FORTUNE_1 = new LevEnchSup(() -> Enchantments.BLOCK_FORTUNE, 1);
-    public static final LevEnchSup LOOTING_1 = new LevEnchSup(EnchantmentRegistry.MOB_LOOTING, 1);
-    public static final LevEnchSup KNOCKBACK_1 = new LevEnchSup(EnchantmentRegistry.KNOCKBACK, 1);
-    public static final LevEnchSup KNOCKBACK_2 = new LevEnchSup(EnchantmentRegistry.KNOCKBACK, 2);
-    public static final LevEnchSup KNOCKBACK_3 = new LevEnchSup(EnchantmentRegistry.KNOCKBACK, 3);
+    public static final LevEnchSup LOOTING_1 = new LevEnchSup(() -> Enchantments.MOB_LOOTING, 1);
+    public static final LevEnchSup KNOCKBACK_1 = new LevEnchSup(() -> Enchantments.KNOCKBACK, 1);
+    public static final LevEnchSup KNOCKBACK_2 = new LevEnchSup(() -> Enchantments.KNOCKBACK, 2);
+    public static final LevEnchSup KNOCKBACK_3 = new LevEnchSup(() -> Enchantments.KNOCKBACK, 3);
     public static final LevEnchSup BANE_OF_ARTHROPODS_1 = new LevEnchSup(EnchantmentRegistry.BANE_OF_ARTHROPODS, 1);
     public static final LevEnchSup BANE_OF_ARTHROPODS_2 = new LevEnchSup(EnchantmentRegistry.BANE_OF_ARTHROPODS, 2);
     public static final LevEnchSup SHATTERING_1 = new LevEnchSup(EnchantmentRegistry.SHATTERING, 1);
     public static final LevEnchSup SHATTERING_2 = new LevEnchSup(EnchantmentRegistry.SHATTERING, 2);
-    public static final LevEnchSup SWEEPING_EDGE_1 = new LevEnchSup(EnchantmentRegistry.SWEEPING_EDGE, 1);
-    public static final LevEnchSup SWEEPING_EDGE_2 = new LevEnchSup(EnchantmentRegistry.SWEEPING_EDGE, 2);
-    public static final LevEnchSup SWEEPING_EDGE_3 = new LevEnchSup(EnchantmentRegistry.SWEEPING_EDGE, 3);
-    public static final LevEnchSup SWEEPING_EDGE_4 = new LevEnchSup(EnchantmentRegistry.SWEEPING_EDGE, 4);
+    public static final LevEnchSup SWEEPING_EDGE_1 = new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 1);
+    public static final LevEnchSup SWEEPING_EDGE_2 = new LevEnchSup(() -> Enchantments.SWEEPING_EDGE, 2);
     public static final LevEnchSup SMITE_1 = new LevEnchSup(EnchantmentRegistry.SMITE, 1);
     public static final LevEnchSup SMITE_2 = new LevEnchSup(EnchantmentRegistry.SMITE, 2);
     public static final LevEnchSup SMITE_3 = new LevEnchSup(EnchantmentRegistry.SMITE, 3);
@@ -154,8 +150,8 @@ public class ItemRegistry {
     public static final LevEnchSup QUICK_CHARGE_2 = new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 2);
     public static final LevEnchSup PUNCH_1 = new LevEnchSup(EnchantmentRegistry.PUNCH_ARROWS, 1);
     public static final LevEnchSup PUNCH_2 = new LevEnchSup(EnchantmentRegistry.PUNCH_ARROWS, 2);
-    public static final LevEnchSup LOYALTY_1 = new LevEnchSup(EnchantmentRegistry.LOYALTY, 1);
-    public static final LevEnchSup LOYALTY_3 = new LevEnchSup(EnchantmentRegistry.LOYALTY, 3);
+    public static final LevEnchSup LOYALTY_1 = new LevEnchSup(() -> EnchantmentRegistry.LOYALTY.get(), 1);
+    public static final LevEnchSup LOYALTY_3 = new LevEnchSup(() -> EnchantmentRegistry.LOYALTY.get(), 3);
 
     //Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem(TreasureChestMaterial.COPPER, (new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS)));
@@ -178,20 +174,21 @@ public class ItemRegistry {
 
     //Melee Weapons
     public static final RegistryObject<Item> FLINT_HATCHET = ITEMS.register("flint_hatchet", () -> new DualWieldItem(OdysseyTiers.FLINT, 4.5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_1));
-    public static final RegistryObject<Item> FLINT_SABRE = ITEMS.register("flint_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.FLINT, 5f, -2.0f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1));
+    public static final RegistryObject<Item> FLINT_SABRE = ITEMS.register("flint_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.FLINT, 5f, -2.3f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1));
 
     public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 8f, -3.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_1));
     public static final RegistryObject<Item> COPPER_BAT = ITEMS.register("copper_bat", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 6f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_1));
     public static final RegistryObject<Item> COPPER_BATTLE_AXE = ITEMS.register("copper_battle_axe", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 8f, -3.1f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1));
 
-    public static final RegistryObject<Item> BATTLE_PICKAXE = ITEMS.register("battle_pickaxe", () -> new EquipmentPickaxeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 5f, -2.0f, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1));
+    public static final RegistryObject<Item> WEAVER_FANG = ITEMS.register("weaver_fang", () -> new EquipmentMeleeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 6f, -2.2f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
+    public static final RegistryObject<Item> BATTLE_PICKAXE = ITEMS.register("battle_pickaxe", () -> new EquipmentPickaxeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 5f, -2.8f, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1));
     public static final RegistryObject<Item> SLIME_BAT = ITEMS.register("slime_bat", () -> new EquipmentMeleeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 2f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_3));
     public static final RegistryObject<Item> MINI_HAMMER = ITEMS.register("mini_hammer", () -> new DualWieldItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_1));
-    public static final RegistryObject<Item> SWIFT_SABRE = ITEMS.register("swift_sabre", () -> new FastMeleeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 6.0f, -2.0f, 0.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1));
+    public static final RegistryObject<Item> SWIFT_SABRE = ITEMS.register("swift_sabre", () -> new FastMeleeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 6.0f, -2.3f, 0.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1));
 
     public static final RegistryObject<Item> CLOVER_STONE_SWORD = ITEMS.register("clover_stone_sword", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 7f, -2.4f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), LOOTING_1));
     public static final RegistryObject<Item> CLOVER_STONE_HATCHET = ITEMS.register("clover_stone_hatchet", () -> new DualWieldItem(OdysseyTiers.CLOVER_STONE, 5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_1, LOOTING_1));
-    public static final RegistryObject<Item> CLOVER_STONE_SABRE = ITEMS.register("clover_stone_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 6f, -2.0f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1, LOOTING_1));
+    public static final RegistryObject<Item> CLOVER_STONE_SABRE = ITEMS.register("clover_stone_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 6f, -2.3f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1, LOOTING_1));
     public static final RegistryObject<Item> CLOVER_STONE_HAMMER = ITEMS.register("clover_stone_hammer", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 9f, -3.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_1, LOOTING_1));
     public static final RegistryObject<Item> CLOVER_STONE_BAT = ITEMS.register("clover_stone_bat", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 7f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_1, LOOTING_1));
     public static final RegistryObject<Item> CLOVER_STONE_BATTLE_AXE = ITEMS.register("clover_stone_battle_axe", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 9f, -3.1f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1, LOOTING_1));
@@ -199,7 +196,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_SWORD = ITEMS.register("sterling_silver_sword", () -> new SwordItem(OdysseyTiers.STERLING_SILVER, 7, -2.4f, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
 
     public static final RegistryObject<Item> AMETHYST_HATCHET = ITEMS.register("amethyst_hatchet", () -> new DualWieldItem(OdysseyTiers.AMETHYST, 5.5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_2));
-    public static final RegistryObject<Item> AMETHYST_SABRE = ITEMS.register("amethyst_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.AMETHYST, 7f, -2.0f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_2));
+    public static final RegistryObject<Item> AMETHYST_SABRE = ITEMS.register("amethyst_sabre", () -> new EquipmentMeleeItem(OdysseyTiers.AMETHYST, 7f, -2.3f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_2));
 
     public static final RegistryObject<Item> OBSIDIAN_HAMMER = ITEMS.register("obsidian_hammer", () -> new EquipmentMeleeItem(OdysseyTiers.OBSIDIAN, 10f, -3.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_2));
     public static final RegistryObject<Item> OBSIDIAN_BAT = ITEMS.register("obsidian_bat", () -> new EquipmentMeleeItem(OdysseyTiers.OBSIDIAN, 8f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_2));

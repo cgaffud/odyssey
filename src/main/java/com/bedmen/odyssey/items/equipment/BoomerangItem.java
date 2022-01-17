@@ -27,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.Vanishable;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -70,7 +71,7 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
                         player1.broadcastBreakEvent(entityLiving.getUsedItemHand());
                     });
                     Boomerang boomerang = new Boomerang(level, player, stack);
-                    boomerang.setLootingLevel((byte)this.getInnateEnchantmentLevel(EnchantmentRegistry.MOB_LOOTING.get()));
+                    boomerang.setLootingLevel((byte)this.getInnateEnchantmentLevel(Enchantments.MOB_LOOTING));
                     float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(player);
                     boomerang.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, this.shootSpeed(), inaccuracy);
                     if (player.isCreative()) {

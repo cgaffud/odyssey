@@ -1,10 +1,8 @@
 package com.bedmen.odyssey.client.gui.screens;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;
 import com.bedmen.odyssey.inventory.StitchingMenu;
 import com.bedmen.odyssey.inventory.slot.AbstractStitchingSlot;
-import com.bedmen.odyssey.inventory.slot.StitchingFiberSlot;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

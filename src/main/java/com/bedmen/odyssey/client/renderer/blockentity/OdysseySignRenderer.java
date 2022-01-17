@@ -13,7 +13,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

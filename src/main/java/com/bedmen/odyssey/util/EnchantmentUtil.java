@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.util;
 
+import com.bedmen.odyssey.enchantment.abstracts.AbstractRiptideEnchantment;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.IntPriorityQueue;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -12,21 +14,74 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
 public class EnchantmentUtil {
 //    private static final Map<Enchantment, Integer> ENCHANTMENT_TO_INTEGER_MAP = new HashMap<>();
 //    private static final Map<Integer, Enchantment> INTEGER_TO_ENCHANTMENT_MAP = new HashMap<>();
-//
-//    public static void init(){
+
+    private static List<List<Pair<Enchantment, Integer>>> ENCHANTMENTS_BY_TIER;
+    private static List<List<Pair<Enchantment, Integer>>> CURSES_BY_TIER;
+
+
+    public static void init(){
+        List<Pair<Enchantment, Integer>> enchantmentTier1 = List.of(
+                Pair.of(EnchantmentRegistry.ALL_DAMAGE_PROTECTION.get(), 1),
+                Pair.of(EnchantmentRegistry.BLAST_PROTECTION.get(), 1),
+                Pair.of(EnchantmentRegistry.FALL_PROTECTION.get(), 1),
+                Pair.of(EnchantmentRegistry.ICE_PROTECTION.get(), 1),
+                Pair.of(EnchantmentRegistry.RESPIRATION.get(), 1),
+                Pair.of(EnchantmentRegistry.THORNS.get(), 1),
+                Pair.of(EnchantmentRegistry.DEPTH_STRIDER.get(), 1),
+                Pair.of(EnchantmentRegistry.SHARPNESS.get(), 1),
+                Pair.of(EnchantmentRegistry.BANE_OF_ARTHROPODS.get(), 1),
+                Pair.of(EnchantmentRegistry.SMITE.get(), 1),
+                Pair.of(Enchantments.SWEEPING_EDGE, 1),
+                Pair.of(EnchantmentRegistry.SHATTERING.get(), 1),
+                Pair.of(EnchantmentRegistry.LOYALTY.get(), 1),
+                Pair.of(EnchantmentRegistry.RIPTIDE.get(), 1),
+                Pair.of(EnchantmentRegistry.QUICK_CHARGE.get(), 1),
+                Pair.of(EnchantmentRegistry.PUNCH_ARROWS.get(), 1),
+                Pair.of(EnchantmentRegistry.POWER_ARROWS.get(), 1),
+                Pair.of(EnchantmentRegistry.PIERCING.get(), 1),
+                Pair.of(Enchantments.BLOCK_EFFICIENCY, 1),
+                Pair.of(Enchantments.UNBREAKING, 1)
+        );
+        List<Pair<Enchantment, Integer>> curseTier1 = List.of(
+                Pair.of(EnchantmentRegistry.UNENCHANTABLE.get(), 1),
+                Pair.of(EnchantmentRegistry.BLEEDING.get(), 1),
+                Pair.of(EnchantmentRegistry.HEAVY.get(), 1),
+                Pair.of(EnchantmentRegistry.DROWNING.get(), 1),
+                Pair.of(EnchantmentRegistry.VOLATILE.get(), 1),
+                Pair.of(Enchantments.BINDING_CURSE, 1),
+                Pair.of(Enchantments.VANISHING_CURSE, 1)
+        );
+        ENCHANTMENTS_BY_TIER = List.of(enchantmentTier1);
+        CURSES_BY_TIER = List.of(curseTier1);
 //        int i = 0;
 //        for(Enchantment enchantment : ForgeRegistries.ENCHANTMENTS.getValues()){
 //            ENCHANTMENT_TO_INTEGER_MAP.put(enchantment, i);
 //            INTEGER_TO_ENCHANTMENT_MAP.put(i, enchantment);
 //            i++;
 //        }
-//    }
+    }
+
+    public static List<Pair<Enchantment, Integer>> getEnchantmentsByTier(int i){
+        if(i > 0 && i <= ENCHANTMENTS_BY_TIER.size()){
+            return ENCHANTMENTS_BY_TIER.get(i-1);
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<Pair<Enchantment, Integer>> getCursesByTier(int i){
+        if(i > 0 && i <= CURSES_BY_TIER.size()){
+            return CURSES_BY_TIER.get(i-1);
+        }
+        return new ArrayList<>();
+    }
+
 //
 //    public static Enchantment intToEnchantment(int i){
 //        return INTEGER_TO_ENCHANTMENT_MAP.get(i);
@@ -123,15 +178,10 @@ public class EnchantmentUtil {
 //    }
     public static Integer getSumEnchantmentLevels(Enchantment enchantment, LivingEntity entity){
         Iterable<ItemStack> itemSlots = enchantment.getSlotItems(entity).values();
-        if (itemSlots == null) {
-            return 0;
-        }
-        else {
-            int sum = 0;
-            for(ItemStack itemstack : itemSlots)
-                sum += EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemstack);
-            return sum;
-        }
+        int sum = 0;
+        for(ItemStack itemstack : itemSlots)
+            sum += EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemstack);
+        return sum;
     }
 
     public static Component getUnenchantableName(){
@@ -182,7 +232,7 @@ public class EnchantmentUtil {
     }
 
     public static int getFrostWalker(LivingEntity entity) {
-        return Integer.max(getObsidianWalker(entity), EnchantmentHelper.getEnchantmentLevel(Enchantments.FROST_WALKER, entity));
+        return Integer.max(getObsidianWalker(entity), EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FROST_WALKER.get(), entity));
     }
 
     public static int getObsidianWalker(LivingEntity entity) {
@@ -197,13 +247,13 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.PYROPNEUMATIC.get(), entity);
     }
 
-    public static int getRiptide(ItemStack itemStack) {
-        return Integer.max(getEruption(itemStack), EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.RIPTIDE.get(), itemStack));
-    }
-
-    public static int getEruption(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.ERUPTION.get(), itemStack);
-    }
+//    public static int getRiptide(ItemStack itemStack) {
+//        return Integer.max(getEruption(itemStack), EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.RIPTIDE.get(), itemStack));
+//    }
+//
+//    public static int getEruption(ItemStack itemStack) {
+//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.ERUPTION.get(), itemStack);
+//    }
 
     public static int getBleeding(LivingEntity entity) {
         return getSumEnchantmentLevels(EnchantmentRegistry.BLEEDING.get(),entity);
@@ -222,7 +272,7 @@ public class EnchantmentUtil {
     }
 
     public static float getSweepingDamageRatio(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SWEEPING_EDGE.get(), entity) * 0.2f;
+        return EnchantmentHelper.getEnchantmentLevel(Enchantments.SWEEPING_EDGE, entity) * 0.2f;
     }
 
     public static int getShattering(LivingEntity entity) {
@@ -258,20 +308,8 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.SUPER_CHARGE.get(), itemStack) * 0.5f + 1.0f;
     }
 
-    public static int getKnockback(LivingEntity livingEntity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.KNOCKBACK.get(), livingEntity);
-    }
-
     public static int getMobLooting(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MOB_LOOTING.get(), itemStack);
-    }
-
-    public static int getMobLooting(LivingEntity livingEntity){
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MOB_LOOTING.get(), livingEntity);
-    }
-
-    public static int getBindingCurse(ItemStack itemStack){
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.BINDING_CURSE.get(), itemStack);
+        return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MOB_LOOTING, itemStack);
     }
 
     public static int getLoyalty(ItemStack itemStack){

@@ -64,8 +64,8 @@ public class OdysseyOverworldBiomeBuilder {
     }
 
     private void addOffCoastBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> p_187196_) {
-        this.addSurfaceBiome(p_187196_, Climate.Parameter.span(-1.0F, 0.55F), this.FULL_RANGE, this.mushroomFieldsContinentalness, this.FULL_RANGE, this.FULL_RANGE, 0.0F, Biomes.MUSHROOM_FIELDS);
-        this.addSurfaceBiome(p_187196_, Climate.Parameter.span(0.55F, 1.0F), this.FULL_RANGE, this.mushroomFieldsContinentalness, this.FULL_RANGE, this.FULL_RANGE, 0.0F, BiomeRegistry.TROPICS_RESOURCE_KEY);
+        this.addSurfaceBiome(p_187196_, Climate.Parameter.span(temperatures[0], temperatures[3]), this.FULL_RANGE, this.mushroomFieldsContinentalness, this.FULL_RANGE, this.FULL_RANGE, 0.0F, Biomes.MUSHROOM_FIELDS);
+        this.addSurfaceBiome(p_187196_, temperatures[4], this.FULL_RANGE, this.mushroomFieldsContinentalness, this.FULL_RANGE, this.FULL_RANGE, 0.0F, BiomeRegistry.TROPICS_RESOURCE_KEY);
 
         for(int i = 0; i < this.temperatures.length; ++i) {
             Climate.Parameter climate$parameter = this.temperatures[i];
@@ -290,12 +290,13 @@ public class OdysseyOverworldBiomeBuilder {
         return this.maybePickShatteredBiome(p_187223_, p_187224_, p_187225_, resourcekey);
     }
 
-    private ResourceKey<Biome> pickBeachBiome(int p_187161_, int p_187162_) {
-        if (p_187161_ == 0) {
-            return Biomes.SNOWY_BEACH;
-        } else {
-            return p_187161_ == 4 ? Biomes.DESERT : Biomes.BEACH;
-        }
+    private ResourceKey<Biome> pickBeachBiome(int temp, int humidity) {
+        return switch (temp) {
+            case 0 -> Biomes.SNOWY_BEACH;
+            case 3 -> BiomeRegistry.TROPICS_RESOURCE_KEY;
+            case 4 -> Biomes.DESERT;
+            default -> Biomes.BEACH;
+        };
     }
 
     private ResourceKey<Biome> pickBadlandsBiome(int p_187173_, Climate.Parameter p_187174_) {

@@ -72,6 +72,11 @@ public class EquipmentArmorItem extends ArmorItem implements IEquipment {
         return tuple.getA();
     }
 
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
+    {
+        return this.getInnateEnchantmentLevel(enchantment) == 0 && enchantment.category.canEnchant(stack.getItem());
+    }
+
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         if(this instanceof HollowCoconutItem){

@@ -22,13 +22,15 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
+    private static final int RARITY = 10;
+
     public TreasureChestFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         Random random = context.random();
-        if(random.nextInt(20) != 0){
+        if(random.nextInt(RARITY) != 0){
             return false;
         }
         WorldGenLevel worldgenlevel = context.level();

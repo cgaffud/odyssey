@@ -10,12 +10,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -180,30 +176,6 @@ public abstract class MixinEnchantmentHelper {
             return EnchantmentUtil.getVulcanStrider(livingEntity);
         }
         return EnchantmentUtil.getDepthStrider(livingEntity);
-    }
-
-    /**
-     * @author JemBren
-     */
-    @Overwrite
-    public static int getKnockbackBonus(LivingEntity livingEntity) {
-        return EnchantmentUtil.getKnockback(livingEntity);
-    }
-
-    /**
-     * @author JemBren
-     */
-    @Overwrite
-    public static int getMobLooting(LivingEntity livingEntity) {
-        return EnchantmentUtil.getMobLooting(livingEntity);
-    }
-
-    /**
-     * @author JemBren
-     */
-    @Overwrite
-    public static boolean hasBindingCurse(ItemStack itemStack) {
-        return EnchantmentUtil.getBindingCurse(itemStack) > 0;
     }
 
     /**
