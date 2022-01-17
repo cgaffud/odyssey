@@ -1,20 +1,15 @@
 package com.bedmen.odyssey.client.gui;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
-import net.minecraftforge.client.gui.OverlayRegistry;
 
 public class OdysseyIngameGui extends ForgeIngameGui
 {

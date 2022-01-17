@@ -32,6 +32,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implements BlockEntityRenderer<T> {
+    public static final Material COPPER_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/treasure_chests/copper"));
+    public static final Material COPPER_MATERIAL_LOCKED = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/treasure_chests/copper_locked"));
+    public static final Material STERLING_SILVER_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/treasure_chests/sterling_silver"));
+    public static final Material STERLING_SILVER_MATERIAL_LOCKED = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/treasure_chests/sterling_silver_locked"));
     private static final String BOTTOM = "bottom";
     private static final String LID = "lid";
     private static final String LOCK = "lock";
@@ -71,7 +75,7 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
             f1 = 1.0F - f1;
             f1 = 1.0F - f1 * f1 * f1;
             int i = neighborcombineresult.<Int2IntFunction>apply(new BrightnessCombiner<>()).applyAsInt(p_112367_);
-            VertexConsumer vertexconsumer = treasureChestMaterial.getRenderMaterial(blockstate.getValue(TreasureChestBlock.LOCKED)).buffer(multiBufferSource, RenderType::entityCutout);
+            VertexConsumer vertexconsumer = getRenderMaterial(treasureChestMaterial, blockstate.getValue(TreasureChestBlock.LOCKED)).buffer(multiBufferSource, RenderType::entityCutout);
             this.render(poseStack, vertexconsumer, this.lid, this.lock, this.bottom, f1, i, p_112368_);
 
             poseStack.popPose();
@@ -84,5 +88,12 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
         p_112372_.render(p_112370_, p_112371_, p_112376_, p_112377_);
         p_112373_.render(p_112370_, p_112371_, p_112376_, p_112377_);
         p_112374_.render(p_112370_, p_112371_, p_112376_, p_112377_);
+    }
+
+    public static Material getRenderMaterial(TreasureChestMaterial treasureChestMaterial, boolean locked){
+        return switch(treasureChestMaterial){
+            case COPPER -> locked ? COPPER_MATERIAL_LOCKED : COPPER_MATERIAL;
+            case STERLING_SILVER -> locked ? STERLING_SILVER_MATERIAL_LOCKED : STERLING_SILVER_MATERIAL;
+        };
     }
 }
