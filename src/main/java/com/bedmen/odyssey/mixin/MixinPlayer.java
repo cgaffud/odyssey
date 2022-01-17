@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
@@ -23,12 +24,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Player.class)
-public abstract class MixinPlayer extends LivingEntity {
+public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer {
 
     @Shadow
     public ItemCooldowns getCooldowns() {return null;}
     @Shadow
     public void awardStat(Stat<?> p_36247_) {}
+
+    private int attackStrengthTickerO;
 
     protected MixinPlayer(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
@@ -86,6 +89,16 @@ public abstract class MixinPlayer extends LivingEntity {
 
         }
     }
+
+    public void resetAttackStrengthTicker() {
+        this.attackStrengthTickerO = this.attackStrengthTicker;
+        this.attackStrengthTicker = 0;
+    }
+
+    public float getAttackStrengthScaleO() {
+        return Mth.clamp(((float)this.attackStrengthTickerO + 0.5f) / this.getCurrentItemAttackStrengthDelay(), 0.0F, 1.0F);
+    }
+
 
     private Player getPlayerEntity(){
         return (Player)(Object)this;

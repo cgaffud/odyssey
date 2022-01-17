@@ -46,16 +46,20 @@
     {
       "rolls": 1.0,
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "random_chance",
-          "chance": 0.25
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "oddc:rusty_sonic_fork"
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:constant",
+                "value": 2.0
+              },
+              "add": false
+            }
+          ],
+          "name": "oddc:rusty_arm"
         }
       ]
     }

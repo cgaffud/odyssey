@@ -43,6 +43,7 @@
   "enchantment.oddc.super_charge": "Super Charge",
   "enchantment.oddc.ice_protection": "Ice Protection",
   "enchantment.oddc.downpour": "Downpour",
+  "enchantment.oddc.fling": "Fling",
   "enchantment.oddc.vulcan_strider": "Vulcan Strider",
   "enchantment.oddc.obsidian_walker": "Obsidian Walker",
   "enchantment.oddc.pyropneumatic": "Pyropneumatic",
@@ -310,5 +311,7 @@
   "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
   "item.oddc.weaver_fang": "Weaver Fang",
   "item.oddc.weaver_fang_arrow": "Weaver Fang Arrow",
-  "item.oddc.weaver_fang.web_chance": "Cobweb Chance: "
+  "item.oddc.weaver_fang.web_chance": "Cobweb Chance: ",
+  "item.oddc.rusty_arm": "Rusty Arm",
+  "item.oddc.rusty_paddle": "Rusty Paddle"
 }

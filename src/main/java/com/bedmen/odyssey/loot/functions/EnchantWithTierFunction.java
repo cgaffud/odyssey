@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.*;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
@@ -45,7 +47,7 @@ public class EnchantWithTierFunction extends LootItemConditionalFunction {
         //Enchantments
         List<Pair<Enchantment, Integer>> enchantmentList = EnchantmentUtil.getEnchantmentsByTier(this.tier.getInt(lootContext));
         for(int i = 0; i < ENCHANTMENT_RARITY.length && enchantmentList.size() > 0; i++){
-            enchantmentList = enchantmentList.stream().filter((pair) -> pair.getFirst().canEnchant(itemStack)).collect(Collectors.toList());
+            enchantmentList = enchantmentList.stream().filter((pair) -> canEnchantOntoItemStack(pair.getFirst(), itemStack)).collect(Collectors.toList());
             if(random.nextInt(ENCHANTMENT_RARITY[i]) == 0){
                 Pair<Enchantment, Integer> enchantmentIntegerPair = enchantmentList.get(random.nextInt(enchantmentList.size()));
                 enchantmentList.remove(enchantmentIntegerPair);
@@ -57,7 +59,7 @@ public class EnchantWithTierFunction extends LootItemConditionalFunction {
         //Curses
         List<Pair<Enchantment, Integer>> curseList = EnchantmentUtil.getCursesByTier(this.tier.getInt(lootContext));
         for(int i = 0; i < CURSE_RARITY.length && curseList.size() > 0; i++){
-            curseList = curseList.stream().filter((pair) -> pair.getFirst().canEnchant(itemStack)).collect(Collectors.toList());
+            curseList = curseList.stream().filter((pair) -> canEnchantOntoItemStack(pair.getFirst(), itemStack)).collect(Collectors.toList());
             if(random.nextInt(CURSE_RARITY[i]) == 0){
                 Pair<Enchantment, Integer> curseIntegerPair = curseList.get(random.nextInt(curseList.size()));
                 curseList.remove(curseIntegerPair);
@@ -67,6 +69,19 @@ public class EnchantWithTierFunction extends LootItemConditionalFunction {
             }
         }
         return itemStack;
+    }
+
+    private static boolean canEnchantOntoItemStack(Enchantment enchantment, ItemStack itemStack){
+        if(!enchantment.canEnchant(itemStack)){
+            return false;
+        }
+        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
+        for(Enchantment enchantment1 : map.keySet()){
+            if(!enchantment1.isCompatibleWith(enchantment)){
+                return false;
+            }
+        }
+        return true;
     }
 
     public static EnchantWithTierFunction.Builder enchantWithTier(NumberProvider numberProvider) {
