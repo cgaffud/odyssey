@@ -3,7 +3,10 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
 import com.bedmen.odyssey.client.renderer.entity.layer.QuiverLayer;
+import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.items.equipment.SniperBowItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
@@ -12,7 +15,9 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpyglassItem;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.FOVModifierEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -77,6 +82,17 @@ public class RenderEvents {
         Player player = event.getPlayer();
         if(playerRenderer instanceof OdysseyPlayerRenderer odysseyPlayerRenderer && player instanceof AbstractClientPlayer abstractClientPlayer){
             odysseyPlayerRenderer.setModelProperties(abstractClientPlayer);
+        }
+    }
+
+    /**
+     * Adjusts FOV for sniper bow
+     */
+    @SubscribeEvent
+    public static void onFOVModifierEvent(final FOVModifierEvent event) {
+        Player player = event.getEntity();
+        if(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player instanceof IOdysseyPlayer odysseyPlayer && odysseyPlayer.isSniperScoping()){
+            event.setNewfov(event.getFov() * SpyglassItem.ZOOM_FOV_MODIFIER);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.SonicBoom;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
@@ -34,6 +35,13 @@ public class PlayerEvents {
     @SubscribeEvent
     public static void tickEvent$PlayerTickEventListener(final TickEvent.PlayerTickEvent event){
         Player player =  event.player;
+        //Both sides
+        if(event.phase == TickEvent.Phase.START){
+            if(player instanceof IOdysseyPlayer odysseyPlayer){
+                odysseyPlayer.updateSniperScoping();
+            }
+        }
+        //Server Side
         if(event.side == LogicalSide.SERVER){
             if(event.phase == TickEvent.Phase.START){
                 if(!(player.isCreative() || player.isSpectator()) && player.level.dimensionType().ultraWarm()){

@@ -153,6 +153,7 @@ public class ItemRegistry {
     public static final LevEnchSup QUICK_CHARGE_2 = new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 2);
     public static final LevEnchSup PUNCH_1 = new LevEnchSup(EnchantmentRegistry.PUNCH_ARROWS, 1);
     public static final LevEnchSup PUNCH_2 = new LevEnchSup(EnchantmentRegistry.PUNCH_ARROWS, 2);
+    public static final LevEnchSup SUPER_CHARGE_1 = new LevEnchSup(EnchantmentRegistry.SUPER_CHARGE, 1);
     public static final LevEnchSup LOYALTY_1 = new LevEnchSup(EnchantmentRegistry.LOYALTY, 1);
     public static final LevEnchSup LOYALTY_3 = new LevEnchSup(EnchantmentRegistry.LOYALTY, 3);
 
@@ -229,6 +230,10 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> AMETHYST_ARROW = ITEMS.register("amethyst_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyArrow.ArrowType.AMETHYST));
 
+    public static final RegistryObject<Item> GREATROOT_LONG_BOW = ITEMS.register("greatroot_long_bow", () -> new EquipmentBowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, PIERCING_2));
+    public static final RegistryObject<Item> GREATROOT_REPEATER = ITEMS.register("greatroot_repeater", () -> new RepeaterItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, QUICK_CHARGE_2));
+    public static final RegistryObject<Item> GREATROOT_SNIPER_BOW = ITEMS.register("greatroot_sniper_bow", () -> new SniperBowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, SUPER_CHARGE_1));
+    
     //Armors
     public static final RegistryObject<Item> HOLLOW_COCONUT = ITEMS.register("hollow_coconut", () -> new HollowCoconutItem(OdysseyArmorMaterials.COCONUT, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), BINDING));
 
