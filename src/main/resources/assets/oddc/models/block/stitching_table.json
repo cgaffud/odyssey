@@ -1,8 +1,12 @@
 {
-  "parent": "oddc:block/cube_column_different_ends",
+  "parent":"minecraft:block/cube",
   "textures": {
-    "top": "oddc:block/stitching_table_top",
-    "bottom": "minecraft:block/acacia_planks",
-    "side": "oddc:block/stitching_table_side"
+    "particle": "oddc:block/stitching_table_front",
+    "north": "oddc:block/stitching_table_front",
+    "south": "oddc:block/stitching_table_side",
+    "east": "oddc:block/stitching_table_side",
+    "west": "oddc:block/stitching_table_front",
+    "up": "oddc:block/stitching_table_top",
+    "down":"minecraft:block/acacia_planks"
   }
 }
