@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
 import com.bedmen.odyssey.client.renderer.entity.layer.QuiverLayer;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
+import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.equipment.SniperBowItem;
 import net.minecraft.client.Minecraft;
@@ -15,6 +16,8 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpyglassItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.FOVModifierEvent;
@@ -92,7 +95,20 @@ public class RenderEvents {
     public static void onFOVModifierEvent(final FOVModifierEvent event) {
         Player player = event.getEntity();
         if(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player instanceof IOdysseyPlayer odysseyPlayer && odysseyPlayer.isSniperScoping()){
-            event.setNewfov(event.getFov() * SpyglassItem.ZOOM_FOV_MODIFIER);
+            event.setNewfov(SpyglassItem.ZOOM_FOV_MODIFIER);
+        }
+        else if (player.isUsingItem()) {
+            ItemStack itemstack = player.getUseItem();
+            if (itemstack.getItem() instanceof OdysseyBowItem && !itemstack.is(Items.BOW)) {
+                int i = player.getTicksUsingItem();
+                float f1 = (float)i / 20.0F;
+                if (f1 > 1.0F) {
+                    f1 = 1.0F;
+                } else {
+                    f1 *= f1;
+                }
+                event.setNewfov(event.getFov() * (1.0F - f1 * 0.15F));
+            }
         }
     }
 }

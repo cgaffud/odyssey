@@ -68,7 +68,6 @@ public class Odyssey
         event.enqueueWork(() -> {
             ContainerRegistry.initQuivers();
             FeatureRegistry.initTreasureChests();
-            OdysseySpawnEggItem.initSpawnEggs();
             PassiveWeaver.init();
             OdysseyFlowerPotBlock.registerFlowerPots();
             EquipmentArmorItem.initEquipment();
