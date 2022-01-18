@@ -144,9 +144,10 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-open_path1 = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\item\rusty_paddle.png"
-save_path = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\item\rusty_paddle_1.png"
+open_path1 = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\block\sterling_silver_cobweb.png"
+save_path = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\block\diamond_cobweb.png"
 image1 = open_image(open_path1)
-recolor_image_randomly(image1, [1,1,1],[0,0,0],[0.88,0.76,0.64],[0,0,0])
+D = {color(255,255,255):[213,255,246],color(215,215,215):[161,251,232],color(175,175,175):[74,237,217]}
+colormap_image(image1, D)
 save_image(image1, save_path)
 print("Done")

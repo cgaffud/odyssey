@@ -63,7 +63,8 @@ public class PassiveWeaver extends Animal {
                 ItemRegistry.SILVER_INGOT.get(), BlockRegistry.SILVER_COBWEB.get(),
                 Items.GOLD_INGOT, BlockRegistry.GOLDEN_COBWEB.get(),
                 ItemRegistry.STERLING_SILVER_INGOT.get(), BlockRegistry.STERLING_SILVER_COBWEB.get(),
-                ItemRegistry.ELECTRUM_INGOT.get(), BlockRegistry.ELECTRUM_COBWEB.get());
+                ItemRegistry.ELECTRUM_INGOT.get(), BlockRegistry.ELECTRUM_COBWEB.get(),
+                Items.DIAMOND, BlockRegistry.DIAMOND_COBWEB.get());
     }
 
     protected void registerGoals() {
@@ -106,13 +107,9 @@ public class PassiveWeaver extends Animal {
         this.stringTimer -= STRING_REPLENISH_TIME;
     }
 
-    public SimpleContainer getInventory() {
-        return this.inventory;
-    }
-
     public boolean wantsToPickUp(ItemStack itemStack) {
         Item item = itemStack.getItem();
-        return ((WEAVE_MAP.containsKey(item) && this.getInventory().canAddItem(itemStack)) || item == Items.STRING) && !this.isBaby();
+        return ((WEAVE_MAP.containsKey(item) && this.inventory.canAddItem(itemStack)) || item == Items.STRING) && !this.isBaby();
     }
 
     protected void pickUpItem(ItemEntity itemEntity) {
@@ -126,7 +123,7 @@ public class PassiveWeaver extends Animal {
                     itemEntity.discard();
                 }
             } else {
-                SimpleContainer simplecontainer = this.getInventory();
+                SimpleContainer simplecontainer = this.inventory;
                 this.take(itemEntity, itemstack.getCount());
                 ItemStack itemstack1 = simplecontainer.addItem(itemstack);
                 if (itemstack1.isEmpty()) {
@@ -156,7 +153,7 @@ public class PassiveWeaver extends Animal {
             } else {
                 itemStack1 = itemStack.getItem().getDefaultInstance();
             }
-            SimpleContainer simplecontainer = this.getInventory();
+            SimpleContainer simplecontainer = this.inventory;
             simplecontainer.addItem(itemStack1);
             this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
             return InteractionResult.SUCCESS;
@@ -213,11 +210,13 @@ public class PassiveWeaver extends Animal {
 
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
+        compoundTag.put("Inventory", this.inventory.createTag());
         compoundTag.putInt("stringTimer", this.stringTimer);
     }
 
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
+        this.inventory.fromTag(compoundTag.getList("Inventory", 10));
         this.stringTimer = compoundTag.getInt("stringTimer");
     }
 
@@ -277,7 +276,7 @@ public class PassiveWeaver extends Animal {
 
         public boolean canUse() {
             int stringTimer = this.passiveWeaver.getStringTimer();
-            return (!this.passiveWeaver.getInventory().isEmpty() && stringTimer >= PassiveWeaver.STRING_REPLENISH_TIME) || stringTimer >= MAX_STRING_TIMER;
+            return (!this.passiveWeaver.inventory.isEmpty() && stringTimer >= PassiveWeaver.STRING_REPLENISH_TIME) || stringTimer >= MAX_STRING_TIMER;
         }
 
         public void start() {
@@ -290,10 +289,10 @@ public class PassiveWeaver extends Animal {
             } else {
                 BlockPos blockPos = this.passiveWeaver.blockPosition();
                 if(this.passiveWeaver.level.getBlockState(blockPos).isAir()){
-                    if(this.passiveWeaver.getInventory().isEmpty()){
+                    if(this.passiveWeaver.inventory.isEmpty()){
                         this.passiveWeaver.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
                     } else {
-                        ItemStack itemStack = this.passiveWeaver.getInventory().getItem(0);
+                        ItemStack itemStack = this.passiveWeaver.inventory.getItem(0);
                         this.passiveWeaver.level.setBlock(blockPos, PassiveWeaver.WEAVE_MAP.get(itemStack.getItem()).defaultBlockState(), 3);
                         itemStack.shrink(1);
                     }
