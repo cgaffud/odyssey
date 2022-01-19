@@ -7,6 +7,7 @@ import com.bedmen.odyssey.entity.monster.BabySkeleton;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyBowItem;
+import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -23,12 +24,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.PolarBear;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -132,12 +132,17 @@ public class EntityEvents {
     public static void onLivingSpawnEvent$CheckSpawn(final LivingSpawnEvent.CheckSpawn event){
         Entity entity = event.getEntity();
 
-        if(entity instanceof Skeleton skeleton && entity.getType() == EntityType.SKELETON){
-            float f = skeleton.getRandom().nextFloat();
-            if(f < ForgeConfig.SERVER.zombieBabyChance.get()){
+        if(entity instanceof Zombie zombie){
+            if(inPrairieBiome(zombie)){
+                zombie.setBaby(true);
+            }
+        }
+
+        else if(entity instanceof Skeleton skeleton && entity.getType() == EntityType.SKELETON){
+            if(isBaby(skeleton)){
                 EntityTypeRegistry.BABY_SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
                 event.setResult(Event.Result.DENY);
-            } else if (f < ForgeConfig.SERVER.zombieBabyChance.get() + 0.05f) {
+            } else if (skeleton.getRandom().nextInt(19) == 0) {
                 EntityTypeRegistry.CROSSBOW_SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
                 event.setResult(Event.Result.DENY);
             }
@@ -146,12 +151,12 @@ public class EntityEvents {
         else if(entity instanceof Creeper creeper && entity.getType() == EntityType.CREEPER){
             Random random = creeper.getRandom();
 
-            if(random.nextFloat() < getCamoChance(entity.level.getDifficulty())){
+            if(isCamo(random, entity.level.getDifficulty())){
                 EntityTypeRegistry.CAMO_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
                 event.setResult(Event.Result.DENY);
             }
 
-            else if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
+            else if(isBaby(entity)){
                 EntityTypeRegistry.BABY_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
                 event.setResult(Event.Result.DENY);
             }
@@ -175,11 +180,20 @@ public class EntityEvents {
         }
     }
 
-    public static float getCamoChance(Difficulty difficulty){
-        return switch (difficulty) {
+    public static boolean isBaby(Entity entity){
+        return inPrairieBiome(entity) || entity.level.random.nextFloat() <  ForgeConfig.SERVER.zombieBabyChance.get();
+    }
+
+    public static boolean inPrairieBiome(Entity entity){
+        return entity.level.getBiome(entity.blockPosition()).getRegistryName().equals(BiomeRegistry.PRAIRIE.get().getRegistryName());
+    }
+
+    public static boolean isCamo(Random random, Difficulty difficulty){
+        float chance = switch (difficulty) {
             case HARD -> 1f;
             case NORMAL -> 0.5f;
             default -> 0.25f;
         };
+        return random.nextFloat() < chance;
     }
 }

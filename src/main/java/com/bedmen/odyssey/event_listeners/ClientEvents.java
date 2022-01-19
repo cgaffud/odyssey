@@ -2,6 +2,7 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
+import com.bedmen.odyssey.block.TriplePlantBlock;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.*;
 import com.bedmen.odyssey.client.model.*;
@@ -21,6 +22,7 @@ import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -33,8 +35,12 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -171,16 +177,27 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onColorHandlerEvent$Block(final ColorHandlerEvent.Block event) {
-        event.getBlockColors().register((p_228061_0_, p_228061_1_, p_228061_2_, p_228061_3_) -> {
-            return p_228061_1_ != null && p_228061_2_ != null ? BiomeColors.getAverageFoliageColor(p_228061_1_, p_228061_2_) : FoliageColor.getDefaultColor();
-        }, BlockRegistry.PALM_LEAVES.get(), BlockRegistry.PALM_CORNER_LEAVES.get());
+        BlockColors blockColors = event.getBlockColors();
+        blockColors.register(
+                (blockState, blockAndTintGetter, blockPos, i) ->
+                        blockAndTintGetter != null && blockPos != null ? BiomeColors.getAverageFoliageColor(blockAndTintGetter, blockPos) : FoliageColor.getDefaultColor(),
+                BlockRegistry.PALM_LEAVES.get(),
+                BlockRegistry.PALM_CORNER_LEAVES.get());
+        blockColors.register((blockState, blockAndTintGetter, blockPos, i) ->
+                blockAndTintGetter != null && blockPos != null ? BiomeColors.getAverageGrassColor(blockAndTintGetter,
+                        blockState.getValue(TriplePlantBlock.THIRD) == TriplePlantBlock.TripleBlockThird.UPPER ? blockPos.below(2) : (blockState.getValue(TriplePlantBlock.THIRD) == TriplePlantBlock.TripleBlockThird.MIDDLE ? blockPos.below() : blockPos)) : -1,
+                BlockRegistry.PRAIRIE_GRASS.get());
+        blockColors.addColoringState(TriplePlantBlock.THIRD, BlockRegistry.PRAIRIE_GRASS.get());
     }
 
     @SubscribeEvent
     public static void onColorHandlerEvent$Item(final ColorHandlerEvent.Item event) {
-        event.getItemColors().register((p_210235_1_, p_210235_2_) -> {
-            BlockState blockstate = ((BlockItem)(p_210235_1_).getItem()).getBlock().defaultBlockState();
-            return event.getBlockColors().getColor(blockstate, null, null, p_210235_2_);
+        event.getItemColors().register((itemStack, i) -> {
+            BlockState blockstate = ((BlockItem)(itemStack).getItem()).getBlock().defaultBlockState();
+            return event.getBlockColors().getColor(blockstate, null, null, i);
         }, BlockRegistry.PALM_LEAVES.get(), BlockRegistry.PALM_CORNER_LEAVES.get());
+        event.getItemColors().register((itemStack, i) ->
+                GrassColor.get(0.5D, 1.0D),
+                BlockRegistry.PRAIRIE_GRASS.get());
     }
 }

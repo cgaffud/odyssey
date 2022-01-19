@@ -322,5 +322,7 @@
   "block.oddc.diamond_cobweb": "Diamond Cobweb",
   "item.oddc.diamond_fiber": "Diamond Fiber",
   "entity.oddc.crossbow_skeleton": "Crossbow Skeleton",
-  "item.oddc.crossbow_skeleton_spawn_egg": "Crossbow Skeleton Spawn Egg"
+  "item.oddc.crossbow_skeleton_spawn_egg": "Crossbow Skeleton Spawn Egg",
+  "block.oddc.prairie_grass": "Prairie Grass",
+  "biome.oddc.prairie": "Prairie"
 }

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "oddc:prairie_grass",
     "oddc:coconut",
     "oddc:hollow_coconut",
     "oddc:stitching_table",
