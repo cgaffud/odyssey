@@ -255,7 +255,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     public enum BoomerangType{
         WOODEN(4.0d, 20, 500),
         BONE(5.0d, 20, 0),
-        BONERANG(5.0d, 10, 0),
+        BONERANG(7.0d, 10, 0),
         CLOVER_STONE(6.0d, 20, 0);
 //        COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
 

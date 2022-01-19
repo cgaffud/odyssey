@@ -1,14 +1,21 @@
 package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyCrossbowItem;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -55,6 +62,26 @@ public class EquipmentCrossbowItem extends OdysseyCrossbowItem implements IEquip
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
     {
         return this.getInnateEnchantmentLevel(enchantment) == 0 && enchantment.category.canEnchant(stack.getItem());
+    }
+
+    public AbstractArrow customArrow(AbstractArrow arrow) {
+        int j = this.getInnateEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get());
+        if (j > 0) {
+            arrow.setKnockback(j);
+        }
+        j = this.getInnateEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get());
+        if (j > 0) {
+            arrow.setSecondsOnFire(100*j);
+        }
+        j = this.getInnateEnchantmentLevel(EnchantmentRegistry.PIERCING.get());
+        if (j > 0) {
+            arrow.setPierceLevel((byte)j);
+        }
+        j = this.getInnateEnchantmentLevel(Enchantments.MOB_LOOTING);
+        if(j > 0 && arrow instanceof OdysseyAbstractArrow){
+            ((OdysseyAbstractArrow) arrow).setLootingLevel((byte)j);
+        }
+        return super.customArrow(arrow);
     }
 
     /**

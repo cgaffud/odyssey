@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -23,6 +24,8 @@ import java.util.Optional;
 public class BabySkeleton extends AbstractSkeleton {
     private int noBoomerangTick;
     private Optional<InteractionHand> boomerangHand = Optional.empty();
+    private Item boomerangItem;
+    private static final float BONERANG_CHANCE = .2f;
     public BabySkeleton(EntityType<? extends BabySkeleton> p_i50194_1_, Level p_i50194_2_) {
         super(p_i50194_1_, p_i50194_2_);
     }
@@ -41,7 +44,7 @@ public class BabySkeleton extends AbstractSkeleton {
             if(this.noBoomerangTick < 200){
                 this.noBoomerangTick++;
             } else {
-                this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemRegistry.BONE_BOOMERANG.get()));
+                this.setItemInHand(InteractionHand.MAIN_HAND, this.boomerangItem.getDefaultInstance());
             }
         }
     }
@@ -94,7 +97,12 @@ public class BabySkeleton extends AbstractSkeleton {
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance p_180481_1_) {
         super.populateDefaultEquipmentSlots(p_180481_1_);
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.BONE_BOOMERANG.get()));
+        if(this.random.nextFloat() < BONERANG_CHANCE){
+            this.boomerangItem = ItemRegistry.BONERANG.get();
+        } else {
+            this.boomerangItem = ItemRegistry.BONE_BOOMERANG.get();
+        }
+        this.setItemSlot(EquipmentSlot.MAINHAND, this.boomerangItem.getDefaultInstance());
     }
 
     public void reassessWeaponGoal() {
@@ -112,7 +120,7 @@ public class BabySkeleton extends AbstractSkeleton {
 
     public void performRangedAttack(LivingEntity target, float p_82196_2_) {
         Optional<InteractionHand> hand = this.hasBoomerang();
-        ItemStack itemstack = hand.map(value -> new ItemStack(this.getItemInHand(value).getItem())).orElseGet(() -> new ItemStack(ItemRegistry.BONE_BOOMERANG.get()));
+        ItemStack itemstack = hand.map(value -> new ItemStack(this.getItemInHand(value).getItem())).orElseGet(() -> this.boomerangItem.getDefaultInstance());
         Boomerang boomerang = new Boomerang(this.level, this, itemstack);
         double d0 = target.getX() - this.getX();
         double d1 = target.getEyeHeight() - this.getEyeHeight() + target.getY() - this.getY();

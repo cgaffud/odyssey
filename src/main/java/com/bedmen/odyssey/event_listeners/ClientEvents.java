@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
+import net.minecraft.client.renderer.entity.SkeletonRenderer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -49,7 +50,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class ClientEvents {
 
     @SubscribeEvent
-    public static void doClientStuff(final FMLClientSetupEvent event)
+    public static void onFMLClientSetupEvent(final FMLClientSetupEvent event)
     {
         event.enqueueWork(() -> {
             //For hollow coconut vision overlay
@@ -106,6 +107,7 @@ public class ClientEvents {
 //        EntityRenderers.register(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.CROSSBOW_SKELETON.get(), CrossbowSkeletonRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
@@ -136,7 +138,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onTextureStitch(final TextureStitchEvent.Pre event){
+    public static void onTextureStitchEvent$Pre(final TextureStitchEvent.Pre event){
         //Shield Textures
         for(OdysseyShieldItem.ShieldType shieldType : OdysseyShieldItem.ShieldType.values()){
             event.addSprite(OdysseyBlockEntityWithoutLevelRenderer.getShieldRenderMaterial(shieldType, false).texture());
@@ -168,14 +170,14 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onColorHandlerEvent(final ColorHandlerEvent.Block event) {
+    public static void onColorHandlerEvent$Block(final ColorHandlerEvent.Block event) {
         event.getBlockColors().register((p_228061_0_, p_228061_1_, p_228061_2_, p_228061_3_) -> {
             return p_228061_1_ != null && p_228061_2_ != null ? BiomeColors.getAverageFoliageColor(p_228061_1_, p_228061_2_) : FoliageColor.getDefaultColor();
         }, BlockRegistry.PALM_LEAVES.get(), BlockRegistry.PALM_CORNER_LEAVES.get());
     }
 
     @SubscribeEvent
-    public static void onColorHandlerEvent(final ColorHandlerEvent.Item event) {
+    public static void onColorHandlerEvent$Item(final ColorHandlerEvent.Item event) {
         event.getItemColors().register((p_210235_1_, p_210235_2_) -> {
             BlockState blockstate = ((BlockItem)(p_210235_1_).getItem()).getBlock().defaultBlockState();
             return event.getBlockColors().getColor(blockstate, null, null, p_210235_2_);

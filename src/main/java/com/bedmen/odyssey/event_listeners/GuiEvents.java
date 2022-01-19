@@ -18,7 +18,7 @@ public class GuiEvents {
      * Custom Creative Screen
      */
     @SubscribeEvent
-    public static void GuiOpenEventListener(final ScreenOpenEvent event){
+    public static void onScreenOpenEvent(final ScreenOpenEvent event){
         Screen screen = event.getScreen();
         if(screen instanceof SignEditScreen signEditScreen && signEditScreen.sign instanceof OdysseySignBlockEntity odysseySignBlockEntity){
             event.setScreen(new OdysseySignEditScreen(odysseySignBlockEntity, Minecraft.getInstance().isTextFilteringEnabled()));

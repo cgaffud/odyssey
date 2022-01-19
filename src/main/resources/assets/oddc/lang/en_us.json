@@ -320,5 +320,7 @@
   "item.oddc.greatroot_shot_bow": "Greatroot Shot Bow",
   "item.oddc.greatroot_slug_bow": "Greatroot Slug Bow",
   "block.oddc.diamond_cobweb": "Diamond Cobweb",
-  "item.oddc.diamond_fiber": "Diamond Fiber"
+  "item.oddc.diamond_fiber": "Diamond Fiber",
+  "entity.oddc.crossbow_skeleton": "Crossbow Skeleton",
+  "item.oddc.crossbow_skeleton_spawn_egg": "Crossbow Skeleton Spawn Egg"
 }

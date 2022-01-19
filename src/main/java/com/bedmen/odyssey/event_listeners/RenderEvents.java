@@ -58,7 +58,7 @@ public class RenderEvents {
      * Prevents Quiver from being rendered in hand
      */
     @SubscribeEvent
-    public static void RenderHandEventListener(final RenderHandEvent event){
+    public static void onRenderHandEvent(final RenderHandEvent event){
         Item item = event.getItemStack().getItem();
         InteractionHand hand = event.getHand();
         if(item instanceof QuiverItem && hand == InteractionHand.OFF_HAND){
@@ -80,7 +80,7 @@ public class RenderEvents {
      * Adjusts PlayerRenderer Layers
      */
     @SubscribeEvent
-    public static void RenderPlayerEvent$PreListener(final RenderPlayerEvent.Pre event){
+    public static void onRenderPlayerEvent$Pre(final RenderPlayerEvent.Pre event){
         PlayerRenderer playerRenderer = event.getRenderer();
         Player player = event.getPlayer();
         if(playerRenderer instanceof OdysseyPlayerRenderer odysseyPlayerRenderer && player instanceof AbstractClientPlayer abstractClientPlayer){
