@@ -95,8 +95,8 @@ public class BabySkeleton extends AbstractSkeleton {
 
     }
 
-    protected void populateDefaultEquipmentSlots(DifficultyInstance p_180481_1_) {
-        super.populateDefaultEquipmentSlots(p_180481_1_);
+    protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
+        super.populateDefaultEquipmentSlots(difficultyInstance);
         if(this.random.nextFloat() < BONERANG_CHANCE){
             this.boomerangItem = ItemRegistry.BONERANG.get();
         } else {

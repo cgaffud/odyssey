@@ -120,8 +120,8 @@ public class Odyssey
     public static void onEntityAttributeCreation(final EntityAttributeCreationEvent event){
 //        event.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
 //        event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.SKELETON.get(), BabySkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeleton.createAttributes().build());
-        event.put(EntityTypeRegistry.CROSSBOW_SKELETON.get(), CrossbowSkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.WEAVER.get(), Weaver.createAttributes().build());

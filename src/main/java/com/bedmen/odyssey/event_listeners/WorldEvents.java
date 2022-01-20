@@ -2,6 +2,7 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
+import com.bedmen.odyssey.entity.monster.OdysseySkeleton;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -33,52 +34,52 @@ public class WorldEvents {
     /**
      * Replaces Mob Equipment when they spawn
      */
-    @SubscribeEvent
-    public static void onServerTickEvent(final TickEvent.WorldTickEvent event){
-        if(event.phase == TickEvent.Phase.START){
-            if(event.side == LogicalSide.SERVER){
-                Level level = event.world;
-                for(Integer integer : EntityEvents.IDS){
-                    Entity entity = level.getEntity(integer);
-                    if(entity instanceof Skeleton skeleton){
-                        ChunkPos chunkPos = entity.chunkPosition();
-                        if(level.hasChunk(chunkPos.x, chunkPos.z) && level.getChunk(chunkPos.x, chunkPos.z).getStatus() == ChunkStatus.FULL){
-                            Item item = switch(skeleton.getRandom().nextInt(18)){
-                                default -> null;
-                                case 0 -> ItemRegistry.BONE_LONG_BOW.get();
-                                case 1 -> ItemRegistry.BONE_REPEATER.get();
-                                case 2 -> ItemRegistry.BOWN.get();
-                            };
-                            if(item != null){
-                                skeleton.setItemInHand(InteractionHand.MAIN_HAND, item.getDefaultInstance());
-                                reassessSkeletonWeaponGoal(skeleton);
-                            }
-                            IDS_FOR_REMOVAL.add(skeleton.getId());
-                        }
-                    }
-                }
-                EntityEvents.IDS.removeAll(IDS_FOR_REMOVAL);
-                IDS_FOR_REMOVAL.clear();
-            }
-        }
-    }
+//    @SubscribeEvent
+//    public static void onServerTickEvent(final TickEvent.WorldTickEvent event){
+//        if(event.phase == TickEvent.Phase.START){
+//            if(event.side == LogicalSide.SERVER){
+//                Level level = event.world;
+//                for(Integer integer : EntityEvents.IDS){
+//                    Entity entity = level.getEntity(integer);
+//                    if(entity instanceof OdysseySkeleton skeleton){
+//                        ChunkPos chunkPos = entity.chunkPosition();
+//                        if(level.hasChunk(chunkPos.x, chunkPos.z) && level.getChunk(chunkPos.x, chunkPos.z).getStatus() == ChunkStatus.FULL){
+//                            Item item = switch(skeleton.getRandom().nextInt(18)){
+//                                default -> null;
+//                                case 0 -> ItemRegistry.BONE_LONG_BOW.get();
+//                                case 1 -> ItemRegistry.BONE_REPEATER.get();
+//                                case 2 -> ItemRegistry.BOWN.get();
+//                            };
+//                            if(item != null){
+//                                skeleton.setItemInHand(InteractionHand.MAIN_HAND, item.getDefaultInstance());
+//                                reassessSkeletonWeaponGoal(skeleton);
+//                            }
+//                            IDS_FOR_REMOVAL.add(skeleton.getId());
+//                        }
+//                    }
+//                }
+//                EntityEvents.IDS.removeAll(IDS_FOR_REMOVAL);
+//                IDS_FOR_REMOVAL.clear();
+//            }
+//        }
+//    }
 
-    public static void reassessSkeletonWeaponGoal(Skeleton skeletonEntity) {
-        if (!skeletonEntity.level.isClientSide) {
-            skeletonEntity.goalSelector.removeGoal(skeletonEntity.meleeGoal);
-            skeletonEntity.goalSelector.removeGoal(skeletonEntity.bowGoal);
-            ItemStack itemstack = skeletonEntity.getItemInHand(WeaponUtil.getHandHoldingBow(skeletonEntity));
+    public static void reassessSkeletonWeaponGoal(OdysseySkeleton skeleton) {
+        if (!skeleton.level.isClientSide) {
+            skeleton.goalSelector.removeGoal(skeleton.meleeGoal);
+            skeleton.goalSelector.removeGoal(skeleton.bowGoal);
+            ItemStack itemstack = skeleton.getItemInHand(WeaponUtil.getHandHoldingBow(skeleton));
             Item item = itemstack.getItem();
             if (item instanceof OdysseyBowItem) {
                 int i = ((OdysseyBowItem) item).getChargeTime(itemstack);
-                if (itemstack.getItem() == ItemRegistry.BOW.get() && skeletonEntity.level.getDifficulty() != Difficulty.HARD) {
+                if (itemstack.getItem() == ItemRegistry.BOW.get() && skeleton.level.getDifficulty() != Difficulty.HARD) {
                     i = 40;
                 }
-                OdysseyRangedBowAttackGoal<AbstractSkeleton> odysseyBowGoal = new OdysseyRangedBowAttackGoal<>(skeletonEntity, 1.0D, i, 15.0F);
+                OdysseyRangedBowAttackGoal<AbstractSkeleton> odysseyBowGoal = new OdysseyRangedBowAttackGoal<>(skeleton, 1.0D, i, 15.0F);
 
-                skeletonEntity.goalSelector.addGoal(4, odysseyBowGoal);
+                skeleton.goalSelector.addGoal(4, odysseyBowGoal);
             } else {
-                skeletonEntity.goalSelector.addGoal(4, skeletonEntity.meleeGoal);
+                skeleton.goalSelector.addGoal(4, skeleton.meleeGoal);
             }
         }
     }

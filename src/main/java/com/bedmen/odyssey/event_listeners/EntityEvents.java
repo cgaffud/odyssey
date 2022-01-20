@@ -141,11 +141,10 @@ public class EntityEvents {
         else if(entity instanceof Skeleton skeleton && entity.getType() == EntityType.SKELETON){
             if(isBaby(skeleton)){
                 EntityTypeRegistry.BABY_SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-                event.setResult(Event.Result.DENY);
-            } else if (skeleton.getRandom().nextInt(19) == 0) {
-                EntityTypeRegistry.CROSSBOW_SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-                event.setResult(Event.Result.DENY);
+            } else {
+                EntityTypeRegistry.SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
             }
+            event.setResult(Event.Result.DENY);
         }
 
         else if(entity instanceof Creeper creeper && entity.getType() == EntityType.CREEPER){

@@ -1,17 +1,20 @@
 package com.bedmen.odyssey.entity.ai;
 
+import java.util.EnumSet;
+
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.OdysseyBowItem;
-import com.bedmen.odyssey.util.WeaponUtil;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
-import java.util.EnumSet;
-
-public class OdysseyRangedBowAttackGoal<T extends Monster & RangedAttackMob> extends Goal {
+public class OdysseyRangedBowAttackGoal<T extends net.minecraft.world.entity.Mob & RangedAttackMob> extends Goal {
     private final T mob;
     private final double speedModifier;
     private int attackIntervalMin;
@@ -22,48 +25,39 @@ public class OdysseyRangedBowAttackGoal<T extends Monster & RangedAttackMob> ext
     private boolean strafingBackwards;
     private int strafingTime = -1;
 
-    public OdysseyRangedBowAttackGoal(T p_i47515_1_, double p_i47515_2_, int p_i47515_4_, float p_i47515_5_) {
-        this.mob = p_i47515_1_;
-        this.speedModifier = p_i47515_2_;
-        this.attackIntervalMin = p_i47515_4_;
-        this.attackRadiusSqr = p_i47515_5_ * p_i47515_5_;
-        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+    public OdysseyRangedBowAttackGoal(T mob, double speedModifier, int attackIntervalMin, float attackRadius) {
+        this.mob = mob;
+        this.speedModifier = speedModifier;
+        this.attackIntervalMin = attackIntervalMin;
+        this.attackRadiusSqr = attackRadius * attackRadius;
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
-    public void setMinAttackInterval(int pAttackCooldown) {
-        this.attackIntervalMin = pAttackCooldown;
+    public void setMinAttackInterval(int attackIntervalMin) {
+        this.attackIntervalMin = attackIntervalMin;
     }
 
-    /**
-     * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-     * method as well.
-     */
+    public int getMinAttackInterval() {
+        return this.attackIntervalMin;
+    }
+
     public boolean canUse() {
         return this.mob.getTarget() != null && this.isHoldingBow();
     }
 
     protected boolean isHoldingBow() {
-        return this.mob.isHolding(itemStack -> itemStack.getItem() instanceof OdysseyBowItem);
+        return this.mob.isHolding(is -> is.getItem() instanceof OdysseyBowItem);
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
     public boolean canContinueToUse() {
         return (this.canUse() || !this.mob.getNavigation().isDone()) && this.isHoldingBow();
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void start() {
         super.start();
         this.mob.setAggressive(true);
     }
 
-    /**
-     * Reset the task's internal state. Called when this task is interrupted by another one
-     */
     public void stop() {
         super.stop();
         this.mob.setAggressive(false);
@@ -72,9 +66,10 @@ public class OdysseyRangedBowAttackGoal<T extends Monster & RangedAttackMob> ext
         this.mob.stopUsingItem();
     }
 
-    /**
-     * Keep ticking a continuous task that has already been started
-     */
+    public boolean requiresUpdateEveryTick() {
+        return true;
+    }
+
     public void tick() {
         LivingEntity livingentity = this.mob.getTarget();
         if (livingentity != null) {
@@ -125,19 +120,20 @@ public class OdysseyRangedBowAttackGoal<T extends Monster & RangedAttackMob> ext
             }
 
             if (this.mob.isUsingItem()) {
-                ItemStack itemStack = this.mob.getUseItem();
+                ItemStack bow = this.mob.getUseItem();
+                OdysseyBowItem odysseyBowItem = (OdysseyBowItem)bow.getItem();
                 if (!flag && this.seeTime < -60) {
                     this.mob.stopUsingItem();
                 } else if (flag) {
                     int i = this.mob.getTicksUsingItem();
-                    if (i >= this.attackIntervalMin) {
+                    if (i >= odysseyBowItem.getChargeTime(bow)) {
                         this.mob.stopUsingItem();
-                        this.mob.performRangedAttack(livingentity, ((OdysseyBowItem)itemStack.getItem()).getPowerForTime(i, itemStack, EnchantmentUtil.getSuperChargeMultiplier(itemStack), null));
+                        this.mob.performRangedAttack(livingentity, odysseyBowItem.getPowerForTime(i, bow));
                         this.attackTime = this.attackIntervalMin;
                     }
                 }
             } else if (--this.attackTime <= 0 && this.seeTime >= -60) {
-                this.mob.startUsingItem(WeaponUtil.getHandHoldingBow(this.mob));
+                this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof OdysseyBowItem));
             }
 
         }

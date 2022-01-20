@@ -1,38 +1,26 @@
 package com.bedmen.odyssey.client.model;
 
-import com.bedmen.odyssey.entity.monster.CrossbowSkeleton;
+import com.bedmen.odyssey.entity.monster.OdysseySkeleton;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.CrossbowAttackMob;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.checkerframework.checker.units.qual.C;
 
 @OnlyIn(Dist.CLIENT)
-public class CrossbowSkeletonModel<T extends CrossbowSkeleton> extends HumanoidModel<T> {
-    public CrossbowSkeletonModel(ModelPart modelPart) {
+public class OdysseySkeletonModel<T extends OdysseySkeleton> extends HumanoidModel<T> {
+    public OdysseySkeletonModel(ModelPart modelPart) {
         super(modelPart);
     }
 
     public void prepareMobModel(T mob, float p_103794_, float p_103795_, float p_103796_) {
-        this.rightArmPose = HumanoidModel.ArmPose.EMPTY;
-        this.leftArmPose = HumanoidModel.ArmPose.EMPTY;
+        this.rightArmPose = ArmPose.EMPTY;
+        this.leftArmPose = ArmPose.EMPTY;
         if (mob.getMainArm() == HumanoidArm.RIGHT) {
             this.rightArmPose = mob.getArmPose();
         } else {

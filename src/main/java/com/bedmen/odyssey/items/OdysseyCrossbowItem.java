@@ -188,7 +188,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         });
     }
 
-    private static void shootProjectile(Level level, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, ItemStack ammo, float pitch, boolean multishotFlag, float power, float p_40903_, float angle) {
+    private static void shootProjectile(Level level, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, ItemStack ammo, float pitch, boolean multishotFlag, float power, float inaccuracy, float angle) {
         if (!level.isClientSide) {
             boolean flag = ammo.is(Items.FIREWORK_ROCKET);
             Projectile projectile;
@@ -210,7 +210,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
                 Vec3 vec3 = livingEntity.getViewVector(1.0F);
                 Vector3f vector3f = new Vector3f(vec3);
                 vector3f.transform(quaternion);
-                projectile.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), power, p_40903_);
+                projectile.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), power, inaccuracy);
             }
 
             crossbow.hurtAndBreak(flag ? 3 : 1, livingEntity, (p_40858_) -> {
@@ -221,7 +221,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         }
     }
 
-    public static void performShooting(Level p_40888_, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, float power, float p_40893_) {
+    public static void performShooting(Level p_40888_, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, float power, float inaccuracy) {
         List<ItemStack> list = getChargedProjectiles(crossbow);
         float[] afloat = getShotPitches(livingEntity.getRandom());
 
@@ -230,11 +230,11 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             boolean flag = livingEntity instanceof Player && ((Player)livingEntity).getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
                 if (i == 0) {
-                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, p_40893_, 0.0F);
+                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, 0.0F);
                 } else if (i == 1) {
-                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, p_40893_, -10.0F);
+                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, -10.0F);
                 } else if (i == 2) {
-                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, p_40893_, 10.0F);
+                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, 10.0F);
                 }
             }
         }
@@ -318,6 +318,10 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         float f = WeaponUtil.BASE_ARROW_VELOCITY * this.velocity;
         f *= containsChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 0.5f : 1.0f;
         return f;
+    }
+
+    public float getVelocity(){
+        return this.velocity;
     }
 
     public static boolean loadProjectile(LivingEntity livingEntity, ItemStack crossbow, ItemStack ammo, boolean multishotArrow, boolean inCreative) {

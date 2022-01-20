@@ -61,26 +61,6 @@ public class EquipmentBowItem extends OdysseyBowItem implements IEquipment {
         return this.getInnateEnchantmentLevel(enchantment) == 0 && enchantment.category.canEnchant(stack.getItem());
     }
 
-    public AbstractArrow customArrow(AbstractArrow arrow) {
-        int j = this.getInnateEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get());
-        if (j > 0) {
-            arrow.setKnockback(j);
-        }
-        j = this.getInnateEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get());
-        if (j > 0) {
-            arrow.setSecondsOnFire(100*j);
-        }
-        j = this.getInnateEnchantmentLevel(EnchantmentRegistry.PIERCING.get());
-        if (j > 0) {
-            arrow.setPierceLevel((byte)j);
-        }
-        j = this.getInnateEnchantmentLevel(Enchantments.MOB_LOOTING);
-        if(j > 0 && arrow instanceof OdysseyAbstractArrow){
-            ((OdysseyAbstractArrow) arrow).setLootingLevel((byte)j);
-        }
-        return super.customArrow(arrow);
-    }
-
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         for(Enchantment e : this.enchantmentMap.keySet()){
             if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
