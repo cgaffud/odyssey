@@ -113,7 +113,6 @@ public class ClientEvents {
 //        EntityRenderers.register(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.SKELETON.get(), OdysseySkeletonRenderer::new);
-            EntityRenderers.register(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);

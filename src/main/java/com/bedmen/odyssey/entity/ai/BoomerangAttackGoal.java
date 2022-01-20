@@ -2,19 +2,15 @@ package com.bedmen.odyssey.entity.ai;
 
 import java.util.EnumSet;
 
-import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.monster.BoomerangAttackMob;
 import com.bedmen.odyssey.items.OdysseyBowItem;
+import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
-public class OdysseyRangedBowAttackGoal<T extends net.minecraft.world.entity.Mob & RangedAttackMob> extends Goal {
+public class BoomerangAttackGoal<T extends net.minecraft.world.entity.Mob & BoomerangAttackMob> extends Goal {
     private final T mob;
     private final double speedModifier;
     private int attackIntervalMin;
@@ -25,7 +21,7 @@ public class OdysseyRangedBowAttackGoal<T extends net.minecraft.world.entity.Mob
     private boolean strafingBackwards;
     private int strafingTime = -1;
 
-    public OdysseyRangedBowAttackGoal(T mob, double speedModifier, int attackIntervalMin, float attackRadius) {
+    public BoomerangAttackGoal(T mob, double speedModifier, int attackIntervalMin, float attackRadius) {
         this.mob = mob;
         this.speedModifier = speedModifier;
         this.attackIntervalMin = attackIntervalMin;
@@ -38,15 +34,11 @@ public class OdysseyRangedBowAttackGoal<T extends net.minecraft.world.entity.Mob
     }
 
     public boolean canUse() {
-        return this.mob.getTarget() != null && this.isHoldingBow();
-    }
-
-    protected boolean isHoldingBow() {
-        return this.mob.isHolding(is -> is.getItem() instanceof OdysseyBowItem);
+        return this.mob.getTarget() != null;
     }
 
     public boolean canContinueToUse() {
-        return (this.canUse() || !this.mob.getNavigation().isDone()) && this.isHoldingBow();
+        return (this.canUse() || !this.mob.getNavigation().isDone());
     }
 
     public void start() {
@@ -117,19 +109,19 @@ public class OdysseyRangedBowAttackGoal<T extends net.minecraft.world.entity.Mob
 
             if (this.mob.isUsingItem()) {
                 ItemStack bow = this.mob.getUseItem();
-                OdysseyBowItem odysseyBowItem = (OdysseyBowItem)bow.getItem();
+                BoomerangItem boomerangItem = (BoomerangItem)bow.getItem();
                 if (!flag && this.seeTime < -60) {
                     this.mob.stopUsingItem();
                 } else if (flag) {
                     int i = this.mob.getTicksUsingItem();
-                    if (i >= odysseyBowItem.getChargeTime(bow)) {
+                    if (i >= boomerangItem.getBoomerangType().getReturnTime()) {
                         this.mob.stopUsingItem();
-                        this.mob.performRangedAttack(livingentity, odysseyBowItem.getPowerForTime(i, bow));
+                        this.mob.performBoomerangAttack(livingentity);
                         this.attackTime = this.attackIntervalMin;
                     }
                 }
-            } else if (--this.attackTime <= 0 && this.seeTime >= -60) {
-                this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof OdysseyBowItem));
+            } else if (--this.attackTime <= 0 && this.seeTime >= -60 && this.mob.hasBoomerang()) {
+                this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof BoomerangItem));
             }
 
         }

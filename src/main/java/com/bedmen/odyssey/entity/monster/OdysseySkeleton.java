@@ -62,15 +62,15 @@ public class OdysseySkeleton extends OdysseyAbstractSkeleton {
         super.tick();
     }
 
-    public void addAdditionalSaveData(CompoundTag p_149836_) {
-        super.addAdditionalSaveData(p_149836_);
-        p_149836_.putInt("StrayConversionTime", this.isFreezeConverting() ? this.conversionTime : -1);
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putInt("StrayConversionTime", this.isFreezeConverting() ? this.conversionTime : -1);
     }
 
-    public void readAdditionalSaveData(CompoundTag p_149833_) {
-        super.readAdditionalSaveData(p_149833_);
-        if (p_149833_.contains("StrayConversionTime", 99) && p_149833_.getInt("StrayConversionTime") > -1) {
-            this.startFreezeConversion(p_149833_.getInt("StrayConversionTime"));
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        if (compoundTag.contains("StrayConversionTime", 99) && compoundTag.getInt("StrayConversionTime") > -1) {
+            this.startFreezeConversion(compoundTag.getInt("StrayConversionTime"));
         }
 
     }

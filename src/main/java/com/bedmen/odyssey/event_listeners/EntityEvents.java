@@ -1,20 +1,14 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.entity.animal.OdysseyPolarBear;
-import com.bedmen.odyssey.entity.monster.BabySkeleton;
-import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
-import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
-import com.bedmen.odyssey.util.WeaponUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
@@ -28,15 +22,12 @@ import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -138,12 +129,8 @@ public class EntityEvents {
             }
         }
 
-        else if(entity instanceof Skeleton skeleton && entity.getType() == EntityType.SKELETON){
-            if(isBaby(skeleton)){
-                EntityTypeRegistry.BABY_SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-            } else {
-                EntityTypeRegistry.SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-            }
+        else if(entity instanceof Skeleton && entity.getType() == EntityType.SKELETON){
+            EntityTypeRegistry.SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
             event.setResult(Event.Result.DENY);
         }
 

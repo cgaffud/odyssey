@@ -1,11 +1,16 @@
 package com.bedmen.odyssey.entity.monster;
 
+import com.bedmen.odyssey.entity.ai.BoomerangAttackGoal;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
+import com.bedmen.odyssey.entity.projectile.Boomerang;
+import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.OdysseyCrossbowItem;
+import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -13,32 +18,125 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 
-public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implements CrossbowAttackMob {
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.UUID;
+
+public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implements CrossbowAttackMob, BoomerangAttackMob {
+    private static final UUID SPEED_MODIFIER_BABY_UUID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
+    private static final AttributeModifier SPEED_MODIFIER_BABY = new AttributeModifier(SPEED_MODIFIER_BABY_UUID, "Baby speed boost", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
+    private static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(OdysseyAbstractSkeleton.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(OdysseyAbstractSkeleton.class, EntityDataSerializers.BOOLEAN);
     public final OdysseyRangedBowAttackGoal<OdysseyAbstractSkeleton> odysseyBowGoal = new OdysseyRangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
     public final RangedCrossbowAttackGoal<OdysseyAbstractSkeleton> crossBowGoal = new RangedCrossbowAttackGoal<>(this, 1.0D, 8.0F);
+    public final BoomerangAttackGoal<OdysseyAbstractSkeleton> boomerangGoal = new BoomerangAttackGoal<>(this, 0.0D, 20, 15.0F);
     private boolean crossbowMode = false;
+    private int noBoomerangTick;
+    private Item boomerangItem = null;
     protected OdysseyAbstractSkeleton(EntityType<? extends AbstractSkeleton> entityType, Level level) {
         super(entityType, level);
     }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.getEntityData().define(DATA_BABY_ID, false);
         this.entityData.define(IS_CHARGING_CROSSBOW, false);
     }
 
+    public void tick(){
+        super.tick();
+        if(this.isBaby()){
+            if(!this.hasBoomerang()){
+                this.noBoomerangTick = 0;
+            } else {
+                if(this.noBoomerangTick < 300){
+                    this.noBoomerangTick++;
+                } else {
+                    this.setItemInHand(InteractionHand.MAIN_HAND, this.boomerangItem.getDefaultInstance());
+                }
+            }
+        }
+    }
+
+    public boolean isBaby() {
+        return this.getEntityData().get(DATA_BABY_ID);
+    }
+
+    public void setBaby(boolean b) {
+        this.getEntityData().set(DATA_BABY_ID, b);
+        if (!this.level.isClientSide) {
+            AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
+            attributeinstance.removeModifier(SPEED_MODIFIER_BABY);
+            if (b) {
+                attributeinstance.addTransientModifier(SPEED_MODIFIER_BABY);
+                if(this.boomerangItem == null){
+                    this.populateBabyEquipmentSlots();
+                }
+            }
+        }
+        this.reassessWeaponGoal();
+    }
+
+    protected int getExperienceReward(Player player) {
+        if (this.isBaby()) {
+            this.xpReward = (int)((float)this.xpReward * 2.5F);
+        }
+        return super.getExperienceReward(player);
+    }
+
+    public void onSyncedDataUpdated(EntityDataAccessor<?> p_34307_) {
+        if (DATA_BABY_ID.equals(p_34307_)) {
+            this.refreshDimensions();
+        }
+        super.onSyncedDataUpdated(p_34307_);
+    }
+
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        if(this.boomerangItem != null){
+            compoundTag.put("BoomerangItem", this.boomerangItem.getDefaultInstance().save(new CompoundTag()));
+        }
+        compoundTag.putBoolean("IsBaby", this.isBaby());
+    }
+
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        if(compoundTag.contains("BoomerangItem")){
+            this.boomerangItem = ItemStack.of((CompoundTag) Objects.requireNonNull(compoundTag.get("BoomerangItem"))).getItem();
+        }
+        this.setBaby(compoundTag.getBoolean("IsBaby"));
+    }
+
+    protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
+        return this.isBaby() ? 0.93F : 1.74F;
+    }
+
+    @Nullable
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
+        if(EntityEvents.isBaby(this)){
+            this.setBaby(true);
+        }
+        return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+    }
+
+    public double getMyRidingOffset() {
+        return this.isBaby() ? 0.0D : -0.45D;
+    }
 
     public void performRangedAttack(LivingEntity target, float power) {
         if(!this.crossbowMode){
@@ -66,14 +164,26 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
         super.populateDefaultEquipmentSlots(difficultyInstance);
-        Item item = switch(random.nextInt(19)){
-            default -> ItemRegistry.BOW.get();
-            case 0 -> ItemRegistry.BOWN.get();
-            case 1 -> ItemRegistry.BONE_SLUG_BOW.get();
-            case 2 -> ItemRegistry.BONE_LONG_BOW.get();
-            case 3 -> ItemRegistry.BONE_REPEATER.get();
-        };
+        Item item;
+        if(this.isBaby()){
+            populateBabyEquipmentSlots();
+        } else {
+            item = switch(random.nextInt(19)){
+                default -> ItemRegistry.BOW.get();
+                case 0 -> ItemRegistry.BOWN.get();
+                case 1 -> ItemRegistry.BONE_SLUG_BOW.get();
+                case 2 -> ItemRegistry.BONE_LONG_BOW.get();
+                case 3 -> ItemRegistry.BONE_REPEATER.get();
+            };
+            this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
+        }
+    }
+
+    protected void populateBabyEquipmentSlots() {
+        Item item = random.nextInt(5) == 0 ? ItemRegistry.BONERANG.get() : ItemRegistry.BONE_BOOMERANG.get();
+        this.boomerangItem = item;
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
+        this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
     }
 
     public void reassessWeaponGoal() {
@@ -82,10 +192,24 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
             this.goalSelector.removeGoal(this.bowGoal);
             this.goalSelector.removeGoal(this.odysseyBowGoal);
             this.goalSelector.removeGoal(this.crossBowGoal);
+            this.goalSelector.removeGoal(this.boomerangGoal);
             this.crossbowMode = false;
+            if(this.isBaby()){
+                ItemStack boomerang = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BoomerangItem));
+                int i = 40;
+                if(boomerang.getItem() instanceof BoomerangItem boomerangItem){
+                    i = boomerangItem.getBoomerangType().getReturnTime();
+                }
+                if (this.level.getDifficulty() != Difficulty.HARD) {
+                    i *= 2;
+                }
+                this.boomerangGoal.setMinAttackInterval(i);
+                this.goalSelector.addGoal(4, this.boomerangGoal);
+                return;
+            }
             ItemStack bow = this.getItemInHand(WeaponUtil.getHandHoldingBow(this));
             Item bowItem = bow.getItem();
-            ItemStack crossbow = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.CrossbowItem));
+            ItemStack crossbow = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem));
             Item crossbowItem = crossbow.getItem();
             if (bowItem instanceof OdysseyBowItem) {
                 int i = ((OdysseyBowItem) bowItem).getChargeTime(bow);
@@ -139,5 +263,34 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     @Override
     public void onCrossbowAttackPerformed() {
         this.noActionTime = 0;
+    }
+
+    public boolean hasBoomerang(){
+        return getBoomerangHand() != null;
+    }
+
+    public InteractionHand getBoomerangHand(){
+        if(this.getMainHandItem().getItem() instanceof BoomerangItem){
+            return InteractionHand.MAIN_HAND;
+        }
+        if(this.getOffhandItem().getItem() instanceof BoomerangItem){
+            return InteractionHand.OFF_HAND;
+        }
+        return null;
+    }
+
+    public void performBoomerangAttack(LivingEntity target) {
+        if(this.hasBoomerang()){
+            InteractionHand hand = this.getBoomerangHand();
+            ItemStack itemstack = new ItemStack(this.getItemInHand(hand).getItem());
+            Boomerang boomerang = new Boomerang(this.level, this, itemstack);
+            double d0 = target.getX() - this.getX();
+            double d1 = target.getBbHeight()/2f - this.getEyeHeight() + target.getY() - this.getY();
+            double d2 = target.getZ() - this.getZ();
+            boomerang.shoot(d0, d1, d2, ((BoomerangItem)itemstack.getItem()).shootSpeed(), (float)(14 - this.level.getDifficulty().getId() * 4));
+            this.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+            this.level.addFreshEntity(boomerang);
+            this.setItemInHand(hand, ItemStack.EMPTY);
+        }
     }
 }
