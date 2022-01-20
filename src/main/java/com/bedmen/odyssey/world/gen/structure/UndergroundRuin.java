@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.world.gen.structure;
 
+import com.bedmen.odyssey.world.gen.structure.pieces.UndergroundRuinPieces;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -30,11 +31,9 @@ public class UndergroundRuin extends StructureFeature<NoneFeatureConfiguration> 
     }
 
     private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {
-        Random random = context.random();
-        ChunkPos chunkPos = context.chunkPos();
-        Rotation rotation = Rotation.getRandom(random);
-        int x = chunkPos.getMinBlockX();
-        int z = chunkPos.getMinBlockZ();
+        BlockPos blockpos = new BlockPos(context.chunkPos().getMinBlockX(), 50, context.chunkPos().getMinBlockZ());
+        Rotation rotation = Rotation.getRandom(context.random());
+        UndergroundRuinPieces.addPiece(context.structureManager(), blockpos, rotation, structurePiecesBuilder, context.random());
     }
 
 

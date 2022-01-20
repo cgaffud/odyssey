@@ -34,11 +34,13 @@ import java.util.Map;
 public class StructureGen {
 
     public static ConfiguredStructureFeature<?, ?> WEAVER_COLONY;
+    public static ConfiguredStructureFeature<? ,?> UNDERGROUND_RUIN;
 
     public static void registerStructures() {
         Registry<ConfiguredStructureFeature<?, ?>> registry = BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE;
 
         WEAVER_COLONY = StructureFeatureRegistry.WEAVER_COLONY.get().configured(FeatureConfiguration.NONE);
+        UNDERGROUND_RUIN = StructureFeatureRegistry.UNDERGROUND_RUIN.get().configured(FeatureConfiguration.NONE);
         Registry.register(registry, new ResourceLocation(Odyssey.MOD_ID, "configured_weaver_colony"), WEAVER_COLONY);
     }
 
@@ -72,6 +74,7 @@ public class StructureGen {
                 Biome.BiomeCategory biomeCategory = biomeEntry.getValue().getBiomeCategory();
                 if(biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.THEEND && biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
                     associateBiomeToConfiguredStructure(hashMap, WEAVER_COLONY, biomeEntry.getKey());
+                    associateBiomeToConfiguredStructure(hashMap, UNDERGROUND_RUIN, biomeEntry.getKey());
                 }
             }
 

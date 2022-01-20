@@ -5,5 +5,5 @@ import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 
 public class OdysseyStructurePieceType {
     public static final StructurePieceType WEAVER_COLONY = StructurePieceType.setPieceId(WeaverColonySpherePiece::new, "oddc:TeWC");
-    public static final StructurePieceType UNDERGROUND_RUIN = StructurePieceType.setPieceId(UndergroundRuinPieces.UndergroundRuinPiece::new, "oddc:UnRu");
+    public static final StructurePieceType UNDERGROUND_RUIN = StructurePieceType.setTemplatePieceId(UndergroundRuinPieces.UndergroundRuinPiece::new, "oddc:UnRu");
 }

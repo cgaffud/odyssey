@@ -1,28 +1,38 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
+import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.world.gen.structure.OdysseyStructurePieceType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.OceanRuinFeature;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 import java.util.Random;
 
 public class UndergroundRuinPieces {
-    private static final ResourceLocation[] HOUSES = new ResourceLocation[]{new ResourceLocation("undeground_ruins/abandoned_underground_house")};
+    private static final ResourceLocation[] HOUSES = new ResourceLocation[]{new ResourceLocation(Odyssey.MOD_ID,"undeground_ruins/abandoned_underground_house")};
 
     public static void addPiece(StructureManager manager, BlockPos blockPos, Rotation rotation, StructurePieceAccessor accessor, Random random) {
-
+        ResourceLocation structureLoc = HOUSES[0];
+        accessor.addPiece(new UndergroundRuinPiece(manager, structureLoc, blockPos, rotation));
     }
 
     public static class UndergroundRuinPiece extends TemplateStructurePiece {
@@ -31,19 +41,30 @@ public class UndergroundRuinPieces {
         }
 
         public UndergroundRuinPiece(StructureManager structureManager, CompoundTag tag) {
-            super(StructurePieceType.OCEAN_RUIN, tag, structureManager, (loc) -> {
+            super(OdysseyStructurePieceType.UNDERGROUND_RUIN, tag, structureManager, (loc) -> {
                 return makeSettings(Rotation.valueOf(tag.getString("Rot")));
             });
         }
+
+        protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
+            super.addAdditionalSaveData(context, tag);
+            tag.putString("Rot", this.placeSettings.getRotation().name());
+        }
+
+        private static StructurePlaceSettings makeSettings(Rotation rotation) {
+            return (new StructurePlaceSettings()).setRotation(rotation).setMirror(Mirror.NONE);
+        }
+
         @Override
-        protected void handleDataMarker(String p_73683_, BlockPos p_73684_, ServerLevelAccessor p_73685_, Random p_73686_, BoundingBox p_73687_) {
-
+        protected void handleDataMarker(String dataMarker, BlockPos blockPos, ServerLevelAccessor accessor, Random random, BoundingBox boundingBox) {
         }
-
-        private static StructurePlaceSettings makeSettings(Rotation p_163113_) {
-            return (new StructurePlaceSettings()).setRotation(p_163113_).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR);
-        }
+//            if ("sterling_silver_chest".equals(dataMarker)) {
+//                accessor.setBlock(blockPos, BlockRegistry.STERLING_SILVER_CHEST.get().defaultBlockState(), 2);
+//                BlockEntity blockentity = accessor.getBlockEntity(blockPos);
+//                if (blockentity instanceof ChestBlockEntity) {
+//                    ((ChestBlockEntity) blockentity).setLootTable(BuiltInLootTables.UNDERWATER_RUIN_SMALL, random.nextLong());
+//                }
+//            }
+//        }
     }
-
-
 }
