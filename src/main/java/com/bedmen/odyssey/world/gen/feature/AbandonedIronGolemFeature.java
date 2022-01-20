@@ -21,7 +21,7 @@ import java.util.Random;
 
 public class AbandonedIronGolemFeature extends Feature<NoneFeatureConfiguration> {
     private static final Vec3i CENTER = new Vec3i(0,64,0);
-    private static final double RARITY_RADIUS = 720;
+    private static final double RARITY_RADIUS = 480;
     private static final int FAR_RARITY = 400;
     private static final int NEAR_RARITY = 100;
     public AbandonedIronGolemFeature(Codec<NoneFeatureConfiguration> p_i231962_1_) {

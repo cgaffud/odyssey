@@ -49,7 +49,7 @@ public class TriplePlantBlock extends BushBlock implements INeedsToRegisterRende
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
         BlockPos blockpos = blockPlaceContext.getClickedPos();
         Level level = blockPlaceContext.getLevel();
-        return blockpos.getY() < level.getMaxBuildHeight() - 2 && level.getBlockState(blockpos.above()).canBeReplaced(blockPlaceContext) ? super.getStateForPlacement(blockPlaceContext) : null;
+        return blockpos.getY() < level.getMaxBuildHeight() - 2 && level.getBlockState(blockpos.above()).canBeReplaced(blockPlaceContext) && level.getBlockState(blockpos.above(2)).canBeReplaced(blockPlaceContext) ? super.getStateForPlacement(blockPlaceContext) : null;
     }
 
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
