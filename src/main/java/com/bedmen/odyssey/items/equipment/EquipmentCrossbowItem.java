@@ -64,26 +64,6 @@ public class EquipmentCrossbowItem extends OdysseyCrossbowItem implements IEquip
         return this.getInnateEnchantmentLevel(enchantment) == 0 && enchantment.category.canEnchant(stack.getItem());
     }
 
-    public AbstractArrow customArrow(AbstractArrow arrow) {
-        int j = this.getInnateEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get());
-        if (j > 0) {
-            arrow.setKnockback(j);
-        }
-        j = this.getInnateEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get());
-        if (j > 0) {
-            arrow.setSecondsOnFire(100*j);
-        }
-        j = this.getInnateEnchantmentLevel(EnchantmentRegistry.PIERCING.get());
-        if (j > 0) {
-            arrow.setPierceLevel((byte)j);
-        }
-        j = this.getInnateEnchantmentLevel(Enchantments.MOB_LOOTING);
-        if(j > 0 && arrow instanceof OdysseyAbstractArrow){
-            ((OdysseyAbstractArrow) arrow).setLootingLevel((byte)j);
-        }
-        return super.customArrow(arrow);
-    }
-
     /**
      * allows items to add custom lines of information to the mouseover description
      */

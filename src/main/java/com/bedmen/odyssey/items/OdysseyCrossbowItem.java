@@ -353,9 +353,6 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     public static AbstractArrow getArrow(Level level, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
         ArrowItem arrowItem = (ArrowItem)(ammo.getItem() instanceof ArrowItem ? ammo.getItem() : Items.ARROW);
         AbstractArrow abstractArrow = arrowItem.createArrow(level, ammo, shooter);
-        if(crossbow.getItem() instanceof OdysseyCrossbowItem odysseyCrossbowItem){
-            return odysseyCrossbowItem.customArrow(abstractArrow);
-        }
         abstractArrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractArrow.setShotFromCrossbow(true);
         int k = EnchantmentUtil.getPower(crossbow);
@@ -379,10 +376,6 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             ((OdysseyAbstractArrow) abstractArrow).setLootingLevel((byte)k);
         }
         return abstractArrow;
-    }
-
-    public AbstractArrow customArrow(AbstractArrow arrow) {
-        return arrow;
     }
 
     public static int getChargeDuration(ItemStack itemStack) {

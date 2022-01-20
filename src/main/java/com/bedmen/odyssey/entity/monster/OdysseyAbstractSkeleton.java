@@ -8,6 +8,7 @@ import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.OdysseyCrossbowItem;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
@@ -142,14 +143,18 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         if(!this.crossbowMode){
             ItemStack itemstack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem)));
             AbstractArrow abstractarrow = this.getArrow(itemstack, power);
-            Item item = this.getMainHandItem().getItem();
-            if (item instanceof net.minecraft.world.item.BowItem)
-                abstractarrow = ((net.minecraft.world.item.BowItem)this.getMainHandItem().getItem()).customArrow(abstractarrow);
+            ItemStack itemStack = this.getMainHandItem();
+            Item item = itemStack.getItem();
+            if (item instanceof BowItem  bowItem)
+                abstractarrow = bowItem.customArrow(abstractarrow);
             double d0 = target.getX() - this.getX();
             double d1 = target.getY(0.3333333333333333D) - abstractarrow.getY();
             double d2 = target.getZ() - this.getZ();
             double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-            abstractarrow.shoot(d0, d1 + d3 * (double)0.2F, d2, WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * (item instanceof OdysseyBowItem odysseyBowItem ? odysseyBowItem.getVelocity() : 1.0f), (float)(14 - this.level.getDifficulty().getId() * 4));
+            float velocity = WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * (item instanceof OdysseyBowItem odysseyBowItem ? odysseyBowItem.getVelocity() : 1.0f);
+            float accuracyMultiplier = EnchantmentUtil.getAccuracyMultiplier(this);
+            float superCharge = EnchantmentUtil.getSuperChargeMultiplier(itemStack);
+            abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier / superCharge);
             this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
             this.level.addFreshEntity(abstractarrow);
         } else {
