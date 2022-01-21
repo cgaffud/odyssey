@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -64,17 +65,17 @@ public class UndergroundRuinPieces {
             return (new StructurePlaceSettings()).setRotation(rotation).setMirror(Mirror.NONE);
         }
 
-        public void postProcess(WorldGenLevel level, StructureFeatureManager manager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
-            ResourceLocation resourceLocation = new ResourceLocation(this.templateName);
-
-            if (HOUSES.contains(resourceLocation)) {
-                BlockPos newpos = getHousePosition(level, random, chunkPos, true);
-                // I also tried setting pos to newpos, but that had little effect either
-                if (newpos != null)
-                    this.templatePosition = newpos;
-            }
-            super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
-        }
+//        public void postProcess(WorldGenLevel level, StructureFeatureManager manager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
+//            ResourceLocation resourceLocation = new ResourceLocation(this.templateName);
+//
+//            super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
+//            if (HOUSES.contains(resourceLocation)) {
+//                BlockPos newpos = getHousePosition(level, random, chunkPos, true);
+//                // I also tried setting pos to newpos, but that had little effect either
+//                if (newpos != null)
+//                    this.templatePosition = newpos;
+//            }
+//        }
 
         // IGLOO CODE WITH MAPPED VARIABLES
             //            ResourceLocation resourcelocation = new ResourceLocation(this.templateName);
@@ -141,10 +142,11 @@ public class UndergroundRuinPieces {
         @Override
         protected void handleDataMarker(String dataMarker, BlockPos blockPos, ServerLevelAccessor accessor, Random random, BoundingBox boundingBox) {
             if ("sterling_silver_chest".equals(dataMarker)) {
-                accessor.setBlock(blockPos, BlockRegistry.STERLING_SILVER_CHEST.get().defaultBlockState(), 1);
-                BlockEntity blockentity = accessor.getBlockEntity(blockPos);
+                accessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
+                BlockEntity blockentity = accessor.getBlockEntity(blockPos.below());
                 if (blockentity instanceof ChestBlockEntity) {
-                    ((ChestBlockEntity) blockentity).setLootTable(OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST, random.nextLong());
+                    ((ChestBlockEntity)blockentity).setLootTable(OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST, random.nextLong());
+                    System.out.println("Lootable Added");
                 }
             }
         }
