@@ -29,15 +29,4 @@ public class BiomeRegistry {
     public static final ResourceKey<Biome> PRAIRIE_RESOURCE_KEY = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Odyssey.MOD_ID, "prairie"));
     public static final RegistryObject<Biome> PRAIRIE = BIOME.register(PRAIRIE_RESOURCE_KEY.location().getPath(), OdysseyOverworldBiomes::prairie);
 
-    public static void register()
-    {
-        //registerBiome("autumn_forest", BiomeManager.BiomeType.COOL, 10, FOREST, OVERWORLD);
-        //registerBiome(TROPICS_RESOURCE_KEY, BiomeManager.BiomeType.DESERT, 10, OVERWORLD, HOT, WET, SANDY, OVERWORLD);
-    }
-
-    private static void registerBiome(ResourceKey<Biome> resourceKey, BiomeManager.BiomeType type, int weight, BiomeDictionary.Type... types) {
-        //BiomeManager.addAdditionalOverworldBiomes(registryKey);
-//        BiomeManager.addBiome(type, new BiomeManager.BiomeEntry(resourceKey, weight));
-//        BiomeDictionary.addTypes(resourceKey, types);
-    }
 }

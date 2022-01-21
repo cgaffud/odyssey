@@ -61,15 +61,16 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
 
     public void tick(){
         super.tick();
-        if(this.isBaby()){
-            if(!this.hasBoomerang()){
-                this.noBoomerangTick = 0;
+        if(this.isBaby() && !this.hasBoomerang()){
+            if(this.noBoomerangTick < 300){
+                this.noBoomerangTick++;
             } else {
-                if(this.noBoomerangTick < 300){
-                    this.noBoomerangTick++;
+                if(this.boomerangItem == null){
+                    this.populateBabyEquipmentSlots();
                 } else {
                     this.setItemInHand(InteractionHand.MAIN_HAND, this.boomerangItem.getDefaultInstance());
                 }
+                this.noBoomerangTick = 0;
             }
         }
     }
@@ -90,7 +91,6 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
                 }
             }
         }
-        this.reassessWeaponGoal();
     }
 
     protected int getExperienceReward(Player player) {
@@ -189,6 +189,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         this.boomerangItem = item;
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
         this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+        this.reassessWeaponGoal();
     }
 
     public void reassessWeaponGoal() {
