@@ -47,7 +47,6 @@ import java.util.stream.Collectors;
 
 public class AbandonedIronGolem extends Boss {
     private final ServerBossEvent bossEvent = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
-    private float damageReduction = 1.0f;
     private int attackAnimationTick;
     private int clapCooldown = 0;
     private static final float CLAP_CHANCE = 0.03f;
@@ -73,11 +72,6 @@ public class AbandonedIronGolem extends Boss {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, null));
     }
 
-    public void setCustomName(@Nullable Component p_200203_1_) {
-        super.setCustomName(p_200203_1_);
-        this.bossEvent.setName(this.getDisplayName());
-    }
-
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(PHASE, 0);
@@ -101,11 +95,6 @@ public class AbandonedIronGolem extends Boss {
         }
 
         super.doPush(pEntity);
-    }
-
-    public void tick(){
-        super.tick();
-        this.damageReduction = this.difficultyDamageReductionMultiplier() * this.nearbyPlayerDamageReductionMultiplier();
     }
 
     public void aiStep() {
@@ -163,17 +152,20 @@ public class AbandonedIronGolem extends Boss {
         }
     }
 
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-        this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putInt("ClapCooldown", this.clapCooldown);
+        compoundTag.putString("Phase", this.getPhase().name());
     }
 
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-    }
-
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.clapCooldown = compoundTag.getInt("ClapCooldown");
+        if(compoundTag.contains("Phase")){
+            this.setPhase(Phase.valueOf(compoundTag.getString("Phase")));
+        } else {
+            this.setPhase(Phase.NORMAL);
+        }
     }
 
     private float getAttackDamage() {
@@ -278,14 +270,6 @@ public class AbandonedIronGolem extends Boss {
 
     public ServerBossEvent getBossEvent(){
         return this.bossEvent;
-    }
-
-    public Difficulty getDifficulty(){
-        return this.level.getDifficulty();
-    }
-
-    public float getDamageReduction(){
-        return this.damageReduction;
     }
 
     public void startSeenByPlayer(ServerPlayer p_184178_1_) {

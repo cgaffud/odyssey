@@ -135,4 +135,8 @@ public class MineralLeviathanBody extends MineralLeviathanSegment {
             this.discard();
         }
     }
+
+    public boolean canChangeBossEvent(){
+        return false;
+    }
 }

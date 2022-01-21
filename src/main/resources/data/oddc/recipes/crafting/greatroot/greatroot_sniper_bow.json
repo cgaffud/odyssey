@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " AB",
-    "ACB",
-    " AB"
+    " AC",
+    "ADB",
+    " AC"
   ],
   "key": {
     "A": {
@@ -13,6 +13,9 @@
       "item": "oddc:diamond_fiber"
     },
     "C": {
+      "item": "oddc:silver_fiber"
+    },
+    "D": {
       "item": "minecraft:spyglass"
     }
   },

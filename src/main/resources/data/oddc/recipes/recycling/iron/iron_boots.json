@@ -1,8 +1,13 @@
 {
   "type": "oddc:recycling",
-  "ingredient": {
-    "item": "minecraft:iron_boots"
-  },
+  "ingredient": [
+    {
+      "item": "minecraft:iron_boots"
+    },
+    {
+      "item": "oddc:reinforced_boots"
+    }
+  ],
   "metalCounts": [
     {
       "metal": "iron",

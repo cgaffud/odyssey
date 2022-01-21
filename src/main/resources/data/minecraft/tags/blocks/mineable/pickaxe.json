@@ -10,6 +10,8 @@
     "oddc:electrum_block",
     "oddc:clover_stone",
     "oddc:recycling_furnace",
-    "oddc:copper_chest"
+    "oddc:copper_chest",
+    "oddc:ruby_ore",
+    "oddc:deepslate_ruby_ore"
   ]
 }

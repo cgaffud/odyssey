@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "oddc:ruby_ore",
+    "oddc:deepslate_ruby_ore",
     "minecraft:diamond_ore",
     "minecraft:deepslate_diamond_ore",
     "oddc:clover_stone",

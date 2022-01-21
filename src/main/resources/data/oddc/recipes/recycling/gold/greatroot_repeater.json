@@ -1,12 +1,12 @@
 {
   "type": "oddc:recycling",
   "ingredient": {
-    "item": "minecraft:golden_horse_armor"
+    "item": "oddc:greatroot_repeater"
   },
   "metalCounts": [
     {
       "metal": "gold",
-      "count": 243
+      "count": 27
     }
   ]
 }

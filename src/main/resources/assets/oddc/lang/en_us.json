@@ -327,5 +327,7 @@
   "item.oddc.cactus_leggings": "Cactus Leggings",
   "item.oddc.cactus_boots": "Cactus Boots",
   "entity.oddc.skeleton": "Skeleton",
-  "item.oddc.skeleton_spawn_egg": "Skeleton Spawn Egg"
+  "item.oddc.skeleton_spawn_egg": "Skeleton Spawn Egg",
+  "block.oddc.ruby_ore": "Ruby Ore",
+  "block.oddc.deepslate_ruby_ore": "Deepslate Ruby Ore"
 }

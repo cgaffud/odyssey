@@ -1,12 +1,12 @@
 {
   "type": "oddc:recycling",
   "ingredient": {
-    "item": "minecraft:golden_horse_armor"
+    "item": "oddc:rusty_sonic_fork"
   },
   "metalCounts": [
     {
-      "metal": "gold",
-      "count": 243
+      "metal": "iron",
+      "count": 63
     }
   ]
 }

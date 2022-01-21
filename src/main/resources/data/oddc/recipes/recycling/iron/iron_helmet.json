@@ -1,8 +1,13 @@
 {
   "type": "oddc:recycling",
-  "ingredient": {
-    "item": "minecraft:iron_helmet"
-  },
+  "ingredient": [
+    {
+      "item": "minecraft:iron_helmet"
+    },
+    {
+      "item": "oddc:reinforced_helmet"
+    }
+  ],
   "metalCounts": [
     {
       "metal": "iron",

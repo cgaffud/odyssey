@@ -123,10 +123,7 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
         this.mouthAngle = this.mouthAngle * (1f-alpha) + f * alpha;
     }
 
-    public void setCustomName(@Nullable Component p_200203_1_) {
-        super.setCustomName(p_200203_1_);
-        this.bossEvent.setName(this.getDisplayName());
-    }
+
 
 
     public void aiStep() {
@@ -262,11 +259,6 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
     protected void rotateTowards(Vec3 vector3d, double acceleration, double rotationRate){
         this.setDeltaMovement(vector3d.normalize().scale(rotationRate).add(this.getDeltaMovement()).normalize().scale(acceleration));
         this.setRotation(this.getDeltaMovement());
-    }
-
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-        this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
     }
 
     protected SoundEvent getAmbientSound() {

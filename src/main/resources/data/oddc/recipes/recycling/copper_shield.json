@@ -1,12 +1,16 @@
 {
   "type": "oddc:recycling",
   "ingredient": {
-    "item": "minecraft:iron_horse_armor"
+    "item": "oddc:copper_shield"
   },
   "metalCounts": [
     {
+      "metal": "copper",
+      "count": 54
+    },
+    {
       "metal": "iron",
-      "count": 243
+      "count": 9
     }
   ]
 }

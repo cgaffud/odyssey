@@ -1,12 +1,12 @@
 {
   "type": "oddc:recycling",
   "ingredient": {
-    "item": "minecraft:golden_horse_armor"
+    "item": "oddc:greatroot_long_bow"
   },
   "metalCounts": [
     {
-      "metal": "gold",
-      "count": 243
+      "metal": "silver",
+      "count": 27
     }
   ]
 }
