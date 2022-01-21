@@ -1,34 +1,24 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.world.gen.structure.OdysseyStructurePieceType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.OceanRuinFeature;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
-import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 import java.util.Random;
 
 public class UndergroundRuinPieces {
-    private static final ResourceLocation[] HOUSES = new ResourceLocation[]{new ResourceLocation(Odyssey.MOD_ID,"undeground_ruins/abandoned_underground_house")};
+    private static final ResourceLocation[] HOUSES = new ResourceLocation[]{new ResourceLocation(Odyssey.MOD_ID,"underground_ruins/abandoned_underground_house")};
 
     public static void addPiece(StructureManager manager, BlockPos blockPos, Rotation rotation, StructurePieceAccessor accessor, Random random) {
         ResourceLocation structureLoc = HOUSES[0];
@@ -36,8 +26,8 @@ public class UndergroundRuinPieces {
     }
 
     public static class UndergroundRuinPiece extends TemplateStructurePiece {
-        public UndergroundRuinPiece(StructureManager p_72568_, ResourceLocation p_72569_, BlockPos p_72570_, Rotation p_72571_) {
-            super(OdysseyStructurePieceType.UNDERGROUND_RUIN, 0, p_72568_, p_72569_, p_72569_.toString(), makeSettings(p_72571_), p_72570_);
+        public UndergroundRuinPiece(StructureManager structureManager, ResourceLocation resourceLocation, BlockPos blockPos, Rotation rotation) {
+            super(OdysseyStructurePieceType.UNDERGROUND_RUIN, 0, structureManager, resourceLocation, resourceLocation.toString(), makeSettings(rotation), blockPos);
         }
 
         public UndergroundRuinPiece(StructureManager structureManager, CompoundTag tag) {

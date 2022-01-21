@@ -25,10 +25,12 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class StructureGen {
@@ -40,8 +42,9 @@ public class StructureGen {
         Registry<ConfiguredStructureFeature<?, ?>> registry = BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE;
 
         WEAVER_COLONY = StructureFeatureRegistry.WEAVER_COLONY.get().configured(FeatureConfiguration.NONE);
-        UNDERGROUND_RUIN = StructureFeatureRegistry.UNDERGROUND_RUIN.get().configured(FeatureConfiguration.NONE);
         Registry.register(registry, new ResourceLocation(Odyssey.MOD_ID, "configured_weaver_colony"), WEAVER_COLONY);
+        UNDERGROUND_RUIN = StructureFeatureRegistry.UNDERGROUND_RUIN.get().configured(FeatureConfiguration.NONE);
+        Registry.register(registry, new ResourceLocation(Odyssey.MOD_ID, "configured_underground_ruin"), UNDERGROUND_RUIN);
     }
 
     private static Method GETCODEC_METHOD;
@@ -130,7 +133,9 @@ public class StructureGen {
              * And if you want to do dimension blacklisting, you need to remove the spacing entry entirely from the map below to prevent generation safely.
              */
             Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(worldStructureConfig.structureConfig());
-            tempMap.putIfAbsent(StructureFeatureRegistry.WEAVER_COLONY.get(), StructureSettings.DEFAULTS.get(StructureFeatureRegistry.WEAVER_COLONY.get()));
+            for(StructureFeature<?> structureFeature : ForgeRegistries.STRUCTURE_FEATURES.getValues().stream().filter(structureFeature -> structureFeature.getRegistryName().getNamespace().equals(Odyssey.MOD_ID)).collect(Collectors.toList())){
+                tempMap.putIfAbsent(structureFeature, StructureSettings.DEFAULTS.get(structureFeature));
+            }
             worldStructureConfig.structureConfig = tempMap;
         }
     }
