@@ -11,14 +11,16 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 public enum TreasureChestMaterial {
-    COPPER(BlockRegistry.COPPER_CHEST::get),
-    STERLING_SILVER(BlockRegistry.STERLING_SILVER_CHEST::get);
+    COPPER(BlockRegistry.COPPER_CHEST::get, OdysseyLootTables.COPPER_TREASURE_CHEST),
+    STERLING_SILVER(BlockRegistry.STERLING_SILVER_CHEST::get, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
 
     private final Supplier<Block> blockSupplier;
+    public final ResourceLocation lootTable;
     public final ResourceLocation stat;
 
-    TreasureChestMaterial(Supplier<Block> blockSupplier){
+    TreasureChestMaterial(Supplier<Block> blockSupplier, ResourceLocation lootTable){
         this.blockSupplier = blockSupplier;
+        this.lootTable = lootTable;
         String name = this.name().toLowerCase(Locale.ROOT);
         this.stat = OdysseyStats.makeCustomStat(String.format("open_%s_chest", name), StatFormatter.DEFAULT);;
     }
