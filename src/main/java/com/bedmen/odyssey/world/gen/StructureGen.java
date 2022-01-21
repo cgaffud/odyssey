@@ -75,9 +75,13 @@ public class StructureGen {
                 // Skip all ocean, end, nether, and none category biomes.
                 // You can do checks for other traits that the biome has.
                 Biome.BiomeCategory biomeCategory = biomeEntry.getValue().getBiomeCategory();
-                if(biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.THEEND && biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
-                    associateBiomeToConfiguredStructure(hashMap, WEAVER_COLONY, biomeEntry.getKey());
-                    associateBiomeToConfiguredStructure(hashMap, UNDERGROUND_RUIN, biomeEntry.getKey());
+
+                //Overworld
+                if(biomeCategory != Biome.BiomeCategory.THEEND && biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE){
+                    if(biomeCategory != Biome.BiomeCategory.OCEAN) {
+                        associateBiomeToConfiguredStructure(hashMap, WEAVER_COLONY, biomeEntry.getKey());
+                        associateBiomeToConfiguredStructure(hashMap, UNDERGROUND_RUIN, biomeEntry.getKey());
+                    }
                 }
             }
 
