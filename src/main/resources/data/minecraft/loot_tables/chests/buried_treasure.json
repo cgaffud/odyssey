@@ -137,11 +137,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:leather_chestplate"
+          "name": "oddc:leather_chestplate"
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_sword"
+          "name": "oddc:broken_sea_sword"
         }
       ]
     },

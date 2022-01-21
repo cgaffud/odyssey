@@ -46,8 +46,8 @@ public class EnchantWithTierFunction extends LootItemConditionalFunction {
         Random random = lootContext.getRandom();
         //Enchantments
         List<Pair<Enchantment, Integer>> enchantmentList = EnchantmentUtil.getEnchantmentsByTier(this.tier.getInt(lootContext));
+        enchantmentList = filterEnchantments(enchantmentList, itemStack);
         for(int i = 0; i < ENCHANTMENT_RARITY.length && enchantmentList.size() > 0; i++){
-            enchantmentList = enchantmentList.stream().filter((pair) -> canEnchantOntoItemStack(pair.getFirst(), itemStack)).collect(Collectors.toList());
             if(random.nextInt(ENCHANTMENT_RARITY[i]) == 0){
                 Pair<Enchantment, Integer> enchantmentIntegerPair = enchantmentList.get(random.nextInt(enchantmentList.size()));
                 enchantmentList.remove(enchantmentIntegerPair);
@@ -55,11 +55,12 @@ public class EnchantWithTierFunction extends LootItemConditionalFunction {
             } else {
                 break;
             }
+            enchantmentList = filterEnchantments(enchantmentList, itemStack);
         }
         //Curses
         List<Pair<Enchantment, Integer>> curseList = EnchantmentUtil.getCursesByTier(this.tier.getInt(lootContext));
+        curseList = filterEnchantments(curseList, itemStack);
         for(int i = 0; i < CURSE_RARITY.length && curseList.size() > 0; i++){
-            curseList = curseList.stream().filter((pair) -> canEnchantOntoItemStack(pair.getFirst(), itemStack)).collect(Collectors.toList());
             if(random.nextInt(CURSE_RARITY[i]) == 0){
                 Pair<Enchantment, Integer> curseIntegerPair = curseList.get(random.nextInt(curseList.size()));
                 curseList.remove(curseIntegerPair);
@@ -67,8 +68,13 @@ public class EnchantWithTierFunction extends LootItemConditionalFunction {
             } else {
                 break;
             }
+            curseList = filterEnchantments(curseList, itemStack);
         }
         return itemStack;
+    }
+
+    private static List<Pair<Enchantment, Integer>> filterEnchantments(List<Pair<Enchantment, Integer>> enchantmentList, ItemStack itemStack){
+        return enchantmentList.stream().filter((pair) -> canEnchantOntoItemStack(pair.getFirst(), itemStack)).collect(Collectors.toList());
     }
 
     private static boolean canEnchantOntoItemStack(Enchantment enchantment, ItemStack itemStack){
