@@ -52,7 +52,7 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> PIERCING = ENCHANTMENTS.register("piercing", () -> new OdysseyBowEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));
 
     //Other
-    public static final RegistryObject<Enchantment> THORNS = ENCHANTMENTS.register("thorns", () -> new ThornsEnchantment(Enchantment.Rarity.VERY_RARE, ARMOR_SLOTS));
+    public static final RegistryObject<Enchantment> THORNS = ENCHANTMENTS.register("thorns", () -> new OdysseyThornsEnchantment(Enchantment.Rarity.VERY_RARE, ARMOR_SLOTS));
 
     //Odyssey Enchantments
     public static final RegistryObject<Enchantment> SHATTERING = ENCHANTMENTS.register("shattering", () -> new ShatteringEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));

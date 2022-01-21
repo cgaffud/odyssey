@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.items.equipment.DualWieldItem;
+import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
 import com.bedmen.odyssey.items.equipment.IEquipment;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -10,24 +11,41 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import org.apache.commons.lang3.mutable.MutableFloat;
+import org.lwjgl.system.CallbackI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Mixin(EnchantmentHelper.class)
 public abstract class MixinEnchantmentHelper {
 
     @Shadow
     public static Map<Enchantment, Integer> deserializeEnchantments(ListTag p_226652_0_) {return null;}
+
+    private static void runIterationOnInventory(EnchantmentHelper.EnchantmentVisitor enchantmentVisitor, Iterable<ItemStack> itemStacks) {
+        for(ItemStack itemstack : itemStacks) {
+            runIterationOnItem(enchantmentVisitor, itemstack);
+        }
+        for(Map.Entry<Enchantment, Integer> entry : EnchantmentUtil.getSetBonusLevels(itemStacks).entrySet()){
+            enchantmentVisitor.accept(entry.getKey(), entry.getValue());
+        }
+    }
 
     private static void runIterationOnItem(EnchantmentHelper.EnchantmentVisitor modifier, ItemStack stack) {
         if (!stack.isEmpty()) {
@@ -56,29 +74,11 @@ public abstract class MixinEnchantmentHelper {
     public static int getEnchantmentLevel(Enchantment enchantment, LivingEntity livingEntity) {
         Iterable<ItemStack> iterable = enchantment.getSlotItems(livingEntity).values();
         Iterable<ItemStack> armor = livingEntity.getArmorSlots();
-        ArmorMaterial material1 = null;
-        Item setBonusItem = null;
-        int setBonusCounter = 0;
         int i = 0;
         for(ItemStack itemstack : iterable) {
             i += getItemEnchantmentLevel(enchantment, itemstack);
         }
-        for (ItemStack itemstack : armor) {
-            Item item = itemstack.getItem();
-            if (item instanceof ArmorItem) {
-                ArmorMaterial material2 = ((ArmorItem) item).getMaterial();
-                if (material1 == null){
-                    material1 = material2;
-                    setBonusItem = item;
-                    setBonusCounter++;
-                }
-                else if (material1 == material2)
-                    setBonusCounter++;
-            }
-        }
-        if(setBonusCounter >= 4 && setBonusItem instanceof IEquipment){
-            i += ((IEquipment)setBonusItem).getSetBonusLevel(enchantment);
-        }
+        i += EnchantmentUtil.getSetBonusLevel(armor, enchantment);
         //TODO Add trinkets back in
 //        if(livingEntity instanceof IOdysseyPlayer){
 //            i += getItemEnchantmentLevel(enchantment, ((IOdysseyPlayer) livingEntity).getTrinketSlot());

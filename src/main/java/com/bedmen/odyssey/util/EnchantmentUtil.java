@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.enchantment.abstracts.AbstractRiptideEnchantment;
+import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.IntPriorityQueue;
@@ -10,6 +11,9 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -176,6 +180,37 @@ public class EnchantmentUtil {
 //    public static void writeEnchantment(Enchantment e, FriendlyByteBuf buffer) {
 //        buffer.writeVarInt(enchantmentToInt(e));
 //    }
+
+    public static int getSetBonusLevel(Iterable<ItemStack> armor, Enchantment enchantment){
+        Integer i = getSetBonusLevels(armor).get(enchantment);
+        if(i == null){
+            return 0;
+        }
+        return i;
+    }
+
+    public static Map<Enchantment, Integer> getSetBonusLevels(Iterable<ItemStack> armor){
+        Item setBonusItem = null;
+        ArmorMaterial material1 = null;
+        int setBonusCounter = 1;
+        for (ItemStack itemstack : armor) {
+            Item item = itemstack.getItem();
+            if (item instanceof ArmorItem) {
+                ArmorMaterial material2 = ((ArmorItem) item).getMaterial();
+                if (material1 == null){
+                    material1 = material2;
+                    setBonusItem = item;
+                }
+                else if (material1 == material2)
+                    setBonusCounter++;
+            }
+        }
+        if(setBonusCounter >= 4 && setBonusItem instanceof EquipmentArmorItem equipmentArmorItem) {
+            return equipmentArmorItem.getSetBonusMap();
+        }
+        return new HashMap<>();
+    }
+
     public static Integer getSumEnchantmentLevels(Enchantment enchantment, LivingEntity entity){
         Iterable<ItemStack> itemSlots = enchantment.getSlotItems(entity).values();
         int sum = 0;
@@ -281,6 +316,10 @@ public class EnchantmentUtil {
 
     public static int getDownpour(LivingEntity entity){
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DOWNPOUR.get(),entity);
+    }
+
+    public static int getThorns(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.THORNS.get(), itemStack);
     }
 
     public static int getQuickChargeTime(int chargeTime, ItemStack itemStack) {
