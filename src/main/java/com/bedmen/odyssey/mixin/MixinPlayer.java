@@ -70,7 +70,6 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     /**
      * In vanilla damage of atleast 3 is required to hurt a shield. Now any amount of damage hurts a shield
-     * @param p_36383_
      */
     protected void hurtCurrentlyUsedShield(float p_36383_) {
         if (this.useItem.canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK)) {

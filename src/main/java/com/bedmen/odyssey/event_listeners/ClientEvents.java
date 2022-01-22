@@ -6,6 +6,7 @@ import com.bedmen.odyssey.block.TriplePlantBlock;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.*;
 import com.bedmen.odyssey.client.model.*;
+import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
@@ -52,12 +53,17 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientEvents {
 
     @SubscribeEvent
     public static void onFMLClientSetupEvent(final FMLClientSetupEvent event)
     {
+
         event.enqueueWork(() -> {
             //For hollow coconut vision overlay
             OverlayRegistry.registerOverlayTop("OdysseyHelmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
@@ -138,6 +144,9 @@ public class ClientEvents {
 
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.gui = new OdysseyIngameGui(minecraft);
+            OdysseyItemInHandRenderer odysseyItemInHandRenderer = new OdysseyItemInHandRenderer(minecraft);
+            minecraft.itemInHandRenderer = odysseyItemInHandRenderer;
+            minecraft.gameRenderer.itemInHandRenderer = odysseyItemInHandRenderer;
 //        minecraft.itemRenderer = new OdysseyItemRenderer(minecraft.getTextureManager(), minecraft.getModelManager(), minecraft.getItemColors());
         });
     }

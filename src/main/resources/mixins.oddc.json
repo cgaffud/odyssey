@@ -1,6 +1,6 @@
 {
   "required": true,
-  "minVersion": "0.8",
+  "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_16",
   "package": "com.bedmen.odyssey.mixin",
   "refmap": "mixins.oddc.refmap.json",
@@ -20,7 +20,6 @@
     "defaultRequire": 1
   },
   "client": [
-    "MixinItemInHandRenderer",
     "MixinLocalPlayer"
   ]
 }

@@ -274,7 +274,7 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
     }
 
     protected float getSoundVolume() {
-        return 3.0F;
+        return 5.0F;
     }
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
