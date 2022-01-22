@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.world.gen.structure.UndergroundRuin;
 import com.bedmen.odyssey.world.gen.structure.WeaverColonyFeature;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -26,6 +27,7 @@ public class StructureFeatureRegistry {
     }
 
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> WEAVER_COLONY = STRUCTURE_FEATURES.register("weaver_colony", () -> new WeaverColonyFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> UNDERGROUND_RUIN = STRUCTURE_FEATURES.register("underground_ruin", () -> new UndergroundRuin(NoneFeatureConfiguration.CODEC));
 
     public static void setupStructures() {
         setupMapSpacingAndLand(
@@ -34,6 +36,10 @@ public class StructureFeatureRegistry {
                         8 /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/,
                         24357620 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 false);
+        setupMapSpacingAndLand(
+                UNDERGROUND_RUIN.get(),
+                new StructureFeatureConfiguration(16, 8,97344289), false
+        );
     }
 
     /**
