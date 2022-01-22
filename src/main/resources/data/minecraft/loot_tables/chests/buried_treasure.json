@@ -137,7 +137,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "oddc:leather_chestplate"
+          "name": "minecraft:leather_chestplate"
         },
         {
           "type": "minecraft:item",
