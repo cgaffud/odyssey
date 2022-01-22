@@ -2,6 +2,7 @@
   "itemGroup.oddc_building_blocks": "Odyssey Building Blocks",
   "itemGroup.oddc_wood": "Odyssey Wood and Plants",
   "itemGroup.oddc_materials": "Odyssey Materials",
+  "itemGroup.oddc_food": "Odyssey Food",
   "itemGroup.oddc_tools": "Odyssey Tools",
   "itemGroup.oddc_melee": "Odyssey Melee Weapons",
   "itemGroup.oddc_ranged": "Odyssey Ranged Weapons",
@@ -310,5 +311,6 @@
   "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
   "item.oddc.weaver_fang": "Weaver Fang",
   "item.oddc.weaver_fang_arrow": "Weaver Fang Arrow",
-  "item.oddc.weaver_fang.web_chance": "Cobweb Chance: "
+  "item.oddc.weaver_fang.web_chance": "Cobweb Chance: ",
+  "item.oddc.coconut_cookie": "Coconut Cookie"
 }
