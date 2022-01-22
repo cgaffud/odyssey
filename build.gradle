@@ -149,7 +149,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     // Apply Mixin AP
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 mixin {

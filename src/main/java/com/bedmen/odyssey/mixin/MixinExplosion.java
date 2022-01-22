@@ -90,7 +90,7 @@ public abstract class MixinExplosion {
                     this.level.getProfiler().push("explosion_blocks");
                     if (blockstate.canDropFromExplosion(this.level, blockpos, getExplosion()) && this.level instanceof ServerLevel) {
                         BlockEntity blockentity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
-                        LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel)this.level)).withRandom(this.level.random).withParameter(OdysseyLootContextParams.IS_EXPLOSION, new Object()).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockentity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.source);
+                        LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel)this.level)).withRandom(this.level.random).withParameter(OdysseyLootContextParams.IS_EXPLOSION, true).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockentity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.source);
                         if (this.blockInteraction == Explosion.BlockInteraction.DESTROY) {
                             lootcontext$builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
                         }

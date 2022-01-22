@@ -129,7 +129,7 @@
         },
         {
           "type": "minecraft:item",
-          "weight": 15,
+          "weight": 40,
           "functions": [
             {
               "function": "oddc:enchant_with_tier",

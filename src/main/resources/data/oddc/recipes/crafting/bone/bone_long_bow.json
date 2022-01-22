@@ -1,16 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "AAA",
+    "CAB",
     "A B",
-    "AB "
+    "CAB"
   ],
   "key": {
     "A": {
       "item": "minecraft:bone"
     },
     "B": {
-      "item": "minecraft:string"
+      "item": "oddc:silver_fiber"
+    },
+    "C": {
+      "item": "minecraft:flint"
     }
   },
   "result": {

@@ -1,17 +1,13 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.entity.animal.OdysseyPolarBear;
-import com.bedmen.odyssey.entity.monster.BabySkeleton;
-import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
-import com.bedmen.odyssey.items.OdysseyBowItem;
+import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
-import com.bedmen.odyssey.util.WeaponUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -22,29 +18,29 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.PolarBear;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
-import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
 
     @SubscribeEvent
-    public static void updateEntityEventListener(final LivingEvent.LivingUpdateEvent event) {
+    public static void onLivingUpdateEvent(final LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
         if (!livingEntity.level.isClientSide && livingEntity.isAlive()) {
             int bleedLvl = EnchantmentUtil.getBleeding(livingEntity);
@@ -64,33 +60,7 @@ public class EntityEvents {
     }
 
     @SubscribeEvent
-    public static void attackEntityEventListener(final AttackEntityEvent event){
-        Player player = (Player) event.getEntity();
-        Entity target = event.getTarget();
-        if(!player.level.isClientSide && player.getAttackStrengthScale(0.5F) > 0.9f && target instanceof LivingEntity livingTarget) {
-            int shatteringLevel = EnchantmentUtil.getShattering(player);
-            if (!player.level.isClientSide && shatteringLevel > 0) {
-                MobEffectInstance effectInstance = livingTarget.getEffect(EffectRegistry.SHATTERED.get());
-                if (effectInstance != null) {
-                    livingTarget.removeEffect(EffectRegistry.SHATTERED.get());
-                    int amp = effectInstance.getAmplifier();
-                    effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, Integer.min(amp + 1, 1 + 2 * shatteringLevel), false, true, true);
-                } else {
-                    effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + shatteringLevel * 20, 0, false, true, true);
-                }
-                livingTarget.addEffect(effectInstance);
-            }
-            if (player.getMainHandItem().is(ItemRegistry.WEAVER_FANG_DAGGER.get()) && player.getRandom().nextFloat() < Weaver.WEB_ATTACK_CHANCE) {
-                BlockPos blockPos = new BlockPos(livingTarget.getPosition(1f));
-                if (livingTarget.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
-                    livingTarget.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void LivingHurtEventListener(final LivingHurtEvent event){
+    public static void onLivingHurtEvent(final LivingHurtEvent event){
         float amount = event.getAmount();
         LivingEntity livingEntity = event.getEntityLiving();
         DamageSource damageSource = event.getSource();
@@ -119,11 +89,19 @@ public class EntityEvents {
         event.setAmount(amount);
     }
 
+    public static final Set<Integer> IDS = ConcurrentHashMap.newKeySet();
+
     @SubscribeEvent
-    public static void entityJoinWorldEventListener(final EntityJoinWorldEvent event){
+    public static void onEntityJoinWorldEvent(final EntityJoinWorldEvent event){
         if(!event.getWorld().isClientSide){
             Entity entity = event.getEntity();
+            if(!event.loadedFromDisk()){
+                if(entity.getType() == EntityType.SKELETON){
+                    IDS.add(entity.getId());
+                }
+            }
 
+            //Todo lifefruits
             //Update Max Health Attribute for Player
 //            if(entity instanceof IOdysseyPlayer){
 //                IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)entity;
@@ -138,81 +116,47 @@ public class EntityEvents {
 //                    modifiableattributeinstance.setBaseValue(20.0d + 2.0d*lifeFruits);
 //                }
 //            }
-
-            //Skeleton
-            if(entity.getType() == EntityType.SKELETON){
-                reassessSkeletonWeaponGoal((Skeleton)entity);
-            }
         }
     }
 
-//Attempt at moving Building Fatigue out of Mixins
-//    @SubscribeEvent
-//    public static void BlockEvent$EntityPlaceEventListener(final BlockEvent.EntityPlaceEvent event){
-//        Entity entity = event.getEntity();
-//        if(entity instanceof LivingEntity){
-//            LivingEntity livingEntity = (LivingEntity)entity;
-//            EffectInstance effectInstance = livingEntity.getEffect(EffectRegistry.BUILDING_FATIGUE.get());
-//            if(effectInstance != null){
-//                if(entity instanceof ServerPlayerEntity){
-//                    ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)entity;
-//                    Hand hand = serverPlayerEntity.getUsedItemHand();
-//                    serverPlayerEntity.setItemInHand(hand, serverPlayerEntity.getItemInHand(hand));
-//                    serverPlayerEntity.broadcastCarriedItem();
-//                }
-//                event.setCanceled(true);
-//            }
-//        }
-//    }
-
     @SubscribeEvent
-    public static void livingSpawnEvent$SpecialSpawnListener(final LivingSpawnEvent.SpecialSpawn event){
+    public static void onLivingSpawnEvent$CheckSpawn(final LivingSpawnEvent.CheckSpawn event){
         Entity entity = event.getEntity();
 
-        if(entity.getType() == EntityType.SKELETON){
-            Random random = entity.level.random;
-
-            if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
-                EntityTypeRegistry.BABY_SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-                event.setCanceled(true);
-                return;
-            }
-
-            if(random.nextFloat() < 0.05f){
-                entity.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.BOWN.get()));
+        if(entity instanceof Zombie zombie){
+            if(inPrairieBiome(zombie)){
+                zombie.setBaby(true);
             }
         }
 
-        else if(entity instanceof BabySkeleton babySkeleton){
-            Random random = babySkeleton.getRandom();
-            if(random.nextFloat() < 0.2f){
-                entity.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.BONERANG.get()));
-            }
+        else if(entity instanceof Skeleton && entity.getType() == EntityType.SKELETON){
+            EntityTypeRegistry.SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
+            event.setResult(Event.Result.DENY);
         }
 
-        else if(entity.getType() == EntityType.CREEPER){
-            Random random = entity.level.getRandom();
+        else if(entity instanceof Creeper creeper && entity.getType() == EntityType.CREEPER){
+            Random random = creeper.getRandom();
 
-            if(random.nextFloat() < getCamoChance(entity.level.getDifficulty())){
+            if(isCamo(random, entity.level.getDifficulty())){
                 EntityTypeRegistry.CAMO_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-                event.setCanceled(true);
+                event.setResult(Event.Result.DENY);
             }
 
-            else if(random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get()){
+            else if(isBaby(entity)){
                 EntityTypeRegistry.BABY_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-                event.setCanceled(true);
+                event.setResult(Event.Result.DENY);
             }
         }
 
-        else if(entity.getType() == EntityType.POLAR_BEAR){
+        else if(entity instanceof PolarBear polarBear && entity.getType() == EntityType.POLAR_BEAR){
             OdysseyPolarBear odysseyPolarBear = (OdysseyPolarBear) EntityTypeRegistry.POLAR_BEAR.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-            odysseyPolarBear.setBaby(((PolarBear)entity).isBaby());
-            event.setCanceled(true);
+            odysseyPolarBear.setAge(polarBear.getAge());
+            event.setResult(Event.Result.DENY);
         }
     }
 
     @SubscribeEvent
-    public static void lootingLevelEventListener(final LootingLevelEvent event){
+    public static void onLootingLevelEvent(final LootingLevelEvent event){
         DamageSource damageSource = event.getDamageSource();
         if(damageSource != null){
             Entity directEntity = damageSource.getDirectEntity();
@@ -222,32 +166,20 @@ public class EntityEvents {
         }
     }
 
-
-    public static void reassessSkeletonWeaponGoal(Skeleton skeletonEntity) {
-        if (skeletonEntity.level != null && !skeletonEntity.level.isClientSide) {
-            skeletonEntity.goalSelector.removeGoal(skeletonEntity.meleeGoal);
-            skeletonEntity.goalSelector.removeGoal(skeletonEntity.bowGoal);
-            ItemStack itemstack = skeletonEntity.getItemInHand(WeaponUtil.getHandHoldingBow(skeletonEntity));
-            Item item = itemstack.getItem();
-            if (item instanceof OdysseyBowItem) {
-                int i = ((OdysseyBowItem) item).getChargeTime(itemstack);
-                if (itemstack.getItem() == ItemRegistry.BOW.get() && skeletonEntity.level.getDifficulty() != Difficulty.HARD) {
-                    i = 40;
-                }
-                OdysseyRangedBowAttackGoal<AbstractSkeleton> odysseyBowGoal = new OdysseyRangedBowAttackGoal<AbstractSkeleton>(skeletonEntity, 1.0D, i, 15.0F);
-
-                skeletonEntity.goalSelector.addGoal(4, odysseyBowGoal);
-            } else {
-                skeletonEntity.goalSelector.addGoal(4, skeletonEntity.meleeGoal);
-            }
-        }
+    public static boolean isBaby(Entity entity){
+        return inPrairieBiome(entity) || entity.level.random.nextFloat() <  ForgeConfig.SERVER.zombieBabyChance.get();
     }
 
-    public static float getCamoChance(Difficulty difficulty){
-        return switch (difficulty) {
+    public static boolean inPrairieBiome(Entity entity){
+        return entity.level.getBiome(entity.blockPosition()).getRegistryName().equals(BiomeRegistry.PRAIRIE.get().getRegistryName());
+    }
+
+    public static boolean isCamo(Random random, Difficulty difficulty){
+        float chance = switch (difficulty) {
             case HARD -> 1f;
             case NORMAL -> 0.5f;
             default -> 0.25f;
         };
+        return random.nextFloat() < chance;
     }
 }

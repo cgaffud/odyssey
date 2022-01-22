@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAB",
+    "A B",
+    "CAB"
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:greatroot"
+    },
+    "B": {
+      "item": "oddc:silver_fiber"
+    },
+    "C": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "result": {
+    "item": "oddc:greatroot_long_bow"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "third=lower": {
+      "model": "oddc:block/prairie_grass_bottom"
+    },
+    "third=middle": {
+      "model": "oddc:block/prairie_grass_middle"
+    },
+    "third=upper": {
+      "model": "oddc:block/prairie_grass_top"
+    }
+  }
+}

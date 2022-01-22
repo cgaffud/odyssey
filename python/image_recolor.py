@@ -23,8 +23,18 @@ def clamp(i):
         return 0
     return int(i)
 
+def gray_color(gray):
+    return color(gray,gray,gray)
+
 def color(r,g,b):
     return r << 16 + g << 8 + b
+
+def uncolor(color):
+    r = color >> 16
+    color -= r << 16
+    g = color >> 8
+    b = color - (g << 8)
+    return (r,g,b)
 
 def grayscale_pixel(pos, pixel):
     r,g,b,a = pixel
@@ -56,7 +66,7 @@ def colormap_pixel(pixel, colormap):
     r,g,b,a = pixel
     color1 = color(r,g,b)
     if(color1 in colormap):
-        r,g,b = colormap[color1]
+        r,g,b = uncolor(colormap[color1])
     return (r,g,b,a)
 
 def grayscale_image(image):
@@ -134,9 +144,19 @@ def recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2):
     colorAdd = [colorAdd1[i] + r*(colorAdd2[i]-colorAdd1[i]) for i in range(3)]
     return recolor_pixel(pixel, colorMult, colorAdd)
 
-def recolor_image_randomly(image, colorMult1, colorAdd1, colorMult2, colorAdd2):
-     at_every_pixel(image, lambda pos, pixel : recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2))
-     return image
+def recolor_image_randomly(image, colorMult1, colorMult2):
+    recolor_image_randomly2(image, colorMult1, [0], colorMult2, [0])
+
+def recolor_image_randomly2(image, colorMult1, colorAdd1, colorMult2, colorAdd2):
+    if(len(colorMult1) == 1):
+        colorMult1 = [colorMult1[0],colorMult1[0],colorMult1[0]]
+    if(len(colorAdd1) == 1):
+        colorAdd1 = [colorAdd1[0],colorAdd1[0],colorAdd1[0]]
+    if(len(colorMult2) == 1):
+        colorMult2 = [colorMult2[0],colorMult2[0],colorMult2[0]]
+    if(len(colorAdd2) == 1):
+        colorAdd2 = [colorAdd2[0],colorAdd2[0],colorAdd2[0]]
+    at_every_pixel(image, lambda pos, pixel : recolor_pixel_randomly(pixel, colorMult1, colorAdd1, colorMult2, colorAdd2))
 
 def stripe_pixel(pos, pixel, w):
     x,y = pos
@@ -144,10 +164,21 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-#open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/models/armor/iron_layer_1.png"
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/sterling_silver_key.png"
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/copper_key.png"
-image1 = open_image(open_path1)
-recolor_image(image1, [1,0.6,0.4],[0,0,0],)
-save_image(image1, save_path)
+pieces = ["boots", "leggings", "chestplate", "helmet"]
+open_path1 = r"C:\Users\18029\Documents\1.18\assets\minecraft\textures\item\iron_"
+save_path = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\item\fur_"
+D = {}
+D[gray_color(25)] = 0x676867
+D[gray_color(45)] = 0x8a8d8b
+D[gray_color(107)] = 0xafafa9
+D[gray_color(150)] = 0xc4c4be
+D[gray_color(198)] = 0xeaead8
+D[gray_color(216)] = 0xf4f4e4
+D[gray_color(255)] = 0xf4f4e4
+for piece in pieces:
+    open_path2 = open_path1 + piece + ".png"
+    save_path2 = save_path + piece + ".png"
+    image1 = open_image(open_path2)
+    colormap_image(image1, D)
+    save_image(image1, save_path2)
 print("Done")

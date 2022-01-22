@@ -21,6 +21,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.antlr.v4.runtime.misc.Triple;
 
 public class ItemRegistry {
 
@@ -45,14 +46,19 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SILVER_BLOCK = ITEMS.register("silver_block", () -> new BlockItem(BlockRegistry.SILVER_BLOCK.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> GOLDEN_COBWEB = ITEMS.register("golden_cobweb", () -> new BlockItem(BlockRegistry.GOLDEN_COBWEB.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> ALLOY_FURNACE = ITEMS.register("alloy_furnace", () -> new BlockItem(BlockRegistry.ALLOY_FURNACE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> RUBY_ORE = ITEMS.register("ruby_ore", () -> new BlockItem(BlockRegistry.RUBY_ORE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> DEEPSLATE_RUBY_ORE = ITEMS.register("deepslate_ruby_ore", () -> new BlockItem(BlockRegistry.DEEPSLATE_RUBY_ORE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> STERLING_SILVER_COBWEB = ITEMS.register("sterling_silver_cobweb", () -> new BlockItem(BlockRegistry.STERLING_SILVER_COBWEB.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> STERLING_SILVER_CHEST = ITEMS.register("sterling_silver_chest", () -> new BEWLRBlockItem(BlockRegistry.STERLING_SILVER_CHEST.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> STERLING_SILVER_BLOCK = ITEMS.register("sterling_silver_block", () -> new BlockItem(BlockRegistry.STERLING_SILVER_BLOCK.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> ELECTRUM_COBWEB = ITEMS.register("electrum_cobweb", () -> new BlockItem(BlockRegistry.ELECTRUM_COBWEB.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> ELECTRUM_BLOCK = ITEMS.register("electrum_block", () -> new BlockItem(BlockRegistry.ELECTRUM_BLOCK.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> DIAMOND_COBWEB = ITEMS.register("diamond_cobweb", () -> new BlockItem(BlockRegistry.DIAMOND_COBWEB.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> CLOVER_STONE = ITEMS.register("clover_stone", () -> new BlockItem(BlockRegistry.CLOVER_STONE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
 
     //Wood and Plants
+    public static final RegistryObject<Item> PRAIRIE_GRASS = ITEMS.register("prairie_grass", () -> new TripleHighBlockItem(BlockRegistry.PRAIRIE_GRASS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
+
     public static final RegistryObject<Item> PALM_PLANKS = ITEMS.register("palm_planks", () -> new BlockItem(BlockRegistry.PALM_PLANKS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_SAPLING = ITEMS.register("palm_sapling", () -> new BlockItem(BlockRegistry.PALM_SAPLING.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_LOG = ITEMS.register("palm_log", () -> new BlockItem(BlockRegistry.PALM_LOG.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
@@ -99,6 +105,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> COPPER_NUGGET = ITEMS.register("copper_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> COPPER_FIBER = ITEMS.register("copper_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> WEAVER_FANG = ITEMS.register("weaver_fang", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> RUSTY_ARM = ITEMS.register("rusty_arm", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> RAW_SILVER = ITEMS.register("raw_silver", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> SILVER_NUGGET = ITEMS.register("silver_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> SILVER_INGOT = ITEMS.register("silver_ingot", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
@@ -112,6 +119,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ELECTRUM_NUGGET = ITEMS.register("electrum_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> ELECTRUM_INGOT = ITEMS.register("electrum_ingot", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> ELECTRUM_FIBER = ITEMS.register("electrum_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> DIAMOND_FIBER = ITEMS.register("diamond_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> PEARL = ITEMS.register("pearl", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> PERMAFROST_SHARD = ITEMS.register("permafrost_shard", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> NETHERITE_NUGGET = ITEMS.register("netherite_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
@@ -133,6 +141,7 @@ public class ItemRegistry {
     public static final LevEnchSup KNOCKBACK_1 = new LevEnchSup(() -> Enchantments.KNOCKBACK, 1);
     public static final LevEnchSup KNOCKBACK_2 = new LevEnchSup(() -> Enchantments.KNOCKBACK, 2);
     public static final LevEnchSup KNOCKBACK_3 = new LevEnchSup(() -> Enchantments.KNOCKBACK, 3);
+    public static final LevEnchSup FLING = new LevEnchSup(EnchantmentRegistry.FLING, 1);
     public static final LevEnchSup BANE_OF_ARTHROPODS_1 = new LevEnchSup(EnchantmentRegistry.BANE_OF_ARTHROPODS, 1);
     public static final LevEnchSup BANE_OF_ARTHROPODS_2 = new LevEnchSup(EnchantmentRegistry.BANE_OF_ARTHROPODS, 2);
     public static final LevEnchSup SHATTERING_1 = new LevEnchSup(EnchantmentRegistry.SHATTERING, 1);
@@ -151,6 +160,8 @@ public class ItemRegistry {
     public static final LevEnchSup QUICK_CHARGE_2 = new LevEnchSup(EnchantmentRegistry.QUICK_CHARGE, 2);
     public static final LevEnchSup PUNCH_1 = new LevEnchSup(EnchantmentRegistry.PUNCH_ARROWS, 1);
     public static final LevEnchSup PUNCH_2 = new LevEnchSup(EnchantmentRegistry.PUNCH_ARROWS, 2);
+    public static final LevEnchSup MULTISHOT_1 = new LevEnchSup(EnchantmentRegistry.MULTISHOT, 1);
+    public static final LevEnchSup SUPER_CHARGE_1 = new LevEnchSup(EnchantmentRegistry.SUPER_CHARGE, 1);
     public static final LevEnchSup LOYALTY_1 = new LevEnchSup(EnchantmentRegistry.LOYALTY, 1);
     public static final LevEnchSup LOYALTY_3 = new LevEnchSup(EnchantmentRegistry.LOYALTY, 3);
 
@@ -182,7 +193,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> COPPER_BATTLE_AXE = ITEMS.register("copper_battle_axe", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 7f, -3.1f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1));
 
     public static final RegistryObject<Item> WEAVER_FANG_DAGGER = ITEMS.register("weaver_fang_dagger", () -> new WeaverFangDaggerItem(OdysseyTiers.STONE, 6f, -2.2f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
-    public static final RegistryObject<Item> BATTLE_PICKAXE = ITEMS.register("battle_pickaxe", () -> new EquipmentPickaxeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 5f, -2.8f, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1));
+    public static final RegistryObject<Item> RUSTY_PADDLE = ITEMS.register("rusty_paddle", () -> new EquipmentMeleeItem(OdysseyTiers.IRON, 6f, -3.3f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), FLING));
+    public static final RegistryObject<Item> BATTLE_PICKAXE = ITEMS.register("battle_pickaxe", () -> new EquipmentPickaxeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 8f, -3.1f, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1));
     public static final RegistryObject<Item> SLIME_BAT = ITEMS.register("slime_bat", () -> new EquipmentMeleeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 2f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_3));
     public static final RegistryObject<Item> MINI_HAMMER = ITEMS.register("mini_hammer", () -> new DualWieldItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_1));
     public static final RegistryObject<Item> SWIFT_SABRE = ITEMS.register("swift_sabre", () -> new FastMeleeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 6.0f, -2.3f, 0.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1));
@@ -219,16 +231,28 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new RepeaterItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.2f, 20, QUICK_CHARGE_1, PUNCH_1, PIERCING_1));
 
     public static final RegistryObject<Item> WEAVER_FANG_ARROW = ITEMS.register("weaver_fang_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyArrow.ArrowType.WEAVER_FANG));
-    public static final RegistryObject<Item> RUSTY_SONIC_FORK = ITEMS.register("rusty_sonic_fork", () -> new EquipmentMeleeItem(OdysseyTiers.IRON, 5f, -3.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.RANGED)));
+    public static final RegistryObject<Item> RUSTY_SONIC_FORK = ITEMS.register("rusty_sonic_fork", () -> new EquipmentMeleeItem(OdysseyTiers.IRON, 2f, -3.0f, false, new Item.Properties().tab(OdysseyCreativeModeTab.RANGED)));
 
     public static final RegistryObject<Item> CLOVER_STONE_BOOMERANG = ITEMS.register("clover_stone_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.CLOVER_STONE.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.CLOVER_STONE, LOYALTY_1, LOOTING_1));
     public static final RegistryObject<Item> CLOVER_STONE_ARROW = ITEMS.register("clover_stone_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyArrow.ArrowType.CLOVER_STONE));
 
     public static final RegistryObject<Item> AMETHYST_ARROW = ITEMS.register("amethyst_arrow", () -> new OdysseyArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyArrow.ArrowType.AMETHYST));
 
+    public static final RegistryObject<Item> GREATROOT_LONG_BOW = ITEMS.register("greatroot_long_bow", () -> new EquipmentBowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, PIERCING_2));
+    public static final RegistryObject<Item> GREATROOT_REPEATER = ITEMS.register("greatroot_repeater", () -> new RepeaterItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, QUICK_CHARGE_2));
+    public static final RegistryObject<Item> GREATROOT_SNIPER_BOW = ITEMS.register("greatroot_sniper_bow", () -> new SniperBowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, SUPER_CHARGE_1));
+    public static final RegistryObject<Item> GREATROOT_SLUG_BOW = ITEMS.register("greatroot_slug_bow", () -> new EquipmentCrossbowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.8f, 25, PUNCH_2));
+    public static final RegistryObject<Item> GREATROOT_SHOT_BOW = ITEMS.register("greatroot_shot_bow", () -> new EquipmentCrossbowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.8f, 25, MULTISHOT_1));
+    
+    
     //Armors
     public static final RegistryObject<Item> HOLLOW_COCONUT = ITEMS.register("hollow_coconut", () -> new HollowCoconutItem(OdysseyArmorMaterials.COCONUT, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), BINDING));
 
+    public static final RegistryObject<Item> CACTUS_HELMET = ITEMS.register("cactus_helmet", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CACTUS, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR)));
+    public static final RegistryObject<Item> CACTUS_CHESTPLATE = ITEMS.register("cactus_chestplate", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CACTUS, EquipmentSlot.CHEST, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR)));
+    public static final RegistryObject<Item> CACTUS_LEGGINGS = ITEMS.register("cactus_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CACTUS, EquipmentSlot.LEGS, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR)));
+    public static final RegistryObject<Item> CACTUS_BOOTS = ITEMS.register("cactus_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CACTUS, EquipmentSlot.FEET, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR)));
+    
     public static final RegistryObject<Item> CHICKEN_HELMET = ITEMS.register("chicken_helmet", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CHICKEN, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), FALL_PROTECTION_1));
     public static final RegistryObject<Item> CHICKEN_CHESTPLATE = ITEMS.register("chicken_chestplate", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CHICKEN, EquipmentSlot.CHEST, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), FALL_PROTECTION_1));
     public static final RegistryObject<Item> CHICKEN_LEGGINGS = ITEMS.register("chicken_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CHICKEN, EquipmentSlot.LEGS, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), FALL_PROTECTION_1));
@@ -272,7 +296,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_HORSE_ARMOR = ITEMS.register("netherite_horse_armor", () -> new HorseArmorItem(OdysseyArmorMaterials.NETHERITE.getTotalDefense(), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/horse/armor/horse_armor_netherite.png"), (new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyCreativeModeTab.ARMOR)));
 
     //Spawning
-    public static final RegistryObject<Item> BABY_SKELETON_SPAWN_EGG = ITEMS.register("baby_skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BABY_SKELETON, 12698049, 4802889, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> ODYSSEY_SKELETON_SPAWN_EGG = ITEMS.register("odyssey_skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.SKELETON, 12698049, 4802889, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> BABY_CREEPER_SPAWN_EGG = ITEMS.register("baby_creeper_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BABY_CREEPER, 894731, 0, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> CAMO_CREEPER_SPAWN_EGG = ITEMS.register("camo_creeper_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.CAMO_CREEPER, 0x50692c, 0x79553a, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> WEAVER_SPAWN_EGG = ITEMS.register("weaver_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WEAVER, 0x442512, 0xff4444, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));

@@ -66,11 +66,17 @@ public class Odyssey
 
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            OdysseyNetwork.init();
             ContainerRegistry.initQuivers();
             FeatureRegistry.initTreasureChests();
-            OdysseySpawnEggItem.initSpawnEggs();
             PassiveWeaver.init();
             OdysseyFlowerPotBlock.registerFlowerPots();
+            CompostUtil.addCompostingRecipes();
+            OdysseyLootItemFunctions.registerFunctions();
+            ((RangedAttribute) Attributes.ARMOR).minValue = -40.0d;
+            ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
+
+            //Equipment / Enchantments
             EquipmentArmorItem.initEquipment();
             EquipmentMeleeItem.initEquipment();
             EquipmentItem.initEquipment();
@@ -82,31 +88,25 @@ public class Odyssey
             EquipmentCrossbowItem.initEquipment();
             EnchantmentUtil.init();
 
+            //Generation
             OreGen.registerOres();
             FeatureGen.registerFeatures();
             TreeGen.registerTrees();
             StructureGen.registerStructures();
             StructureFeatureRegistry.setupStructures();
-            OdysseyBiomeEntitySpawn.registerSpawners();
-
-            ((RangedAttribute) Attributes.ARMOR).minValue = -40.0d;
-            ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
-//        OdysseyStructureEntitySpawn.registerSpawners();
-//        OdysseyPotions.addBrewingRecipes();
-            CompostUtil.addCompostingRecipes();
-//        OdysseyTrades.addTrades();
-            OdysseyNetwork.init();
-            BiomeRegistry.register();
             FoliagePlacerTypeRegistry.registerFoliagePlacerTypes();
-
             NoiseGeneratorSettings.register(WorldTypeRegistry.ODYSSEY_RESOURCE_KEY, OdysseyGeneration.odysseyOverworld(false, false));
 
-//        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
-//        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
+            //Spawning
+            OdysseyBiomeEntitySpawn.registerSpawners();
             SpawnPlacements.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BabyLeviathan::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.WEAVER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Weaver::spawnPredicate);
+//        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
+//        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
 
-            OdysseyLootItemFunctions.ENCHANT_WITH_TIER = OdysseyLootItemFunctions.register("enchant_with_tier", new EnchantWithTierFunction.Serializer());
+//        OdysseyStructureEntitySpawn.registerSpawners();
+//        OdysseyPotions.addBrewingRecipes();
+//        OdysseyTrades.addTrades();
         });
     }
 
@@ -121,7 +121,7 @@ public class Odyssey
     public static void onEntityAttributeCreation(final EntityAttributeCreationEvent event){
 //        event.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
 //        event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
-        event.put(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeleton.createAttributes().build());
+        event.put(EntityTypeRegistry.SKELETON.get(), OdysseySkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.WEAVER.get(), Weaver.createAttributes().build());

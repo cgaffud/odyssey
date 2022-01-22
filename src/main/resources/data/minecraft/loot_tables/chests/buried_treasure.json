@@ -141,7 +141,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_sword"
+          "name": "oddc:broken_sea_sword"
         }
       ]
     },

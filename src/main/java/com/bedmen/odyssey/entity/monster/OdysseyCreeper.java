@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.entity.ai.OdysseyCreeperSwellGoal;
+import com.bedmen.odyssey.event_listeners.EntityEvents;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -171,7 +172,7 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         pSpawnData = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
 
-        if(this.random.nextFloat() < net.minecraftforge.common.ForgeConfig.SERVER.zombieBabyChance.get()){
+        if(EntityEvents.isBaby(this)){
             this.setBaby(true);
         }
 

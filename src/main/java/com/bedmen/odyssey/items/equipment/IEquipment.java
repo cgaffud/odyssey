@@ -21,10 +21,6 @@ public interface IEquipment {
         return new HashMap<>();
     }
 
-    default int getSetBonusLevel(Enchantment e) {
-        return 0;
-    }
-
     default boolean canSweep(){
         return this instanceof SwordItem;
     }

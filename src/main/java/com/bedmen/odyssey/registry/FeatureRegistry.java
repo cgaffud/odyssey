@@ -6,10 +6,13 @@ import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.world.gen.feature.AbandonedIronGolemFeature;
 import com.bedmen.odyssey.world.gen.feature.TreasureChestFeature;
+import com.bedmen.odyssey.world.gen.feature.TriplePlantBlockFeature;
 import com.bedmen.odyssey.world.gen.feature.tree.CornerLeafTreeFeature;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.SimpleBlockFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -30,6 +33,7 @@ public class FeatureRegistry {
         FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
+    public static final RegistryObject<Feature<SimpleBlockConfiguration>> TRIPLE_PLANT_BLOCK = FEATURES.register("triple_plant_block", () -> new TriplePlantBlockFeature(SimpleBlockConfiguration.CODEC));
     public static final RegistryObject<Feature<TreeConfiguration>> CORNER_LEAF_TREE = FEATURES.register("corner_leaf_tree", () -> new CornerLeafTreeFeature(TreeConfiguration.CODEC));
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> ABANDONED_IRON_GOLEM = FEATURES.register("abandoned_iron_golem", () -> new AbandonedIronGolemFeature(NoneFeatureConfiguration.CODEC));
 

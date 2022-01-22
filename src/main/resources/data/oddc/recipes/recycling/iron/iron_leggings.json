@@ -1,8 +1,13 @@
 {
   "type": "oddc:recycling",
-  "ingredient": {
-    "item": "minecraft:iron_leggings"
-  },
+  "ingredient": [
+    {
+      "item": "minecraft:iron_leggings"
+    },
+    {
+      "item": "oddc:reinforced_leggings"
+    }
+  ],
   "metalCounts": [
     {
       "metal": "iron",

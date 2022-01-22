@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:rusty_sonic_fork"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 63
+    }
+  ]
+}
