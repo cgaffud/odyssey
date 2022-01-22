@@ -38,7 +38,7 @@ public class StructureFeatureRegistry {
                 false);
         setupMapSpacingAndLand(
                 UNDERGROUND_RUIN.get(),
-                new StructureFeatureConfiguration(16, 8,97344289), true
+                new StructureFeatureConfiguration(16, 8,97344289), false
         );
     }
 

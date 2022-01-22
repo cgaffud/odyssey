@@ -37,7 +37,7 @@ public class UndergroundRuin extends StructureFeature<NoneFeatureConfiguration> 
     }
 
     public GenerationStep.Decoration step() {
-        return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
+        return GenerationStep.Decoration.UNDERGROUND_DECORATION;
     }
 
     private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {

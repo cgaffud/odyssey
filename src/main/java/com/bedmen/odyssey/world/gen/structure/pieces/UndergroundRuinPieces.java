@@ -45,6 +45,7 @@ public class UndergroundRuinPieces {
         accessor.addPiece(new UndergroundRuinPiece(manager, structureLoc, blockPos, rotation));
     }
 
+    // TODO structure doesn't generate with conditions properly or at correct location. Recomment in at StructureGen
     public static class UndergroundRuinPiece extends TemplateStructurePiece {
         public UndergroundRuinPiece(StructureManager structureManager, ResourceLocation resourceLocation, BlockPos blockPos, Rotation rotation) {
             super(OdysseyStructurePieceType.UNDERGROUND_RUIN, 0, structureManager, resourceLocation, resourceLocation.toString(), makeSettings(rotation), blockPos);
@@ -65,17 +66,19 @@ public class UndergroundRuinPieces {
             return (new StructurePlaceSettings()).setRotation(rotation).setMirror(Mirror.NONE);
         }
 
-//        public void postProcess(WorldGenLevel level, StructureFeatureManager manager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
-//            ResourceLocation resourceLocation = new ResourceLocation(this.templateName);
-//
-//            super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
-//            if (HOUSES.contains(resourceLocation)) {
-//                BlockPos newpos = getHousePosition(level, random, chunkPos, true);
-//                // I also tried setting pos to newpos, but that had little effect either
-//                if (newpos != null)
-//                    this.templatePosition = newpos;
-//            }
-//        }
+        public void postProcess(WorldGenLevel level, StructureFeatureManager manager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
+            ResourceLocation resourceLocation = new ResourceLocation(this.templateName);
+            if (HOUSES.contains(resourceLocation)) {
+                BlockPos newpos = getHousePosition(level, random, chunkPos, true);
+                // I also tried setting pos to newpos, but that had little effect either
+                if (newpos != null) {
+                    this.templatePosition = newpos;
+                    pos = newpos;
+                }
+            }
+
+            super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
+        }
 
         // IGLOO CODE WITH MAPPED VARIABLES
             //            ResourceLocation resourcelocation = new ResourceLocation(this.templateName);
