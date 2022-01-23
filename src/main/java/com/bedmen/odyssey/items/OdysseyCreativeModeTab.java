@@ -12,6 +12,7 @@ public class OdysseyCreativeModeTab extends CreativeModeTab {
     public static final CreativeModeTab BUILDING_BLOCKS = new OdysseyCreativeModeTab("oddc_building_blocks", ItemRegistry.SILVER_ORE::get);
     public static final CreativeModeTab WOOD = new OdysseyCreativeModeTab("oddc_wood", ItemRegistry.PALM_LOG::get);
     public static final CreativeModeTab MATERIALS = new OdysseyCreativeModeTab("oddc_materials", ItemRegistry.RAW_SILVER::get);
+    public static final CreativeModeTab FOOD = new OdysseyCreativeModeTab("oddc_food", ItemRegistry.COCONUT_COOKIE::get);
     public static final CreativeModeTab TOOLS = new OdysseyCreativeModeTab("oddc_tools", ItemRegistry.STERLING_SILVER_AXE::get);
     public static final CreativeModeTab MELEE = new OdysseyCreativeModeTab("oddc_melee", ItemRegistry.COPPER_BATTLE_AXE::get);
     public static final CreativeModeTab RANGED = new OdysseyCreativeModeTab("oddc_ranged", ItemRegistry.BONE_LONG_BOW::get);
