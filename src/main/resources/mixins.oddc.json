@@ -10,16 +10,11 @@
     "MixinCombatRules",
     "MixinEnchantment",
     "MixinEnchantmentHelper",
-    "MixinExplosion",
-    "MixinLivingEntity",
-    "MixinMob",
-    "MixinPlayer",
-    "MixinPowderSnowBlock"
+    "MixinExplosion"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "MixinLocalPlayer"
   ]
 }

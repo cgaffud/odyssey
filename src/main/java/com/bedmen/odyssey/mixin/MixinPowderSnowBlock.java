@@ -10,6 +10,9 @@ import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.PowderSnowBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PowderSnowBlock.class)
 public abstract class MixinPowderSnowBlock extends Block implements BucketPickup {
@@ -19,6 +22,7 @@ public abstract class MixinPowderSnowBlock extends Block implements BucketPickup
 
     /**
      * @author JemBren
+     * @reason To swap on Leather Boots with item tag powder_snow_walkables
      */
     @Overwrite
     public static boolean canEntityWalkOnPowderSnow(Entity entity) {

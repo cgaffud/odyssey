@@ -15,6 +15,7 @@ import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -95,8 +96,13 @@ public class SonicBoom extends AbstractHurtingProjectile {
         }
     }
 
-    protected boolean canHitEntity(Entity p_230298_1_) {
-        return super.canHitEntity(p_230298_1_) && !p_230298_1_.noPhysics;
+    protected boolean canHitEntity(Entity entity) {
+        if (!entity.isSpectator() && entity.isAlive() && entity.isPickable()) {
+            Entity owner = this.getOwner();
+            return owner == null || this.leftOwner || !entity.isPassengerOfSameVehicle(entity);
+        } else {
+            return false;
+        }
     }
 
     public boolean isOnFire() {

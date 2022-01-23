@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.enchantment.IUpgradedEnchantment;
+import com.bedmen.odyssey.enchantment.TieredEnchantment;
 import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -10,6 +10,9 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Enchantment.class)
 public abstract class MixinEnchantment extends net.minecraftforge.registries.ForgeRegistryEntry<Enchantment> {
@@ -21,26 +24,24 @@ public abstract class MixinEnchantment extends net.minecraftforge.registries.For
     @Shadow
     public String getDescriptionId() {return null;}
 
-    public Component getFullname(int p_200305_1_) {
-        MutableComponent mutableComponent;
-        int i = this.isCurse() ? 2 : 1;
-        i -= (this instanceof IUpgradedEnchantment) ? 1 : 0;
-        switch(i) {
-            case 0:
-                mutableComponent = new TranslatableComponent(this.getDescriptionId()).withStyle(OdysseyChatFormatting.ORANGE);
-                break;
-            case 2:
-                mutableComponent = new TextComponent("aaaaaaaaaa").withStyle(ChatFormatting.OBFUSCATED).withStyle((ChatFormatting.DARK_RED));
-                break;
-            default:
-                mutableComponent = new TranslatableComponent(this.getDescriptionId()).withStyle(ChatFormatting.GRAY);
+    @Inject(method = "getFullname", at = @At("HEAD"), cancellable = true)
+    protected void onGetFullname(int level, CallbackInfoReturnable<Component> cir) {
+        if(this.isCurse()){
+            MutableComponent mutableComponent = new TextComponent("aaaaaaaaaa").withStyle(ChatFormatting.OBFUSCATED).withStyle((ChatFormatting.DARK_RED));
+            cir.setReturnValue(mutableComponent);
+            cir.cancel();
         }
-
-        if ((p_200305_1_ != 1 || this.getMaxLevel() != 1) && i < 2) {
-            mutableComponent.append(" ").append(new TranslatableComponent("enchantment.level." + p_200305_1_));
+        else if(getEnchantment() instanceof TieredEnchantment){
+            MutableComponent mutableComponent = new TranslatableComponent(this.getDescriptionId()).withStyle(OdysseyChatFormatting.ORANGE);
+            if (level != 1 || this.getMaxLevel() != 1) {
+                mutableComponent.append(" ").append(new TranslatableComponent("enchantment.level." + level));
+            }
+            cir.setReturnValue(mutableComponent);
+            cir.cancel();
         }
-
-        return mutableComponent;
     }
 
+    private Enchantment getEnchantment(){
+        return (Enchantment)(Object)this;
+    }
 }
