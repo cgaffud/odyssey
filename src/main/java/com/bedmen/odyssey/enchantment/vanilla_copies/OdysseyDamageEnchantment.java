@@ -12,8 +12,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 public class OdysseyDamageEnchantment extends Enchantment {
     public final DamageType damageType;
 
-    public OdysseyDamageEnchantment(Rarity p_i46734_1_, DamageType damageType, EquipmentSlot... p_i46734_3_) {
-        super(p_i46734_1_, OdysseyEnchantmentCategory.MAIN_MELEE, p_i46734_3_);
+    public OdysseyDamageEnchantment(Rarity rarity, DamageType damageType, EquipmentSlot... equipmentSlots) {
+        super(rarity, OdysseyEnchantmentCategory.MAIN_MELEE, equipmentSlots);
         this.damageType = damageType;
     }
 

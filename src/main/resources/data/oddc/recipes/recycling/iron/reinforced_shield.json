@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:reinforced_shield"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 54
+    }
+  ]
+}

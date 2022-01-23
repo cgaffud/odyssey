@@ -37,6 +37,10 @@
                 },
                 {
                   "function": "minecraft:explosion_decay"
+                },
+                {
+                  "function": "oddc:chance_decay",
+                  "probability": 0.5
                 }
               ],
               "name": "oddc:greatroot"

@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:greatroot_long_bow"
+  },
+  "metalCounts": [
+    {
+      "metal": "silver",
+      "count": 27
+    }
+  ]
+}

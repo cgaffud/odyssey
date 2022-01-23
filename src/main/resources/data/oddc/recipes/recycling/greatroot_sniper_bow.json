@@ -1,0 +1,16 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:greatroot_sniper_bow"
+  },
+  "metalCounts": [
+    {
+      "metal": "copper",
+      "count": 18
+    },
+    {
+      "metal": "silver",
+      "count": 18
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class CamoCreeper extends OdysseyCreeper {
     private Biome biome;
+
     public CamoCreeper(EntityType<? extends OdysseyCreeper> p_i50213_1_, Level p_i50213_2_) {
         super(p_i50213_1_, p_i50213_2_);
     }

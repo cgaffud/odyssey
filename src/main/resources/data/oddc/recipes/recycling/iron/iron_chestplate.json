@@ -1,8 +1,13 @@
 {
   "type": "oddc:recycling",
-  "ingredient": {
-    "item": "minecraft:iron_chestplate"
-  },
+  "ingredient": [
+    {
+      "item": "minecraft:iron_chestplate"
+    },
+    {
+      "item": "oddc:reinforced_chestplate"
+    }
+  ],
   "metalCounts": [
     {
       "metal": "iron",

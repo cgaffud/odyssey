@@ -2,9 +2,11 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
+import com.bedmen.odyssey.block.TriplePlantBlock;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.*;
 import com.bedmen.odyssey.client.model.*;
+import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
@@ -13,6 +15,7 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.equipment.SniperBowItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.BlockRegistry;
@@ -20,21 +23,29 @@ import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
+import net.minecraft.client.renderer.entity.SkeletonRenderer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.FOVModifierEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -42,12 +53,17 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientEvents {
 
     @SubscribeEvent
-    public static void doClientStuff(final FMLClientSetupEvent event)
+    public static void onFMLClientSetupEvent(final FMLClientSetupEvent event)
     {
+
         event.enqueueWork(() -> {
             //For hollow coconut vision overlay
             OverlayRegistry.registerOverlayTop("OdysseyHelmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
@@ -102,7 +118,7 @@ public class ClientEvents {
             //Mob Renderings
 //        EntityRenderers.register(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
-            EntityRenderers.register(EntityTypeRegistry.BABY_SKELETON.get(), BabySkeletonRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.SKELETON.get(), OdysseySkeletonRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
@@ -128,12 +144,15 @@ public class ClientEvents {
 
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.gui = new OdysseyIngameGui(minecraft);
+            OdysseyItemInHandRenderer odysseyItemInHandRenderer = new OdysseyItemInHandRenderer(minecraft);
+            minecraft.itemInHandRenderer = odysseyItemInHandRenderer;
+            minecraft.gameRenderer.itemInHandRenderer = odysseyItemInHandRenderer;
 //        minecraft.itemRenderer = new OdysseyItemRenderer(minecraft.getTextureManager(), minecraft.getModelManager(), minecraft.getItemColors());
         });
     }
 
     @SubscribeEvent
-    public static void onTextureStitch(final TextureStitchEvent.Pre event){
+    public static void onTextureStitchEvent$Pre(final TextureStitchEvent.Pre event){
         //Shield Textures
         for(OdysseyShieldItem.ShieldType shieldType : OdysseyShieldItem.ShieldType.values()){
             event.addSprite(OdysseyBlockEntityWithoutLevelRenderer.getShieldRenderMaterial(shieldType, false).texture());
@@ -165,17 +184,28 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onColorHandlerEvent(final ColorHandlerEvent.Block event) {
-        event.getBlockColors().register((p_228061_0_, p_228061_1_, p_228061_2_, p_228061_3_) -> {
-            return p_228061_1_ != null && p_228061_2_ != null ? BiomeColors.getAverageFoliageColor(p_228061_1_, p_228061_2_) : FoliageColor.getDefaultColor();
-        }, BlockRegistry.PALM_LEAVES.get(), BlockRegistry.PALM_CORNER_LEAVES.get());
+    public static void onColorHandlerEvent$Block(final ColorHandlerEvent.Block event) {
+        BlockColors blockColors = event.getBlockColors();
+        blockColors.register(
+                (blockState, blockAndTintGetter, blockPos, i) ->
+                        blockAndTintGetter != null && blockPos != null ? BiomeColors.getAverageFoliageColor(blockAndTintGetter, blockPos) : FoliageColor.getDefaultColor(),
+                BlockRegistry.PALM_LEAVES.get(),
+                BlockRegistry.PALM_CORNER_LEAVES.get());
+        blockColors.register((blockState, blockAndTintGetter, blockPos, i) ->
+                blockAndTintGetter != null && blockPos != null ? BiomeColors.getAverageGrassColor(blockAndTintGetter,
+                        blockState.getValue(TriplePlantBlock.THIRD) == TriplePlantBlock.TripleBlockThird.UPPER ? blockPos.below(2) : (blockState.getValue(TriplePlantBlock.THIRD) == TriplePlantBlock.TripleBlockThird.MIDDLE ? blockPos.below() : blockPos)) : -1,
+                BlockRegistry.PRAIRIE_GRASS.get());
+        blockColors.addColoringState(TriplePlantBlock.THIRD, BlockRegistry.PRAIRIE_GRASS.get());
     }
 
     @SubscribeEvent
-    public static void onColorHandlerEvent(final ColorHandlerEvent.Item event) {
-        event.getItemColors().register((p_210235_1_, p_210235_2_) -> {
-            BlockState blockstate = ((BlockItem)(p_210235_1_).getItem()).getBlock().defaultBlockState();
-            return event.getBlockColors().getColor(blockstate, null, null, p_210235_2_);
+    public static void onColorHandlerEvent$Item(final ColorHandlerEvent.Item event) {
+        event.getItemColors().register((itemStack, i) -> {
+            BlockState blockstate = ((BlockItem)(itemStack).getItem()).getBlock().defaultBlockState();
+            return event.getBlockColors().getColor(blockstate, null, null, i);
         }, BlockRegistry.PALM_LEAVES.get(), BlockRegistry.PALM_CORNER_LEAVES.get());
+        event.getItemColors().register((itemStack, i) ->
+                GrassColor.get(0.5D, 1.0D),
+                BlockRegistry.PRAIRIE_GRASS.get());
     }
 }

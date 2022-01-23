@@ -44,7 +44,7 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
     public void postProcess(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos origin) {
         if(chunkPos.getMinBlockX() > origin.getX() || chunkPos.getMaxBlockX() < origin.getX() || chunkPos.getMinBlockZ() > origin.getZ() || chunkPos.getMaxBlockZ() < origin.getZ())
             return;
-        double r1 = this.r0 * 0.9d;
+        double r1 = this.r0 * 0.85d;
         double r2 = this.r0 * 0.5d;
         origin = origin.above((int) Math.round(this.r0));
         int max = Mth.floor(this.r0+1);
@@ -90,7 +90,7 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
         if (!this.spawnedWeavers) {
             //Weavers inside colony
             if (boundingBox.isInside(blockPos)) {
-                for(int i = 0; i < 6; i++){
+                for(int i = 0; i < 8; i++){
                     Weaver weaver = EntityTypeRegistry.WEAVER.get().create(serverLevelAccessor.getLevel());
                     if(weaver != null){
                         if(i == 0){

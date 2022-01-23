@@ -1,6 +1,7 @@
 {
   "replace": false,
   "entries": [
-    "oddc:no_loot_on_explosion"
+    "oddc:no_loot_on_explosion",
+    "oddc:double_hatchets"
   ]
 }

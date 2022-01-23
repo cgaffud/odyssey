@@ -1,8 +1,7 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.OdysseyDamageSource;
-import com.bedmen.odyssey.entity.monster.BabySkeleton;
+import com.bedmen.odyssey.entity.monster.BoomerangAttackMob;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -12,7 +11,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -29,8 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
@@ -122,12 +118,12 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         if(this.dealtDamage){
             if(!this.level.isClientSide){
                 AABB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
-                for(Entity entity : this.level.getEntities(this, box, this::isBabySkeletonOwner)) {
-                    BabySkeleton babySkeleton = (BabySkeleton)entity;
-                    if(babySkeleton.getMainHandItem().isEmpty()){
-                        babySkeleton.setItemInHand(InteractionHand.MAIN_HAND, this.thrownStack);
-                    } else if (babySkeleton.getOffhandItem().isEmpty()){
-                        babySkeleton.setItemInHand(InteractionHand.OFF_HAND, this.thrownStack);
+                for(Entity entity : this.level.getEntities(this, box, this::isBoomerangOwner)) {
+                    LivingEntity livingEntity = (LivingEntity)entity;
+                    if(livingEntity.getMainHandItem().isEmpty()){
+                        livingEntity.setItemInHand(InteractionHand.MAIN_HAND, this.thrownStack);
+                    } else if (livingEntity.getOffhandItem().isEmpty()){
+                        livingEntity.setItemInHand(InteractionHand.OFF_HAND, this.thrownStack);
                     }
                     this.discard();
                     break;
@@ -139,8 +135,8 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         }
     }
 
-    private boolean isBabySkeletonOwner(Entity entity){
-        return entity instanceof BabySkeleton && entity.getUUID() == this.getOwner().getUUID();
+    private boolean isBoomerangOwner(Entity entity){
+        return entity instanceof BoomerangAttackMob && entity instanceof LivingEntity && entity.getUUID() == this.getOwner().getUUID();
     }
 
     /**
@@ -255,7 +251,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     public enum BoomerangType{
         WOODEN(4.0d, 20, 500),
         BONE(5.0d, 20, 0),
-        BONERANG(5.0d, 10, 0),
+        BONERANG(7.0d, 10, 0),
         CLOVER_STONE(6.0d, 20, 0);
 //        COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
 

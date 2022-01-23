@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.entity.boss;
 
-import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -10,30 +10,35 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
 public abstract class MineralLeviathanSegment extends Boss implements IEntityAdditionalSpawnData {
     protected static final EntityDataAccessor<Float> DATA_SHELL_HEALTH_ID = SynchedEntityData.defineId(MineralLeviathanSegment.class, EntityDataSerializers.FLOAT);
     protected boolean initBody = false;
-    protected float damageReduction = 1.0f;
     protected ShellType shellType;
     protected static final float SILVER_FISH_CHANCE = 0.01f;
     private int silverFishSpawned;
@@ -52,7 +57,6 @@ public abstract class MineralLeviathanSegment extends Boss implements IEntityAdd
     }
 
     public void tick() {
-        this.damageReduction = this.difficultyDamageReductionMultiplier() * this.nearbyPlayerDamageReductionMultiplier();
         this.setNoGravity(true);
         this.noPhysics = true;
         super.tick();
@@ -141,28 +145,32 @@ public abstract class MineralLeviathanSegment extends Boss implements IEntityAdd
     public boolean hurt(DamageSource damageSource, float amount) {
         Entity entity = damageSource.getEntity();
         if(damageSource.isExplosion()){
-            return this.hurtWithShell(damageSource, amount);
+            return this.hurtWithShell(damageSource, amount, null);
         }
         else if(damageSource == DamageSource.OUT_OF_WORLD){
             return super.hurt(damageSource, amount*1000f);
         }
-        else if(entity instanceof LivingEntity){
-            Item item = ((LivingEntity) entity).getItemInHand(InteractionHand.MAIN_HAND).getItem();
-            if(item instanceof PickaxeItem){
-                int harvestLevel = ((PickaxeItem) item).getTier().getLevel();
-                if(this.shellType.getHarvestLevel() <= harvestLevel){
-                    return this.hurtWithShell(damageSource, amount);
+        else if(entity instanceof LivingEntity livingEntity){
+            ItemStack itemStack = livingEntity.getItemInHand(InteractionHand.MAIN_HAND);
+            Item item = itemStack.getItem();
+            if(item instanceof PickaxeItem pickaxeItem && this.shellType.canHarvest(itemStack)){
+                amount = amount * 0.5f + 1f;
+                if(this.getShellHealth() > 0.0f){
+                    itemStack.hurtAndBreak(1, livingEntity, (livingEntity1) -> {
+                        livingEntity1.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+                    });
                 }
+                return this.hurtWithShell(damageSource, amount, itemStack);
             }
         }
         return false;
     }
 
-    protected boolean hurtWithShell(DamageSource damageSource, float amount){
+    protected boolean hurtWithShell(DamageSource damageSource, float amount, @Nullable ItemStack itemStack){
         float shellHealth = this.getShellHealth();
         if(shellHealth > 0.0f){
             if(!this.level.isClientSide){
-                this.setShellHealth(shellHealth - amount * this.getDamageReduction());
+                this.setShellHealth(shellHealth - amount * this.damageReduction);
             }
             float newShellHealth = this.getShellHealth();
             if (newShellHealth != shellHealth && !this.isSilent()) {
@@ -171,10 +179,7 @@ public abstract class MineralLeviathanSegment extends Boss implements IEntityAdd
                 } else {
                     this.playSound(SoundEvents.IRON_GOLEM_DAMAGE, 1.0F, 1.0F);
                     if(!this.level.isClientSide){
-                        ItemEntity itementity = this.spawnAtLocation(this.shellType.getItem());
-                        if (itementity != null) {
-                            itementity.setExtendedLifetime();
-                        }
+                        this.shellType.spawnLoot((ServerLevel) this.level, damageSource, this, itemStack);
                     }
                 }
             }
@@ -188,26 +193,11 @@ public abstract class MineralLeviathanSegment extends Boss implements IEntityAdd
         return super.hurt(damageSource, amount);
     }
 
-    protected void dropCustomDeathLoot(DamageSource damageSource, int p_213333_2_, boolean p_213333_3_) {
-        super.dropCustomDeathLoot(damageSource, p_213333_2_, p_213333_3_);
-        if(this.hasShell()){
-            ItemEntity itementity = this.spawnAtLocation(this.shellType.getItem());
-            if (itementity != null) {
-                itementity.setExtendedLifetime();
-            }
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean b) {
+        super.dropCustomDeathLoot(damageSource, looting, b);
+        if(this.hasShell() && !this.level.isClientSide){
+            this.shellType.spawnLoot((ServerLevel)this.level, damageSource, this, ItemStack.EMPTY);
         }
-    }
-
-    public Difficulty getDifficulty(){
-        return this.level.getDifficulty();
-    }
-
-    public float getDamageReduction(){
-        return this.damageReduction;
-    }
-
-    protected boolean isAlwaysExperienceDropper() {
-        return true;
     }
 
     @Override
@@ -226,28 +216,26 @@ public abstract class MineralLeviathanSegment extends Boss implements IEntityAdd
     }
 
     public enum ShellType{
-        RUBY(3, ItemRegistry.RUBY.get()),
-        COAL(0, Items.COAL),
-        COPPER(1, Items.RAW_COPPER),
-        IRON(1, Items.RAW_IRON),
-        LAPIS(1, Items.LAPIS_LAZULI),
-        GOLD(2, Items.RAW_GOLD),
-        SILVER(2, ItemRegistry.RAW_SILVER.get()),
-        EMERALD(2, Items.EMERALD),
-        REDSTONE(2, Items.REDSTONE);
+        RUBY(BlockRegistry.DEEPSLATE_RUBY_ORE::get, 0.25f),
+        COAL(() -> Blocks.DEEPSLATE_COAL_ORE, 0.1f),
+        COPPER(() -> Blocks.DEEPSLATE_COPPER_ORE, 0.15f),
+        IRON(() -> Blocks.DEEPSLATE_IRON_ORE, 0.15f),
+        LAPIS(() -> Blocks.DEEPSLATE_LAPIS_ORE, 0.15f),
+        GOLD(() -> Blocks.DEEPSLATE_GOLD_ORE, 0.2f),
+        SILVER(BlockRegistry.DEEPSLATE_SILVER_ORE::get, 0.2f),
+        EMERALD(() -> Blocks.DEEPSLATE_EMERALD_ORE, 0.2f),
+        REDSTONE(() -> Blocks.DEEPSLATE_REDSTONE_ORE, 0.2f);
 
-        private final int harvestLevel;
-        private final float percentageHealth;
-        private final Item item;
+        private final Lazy<Block> lazyBlock;
+        private final float maxHealth;
 
-        ShellType(int harvestLevel, Item item){
-            this.harvestLevel = harvestLevel;
-            this.percentageHealth = (float)harvestLevel * 0.05f + 0.1f;
-            this.item = item;
+        ShellType(Lazy<Block> lazyBlock, float healthPercentage){
+            this.lazyBlock = lazyBlock;
+            this.maxHealth = healthPercentage * (float) MineralLeviathanHead.BASE_HEALTH;
         }
 
         public float getShellMaxHealth(){
-            return this.percentageHealth * (float) MineralLeviathanHead.BASE_HEALTH;
+            return this.maxHealth;
         }
 
         public static ShellType getRandomShellType(Random random){
@@ -255,12 +243,23 @@ public abstract class MineralLeviathanSegment extends Boss implements IEntityAdd
             return values[random.nextInt(values.length-1)+1];
         }
 
-        public Item getItem(){
-            return this.item;
+        public void spawnLoot(ServerLevel serverLevel, DamageSource damageSource, Entity entity, @Nonnull ItemStack itemStack){
+            BlockState blockState = this.lazyBlock.get().defaultBlockState();
+            List<ItemStack> loot = blockState.getDrops(new LootContext.Builder(serverLevel)
+                    .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
+                    .withParameter(LootContextParams.THIS_ENTITY, entity)
+                    .withParameter(LootContextParams.BLOCK_STATE, blockState)
+                    .withParameter(LootContextParams.ORIGIN, entity.position())
+                    .withParameter(LootContextParams.TOOL, itemStack)
+                    .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, damageSource.getDirectEntity())
+                    .withOptionalParameter(LootContextParams.KILLER_ENTITY, damageSource.getEntity()));
+            for(ItemStack itemStack1 : loot){
+                entity.spawnAtLocation(itemStack1);
+            }
         }
 
-        public int getHarvestLevel(){
-            return this.harvestLevel;
+        public boolean canHarvest(ItemStack itemStack){
+            return itemStack.isCorrectToolForDrops(this.lazyBlock.get().defaultBlockState());
         }
     }
 

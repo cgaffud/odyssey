@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "A B",
+    "AA "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:iron_ingot"
+    },
+    "B": {
+      "item": "oddc:rusty_arm"
+    }
+  },
+  "result": {
+    "item": "oddc:rusty_sonic_fork"
+  }
+}

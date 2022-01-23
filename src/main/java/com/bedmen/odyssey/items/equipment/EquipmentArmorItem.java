@@ -22,12 +22,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EquipmentArmorItem extends ArmorItem implements IEquipment {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     protected final Set<SetBonusEnchSup> setBonusEnchSupSet = new HashSet<>();
     protected final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected final Map<Enchantment, Tuple<Integer, String>> setBonusMap = new HashMap<>();
+    protected Map<Enchantment, Integer> cachedSetBonusMap = null;
+
     protected static final List<EquipmentArmorItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
     public EquipmentArmorItem(OdysseyArmorMaterials armorMaterial, EquipmentSlot slotType, Properties properties, LevEnchSup... levEnchSups) {
@@ -70,6 +73,13 @@ public class EquipmentArmorItem extends ArmorItem implements IEquipment {
         if(tuple == null)
             return 0;
         return tuple.getA();
+    }
+
+    public Map<Enchantment, Integer> getSetBonusMap() {
+        if (this.cachedSetBonusMap == null) {
+            this.cachedSetBonusMap = this.setBonusMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, (entry) -> entry.getValue().getA()));
+        }
+        return this.cachedSetBonusMap;
     }
 
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)

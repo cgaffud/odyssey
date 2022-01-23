@@ -61,7 +61,7 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
                             if(blockpos$mutableblockpos.getY() >= 0){
                                 BlockState blockState = this.treasureChestMaterial.getBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
                                 worldgenlevel.setBlock(blockpos$mutableblockpos, blockState, 2);
-                                RandomizableContainerBlockEntity.setLootTable(worldgenlevel, random, blockpos$mutableblockpos, OdysseyLootTables.COPPER_TREASURE_CHEST);
+                                RandomizableContainerBlockEntity.setLootTable(worldgenlevel, random, blockpos$mutableblockpos, this.treasureChestMaterial.lootTable);
                                 return true;
                             }
                         }

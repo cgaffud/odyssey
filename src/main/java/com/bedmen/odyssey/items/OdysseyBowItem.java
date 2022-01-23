@@ -38,6 +38,10 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         this.chargeTime = chargeTime;
     }
 
+    public float getVelocity(){
+        return this.velocity;
+    }
+
     public void releaseUsing(ItemStack bow, Level level, LivingEntity livingEntity, int useTime) {
         if (livingEntity instanceof Player) {
             Player player = (Player)livingEntity;
@@ -116,6 +120,10 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                 }
             }
         }
+    }
+
+    public float getPowerForTime(int charge, ItemStack bow) {
+        return getPowerForTime(charge, bow, EnchantmentUtil.getSuperChargeMultiplier(bow), null);
     }
 
     public float getPowerForTime(int charge, ItemStack itemStack, float superCharge, Flag flag) {
