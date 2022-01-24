@@ -9,14 +9,6 @@ public class SuperChargeEnchantment extends Enchantment {
         super(p_i50016_1_, EnchantmentCategory.BOW, p_i50016_2_);
     }
 
-    public int getMinCost(int p_77321_1_) {
-        return 10 + (p_77321_1_ - 1) * 20;
-    }
-
-    public int getMaxCost(int p_223551_1_) {
-        return 50;
-    }
-
     public int getMaxLevel() {
         return 3;
     }
