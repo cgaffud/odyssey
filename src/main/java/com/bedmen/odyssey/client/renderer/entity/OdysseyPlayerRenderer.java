@@ -1,11 +1,13 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
+import com.bedmen.odyssey.client.renderer.entity.layer.OdysseyElytraLayer;
 import com.bedmen.odyssey.client.renderer.entity.layer.OdysseyPlayerItemInHandLayer;
 import com.bedmen.odyssey.client.renderer.entity.layer.QuiverLayer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -19,7 +21,6 @@ import net.minecraft.world.item.UseAnim;
 public class OdysseyPlayerRenderer extends PlayerRenderer {
     public OdysseyPlayerRenderer(EntityRendererProvider.Context context, boolean slim) {
         super(context, slim);
-        this.addLayer(new QuiverLayer<>(this, context.getModelSet()));
         RenderLayer playerItemInHandLayer = null;
         for(RenderLayer renderLayer : this.layers){
             if(renderLayer instanceof PlayerItemInHandLayer){
@@ -29,6 +30,8 @@ public class OdysseyPlayerRenderer extends PlayerRenderer {
         }
         this.layers.remove(playerItemInHandLayer);
         this.addLayer(new OdysseyPlayerItemInHandLayer<>(this));
+        this.addLayer(new QuiverLayer<>(this, context.getModelSet()));
+        this.addLayer(new OdysseyElytraLayer<>(this, context.getModelSet()));
     }
 
     public void setModelProperties(AbstractClientPlayer p_117819_) {

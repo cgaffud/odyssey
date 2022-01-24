@@ -1,0 +1,16 @@
+{
+  "type": "oddc:stitching",
+  "ingredient1":
+  {
+    "item": "oddc:chicken_chestplate"
+  },
+  "ingredient2":
+  {
+    "item": "oddc:glider_chestplate"
+  },
+  "fiber":
+  {
+    "item": "oddc:silver_fiber"
+  },
+  "result": "oddc:zephyr_chestplate"
+}

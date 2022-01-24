@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
@@ -11,10 +12,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity extends Entity {
+public abstract class MixinLivingEntity extends Entity implements IOdysseyLivingEntity {
+    private int glidingTicks = 0;
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -22,16 +25,28 @@ public abstract class MixinLivingEntity extends Entity {
     @Shadow
     public boolean hasEffect(MobEffect p_21024_) {return false;}
 
-    public void setAirSupply(int amount) {
-        super.setAirSupply(Integer.max(-20, amount));
+//    public void setAirSupply(int amount) {
+//        super.setAirSupply(Integer.max(-20, amount));
+//    }
+
+//    @Inject(method = "increaseAirSupply", at = @At(value = "HEAD"), cancellable = true)
+//    protected void increaseAirSupply(int currentAirSupply, CallbackInfoReturnable<Integer> cir) {
+//        if(this.hasEffect(EffectRegistry.DROWNING.get())){
+//            cir.setReturnValue(currentAirSupply);
+//            cir.cancel();
+//        }
+//    }
+
+    public void incrementGlidingTicks(){
+        this.glidingTicks++;
     }
 
-    @Inject(method = "increaseAirSupply", at = @At(value = "HEAD"), cancellable = true)
-    protected void increaseAirSupply(int currentAirSupply, CallbackInfoReturnable<Integer> cir) {
-        if(this.hasEffect(EffectRegistry.DROWNING.get())){
-            cir.setReturnValue(currentAirSupply);
-            cir.cancel();
-        }
+    public void resetGlidingTicks(){
+        this.glidingTicks = 0;
+    }
+
+    public int getGlidingTicks(){
+        return this.glidingTicks;
     }
 
 //    public void baseTick() {

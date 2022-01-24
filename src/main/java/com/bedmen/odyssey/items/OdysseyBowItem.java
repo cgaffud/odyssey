@@ -169,8 +169,8 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                 return livingEntity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - livingEntity.getUseItemRemainingTicks()) / (float)(this.getChargeTime(itemStack));
             }
         });
-        ItemProperties.register(this, new ResourceLocation("pulling"), (p_174630_, p_174631_, p_174632_, p_174633_) -> {
-            return p_174632_ != null && p_174632_.isUsingItem() && p_174632_.getUseItem() == p_174630_ ? 1.0F : 0.0F;
+        ItemProperties.register(this, new ResourceLocation("pulling"), (itemStack, clientLevel, livingEntity, i) -> {
+            return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == itemStack ? 1.0F : 0.0F;
         });
     }
 

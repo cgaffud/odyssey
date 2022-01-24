@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.animal.OdysseyPolarBear;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
@@ -42,6 +43,11 @@ public class EntityEvents {
     @SubscribeEvent
     public static void onLivingUpdateEvent(final LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
+        //For Gliding Armor
+        if(livingEntity.isOnGround() && livingEntity instanceof IOdysseyLivingEntity odysseyLivingEntity){
+            odysseyLivingEntity.resetGlidingTicks();
+        }
+
         if (!livingEntity.level.isClientSide && livingEntity.isAlive()) {
             int bleedLvl = EnchantmentUtil.getBleeding(livingEntity);
             int heavyLvl = EnchantmentUtil.getHeavy(livingEntity);

@@ -24,22 +24,19 @@ public class OdysseyProtectionEnchantment extends Enchantment {
     /**
      * Calculates the damage protection of the enchantment based on level and damage source passed.
      */
-    public int getDamageProtection(int pLevel, DamageSource pSource) {
-        if (pSource.isBypassInvul()) {
-            return 0;
-        } else if (this.type == OdysseyProtectionEnchantment.Type.ALL) {
-            return pLevel;
-        } else if (this.type == OdysseyProtectionEnchantment.Type.FIRE && pSource.isFire()) {
-            return pLevel * 5;
-        } else if (this.type == OdysseyProtectionEnchantment.Type.ICE && pSource == DamageSource.FREEZE) {
-            return pLevel * 5;
-        } else if (this.type == OdysseyProtectionEnchantment.Type.FALL && pSource == DamageSource.FALL) {
-            return pLevel * 5;
-        } else if (this.type == OdysseyProtectionEnchantment.Type.EXPLOSION && pSource.isExplosion()) {
-            return pLevel * 5;
-        } else {
+    public int getDamageProtection(int enchantmentLevel, DamageSource damageSource) {
+        if (damageSource.isBypassInvul()) {
             return 0;
         }
+        return switch (this.type) {
+            case ALL -> enchantmentLevel;
+            case FIRE -> damageSource.isFire() ? enchantmentLevel * 5 : 0;
+            case ICE -> damageSource == DamageSource.FREEZE ? enchantmentLevel * 5 : 0;
+            case FALL -> damageSource == DamageSource.FALL ? enchantmentLevel * 5 : 0;
+            case CRASH -> damageSource == DamageSource.FLY_INTO_WALL ? enchantmentLevel * 5 : 0;
+            case KINETIC -> damageSource == DamageSource.FLY_INTO_WALL || damageSource == DamageSource.FALL ? enchantmentLevel * 5 : 0;
+            case EXPLOSION -> damageSource.isExplosion() ? enchantmentLevel * 5 : 0;
+        };
     }
 
     /**
@@ -54,6 +51,8 @@ public class OdysseyProtectionEnchantment extends Enchantment {
         FIRE,
         ICE,
         FALL,
+        CRASH,
+        KINETIC,
         EXPLOSION,
     }
 }

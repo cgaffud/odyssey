@@ -246,6 +246,14 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.TURTLING.get(), entity) > 0;
     }
 
+    public static int getGliding(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.GLIDING.get(), entity);
+    }
+
+    public static boolean hasGliding(LivingEntity entity) {
+        return getGliding(entity) > 0;
+    }
+
 //    public static boolean hasFireproof(LivingEntity entity) {
 //        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FIREPROOF.get(), entity) > 0;
 //    }
