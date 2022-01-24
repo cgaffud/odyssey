@@ -47,6 +47,7 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.FOVModifierEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -63,10 +64,20 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onFMLClientSetupEvent(final FMLClientSetupEvent event)
     {
-
         event.enqueueWork(() -> {
+            //For Build Testing
+//            File file = new File("C:\\Users\\18029\\Documents\\odyssey-1.18.1\\sample.txt");
+//            PrintStream stream = null;
+//            try {
+//                stream = new PrintStream(file);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            System.setOut(stream);
+//            System.out.println("From now on "+file.getAbsolutePath()+" will be your console");
+
             //For hollow coconut vision overlay
-            OverlayRegistry.registerOverlayTop("OdysseyHelmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HELMET_ELEMENT,"Odyssey Helmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
                 gui.setupOverlayRenderState(true, false);
                 if(gui instanceof OdysseyIngameGui odysseyIngameGui){
                     odysseyIngameGui.renderOdysseyHelmet(partialTicks, mStack);

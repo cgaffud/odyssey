@@ -4,6 +4,96 @@
     {
       "rolls": {
         "type": "minecraft:uniform",
+        "min": 0.0,
+        "max": 1.0
+      },
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "minecraft:iron_pickaxe"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "minecraft:iron_axe"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "minecraft:iron_shovel"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "minecraft:iron_hoe"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "minecraft:golden_pickaxe"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "minecraft:golden_axe"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "minecraft:golden_shovel"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "minecraft:golden_hoe"
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
         "min": 2.0,
         "max": 3.0
       },
@@ -29,6 +119,17 @@
               "tier": 1
             }
           ],
+          "name": "minecraft:crossbow"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
           "name": "oddc:bone_slug_bow"
         },
         {
@@ -41,17 +142,6 @@
             }
           ],
           "name": "oddc:bone_repeater"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "oddc:enchant_with_tier",
-              "tier": 1
-            }
-          ],
-          "name": "oddc:bone_slug_bow"
         },
         {
           "type": "minecraft:item",
@@ -172,6 +262,17 @@
               "tier": 1
             }
           ],
+          "name": "minecraft:golden_sword"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
           "name": "oddc:flint_sabre"
         },
         {
@@ -220,18 +321,17 @@
         },
         {
           "type": "minecraft:item",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "oddc:enchant_with_tier",
-              "tier": 1
-            }
-          ],
-          "name": "oddc:rusty_sonic_fork"
+          "weight": 2,
+          "name": "oddc:rusty_arm"
         },
         {
           "type": "minecraft:item",
           "weight": 1,
+          "name": "oddc:weaver_fang"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
           "functions": [
             {
               "function": "oddc:enchant_with_tier",
@@ -242,7 +342,7 @@
         },
         {
           "type": "minecraft:item",
-          "weight": 1,
+          "weight": 2,
           "functions": [
             {
               "function": "oddc:enchant_with_tier",
@@ -253,7 +353,7 @@
         },
         {
           "type": "minecraft:item",
-          "weight": 1,
+          "weight": 2,
           "functions": [
             {
               "function": "oddc:enchant_with_tier",
@@ -264,7 +364,7 @@
         },
         {
           "type": "minecraft:item",
-          "weight": 1,
+          "weight": 2,
           "functions": [
             {
               "function": "oddc:enchant_with_tier",
@@ -272,44 +372,17 @@
             }
           ],
           "name": "oddc:swift_sabre"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "oddc:enchant_with_tier",
-              "tier": 1
-            }
-          ],
-          "name": "oddc:weaver_fang"
         }
       ]
     },
     {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 3.0,
-        "max": 6.0
+        "min": 4.0,
+        "max": 5.0
       },
       "bonus_rolls": 0.0,
       "entries": [
-        {
-          "type": "minecraft:item",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 20.0
-              },
-              "add": false
-            }
-          ],
-          "name": "oddc:copper_nugget"
-        },
         {
           "type": "minecraft:item",
           "weight": 10,
@@ -357,22 +430,6 @@
             }
           ],
           "name": "oddc:silver_nugget"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 3.0
-              },
-              "add": false
-            }
-          ],
-          "name": "minecraft:raw_copper"
         },
         {
           "type": "minecraft:item",
@@ -484,22 +541,6 @@
               "add": false
             }
           ],
-          "name": "oddc:copper_fiber"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 5,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 2.0
-              },
-              "add": false
-            }
-          ],
           "name": "oddc:silver_fiber"
         },
         {
@@ -581,6 +622,61 @@
             }
           ],
           "name": "minecraft:gunpowder"
+        }
+      ]
+    },
+    {
+      "rolls": {
+      "type": "minecraft:uniform",
+      "min": 0.0,
+      "max": 2.0
+    },
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 0.0,
+                "max": 2.0
+              },
+              "add": false
+            }
+          ],
+          "name": "minecraft:beetroot_seeds"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 0.0,
+                "max": 2.0
+              },
+              "add": false
+            }
+          ],
+          "name": "minecraft:carrot"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 0.0,
+                "max": 2.0
+              },
+              "add": false
+            }
+          ],
+          "name": "minecraft:potato"
         }
       ]
     }

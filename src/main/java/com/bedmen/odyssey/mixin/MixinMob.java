@@ -19,6 +19,7 @@ public abstract class MixinMob extends LivingEntity {
         super(entityType, level);
     }
 
+    //Todo Shield
     private void maybeDisableShield(Player player, ItemStack offensiveStack, ItemStack defensiveStack) {
         if (!offensiveStack.isEmpty() && !defensiveStack.isEmpty() && offensiveStack.getItem() instanceof AxeItem && defensiveStack.is(OdysseyItemTags.SHIELDS)) {
             float f = 0.25F + (float) EnchantmentHelper.getBlockEfficiency(getMob()) * 0.05F;

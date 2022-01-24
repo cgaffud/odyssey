@@ -75,7 +75,7 @@ public abstract class Boss extends Monster {
         return false;
     }
 
-    protected int decreaseAirSupply(int pAir) {
+    public int decreaseAirSupply(int pAir) {
         return pAir;
     }
 

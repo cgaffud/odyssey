@@ -3,6 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.animal.OdysseyPolarBear;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -23,14 +24,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfig;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -120,7 +120,7 @@ public class EntityEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingSpawnEvent$CheckSpawn(final LivingSpawnEvent.CheckSpawn event){
+    public static void onLivingSpawnEvent$CheckSpawn(final LivingSpawnEvent.SpecialSpawn event){
         Entity entity = event.getEntity();
 
         if(entity instanceof Zombie zombie){
@@ -131,7 +131,8 @@ public class EntityEvents {
 
         else if(entity instanceof Skeleton && entity.getType() == EntityType.SKELETON){
             EntityTypeRegistry.SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-            event.setResult(Event.Result.DENY);
+            event.setCanceled(true);
+            entity.discard();
         }
 
         else if(entity instanceof Creeper creeper && entity.getType() == EntityType.CREEPER){
@@ -139,19 +140,22 @@ public class EntityEvents {
 
             if(isCamo(random, entity.level.getDifficulty())){
                 EntityTypeRegistry.CAMO_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-                event.setResult(Event.Result.DENY);
+                event.setCanceled(true);
+                entity.discard();
             }
 
             else if(isBaby(entity)){
                 EntityTypeRegistry.BABY_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-                event.setResult(Event.Result.DENY);
+                event.setCanceled(true);
+                entity.discard();
             }
         }
 
         else if(entity instanceof PolarBear polarBear && entity.getType() == EntityType.POLAR_BEAR){
             OdysseyPolarBear odysseyPolarBear = (OdysseyPolarBear) EntityTypeRegistry.POLAR_BEAR.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
             odysseyPolarBear.setAge(polarBear.getAge());
-            event.setResult(Event.Result.DENY);
+            event.setCanceled(true);
+            entity.discard();
         }
     }
 
@@ -166,6 +170,15 @@ public class EntityEvents {
         }
     }
 
+    @SubscribeEvent
+    public static void onShieldBlockEvent(final ShieldBlockEvent event){
+        LivingEntity livingEntity = event.getEntityLiving();
+        ItemStack shield = livingEntity.getUseItem();
+        if(shield.getItem() instanceof OdysseyShieldItem odysseyShieldItem){
+            event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty()));
+        }
+    }
+
     public static boolean isBaby(Entity entity){
         return inPrairieBiome(entity) || entity.level.random.nextFloat() <  ForgeConfig.SERVER.zombieBabyChance.get();
     }
@@ -174,12 +187,13 @@ public class EntityEvents {
         return entity.level.getBiome(entity.blockPosition()).getRegistryName().equals(BiomeRegistry.PRAIRIE.get().getRegistryName());
     }
 
+    public static final Map<Difficulty, Float> DIFFICULTY_MAP = Map.of(
+            Difficulty.HARD, 1f,
+            Difficulty.NORMAL, 0.5f,
+            Difficulty.EASY, 0.25f,
+            Difficulty.PEACEFUL, 0.0f);
+
     public static boolean isCamo(Random random, Difficulty difficulty){
-        float chance = switch (difficulty) {
-            case HARD -> 1f;
-            case NORMAL -> 0.5f;
-            default -> 0.25f;
-        };
-        return random.nextFloat() < chance;
+        return random.nextFloat() < DIFFICULTY_MAP.get(difficulty);
     }
 }
