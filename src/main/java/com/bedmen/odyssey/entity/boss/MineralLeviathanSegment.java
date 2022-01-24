@@ -18,7 +18,6 @@ import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,9 +29,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
@@ -166,13 +162,16 @@ public abstract class MineralLeviathanSegment extends Boss implements IEntityAdd
         return false;
     }
 
-    protected boolean hurtWithShell(DamageSource damageSource, float amount, @Nullable ItemStack itemStack){
+    protected boolean hurtWithShell(DamageSource damageSource, float amount, ItemStack itemStack){
         float shellHealth = this.getShellHealth();
         if(shellHealth > 0.0f){
-            if(!this.level.isClientSide){
-                this.setShellHealth(shellHealth - amount * this.damageReduction);
+            if(this instanceof MineralLeviathanHead && damageSource.isExplosion()){
+                return false;
             }
-            float newShellHealth = this.getShellHealth();
+            float newShellHealth = shellHealth - amount * this.damageReduction;
+            if(!this.level.isClientSide){
+                this.setShellHealth(newShellHealth);
+            }
             if (newShellHealth != shellHealth && !this.isSilent()) {
                 if(newShellHealth > 0f){
                     this.playSound(SoundEvents.STONE_BREAK, 1.0F, 1.0F);
@@ -243,14 +242,14 @@ public abstract class MineralLeviathanSegment extends Boss implements IEntityAdd
             return values[random.nextInt(values.length-1)+1];
         }
 
-        public void spawnLoot(ServerLevel serverLevel, DamageSource damageSource, Entity entity, @Nonnull ItemStack itemStack){
+        public void spawnLoot(ServerLevel serverLevel, DamageSource damageSource, Entity entity, ItemStack itemStack){
             BlockState blockState = this.lazyBlock.get().defaultBlockState();
             List<ItemStack> loot = blockState.getDrops(new LootContext.Builder(serverLevel)
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
                     .withParameter(LootContextParams.THIS_ENTITY, entity)
                     .withParameter(LootContextParams.BLOCK_STATE, blockState)
                     .withParameter(LootContextParams.ORIGIN, entity.position())
-                    .withParameter(LootContextParams.TOOL, itemStack)
+                    .withParameter(LootContextParams.TOOL, itemStack == null ? ItemStack.EMPTY : itemStack)
                     .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, damageSource.getDirectEntity())
                     .withOptionalParameter(LootContextParams.KILLER_ENTITY, damageSource.getEntity()));
             for(ItemStack itemStack1 : loot){

@@ -136,6 +136,9 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     }
 
     private boolean isBoomerangOwner(Entity entity){
+        if(this.getOwner() == null){
+            return false;
+        }
         return entity instanceof BoomerangAttackMob && entity instanceof LivingEntity && entity.getUUID() == this.getOwner().getUUID();
     }
 

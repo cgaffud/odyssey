@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "oddc:item/parka_boots"
+    "layer0": "oddc:item/parka_boots",
+    "layer1": "oddc:item/parka_boots_overlay"
   }
 }

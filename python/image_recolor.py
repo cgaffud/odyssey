@@ -164,21 +164,13 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-pieces = ["boots", "leggings", "chestplate", "helmet"]
-open_path1 = r"C:\Users\18029\Documents\1.18\assets\minecraft\textures\item\iron_"
-save_path = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\item\fur_"
-D = {}
-D[gray_color(25)] = 0x676867
-D[gray_color(45)] = 0x8a8d8b
-D[gray_color(107)] = 0xafafa9
-D[gray_color(150)] = 0xc4c4be
-D[gray_color(198)] = 0xeaead8
-D[gray_color(216)] = 0xf4f4e4
-D[gray_color(255)] = 0xf4f4e4
+pieces = ["1","2"]
+open_path1 = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\models\armor\parka_layer_"
+save_path = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\models\armor\gray_parka_layer_"
 for piece in pieces:
     open_path2 = open_path1 + piece + ".png"
     save_path2 = save_path + piece + ".png"
     image1 = open_image(open_path2)
-    colormap_image(image1, D)
+    grayscale_image(image1)
     save_image(image1, save_path2)
 print("Done")

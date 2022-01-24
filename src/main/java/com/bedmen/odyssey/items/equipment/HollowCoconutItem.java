@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
 import javax.annotation.Nullable;
@@ -41,44 +42,81 @@ public class HollowCoconutItem extends EquipmentArmorItem {
         return !actionresulttype.consumesAction() && this.isEdible() ? this.use(p_195939_1_.getLevel(), p_195939_1_.getPlayer(), p_195939_1_.getHand()).getResult() : actionresulttype;
     }
 
-    public InteractionResult place(BlockPlaceContext p_195942_1_) {
-        if (!p_195942_1_.canPlace()) {
+    public InteractionResult place(BlockPlaceContext p_40577_) {
+        if (!p_40577_.canPlace()) {
             return InteractionResult.FAIL;
         } else {
-            BlockPlaceContext blockitemusecontext = this.updatePlacementContext(p_195942_1_);
-            if (blockitemusecontext == null) {
+            BlockPlaceContext blockplacecontext = this.updatePlacementContext(p_40577_);
+            if (blockplacecontext == null) {
                 return InteractionResult.FAIL;
             } else {
-                BlockState blockstate = this.getPlacementState(blockitemusecontext);
+                BlockState blockstate = this.getPlacementState(blockplacecontext);
                 if (blockstate == null) {
                     return InteractionResult.FAIL;
-                } else if (!this.placeBlock(blockitemusecontext, blockstate)) {
+                } else if (!this.placeBlock(blockplacecontext, blockstate)) {
                     return InteractionResult.FAIL;
                 } else {
-                    BlockPos blockpos = blockitemusecontext.getClickedPos();
-                    Level world = blockitemusecontext.getLevel();
-                    Player playerentity = blockitemusecontext.getPlayer();
-                    ItemStack itemstack = blockitemusecontext.getItemInHand();
-                    BlockState blockstate1 = world.getBlockState(blockpos);
-                    Block block = blockstate1.getBlock();
-                    if (block == blockstate.getBlock()) {
-                        blockstate1 = this.updateBlockStateFromTag(blockpos, world, itemstack, blockstate1);
-                        this.updateCustomBlockEntityTag(blockpos, world, playerentity, itemstack, blockstate1);
-                        block.setPlacedBy(world, blockpos, blockstate1, playerentity, itemstack);
-                        if (playerentity instanceof ServerPlayer) {
-                            CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer)playerentity, blockpos, itemstack);
+                    BlockPos blockpos = blockplacecontext.getClickedPos();
+                    Level level = blockplacecontext.getLevel();
+                    Player player = blockplacecontext.getPlayer();
+                    ItemStack itemstack = blockplacecontext.getItemInHand();
+                    BlockState blockstate1 = level.getBlockState(blockpos);
+                    if (blockstate1.is(blockstate.getBlock())) {
+                        blockstate1 = this.updateBlockStateFromTag(blockpos, level, itemstack, blockstate1);
+                        this.updateCustomBlockEntityTag(blockpos, level, player, itemstack, blockstate1);
+                        blockstate1.getBlock().setPlacedBy(level, blockpos, blockstate1, player, itemstack);
+                        if (player instanceof ServerPlayer) {
+                            CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer)player, blockpos, itemstack);
                         }
                     }
 
-                    SoundType soundtype = blockstate1.getSoundType(world, blockpos, p_195942_1_.getPlayer());
-                    world.playSound(playerentity, blockpos, this.getPlaceSound(blockstate1, world, blockpos, p_195942_1_.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                    if (playerentity == null || !playerentity.isCreative()) {
+                    level.gameEvent(player, GameEvent.BLOCK_PLACE, blockpos);
+                    SoundType soundtype = blockstate1.getSoundType(level, blockpos, p_40577_.getPlayer());
+                    level.playSound(player, blockpos, this.getPlaceSound(blockstate1, level, blockpos, p_40577_.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                    if (player == null || !player.getAbilities().instabuild) {
                         itemstack.shrink(1);
                     }
 
-                    return InteractionResult.sidedSuccess(world.isClientSide);
+                    return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
+        }
+    }
+
+    @Nullable
+    public static CompoundTag getBlockEntityData(ItemStack p_186337_) {
+        return p_186337_.getTagElement("BlockEntityTag");
+    }
+
+    protected boolean updateCustomBlockEntityTag(BlockPos p_40597_, Level p_40598_, @Nullable Player p_40599_, ItemStack p_40600_, BlockState p_40601_) {
+        return updateCustomBlockEntityTag(p_40598_, p_40599_, p_40597_, p_40600_);
+    }
+
+    public static boolean updateCustomBlockEntityTag(Level p_40583_, @Nullable Player p_40584_, BlockPos p_40585_, ItemStack p_40586_) {
+        MinecraftServer minecraftserver = p_40583_.getServer();
+        if (minecraftserver == null) {
+            return false;
+        } else {
+            CompoundTag compoundtag = getBlockEntityData(p_40586_);
+            if (compoundtag != null) {
+                BlockEntity blockentity = p_40583_.getBlockEntity(p_40585_);
+                if (blockentity != null) {
+                    if (!p_40583_.isClientSide && blockentity.onlyOpCanSetNbt() && (p_40584_ == null || !p_40584_.canUseGameMasterBlocks())) {
+                        return false;
+                    }
+
+                    CompoundTag compoundtag1 = blockentity.saveWithoutMetadata();
+                    CompoundTag compoundtag2 = compoundtag1.copy();
+                    compoundtag1.merge(compoundtag);
+                    if (!compoundtag1.equals(compoundtag2)) {
+                        blockentity.load(compoundtag1);
+                        blockentity.setChanged();
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 
@@ -97,34 +135,30 @@ public class HollowCoconutItem extends EquipmentArmorItem {
         return p_219984_1_;
     }
 
-    protected boolean updateCustomBlockEntityTag(BlockPos p_195943_1_, Level p_195943_2_, @Nullable Player p_195943_3_, ItemStack p_195943_4_, BlockState p_195943_5_) {
-        return updateCustomBlockEntityTag(p_195943_2_, p_195943_3_, p_195943_1_, p_195943_4_);
-    }
-
     @Nullable
     protected BlockState getPlacementState(BlockPlaceContext p_195945_1_) {
         BlockState blockstate = this.getBlock().getStateForPlacement(p_195945_1_);
         return blockstate != null && this.canPlace(p_195945_1_, blockstate) ? blockstate : null;
     }
 
-    private BlockState updateBlockStateFromTag(BlockPos p_219985_1_, Level p_219985_2_, ItemStack p_219985_3_, BlockState p_219985_4_) {
-        BlockState blockstate = p_219985_4_;
-        CompoundTag compoundnbt = p_219985_3_.getTag();
-        if (compoundnbt != null) {
-            CompoundTag compoundnbt1 = compoundnbt.getCompound("BlockStateTag");
-            StateDefinition<Block, BlockState> statecontainer = p_219985_4_.getBlock().getStateDefinition();
+    private BlockState updateBlockStateFromTag(BlockPos p_40603_, Level p_40604_, ItemStack p_40605_, BlockState p_40606_) {
+        BlockState blockstate = p_40606_;
+        CompoundTag compoundtag = p_40605_.getTag();
+        if (compoundtag != null) {
+            CompoundTag compoundtag1 = compoundtag.getCompound("BlockStateTag");
+            StateDefinition<Block, BlockState> statedefinition = p_40606_.getBlock().getStateDefinition();
 
-            for(String s : compoundnbt1.getAllKeys()) {
-                Property<?> property = statecontainer.getProperty(s);
+            for(String s : compoundtag1.getAllKeys()) {
+                Property<?> property = statedefinition.getProperty(s);
                 if (property != null) {
-                    String s1 = compoundnbt1.get(s).getAsString();
+                    String s1 = compoundtag1.get(s).getAsString();
                     blockstate = updateState(blockstate, property, s1);
                 }
             }
         }
 
-        if (blockstate != p_219985_4_) {
-            p_219985_2_.setBlock(p_219985_1_, blockstate, 2);
+        if (blockstate != p_40606_) {
+            p_40604_.setBlock(p_40603_, blockstate, 2);
         }
 
         return blockstate;
@@ -148,37 +182,6 @@ public class HollowCoconutItem extends EquipmentArmorItem {
 
     protected boolean placeBlock(BlockPlaceContext p_195941_1_, BlockState p_195941_2_) {
         return p_195941_1_.getLevel().setBlock(p_195941_1_.getClickedPos(), p_195941_2_, 11);
-    }
-
-    public static boolean updateCustomBlockEntityTag(Level p_179224_0_, @Nullable Player p_179224_1_, BlockPos p_179224_2_, ItemStack p_179224_3_) {
-        MinecraftServer minecraftserver = p_179224_0_.getServer();
-        if (minecraftserver == null) {
-            return false;
-        } else {
-            CompoundTag compoundnbt = p_179224_3_.getTagElement("BlockEntityTag");
-            if (compoundnbt != null) {
-                BlockEntity blockEntity = p_179224_0_.getBlockEntity(p_179224_2_);
-                if (blockEntity != null) {
-                    if (!p_179224_0_.isClientSide && blockEntity.onlyOpCanSetNbt() && (p_179224_1_ == null || !p_179224_1_.canUseGameMasterBlocks())) {
-                        return false;
-                    }
-
-                    CompoundTag compoundnbt1 = blockEntity.save(new CompoundTag());
-                    CompoundTag compoundnbt2 = compoundnbt1.copy();
-                    compoundnbt1.merge(compoundnbt);
-                    compoundnbt1.putInt("x", p_179224_2_.getX());
-                    compoundnbt1.putInt("y", p_179224_2_.getY());
-                    compoundnbt1.putInt("z", p_179224_2_.getZ());
-                    if (!compoundnbt1.equals(compoundnbt2)) {
-                        blockEntity.load(compoundnbt1);
-                        blockEntity.setChanged();
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
     }
 
     public String getDescriptionId() {

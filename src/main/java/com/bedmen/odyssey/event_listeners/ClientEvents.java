@@ -17,10 +17,7 @@ import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.equipment.SniperBowItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
-import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
-import com.bedmen.odyssey.registry.BlockRegistry;
-import com.bedmen.odyssey.registry.ContainerRegistry;
-import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.*;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
@@ -34,7 +31,9 @@ import net.minecraft.client.renderer.entity.SkeletonRenderer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
@@ -47,6 +46,7 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.FOVModifierEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -63,10 +63,20 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onFMLClientSetupEvent(final FMLClientSetupEvent event)
     {
-
         event.enqueueWork(() -> {
+            //For Build Testing
+//            File file = new File("C:\\Users\\18029\\Documents\\odyssey-1.18.1\\sample.txt");
+//            PrintStream stream = null;
+//            try {
+//                stream = new PrintStream(file);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            System.setOut(stream);
+//            System.out.println("From now on "+file.getAbsolutePath()+" will be your console");
+
             //For hollow coconut vision overlay
-            OverlayRegistry.registerOverlayTop("OdysseyHelmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HELMET_ELEMENT,"Odyssey Helmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
                 gui.setupOverlayRenderState(true, false);
                 if(gui instanceof OdysseyIngameGui odysseyIngameGui){
                     odysseyIngameGui.renderOdysseyHelmet(partialTicks, mStack);
@@ -207,5 +217,8 @@ public class ClientEvents {
         event.getItemColors().register((itemStack, i) ->
                 GrassColor.get(0.5D, 1.0D),
                 BlockRegistry.PRAIRIE_GRASS.get());
+        event.getItemColors().register((itemStack, i) -> {
+            return i > 0 ? -1 : ((DyeableLeatherItem)itemStack.getItem()).getColor(itemStack);
+        }, ItemRegistry.PARKA_HELMET.get(), ItemRegistry.PARKA_CHESTPLATE.get(), ItemRegistry.PARKA_LEGGINGS.get(), ItemRegistry.PARKA_BOOTS.get());
     }
 }

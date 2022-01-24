@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.RenderProperties;
@@ -15,20 +16,26 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 public class OdysseyIngameGui extends ForgeIngameGui
 {
     private static final ResourceLocation COCONUT_BLUR_LOCATION = new ResourceLocation(Odyssey.MOD_ID , "textures/misc/coconutblur.png");
+    public static final ResourceLocation ODYSSEY_GUI_ICONS_LOCATION = new ResourceLocation(Odyssey.MOD_ID ,"textures/gui/icons.png");
 
     public OdysseyIngameGui(Minecraft mc) {
         super(mc);
     }
 
-    protected void renderArmor(PoseStack mStack, int width, int height)
+    public Minecraft getMinecraft(){
+        return this.minecraft;
+    }
+
+    public void renderArmor(PoseStack mStack, int width, int height)
     {
+        RenderSystem.setShaderTexture(0, ODYSSEY_GUI_ICONS_LOCATION);
         minecraft.getProfiler().push("armor");
 
         RenderSystem.enableBlend();
         int left = width / 2 - 91;
         int top = height - left_height;
 
-        int level = minecraft.player.getArmorValue();
+        int level = minecraft.player == null ? 80 : minecraft.player.getArmorValue();
         int imageYOffset = 122;
         if(level < 0){
             level *= -1;
