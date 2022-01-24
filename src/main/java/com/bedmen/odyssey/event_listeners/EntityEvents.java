@@ -10,6 +10,7 @@ import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -182,6 +183,12 @@ public class EntityEvents {
         ItemStack shield = livingEntity.getUseItem();
         if(shield.getItem() instanceof OdysseyShieldItem odysseyShieldItem){
             event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty()));
+            if(livingEntity instanceof Player player){
+                int recoveryTime = odysseyShieldItem.getRecoveryTime();
+                for(Item item : OdysseyItemTags.SHIELDS.getValues()){
+                    player.getCooldowns().addCooldown(item, recoveryTime);
+                }
+            }
         }
     }
 
