@@ -36,8 +36,6 @@ public class OdysseyIngameGui extends ForgeIngameGui
         int top = height - left_height;
 
         int level = minecraft.player == null ? 80 : minecraft.player.getArmorValue();
-        System.out.println(minecraft.player);
-        System.out.println(level);
         int imageYOffset = 122;
         if(level < 0){
             level *= -1;
@@ -47,10 +45,8 @@ public class OdysseyIngameGui extends ForgeIngameGui
             level -= 40;
             imageYOffset += 9;
         }
-        System.out.println(imageYOffset);
         for (int i = 0; level > 0 && i < 10; i++)
         {
-            System.out.println(left);
             if (i*4+3 < level)
             {
                 blit(mStack, left, top, 36, imageYOffset, 9, 9);
@@ -77,7 +73,6 @@ public class OdysseyIngameGui extends ForgeIngameGui
 
         RenderSystem.disableBlend();
         minecraft.getProfiler().pop();
-        System.out.println("bean3");
     }
 
     public void renderOdysseyHelmet(float partialTicks, PoseStack mStack)

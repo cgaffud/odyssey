@@ -17,10 +17,7 @@ import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.equipment.SniperBowItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
-import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
-import com.bedmen.odyssey.registry.BlockRegistry;
-import com.bedmen.odyssey.registry.ContainerRegistry;
-import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.*;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
@@ -34,7 +31,9 @@ import net.minecraft.client.renderer.entity.SkeletonRenderer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
@@ -218,5 +217,8 @@ public class ClientEvents {
         event.getItemColors().register((itemStack, i) ->
                 GrassColor.get(0.5D, 1.0D),
                 BlockRegistry.PRAIRIE_GRASS.get());
+        event.getItemColors().register((itemStack, i) -> {
+            return i > 0 ? -1 : ((DyeableLeatherItem)itemStack.getItem()).getColor(itemStack);
+        }, ItemRegistry.PARKA_HELMET.get(), ItemRegistry.PARKA_CHESTPLATE.get(), ItemRegistry.PARKA_LEGGINGS.get(), ItemRegistry.PARKA_BOOTS.get());
     }
 }
