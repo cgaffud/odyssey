@@ -64,6 +64,24 @@ public class EntityEvents {
                 livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 2, drowningLvl-1
                         ,false,false,false));
         }
+
+        //For Drowning
+        if(!livingEntity.level.isClientSide && livingEntity.hasEffect(EffectRegistry.DROWNING.get())){
+            MobEffectInstance mobEffectInstance = livingEntity.getEffect(EffectRegistry.DROWNING.get());
+            int air = livingEntity.getAirSupply();
+            int reduction = mobEffectInstance.getAmplifier();
+            //If the entity is taking drown damage, if can only take damage once per half second anyways.
+            //Odd multiples of drown amounts actually cause drown damage less frequently than even, which hit every half second
+            //Therefore if the entity is drowning we just max the drown amount at 2
+            //Note that the 1st drown amount is dealt through the LivingEntity baseTick code, so we max reduction here at 1.
+            if(air <= 0){
+                reduction = Integer.min(reduction, 1);
+            }
+            for(int i = 0; i < reduction; i++){
+                air = livingEntity.decreaseAirSupply(air);
+            }
+            livingEntity.setAirSupply(air);
+        }
     }
 
     @SubscribeEvent
