@@ -21,7 +21,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.antlr.v4.runtime.misc.Triple;
 
 public class ItemRegistry {
 
@@ -195,12 +194,16 @@ public class ItemRegistry {
     public static final RegistryObject<Item> COPPER_BAT = ITEMS.register("copper_bat", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 6f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_1));
     public static final RegistryObject<Item> COPPER_BATTLE_AXE = ITEMS.register("copper_battle_axe", () -> new EquipmentMeleeItem(OdysseyTiers.COPPER, 7f, -3.1f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1));
 
-    public static final RegistryObject<Item> WEAVER_FANG_DAGGER = ITEMS.register("weaver_fang_dagger", () -> new WeaverFangDaggerItem(OdysseyTiers.STONE, 6f, -2.2f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
+    public static final RegistryObject<Item> WEAVER_FANG_DAGGER = ITEMS.register("weaver_fang_dagger", () -> new WeaverFangDaggerItem(OdysseyTiers.STONE, 5f, -2.2f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
     public static final RegistryObject<Item> RUSTY_PADDLE = ITEMS.register("rusty_paddle", () -> new EquipmentMeleeItem(OdysseyTiers.IRON, 6f, -3.3f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), FLING));
     public static final RegistryObject<Item> BATTLE_PICKAXE = ITEMS.register("battle_pickaxe", () -> new EquipmentPickaxeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 8f, -3.1f, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SHATTERING_1));
     public static final RegistryObject<Item> SLIME_BAT = ITEMS.register("slime_bat", () -> new EquipmentMeleeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 2f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), KNOCKBACK_3));
     public static final RegistryObject<Item> MINI_HAMMER = ITEMS.register("mini_hammer", () -> new DualWieldItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), BANE_OF_ARTHROPODS_1));
     public static final RegistryObject<Item> SWIFT_SABRE = ITEMS.register("swift_sabre", () -> new FastMeleeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 6.0f, -2.3f, 0.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SWEEPING_EDGE_1));
+    public static final RegistryObject<Item> SPIDER_DAGGER = ITEMS.register("spider_fang_dagger", () -> new SpiderDaggerItem(OdysseyTiers.STONE, 5f, -2.2f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
+    public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new LightMeleeItem(OdysseyTiers.ULTRA_1, 5f, -2.2f, 2f, LightMeleeItem.TIME_ACTIVE.DAY, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
+    public static final RegistryObject<Item> MOON_SWORD = ITEMS.register("moon_sword", () -> new LightMeleeItem(OdysseyTiers.ULTRA_2, 7f, -2.2f, 2f, LightMeleeItem.TIME_ACTIVE.NIGHT, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
+
 
     public static final RegistryObject<Item> CLOVER_STONE_SWORD = ITEMS.register("clover_stone_sword", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 7f, -2.4f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), LOOTING_1));
     public static final RegistryObject<Item> CLOVER_STONE_HATCHET = ITEMS.register("clover_stone_hatchet", () -> new DualWieldItem(OdysseyTiers.CLOVER_STONE, 5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_1, LOOTING_1));
