@@ -14,7 +14,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import java.util.function.Supplier;
 
 public enum OdysseyArmorMaterials implements ArmorMaterial {
-    CACTUS("oddc:cactus", 5, new int[]{2,3,3,2}, 0, SoundEvents.WOOL_BREAK, 0.0f, () -> Ingredient.of(Items.CACTUS), new SetBonusEnchSup(EnchantmentRegistry.THORNS, "passive")),
+    CACTUS("oddc:cactus", 5, new int[]{2,3,3,2}, 0, SoundEvents.WOOL_BREAK, 0.0f, () -> Ingredient.of(Items.CACTUS), new SetBonusEnchSup(EnchantmentRegistry.THORNS, 1, "passive")),
     LEATHER("leather", 5, new int[]{2,3,4,3}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> Ingredient.of(Items.LEATHER)),
     COCONUT("oddc:coconut", 0, new int[]{0,0,0,3}, 0, SoundEvents.WOOD_BREAK, 0.0f, () -> Ingredient.of(ItemRegistry.HOLLOW_COCONUT.get())),
     CHICKEN("oddc:chicken", 10, new int[]{3,5,5,3}, 0, SoundEvents.CHICKEN_HURT, 0.0f, () -> Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get()), new SetBonusEnchSup(EnchantmentRegistry.SLOW_FALLING, "key.jump")),
@@ -24,6 +24,7 @@ public enum OdysseyArmorMaterials implements ArmorMaterial {
     IRON("iron", 15, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, () -> Ingredient.of(Items.IRON_INGOT)),
     TURTLE("oddc:turtle", 25, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, () -> Ingredient.of(Items.SCUTE), new SetBonusEnchSup(EnchantmentRegistry.TURTLING, "key.sneak")),
     GOLD("gold", 7, new int[]{4,7,8,5}, 10, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, () -> Ingredient.of(Items.GOLD_INGOT)),
+    THORNMAIL("oddc:thornmail", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_CHAIN, 0.0f, () -> Ingredient.EMPTY, new SetBonusEnchSup(EnchantmentRegistry.THORNS, 2, "passive")),
     PARKA("oddc:parka", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> Ingredient.EMPTY),
     ZEPHYR("oddc:zephyr", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, () -> Ingredient.EMPTY, new SetBonusEnchSup(EnchantmentRegistry.GLIDING, 2, "key.jump")),
     STERLING_SILVER("oddc:sterling_silver", 20, new int[]{5,9,10,6}, 7, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, () -> Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get())),

@@ -342,5 +342,9 @@
   "item.oddc.zephyr_chestplate": "Zephyr Tunic",
   "item.oddc.zephyr_leggings": "Zephyr Pants",
   "item.oddc.zephyr_boots": "Zephyr Boots",
-  "enchantment.oddc.kinetic_protection": "Antikinetic"
+  "enchantment.oddc.kinetic_protection": "Antikinetic",
+  "item.oddc.thornmail_helmet": "Thornmail Helmet",
+  "item.oddc.thornmail_chestplate": "Thornmail Chestplate",
+  "item.oddc.thornmail_leggings": "Thornmail Leggings",
+  "item.oddc.thornmail_boots": "Thornmail Boots"
 }
