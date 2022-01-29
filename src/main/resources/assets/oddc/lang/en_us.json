@@ -348,5 +348,14 @@
   "item.oddc.thornmail_leggings": "Thornmail Leggings",
   "item.oddc.thornmail_boots": "Thornmail Boots",
   "block.oddc.greatwood_seed": "Greatwood Seed",
-  "item.oddc.greatwood_seed": "Greatwood Seed"
+  "item.oddc.greatwood_seed": "Greatwood Seed",
+  "item.oddc.sharp_bone_boomerang": "Sharp Bone Boomerang",
+  "item.oddc.heavy_bone_boomerang": "Heavy Bone Boomerang",
+  "item.oddc.speedy_bone_boomerang": "Speedy Bone Boomerang",
+  "item.oddc.greatroot_boomerang": "Greatroot Boomerang",
+  "item.oddc.sharp_greatroot_boomerang": "Sharp Greatroot Boomerang",
+  "item.oddc.heavy_greatroot_boomerang": "Heavy Greatroot Boomerang",
+  "item.oddc.speedy_greatroot_boomerang": "Speedy Greatroot Boomerang",
+  "item.oddc.super_greatroot_boomerang": "Super Greatroot Boomerang",
+  "item.oddc.multishot_greatroot_boomerang": "Multishot Greatroot Boomerang"
 }
