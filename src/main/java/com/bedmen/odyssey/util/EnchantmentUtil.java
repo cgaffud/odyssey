@@ -234,10 +234,6 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FIRE_PROTECTION.get(), entity) > 0 || entity.hasEffect(MobEffects.FIRE_RESISTANCE);
     }
 
-//    public static boolean hasGliding(LivingEntity entity) {
-//        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.GLIDING.get(), entity) > 0;
-//    }
-
     public static boolean hasSlowFalling(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SLOW_FALLING.get(), entity) > 0;
     }
@@ -248,10 +244,6 @@ public class EnchantmentUtil {
 
     public static int getGliding(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.GLIDING.get(), entity);
-    }
-
-    public static boolean hasGliding(LivingEntity entity) {
-        return getGliding(entity) > 0;
     }
 
 //    public static boolean hasFireproof(LivingEntity entity) {

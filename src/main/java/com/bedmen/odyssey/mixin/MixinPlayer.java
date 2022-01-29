@@ -6,6 +6,7 @@ import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.bedmen.odyssey.items.equipment.SniperBowItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.WeaponUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
@@ -38,11 +39,22 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
     public float getCurrentItemAttackStrengthDelay() {return 0.0f;}
 
     private int attackStrengthTickerO;
-    private boolean isSniperScopingO;
     private boolean isSniperScoping;
 
     protected MixinPlayer(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
+    }
+
+    @Inject(method = "addAdditionalSaveData", at = @At(value = "RETURN"))
+    public void onAddAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
+        compoundTag.putInt("AttackStrengthTickerO", this.attackStrengthTickerO);
+        compoundTag.putBoolean("IsSniperScoping", this.isSniperScoping);
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
+    public void onReadAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
+        this.attackStrengthTickerO = compoundTag.getInt("AttackStrengthTickerO");
+        this.isSniperScoping = compoundTag.getBoolean("IsSniperScoping");
     }
 
     @Inject(method = "getCurrentItemAttackStrengthDelay", at = @At("HEAD"), cancellable = true)
@@ -69,11 +81,11 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
     }
 
     public void updateSniperScoping() {
-        this.isSniperScopingO = this.isSniperScoping;
+        boolean isSniperScopingO = this.isSniperScoping;
         this.isSniperScoping = this.getMainHandItem().getItem() instanceof SniperBowItem && this.isShiftKeyDown();
-        if(!this.isSniperScopingO && this.isSniperScoping){
+        if(!isSniperScopingO && this.isSniperScoping){
             this.playSound(SoundEvents.SPYGLASS_USE, 1.0F, 1.0F);
-        } else if (this.isSniperScopingO && !this.isSniperScoping){
+        } else if (isSniperScopingO && !this.isSniperScoping){
             this.playSound(SoundEvents.SPYGLASS_STOP_USING, 1.0F, 1.0F);
         }
     }

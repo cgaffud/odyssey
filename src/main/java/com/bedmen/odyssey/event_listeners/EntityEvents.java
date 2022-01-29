@@ -45,8 +45,11 @@ public class EntityEvents {
     public static void onLivingUpdateEvent(final LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
         //For Gliding Armor
-        if(livingEntity.isOnGround() && livingEntity instanceof IOdysseyLivingEntity odysseyLivingEntity){
-            odysseyLivingEntity.resetGlidingTicks();
+        if(livingEntity instanceof IOdysseyLivingEntity odysseyLivingEntity){
+            odysseyLivingEntity.setGlidingLevel(EnchantmentUtil.getGliding(livingEntity));
+            if(livingEntity.isOnGround()){
+                odysseyLivingEntity.decrementGlidingTicks();
+            }
         }
 
         if (!livingEntity.level.isClientSide && livingEntity.isAlive()) {

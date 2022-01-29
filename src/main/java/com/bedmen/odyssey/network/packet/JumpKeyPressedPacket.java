@@ -37,10 +37,7 @@ public class JumpKeyPressedPacket {
             ServerPlayer serverPlayerEntity = context.getSender();
             if (serverPlayerEntity != null && EnchantmentUtil.hasSlowFalling(serverPlayerEntity) && serverPlayerEntity.getDeltaMovement().y < -0.1d && !serverPlayerEntity.getCooldowns().isOnCooldown(ItemRegistry.CHICKEN_CHESTPLATE.get())) {
                 serverPlayerEntity.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 40, 0, false, false, true));
-                serverPlayerEntity.getCooldowns().addCooldown(ItemRegistry.CHICKEN_HELMET.get(), 200);
                 serverPlayerEntity.getCooldowns().addCooldown(ItemRegistry.CHICKEN_CHESTPLATE.get(), 200);
-                serverPlayerEntity.getCooldowns().addCooldown(ItemRegistry.CHICKEN_LEGGINGS.get(), 200);
-                serverPlayerEntity.getCooldowns().addCooldown(ItemRegistry.CHICKEN_BOOTS.get(), 200);
             }
         });
         context.setPacketHandled(true);

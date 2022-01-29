@@ -6,6 +6,7 @@ import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class GlidingAmorItem extends EquipmentArmorItem {
@@ -15,9 +16,8 @@ public class GlidingAmorItem extends EquipmentArmorItem {
 
     @Override
     public boolean canElytraFly(ItemStack stack, LivingEntity livingEntity) {
-        int glidingLevel = EnchantmentUtil.getGliding(livingEntity);
         if(livingEntity instanceof IOdysseyLivingEntity odysseyLivingEntity){
-            return glidingLevel > 0 && glidingLevel * 20 > odysseyLivingEntity.getGlidingTicks();
+            return odysseyLivingEntity.getMaxGlidingTicks() > odysseyLivingEntity.getGlidingTicks();
         } else {
             return false;
         }

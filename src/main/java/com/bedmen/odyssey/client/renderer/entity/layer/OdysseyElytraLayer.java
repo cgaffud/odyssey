@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.client.renderer.entity.layer;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -17,7 +18,7 @@ public class OdysseyElytraLayer<T extends LivingEntity, M extends EntityModel<T>
     }
 
     public boolean shouldRender(ItemStack stack, T entity) {
-        return EnchantmentUtil.hasGliding(entity);
+        return entity instanceof IOdysseyLivingEntity odysseyLivingEntity && odysseyLivingEntity.getGlidingLevel() > 0;
     }
 
     public ResourceLocation getElytraTexture(ItemStack itemStack, T entity) {
