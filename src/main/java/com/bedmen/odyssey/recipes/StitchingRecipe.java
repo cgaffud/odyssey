@@ -47,7 +47,7 @@ public class StitchingRecipe implements Recipe<Container> {
         ItemStack itemStack0 = inv.getItem(0);
         ItemStack itemStack1 = inv.getItem(1);
         ItemStack result = this.result.copy();
-        CompoundTag compoundTag = itemStack0.getOrCreateTag().merge(itemStack1.getOrCreateTag());
+        CompoundTag compoundTag = itemStack0.getOrCreateTag().copy().merge(itemStack1.getOrCreateTag().copy());
         result.setTag(compoundTag);
         int maxDamage0 = itemStack0.getMaxDamage();
         int currentDamage0 = itemStack0.getDamageValue();
