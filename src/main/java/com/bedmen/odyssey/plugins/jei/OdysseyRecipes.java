@@ -2,6 +2,7 @@ package com.bedmen.odyssey.plugins.jei;
 
 import com.bedmen.odyssey.recipes.AlloyRecipe;
 import com.bedmen.odyssey.recipes.OdysseyRecipeType;
+import com.bedmen.odyssey.recipes.StitchingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.Container;
@@ -20,6 +21,10 @@ public final class OdysseyRecipes {
 
     public List<AlloyRecipe> getAlloyingRecipes() {
         return getRecipes(recipeManager, OdysseyRecipeType.ALLOYING);
+    }
+
+    public List<StitchingRecipe> getStitchingRecipes() {
+        return getRecipes(recipeManager, OdysseyRecipeType.STITCHING);
     }
 
     @SuppressWarnings("unchecked")

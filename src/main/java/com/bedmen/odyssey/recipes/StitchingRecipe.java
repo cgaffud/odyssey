@@ -5,6 +5,7 @@ import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.RecipeRegistry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -81,9 +82,25 @@ public class StitchingRecipe implements Recipe<Container> {
         return this.ingredient2;
     }
 
-
     public Ingredient getFiber() {
         return this.fiber;
+    }
+
+    public NonNullList<Ingredient> getIngredients() {
+        NonNullList<Ingredient> nonnulllist = NonNullList.create();
+        nonnulllist.add(this.ingredient1);
+        nonnulllist.add(this.ingredient2);
+        nonnulllist.add(this.fiber);
+        nonnulllist.add(this.fiber);
+        if(isQuadFiber()){
+            nonnulllist.add(this.fiber);
+            nonnulllist.add(this.fiber);
+        }
+        return nonnulllist;
+    }
+
+    public boolean isQuadFiber(){
+        return StitchingMenu.isQuadFiber(this.ingredient1.getItems()[0]);
     }
 
     public ResourceLocation getId() {

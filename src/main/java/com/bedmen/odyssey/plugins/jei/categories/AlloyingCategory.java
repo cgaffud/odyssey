@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.plugins.jei;
+package com.bedmen.odyssey.plugins.jei.categories;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.gui.screens.AlloyFurnaceScreen;
