@@ -92,7 +92,7 @@ public class OdysseyIngameGui extends ForgeIngameGui
         {
             int maxGlidingTicks = odysseyLivingEntity.getMaxGlidingTicks();
             int glidingTicksLeft = maxGlidingTicks - odysseyLivingEntity.getGlidingTicks();
-            int full = Mth.ceil((double)(glidingTicksLeft - 2) * 10.0D / maxGlidingTicks);
+            int full = Mth.ceil((double)(glidingTicksLeft - 1.99f) * 10.0D / maxGlidingTicks);
             int partial = Mth.ceil((double)glidingTicksLeft * 10.0D / maxGlidingTicks) - full;
 
             for (int i = 0; i < full + partial; ++i)

@@ -33,7 +33,6 @@ public class OdysseyProtectionEnchantment extends Enchantment {
             case FIRE -> damageSource.isFire() ? enchantmentLevel * 5 : 0;
             case ICE -> damageSource == DamageSource.FREEZE ? enchantmentLevel * 5 : 0;
             case FALL -> damageSource == DamageSource.FALL ? enchantmentLevel * 5 : 0;
-            case CRASH -> damageSource == DamageSource.FLY_INTO_WALL ? enchantmentLevel * 5 : 0;
             case KINETIC -> damageSource == DamageSource.FLY_INTO_WALL || damageSource == DamageSource.FALL ? enchantmentLevel * 5 : 0;
             case EXPLOSION -> damageSource.isExplosion() ? enchantmentLevel * 5 : 0;
         };
@@ -51,7 +50,6 @@ public class OdysseyProtectionEnchantment extends Enchantment {
         FIRE,
         ICE,
         FALL,
-        CRASH,
         KINETIC,
         EXPLOSION,
     }
