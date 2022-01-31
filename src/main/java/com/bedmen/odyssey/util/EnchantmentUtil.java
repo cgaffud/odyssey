@@ -327,6 +327,10 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), itemStack);
     }
 
+    public static int getMultishot(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MULTISHOT.get(), itemStack);
+    }
+
     public static int getPower(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.POWER_ARROWS.get(), itemStack);
     }

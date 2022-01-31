@@ -1,26 +1,18 @@
 package com.bedmen.odyssey.plugins.jei.categories;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.client.gui.screens.AlloyFurnaceScreen;
 import com.bedmen.odyssey.client.gui.screens.StitchingTableScreen;
-import com.bedmen.odyssey.recipes.AlloyRecipe;
 import com.bedmen.odyssey.recipes.StitchingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +30,7 @@ public class StitchingCategory implements IRecipeCategory<StitchingRecipe> {
     private final IDrawable icon;
     private final Component localizedName;
 
-    public static final ResourceLocation STITCHING_UID = new ResourceLocation(Odyssey.MOD_ID, "stitching");
+    public static final ResourceLocation UID = new ResourceLocation(Odyssey.MOD_ID, "stitching");
 
     public StitchingCategory(IGuiHelper guiHelper) {
         staticSlotCovers[0] = guiHelper.createDrawable(StitchingTableScreen.TEXTURE, 176, 0, 18, 18);
@@ -100,7 +92,7 @@ public class StitchingCategory implements IRecipeCategory<StitchingRecipe> {
 
     @Override
     public ResourceLocation getUid() {
-        return STITCHING_UID;
+        return UID;
     }
 
     @Override

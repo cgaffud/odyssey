@@ -39,7 +39,7 @@ public class AlloyingCategory implements IRecipeCategory<AlloyRecipe> {
     private final Component localizedName;
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
 
-    public static final ResourceLocation ALLOYING_UID = new ResourceLocation(Odyssey.MOD_ID, "alloying");
+    public static final ResourceLocation UID = new ResourceLocation(Odyssey.MOD_ID, "alloying");
 
     public AlloyingCategory(IGuiHelper guiHelper) {
         staticFlame = guiHelper.createDrawable(AlloyFurnaceScreen.TEXTURE, 176, 0, 14, 14);
@@ -141,7 +141,7 @@ public class AlloyingCategory implements IRecipeCategory<AlloyRecipe> {
 
     @Override
     public ResourceLocation getUid() {
-        return ALLOYING_UID;
+        return UID;
     }
 
     @Override

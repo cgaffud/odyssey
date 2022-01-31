@@ -62,21 +62,21 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
     /**
      * Called when the player stops using an Item (stops holding the right mouse button).
      */
-    public void releaseUsing(ItemStack stack, Level level, LivingEntity entityLiving, int timeLeft) {
+    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity entityLiving, int timeLeft) {
         if (entityLiving instanceof Player player) {
-            int i = this.getUseDuration(stack) - timeLeft;
+            int i = this.getUseDuration(itemStack) - timeLeft;
             if (i >= this.getBoomerangType().getChargeTime()) {
                 if (!level.isClientSide) {
-                    stack.hurtAndBreak(1, player, (player1) -> {
+                    itemStack.hurtAndBreak(1, player, (player1) -> {
                         player1.broadcastBreakEvent(entityLiving.getUsedItemHand());
                     });
-                    int multishot = this.getInnateEnchantmentLevel(EnchantmentRegistry.MULTISHOT.get());
+                    int multishot = EnchantmentUtil.getMultishot(itemStack);
                     for(int k = -multishot; k <= multishot; k++){
-                        Boomerang boomerang = new Boomerang(level, player, stack, k != 0);
-                        boomerang.setLootingLevel((byte)this.getInnateEnchantmentLevel(Enchantments.MOB_LOOTING));
-                        boomerang.setKnockback(this.getInnateEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get()));
-                        boomerang.setPierceLevel((byte) this.getInnateEnchantmentLevel(EnchantmentRegistry.PIERCING.get()));
-                        float superCharge = EnchantmentUtil.getSuperChargeMultiplier(stack);
+                        Boomerang boomerang = new Boomerang(level, player, itemStack, k != 0);
+                        boomerang.setLootingLevel((byte) EnchantmentUtil.getMobLooting(itemStack));
+                        boomerang.setKnockback(EnchantmentUtil.getPunch(itemStack));
+                        boomerang.setPierceLevel((byte)EnchantmentUtil.getPiercing(itemStack));
+                        float superCharge = EnchantmentUtil.getSuperChargeMultiplier(itemStack);
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(player) / superCharge;
                         float angle = multishot > 0 ? k * 10f / (multishot) : 0f;
                         boomerang.shootFromRotation(player, player.getXRot(), player.getYRot() + angle, 0.0F, this.shootSpeed(superCharge), inaccuracy);
@@ -91,7 +91,7 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
                         }
                     }
                     if (!player.isCreative()) {
-                        player.getInventory().removeItem(stack);
+                        player.getInventory().removeItem(itemStack);
                     }
                 }
 

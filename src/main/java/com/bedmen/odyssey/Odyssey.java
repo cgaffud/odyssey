@@ -70,7 +70,7 @@ public class Odyssey
             OdysseyNetwork.init();
             ContainerRegistry.initQuivers();
             FeatureRegistry.initTreasureChests();
-            PassiveWeaver.init();
+            //PassiveWeaver.init();
             OdysseyFlowerPotBlock.registerFlowerPots();
             CompostUtil.addCompostingRecipes();
             OdysseyLootItemFunctions.registerFunctions();

@@ -137,10 +137,10 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
                     break;
                 }
             }
-            return null;
-        } else {
+        } else if(!this.isNoPhysics()) {
             return super.findHitEntity(startVec, endVec);
         }
+        return null;
     }
 
     private boolean isBoomerangOwner(Entity entity){
@@ -150,17 +150,13 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return entity instanceof BoomerangAttackMob && entity instanceof LivingEntity && entity.getUUID() == this.getOwner().getUUID();
     }
 
-    /**
-     * Called when the arrow hits an entity
-     */
-    protected void onHitEntity(EntityHitResult p_213868_1_) {
-        Entity entity = p_213868_1_.getEntity();
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        Entity entity = entityHitResult.getEntity();
         float f = (float)this.getBoomerangType().getDamage();
         if (entity instanceof LivingEntity) {
             LivingEntity livingentity = (LivingEntity)entity;
             f += EnchantmentHelper.getDamageBonus(this.thrownStack, livingentity.getMobType());
         }
-
         Entity entity1 = this.getOwner();
         DamageSource damagesource = OdysseyDamageSource.boomerang(this, entity1 == null ? this : entity1);
         if (entity.hurt(damagesource, f)) {
@@ -184,7 +180,6 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
                 this.doPostHurtEffects(livingEntity);
             }
         }
-
         if (this.piercingIgnoreEntityIds == null) {
             this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
         }
@@ -193,11 +188,11 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
             this.dealtDamage = true;
             this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
         }
-        this.playSound(SoundEvents.TRIDENT_HIT, 1.0f, 1.0F);
+        this.playSound(SoundEvents.ARROW_HIT, 1.0f, 1.0F);
     }
 
     protected SoundEvent getDefaultHitGroundSoundEvent() {
-        return SoundEvents.TRIDENT_HIT_GROUND;
+        return SoundEvents.ARROW_HIT;
     }
 
     public void playerTouch(Player player) {
@@ -225,6 +220,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         if (compoundNBT.contains("BoomerangType")) {
             this.boomerangType = BoomerangType.valueOf(compoundNBT.getString("BoomerangType"));
         }
+        this.multishot = compoundNBT.getBoolean("IsMultishot");
     }
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
@@ -232,6 +228,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         compoundNBT.put("Boomerang", this.thrownStack.save(new CompoundTag()));
         compoundNBT.putBoolean("DealtDamage", this.dealtDamage);
         compoundNBT.putString("BoomerangType", this.boomerangType.name());
+        compoundNBT.putBoolean("IsMultishot", this.multishot);
     }
 
 

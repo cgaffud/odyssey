@@ -1,0 +1,8 @@
+{
+  "type": "oddc:weaving",
+  "ingredient":
+  {
+    "item": "oddc:sterling_silver_ingot"
+  },
+  "result": "oddc:sterling_silver_cobweb"
+}

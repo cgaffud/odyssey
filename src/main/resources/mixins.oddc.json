@@ -5,6 +5,7 @@
   "package": "com.bedmen.odyssey.mixin",
   "refmap": "mixins.oddc.refmap.json",
   "mixins": [
+    "MixinAbstractArrow",
     "MixinChatFormatting",
     "MixinClientboundSetEntityMotionPacket",
     "MixinCombatRules",
