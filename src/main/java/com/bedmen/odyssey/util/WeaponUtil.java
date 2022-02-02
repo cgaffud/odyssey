@@ -150,8 +150,8 @@ public class WeaponUtil {
         Item holding = entity.getMainHandItem().getItem();
         float boost = 0f;
         if (holding instanceof LightMeleeItem lightItem) {
-            BlockPos eyeLevel = new BlockPos(entity.getX(), entity.getEyeY(), entity.getZ());
-            if (entity.level.canSeeSky(eyeLevel) && lightItem.isTimeActivated(entity.level)){
+            if (lightItem.isActive(entity.level, entity)){
+                System.out.println("BOOSETD");
                 boost += lightItem.attackBoost;
             }
         }
