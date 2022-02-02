@@ -2,13 +2,17 @@ package com.bedmen.odyssey.plugins.jei;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.gui.screens.AlloyFurnaceScreen;
+import com.bedmen.odyssey.client.gui.screens.RecyclingFurnaceScreen;
 import com.bedmen.odyssey.client.gui.screens.StitchingTableScreen;
 import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;
+import com.bedmen.odyssey.inventory.RecyclingFurnaceMenu;
 import com.bedmen.odyssey.inventory.StitchingMenu;
 import com.bedmen.odyssey.plugins.jei.categories.AlloyingCategory;
+import com.bedmen.odyssey.plugins.jei.categories.RecyclingCategory;
 import com.bedmen.odyssey.plugins.jei.categories.StitchingCategory;
 import com.bedmen.odyssey.plugins.jei.categories.WeavingCategory;
 import com.bedmen.odyssey.recipes.AlloyRecipe;
+import com.bedmen.odyssey.recipes.RecyclingRecipe;
 import com.bedmen.odyssey.recipes.StitchingRecipe;
 import com.bedmen.odyssey.recipes.WeavingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
@@ -34,6 +38,8 @@ public class OdysseyJEI implements IModPlugin {
     private IRecipeCategory<StitchingRecipe> stitchingCategory;
     @Nullable
     private IRecipeCategory<WeavingRecipe> weavingCategory;
+    @Nullable
+    private IRecipeCategory<RecyclingRecipe> recyclingCategory;
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -47,7 +53,8 @@ public class OdysseyJEI implements IModPlugin {
         registration.addRecipeCategories(
                 alloyingCategory = new AlloyingCategory(guiHelper),
                 stitchingCategory = new StitchingCategory(guiHelper),
-                weavingCategory = new WeavingCategory(guiHelper)
+                weavingCategory = new WeavingCategory(guiHelper),
+                recyclingCategory = new RecyclingCategory(guiHelper)
         );
     }
 
@@ -57,13 +64,15 @@ public class OdysseyJEI implements IModPlugin {
         registration.addRecipes(odysseyRecipes.getAlloyingRecipes(), AlloyingCategory.UID);
         registration.addRecipes(odysseyRecipes.getStitchingRecipes(), StitchingCategory.UID);
         registration.addRecipes(odysseyRecipes.getWeavingRecipes(), WeavingCategory.UID);
+        registration.addRecipes(odysseyRecipes.getRecyclingRecipes(), RecyclingCategory.UID);
     }
 
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addRecipeClickArea(AlloyFurnaceScreen.class, 78, 32, 28, 23, AlloyingCategory.UID, VanillaRecipeCategoryUid.FUEL);
+        registration.addRecipeClickArea(AlloyFurnaceScreen.class, 80, 35, 22, 15, AlloyingCategory.UID, VanillaRecipeCategoryUid.FUEL);
         registration.addRecipeClickArea(StitchingTableScreen.class, 107, 39, 25, 18, StitchingCategory.UID, WeavingCategory.UID);
+        registration.addRecipeClickArea(RecyclingFurnaceScreen.class, 58, 35, 22, 15, RecyclingCategory.UID, VanillaRecipeCategoryUid.FUEL);
     }
 
     @Override
@@ -71,6 +80,7 @@ public class OdysseyJEI implements IModPlugin {
         registration.addRecipeTransferHandler(AlloyFurnaceMenu.class, AlloyingCategory.UID, 0, 2, 4, 36);
         registration.addRecipeTransferHandler(AlloyFurnaceMenu.class, VanillaRecipeCategoryUid.FUEL, 2, 1, 4, 36);
         registration.addRecipeTransferHandler(StitchingMenu.class, StitchingCategory.UID, 0, 6, 7, 36);
+        registration.addRecipeTransferHandler(RecyclingFurnaceMenu.class, RecyclingCategory.UID, 0, 1, 11, 36);
     }
 
     @Override
@@ -78,5 +88,6 @@ public class OdysseyJEI implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(BlockRegistry.ALLOY_FURNACE.get()), AlloyingCategory.UID, VanillaRecipeCategoryUid.FUEL);
         registration.addRecipeCatalyst(new ItemStack(BlockRegistry.STITCHING_TABLE.get()), StitchingCategory.UID);
         registration.addRecipeCatalyst(new ItemStack(ItemRegistry.WEAVER_EGG.get()), WeavingCategory.UID);
+        registration.addRecipeCatalyst(new ItemStack(BlockRegistry.RECYCLING_FURNACE.get()), RecyclingCategory.UID, VanillaRecipeCategoryUid.FUEL);
     }
 }

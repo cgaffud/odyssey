@@ -1,9 +1,6 @@
 package com.bedmen.odyssey.plugins.jei;
 
-import com.bedmen.odyssey.recipes.AlloyRecipe;
-import com.bedmen.odyssey.recipes.OdysseyRecipeType;
-import com.bedmen.odyssey.recipes.StitchingRecipe;
-import com.bedmen.odyssey.recipes.WeavingRecipe;
+import com.bedmen.odyssey.recipes.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.Container;
@@ -30,6 +27,10 @@ public final class OdysseyRecipes {
 
     public List<WeavingRecipe> getWeavingRecipes() {
         return getRecipes(recipeManager, OdysseyRecipeType.WEAVING);
+    }
+
+    public List<RecyclingRecipe> getRecyclingRecipes() {
+        return getRecipes(recipeManager, OdysseyRecipeType.RECYCLING);
     }
 
     @SuppressWarnings("unchecked")
