@@ -3,14 +3,11 @@ package com.bedmen.odyssey.client.gui;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -88,19 +85,21 @@ public class OdysseyIngameGui extends ForgeIngameGui
         int left = width / 2 + 91;
         int top = height - right_height;
 
-        if (player instanceof IOdysseyLivingEntity odysseyLivingEntity && odysseyLivingEntity.getMaxGlidingTicks() > 0)
+        if (player instanceof IOdysseyLivingEntity odysseyLivingEntity)
         {
-            int maxGlidingTicks = odysseyLivingEntity.getMaxGlidingTicks();
-            int glidingTicksLeft = maxGlidingTicks - odysseyLivingEntity.getGlidingTicks();
-            int full = Mth.ceil((double)(glidingTicksLeft - 1.99f) * 10.0D / maxGlidingTicks);
-            int partial = Mth.ceil((double)glidingTicksLeft * 10.0D / maxGlidingTicks) - full;
+            int maxGlidingTicks = odysseyLivingEntity.getMaxFlightTicks();
+            if(maxGlidingTicks > 0){
+                int glidingTicksLeft = maxGlidingTicks - odysseyLivingEntity.getFlightTicks();
+                int full = Mth.ceil((double)(glidingTicksLeft - 1.99f) * 10.0D / maxGlidingTicks);
+                int partial = Mth.ceil((double)glidingTicksLeft * 10.0D / maxGlidingTicks) - full;
 
-            for (int i = 0; i < full + partial; ++i)
-            {
-                int x = (i < full ? 0 : 9);
-                blit(mStack, left - i * 8 - 9, top, x, 27, 9, 9);
+                for (int i = 0; i < full + partial; ++i)
+                {
+                    int x = (i < full ? 0 : 9);
+                    blit(mStack, left - i * 8 - 9, top, x, 27, 9, 9);
+                }
+                right_height += 10;
             }
-            right_height += 10;
         }
 
         RenderSystem.disableBlend();

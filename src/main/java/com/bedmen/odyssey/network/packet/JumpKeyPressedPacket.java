@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.network.packet;
 
+import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,10 +35,9 @@ public class JumpKeyPressedPacket {
     public static void handle(JumpKeyPressedPacket jumpKeyPressedPacket, Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
-            ServerPlayer serverPlayerEntity = context.getSender();
-            if (serverPlayerEntity != null && EnchantmentUtil.hasSlowFalling(serverPlayerEntity) && serverPlayerEntity.getDeltaMovement().y < -0.1d && !serverPlayerEntity.getCooldowns().isOnCooldown(ItemRegistry.CHICKEN_CHESTPLATE.get())) {
-                serverPlayerEntity.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 40, 0, false, false, true));
-                serverPlayerEntity.getCooldowns().addCooldown(ItemRegistry.CHICKEN_CHESTPLATE.get(), 200);
+            ServerPlayer serverPlayer = context.getSender();
+            if(serverPlayer != null){
+                serverPlayer.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 2, 0, false, false, true));
             }
         });
         context.setPacketHandled(true);

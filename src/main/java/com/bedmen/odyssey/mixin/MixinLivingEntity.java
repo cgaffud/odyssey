@@ -2,9 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.registry.EffectRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
@@ -17,12 +15,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements IOdysseyLivingEntity {
     private int glidingLevel = 0;
-    private int glidingTicks = 0;
+    private boolean hasSlowFalling = false;
+    private int flightTicks = 0;
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -47,36 +45,45 @@ public abstract class MixinLivingEntity extends Entity implements IOdysseyLiving
     @Inject(method = "addAdditionalSaveData", at = @At(value = "RETURN"))
     public void onAddAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
         compoundTag.putInt("GlidingLevel", this.glidingLevel);
-        compoundTag.putInt("GlidingTicks", this.glidingTicks);
+        compoundTag.putInt("GlidingTicks", this.flightTicks);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
     public void onReadAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
         this.glidingLevel = compoundTag.getInt("GlidingLevel");
-        this.glidingTicks = compoundTag.getInt("GlidingTicks");
+        this.flightTicks = compoundTag.getInt("GlidingTicks");
     }
 
-    public void setGlidingLevel(int i){
-        this.glidingLevel = i;
+    public void setFlightLevels(boolean hasSlowFalling, int glidingLevel){
+        this.hasSlowFalling = hasSlowFalling;
+        this.glidingLevel = glidingLevel;
     }
 
     public int getGlidingLevel(){
         return this.glidingLevel;
     }
 
-    public void incrementGlidingTicks(){
-        this.glidingTicks++;
+    public boolean hasSlowFalling(){
+        return this.hasSlowFalling;
     }
 
-    public void decrementGlidingTicks(){
-        this.glidingTicks = Integer.max(0, this.glidingTicks - this.glidingLevel);
+    public void incrementFlightTicks(int i){
+        this.flightTicks += i;
     }
 
-    public int getGlidingTicks(){
-        return this.glidingTicks;
+    public void decrementFlightTicks(){
+        int i = this.hasSlowFalling ? 1 : this.glidingLevel;
+        this.flightTicks = Integer.max(0, this.flightTicks - i);
     }
 
-    public int getMaxGlidingTicks(){
+    public int getFlightTicks(){
+        return this.flightTicks;
+    }
+
+    public int getMaxFlightTicks(){
+        if(this.hasSlowFalling){
+            return 100;
+        }
         return this.glidingLevel * 20;
     }
 

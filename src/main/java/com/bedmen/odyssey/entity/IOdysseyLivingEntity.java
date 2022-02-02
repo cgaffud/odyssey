@@ -1,10 +1,11 @@
 package com.bedmen.odyssey.entity;
 
 public interface IOdysseyLivingEntity {
-    void setGlidingLevel(int i);
+    void setFlightLevels(boolean hasSlowFalling, int glidingLevel);
+    boolean hasSlowFalling();
     int getGlidingLevel();
-    void incrementGlidingTicks();
-    void decrementGlidingTicks();
-    int getGlidingTicks();
-    int getMaxGlidingTicks();
+    void incrementFlightTicks(int i);
+    void decrementFlightTicks();
+    int getFlightTicks();
+    int getMaxFlightTicks();
 }
