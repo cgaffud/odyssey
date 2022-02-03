@@ -32,7 +32,7 @@ public class LightMeleeItem extends EquipmentMeleeItem implements INeedsToRegist
     /**TODO: add dimension check, weather check, new moon check after rendering bug fixed*/
     public boolean isActive(Level level, LivingEntity livingEntity) {
         BlockPos eyeLevel = new BlockPos(livingEntity.getX(), livingEntity.getEyeY(), livingEntity.getZ());
-        System.out.println(level.getDayTime());
+        //System.out.println(level.getDayTime());
         switch (this.time) {
             case DAY:
                 //TIME_ACTIVE enum works properly
@@ -51,7 +51,7 @@ public class LightMeleeItem extends EquipmentMeleeItem implements INeedsToRegist
 
     public static boolean isActive(ItemStack itemStack, Level level, LivingEntity livingEntity){
         if (itemStack.getItem() instanceof LightMeleeItem lightMeleeItem) {
-            System.out.println(lightMeleeItem.isActive(level, livingEntity));
+            //System.out.println(lightMeleeItem.isActive(level, livingEntity));
             return lightMeleeItem.isActive(level, livingEntity);
         }
         return false;
@@ -59,7 +59,7 @@ public class LightMeleeItem extends EquipmentMeleeItem implements INeedsToRegist
 
     public void registerItemModelProperties() {
         ItemProperties.register(this, new ResourceLocation("active"), (itemStack, clientLevel, livingEntity, i) -> {
-            if ((livingEntity != null) && (clientLevel != null) && this.isActive(itemStack, clientLevel, livingEntity)) {
+            if ((livingEntity != null)  && this.isActive(itemStack, livingEntity.getLevel(), livingEntity)) {
                 //System.out.println("ACTIVE");
                 return 1.0F;
             }
