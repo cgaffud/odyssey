@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:copper_ingot"
+    },
+    "B": {
+      "item": "oddc:bone_boomerang"
+    }
+  },
+  "result": {
+    "item": "oddc:heavy_bone_boomerang"
+  }
+}

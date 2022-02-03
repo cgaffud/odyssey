@@ -289,11 +289,11 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         if(this.hasBoomerang()){
             InteractionHand hand = this.getBoomerangHand();
             ItemStack itemstack = new ItemStack(this.getItemInHand(hand).getItem());
-            Boomerang boomerang = new Boomerang(this.level, this, itemstack);
+            Boomerang boomerang = new Boomerang(this.level, this, itemstack, false);
             double d0 = target.getX() - this.getX();
             double d1 = target.getBbHeight()/2f - this.getEyeHeight() + target.getY() - this.getY();
             double d2 = target.getZ() - this.getZ();
-            boomerang.shoot(d0, d1, d2, ((BoomerangItem)itemstack.getItem()).shootSpeed(), (float)(14 - this.level.getDifficulty().getId() * 4));
+            boomerang.shoot(d0, d1, d2, ((BoomerangItem)itemstack.getItem()).shootSpeed(1f), (float)(14 - this.level.getDifficulty().getId() * 4));
             this.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
             this.level.addFreshEntity(boomerang);
             this.setItemInHand(hand, ItemStack.EMPTY);

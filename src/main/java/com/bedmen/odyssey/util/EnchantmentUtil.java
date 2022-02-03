@@ -234,16 +234,16 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FIRE_PROTECTION.get(), entity) > 0 || entity.hasEffect(MobEffects.FIRE_RESISTANCE);
     }
 
-//    public static boolean hasGliding(LivingEntity entity) {
-//        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.GLIDING.get(), entity) > 0;
-//    }
-
     public static boolean hasSlowFalling(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SLOW_FALLING.get(), entity) > 0;
     }
 
     public static boolean hasTurtling(LivingEntity entity) {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.TURTLING.get(), entity) > 0;
+    }
+
+    public static int getGliding(LivingEntity entity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.GLIDING.get(), entity);
     }
 
 //    public static boolean hasFireproof(LivingEntity entity) {
@@ -325,6 +325,10 @@ public class EnchantmentUtil {
 
     public static int getPiercing(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), itemStack);
+    }
+
+    public static int getMultishot(ItemStack itemStack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MULTISHOT.get(), itemStack);
     }
 
     public static int getPower(ItemStack itemStack) {

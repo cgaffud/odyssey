@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:super_greatroot_boomerang"
+  },
+  "metalCounts": [
+    {
+      "metal": "silver",
+      "count": 18
+    }
+  ]
+}

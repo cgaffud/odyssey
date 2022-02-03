@@ -1,0 +1,8 @@
+{
+  "type": "oddc:weaving",
+  "ingredient":
+  {
+    "item": "minecraft:diamond"
+  },
+  "result": "oddc:diamond_cobweb"
+}

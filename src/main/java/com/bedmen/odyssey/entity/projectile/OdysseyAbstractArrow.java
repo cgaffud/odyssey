@@ -1,11 +1,9 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.WeaponUtil;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,7 +17,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;

@@ -15,4 +15,12 @@ public class LevEnchSup {
         this.enchantmentSupplier = enchantmentSupplier;
         this.level = level;
     }
+
+    public static LevEnchSup[] getLevEnchantSupArray(Supplier<Enchantment> enchantmentSupplier, int maxLevel){
+        LevEnchSup[] levEnchSups = new LevEnchSup[maxLevel];
+        for(int i = 0; i < levEnchSups.length; i++){
+            levEnchSups[i] = new LevEnchSup(enchantmentSupplier, i+1);
+        }
+        return levEnchSups;
+    }
 }

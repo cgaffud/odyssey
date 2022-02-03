@@ -13,11 +13,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RecyclingFurnaceScreen extends AbstractContainerScreen<RecyclingFurnaceMenu> {
-    private final ResourceLocation guiTexture;
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/recycling_furnace.png");
 
     public RecyclingFurnaceScreen(RecyclingFurnaceMenu screenContainer, Inventory inv, Component titleIn) {
         super(screenContainer, inv, titleIn);
-        this.guiTexture = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/recycling_furnace.png");
     }
 
     public void init() {
@@ -34,7 +33,7 @@ public class RecyclingFurnaceScreen extends AbstractContainerScreen<RecyclingFur
     protected void renderBg(PoseStack poseStack, float p_97854_, int p_97855_, int p_97856_) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, this.guiTexture);
+        RenderSystem.setShaderTexture(0, TEXTURE);
         int i = this.leftPos;
         int j = this.topPos;
         this.blit(poseStack, i, j, 0, 0, this.imageWidth, this.imageHeight);

@@ -2,7 +2,6 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.network.OdysseyNetwork;
-import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.network.packet.ShootSonicBoomPacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -15,20 +14,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class InputEvents {
-
-    @SubscribeEvent
-    public static void onKeyInputEvent(final InputEvent.KeyInputEvent event){
-        if(event.getKey() == Minecraft.getInstance().options.keyJump.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS){
-            try{
-                OdysseyNetwork.CHANNEL.sendToServer(new JumpKeyPressedPacket());
-            } catch(NullPointerException e){
-            }
-        }
-    }
 
     @SubscribeEvent
     public static void onClickInputEvent(final InputEvent.ClickInputEvent event){

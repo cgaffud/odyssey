@@ -82,13 +82,13 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         }
     }
 
-    public void releaseUsing(ItemStack p_40875_, Level p_40876_, LivingEntity p_40877_, int p_40878_) {
-        int i = this.getUseDuration(p_40875_) - p_40878_;
-        float f = getPowerForTime(i, p_40875_);
-        if (f >= 1.0F && !isCharged(p_40875_) && tryLoadProjectiles(p_40877_, p_40875_)) {
-            setCharged(p_40875_, true);
-            SoundSource soundsource = p_40877_ instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-            p_40876_.playSound((Player)null, p_40877_.getX(), p_40877_.getY(), p_40877_.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundsource, 1.0F, 1.0F / (p_40876_.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
+    public void releaseUsing(ItemStack crossbow, Level level, LivingEntity livingEntity, int count) {
+        int i = this.getUseDuration(crossbow) - count;
+        float f = getPowerForTime(i, crossbow);
+        if (f >= 1.0F && !isCharged(crossbow) && tryLoadProjectiles(livingEntity, crossbow)) {
+            setCharged(crossbow, true);
+            SoundSource soundsource = livingEntity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
+            level.playSound((Player)null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundsource, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
         }
 
     }

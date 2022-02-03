@@ -7,6 +7,8 @@ import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -30,6 +32,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
@@ -62,26 +65,41 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
     /**
      * Called when the player stops using an Item (stops holding the right mouse button).
      */
-    public void releaseUsing(ItemStack stack, Level level, LivingEntity entityLiving, int timeLeft) {
+    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity entityLiving, int timeLeft) {
         if (entityLiving instanceof Player player) {
-            int i = this.getUseDuration(stack) - timeLeft;
-            if (i >= 10) {
+            int i = this.getUseDuration(itemStack) - timeLeft;
+            if (i >= this.getBoomerangType().getChargeTime()) {
                 if (!level.isClientSide) {
-                    stack.hurtAndBreak(1, player, (player1) -> {
+                    itemStack.hurtAndBreak(1, player, (player1) -> {
                         player1.broadcastBreakEvent(entityLiving.getUsedItemHand());
                     });
-                    Boomerang boomerang = new Boomerang(level, player, stack);
-                    boomerang.setLootingLevel((byte)this.getInnateEnchantmentLevel(Enchantments.MOB_LOOTING));
-                    float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(player);
-                    boomerang.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, this.shootSpeed(), inaccuracy);
-                    if (player.isCreative()) {
-                        boomerang.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                    int multishot = EnchantmentUtil.getMultishot(itemStack);
+                    for(int k = -multishot; k <= multishot; k++){
+                        Boomerang boomerang = new Boomerang(level, player, itemStack, k != 0);
+                        boomerang.setLootingLevel((byte) EnchantmentUtil.getMobLooting(itemStack));
+                        boomerang.setKnockback(EnchantmentUtil.getPunch(itemStack));
+                        boomerang.setPierceLevel((byte)EnchantmentUtil.getPiercing(itemStack));
+                        float superCharge = EnchantmentUtil.getSuperChargeMultiplier(itemStack);
+                        float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(player) / superCharge;
+                        float angle = multishot > 0 ? k * 10f / (multishot) : 0f;
+                        Vec3 vec31 = player.getUpVector(1.0F);
+                        Quaternion quaternion = new Quaternion(new Vector3f(vec31), angle, true);
+                        Vec3 vec3 = player.getViewVector(1.0F);
+                        Vector3f vector3f = new Vector3f(vec3);
+                        vector3f.transform(quaternion);
+                        boomerang.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.shootSpeed(superCharge), inaccuracy);
+                        if (player.isCreative()) {
+                            boomerang.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                        }
+                        level.addFreshEntity(boomerang);
+                        if(k == 0){
+                            level.playSound(null, boomerang, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.0F, 1.0F);
+                        } else {
+                            boomerang.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                        }
                     }
-
-                    level.addFreshEntity(boomerang);
-                    level.playSound(null, boomerang, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.0F, 1.0F);
                     if (!player.isCreative()) {
-                        player.getInventory().removeItem(stack);
+                        player.getInventory().removeItem(itemStack);
                     }
                 }
 
@@ -90,8 +108,8 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         }
     }
 
-    public float shootSpeed(){
-        return (Float.max((float)this.getInnateEnchantmentLevel(EnchantmentRegistry.LOYALTY.get()), 1.0f)+1.0f)*0.4f;
+    public float shootSpeed(float f){
+        return (Float.max((float)this.getInnateEnchantmentLevel(EnchantmentRegistry.LOYALTY.get()), 1.0f)+1.0f)*0.4f * f;
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {

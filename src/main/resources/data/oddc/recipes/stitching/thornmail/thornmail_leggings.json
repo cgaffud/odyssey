@@ -1,0 +1,16 @@
+{
+  "type": "oddc:stitching",
+  "ingredient1":
+  {
+    "item": "oddc:cactus_leggings"
+  },
+  "ingredient2":
+  {
+    "item": "minecraft:chainmail_leggings"
+  },
+  "fiber":
+  {
+    "item": "oddc:copper_fiber"
+  },
+  "result": "oddc:thornmail_leggings"
+}

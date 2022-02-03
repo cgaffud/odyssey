@@ -5,25 +5,17 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class SetBonusEnchantment extends Enchantment {
-    public SetBonusEnchantment(Rarity rarity, EquipmentSlot... slots) {
+    private final int maxLevel;
+    public SetBonusEnchantment(Rarity rarity, int maxLevel, EquipmentSlot... slots) {
         super(rarity, EnchantmentCategory.ARMOR, slots);
-    }
-    /**
-     * Returns the minimal value of enchantability needed on the enchantment level passed.
-     */
-    public int getMinCost(int enchantmentLevel) {
-        return 25;
-    }
-
-    public int getMaxCost(int enchantmentLevel) {
-        return 50;
+        this.maxLevel = maxLevel;
     }
 
     /**
      * Returns the maximum level that the enchantment can have.
      */
     public int getMaxLevel() {
-        return 1;
+        return maxLevel;
     }
 
     public boolean isTreasureOnly() {
