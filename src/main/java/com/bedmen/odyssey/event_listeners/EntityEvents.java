@@ -27,9 +27,11 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfig;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -210,7 +212,8 @@ public class EntityEvents {
         ItemStack shield = livingEntity.getUseItem();
         if(shield.getItem() instanceof OdysseyShieldItem odysseyShieldItem){
             event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty()));
-            if(livingEntity instanceof Player player){
+            Entity attacker = event.getDamageSource().getDirectEntity();
+            if(livingEntity instanceof Player player && attacker instanceof LivingEntity livingAttacker && livingAttacker.getMainHandItem().getItem() instanceof AxeItem){
                 int recoveryTime = odysseyShieldItem.getRecoveryTime();
                 for(Item item : OdysseyItemTags.SHIELDS.getValues()){
                     player.getCooldowns().addCooldown(item, recoveryTime);

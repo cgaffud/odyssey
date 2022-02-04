@@ -165,12 +165,13 @@ def stripe_pixel(pos, pixel, w):
     return pixel
 
 pieces = ["1","2"]
-open_path1 = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\models\armor\parka_layer_"
-save_path = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\models\armor\gray_parka_layer_"
+open_path1 = r"C:\Users\18029\Documents\1.18\assets\minecraft\textures\models\armor\chainmail_layer_"
+save_path = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\models\armor\thornmail_layer_"
 for piece in pieces:
     open_path2 = open_path1 + piece + ".png"
     save_path2 = save_path + piece + ".png"
     image1 = open_image(open_path2)
-    grayscale_image(image1)
+    recolor_image(image1, [0.5,0.6,0.3], [0,0,0])
+    recolor_image(image1, [0.8,0.8,0.8], [0,0,0])
     save_image(image1, save_path2)
 print("Done")
