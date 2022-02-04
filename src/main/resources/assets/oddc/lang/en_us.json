@@ -331,5 +331,10 @@
   "entity.oddc.skeleton": "Skeleton",
   "item.oddc.skeleton_spawn_egg": "Skeleton Spawn Egg",
   "block.oddc.ruby_ore": "Ruby Ore",
-  "block.oddc.deepslate_ruby_ore": "Deepslate Ruby Ore"
+  "block.oddc.deepslate_ruby_ore": "Deepslate Ruby Ore",
+  "item.oddc.light_melee_item.damage_modifier": "+%s Damage Under %s",
+  "item.oddc.spider_dagger.damage_modifier": "+%s Poison Damage",
+  "item.oddc.spider_dagger": "Spider Fang Dagger",
+  "item.oddc.sun_sword": "Sunblade",
+  "item.oddc.moon_sword": "Moonblade"
 }
