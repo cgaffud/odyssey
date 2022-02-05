@@ -32,7 +32,7 @@ public class LightMeleeItem extends EquipmentMeleeItem implements INeedsToRegist
         this.time = time;
     }
 
-    /**TODO: add new moon*/
+    /**TODO: add new moon check*/
     public boolean isActive(Level level, LivingEntity livingEntity) {
         BlockPos eyeLevel = new BlockPos(livingEntity.getX(), livingEntity.getEyeY(), livingEntity.getZ());
         boolean correctTime = switch (this.time) {
