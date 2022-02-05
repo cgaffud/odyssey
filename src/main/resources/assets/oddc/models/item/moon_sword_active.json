@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/moon_sword",
+  "textures": {
+    "layer0": "oddc:item/moon_sword/active"
+  }
+}
