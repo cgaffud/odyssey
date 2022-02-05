@@ -4,6 +4,7 @@ import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.util.WorldGenUtil;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -55,9 +56,9 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
                 for(Integer y : yList){
                     blockpos$mutableblockpos.set(integer, y, integer1);
                     for(int i = 0; i < 8; i++){
-                        blockpos$mutableblockpos.offset(0, -1, 0);
+                        blockpos$mutableblockpos.move(0, -1, 0);
                         BlockPos blockPosBelow = blockpos$mutableblockpos.below();
-                        if (isSolid(worldgenlevel, blockpos$mutableblockpos) && !isSolid(worldgenlevel, blockPosBelow)) {
+                        if (WorldGenUtil.isEmpty(worldgenlevel, blockpos$mutableblockpos) && WorldGenUtil.isSolid(worldgenlevel, blockPosBelow)) {
                             BlockState blockState = this.treasureChestMaterial.getBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
                             worldgenlevel.setBlock(blockpos$mutableblockpos, blockState, 2);
                             RandomizableContainerBlockEntity.setLootTable(worldgenlevel, random, blockpos$mutableblockpos, this.treasureChestMaterial.lootTable);
@@ -71,7 +72,5 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
         return false;
     }
 
-    private boolean isSolid(WorldGenLevel worldgenlevel, BlockPos blockPos){
-        return (worldgenlevel.isEmptyBlock(blockPos) || worldgenlevel.getBlockState(blockPos).getCollisionShape(worldgenlevel, blockPos).isEmpty()) && worldgenlevel.getBlockState(blockPos).getFluidState().isEmpty();
-    }
+
 }

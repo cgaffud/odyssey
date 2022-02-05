@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.util.WorldGenUtil;
 import com.bedmen.odyssey.world.gen.structure.OdysseyStructurePieceType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class UndergroundRuinPieces {
+    private static final int PLACEMENT_RADIUS = 0;
     private static final List<ResourceLocation> HOUSES = Arrays.asList(new ResourceLocation(Odyssey.MOD_ID, "underground_ruins/abandoned_underground_house"));
 
     public static void addPiece(StructureManager manager, BlockPos blockPos, Rotation rotation, StructurePieceAccessor accessor, Random random) {
@@ -45,7 +47,6 @@ public class UndergroundRuinPieces {
         accessor.addPiece(new UndergroundRuinPiece(manager, structureLoc, blockPos, rotation));
     }
 
-    // TODO structure doesn't generate with conditions properly or at correct location. Recomment in at StructureGen
     public static class UndergroundRuinPiece extends TemplateStructurePiece {
         public UndergroundRuinPiece(StructureManager structureManager, ResourceLocation resourceLocation, BlockPos blockPos, Rotation rotation) {
             super(OdysseyStructurePieceType.UNDERGROUND_RUIN, 0, structureManager, resourceLocation, resourceLocation.toString(), makeSettings(rotation), blockPos);
@@ -67,79 +68,38 @@ public class UndergroundRuinPieces {
         }
 
         public void postProcess(WorldGenLevel level, StructureFeatureManager manager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
-            ResourceLocation resourceLocation = new ResourceLocation(this.templateName);
-            if (HOUSES.contains(resourceLocation)) {
-                BlockPos newpos = getHousePosition(level, random, chunkPos, true);
-                // I also tried setting pos to newpos, but that had little effect either
-                if (newpos != null) {
-                    this.templatePosition = newpos;
-                    pos = newpos;
-                }
-            }
-
+            StructurePlaceSettings structureplacesettings = makeSettings(this.placeSettings.getRotation());
+            BlockPos blockpos1 = this.templatePosition.offset(StructureTemplate.calculateRelativePosition(structureplacesettings, new BlockPos(0, 0, 3)));
+            BlockPos housePosition = getHousePosition(level, random, blockpos1);
+            BlockPos blockpos2 = this.templatePosition;
+            this.templatePosition = this.templatePosition.offset(housePosition.getX() - blockpos2.getX(), housePosition.getY() - 90 - 5, housePosition.getZ() - blockpos2.getZ());
             super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
+            this.templatePosition = blockpos2;
         }
 
-        // IGLOO CODE WITH MAPPED VARIABLES
-            //            ResourceLocation resourcelocation = new ResourceLocation(this.templateName);
-//            StructurePlaceSettings structureplacesettings = makeSettings(this.placeSettings.getRotation());
-//            BlockPos blockpos = IglooPieces.OFFSETS.get(resourcelocation);
-//            BlockPos blockpos1 = this.templatePosition.offset(StructureTemplate.calculateRelativePosition(structureplacesettings, new BlockPos(3 - blockpos.getX(), 0, -blockpos.getZ())));
-//            int i = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, blockpos1.getX(), blockpos1.getZ());
-//            BlockPos blockpos2 = this.templatePosition;
-//            this.templatePosition = this.templatePosition.offset(0, i - 90 - 1, 0);
-//            super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
-//            if (resourcelocation.equals(IglooPieces.STRUCTURE_LOCATION_IGLOO)) {
-//                BlockPos blockpos3 = this.templatePosition.offset(StructureTemplate.calculateRelativePosition(structureplacesettings, new BlockPos(3, 0, 5)));
-//                BlockState blockstate = level.getBlockState(blockpos3.below());
-//                if (!blockstate.isAir() && !blockstate.is(Blocks.LADDER)) {
-//                    level.setBlock(blockpos3, Blocks.SNOW_BLOCK.defaultBlockState(), 3);
-//                }
-//            }
-//
-//            this.templatePosition = blockpos2;
-//        }
-
-        private BlockPos getHousePosition(WorldGenLevel level, Random random, ChunkPos chunkPos, boolean hasBunker) {
-            Rotation rotation = this.placeSettings.getRotation();
-            StructurePlaceSettings structureplacesettings = makeSettings(this.placeSettings.getRotation());
-//            List<Integer> xList = IntStream.rangeClosed(chunkPos.getMinBlockX(), chunkPos.getMaxBlockX()).boxed().collect(Collectors.toList());
-//            Collections.shuffle(xList, random);
-//            List<Integer> zList = IntStream.rangeClosed(chunkPos.getMinBlockZ(), chunkPos.getMaxBlockZ()).boxed().collect(Collectors.toList());
-//            Collections.shuffle(zList, random);
+        private BlockPos getHousePosition(WorldGenLevel level, Random random, BlockPos blockPos) {
+            List<Integer> xList = IntStream.rangeClosed(blockPos.getX()-PLACEMENT_RADIUS, blockPos.getX()+PLACEMENT_RADIUS).boxed().collect(Collectors.toList());
+            Collections.shuffle(xList, random);
+            List<Integer> zList = IntStream.rangeClosed(blockPos.getZ()-PLACEMENT_RADIUS, blockPos.getZ()+PLACEMENT_RADIUS).boxed().collect(Collectors.toList());
+            Collections.shuffle(zList, random);
             List<Integer> yList = IntStream.rangeClosed(-7, 7).boxed().map((i) -> i*8) .collect(Collectors.toList());
             Collections.shuffle(yList, random);
-            BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+            BlockPos.MutableBlockPos mutable = blockPos.mutable();
 //
-//            for(Integer x : xList) {
-//                for(Integer z : zList) {
+            for(Integer x : xList) {
+                for(Integer z : zList) {
                     for(Integer y : yList){
-                        mutable.set(chunkPos.getMinBlockX(), y, chunkPos.getMinBlockZ());
+                        mutable.set(x,y,z);
                         for(int i = 0; i < 8; i++){
-                            mutable.offset(0,-1,0);
-                            BlockPos.MutableBlockPos doorChecker = new BlockPos.MutableBlockPos();
-                            doorChecker.set(mutable.getX(), mutable.getY(), mutable.getZ());
-                            /*I think this is how this is supposed to be used*/
-                            doorChecker.offset(StructureTemplate.calculateRelativePosition(structureplacesettings, new BlockPos(0,hasBunker ? 7 : 3, 3)));
-                            /*But this is what I intially tried. Both don't seem to work*/
-//                            switch(rotation) {
-//                                case NONE -> doorChecker.offset(0, hasBunker ? 7 : 3, 3);
-//                                case CLOCKWISE_90 -> doorChecker.offset(-3,hasBunker ? 7 : 3,0);
-//                                case CLOCKWISE_180 -> doorChecker.offset(0,hasBunker ? 7 : 3,-3);
-//                                case COUNTERCLOCKWISE_90 -> doorChecker.offset(3,hasBunker ? 7 : 3,0);
-//                            }
-                            if (isSolid(level, doorChecker.above()) && isSolid(level, doorChecker) && !isSolid(level,doorChecker.below(2))) {
-                               System.out.println("Passed");
-                               System.out.println(mutable.toString());
+                            mutable.move(0,-1,0);
+                            if (WorldGenUtil.isEmpty(level, mutable.above()) && WorldGenUtil.isEmpty(level, mutable) && WorldGenUtil.isSolid(level, mutable.below())) {
                                return mutable;
                             }
-
                         }
-            //        }
-          //      }
+                    }
+                }
             }
-            System.out.println("Failed");
-            return null;
+            return blockPos.atY(random.nextInt(96)-48);
         }
 
         @Override
@@ -152,10 +112,6 @@ public class UndergroundRuinPieces {
                     System.out.println("Lootable Added");
                 }
             }
-        }
-
-        private boolean isSolid(WorldGenLevel worldgenlevel, BlockPos blockPos){
-            return (worldgenlevel.isEmptyBlock(blockPos) || worldgenlevel.getBlockState(blockPos).getCollisionShape(worldgenlevel, blockPos).isEmpty()) && worldgenlevel.getBlockState(blockPos).getFluidState().isEmpty();
         }
     }
 }

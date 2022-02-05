@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.world.gen.structure;
 
 import com.bedmen.odyssey.world.gen.structure.pieces.UndergroundRuinPieces;
+import com.bedmen.odyssey.world.gen.structure.pieces.WeaverColonySpherePiece;
 import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 
 public class OdysseyStructurePieceType {
