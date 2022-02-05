@@ -6,6 +6,8 @@ import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -33,22 +35,23 @@ import javax.annotation.Nullable;
 
 public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
     private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(Boomerang.class, EntityDataSerializers.BYTE);
-    private static final EntityDataAccessor<Boolean> ID_FOIL = SynchedEntityData.defineId(Boomerang.class, EntityDataSerializers.BOOLEAN);
     private BoomerangType boomerangType = BoomerangType.WOODEN;
     private ItemStack thrownStack = new ItemStack(ItemRegistry.WOODEN_BOOMERANG.get());
+    private boolean multishot = false;
     private boolean dealtDamage;
     public int returningTicks;
+    private int despawnTicks;
 
     public Boomerang(EntityType<? extends Boomerang> type, Level level) {
         super(type, level);
     }
 
-    public Boomerang(Level level, LivingEntity thrower, ItemStack thrownStackIn) {
+    public Boomerang(Level level, LivingEntity thrower, ItemStack thrownStackIn, boolean multishot) {
         super(EntityTypeRegistry.BOOMERANG.get(), thrower, level);
         this.thrownStack = thrownStackIn.copy();
         this.entityData.set(ID_LOYALTY, (byte) EnchantmentUtil.getLoyalty(thrownStackIn));
-        this.entityData.set(ID_FOIL, thrownStackIn.hasFoil());
         this.boomerangType = ((BoomerangItem)this.thrownStack.getItem()).getBoomerangType();
+        this.multishot = multishot;
     }
 
     public Boomerang(Level p_i48791_1_, double p_i48791_2_, double p_i48791_4_, double p_i48791_6_) {
@@ -58,7 +61,6 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ID_LOYALTY, (byte)0);
-        this.entityData.define(ID_FOIL, false);
     }
 
     /**
@@ -74,11 +76,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         if ((this.dealtDamage || this.isNoPhysics()) && entity != null) {
             int loyalty = this.getLoyalty();
             if (!this.isAcceptibleReturnOwner()) {
-                if (!this.level.isClientSide && this.pickup == Pickup.ALLOWED) {
-                    this.spawnAtLocation(this.getPickupItem(), 0.1F);
-                }
-
-                this.discard();
+                despawn();
             } else {
                 this.setNoPhysics(true);
                 Vec3 vector3d = new Vec3(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
@@ -87,9 +85,23 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
 
                 ++this.returningTicks;
             }
+        } else if (entity == null && this.getDeltaMovement().length() < 0.01){
+            this.despawnTicks++;
+        }
+
+        if(this.despawnTicks > 20){
+            despawn();
         }
 
         super.tick();
+    }
+
+    private void despawn(){
+        if (!this.level.isClientSide && this.pickup == Pickup.ALLOWED) {
+            this.spawnAtLocation(this.getPickupItem(), 0.1F);
+        }
+
+        this.discard();
     }
 
     private boolean isAcceptibleReturnOwner() {
@@ -102,11 +114,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     }
 
     protected ItemStack getPickupItem() {
-        return this.thrownStack.copy();
-    }
-
-    public boolean isFoil() {
-        return this.entityData.get(ID_FOIL);
+        return this.multishot ? ItemStack.EMPTY : this.thrownStack.copy();
     }
 
     public int getLoyalty() {
@@ -129,10 +137,10 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
                     break;
                 }
             }
-            return null;
-        } else {
+        } else if(!this.isNoPhysics()) {
             return super.findHitEntity(startVec, endVec);
         }
+        return null;
     }
 
     private boolean isBoomerangOwner(Entity entity){
@@ -142,42 +150,49 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return entity instanceof BoomerangAttackMob && entity instanceof LivingEntity && entity.getUUID() == this.getOwner().getUUID();
     }
 
-    /**
-     * Called when the arrow hits an entity
-     */
-    protected void onHitEntity(EntityHitResult p_213868_1_) {
-        Entity entity = p_213868_1_.getEntity();
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        Entity entity = entityHitResult.getEntity();
         float f = (float)this.getBoomerangType().getDamage();
         if (entity instanceof LivingEntity) {
             LivingEntity livingentity = (LivingEntity)entity;
             f += EnchantmentHelper.getDamageBonus(this.thrownStack, livingentity.getMobType());
         }
-
         Entity entity1 = this.getOwner();
         DamageSource damagesource = OdysseyDamageSource.boomerang(this, entity1 == null ? this : entity1);
-        this.dealtDamage = true;
         if (entity.hurt(damagesource, f)) {
             if (entity.getType() == EntityType.ENDERMAN) {
                 return;
             }
 
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingentity1 = (LivingEntity)entity;
-                if (entity1 instanceof LivingEntity) {
-                    EnchantmentHelper.doPostHurtEffects(livingentity1, entity1);
-                    EnchantmentHelper.doPostDamageEffects((LivingEntity)entity1, livingentity1);
+            if (entity instanceof LivingEntity livingEntity) {
+                if (this.knockback > 0) {
+                    Vec3 vec3 = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double)this.knockback * 0.6D);
+                    if (vec3.lengthSqr() > 0.0D) {
+                        livingEntity.push(vec3.x, 0.1D, vec3.z);
+                    }
                 }
 
-                this.doPostHurtEffects(livingentity1);
+                if (entity1 instanceof LivingEntity) {
+                    EnchantmentHelper.doPostHurtEffects(livingEntity, entity1);
+                    EnchantmentHelper.doPostDamageEffects((LivingEntity)entity1, livingEntity);
+                }
+
+                this.doPostHurtEffects(livingEntity);
             }
         }
-
-        this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
-        this.playSound(SoundEvents.TRIDENT_HIT, 1.0f, 1.0F);
+        if (this.piercingIgnoreEntityIds == null) {
+            this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
+        }
+        this.piercingIgnoreEntityIds.add(entity.getId());
+        if (this.piercingIgnoreEntityIds.size() >= this.getPierceLevel() + 1) {
+            this.dealtDamage = true;
+            this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
+        }
+        this.playSound(SoundEvents.ARROW_HIT, 1.0f, 1.0F);
     }
 
     protected SoundEvent getDefaultHitGroundSoundEvent() {
-        return SoundEvents.TRIDENT_HIT_GROUND;
+        return SoundEvents.ARROW_HIT;
     }
 
     public void playerTouch(Player player) {
@@ -186,8 +201,13 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         }
     }
 
-    protected boolean tryPickup(Player p_150196_) {
-        return super.tryPickup(p_150196_) || this.isNoPhysics() && this.ownedBy(p_150196_) && p_150196_.getInventory().add(this.getPickupItem());
+    protected boolean tryPickup(Player player) {
+        boolean flag = this.isNoPhysics() && this.ownedBy(player);
+        if(flag && this.multishot){
+            this.discard();
+            return false;
+        }
+        return super.tryPickup(player) || flag && player.getInventory().add(this.getPickupItem());
     }
 
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
@@ -200,6 +220,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         if (compoundNBT.contains("BoomerangType")) {
             this.boomerangType = BoomerangType.valueOf(compoundNBT.getString("BoomerangType"));
         }
+        this.multishot = compoundNBT.getBoolean("IsMultishot");
     }
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
@@ -207,6 +228,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         compoundNBT.put("Boomerang", this.thrownStack.save(new CompoundTag()));
         compoundNBT.putBoolean("DealtDamage", this.dealtDamage);
         compoundNBT.putString("BoomerangType", this.boomerangType.name());
+        compoundNBT.putBoolean("IsMultishot", this.multishot);
     }
 
 
@@ -254,9 +276,15 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     public enum BoomerangType{
         WOODEN(4.0d, 20, 500),
         BONE(5.0d, 20, 0),
-        BONERANG(7.0d, 10, 0),
-        CLOVER_STONE(6.0d, 20, 0);
-//        COPPER(6.0d, new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/copper_boomerang.png"));
+        UPGRADED_BONE(6.0d, 20, 0),
+        SPEEDY_BONE(5.0d, 14, 0),
+        BONERANG(6.0d, 14, 0),
+        CLOVER_STONE(6.5d, 20, 0),
+        GREATROOT(7.0d, 20, 0),
+        UPGRADED_GREATROOT(8.0d, 20, 0),
+        SPEEDY_GREATROOT(7.0d, 12, 0),
+        SUPER_GREATROOT(12.0d, 30, 0);
+
 
         private final double damage;
         private final int returnTime;
@@ -274,6 +302,10 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
 
         public int getReturnTime(){
             return this.returnTime;
+        }
+
+        public int getChargeTime(){
+            return this.returnTime / 2;
         }
 
         public float getAttackTime(){

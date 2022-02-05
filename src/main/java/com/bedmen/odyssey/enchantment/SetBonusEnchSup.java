@@ -8,7 +8,10 @@ public class SetBonusEnchSup extends LevEnchSup{
     public final String key;
 
     public SetBonusEnchSup(Supplier<Enchantment> enchantmentSupplier, String key){
-        super(enchantmentSupplier);
+        this(enchantmentSupplier, 1, key);
+    }
+    public SetBonusEnchSup(Supplier<Enchantment> enchantmentSupplier, int level, String key){
+        super(enchantmentSupplier, level);
         this.key = key;
     }
 }

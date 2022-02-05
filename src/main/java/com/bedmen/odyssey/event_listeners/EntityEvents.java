@@ -1,15 +1,21 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.animal.OdysseyPolarBear;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +33,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -43,6 +48,17 @@ public class EntityEvents {
     @SubscribeEvent
     public static void onLivingUpdateEvent(final LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
+        //For Gliding Armor
+        if(livingEntity instanceof IOdysseyLivingEntity odysseyLivingEntity){
+            odysseyLivingEntity.setFlightLevels(EnchantmentUtil.hasSlowFalling(livingEntity), EnchantmentUtil.getGliding(livingEntity));
+            if(livingEntity.level.isClientSide && livingEntity.jumping && odysseyLivingEntity.hasSlowFalling() && livingEntity.getDeltaMovement().y < -0.1d && odysseyLivingEntity.getFlightTicks() <= odysseyLivingEntity.getMaxFlightTicks()){
+                odysseyLivingEntity.incrementFlightTicks(20);
+                OdysseyNetwork.CHANNEL.sendToServer(new JumpKeyPressedPacket());
+            } else if(livingEntity.isOnGround()) {
+                odysseyLivingEntity.decrementFlightTicks();
+            }
+        }
+
         if (!livingEntity.level.isClientSide && livingEntity.isAlive()) {
             int bleedLvl = EnchantmentUtil.getBleeding(livingEntity);
             int heavyLvl = EnchantmentUtil.getHeavy(livingEntity);
@@ -57,6 +73,24 @@ public class EntityEvents {
             if (drowningLvl > 0)
                 livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 2, drowningLvl-1
                         ,false,false,false));
+        }
+
+        //For Drowning
+        if(!livingEntity.level.isClientSide && livingEntity.hasEffect(EffectRegistry.DROWNING.get())){
+            MobEffectInstance mobEffectInstance = livingEntity.getEffect(EffectRegistry.DROWNING.get());
+            int air = livingEntity.getAirSupply();
+            int reduction = mobEffectInstance.getAmplifier();
+            //If the entity is taking drown damage, if can only take damage once per half second anyways.
+            //Odd multiples of drown amounts actually cause drown damage less frequently than even, which hit every half second
+            //Therefore if the entity is drowning we just max the drown amount at 2
+            //Note that the 1st drown amount is dealt through the LivingEntity baseTick code, so we max reduction here at 1.
+            if(air <= 0){
+                reduction = Integer.min(reduction, 1);
+            }
+            for(int i = 0; i < reduction; i++){
+                air = livingEntity.decreaseAirSupply(air);
+            }
+            livingEntity.setAirSupply(air);
         }
     }
 
@@ -178,6 +212,12 @@ public class EntityEvents {
         ItemStack shield = livingEntity.getUseItem();
         if(shield.getItem() instanceof OdysseyShieldItem odysseyShieldItem){
             event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty()));
+            if(livingEntity instanceof Player player){
+                int recoveryTime = odysseyShieldItem.getRecoveryTime();
+                for(Item item : OdysseyItemTags.SHIELDS.getValues()){
+                    player.getCooldowns().addCooldown(item, recoveryTime);
+                }
+            }
         }
     }
 

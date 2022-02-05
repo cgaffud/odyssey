@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.world.gen.feature.tree;
 
+import com.bedmen.odyssey.block.SeedBlock;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -109,8 +111,10 @@ public class GreatTrunkPlacer extends TrunkPlacer {
         /* remainder of trunk */
         for (int i = 0; i < effTreeHeight/2+1; i++) {
             for (int j = 0; j < 4; j++) {
-                if (((i == 0)||(i == effTreeHeight/2)) && (j == 0))
+                if (((i == 0)||(i == effTreeHeight/2)) && (j == 0)){
+                    placeSeedIfFreeWithOffset(levelSimulatedReader, biConsumer, random, blockpos$mutableblockpos, config, lean, 0, i, 0);
                     continue;
+                }
                 placeLogIfFreeWithOffset(levelSimulatedReader, biConsumer, random, blockpos$mutableblockpos, config, lean, (j/2==0) ? 0 : dirx, i, (j%2==0) ? 0 : dirz);
             }
         }
@@ -127,7 +131,7 @@ public class GreatTrunkPlacer extends TrunkPlacer {
     }
 
     private static FoliagePlacer.FoliageAttachment makeBranch(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int xOffset, int zOffset) {
-        int branchLength = 4+random.nextInt(2);
+        int branchLength = 4+random.nextInt(3);
         int yOffset = 0;
         Direction.Axis axis = (xOffset != 0) ? Direction.Axis.X : Direction.Axis.Z;
 
@@ -220,5 +224,30 @@ public class GreatTrunkPlacer extends TrunkPlacer {
 
     private void placeRoots(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos pos, TreeConfiguration config, Function<BlockState, BlockState> func) {
         biConsumer.accept(pos, func.apply(this.roots.getState(random, pos)));
+    }
+
+    private void placeSeedWithAxis(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int x, int y, int z, Direction.Axis axis) {
+        mutable.setWithOffset(pos, x, y, z);
+        placeSeed(levelSimulatedReader, biConsumer, random, mutable, config, blockState -> blockState.setValue(RotatedPillarBlock.AXIS, axis));
+    }
+    private void placeSeedIfFreeWithAxis(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int x, int y, int z, Direction.Axis axis) {
+        mutable.setWithOffset(pos, x, y, z);
+        if (TreeFeature.validTreePos(levelSimulatedReader,mutable) && TreeFeature.isFree(levelSimulatedReader,mutable))
+            placeSeed(levelSimulatedReader, biConsumer, random, mutable, config, blockState -> blockState.setValue(RotatedPillarBlock.AXIS, axis));
+    }
+
+    private void placeSeedWithOffset(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int x, int y, int z) {
+        mutable.setWithOffset(pos, x, y, z);
+        placeSeed(levelSimulatedReader, biConsumer, random, mutable, config, Function.identity());
+    }
+
+    private void placeSeedIfFreeWithOffset(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int x, int y, int z) {
+        mutable.setWithOffset(pos, x, y, z);
+        if (TreeFeature.validTreePos(levelSimulatedReader,mutable) && TreeFeature.isFree(levelSimulatedReader,pos))
+            placeSeed(levelSimulatedReader, biConsumer, random, mutable, config, Function.identity());
+    }
+
+    private void placeSeed(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos pos, TreeConfiguration config, Function<BlockState, BlockState> func) {
+        biConsumer.accept(pos, BlockRegistry.GREATWOOD_SEED.get().defaultBlockState().setValue(SeedBlock.AGE, 0));
     }
 }

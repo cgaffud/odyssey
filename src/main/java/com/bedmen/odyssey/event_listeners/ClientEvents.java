@@ -77,9 +77,17 @@ public class ClientEvents {
 
             //For hollow coconut vision overlay
             OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HELMET_ELEMENT,"Odyssey Helmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-                gui.setupOverlayRenderState(true, false);
                 if(gui instanceof OdysseyIngameGui odysseyIngameGui){
+                    gui.setupOverlayRenderState(true, false);
                     odysseyIngameGui.renderOdysseyHelmet(partialTicks, mStack);
+                }
+            });
+
+            //For hollow coconut vision overlay
+            OverlayRegistry.registerOverlayAbove(ForgeIngameGui.AIR_LEVEL_ELEMENT,"Odyssey Flight", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+                if(gui instanceof OdysseyIngameGui odysseyIngameGui && !odysseyIngameGui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()){
+                    gui.setupOverlayRenderState(true, false, OdysseyIngameGui.ODYSSEY_GUI_ICONS_LOCATION);
+                    odysseyIngameGui.renderFlight(screenWidth, screenHeight, mStack);
                 }
             });
 

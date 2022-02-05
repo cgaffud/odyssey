@@ -1,0 +1,8 @@
+{
+  "type": "oddc:weaving",
+  "ingredient":
+  {
+    "item": "minecraft:gold_ingot"
+  },
+  "result": "oddc:golden_cobweb"
+}

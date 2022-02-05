@@ -17,6 +17,7 @@ import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.*;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
+import mezz.jei.api.JeiPlugin;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
@@ -69,7 +70,7 @@ public class Odyssey
             OdysseyNetwork.init();
             ContainerRegistry.initQuivers();
             FeatureRegistry.initTreasureChests();
-            PassiveWeaver.init();
+            //PassiveWeaver.init();
             OdysseyFlowerPotBlock.registerFlowerPots();
             CompostUtil.addCompostingRecipes();
             OdysseyLootItemFunctions.registerFunctions();

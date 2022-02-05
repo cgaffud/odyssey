@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -26,8 +27,7 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
     protected final ResourceLocation id;
     protected final Ingredient ingredient;
     protected final Map<Metal, Integer> metalCounts;
-    protected final float experience;
-    protected final int cookTime;
+    protected final int countTotal;
     protected static final float PENALTY = 2.0f/3.0f;
     protected static final int MAX_METALS = 3;
     protected static final int DEFAULT_COOK_TIME= 100;
@@ -36,9 +36,7 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
         this.id = idIn;
         this.ingredient = ingredientIn;
         this.metalCounts = metalCounts;
-        int countTotal = metalCounts.values().stream().reduce(0, Integer::sum);
-        this.experience = countTotal / 100f;
-        this.cookTime = Integer.max(DEFAULT_COOK_TIME, 2 * countTotal);
+        this.countTotal = metalCounts.values().stream().reduce(0, Integer::sum);
     }
 
     public boolean matches(Container container, Level level) {
@@ -63,7 +61,7 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
      * Gets the experience of this recipe
      */
     public float getExperience() {
-        return this.experience;
+        return this.countTotal / 100f;
     }
 
     /**
@@ -77,11 +75,40 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
         return null;
     }
 
+    public NonNullList<Ingredient> getIngredients() {
+        NonNullList<Ingredient> nonnulllist = NonNullList.create();
+        nonnulllist.add(this.ingredient);
+        return nonnulllist;
+    }
+
+    public NonNullList<ItemStack> getOutputForJEI() {
+        NonNullList<ItemStack> nonnulllist = NonNullList.create();
+        int i = 0;
+        for(Map.Entry<Metal, Integer> metalCountEntry : this.metalCounts.entrySet()){
+            i++;
+            Metal metal = metalCountEntry.getKey();
+            int count = metalCountEntry.getValue();
+            int blockCount = count / 81;
+            count -= blockCount * 81;
+            int ingotCount = count / 9;
+            count -= ingotCount * 9;
+            nonnulllist.add(count > 0 ? new ItemStack(metal.getNugget(), count) : ItemStack.EMPTY);
+            nonnulllist.add(ingotCount > 0 ? new ItemStack(metal.getIngot(), ingotCount) : ItemStack.EMPTY);
+            nonnulllist.add(blockCount > 0 ? new ItemStack(metal.getBlock(), blockCount) : ItemStack.EMPTY);
+        }
+        for(; i < 3; i++){
+            nonnulllist.add(ItemStack.EMPTY);
+            nonnulllist.add(ItemStack.EMPTY);
+            nonnulllist.add(ItemStack.EMPTY);
+        }
+        return nonnulllist;
+    }
+
     /**
      * Gets the cook time in ticks
      */
     public int getCookingTime() {
-        return this.cookTime;
+        return Integer.max(DEFAULT_COOK_TIME, 2 * this.countTotal);
     }
 
     public ResourceLocation getId() {

@@ -60,6 +60,7 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> ICE_PROTECTION = ENCHANTMENTS.register("ice_protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.UNCOMMON, OdysseyProtectionEnchantment.Type.ICE, EnchantmentCategory.ARMOR_CHEST, EquipmentSlot.CHEST));
     public static final RegistryObject<Enchantment> DOWNPOUR = ENCHANTMENTS.register("downpour", () -> new OdysseyDamageEnchantment(Enchantment.Rarity.RARE, OdysseyDamageEnchantment.DamageType.HYDROPHOBIC, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> FLING = ENCHANTMENTS.register("fling", () -> new FlingEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> KINETIC_PROTECTION = ENCHANTMENTS.register("kinetic_protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.UNCOMMON, OdysseyProtectionEnchantment.Type.KINETIC, EnchantmentCategory.ARMOR_FEET, EquipmentSlot.FEET));
 
     //Volcanic Enchantments
     public static final RegistryObject<Enchantment> VULCAN_STRIDER = ENCHANTMENTS.register("vulcan_strider", () -> new VulcanStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
@@ -69,8 +70,9 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> ERUPTION = ENCHANTMENTS.register("eruption", () -> new EruptionEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
 
     //Set Bonuses
-    public static final RegistryObject<Enchantment> SLOW_FALLING = ENCHANTMENTS.register("slow_falling", () -> new SetBonusEnchantment(Enchantment.Rarity.VERY_RARE, ARMOR_SLOTS));
-    public static final RegistryObject<Enchantment> TURTLING = ENCHANTMENTS.register("turtling", () -> new SetBonusEnchantment(Enchantment.Rarity.VERY_RARE, ARMOR_SLOTS));
+    public static final RegistryObject<Enchantment> SLOW_FALLING = ENCHANTMENTS.register("slow_falling", () -> new SetBonusEnchantment(Enchantment.Rarity.VERY_RARE, 1, ARMOR_SLOTS));
+    public static final RegistryObject<Enchantment> TURTLING = ENCHANTMENTS.register("turtling", () -> new SetBonusEnchantment(Enchantment.Rarity.VERY_RARE, 1, ARMOR_SLOTS));
+    public static final RegistryObject<Enchantment> GLIDING = ENCHANTMENTS.register("gliding", () -> new SetBonusEnchantment(Enchantment.Rarity.VERY_RARE, 2, ARMOR_SLOTS));
 
     //Curses
     public static final RegistryObject<Enchantment> UNENCHANTABLE = ENCHANTMENTS.register("unenchantable", () -> new BasicCurseEnchantment(Enchantment.Rarity.RARE, 1, EquipmentSlot.values()));

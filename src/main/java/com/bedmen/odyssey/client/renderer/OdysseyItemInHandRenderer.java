@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.client.renderer;
 
+import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
@@ -362,7 +363,7 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
                             p_109379_.mulPose(Vector3f.YP.rotationDegrees((float)k * 35.3F));
                             p_109379_.mulPose(Vector3f.ZP.rotationDegrees((float)k * -9.785F));
                             float f7 = (float)p_109377_.getUseDuration() - ((float)this.minecraft.player.getUseItemRemainingTicks() - p_109373_ + 1.0F);
-                            float f11 = f7 / 10.0F;
+                            float f11 = f7 / (float)(p_109377_.getItem() instanceof BoomerangItem boomerangItem ? boomerangItem.getBoomerangType().getChargeTime() : 10);
                             if (f11 > 1.0F) {
                                 f11 = 1.0F;
                             }

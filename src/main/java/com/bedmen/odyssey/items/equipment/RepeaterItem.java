@@ -11,10 +11,10 @@ public class RepeaterItem extends EquipmentBowItem {
         super(builder, velocity, chargeTime, levEnchSups);
     }
 
-    public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pCount) {
-        if(this.getUseDuration(pStack) - pCount > this.getChargeTime(pStack)){
-            pLivingEntity.stopUsingItem();
-            this.releaseUsing(pStack, pLevel, pLivingEntity, pCount);
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int count) {
+        if(this.getUseDuration(itemStack) - count > this.getChargeTime(itemStack)){
+            livingEntity.stopUsingItem();
+            this.releaseUsing(itemStack, level, livingEntity, count);
         }
     }
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface OdysseyRecipeType<T extends Recipe<?>> {
     RecipeType<RecyclingRecipe> RECYCLING = register("recycling");
+    RecipeType<WeavingRecipe> WEAVING = register("weaving");
     RecipeType<StitchingRecipe> STITCHING = register("stitching");
     RecipeType<AlloyRecipe> ALLOYING = register("alloying");
 //    RecipeType<OdysseySmithingRecipe> ODYSSEY_SMITHING = register("odyssey_smithing");

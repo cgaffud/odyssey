@@ -1,14 +1,12 @@
 package com.bedmen.odyssey.entity.animal;
 
+import com.bedmen.odyssey.recipes.OdysseyRecipeType;
+import com.bedmen.odyssey.recipes.WeavingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -28,6 +26,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,11 +40,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PassiveWeaver extends Animal {
     private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BEETROOT);
-    private static Map<Item, Block> WEAVE_MAP;
+    private final Map<Item, Block> weaveMap = new HashMap<>();
     private final SimpleContainer inventory = new SimpleContainer(1);
     private static final int MAX_STRING = 3;
     private static final float STRING_CHANCE = 0.05f;
@@ -56,16 +57,28 @@ public class PassiveWeaver extends Animal {
     public PassiveWeaver(EntityType<? extends PassiveWeaver> entityType, Level level) {
         super(entityType, level);
         this.setCanPickUpLoot(true);
+        Collection<WeavingRecipe> recipes = level.getRecipeManager().getAllRecipesFor(OdysseyRecipeType.WEAVING);
+        for(WeavingRecipe recipe : recipes){
+            Item item = recipe.getResultItem().getItem();
+            if(!(item instanceof BlockItem blockItem)){
+                continue;
+            }
+            Block block = blockItem.getBlock();
+            for(ItemStack itemStack : recipe.getIngredient().getItems()){
+                Item item1 = itemStack.getItem();
+                weaveMap.put(item1, block);
+            }
+        }
     }
 
-    public static void init(){
-        WEAVE_MAP = Map.of(Items.COPPER_INGOT, BlockRegistry.COPPER_COBWEB.get(),
-                ItemRegistry.SILVER_INGOT.get(), BlockRegistry.SILVER_COBWEB.get(),
-                Items.GOLD_INGOT, BlockRegistry.GOLDEN_COBWEB.get(),
-                ItemRegistry.STERLING_SILVER_INGOT.get(), BlockRegistry.STERLING_SILVER_COBWEB.get(),
-                ItemRegistry.ELECTRUM_INGOT.get(), BlockRegistry.ELECTRUM_COBWEB.get(),
-                Items.DIAMOND, BlockRegistry.DIAMOND_COBWEB.get());
-    }
+//    public static void init(){
+//        WEAVE_MAP = Map.of(Items.COPPER_INGOT, BlockRegistry.COPPER_COBWEB.get(),
+//                ItemRegistry.SILVER_INGOT.get(), BlockRegistry.SILVER_COBWEB.get(),
+//                Items.GOLD_INGOT, BlockRegistry.GOLDEN_COBWEB.get(),
+//                ItemRegistry.STERLING_SILVER_INGOT.get(), BlockRegistry.STERLING_SILVER_COBWEB.get(),
+//                ItemRegistry.ELECTRUM_INGOT.get(), BlockRegistry.ELECTRUM_COBWEB.get(),
+//                Items.DIAMOND, BlockRegistry.DIAMOND_COBWEB.get());
+//    }
 
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
@@ -109,7 +122,7 @@ public class PassiveWeaver extends Animal {
 
     public boolean wantsToPickUp(ItemStack itemStack) {
         Item item = itemStack.getItem();
-        return ((WEAVE_MAP.containsKey(item) && this.inventory.canAddItem(itemStack)) || item == Items.STRING) && !this.isBaby();
+        return ((weaveMap.containsKey(item) && this.inventory.canAddItem(itemStack)) || item == Items.STRING) && !this.isBaby();
     }
 
     protected void pickUpItem(ItemEntity itemEntity) {
@@ -293,7 +306,7 @@ public class PassiveWeaver extends Animal {
                         this.passiveWeaver.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
                     } else {
                         ItemStack itemStack = this.passiveWeaver.inventory.getItem(0);
-                        this.passiveWeaver.level.setBlock(blockPos, PassiveWeaver.WEAVE_MAP.get(itemStack.getItem()).defaultBlockState(), 3);
+                        this.passiveWeaver.level.setBlock(blockPos, this.passiveWeaver.weaveMap.get(itemStack.getItem()).defaultBlockState(), 3);
                         itemStack.shrink(1);
                     }
                     this.passiveWeaver.decrementStringTimer();

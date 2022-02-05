@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A  ",
+    " BC",
+    " C "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:diamond"
+    },
+    "B": {
+      "item": "oddc:greatroot_boomerang"
+    },
+    "C": {
+      "item": "oddc:silver_ingot"
+    }
+  },
+  "result": {
+    "item": "oddc:super_greatroot_boomerang"
+  }
+}

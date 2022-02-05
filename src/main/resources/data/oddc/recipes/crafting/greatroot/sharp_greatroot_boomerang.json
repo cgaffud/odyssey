@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "B": {
+      "item": "oddc:greatroot_boomerang"
+    }
+  },
+  "result": {
+    "item": "oddc:sharp_greatroot_boomerang"
+  }
+}
