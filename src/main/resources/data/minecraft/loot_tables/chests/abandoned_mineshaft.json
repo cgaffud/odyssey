@@ -65,6 +65,10 @@
             }
           ],
           "name": "oddc:reinforced_shield"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "oddc:spider_fang_dagger"
         }
       ]
     },

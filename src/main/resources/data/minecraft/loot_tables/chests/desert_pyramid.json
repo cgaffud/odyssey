@@ -131,6 +131,11 @@
           "name": "minecraft:enchanted_golden_apple"
         },
         {
+          "type": "minecraft:item",
+          "weight": 15,
+          "name": "oddc:sun_sword"
+        },
+        {
           "type": "minecraft:empty",
           "weight": 15
         },
