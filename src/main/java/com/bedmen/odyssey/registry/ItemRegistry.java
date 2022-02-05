@@ -26,9 +26,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import com.google.common.collect.Multimap;
-
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -209,9 +206,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SLIME_BAT = ITEMS.register("slime_bat", () -> new EquipmentMeleeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 2f, -2.7f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), KNOCKBACK_3));
     public static final RegistryObject<Item> MINI_HAMMER = ITEMS.register("mini_hammer", () -> new DualWieldItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), BANE_OF_ARTHROPODS_1));
     public static final RegistryObject<Item> SWIFT_SABRE = ITEMS.register("swift_sabre", () -> new FastMeleeItem(OdysseyTiers.TIER_1_UNCRAFTABLE, 6.0f, -2.3f, 0.2f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), SWEEPING_EDGE_1));
-    public static final RegistryObject<Item> SPIDER_DAGGER = ITEMS.register("spider_fang_dagger", () -> new SpiderDaggerItem(OdysseyTiers.STONE, 5f, -2.2f, 40, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
-    public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new LightMeleeItem(OdysseyTiers.ULTRA_1, 5f, -2.2f, 2f, LightMeleeItem.TIME_ACTIVE.DAY, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
-    public static final RegistryObject<Item> MOON_SWORD = ITEMS.register("moon_sword", () -> new LightMeleeItem(OdysseyTiers.ULTRA_2, 7f, -2.2f, 2f, LightMeleeItem.TIME_ACTIVE.NIGHT, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE)));
+    public static final RegistryObject<Item> SPIDER_DAGGER = ITEMS.register("spider_fang_dagger", () -> new SpiderDaggerItem(OdysseyTiers.STONE, 5f, -2.2f, 40, true, new Item.Properties().rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE)));
+    public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new LightMeleeItem(OdysseyTiers.ULTRA_1, 5f, -2.4f, 2f, LightMeleeItem.TIME_ACTIVE.DAY, true, new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE)));
+    public static final RegistryObject<Item> MOON_SWORD = ITEMS.register("moon_sword", () -> new LightMeleeItem(OdysseyTiers.ULTRA_2, 7f, -2.4f, 2f, LightMeleeItem.TIME_ACTIVE.NIGHT, true, new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE)));
 
 
     public static final RegistryObject<Item> CLOVER_STONE_SWORD = ITEMS.register("clover_stone_sword", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 7f, -2.4f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), LOOTING_1));
