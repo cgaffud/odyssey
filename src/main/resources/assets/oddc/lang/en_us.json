@@ -360,8 +360,7 @@
   "item.oddc.heavy_greatroot_boomerang": "Heavy Greatroot Boomerang",
   "item.oddc.speedy_greatroot_boomerang": "Speedy Greatroot Boomerang",
   "item.oddc.super_greatroot_boomerang": "Super Greatroot Boomerang",
-  "item.oddc.multishot_greatroot_boomerang": "Multishot Greatroot Boomerang"
-  "block.oddc.deepslate_ruby_ore": "Deepslate Ruby Ore",
+  "item.oddc.multishot_greatroot_boomerang": "Multishot Greatroot Boomerang",
   "item.oddc.light_melee_item.damage_modifier": "+%s Damage Under %s",
   "item.oddc.spider_dagger.damage_modifier": "+%s Poison Damage",
   "item.oddc.spider_fang_dagger": "Spider Fang Dagger",
