@@ -3,6 +3,7 @@ package com.bedmen.odyssey.items.equipment;
 import com.bedmen.odyssey.armor.OdysseyArmorMaterials;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
+import com.bedmen.odyssey.items.equipment.base.EquipmentArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;

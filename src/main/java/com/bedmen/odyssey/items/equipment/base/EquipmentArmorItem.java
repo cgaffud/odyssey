@@ -1,12 +1,10 @@
-package com.bedmen.odyssey.items.equipment;
+package com.bedmen.odyssey.items.equipment.base;
 
 import com.bedmen.odyssey.armor.OdysseyArmorMaterials;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.enchantment.SetBonusEnchSup;
-import com.bedmen.odyssey.registry.EnchantmentRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.util.OdysseyRarity;
-import net.minecraft.ChatFormatting;
+import com.bedmen.odyssey.items.equipment.HollowCoconutItem;
+import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -17,8 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -34,7 +30,7 @@ public class EquipmentArmorItem extends ArmorItem implements IEquipment {
     protected static final List<EquipmentArmorItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
     public EquipmentArmorItem(OdysseyArmorMaterials armorMaterial, EquipmentSlot slotType, Properties properties, LevEnchSup... levEnchSups) {
-        super(armorMaterial, slotType, properties.rarity(OdysseyRarity.EQUIPMENT));
+        super(armorMaterial, slotType, properties);
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         Collections.addAll(this.setBonusEnchSupSet, armorMaterial.getSetBonusEnchSups());
@@ -88,26 +84,19 @@ public class EquipmentArmorItem extends ArmorItem implements IEquipment {
     }
 
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        if(this instanceof HollowCoconutItem){
-            super.appendHoverText(stack, level, tooltip, flagIn);
-        } else {
-            for(Enchantment e : this.enchantmentMap.keySet()){
-                if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
-                    tooltip.add(1, EnchantmentUtil.getUnenchantableName());
-                else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
-                    tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
-            }
+        if(!(this instanceof HollowCoconutItem)){
+            this.appendInnateEnchantments(tooltip, flagIn);
             if(this.setBonusMap.size() > 0)
-                tooltip.add(new TranslatableComponent("item.oddc.equipment.setbonus").withStyle(ChatFormatting.GRAY));
+                tooltip.add(new TranslatableComponent("item.oddc.equipment.setbonus").withStyle(OdysseyChatFormatting.LAVENDER));
             for(Enchantment e : this.setBonusMap.keySet()){
                 MutableComponent mutableComponent = (MutableComponent)(e.getFullname(this.setBonusMap.get(e).getA()));
                 String key = this.setBonusMap.get(e).getB();
                 if(key.equals("passive"))
-                    mutableComponent.append(new TranslatableComponent("item.oddc.equipment.passive").withStyle(ChatFormatting.GRAY));
+                    mutableComponent.append(new TranslatableComponent("item.oddc.equipment.passive").withStyle(OdysseyChatFormatting.LAVENDER));
                 else{
                     mutableComponent.append(" [");
-                    mutableComponent.append(new TranslatableComponent(key).withStyle(ChatFormatting.GRAY));
-                    mutableComponent.append(new TranslatableComponent("item.oddc.equipment.key").withStyle(ChatFormatting.GRAY));
+                    mutableComponent.append(new TranslatableComponent(key).withStyle(OdysseyChatFormatting.LAVENDER));
+                    mutableComponent.append(new TranslatableComponent("item.oddc.equipment.key").withStyle(OdysseyChatFormatting.LAVENDER));
                 }
                 tooltip.add(mutableComponent);
             }

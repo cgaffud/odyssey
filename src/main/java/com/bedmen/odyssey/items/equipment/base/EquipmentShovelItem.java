@@ -1,37 +1,33 @@
-package com.bedmen.odyssey.items.equipment;
+package com.bedmen.odyssey.items.equipment.base;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
-import com.bedmen.odyssey.registry.EnchantmentRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EquipmentPickaxeItem extends PickaxeItem implements IEquipment {
+public class EquipmentShovelItem extends ShovelItem implements IEquipment {
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
-    protected static final List<EquipmentPickaxeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
+    protected static final List<EquipmentShovelItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
-    public EquipmentPickaxeItem(Tier tier, float damage, float attackSpeed, Properties properties, LevEnchSup... levEnchSups) {
-        super(tier, (int)damage, attackSpeed, properties.rarity(OdysseyRarity.EQUIPMENT));
+    public EquipmentShovelItem(Tier tier, float damage, float attackSpeed, Properties properties, LevEnchSup... levEnchSups) {
+        super(tier, (int)damage, attackSpeed, properties);
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);
     }
 
     public static void initEquipment(){
-        for(final EquipmentPickaxeItem equipmentPickaxeItem : UNFINISHED_EQUIPMENT){
-            equipmentPickaxeItem.init();
+        for(final EquipmentShovelItem equipmentShovelItem : UNFINISHED_EQUIPMENT){
+            equipmentShovelItem.init();
         }
         UNFINISHED_EQUIPMENT.clear();
     }
@@ -58,15 +54,7 @@ public class EquipmentPickaxeItem extends PickaxeItem implements IEquipment {
         return this.getInnateEnchantmentLevel(enchantment) == 0 && enchantment.category.canEnchant(stack.getItem());
     }
 
-    /**
-     * allows items to add custom lines of information to the mouseover description
-     */
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        for(Enchantment e : this.enchantmentMap.keySet()){
-            if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
-                tooltip.add(1, EnchantmentUtil.getUnenchantableName());
-            else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
-                tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
-        }
+        this.appendInnateEnchantments(tooltip, flagIn);
     }
 }

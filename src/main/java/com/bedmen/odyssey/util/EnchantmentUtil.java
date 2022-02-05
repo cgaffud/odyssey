@@ -1,15 +1,12 @@
 package com.bedmen.odyssey.util;
 
-import com.bedmen.odyssey.enchantment.abstracts.AbstractRiptideEnchantment;
-import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
+import com.bedmen.odyssey.items.equipment.base.EquipmentArmorItem;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.ints.IntPriorityQueue;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -18,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 

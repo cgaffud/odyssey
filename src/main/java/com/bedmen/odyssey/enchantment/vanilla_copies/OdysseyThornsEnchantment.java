@@ -3,7 +3,6 @@ package com.bedmen.odyssey.enchantment.vanilla_copies;
 import java.util.*;
 import java.util.Map.Entry;
 
-import com.bedmen.odyssey.items.equipment.EquipmentArmorItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
