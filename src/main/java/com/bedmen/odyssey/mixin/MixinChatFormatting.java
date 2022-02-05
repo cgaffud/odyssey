@@ -45,8 +45,10 @@ public class MixinChatFormatting implements IExtensibleEnum {
                     ChatFormatting.UNDERLINE,
                     ChatFormatting.ITALIC,
                     ChatFormatting.RESET,
-                    OdysseyChatFormatting.ORANGE,
-                    OdysseyChatFormatting.COPPER};
+                    OdysseyChatFormatting.COPPER,
+                    OdysseyChatFormatting.SILVER,
+                    OdysseyChatFormatting.ODYSSEY_GOLD,
+                    OdysseyChatFormatting.LAVENDER};
         }
         return VALUES;
     }

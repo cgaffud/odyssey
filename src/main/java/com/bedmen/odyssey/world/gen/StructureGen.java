@@ -43,8 +43,8 @@ public class StructureGen {
 
         WEAVER_COLONY = StructureFeatureRegistry.WEAVER_COLONY.get().configured(FeatureConfiguration.NONE);
         Registry.register(registry, new ResourceLocation(Odyssey.MOD_ID, "configured_weaver_colony"), WEAVER_COLONY);
-        //UNDERGROUND_RUIN = StructureFeatureRegistry.UNDERGROUND_RUIN.get().configured(FeatureConfiguration.NONE);
-        //Registry.register(registry, new ResourceLocation(Odyssey.MOD_ID, "configured_underground_ruin"), UNDERGROUND_RUIN);
+        UNDERGROUND_RUIN = StructureFeatureRegistry.UNDERGROUND_RUIN.get().configured(FeatureConfiguration.NONE);
+        Registry.register(registry, new ResourceLocation(Odyssey.MOD_ID, "configured_underground_ruin"), UNDERGROUND_RUIN);
     }
 
     private static Method GETCODEC_METHOD;
@@ -80,7 +80,7 @@ public class StructureGen {
                 if(biomeCategory != Biome.BiomeCategory.THEEND && biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE){
                     if(biomeCategory != Biome.BiomeCategory.OCEAN) {
                         associateBiomeToConfiguredStructure(hashMap, WEAVER_COLONY, biomeEntry.getKey());
-                       // associateBiomeToConfiguredStructure(hashMap, UNDERGROUND_RUIN, biomeEntry.getKey());
+                        associateBiomeToConfiguredStructure(hashMap, UNDERGROUND_RUIN, biomeEntry.getKey());
                     }
                 }
             }

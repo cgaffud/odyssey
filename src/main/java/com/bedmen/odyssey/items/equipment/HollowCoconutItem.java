@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.armor.OdysseyArmorMaterials;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.items.equipment.base.EquipmentArmorItem;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -34,7 +35,7 @@ public class HollowCoconutItem extends EquipmentArmorItem {
     private final Block block = BlockRegistry.HOLLOW_COCONUT.get();
 
     public HollowCoconutItem(OdysseyArmorMaterials odysseyArmorMaterials, EquipmentSlot slotType, Properties properties, LevEnchSup... levEnchSups) {
-        super(odysseyArmorMaterials, slotType, properties.rarity(OdysseyRarity.EQUIPMENT), levEnchSups);
+        super(odysseyArmorMaterials, slotType, properties, levEnchSups);
     }
 
     public InteractionResult useOn(UseOnContext p_195939_1_) {

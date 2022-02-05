@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.enchantment;
 
-import com.bedmen.odyssey.items.equipment.EquipmentMeleeItem;
+import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 

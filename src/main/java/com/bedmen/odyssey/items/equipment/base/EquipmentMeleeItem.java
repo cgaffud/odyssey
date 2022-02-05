@@ -1,11 +1,8 @@
-package com.bedmen.odyssey.items.equipment;
+package com.bedmen.odyssey.items.equipment.base;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
-import com.bedmen.odyssey.registry.EnchantmentRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -22,8 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 
@@ -39,7 +34,7 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
     private final boolean canSweep;
 
     public EquipmentMeleeItem(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, Properties builderIn, LevEnchSup... levEnchSups) {
-        super(tier, builderIn.rarity(OdysseyRarity.EQUIPMENT));
+        super(tier, builderIn);
         float attackDamage = attackDamageIn + tier.getAttackDamageBonus();
         HashMultimap<Attribute, AttributeModifier> attributeModifiers = HashMultimap.create();
         attributeModifiers.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double) attackDamage, AttributeModifier.Operation.ADDITION));
@@ -126,15 +121,7 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
         return this.getInnateEnchantmentLevel(enchantment) == 0 && enchantment.category.canEnchant(stack.getItem());
     }
 
-    /**
-     * allows items to add custom lines of information to the mouseover description
-     */
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        for(Enchantment e : this.enchantmentMap.keySet()){
-            if(EnchantmentRegistry.UNENCHANTABLE.get() == e && flagIn.isAdvanced())
-                tooltip.add(1, EnchantmentUtil.getUnenchantableName());
-            else if (EnchantmentRegistry.UNENCHANTABLE.get() != e )
-                tooltip.add(e.getFullname(this.enchantmentMap.get(e)));
-        }
+        this.appendInnateEnchantments(tooltip, flagIn);
     }
 }

@@ -1,9 +1,10 @@
-package com.bedmen.odyssey.world.gen.structure;
+package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import java.util.Random;
 
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.world.gen.structure.OdysseyStructurePieceType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

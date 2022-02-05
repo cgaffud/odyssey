@@ -32,7 +32,7 @@ public abstract class MixinEnchantment extends net.minecraftforge.registries.For
             cir.cancel();
         }
         else if(getEnchantment() instanceof TieredEnchantment tieredEnchantment && tieredEnchantment.canDowngrade()){
-            MutableComponent mutableComponent = new TranslatableComponent(this.getDescriptionId()).withStyle(OdysseyChatFormatting.ORANGE);
+            MutableComponent mutableComponent = new TranslatableComponent(this.getDescriptionId()).withStyle(ChatFormatting.GOLD);
             if (level != 1 || this.getMaxLevel() != 1) {
                 mutableComponent.append(" ").append(new TranslatableComponent("enchantment.level." + level));
             }

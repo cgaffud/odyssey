@@ -13,4 +13,8 @@ public class OdysseyChannelingOrLoyaltyEnchantment extends Enchantment {
     public boolean checkCompatibility(Enchantment enchantment) {
         return super.checkCompatibility(enchantment) && !(enchantment instanceof AbstractRiptideEnchantment);
     }
+
+    public int getMaxLevel() {
+        return 3;
+    }
 }

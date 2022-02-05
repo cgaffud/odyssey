@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.monster.Weaver;
+import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
@@ -22,7 +23,7 @@ import net.minecraft.world.level.block.Blocks;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SpiderDaggerItem extends EquipmentMeleeItem{
+public class SpiderDaggerItem extends EquipmentMeleeItem {
 
     private int poisonTime;
 

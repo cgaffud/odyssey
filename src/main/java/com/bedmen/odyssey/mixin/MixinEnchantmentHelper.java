@@ -2,8 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.enchantment.TieredEnchantment;
 import com.bedmen.odyssey.items.equipment.DualWieldItem;
-import com.bedmen.odyssey.items.equipment.IEquipment;
-import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.items.equipment.base.IEquipment;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
