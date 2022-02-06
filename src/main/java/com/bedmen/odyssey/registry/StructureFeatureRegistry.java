@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.world.gen.structure.CloverStoneSanctuaryFeature;
 import com.bedmen.odyssey.world.gen.structure.UndergroundRuin;
 import com.bedmen.odyssey.world.gen.structure.WeaverColonyFeature;
 import com.google.common.collect.ImmutableList;
@@ -28,6 +29,7 @@ public class StructureFeatureRegistry {
 
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> WEAVER_COLONY = STRUCTURE_FEATURES.register("weaver_colony", () -> new WeaverColonyFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> UNDERGROUND_RUIN = STRUCTURE_FEATURES.register("underground_ruin", () -> new UndergroundRuin(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> CLOVER_STONE_SANCTUARY = STRUCTURE_FEATURES.register("clover_stone_sanctuary", () -> new CloverStoneSanctuaryFeature(NoneFeatureConfiguration.CODEC));
 
     public static void setupStructures() {
         setupMapSpacingAndLand(
@@ -38,8 +40,12 @@ public class StructureFeatureRegistry {
                 false);
         setupMapSpacingAndLand(
                 UNDERGROUND_RUIN.get(),
-                new StructureFeatureConfiguration(16, 8,97344289), false
-        );
+                new StructureFeatureConfiguration(16, 8,97344289),
+                false);
+        setupMapSpacingAndLand(
+                CLOVER_STONE_SANCTUARY.get(),
+                new StructureFeatureConfiguration(16, 8,52846379),
+                false);
     }
 
     /**

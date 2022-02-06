@@ -37,6 +37,7 @@ public class StructureGen {
 
     public static ConfiguredStructureFeature<?, ?> WEAVER_COLONY;
     public static ConfiguredStructureFeature<? ,?> UNDERGROUND_RUIN;
+    public static ConfiguredStructureFeature<? ,?> CLOVER_STONE_SANCTUARY;
 
     public static void registerStructures() {
         Registry<ConfiguredStructureFeature<?, ?>> registry = BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE;
@@ -45,6 +46,8 @@ public class StructureGen {
         Registry.register(registry, new ResourceLocation(Odyssey.MOD_ID, "configured_weaver_colony"), WEAVER_COLONY);
         UNDERGROUND_RUIN = StructureFeatureRegistry.UNDERGROUND_RUIN.get().configured(FeatureConfiguration.NONE);
         Registry.register(registry, new ResourceLocation(Odyssey.MOD_ID, "configured_underground_ruin"), UNDERGROUND_RUIN);
+        CLOVER_STONE_SANCTUARY = StructureFeatureRegistry.CLOVER_STONE_SANCTUARY.get().configured(FeatureConfiguration.NONE);
+        Registry.register(registry, new ResourceLocation(Odyssey.MOD_ID, "configured_clover_stone_sanctuary"), CLOVER_STONE_SANCTUARY);
     }
 
     private static Method GETCODEC_METHOD;
@@ -81,6 +84,9 @@ public class StructureGen {
                     if(biomeCategory != Biome.BiomeCategory.OCEAN) {
                         associateBiomeToConfiguredStructure(hashMap, WEAVER_COLONY, biomeEntry.getKey());
                         associateBiomeToConfiguredStructure(hashMap, UNDERGROUND_RUIN, biomeEntry.getKey());
+                        if(biomeCategory != Biome.BiomeCategory.RIVER){
+                            associateBiomeToConfiguredStructure(hashMap, CLOVER_STONE_SANCTUARY, biomeEntry.getKey());
+                        }
                     }
                 }
             }
