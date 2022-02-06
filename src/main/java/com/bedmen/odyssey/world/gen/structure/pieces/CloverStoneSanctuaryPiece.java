@@ -93,12 +93,12 @@ public class CloverStoneSanctuaryPiece extends TemplateStructurePiece {
         for(int j = -1; j <= 1; j += 2){
             for(int k = -1; k <= 1; k += 2){
                 BlockPos.MutableBlockPos mutableBlockPos = center.offset(j*5,0,k).mutable();
-                while(!WorldGenUtil.isSolid(worldGenLevel, mutableBlockPos)){
+                while(worldGenLevel.ensureCanWrite(mutableBlockPos) && !WorldGenUtil.isSolid(worldGenLevel, mutableBlockPos)){
                     worldGenLevel.setBlock(mutableBlockPos, STONE_BRICKS.get(random.nextInt(STONE_BRICKS.size())).defaultBlockState(), 3);
                     mutableBlockPos.move(Direction.DOWN);
                 }
                 mutableBlockPos = center.offset(j,0,k*5).mutable();
-                while(!WorldGenUtil.isSolid(worldGenLevel, mutableBlockPos)){
+                while(worldGenLevel.ensureCanWrite(mutableBlockPos) && !WorldGenUtil.isSolid(worldGenLevel, mutableBlockPos)){
                     worldGenLevel.setBlock(mutableBlockPos, STONE_BRICKS.get(random.nextInt(STONE_BRICKS.size())).defaultBlockState(), 3);
                     mutableBlockPos.move(Direction.DOWN);
                 }

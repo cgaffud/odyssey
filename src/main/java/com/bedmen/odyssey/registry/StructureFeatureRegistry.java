@@ -44,7 +44,7 @@ public class StructureFeatureRegistry {
                 false);
         setupMapSpacingAndLand(
                 CLOVER_STONE_SANCTUARY.get(),
-                new StructureFeatureConfiguration(16, 8,52846379),
+                new StructureFeatureConfiguration(32, 8,52846379),
                 false);
     }
 

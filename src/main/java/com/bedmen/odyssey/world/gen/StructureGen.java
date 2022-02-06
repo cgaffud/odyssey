@@ -81,11 +81,50 @@ public class StructureGen {
 
                 //Overworld
                 if(biomeCategory != Biome.BiomeCategory.THEEND && biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE){
+                    //Non-Ocean
                     if(biomeCategory != Biome.BiomeCategory.OCEAN) {
                         associateBiomeToConfiguredStructure(hashMap, WEAVER_COLONY, biomeEntry.getKey());
                         associateBiomeToConfiguredStructure(hashMap, UNDERGROUND_RUIN, biomeEntry.getKey());
-                        if(biomeCategory != Biome.BiomeCategory.RIVER){
-                            associateBiomeToConfiguredStructure(hashMap, CLOVER_STONE_SANCTUARY, biomeEntry.getKey());
+                        switch (biomeCategory){
+                            case TAIGA:
+                                associateBiomeToConfiguredStructure(hashMap, CLOVER_STONE_SANCTUARY, biomeEntry.getKey());
+                                break;
+                            case EXTREME_HILLS:
+                                associateBiomeToConfiguredStructure(hashMap, CLOVER_STONE_SANCTUARY, biomeEntry.getKey());
+                                break;
+                            case JUNGLE:
+                                associateBiomeToConfiguredStructure(hashMap, CLOVER_STONE_SANCTUARY, biomeEntry.getKey());
+                                break;
+                            case MESA:
+                                break;
+                            case PLAINS:
+                                associateBiomeToConfiguredStructure(hashMap, CLOVER_STONE_SANCTUARY, biomeEntry.getKey());
+                                break;
+                            case SAVANNA:
+                                break;
+                            case ICY:
+                                break;
+                            case BEACH:
+                                break;
+                            case FOREST:
+                                associateBiomeToConfiguredStructure(hashMap, CLOVER_STONE_SANCTUARY, biomeEntry.getKey());
+                                break;
+                            case DESERT:
+                                break;
+                            case RIVER:
+                                break;
+                            case SWAMP:
+                                associateBiomeToConfiguredStructure(hashMap, CLOVER_STONE_SANCTUARY, biomeEntry.getKey());
+                                break;
+                            case MUSHROOM:
+                                break;
+                            case UNDERGROUND:
+                                break;
+                            case MOUNTAIN:
+                                associateBiomeToConfiguredStructure(hashMap, CLOVER_STONE_SANCTUARY, biomeEntry.getKey());
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
