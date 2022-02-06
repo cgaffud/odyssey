@@ -11,6 +11,7 @@ import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.trades.OdysseyTrades;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.*;
@@ -67,10 +68,10 @@ public class Odyssey
             OdysseyNetwork.init();
             ContainerRegistry.initQuivers();
             FeatureRegistry.initTreasureChests();
-            //PassiveWeaver.init();
             OdysseyFlowerPotBlock.registerFlowerPots();
             CompostUtil.addCompostingRecipes();
             OdysseyLootItemFunctions.registerFunctions();
+            OdysseyTrades.addTrades();
             ((RangedAttribute) Attributes.ARMOR).minValue = -40.0d;
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
 
