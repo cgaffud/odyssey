@@ -6,9 +6,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FlammableBlock extends Block {
+public class FlammablePlanksBlock extends Block {
 
-    public FlammableBlock(Properties p_i48440_1_) {
+    public FlammablePlanksBlock(Properties p_i48440_1_) {
         super(p_i48440_1_);
     }
 

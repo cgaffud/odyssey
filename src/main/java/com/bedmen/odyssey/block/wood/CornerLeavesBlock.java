@@ -19,13 +19,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Random;
 
-public class CornerLeavesBlock extends LeavesBlock {
+public class CornerLeavesBlock extends FlammableLeavesBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final VoxelShape SHAPE_NORTH_EAST = Shapes.or(Block.box(8,0,0,16,16,8));
     public static final VoxelShape SHAPE_EAST_SOUTH = Shapes.or(Block.box(8,0,8,16,16,16));
     public static final VoxelShape SHAPE_SOUTH_WEST = Shapes.or(Block.box(0,0,8,8,16,16));
     public static final VoxelShape SHAPE_WEST_NORTH = Shapes.or(Block.box(0,0,0,8,16,8));
-
 
     public CornerLeavesBlock(Properties p_54422_) {
         super(p_54422_);
@@ -87,15 +86,5 @@ public class CornerLeavesBlock extends LeavesBlock {
         i = Math.max(1, i);
 
         return p_54436_.setValue(DISTANCE, i);
-    }
-
-    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face)
-    {
-        return 30;
-    }
-
-    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face)
-    {
-        return 60;
     }
 }

@@ -71,15 +71,6 @@ public class PassiveWeaver extends Animal {
         }
     }
 
-//    public static void init(){
-//        WEAVE_MAP = Map.of(Items.COPPER_INGOT, BlockRegistry.COPPER_COBWEB.get(),
-//                ItemRegistry.SILVER_INGOT.get(), BlockRegistry.SILVER_COBWEB.get(),
-//                Items.GOLD_INGOT, BlockRegistry.GOLDEN_COBWEB.get(),
-//                ItemRegistry.STERLING_SILVER_INGOT.get(), BlockRegistry.STERLING_SILVER_COBWEB.get(),
-//                ItemRegistry.ELECTRUM_INGOT.get(), BlockRegistry.ELECTRUM_COBWEB.get(),
-//                Items.DIAMOND, BlockRegistry.DIAMOND_COBWEB.get());
-//    }
-
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new LeapAtTargetGoal(this, 0.4F));

@@ -121,7 +121,7 @@ public abstract class Boss extends Monster {
     }
 
     public float nearbyPlayerDamageReductionMultiplier(){
-        return 1.0f / (float)(Integer.max(1, this.getNearbyPlayerNumber()));
+        return 1.0f / Float.max(1f, this.getNearbyPlayerNumber() * 0.75f + 0.25f);
     }
 
     public float difficultyDamageReductionMultiplier(){
