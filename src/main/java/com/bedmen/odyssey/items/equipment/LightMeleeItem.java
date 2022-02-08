@@ -53,7 +53,7 @@ public class LightMeleeItem extends EquipmentMeleeItem implements INeedsToRegist
 
     public void registerItemModelProperties() {
         ItemProperties.register(this, new ResourceLocation("active"), (itemStack, clientLevel, livingEntity, i) -> {
-            if ((livingEntity != null)  && this.isActive(itemStack, livingEntity.getLevel(), livingEntity)) {
+            if ((livingEntity != null)  && isActive(itemStack, livingEntity.getLevel(), livingEntity)) {
                 return 1.0F;
             }
             return 0.0F;
@@ -70,6 +70,7 @@ public class LightMeleeItem extends EquipmentMeleeItem implements INeedsToRegist
 
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, level, tooltip, flagIn);
+        //tooltip.removeIf((obj) -> obj.getString())
         tooltip.add(new TranslatableComponent("item.oddc.light_melee_item.damage_modifier", StringUtil.doubleFormat(this.attackBoost), this.getTimeHoverText()).withStyle(ChatFormatting.BLUE));
     }
 }
