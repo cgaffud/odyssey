@@ -7,14 +7,18 @@ import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.equipment.SniperBowItem;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -23,6 +27,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.FOVModifierEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -65,16 +70,6 @@ public class RenderEvents {
             event.setCanceled(true);
         }
     }
-
-//    @SubscribeEvent
-//    public static <T extends LivingEntity, M extends EntityModel<T> & ArmedModel> void RenderLivingEvent$PreListener(final RenderLivingEvent.Pre<T,M> event){
-//        LivingEntityRenderer<T,M> renderer = event.getRenderer();
-//        for(int i = 0; i < renderer.layers.size(); i++){
-//            if(renderer.layers.get(i) instanceof ItemInHandLayer){
-//                renderer.layers.set(i, new OdysseyHeldItemLayer<>(renderer));
-//            }
-//        }
-//    }
 
     /**
      * Adjusts PlayerRenderer Layers
