@@ -9,6 +9,7 @@ import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -91,28 +92,23 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public static void onItemTooltipEvent(final ItemTooltipEvent event){
-        Player player = event.getPlayer();
         float boost = EnchantmentUtil.getConditionalAmpBonus(event.getItemStack(), event.getPlayer());
-        System.out.println(boost);
         if(boost > 0.0f){
             List<Component> list = event.getToolTip();
-            int size = list.size();
-            for(int i = 0; i < size; i++){
-                Component component = list.get(i);
-                if(component instanceof TranslatableComponent translatableComponent){
-                    String key = translatableComponent.getKey();
-                    System.out.println(key);
-                    if(key.equals("attribute.modifier.plus.0")){
-                        System.out.println("B");
-                        Object[] args = translatableComponent.getArgs();
-                        if(args.length == 2 && args[1] instanceof TranslatableComponent translatableComponent1 && translatableComponent1.getKey().equals("attribute.name.generic.attack_damage") && args[0] instanceof Double d){
-                            System.out.println("C");
-                            d += boost;
-                            System.out.print(d);
-                            args[0] = d;
-                            TranslatableComponent translatableComponent2 = new TranslatableComponent(key, args);
-                            list.set(i, translatableComponent2);
-                            break;
+            for (Component component : list) {
+                if (component instanceof TextComponent textComponent) {
+                    String text = textComponent.getText();
+                    if (text.equals(" ")) {
+                        List<Component> list1 = textComponent.getSiblings();
+                        if (list1.size() >= 1 && list1.get(0) instanceof TranslatableComponent translatableComponent && translatableComponent.getKey().equals("attribute.modifier.equals.0")) {
+                            Object[] args = translatableComponent.getArgs();
+                            if (args.length == 2 && args[1] instanceof TranslatableComponent translatableComponent1 && translatableComponent1.getKey().equals("attribute.name.generic.attack_damage") && args[0] instanceof String s) {
+                                double d = Double.parseDouble(s);
+                                d += boost;
+                                args[0] = ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d);
+                                list1.set(0, new TranslatableComponent("attribute.modifier.equals.0", args));
+                                break;
+                            }
                         }
                     }
                 }
