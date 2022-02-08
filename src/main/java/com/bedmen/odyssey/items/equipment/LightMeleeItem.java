@@ -1,8 +1,10 @@
 package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.enchantment.odyssey.ConditionalAmpEnchantment;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -14,63 +16,47 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class LightMeleeItem extends EquipmentMeleeItem implements INeedsToRegisterItemModelProperty {
-    public float attackBoost;
-    public enum TIME_ACTIVE{
-        DAY, NIGHT, BOTH
+
+    public Supplier<Enchantment> enchSup;
+    public LightMeleeItem(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, Properties builderIn, LevEnchSup levEnchSup) {
+        super(tier, attackDamageIn, attackSpeedIn, canSweep, builderIn, levEnchSup);
+        this.enchSup = levEnchSup.enchantmentSupplier;
     }
 
-    public TIME_ACTIVE time;
-
-    public LightMeleeItem(Tier tier, float attackDamageIn, float attackSpeedIn, float attackBoost, TIME_ACTIVE time, boolean canSweep, Properties builderIn, LevEnchSup... levEnchSups) {
-        super(tier, attackDamageIn, attackSpeedIn, canSweep, builderIn, levEnchSups);
-        this.attackBoost = attackBoost;
-        this.time = time;
-    }
-
-    /**TODO: add new moon check*/
-    public boolean isActive(Level level, LivingEntity livingEntity) {
-        BlockPos eyeLevel = new BlockPos(livingEntity.getX(), livingEntity.getEyeY(), livingEntity.getZ());
-        boolean correctTime = switch (this.time) {
-            case DAY -> ((level.getDayTime() % 24000L) < 12000L);
-            case NIGHT -> ((level.getDayTime() % 24000L) >= 12000L);
-            case BOTH -> true;
-        };
-        return correctTime && level.canSeeSky(eyeLevel) && !level.isThundering() && !level.isRaining() && (level.dimension() == Level.OVERWORLD);
-    }
-
-    public static boolean isActive(ItemStack itemStack, Level level, LivingEntity livingEntity){
-        if (itemStack.getItem() instanceof LightMeleeItem lightMeleeItem) {
-            return lightMeleeItem.isActive(level, livingEntity);
-        }
+    public static boolean isActive(ItemStack itemStack, LivingEntity livingEntity) {
+        if (itemStack.getItem() instanceof LightMeleeItem lightMeleeItem && lightMeleeItem.enchSup.get() instanceof ConditionalAmpEnchantment conditionalAmpEnchantment)
+            return conditionalAmpEnchantment.getActiveBoost(livingEntity.level, livingEntity) > 0.0f;
         return false;
     }
 
     public void registerItemModelProperties() {
         ItemProperties.register(this, new ResourceLocation("active"), (itemStack, clientLevel, livingEntity, i) -> {
-            if ((livingEntity != null)  && isActive(itemStack, livingEntity.getLevel(), livingEntity)) {
+            if ((livingEntity != null)  && isActive(itemStack, livingEntity)) {
                 return 1.0F;
             }
             return 0.0F;
         });
     }
 
-    private String getTimeHoverText(){
-        return switch (this.time) {
-            case DAY -> "Sunlight";
-            case NIGHT -> "Moonlight";
-            case BOTH -> "Light";
-        };
-    }
+//    private String getTimeHoverText(){
+//        return switch (this.time) {
+//            case DAY -> "Sunlight";
+//            case NIGHT -> "Moonlight";
+//            case BOTH -> "Light";
+//        };
+//    }
 
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
-        //tooltip.removeIf((obj) -> obj.getString())
-        tooltip.add(new TranslatableComponent("item.oddc.light_melee_item.damage_modifier", StringUtil.doubleFormat(this.attackBoost), this.getTimeHoverText()).withStyle(ChatFormatting.BLUE));
-    }
+//    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+//        super.appendHoverText(stack, level, tooltip, flagIn);
+//        //tooltip.removeIf((obj) -> obj.getString())
+//        tooltip.add(new TranslatableComponent("item.oddc.light_melee_item.damage_modifier", StringUtil.doubleFormat(this.attackBoost), this.getTimeHoverText()).withStyle(ChatFormatting.BLUE));
+//    }
 }

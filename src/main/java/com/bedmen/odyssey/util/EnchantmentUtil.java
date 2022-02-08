@@ -223,13 +223,20 @@ public class EnchantmentUtil {
     }
 
     public static float getConditionalAmpBonus(LivingEntity entity){
+        return getConditionalAmpBonus(entity.getMainHandItem(), entity);
+    }
+
+    public static float getConditionalAmpBonus(ItemStack itemStack, LivingEntity entity){
         float boost = 0.0f;
-        for (ConditionalAmpEnchantment enchantment : CONDITIONAL_AMP_ENCHANTS) {
-            int level = EnchantmentHelper.getEnchantmentLevel(enchantment, entity);
-            boost += ((float)level) * enchantment.getActiveBoost(entity.getLevel(), entity);
+        if (entity != null) {
+            for (ConditionalAmpEnchantment enchantment : CONDITIONAL_AMP_ENCHANTS) {
+                int level = EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemStack);
+                boost += ((float) level) * enchantment.getActiveBoost(entity.getLevel(), entity);
+            }
         }
         return boost;
     }
+
 
     public static Component getUnenchantableName(){
         return new TranslatableComponent("enchantment.oddc.unenchantable").withStyle(ChatFormatting.DARK_RED);

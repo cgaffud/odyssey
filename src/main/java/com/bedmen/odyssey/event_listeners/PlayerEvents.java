@@ -8,6 +8,8 @@ import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -19,11 +21,14 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
@@ -82,6 +87,37 @@ public class PlayerEvents {
 //        if(player instanceof IOdysseyPlayer && !player.level.isClientSide){
 //            player.setHealth(20.0f + 2.0f * ((IOdysseyPlayer) player).getLifeFruits());
 //        }
+    }
+
+    @SubscribeEvent
+    public static void onItemTooltipEvent(final ItemTooltipEvent event){
+        Player player = event.getPlayer();
+        float boost = EnchantmentUtil.getConditionalAmpBonus(event.getItemStack(), event.getPlayer());
+        System.out.println(boost);
+        if(boost > 0.0f){
+            List<Component> list = event.getToolTip();
+            int size = list.size();
+            for(int i = 0; i < size; i++){
+                Component component = list.get(i);
+                if(component instanceof TranslatableComponent translatableComponent){
+                    String key = translatableComponent.getKey();
+                    System.out.println(key);
+                    if(key.equals("attribute.modifier.plus.0")){
+                        System.out.println("B");
+                        Object[] args = translatableComponent.getArgs();
+                        if(args.length == 2 && args[1] instanceof TranslatableComponent translatableComponent1 && translatableComponent1.getKey().equals("attribute.name.generic.attack_damage") && args[0] instanceof Double d){
+                            System.out.println("C");
+                            d += boost;
+                            System.out.print(d);
+                            args[0] = d;
+                            TranslatableComponent translatableComponent2 = new TranslatableComponent(key, args);
+                            list.set(i, translatableComponent2);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent
