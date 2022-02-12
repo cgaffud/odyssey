@@ -65,7 +65,9 @@ public class EnchantmentUtil {
         CONDITIONAL_AMP_ENCHANTS = List.of(
                 (ConditionalAmpEnchantment) EnchantmentRegistry.SUN_BLESSING.get(),
                 (ConditionalAmpEnchantment) EnchantmentRegistry.MOON_BLESSING.get(),
-                (ConditionalAmpEnchantment) EnchantmentRegistry.SKY_BLESSING.get()
+                (ConditionalAmpEnchantment) EnchantmentRegistry.SKY_BLESSING.get(),
+                (ConditionalAmpEnchantment) EnchantmentRegistry.HYDROCLIMATIC.get(),
+                (ConditionalAmpEnchantment) EnchantmentRegistry.VOID_ANNIHILATION.get()
         );
 //        int i = 0;
 //        for(Enchantment enchantment : ForgeRegistries.ENCHANTMENTS.getValues()){

@@ -2,7 +2,6 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
-import com.bedmen.odyssey.items.equipment.LightMeleeItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
