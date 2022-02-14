@@ -28,8 +28,12 @@ public class ConditionalAmpEnchantment extends Enchantment {
     }
 
     public float getActiveBoost(Level level, LivingEntity livingEntity) {
+        return this.getActiveFraction(level,livingEntity) * this.attackBoost;
+    }
+
+    public float getActiveFraction(Level level, LivingEntity livingEntity){
         BlockPos eyeLevel = new BlockPos(livingEntity.getX(), livingEntity.getEyeY(), livingEntity.getZ());
-        return this.calculator.getBoost(eyeLevel, level) * this.attackBoost;
+        return this.calculator.getBoost(eyeLevel, level);
     }
 
 
