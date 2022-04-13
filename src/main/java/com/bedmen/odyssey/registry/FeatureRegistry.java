@@ -39,7 +39,7 @@ public class FeatureRegistry {
 
     //Treasure Chests
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> COPPER_TREASURE_CHEST = FEATURES.register("copper_treasure_chest", () -> new TreasureChestFeature(NoneFeatureConfiguration.CODEC, TreasureChestMaterial.COPPER, 0, 56));
-    public static final RegistryObject<Feature<NoneFeatureConfiguration>> STERLING_SILVER_TREASURE_CHEST = FEATURES.register("sterling_silver_treasure_chest", () -> new TreasureChestFeature(NoneFeatureConfiguration.CODEC, TreasureChestMaterial.STERLING_SILVER, -56, 0));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> STERLING_SILVER_TREASURE_CHEST = FEATURES.register("sterling_silver_treasure_chest", () -> new TreasureChestFeature(NoneFeatureConfiguration.CODEC, TreasureChestMaterial.STERLING_SILVER, -64, 0));
     public static final Map<TreasureChestMaterial, Feature<NoneFeatureConfiguration>> TREASURE_CHEST_MAP = new HashMap<>();
 
     public static void initTreasureChests(){

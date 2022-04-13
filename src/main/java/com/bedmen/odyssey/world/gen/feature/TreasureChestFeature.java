@@ -32,7 +32,7 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
     public TreasureChestFeature(Codec<NoneFeatureConfiguration> codec, TreasureChestMaterial treasureChestMaterial, int minY, int maxY) {
         super(codec);
         this.treasureChestMaterial = treasureChestMaterial;
-        this.minY = minY;
+        this.minY = minY + 8;
         this.maxY = maxY;
     }
 
