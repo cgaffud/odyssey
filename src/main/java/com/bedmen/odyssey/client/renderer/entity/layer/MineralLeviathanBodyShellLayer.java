@@ -2,13 +2,10 @@ package com.bedmen.odyssey.client.renderer.entity.layer;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.model.MineralLeviathanBodyModel;
-import com.bedmen.odyssey.client.model.OdysseyCreeperModel;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBody;
-import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -17,8 +14,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class MineralLeviathanBodyShellLayer extends RenderLayer<MineralLeviathanBody, MineralLeviathanBodyModel> {
     public static final ResourceLocation[][] SHELL_LOCATION = new ResourceLocation[9][11];
