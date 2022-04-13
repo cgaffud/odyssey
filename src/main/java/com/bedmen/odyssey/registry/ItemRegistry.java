@@ -13,6 +13,7 @@ import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -20,6 +21,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -213,7 +216,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SPIDER_DAGGER = ITEMS.register("spider_fang_dagger", () -> new SpiderDaggerItem(OdysseyTiers.STONE, 5f, -2.2f, 40, true, new Item.Properties().rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE)));
     public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new CondAmpMeleeItem.Binary(OdysseyTiers.ULTRA_1, 5f, -2.4f,  true, new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE),SUN_BLESSING));
     public static final RegistryObject<Item> MOON_SWORD = ITEMS.register("moon_sword", () -> new CondAmpMeleeItem.Binary(OdysseyTiers.ULTRA_2, 7f, -2.4f, true, new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE),MOON_BLESSING));
-    public static final RegistryObject<Item> RAIN_SWORD = ITEMS.register("rain_sword", () -> new CondAmpMeleeItem.Gradient(OdysseyTiers.ULTRA_2, 7f, -2.4f, true, 2021805, new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE),HYDROCLIMATIC));
+    public static final RegistryObject<Item> RAIN_SWORD = ITEMS.register("rain_sword", () -> new CondAmpMeleeItem.Gradient(OdysseyTiers.ULTRA_2, 7f, -2.4f, true, (Level level, Entity entity) -> level.getBiome(entity.eyeBlockPosition()).getFoliageColor(), new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE),HYDROCLIMATIC));
 
     public static final RegistryObject<Item> CLOVER_STONE_SWORD = ITEMS.register("clover_stone_sword", () -> new EquipmentMeleeItem(OdysseyTiers.CLOVER_STONE, 7f, -2.4f, true, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), LOOTING_1));
     public static final RegistryObject<Item> CLOVER_STONE_HATCHET = ITEMS.register("clover_stone_hatchet", () -> new DualWieldItem(OdysseyTiers.CLOVER_STONE, 5f, -2.5f, false, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), SMITE_1, LOOTING_1));
