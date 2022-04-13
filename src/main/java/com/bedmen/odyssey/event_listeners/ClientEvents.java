@@ -230,7 +230,7 @@ public class ClientEvents {
             return i > 0 ? -1 : ((DyeableLeatherItem)itemStack.getItem()).getColor(itemStack);
         }, ItemRegistry.PARKA_HELMET.get(), ItemRegistry.PARKA_CHESTPLATE.get(), ItemRegistry.PARKA_LEGGINGS.get(), ItemRegistry.PARKA_BOOTS.get());
         event.getItemColors().register((itemStack, i) -> {
-            return i > 0 ? -1 : CondAmpMeleeItem.Gradient.getColor(itemStack);
+            return i <= 0 ? -1 : CondAmpMeleeItem.Gradient.getColor(itemStack);
         }, ItemRegistry.RAIN_SWORD.get());
     }
 }
