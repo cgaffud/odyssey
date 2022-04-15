@@ -8,6 +8,9 @@ import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -19,11 +22,14 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
@@ -82,6 +88,32 @@ public class PlayerEvents {
 //        if(player instanceof IOdysseyPlayer && !player.level.isClientSide){
 //            player.setHealth(20.0f + 2.0f * ((IOdysseyPlayer) player).getLifeFruits());
 //        }
+    }
+
+    @SubscribeEvent
+    public static void onItemTooltipEvent(final ItemTooltipEvent event){
+        float boost = EnchantmentUtil.getConditionalAmpBonus(event.getItemStack(), event.getPlayer());
+        if(boost > 0.0f){
+            List<Component> list = event.getToolTip();
+            for (Component component : list) {
+                if (component instanceof TextComponent textComponent) {
+                    String text = textComponent.getText();
+                    if (text.equals(" ")) {
+                        List<Component> list1 = textComponent.getSiblings();
+                        if (list1.size() >= 1 && list1.get(0) instanceof TranslatableComponent translatableComponent && translatableComponent.getKey().equals("attribute.modifier.equals.0")) {
+                            Object[] args = translatableComponent.getArgs();
+                            if (args.length == 2 && args[1] instanceof TranslatableComponent translatableComponent1 && translatableComponent1.getKey().equals("attribute.name.generic.attack_damage") && args[0] instanceof String s) {
+                                double d = Double.parseDouble(s);
+                                d += boost;
+                                args[0] = ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d);
+                                list1.set(0, new TranslatableComponent("attribute.modifier.equals.0", args));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent

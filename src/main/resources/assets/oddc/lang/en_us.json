@@ -365,5 +365,7 @@
   "item.oddc.spider_dagger.damage_modifier": "+%s Poison Damage",
   "item.oddc.spider_fang_dagger": "Spider Fang Dagger",
   "item.oddc.sun_sword": "Sunblade",
-  "item.oddc.moon_sword": "Moonblade"
+  "item.oddc.moon_sword": "Moonblade",
+  "item.oddc.rain_sword": "Stabsprout",
+  "enchantment.oddc.hydroclimatic": "Hydroclimatic"
 }
