@@ -80,7 +80,8 @@ public class CondAmpMeleeItem extends EquipmentMeleeItem {
                 if (tag != null)
                     return tag.getInt(Odyssey.MOD_ID+"_gradient_color");
             }
-            return -1;
+            // TODO: color in inventory not working correctly?
+            return 9551193;
         }
     }
 
