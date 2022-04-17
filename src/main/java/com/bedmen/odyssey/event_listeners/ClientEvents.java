@@ -16,7 +16,6 @@ import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.equipment.CondAmpMeleeItem;
-import com.bedmen.odyssey.items.equipment.SniperBowItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.*;
 import com.google.common.collect.ImmutableMap;
