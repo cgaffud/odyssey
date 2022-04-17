@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.util;
 
+import com.bedmen.odyssey.enchantment.odyssey.ConditionalAmpEnchantment;
 import com.bedmen.odyssey.items.equipment.base.EquipmentArmorItem;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.mojang.datafixers.util.Pair;
@@ -24,6 +25,7 @@ public class EnchantmentUtil {
 
     private static List<List<Pair<Enchantment, Integer>>> ENCHANTMENTS_BY_TIER;
     private static List<List<Pair<Enchantment, Integer>>> CURSES_BY_TIER;
+    private static List<ConditionalAmpEnchantment> CONDITIONAL_AMP_ENCHANTS;
 
 
     public static void init(){
@@ -60,6 +62,13 @@ public class EnchantmentUtil {
         );
         ENCHANTMENTS_BY_TIER = List.of(enchantmentTier1);
         CURSES_BY_TIER = List.of(curseTier1);
+        CONDITIONAL_AMP_ENCHANTS = List.of(
+                (ConditionalAmpEnchantment) EnchantmentRegistry.SUN_BLESSING.get(),
+                (ConditionalAmpEnchantment) EnchantmentRegistry.MOON_BLESSING.get(),
+                (ConditionalAmpEnchantment) EnchantmentRegistry.SKY_BLESSING.get(),
+                (ConditionalAmpEnchantment) EnchantmentRegistry.HYDROCLIMATIC.get(),
+                (ConditionalAmpEnchantment) EnchantmentRegistry.VOID_ANNIHILATION.get()
+        );
 //        int i = 0;
 //        for(Enchantment enchantment : ForgeRegistries.ENCHANTMENTS.getValues()){
 //            ENCHANTMENT_TO_INTEGER_MAP.put(enchantment, i);
@@ -214,6 +223,22 @@ public class EnchantmentUtil {
             sum += EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemstack);
         return sum;
     }
+
+    public static float getConditionalAmpBonus(LivingEntity entity){
+        return getConditionalAmpBonus(entity.getMainHandItem(), entity);
+    }
+
+    public static float getConditionalAmpBonus(ItemStack itemStack, LivingEntity entity){
+        float boost = 0.0f;
+        if (entity != null) {
+            for (ConditionalAmpEnchantment enchantment : CONDITIONAL_AMP_ENCHANTS) {
+                int level = EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemStack);
+                boost += ((float) level) * enchantment.getActiveBoost(entity.getLevel(), entity);
+            }
+        }
+        return boost;
+    }
+
 
     public static Component getUnenchantableName(){
         return new TranslatableComponent("enchantment.oddc.unenchantable").withStyle(ChatFormatting.DARK_RED);

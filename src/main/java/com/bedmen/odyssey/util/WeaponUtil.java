@@ -2,7 +2,6 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
-import com.bedmen.odyssey.items.equipment.LightMeleeItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -146,15 +145,4 @@ public class WeaponUtil {
         }
     }
 
-    public static float getLightDamageBoost(LivingEntity entity){
-        Item holding = entity.getMainHandItem().getItem();
-        float boost = 0f;
-        if (holding instanceof LightMeleeItem lightItem) {
-            if (lightItem.isActive(entity.level, entity)){
-                System.out.println("BOOSETD");
-                boost += lightItem.attackBoost;
-            }
-        }
-        return boost;
-    }
 }

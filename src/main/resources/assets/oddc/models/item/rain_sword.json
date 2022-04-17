@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "oddc:item/rain_sword",
+    "layer1": "oddc:item/rain_sword_overlay"
+  }
+}

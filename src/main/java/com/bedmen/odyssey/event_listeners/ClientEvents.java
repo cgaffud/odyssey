@@ -15,6 +15,8 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.equipment.CondAmpMeleeItem;
+import com.bedmen.odyssey.items.equipment.SniperBowItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.*;
 import com.google.common.collect.ImmutableMap;
@@ -216,5 +218,8 @@ public class ClientEvents {
         event.getItemColors().register((itemStack, i) -> {
             return i > 0 ? -1 : ((DyeableLeatherItem)itemStack.getItem()).getColor(itemStack);
         }, ItemRegistry.PARKA_HELMET.get(), ItemRegistry.PARKA_CHESTPLATE.get(), ItemRegistry.PARKA_LEGGINGS.get(), ItemRegistry.PARKA_BOOTS.get());
+        event.getItemColors().register((itemStack, i) -> {
+            return i <= 0 ? -1 : CondAmpMeleeItem.Gradient.getColor(itemStack);
+        }, ItemRegistry.RAIN_SWORD.get());
     }
 }

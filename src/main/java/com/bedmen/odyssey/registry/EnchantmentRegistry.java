@@ -5,8 +5,10 @@ import com.bedmen.odyssey.enchantment.*;
 import com.bedmen.odyssey.enchantment.odyssey.*;
 import com.bedmen.odyssey.enchantment.upgrades.*;
 import com.bedmen.odyssey.enchantment.vanilla_copies.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -61,6 +63,11 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> DOWNPOUR = ENCHANTMENTS.register("downpour", () -> new OdysseyDamageEnchantment(Enchantment.Rarity.RARE, OdysseyDamageEnchantment.DamageType.HYDROPHOBIC, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> FLING = ENCHANTMENTS.register("fling", () -> new FlingEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> KINETIC_PROTECTION = ENCHANTMENTS.register("kinetic_protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.UNCOMMON, OdysseyProtectionEnchantment.Type.KINETIC, EnchantmentCategory.ARMOR_FEET, EquipmentSlot.FEET));
+    public static final RegistryObject<Enchantment> SUN_BLESSING = ENCHANTMENTS.register("sun_blessing",() -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level) && ((level.getDayTime() % 24000L) < 12000L)) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> MOON_BLESSING = ENCHANTMENTS.register("moon_blessing",() -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level) && ((level.getDayTime() % 24000L) >= 12000L) ) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> SKY_BLESSING = ENCHANTMENTS.register("sky_blessing",()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level)) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> HYDROCLIMATIC = ENCHANTMENTS.register("hydroclimatic", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 1.5f, (BlockPos pos, Level level) -> (level.isRaining() ? 1.0f : level.getBiome(pos).getDownfall()), EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> VOID_ANNIHILATION = ENCHANTMENTS.register("void_annihilation", () -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 4.0f, EnchantmentRegistry::getBoostFromVoid, EquipmentSlot.MAINHAND));
 
     //Volcanic Enchantments
     public static final RegistryObject<Enchantment> VULCAN_STRIDER = ENCHANTMENTS.register("vulcan_strider", () -> new VulcanStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
@@ -80,4 +87,30 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> HEAVY = ENCHANTMENTS.register("heavy", () -> new BasicCurseEnchantment(Enchantment.Rarity.RARE, 3, EquipmentSlot.values()));
     public static final RegistryObject<Enchantment> DROWNING = ENCHANTMENTS.register("drowning", () -> new BasicCurseEnchantment(Enchantment.Rarity.RARE, 1, EquipmentSlot.values()));
     public static final RegistryObject<Enchantment> VOLATILE = ENCHANTMENTS.register("volatile", () -> new BasicCurseEnchantment(Enchantment.Rarity.RARE, OdysseyEnchantmentCategory.ALL_MELEE, 1, EquipmentSlot.values()));
+
+    //Damage Boost Calculators
+    private static boolean getsOverworldLight(BlockPos pos, Level level) {
+        return (level.canSeeSky(pos) && !level.isThundering() && !level.isRaining() && (level.dimension() == Level.OVERWORLD));
+    }
+
+    private static float getBoostFromVoid(BlockPos pos, Level level) {
+        int y = pos.getY();
+        if (level.dimension() == Level.OVERWORLD) {
+            if (y >= 64) return 0.0f;
+            else {
+                float yAdj = (float) 64-y;
+                return (yAdj*yAdj)/(128.0f*128.0f) * 0.5f;
+            }
+        }
+        if (level.dimension() == Level.NETHER) {
+            System.out.println(y);
+            if ((y >= 32) && (y <= 96)) return 0.0f;
+            else {
+                float yAdj = (float) Math.min(Math.abs(32-y), Math.abs(y-96));
+                return (yAdj * yAdj)/(32.0f*32.0f) * 0.5f;
+            }
+        }
+        return 1.0f;
+    }
+
 }
