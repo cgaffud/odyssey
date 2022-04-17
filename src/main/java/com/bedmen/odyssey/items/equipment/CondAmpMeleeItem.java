@@ -58,14 +58,16 @@ public class CondAmpMeleeItem extends EquipmentMeleeItem {
 
 //        private List<Integer> base;
 //        private List<Integer> gray;
-//        public int color;
+
         public interface ColorProvider {
             int getColor(Level level, Entity entity);
         }
         private ColorProvider colorer;
-        public Gradient(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, ColorProvider colorer, Properties builderIn, LevEnchSup levEnchSup){
+        private int colorDefault;
+        public Gradient(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, ColorProvider colorer, int colorDefault, Properties builderIn, LevEnchSup levEnchSup){
             super(tier, attackDamageIn, attackSpeedIn, canSweep, builderIn, levEnchSup);
             this.colorer = colorer;
+            this.colorDefault = colorDefault;
         }
 
         public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
@@ -77,11 +79,11 @@ public class CondAmpMeleeItem extends EquipmentMeleeItem {
         public static int getColor(ItemStack itemStack){
             if (itemStack.getItem() instanceof CondAmpMeleeItem.Gradient){
                 CompoundTag tag = itemStack.getTag();
-                if (tag != null)
+                if (tag != null && tag.contains(Odyssey.MOD_ID+"_gradient_color"))
                     return tag.getInt(Odyssey.MOD_ID+"_gradient_color");
+                return ((Gradient) itemStack.getItem()).colorDefault;
             }
-            // TODO: color in inventory not working correctly?
-            return 9551193;
+            return -1;
         }
     }
 

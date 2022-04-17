@@ -11,6 +11,7 @@
     "MixinEnchantment",
     "MixinEnchantmentHelper",
     "MixinExplosion",
+    "MixinJunglePyramidPiece",
     "MixinLivingEntity",
     "MixinPlayer",
     "MixinPowderSnowBlock"
