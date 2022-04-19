@@ -66,10 +66,8 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> SUN_BLESSING = ENCHANTMENTS.register("sun_blessing",() -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level) && ((level.getDayTime() % 24000L) < 12000L)) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> MOON_BLESSING = ENCHANTMENTS.register("moon_blessing",() -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level) && ((level.getDayTime() % 24000L) >= 12000L) ) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> SKY_BLESSING = ENCHANTMENTS.register("sky_blessing",()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level)) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
-    public static final RegistryObject<Enchantment> HYDROCLIMATIC = ENCHANTMENTS.register("hydroclimatic", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 1.5f, (BlockPos pos, Level level) -> (level.isRaining() ? 1.0f : level.getBiome(pos).getDownfall()), EquipmentSlot.MAINHAND));
-    public static final RegistryObject<Enchantment> VOID_AMPLIFICATION = ENCHANTMENTS.register("void_amplification", () -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 4.0f, EnchantmentRegistry::getBoostFromVoid, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> HYDROCLIMATIC = ENCHANTMENTS.register("hydroclimatic", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 1.5f, (BlockPos pos, Level level) -> (level.isRaining() ? 1.0f : level.getBiome(pos).value().getDownfall()), EquipmentSlot.MAINHAND));
-    public static final RegistryObject<Enchantment> VOID_ANNIHILATION = ENCHANTMENTS.register("void_annihilation", () -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 4.0f, EnchantmentRegistry::getBoostFromVoid, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> VOID_AMPLIFICATION = ENCHANTMENTS.register("void_amplification", () -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 4.0f, EnchantmentRegistry::getBoostFromVoid, EquipmentSlot.MAINHAND));
 
     //Volcanic Enchantments
     public static final RegistryObject<Enchantment> VULCAN_STRIDER = ENCHANTMENTS.register("vulcan_strider", () -> new VulcanStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
@@ -110,7 +108,8 @@ public class EnchantmentRegistry {
             System.out.println(y);
             if ((y >= 32) && (y <= 96)) return 0.0f;
             else {
-                return 2.0f*Math.max(quadraticMagicFunction(y, 32.0f, false), quadraticMagicFunction(y-96, 32.0f, true));
+                float yAdj = (float) Math.min(Math.abs(32-y), Math.abs(y-96));
+                return (yAdj * yAdj)/(32.0f*32.0f) * 0.5f;
             }
         }
         return 1.0f;
