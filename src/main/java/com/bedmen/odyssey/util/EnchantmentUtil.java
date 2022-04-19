@@ -67,7 +67,7 @@ public class EnchantmentUtil {
                 (ConditionalAmpEnchantment) EnchantmentRegistry.MOON_BLESSING.get(),
                 (ConditionalAmpEnchantment) EnchantmentRegistry.SKY_BLESSING.get(),
                 (ConditionalAmpEnchantment) EnchantmentRegistry.HYDROCLIMATIC.get(),
-                (ConditionalAmpEnchantment) EnchantmentRegistry.VOID_ANNIHILATION.get()
+                (ConditionalAmpEnchantment) EnchantmentRegistry.VOID_AMPLIFICATION.get()
         );
 //        int i = 0;
 //        for(Enchantment enchantment : ForgeRegistries.ENCHANTMENTS.getValues()){

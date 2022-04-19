@@ -367,5 +367,7 @@
   "item.oddc.sun_sword": "Sunblade",
   "item.oddc.moon_sword": "Moonblade",
   "item.oddc.rain_sword": "Stabsprout",
-  "enchantment.oddc.hydroclimatic": "Hydroclimatic"
+  "enchantment.oddc.hydroclimatic": "Hydroclimatic",
+  "enchantment.oddc.sun_blessing" : "Sun's Blessing",
+  "enchantment.oddc.moon_blessing" : "Moon's Blessing"
 }

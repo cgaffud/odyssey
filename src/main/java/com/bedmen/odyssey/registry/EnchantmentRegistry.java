@@ -66,6 +66,8 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> SUN_BLESSING = ENCHANTMENTS.register("sun_blessing",() -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level) && ((level.getDayTime() % 24000L) < 12000L)) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> MOON_BLESSING = ENCHANTMENTS.register("moon_blessing",() -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level) && ((level.getDayTime() % 24000L) >= 12000L) ) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> SKY_BLESSING = ENCHANTMENTS.register("sky_blessing",()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level)) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> HYDROCLIMATIC = ENCHANTMENTS.register("hydroclimatic", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 1.5f, (BlockPos pos, Level level) -> (level.isRaining() ? 1.0f : level.getBiome(pos).getDownfall()), EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> VOID_AMPLIFICATION = ENCHANTMENTS.register("void_amplification", () -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 4.0f, EnchantmentRegistry::getBoostFromVoid, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> HYDROCLIMATIC = ENCHANTMENTS.register("hydroclimatic", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 1.5f, (BlockPos pos, Level level) -> (level.isRaining() ? 1.0f : level.getBiome(pos).value().getDownfall()), EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> VOID_ANNIHILATION = ENCHANTMENTS.register("void_annihilation", () -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 4.0f, EnchantmentRegistry::getBoostFromVoid, EquipmentSlot.MAINHAND));
 
@@ -93,21 +95,22 @@ public class EnchantmentRegistry {
         return (level.canSeeSky(pos) && !level.isThundering() && !level.isRaining() && (level.dimension() == Level.OVERWORLD));
     }
 
+    private static float quadraticMagicFunction(float y, float intercept, boolean incr){
+        float num  = incr ? (-0.5f * intercept - y) : (1.5f * intercept - y);
+        return ((num * num)/(8.0f * intercept * intercept) - 1 / 32.0f);
+    }
+
     private static float getBoostFromVoid(BlockPos pos, Level level) {
         int y = pos.getY();
         if (level.dimension() == Level.OVERWORLD) {
             if (y >= 64) return 0.0f;
-            else {
-                float yAdj = (float) 64-y;
-                return (yAdj*yAdj)/(128.0f*128.0f) * 0.5f;
-            }
+            else return 2.0f* quadraticMagicFunction(y+64, 128.0f, false);
         }
         if (level.dimension() == Level.NETHER) {
             System.out.println(y);
             if ((y >= 32) && (y <= 96)) return 0.0f;
             else {
-                float yAdj = (float) Math.min(Math.abs(32-y), Math.abs(y-96));
-                return (yAdj * yAdj)/(32.0f*32.0f) * 0.5f;
+                return 2.0f*Math.max(quadraticMagicFunction(y, 32.0f, false), quadraticMagicFunction(y-96, 32.0f, true));
             }
         }
         return 1.0f;
