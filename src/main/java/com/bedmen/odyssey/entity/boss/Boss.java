@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 
 public abstract class Boss extends Monster {
-    private static final int DESPAWN_TIME = 2400;
+    private static final int DESPAWN_TIME = 1200;
     private int despawnTimer;
     protected float damageReduction = 1.0f;
     private int cachedNearbyPlayers = 0;

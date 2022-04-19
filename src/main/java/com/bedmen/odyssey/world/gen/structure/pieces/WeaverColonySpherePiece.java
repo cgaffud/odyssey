@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import com.bedmen.odyssey.world.gen.structure.OdysseyStructurePieceType;
+import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,12 +26,12 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
     private boolean spawnedWeavers;
 
     public WeaverColonySpherePiece(Random random, int x, int z, double r0, int boundlingLength) {
-        super(OdysseyStructurePieceType.WEAVER_COLONY, x, -32+random.nextInt(64), z, boundlingLength, boundlingLength, boundlingLength, Direction.UP);
+        super(StructurePieceTypeRegistry.WEAVER_COLONY.get(), x, -32+random.nextInt(64), z, boundlingLength, boundlingLength, boundlingLength, Direction.UP);
         this.r0 = r0;
     }
 
     public WeaverColonySpherePiece(CompoundTag compoundTag) {
-        super(OdysseyStructurePieceType.WEAVER_COLONY, compoundTag);
+        super(StructurePieceTypeRegistry.WEAVER_COLONY.get(), compoundTag);
         this.r0 = compoundTag.getDouble("r0");
         this.spawnedWeavers = compoundTag.getBoolean("spawnedWeavers");
     }

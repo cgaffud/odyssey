@@ -1,0 +1,17 @@
+{
+  "structures": [
+    {
+      "structure": "oddc:clover_stone_sanctuary",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 1694767080,
+
+    "spacing": 32,
+
+    "separation": 8,
+
+    "type": "minecraft:random_spread"
+  }
+}
