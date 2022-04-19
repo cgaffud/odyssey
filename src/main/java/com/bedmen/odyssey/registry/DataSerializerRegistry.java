@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class DataSerializerRegistry {
 
-    public static DeferredRegister<DataSerializerEntry> DATA_SERIALIZERS = DeferredRegister.create(ForgeRegistries.DATA_SERIALIZERS , Odyssey.MOD_ID);
+    public static DeferredRegister<DataSerializerEntry> DATA_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.DATA_SERIALIZERS, Odyssey.MOD_ID);
 
     public static void init() {
         DATA_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());

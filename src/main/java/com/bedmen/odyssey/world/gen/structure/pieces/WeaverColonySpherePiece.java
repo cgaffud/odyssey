@@ -58,7 +58,7 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
             for(int j = -max; j <= max; j++){
                 for(int k = -max; k <= max; k++){
                     BlockPos blockPos = origin.offset(i,j,k);
-                    double dist = Math.sqrt(origin.distSqr(blockPos,false));
+                    double dist = Math.sqrt(origin.distSqr(blockPos));
                     if(dist > r2 && dist < this.r0 && random.nextDouble() < 1d / Math.abs(r1 - dist)) {
                         worldGenLevel.setBlock(blockPos, dirt, 3);
                     } else if(dist > r2 && dist < this.r0 && random.nextInt(4) == 0) {

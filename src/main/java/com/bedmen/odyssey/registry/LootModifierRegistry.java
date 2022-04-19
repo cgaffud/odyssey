@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class LootModifierRegistry {
 
-    public static DeferredRegister<GlobalLootModifierSerializer<?>> LOOT_MODIFIER = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS, Odyssey.MOD_ID);
+    public static DeferredRegister<GlobalLootModifierSerializer<?>> LOOT_MODIFIER = DeferredRegister.create(ForgeRegistries.Keys.LOOT_MODIFIER_SERIALIZERS, Odyssey.MOD_ID);
 
     public static void init() {
         LOOT_MODIFIER.register(FMLJavaModLoadingContext.get().getModEventBus());

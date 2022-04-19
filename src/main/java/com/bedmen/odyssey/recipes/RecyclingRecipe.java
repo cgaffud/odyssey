@@ -1,7 +1,8 @@
 package com.bedmen.odyssey.recipes;
 
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.registry.RecipeRegistry;
+import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
+import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -116,7 +117,7 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
     }
 
     public RecipeType<?> getType() {
-        return OdysseyRecipeType.RECYCLING;
+        return RecipeTypeRegistry.RECYCLING.get();
     }
 
     public ItemStack getToastSymbol() {
@@ -129,7 +130,7 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.RECYCLING.get();
+        return RecipeSerializerRegistry.RECYCLING.get();
     }
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<RecyclingRecipe> {

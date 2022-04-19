@@ -23,6 +23,7 @@ public class GuiEvents {
         if(screen instanceof SignEditScreen signEditScreen && signEditScreen.sign instanceof OdysseySignBlockEntity odysseySignBlockEntity){
             event.setScreen(new OdysseySignEditScreen(odysseySignBlockEntity, Minecraft.getInstance().isTextFilteringEnabled()));
         }
+        //todo trinkets / amulets
 //        if(gui instanceof CreativeModeInventoryScreen){
 //            event.setGui(new OdysseyCreativeScreen(((CreativeModeInventoryScreen) gui).inventory.player));
 //        }

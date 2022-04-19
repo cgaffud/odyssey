@@ -1,9 +1,9 @@
 package com.bedmen.odyssey.entity.animal;
 
-import com.bedmen.odyssey.recipes.OdysseyRecipeType;
 import com.bedmen.odyssey.recipes.WeavingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -57,7 +57,7 @@ public class PassiveWeaver extends Animal {
     public PassiveWeaver(EntityType<? extends PassiveWeaver> entityType, Level level) {
         super(entityType, level);
         this.setCanPickUpLoot(true);
-        Collection<WeavingRecipe> recipes = level.getRecipeManager().getAllRecipesFor(OdysseyRecipeType.WEAVING);
+        Collection<WeavingRecipe> recipes = level.getRecipeManager().getAllRecipesFor(RecipeTypeRegistry.WEAVING.get());
         for(WeavingRecipe recipe : recipes){
             Item item = recipe.getResultItem().getItem();
             if(!(item instanceof BlockItem blockItem)){

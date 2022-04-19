@@ -150,8 +150,8 @@ public abstract class MixinEnchantmentHelper {
     @Overwrite
     public static float getDamageBonus(ItemStack itemStack, MobType mobType) {
         MutableFloat mutablefloat = new MutableFloat();
-        runIterationOnItem((p_44887_, p_44888_) -> {
-            mutablefloat.add(p_44887_.getDamageBonus(p_44888_, mobType));
+        runIterationOnItem((enchantment, enchantmentLevel) -> {
+            mutablefloat.add(enchantment.getDamageBonus(enchantmentLevel, mobType));
         }, itemStack);
         return mutablefloat.floatValue() * (itemStack.getItem() instanceof DualWieldItem ? 0.5f : 1f);
     }

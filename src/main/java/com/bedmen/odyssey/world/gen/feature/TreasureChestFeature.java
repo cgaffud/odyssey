@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
-    private static final int RARITY = 20;
+    private static final int RARITY = 1;
     public final TreasureChestMaterial treasureChestMaterial;
     private final int minY;
     private final int maxY;
@@ -32,7 +32,7 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
     public TreasureChestFeature(Codec<NoneFeatureConfiguration> codec, TreasureChestMaterial treasureChestMaterial, int minY, int maxY) {
         super(codec);
         this.treasureChestMaterial = treasureChestMaterial;
-        this.minY = minY;
+        this.minY = minY + 8;
         this.maxY = maxY;
     }
 

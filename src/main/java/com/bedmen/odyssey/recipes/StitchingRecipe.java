@@ -2,7 +2,8 @@ package com.bedmen.odyssey.recipes;
 
 import com.bedmen.odyssey.inventory.StitchingMenu;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.registry.RecipeRegistry;
+import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
+import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
@@ -108,7 +109,7 @@ public class StitchingRecipe implements Recipe<Container> {
     }
 
     public RecipeType<?> getType() {
-        return OdysseyRecipeType.STITCHING;
+        return RecipeTypeRegistry.STITCHING.get();
     }
 
     public ItemStack getToastSymbol() {
@@ -117,7 +118,7 @@ public class StitchingRecipe implements Recipe<Container> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.STITCHING.get();
+        return RecipeSerializerRegistry.STITCHING.get();
     }
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<StitchingRecipe> {

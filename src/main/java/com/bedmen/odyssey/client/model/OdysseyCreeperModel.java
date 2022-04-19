@@ -2,11 +2,7 @@ package com.bedmen.odyssey.client.model;
 
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.AgeableListModel;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -16,9 +12,6 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class OdysseyCreeperModel<T extends OdysseyCreeper> extends AgeableListModel<T> {
     private final ModelPart root;
@@ -56,7 +49,7 @@ public class OdysseyCreeperModel<T extends OdysseyCreeper> extends AgeableListMo
         return this.root;
     }
 
-    public void setupAnim(T p_102463_, float p_102464_, float p_102465_, float p_102466_, float p_102467_, float p_102468_) {
+    public void setupAnim(T entity, float p_102464_, float p_102465_, float p_102466_, float p_102467_, float p_102468_) {
         this.head.yRot = p_102467_ * ((float)Math.PI / 180F);
         this.head.xRot = p_102468_ * ((float)Math.PI / 180F);
         this.rightHindLeg.xRot = Mth.cos(p_102464_ * 0.6662F) * 1.4F * p_102465_;

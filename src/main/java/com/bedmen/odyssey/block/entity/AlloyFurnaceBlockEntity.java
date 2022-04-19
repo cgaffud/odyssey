@@ -2,8 +2,9 @@ package com.bedmen.odyssey.block.entity;
 
 import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;
 import com.bedmen.odyssey.recipes.AlloyRecipe;
-import com.bedmen.odyssey.recipes.OdysseyRecipeType;
+
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
+import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -34,7 +35,7 @@ public class AlloyFurnaceBlockEntity extends OdysseyFurnaceBlockEntity {
     public static final int BURN_COOL_SPEED = 2;
 
     public AlloyFurnaceBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(BlockEntityTypeRegistry.ALLOY_FURNACE.get(), blockPos, blockState, OdysseyRecipeType.ALLOYING);
+        super(BlockEntityTypeRegistry.ALLOY_FURNACE.get(), blockPos, blockState, RecipeTypeRegistry.ALLOYING.get());
         items = NonNullList.withSize(SLOT_COUNT, ItemStack.EMPTY);
     }
 

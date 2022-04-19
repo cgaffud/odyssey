@@ -4,10 +4,11 @@ import javax.annotation.Nullable;
 
 import com.bedmen.odyssey.inventory.slot.StitchingFiberSlot;
 import com.bedmen.odyssey.inventory.slot.StitchingIngredientSlot;
-import com.bedmen.odyssey.recipes.OdysseyRecipeType;
+
 import com.bedmen.odyssey.recipes.StitchingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ContainerRegistry;
+import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -123,11 +124,11 @@ public class StitchingMenu extends AbstractContainerMenu {
             this.addSlot(new Slot(inventory, k, 8 + k * 18, 142));
         }
         this.level = inventory.player.level;
-        this.recipes = this.level.getRecipeManager().getAllRecipesFor(OdysseyRecipeType.STITCHING);
+        this.recipes = this.level.getRecipeManager().getAllRecipesFor(RecipeTypeRegistry.STITCHING.get());
     }
 
     public void createResult() {
-        List<StitchingRecipe> list = this.level.getRecipeManager().getRecipesFor(OdysseyRecipeType.STITCHING, this.inputSlots, this.level);
+        List<StitchingRecipe> list = this.level.getRecipeManager().getRecipesFor(RecipeTypeRegistry.STITCHING.get(), this.inputSlots, this.level);
         if (list.isEmpty()) {
             this.resultSlots.setItem(0, ItemStack.EMPTY);
         } else {

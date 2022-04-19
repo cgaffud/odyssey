@@ -233,7 +233,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> OBSIDIAN_BATTLE_AXE = ITEMS.register("obsidian_battle_axe", () -> new EquipmentMeleeItem(OdysseyTiers.OBSIDIAN, 9f, -3.1f, false, new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), SHATTERING_2));
 
     public static final RegistryObject<Item> MOON_SWORD = ITEMS.register("moon_sword", () -> new CondAmpMeleeItem.Binary(OdysseyTiers.ULTRA_2, 7f, -2.4f, true, new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE),MOON_BLESSING));
-    public static final RegistryObject<Item> RAIN_SWORD = ITEMS.register("rain_sword", () -> new CondAmpMeleeItem.Gradient(OdysseyTiers.ULTRA_2, 7f, -2.4f, true, (Level level, Entity entity) -> level.getBiome(entity.eyeBlockPosition()).getFoliageColor(), 9551193, new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), HYDROCLIMATIC));
+    public static final RegistryObject<Item> RAIN_SWORD = ITEMS.register("rain_sword", () -> new CondAmpMeleeItem.Gradient(OdysseyTiers.ULTRA_2, 7f, -2.4f, true, (Level level, Entity entity) -> level.getBiome(entity.eyeBlockPosition()).value().getFoliageColor(), 9551193, new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), HYDROCLIMATIC));
 
     public static final RegistryObject<Item> BROKEN_SEA_SWORD = ITEMS.register("broken_sea_sword", () -> new EquipmentMeleeItem(OdysseyTiers.ULTRA_1,7, -2.4f,false, new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), DOWNPOUR_1));
 

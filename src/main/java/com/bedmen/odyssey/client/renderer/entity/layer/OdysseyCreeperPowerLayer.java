@@ -11,13 +11,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class OdysseyCreeperPowerLayer extends EnergySwirlLayer<OdysseyCreeper, OdysseyCreeperModel<OdysseyCreeper>> {
-    private static final ResourceLocation POWER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    private final OdysseyCreeperModel<OdysseyCreeper> model;
+import java.util.function.Supplier;
 
-    public OdysseyCreeperPowerLayer(RenderLayerParent<OdysseyCreeper, OdysseyCreeperModel<OdysseyCreeper>> renderLayerParent, EntityModelSet entityModelSet) {
+public class OdysseyCreeperPowerLayer<T extends OdysseyCreeper, M extends OdysseyCreeperModel<T>> extends EnergySwirlLayer<T, M> {
+    private static final ResourceLocation POWER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
+    private final M model;
+
+    public OdysseyCreeperPowerLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet entityModelSet, Supplier<M> supplier) {
         super(renderLayerParent);
-        this.model = new OdysseyCreeperModel<>(entityModelSet.bakeLayer(ModelLayers.CREEPER_ARMOR));
+        this.model = supplier.get();
     }
 
     protected float xOffset(float p_116683_) {
@@ -28,7 +30,7 @@ public class OdysseyCreeperPowerLayer extends EnergySwirlLayer<OdysseyCreeper, O
         return POWER_LOCATION;
     }
 
-    protected EntityModel<OdysseyCreeper> model() {
+    protected M model() {
         return this.model;
     }
 }
