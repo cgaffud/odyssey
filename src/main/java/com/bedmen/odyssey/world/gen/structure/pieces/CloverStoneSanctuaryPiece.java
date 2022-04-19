@@ -2,13 +2,12 @@ package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.util.WorldGenUtil;
-import com.bedmen.odyssey.world.gen.structure.OdysseyStructurePieceType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureFeatureManager;
@@ -41,11 +40,11 @@ public class CloverStoneSanctuaryPiece extends TemplateStructurePiece {
     private static final List<Block> SPECIAL_STONE = List.of(Blocks.CHISELED_STONE_BRICKS, BlockRegistry.CLOVER_STONE.get());
     private static final Map<Block, List<Block>> BLOCK_MAP = Map.of(Blocks.STONE_BRICKS, STONE_BRICKS, Blocks.STONE_BRICK_STAIRS, STONE_BRICK_STAIRS, Blocks.STONE_BRICK_SLAB, STONE_BRICK_SLABS, Blocks.STONE_BRICK_WALL, STONE_BRICK_WALLS, Blocks.CHISELED_STONE_BRICKS, SPECIAL_STONE);
     public CloverStoneSanctuaryPiece(StructureManager structureManager, BlockPos blockPos) {
-        super(OdysseyStructurePieceType.CLOVER_STONE_SANCTUARY, 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(), blockPos);
+        super(StructurePieceTypeRegistry.CLOVER_STONE_SANCTUARY.get(), 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(), blockPos);
     }
 
     public CloverStoneSanctuaryPiece(StructureManager structureManager, CompoundTag compoundTag) {
-        super(OdysseyStructurePieceType.CLOVER_STONE_SANCTUARY, compoundTag, structureManager, (p_162451_) -> {
+        super(StructurePieceTypeRegistry.CLOVER_STONE_SANCTUARY.get(), compoundTag, structureManager, (p_162451_) -> {
             return makeSettings();
         });
     }

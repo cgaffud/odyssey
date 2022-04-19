@@ -61,6 +61,7 @@ public class Odyssey
         RecipeTypeRegistry.init();
         SoundEventRegistry.init();
         StructureFeatureRegistry.init();
+        StructurePieceTypeRegistry.init();
         WorldTypeRegistry.init();
     }
 

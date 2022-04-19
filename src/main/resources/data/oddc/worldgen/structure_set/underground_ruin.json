@@ -1,0 +1,17 @@
+{
+  "structures": [
+    {
+      "structure": "oddc:underground_ruin",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 4496465319,
+
+    "spacing": 12,
+
+    "separation": 4,
+
+    "type": "minecraft:random_spread"
+  }
+}

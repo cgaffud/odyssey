@@ -1,0 +1,17 @@
+{
+  "structures": [
+    {
+      "structure": "oddc:weaver_colony",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 2097174030,
+
+    "spacing": 32,
+
+    "separation": 8,
+
+    "type": "minecraft:random_spread"
+  }
+}

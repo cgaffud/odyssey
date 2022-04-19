@@ -8,8 +8,13 @@ import com.bedmen.odyssey.entity.monster.CamoCreeper;
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Objects;
 
 public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, CamoCreeperModel<CamoCreeper>> {
     public static final ResourceLocation GRAY_CREEPER_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/camo_creeper/gray_creeper.png");
@@ -29,16 +34,18 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
     public static ResourceLocation getTexture(OdysseyCreeper odysseyCreeper) {
         Biome biome = ((CamoCreeper)odysseyCreeper).getBiome();
 
+        if(biome == null || Objects.equals(biome.getRegistryName(), Biomes.LUSH_CAVES.location())){
+            return GRAY_CREEPER_LOCATION;
+        }
+
         if (odysseyCreeper.position().y < 0) {
             return DEEPSLATE_CREEPER_LOCATION;
         }
 
-        if (odysseyCreeper.position().y < 56) {
+        if (odysseyCreeper.position().y < 56
+                || Objects.equals(biome.getRegistryName(), Biomes.STONY_PEAKS.location())
+                || Objects.equals(biome.getRegistryName(), Biomes.STONY_SHORE.location())) {
             return STONE_CREEPER_LOCATION;
-        }
-
-        if(biome == null){
-            return GRAY_CREEPER_LOCATION;
         }
 
         if(biome.getBiomeCategory() == Biome.BiomeCategory.DESERT){

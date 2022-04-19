@@ -2,8 +2,8 @@ package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
+import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.util.WorldGenUtil;
-import com.bedmen.odyssey.world.gen.structure.OdysseyStructurePieceType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -40,11 +40,11 @@ public class UndergroundRuinPieces {
 
     public static class UndergroundRuinPiece extends TemplateStructurePiece {
         public UndergroundRuinPiece(StructureManager structureManager, ResourceLocation resourceLocation, BlockPos blockPos, Rotation rotation) {
-            super(OdysseyStructurePieceType.UNDERGROUND_RUIN, 0, structureManager, resourceLocation, resourceLocation.toString(), makeSettings(rotation), blockPos);
+            super(StructurePieceTypeRegistry.UNDERGROUND_RUIN.get(), 0, structureManager, resourceLocation, resourceLocation.toString(), makeSettings(rotation), blockPos);
         }
 
         public UndergroundRuinPiece(StructureManager structureManager, CompoundTag tag) {
-            super(OdysseyStructurePieceType.UNDERGROUND_RUIN, tag, structureManager, (loc) -> {
+            super(StructurePieceTypeRegistry.UNDERGROUND_RUIN.get(), tag, structureManager, (loc) -> {
                 return makeSettings(Rotation.valueOf(tag.getString("Rot")));
             });
         }
