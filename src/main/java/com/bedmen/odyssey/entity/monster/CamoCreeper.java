@@ -1,12 +1,8 @@
 package com.bedmen.odyssey.entity.monster;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class CamoCreeper extends OdysseyCreeper {
     private Biome biome;
@@ -17,7 +13,7 @@ public class CamoCreeper extends OdysseyCreeper {
 
     public void tick(){
         super.tick();
-        this.biome = this.level.getBiome(this.blockPosition());
+        this.biome = this.level.getBiome(this.blockPosition()).value();
     }
 
     public Biome getBiome(){

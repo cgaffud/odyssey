@@ -89,12 +89,12 @@ public class EquipmentArmorItem extends ArmorItem implements IEquipment {
             if(this.setBonusMap.size() > 0)
                 tooltip.add(new TranslatableComponent("item.oddc.equipment.setbonus").withStyle(OdysseyChatFormatting.LAVENDER));
             for(Enchantment e : this.setBonusMap.keySet()){
-                MutableComponent mutableComponent = (MutableComponent)(e.getFullname(this.setBonusMap.get(e).getA()));
+                MutableComponent mutableComponent = ((MutableComponent)e.getFullname(this.setBonusMap.get(e).getA())).withStyle(OdysseyChatFormatting.LAVENDER);
                 String key = this.setBonusMap.get(e).getB();
                 if(key.equals("passive"))
                     mutableComponent.append(new TranslatableComponent("item.oddc.equipment.passive").withStyle(OdysseyChatFormatting.LAVENDER));
                 else{
-                    mutableComponent.append(" [");
+                    mutableComponent.append(" [").withStyle(OdysseyChatFormatting.LAVENDER);
                     mutableComponent.append(new TranslatableComponent(key).withStyle(OdysseyChatFormatting.LAVENDER));
                     mutableComponent.append(new TranslatableComponent("item.oddc.equipment.key").withStyle(OdysseyChatFormatting.LAVENDER));
                 }

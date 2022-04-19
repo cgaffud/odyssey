@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.inventory;
 
-import com.bedmen.odyssey.recipes.OdysseyRecipeType;
+import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,7 +23,7 @@ public abstract class OdysseyFurnaceMenu extends AbstractContainerMenu {
     }
 
     public boolean isFuel(ItemStack itemStack) {
-        return net.minecraftforge.common.ForgeHooks.getBurnTime(itemStack, OdysseyRecipeType.RECYCLING) > 0;
+        return net.minecraftforge.common.ForgeHooks.getBurnTime(itemStack, RecipeTypeRegistry.RECYCLING.get()) > 0;
     }
 
     public int getBurnProgress() {

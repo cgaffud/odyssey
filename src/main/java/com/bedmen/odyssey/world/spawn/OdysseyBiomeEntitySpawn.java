@@ -60,7 +60,6 @@ public class OdysseyBiomeEntitySpawn {
 //                monsterSpawns.add(ARCTIHORN_SPAWNER);
 //            }
         }
-
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)

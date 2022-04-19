@@ -20,6 +20,7 @@ import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -37,6 +38,9 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITag;
+import net.minecraftforge.registries.tags.ITagManager;
 
 import java.util.Map;
 import java.util.Random;
@@ -106,7 +110,7 @@ public class EntityEvents {
             LivingEntity attackingEntity = (LivingEntity) damageSource.getEntity();
             // downpour damage booster
             int downpourLevel = EnchantmentUtil.getDownpour(attackingEntity);
-            if (downpourLevel > 0 && OdysseyEntityTags.HYDROPHOBIC.contains(livingEntity.getType()))
+            if (downpourLevel > 0 && livingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
                 amount += (float)downpourLevel * 3f;
             amount += EnchantmentUtil.getConditionalAmpBonus(attackingEntity);
         }
@@ -217,8 +221,13 @@ public class EntityEvents {
             Entity attacker = event.getDamageSource().getDirectEntity();
             if(livingEntity instanceof Player player && attacker instanceof LivingEntity livingAttacker && livingAttacker.getMainHandItem().getItem() instanceof AxeItem){
                 int recoveryTime = odysseyShieldItem.getRecoveryTime();
-                for(Item item : OdysseyItemTags.SHIELDS.getValues()){
-                    player.getCooldowns().addCooldown(item, recoveryTime);
+                ITagManager<Item> itemITagManager = ForgeRegistries.ITEMS.tags();
+                if(itemITagManager != null){
+                    for(Item item : itemITagManager.getTag(OdysseyItemTags.SHIELDS).stream().toList()){
+                        player.getCooldowns().addCooldown(item, recoveryTime);
+                    }
+                } else {
+                    System.out.println("Error: itemITagManager is null in onShieldBlockEvent");
                 }
             }
         }
@@ -229,7 +238,7 @@ public class EntityEvents {
     }
 
     public static boolean inPrairieBiome(Entity entity){
-        return entity.level.getBiome(entity.blockPosition()).getRegistryName().equals(BiomeRegistry.PRAIRIE.get().getRegistryName());
+        return entity.level.getBiome(entity.blockPosition()).is(BiomeRegistry.PRAIRIE_RESOURCE_KEY);
     }
 
     public static final Map<Difficulty, Float> DIFFICULTY_MAP = Map.of(

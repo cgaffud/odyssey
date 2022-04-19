@@ -28,14 +28,5 @@ public class FoliagePlacerTypeRegistry {
         FOLIAGE_PLACER_TYPE.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static void registerFoliagePlacerTypes(){
-        PALM_FOLIAGE_PLACER = register("palm_foliage_placer", PalmFoliagePlacer.CODEC);
-    }
-
-    public static FoliagePlacerType<PalmFoliagePlacer> PALM_FOLIAGE_PLACER;
-    //public static final RegistryObject<FoliagePlacerType<PalmFoliagePlacer>> PALM_FOLIAGE_PLACER = FOLIAGE_PLACER_TYPE.register("palm_foliage_placer", () -> new FoliagePlacerType<>(PalmFoliagePlacer.CODEC));
-
-    private static <P extends FoliagePlacer> FoliagePlacerType<P> register(String s, Codec<P> codec) {
-        return Registry.register(Registry.FOLIAGE_PLACER_TYPES, s, new FoliagePlacerType<>(codec));
-    }
+    public static final RegistryObject<FoliagePlacerType<PalmFoliagePlacer>> PALM = FOLIAGE_PLACER_TYPE.register("palm", () -> new FoliagePlacerType<>(PalmFoliagePlacer.CODEC));
 }

@@ -4,6 +4,7 @@ import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
@@ -32,9 +34,9 @@ public abstract class MixinLivingEntity extends Entity implements IOdysseyLiving
         super.setAirSupply(Integer.max(-20, amount));
     }
 
-    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/Tag;)Z"))
-    public boolean onBaseTick$isEyeInFluid(LivingEntity livingEntity, Tag tag){
-        return livingEntity.isEyeInFluid(tag) || this.hasEffect(EffectRegistry.DROWNING.get());
+    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
+    public boolean onBaseTick$isEyeInFluid(LivingEntity livingEntity, TagKey<Fluid> tagkey){
+        return livingEntity.isEyeInFluid(tagkey) || this.hasEffect(EffectRegistry.DROWNING.get());
     }
 
     @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))

@@ -1,9 +1,10 @@
 package com.bedmen.odyssey.block.entity;
 
 import com.bedmen.odyssey.inventory.RecyclingFurnaceMenu;
-import com.bedmen.odyssey.recipes.OdysseyRecipeType;
+
 import com.bedmen.odyssey.recipes.RecyclingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
+import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -47,7 +48,7 @@ public class RecyclingFurnaceBlockEntity extends OdysseyFurnaceBlockEntity {
     public static final int[] COLUMN_WEIGHTS = new int[]{1,9,81};
 
     public RecyclingFurnaceBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(BlockEntityTypeRegistry.RECYCLING_FURNACE.get(), blockPos, blockState, OdysseyRecipeType.RECYCLING);
+        super(BlockEntityTypeRegistry.RECYCLING_FURNACE.get(), blockPos, blockState, RecipeTypeRegistry.RECYCLING.get());
         this.items = NonNullList.withSize(SLOT_COUNT, ItemStack.EMPTY);
     }
 

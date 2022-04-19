@@ -45,7 +45,7 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
             return DESERT_CREEPER_LOCATION;
         }
 
-        if(biome.getBaseTemperature() < 0.1f){
+        if(biome.coldEnoughToSnow(odysseyCreeper.blockPosition())){
             return SNOW_CREEPER_LOCATION;
         }
 

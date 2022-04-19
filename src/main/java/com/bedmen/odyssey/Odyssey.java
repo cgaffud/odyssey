@@ -57,7 +57,8 @@ public class Odyssey
         FoliagePlacerTypeRegistry.init();
         LootModifierRegistry.init();
 //        PotionRegistry.init();
-        RecipeRegistry.init();
+        RecipeSerializerRegistry.init();
+        RecipeTypeRegistry.init();
         SoundEventRegistry.init();
         StructureFeatureRegistry.init();
         WorldTypeRegistry.init();
@@ -91,9 +92,6 @@ public class Odyssey
             OreGen.registerOres();
             FeatureGen.registerFeatures();
             TreeGen.registerTrees();
-            StructureGen.registerStructures();
-            StructureFeatureRegistry.setupStructures();
-            FoliagePlacerTypeRegistry.registerFoliagePlacerTypes();
             NoiseGeneratorSettings.register(WorldTypeRegistry.ODYSSEY_RESOURCE_KEY, OdysseyGeneration.odysseyOverworld(false, false));
 
             //Spawning
@@ -103,7 +101,6 @@ public class Odyssey
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
 
-//        OdysseyStructureEntitySpawn.registerSpawners();
 //        OdysseyPotions.addBrewingRecipes();
 //        OdysseyTrades.addTrades();
         });

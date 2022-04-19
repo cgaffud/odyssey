@@ -14,7 +14,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class WorldTypeRegistry {
 
-    public static DeferredRegister<ForgeWorldPreset> WORLD_TYPE = DeferredRegister.create(ForgeRegistries.WORLD_TYPES, Odyssey.MOD_ID);
+    public static DeferredRegister<ForgeWorldPreset> WORLD_TYPE = DeferredRegister.create(ForgeRegistries.Keys.WORLD_TYPES, Odyssey.MOD_ID);
     public static final ResourceKey<NoiseGeneratorSettings> ODYSSEY_RESOURCE_KEY = ResourceKey.create(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, new ResourceLocation(Odyssey.MOD_ID));
 
     public static void init() {

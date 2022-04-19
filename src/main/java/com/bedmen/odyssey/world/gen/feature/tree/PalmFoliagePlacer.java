@@ -36,7 +36,7 @@ public class PalmFoliagePlacer extends FoliagePlacer {
     }
 
     protected FoliagePlacerType<?> type() {
-        return FoliagePlacerTypeRegistry.PALM_FOLIAGE_PLACER;
+        return FoliagePlacerTypeRegistry.PALM.get();
     }
 
     @Override

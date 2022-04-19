@@ -1,32 +1,24 @@
 package com.bedmen.odyssey.items;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.resources.model.Material;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.util.Lazy;
-import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty {
@@ -90,15 +82,15 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
 
     public static class TagItemChecker implements ItemChecker{
 
-        private final Tag.Named<Item> itemTag;
+        private final TagKey<Item> itemTag;
 
-        public TagItemChecker(Tag.Named<Item> itemTag){
+        public TagItemChecker(TagKey<Item> itemTag){
             this.itemTag = itemTag;
         }
 
         @Override
         public boolean contains(Item item) {
-            return this.itemTag.contains(item);
+            return item.getDefaultInstance().is(this.itemTag);
         }
     }
 

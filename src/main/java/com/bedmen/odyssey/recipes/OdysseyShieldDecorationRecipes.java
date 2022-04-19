@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.recipes;
 
 import com.bedmen.odyssey.items.OdysseyShieldItem;
-import com.bedmen.odyssey.registry.RecipeRegistry;
+import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -81,6 +81,6 @@ public class OdysseyShieldDecorationRecipes extends CustomRecipe {
     }
 
     public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.SHIELD_DECORATION.get();
+        return RecipeSerializerRegistry.SHIELD_DECORATION.get();
     }
 }
