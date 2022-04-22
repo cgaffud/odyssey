@@ -38,9 +38,6 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         Random random = context.random();
-        if(random.nextInt(RARITY) != 0){
-            return false;
-        }
         WorldGenLevel worldgenlevel = context.level();
         ChunkPos chunkpos = new ChunkPos(context.origin());
         List<Integer> list = IntStream.rangeClosed(chunkpos.getMinBlockX(), chunkpos.getMaxBlockX()).boxed().collect(Collectors.toList());
