@@ -23,8 +23,8 @@ public class UndergroundRuin extends StructureFeature<NoneFeatureConfiguration> 
     }
 
     private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {
-        BlockPos blockpos = new BlockPos(context.chunkPos().getMinBlockX(), 90, context.chunkPos().getMinBlockZ());
-        Rotation rotation = Rotation.getRandom(context.random());
+        BlockPos blockpos = new BlockPos(context.chunkPos().getMinBlockX(), 0, context.chunkPos().getMinBlockZ());
+        Rotation rotation = Rotation.NONE;
         UndergroundRuinPieces.addPiece(context.structureManager(), blockpos, rotation, structurePiecesBuilder, context.random());
     }
 
