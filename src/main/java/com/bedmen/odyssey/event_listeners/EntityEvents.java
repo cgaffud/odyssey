@@ -15,12 +15,15 @@ import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.Tag;
+import net.minecraft.util.Tuple;
+import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -36,17 +39,23 @@ import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
 import net.minecraftforge.registries.tags.ITagManager;
 
+import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
@@ -161,44 +170,87 @@ public class EntityEvents {
         }
     }
 
+    private interface EntityReplacementFunction {
+        Optional<EntityType<?>> call(Mob mob, Random random);
+    }
+
+    private static Map<EntityType<?>, EntityReplacementFunction> ENTITY_REPLACEMENT_MAP;
+
+    public static void initEntityMap(){
+        ENTITY_REPLACEMENT_MAP = Map.of(
+                EntityType.SKELETON, EntityEvents::skeletonReplace,
+                EntityType.CREEPER, EntityEvents::creeperReplace,
+                EntityType.ZOMBIE, EntityEvents::zombieReplace,
+                EntityType.HUSK, EntityEvents::zombieReplace,
+                EntityType.DROWNED, EntityEvents::zombieReplace,
+                EntityType.POLAR_BEAR, EntityEvents::polarBearReplace);
+    }
+
     @SubscribeEvent
-    public static void onLivingSpawnEvent$CheckSpawn(final LivingSpawnEvent.SpecialSpawn event){
+    public static void onLivingSpawnEvent$CheckSpawn(final LivingSpawnEvent.CheckSpawn event){
         Entity entity = event.getEntity();
+        Random random = entity.level.random;
+        EntityType<?> entityType = entity.getType();
+        MobSpawnType mobSpawnType = event.getSpawnReason();
 
-        if(entity instanceof Zombie zombie){
-            if(inPrairieBiome(zombie)){
-                zombie.setBaby(true);
+        if(mobSpawnType == MobSpawnType.SPAWNER){
+            return;
+        }
+
+        if(ENTITY_REPLACEMENT_MAP.containsKey(entityType) && entity instanceof Mob mob){
+            EntityReplacementFunction entityReplacementFunction = ENTITY_REPLACEMENT_MAP.get(entityType);
+            Optional<EntityType<?>> oEntityType = entityReplacementFunction.call(mob, random);
+            if(oEntityType.isPresent()){
+                EntityType<?> entityType1 = oEntityType.get();
+                if(entityType1 != entityType){
+                    entityType1.spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), mobSpawnType, true, true);
+                    event.setResult(Event.Result.DENY);
+                }
             }
         }
+    }
 
-        else if(entity instanceof Skeleton && entity.getType() == EntityType.SKELETON){
-            EntityTypeRegistry.SKELETON.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-            event.setCanceled(true);
-            entity.discard();
+    private static Optional<EntityType<?>> skeletonReplace(Mob mob, Random random){
+        return Optional.of(EntityTypeRegistry.SKELETON.get());
+    }
+
+    private static Optional<EntityType<?>> creeperReplace(Mob mob, Random random){
+        if(isCamo(random, mob.level.getDifficulty())){
+            return Optional.of(EntityTypeRegistry.CAMO_CREEPER.get());
         }
-
-        else if(entity instanceof Creeper creeper && entity.getType() == EntityType.CREEPER){
-            Random random = creeper.getRandom();
-
-            if(isCamo(random, entity.level.getDifficulty())){
-                EntityTypeRegistry.CAMO_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-                event.setCanceled(true);
-                entity.discard();
-            }
-
-            else if(isBaby(entity)){
-                EntityTypeRegistry.BABY_CREEPER.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-                event.setCanceled(true);
-                entity.discard();
-            }
+        else if(isBaby(mob)){
+            return Optional.of(EntityTypeRegistry.BABY_CREEPER.get());
         }
+        return Optional.empty();
+    }
 
-        else if(entity instanceof PolarBear polarBear && entity.getType() == EntityType.POLAR_BEAR){
-            OdysseyPolarBear odysseyPolarBear = (OdysseyPolarBear) EntityTypeRegistry.POLAR_BEAR.get().spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), event.getSpawnReason(), true, true);
-            odysseyPolarBear.setAge(polarBear.getAge());
-            event.setCanceled(true);
-            entity.discard();
+    private static Optional<EntityType<?>> zombieReplace(Mob mob, Random random){
+        if(inPrairieBiome(mob)){
+            mob.setBaby(true);
         }
+        return Optional.empty();
+    }
+
+    private static Optional<EntityType<?>> polarBearReplace(Mob mob, Random random){
+        return Optional.of(EntityTypeRegistry.POLAR_BEAR.get());
+    }
+
+    public static boolean isBaby(Entity entity){
+        return inPrairieBiome(entity) || entity.level.random.nextFloat() < ForgeConfig.SERVER.zombieBabyChance.get();
+    }
+
+    public static boolean inPrairieBiome(Entity entity){
+        return entity.level.getBiome(entity.blockPosition()).is(BiomeRegistry.PRAIRIE_RESOURCE_KEY);
+    }
+
+    public static final Map<Difficulty, Float> DIFFICULTY_MAP = Map.of(
+            Difficulty.HARD, 1f,
+            Difficulty.NORMAL, 0.5f,
+            Difficulty.EASY, 0.25f,
+            Difficulty.PEACEFUL, 0.0f);
+
+    public static boolean isCamo(Random random, Difficulty difficulty){
+        return random.nextFloat() < DIFFICULTY_MAP.get(difficulty);
     }
 
     @SubscribeEvent
@@ -231,23 +283,5 @@ public class EntityEvents {
                 }
             }
         }
-    }
-
-    public static boolean isBaby(Entity entity){
-        return inPrairieBiome(entity) || entity.level.random.nextFloat() <  ForgeConfig.SERVER.zombieBabyChance.get();
-    }
-
-    public static boolean inPrairieBiome(Entity entity){
-        return entity.level.getBiome(entity.blockPosition()).is(BiomeRegistry.PRAIRIE_RESOURCE_KEY);
-    }
-
-    public static final Map<Difficulty, Float> DIFFICULTY_MAP = Map.of(
-            Difficulty.HARD, 1f,
-            Difficulty.NORMAL, 0.5f,
-            Difficulty.EASY, 0.25f,
-            Difficulty.PEACEFUL, 0.0f);
-
-    public static boolean isCamo(Random random, Difficulty difficulty){
-        return random.nextFloat() < DIFFICULTY_MAP.get(difficulty);
     }
 }
