@@ -1,12 +1,8 @@
-import json, os
+import json, os, helper
 
-def yes(s):
-    return s.__contains__("Y") or s.__contains__("y")
-
-again = True
-while(again):
+while(True):
     enchantmentID = input("Input enchantmentID: ")
-    langName = input("Lang File Enchantment Name: ")
+    langName = helper.input_langName("Lang File Enchantment Name: ", enchantmentID)
 
     assetsPath = "../src/main/resources/assets/oddc"
     langPath = "%s/lang/en_us.json" % (assetsPath)
@@ -17,7 +13,7 @@ while(again):
         langDictionary["enchantment.oddc."+enchantmentID] = langName
         json.dump(langDictionary, langFile, indent = 2)
 
-    if(not yes(input("Again? (Y/N): "))):
-        again = False
+    if(not helper.yes(input("Again? (Y/N): "))):
+        break
 
 print("Done")

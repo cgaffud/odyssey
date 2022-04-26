@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
+import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -30,7 +31,7 @@ public class DualWieldItem extends EquipmentMeleeItem {
     }
 
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(new TranslatableComponent("item.oddc.dualwield").withStyle(ChatFormatting.GRAY));
+        tooltip.add(new TranslatableComponent("item.oddc.dualwield").withStyle(OdysseyChatFormatting.LAVENDER));
         super.appendHoverText(stack, level, tooltip, flagIn);
     }
 

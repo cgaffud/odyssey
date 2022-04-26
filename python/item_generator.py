@@ -1,13 +1,9 @@
-import json, os
+import json, os, helper
 
-def yes(s):
-    return s.__contains__("Y") or s.__contains__("y")
-
-again = True
-while(again):
+while(True):
     itemID = input("Input itemID: ")
-    langName = input("Lang File Item Name: ")
-    handheld = yes(input("Is this a tool or melee weapon? (Y/N): "))
+    langName = helper.input_default_to_id("Lang File Item Name: ")
+    handheld = helper.yes(input("Is this a tool or melee weapon? (Y/N): "))
     itemPath = 'oddc:item/'+itemID
 
     itemModel = {
@@ -41,7 +37,7 @@ while(again):
         langDictionary["item.oddc."+itemID] = langName
         json.dump(langDictionary, langFile, indent = 2)
 
-    if(not yes(input("Again? (Y/N): "))):
-        again = False
+    if(not helper.yes(input("Again? (Y/N): "))):
+        break
 
 print("Done")

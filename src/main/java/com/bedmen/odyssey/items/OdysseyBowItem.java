@@ -161,12 +161,16 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         return Mth.floor(EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack) * EnchantmentUtil.getSuperChargeMultiplier(itemStack));
     }
 
+    public float getChargeFactor(ItemStack itemStack, LivingEntity livingEntity){
+        return (float)(itemStack.getUseDuration() - livingEntity.getUseItemRemainingTicks()) / (float)(this.getChargeTime(itemStack));
+    }
+
     public void registerItemModelProperties() {
         ItemProperties.register(this, new ResourceLocation("pull"), (itemStack, clientLevel, livingEntity, i) -> {
             if (livingEntity == null) {
                 return 0.0F;
             } else {
-                return livingEntity.getUseItem() != itemStack ? 0.0F : (float)(itemStack.getUseDuration() - livingEntity.getUseItemRemainingTicks()) / (float)(this.getChargeTime(itemStack));
+                return livingEntity.getUseItem() != itemStack ? 0.0F : getChargeFactor(itemStack, livingEntity);
             }
         });
         ItemProperties.register(this, new ResourceLocation("pulling"), (itemStack, clientLevel, livingEntity, i) -> {

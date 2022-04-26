@@ -6,6 +6,7 @@ import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.monster.*;
+import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.equipment.base.*;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
@@ -74,6 +75,7 @@ public class Odyssey
             CompostUtil.addCompostingRecipes();
             OdysseyLootItemFunctions.registerFunctions();
             OdysseyTrades.addTrades();
+            EntityEvents.initEntityMap();
             ((RangedAttribute) Attributes.ARMOR).minValue = -40.0d;
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
 
@@ -125,6 +127,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaver.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathan.createAttributes().build());
         event.put(EntityTypeRegistry.POLAR_BEAR.get(), PolarBear.createAttributes().build());
+        event.put(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBrute.createAttributes().build());
 //
 //        //Bosses
         event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolem.createAttributes().build());

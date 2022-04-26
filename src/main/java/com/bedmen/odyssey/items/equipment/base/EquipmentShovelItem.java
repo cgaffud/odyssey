@@ -19,7 +19,7 @@ public class EquipmentShovelItem extends ShovelItem implements IEquipment {
     protected static final List<EquipmentShovelItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
     public EquipmentShovelItem(Tier tier, float damage, float attackSpeed, Properties properties, LevEnchSup... levEnchSups) {
-        super(tier, (int)damage, attackSpeed, properties);
+        super(tier, damage, attackSpeed, properties);
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);

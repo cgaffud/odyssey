@@ -1,14 +1,9 @@
-import json, os
+import json, os, helper
 
-def yes(s):
-    return s.__contains__("Y") or s.__contains__("y")
-
-again = True
-
-while(again):
+while(True):
     mobID = input("Mob ID: ")
+    langName = helper.input_langName("Lang File Mob Name: ", mobID)
     spawnEggID = "%s_spawn_egg" % (mobID)
-    langName = input("Lang File Mob Name: ")
     spawnEggLangName = "%s Spawn Egg" % (langName)
 
     spawnEggModel = {
@@ -30,7 +25,7 @@ while(again):
         langDictionary["item.oddc."+spawnEggID] = spawnEggLangName
         json.dump(langDictionary, langFile, indent = 2)
 
-    if(not yes(input("Again? (Y/N): "))):
-        again = False
+    if(not helper.yes(input("Again? (Y/N): "))):
+        break
 
 print("Done")

@@ -69,6 +69,7 @@
   "item.oddc.obsidian_bat": "Obsidian Bat",
   "entity.oddc.baby_creeper": "Baby Creeper",
   "item.oddc.baby_creeper_spawn_egg": "Baby Creeper Spawn Egg",
+  "item.oddc.polar_bear_spawn_egg": "Odyssey Polar Bear Spawn Egg",
   "entity.oddc.camo_creeper": "Camo Creeper",
   "item.oddc.camo_creeper_spawn_egg": "Camo Creeper Spawn Egg",
   "entity.oddc.baby_leviathan": "Baby Leviathan",
@@ -370,5 +371,10 @@
   "enchantment.oddc.hydroclimatic": "Hydroclimatic",
   "enchantment.oddc.sun_blessing": "Sun's Blessing",
   "enchantment.oddc.moon_blessing": "Moon's Blessing",
-  "item.oddc.sledgeaxe": "Sledgeaxe"
+  "item.oddc.sledgeaxe": "Sledgeaxe",
+  "item.oddc.sledgehammer": "Sledgehammer",
+  "item.oddc.smackin_shovel": "Smackin Shovel",
+  "item.oddc.blunt_sabre": "Blunt Sabre",
+  "entity.oddc.zombie_brute": "Zombie Brute",
+  "item.oddc.zombie_brute_spawn_egg": "Zombie Brute Spawn Egg"
 }
