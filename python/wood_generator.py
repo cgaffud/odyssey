@@ -1,5 +1,4 @@
-import json
-import os
+import json, os, helper
 
 def write(fileNames, data):
     assert len(fileNames) == len(data)
@@ -2110,14 +2109,10 @@ def doCopyables(name, color = "MaterialColor.COLOR_BROWN"):
             
     out.close()
               
-
-        
-
-    
         
 name = input("Input Wood ID: ")
 color = input("Color (if none specified, hit Enter):")
-lang_name = input("Lang File Wood Name: ")
+langName = helper.input_langName("Lang File Wood Name: ")
 
 if color == "":
     doCopyables(name)
@@ -2130,7 +2125,7 @@ else:
 #doRecipes(name)
 #doBlockTags(name)
 #doItemTags(name)
-#doLang(name, lang_name)
+#doLang(name, langName)
 
 
 # Missing funcitonality

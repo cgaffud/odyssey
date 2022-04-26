@@ -1,4 +1,4 @@
-import json, os
+import json, os, helper
 
 assetsPath = "../src/main/resources/assets/oddc"
 dataPath = "../src/main/resources/data"
@@ -15,13 +15,9 @@ harvestLevelPaths = {0:"none",
                      4:"%s/needs_diamond_tool.json" % (minecraftTagsPath),
                      5:"%s/needs_netherite_tool.json" % (forgeTagsPath)}
 
-def yes(s):
-    return s.__contains__("Y") or s.__contains__("y")
-
-again = True
-while(again):
+while(True):
     blockID = input("Input blockID: ")
-    langName = input("Lang File Block Name: ")
+    langName = helper.input_langName("Lang File Block Name: ", blockID)
     while(True):
         toolType = int(input("Tool Type? (0 : None, 1 : Pickaxe, 2 : Axe, 3 : Shovel, 4 : Hoe): "))
         if(toolType in toolTypes): 
@@ -120,7 +116,7 @@ while(again):
                 dictionary["values"].append(blockTagPath)
             json.dump(dictionary, harvestLevelFile, indent = 2)
 
-    if(not yes(input("Again? (Y/N): "))):
-        again = False
+    if(not helper.yes(input("Again? (Y/N): "))):
+        break
 
 print("Done")

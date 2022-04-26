@@ -1,12 +1,8 @@
-import json, os
+import json, os, helper
 
-def yes(s):
-    return s.__contains__("Y") or s.__contains__("y")
-
-again = True
-while(again):
+while(True):
     itemID = input("Input boomerangID: ")
-    langName = input("Lang File Item Name: ")
+    langName =helper.input_langName("Lang File Item Name: ", itemID)
     itemPath = 'oddc:item/'+itemID
     throwingPath = itemPath + "_throwing"
 
@@ -47,7 +43,7 @@ while(again):
         langDictionary["item.oddc."+itemID] = langName
         json.dump(langDictionary, langFile, indent = 2)
 
-    if(not yes(input("Again? (Y/N): "))):
-        again = False
+    if(not helper.yes(input("Again? (Y/N): "))):
+        break
 
 print("Done")

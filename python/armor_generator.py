@@ -1,4 +1,4 @@
-import json, os, copy
+import json, os, copy, helper
 
 pieces = ["helmet","chestplate","leggings","boots"]
 hardNames = {piece:piece.capitalize() for piece in pieces}
@@ -8,14 +8,10 @@ resourcesPath = "../src/main/resources"
 assetsPath = "%s/assets/oddc" % (resourcesPath)
 langPath = "%s/lang/en_us.json" % (assetsPath)
 
-def yes(s):
-    return s.__contains__("Y") or s.__contains__("y")
-
-again = True
-while(again):
+while(True):
     armorID = input("Input armor ID: ")
-    langName = input("Armor Lang File Name: ")
-    soft = yes(input("Is this armor soft (cap/tunic/pants naming)? (Y/N): "))
+    langName = helper.input_langName("Armor Lang File Name: ", armorID)
+    soft = helper.yes(input("Is this armor soft (cap/tunic/pants naming)? (Y/N): "))
     itemIDs = {piece:'%s_%s' % (armorID, piece) for piece in pieces}
     itemPaths = {piece:'oddc:item/%s' % (itemIDs[piece]) for piece in pieces}
 
@@ -38,7 +34,7 @@ while(again):
     else:
         names = copy.deepcopy(hardNames)
     for piece in pieces:
-        names[piece] = (armorID.capitalize())+" "+names[piece]
+        names[piece] = langName+" "+names[piece]
 
     itemModelPaths = {piece:"%s/models/item/%s.json" % (assetsPath,itemIDs[piece]) for piece in pieces}
 
@@ -53,7 +49,7 @@ while(again):
             langDictionary["item.oddc."+itemIDs[piece]] = names[piece]
         json.dump(langDictionary, file, indent = 2)
 
-    if(not yes(input("Again? (Y/N): "))):
+    if(not helper.yes(input("Again? (Y/N): "))):
         again = False
 
 print("Done")

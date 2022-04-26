@@ -1,12 +1,8 @@
-import json, os, shutil
+import json, os, shutil, helper
 
-def yes(s):
-    return s.__contains__("Y") or s.__contains__("y")
-
-again = True
-while(again):
+while(True):
     crossbowID = input("Input crossbowID: ")
-    langName = input("Lang File Item Name: ")
+    langName = helper.input_langName("Lang File Item Name: ", crossbowID)
     crossbowPath = 'oddc:item/'+crossbowID
 
     crossbowModel = {
@@ -134,7 +130,7 @@ while(again):
     for texture in crossbowTemplateTextures:
         shutil.copy(texture, textureDirectory)
 
-    if(not yes(input("Again? (Y/N): "))):
-        again = False
+    if(not helper.yes(input("Again? (Y/N): "))):
+        break
 
 print("Done")

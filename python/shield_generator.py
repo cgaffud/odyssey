@@ -1,4 +1,4 @@
-import json, os
+import json, os, helper
 
 resourcesPath = "../src/main/resources"
 assetsPath = "%s/assets/oddc" % (resourcesPath)
@@ -15,13 +15,9 @@ def getColorName(s):
 colors = ["red","brown","orange","yellow","lime","green","cyan","blue","light_blue","purple","magenta","pink","white","light_gray","gray","black"]
 colorNames = {color:getColorName(color) for color in colors}
 
-def yes(s):
-    return s.__contains__("Y") or s.__contains__("y")
-
-again = True
-while(again):
+while(True):
     itemID = input("Input shieldID: ")
-    langName = input("Lang File Shield Name: ")
+    langName = helper.input_langName("Lang File Shield Name: ", itemID)
     particle = input("ID of block texture for particles (such as minecraft:dark_oak_planks or oddc:silver_block): ")
     itemPath = "oddc:item/"+itemID
     fullItemID = "oddc:"+itemID
@@ -72,7 +68,7 @@ while(again):
                 D["item.oddc.%s.%s" % (itemID,color)] = colorNames[color]+" "+langName
         json.dump(D, file, indent = 2)
 
-    if(not yes(input("Again? (Y/N): "))):
-        again = False
+    if(not helper.yes(input("Again? (Y/N): "))):
+        break
 
 print("Done")
