@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class CloverStoneSanctuaryPiece extends TemplateStructurePiece {
-    private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"clover_stone_sanctuary/clover_stone_sanctuary");
+    private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"clover_stone_sanctuary");
     private static final List<Block> STONE_BRICKS = List.of(Blocks.STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS, Blocks.CRACKED_STONE_BRICKS);
     private static final List<Block> STONE_BRICK_STAIRS = List.of(Blocks.STONE_BRICK_STAIRS, Blocks.MOSSY_STONE_BRICK_STAIRS);
     private static final List<Block> STONE_BRICK_SLABS = List.of(Blocks.STONE_BRICK_SLAB, Blocks.MOSSY_STONE_BRICK_SLAB);

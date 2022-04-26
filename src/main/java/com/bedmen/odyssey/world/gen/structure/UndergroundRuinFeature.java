@@ -12,10 +12,10 @@ import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
-public class UndergroundRuin extends StructureFeature<NoneFeatureConfiguration> {
+public class UndergroundRuinFeature extends StructureFeature<NoneFeatureConfiguration> {
 
-    public UndergroundRuin(Codec<NoneFeatureConfiguration> codec) {
-        super(codec, PieceGeneratorSupplier.simple(PieceGeneratorSupplier.checkForBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG), UndergroundRuin::generatePieces));
+    public UndergroundRuinFeature(Codec<NoneFeatureConfiguration> codec) {
+        super(codec, PieceGeneratorSupplier.simple(PieceGeneratorSupplier.checkForBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG), UndergroundRuinFeature::generatePieces));
     }
 
     public GenerationStep.Decoration step() {
