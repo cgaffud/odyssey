@@ -374,5 +374,7 @@
   "item.oddc.sledgeaxe": "Sledgeaxe",
   "item.oddc.sledgehammer": "Sledgehammer",
   "item.oddc.smackin_shovel": "Smackin Shovel",
-  "item.oddc.blunt_sabre": "Blunt Sabre"
+  "item.oddc.blunt_sabre": "Blunt Sabre",
+  "entity.oddc.zombie_brute": "Zombie Brute",
+  "item.oddc.zombie_brute_spawn_egg": "Zombie Brute Spawn Egg"
 }

@@ -127,6 +127,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaver.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathan.createAttributes().build());
         event.put(EntityTypeRegistry.POLAR_BEAR.get(), PolarBear.createAttributes().build());
+        event.put(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBrute.createAttributes().build());
 //
 //        //Bosses
         event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolem.createAttributes().build());

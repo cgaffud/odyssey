@@ -21,6 +21,7 @@ import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.random.SimpleWeightedRandomList;
@@ -35,6 +36,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.entity.living.*;
@@ -225,6 +227,9 @@ public class EntityEvents {
     }
 
     private static Optional<EntityType<?>> zombieReplace(Mob mob, Random random){
+        if(random.nextFloat() < 0.05){
+            return Optional.of(EntityTypeRegistry.ZOMBIE_BRUTE.get());
+        }
         if(inPrairieBiome(mob)){
             mob.setBaby(true);
         }
@@ -251,6 +256,17 @@ public class EntityEvents {
 
     public static boolean isCamo(Random random, Difficulty difficulty){
         return random.nextFloat() < DIFFICULTY_MAP.get(difficulty);
+    }
+
+    @SubscribeEvent
+    public static void onLivingSpawnEvent$SpecialSpawn(final LivingSpawnEvent.SpecialSpawn event){
+        Entity entity = event.getEntity();
+        Random random = entity.level.random;
+        EntityType<?> entityType = entity.getType();
+        if(entity instanceof Zombie zombie && entityType == EntityType.ZOMBIE && zombie.getMainHandItem().isEmpty() && random.nextFloat() < 0.01){
+            zombie.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.SLEDGEHAMMER.get()));
+            zombie.setDropChance(EquipmentSlot.MAINHAND, 0.5f);
+        }
     }
 
     @SubscribeEvent
