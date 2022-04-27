@@ -15,6 +15,7 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.TomeItem;
 import com.bedmen.odyssey.items.equipment.CondAmpMeleeItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.*;
@@ -221,5 +222,10 @@ public class ClientEvents {
         event.getItemColors().register((itemStack, i) -> {
             return i <= 0 ? -1 : CondAmpMeleeItem.Gradient.getColor(itemStack);
         }, ItemRegistry.RAIN_SWORD.get());
+        for(TomeItem tomeItem : TomeItem.TOMES){
+            event.getItemColors().register((itemStack, i) -> {
+                return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();
+            }, tomeItem);
+        }
     }
 }

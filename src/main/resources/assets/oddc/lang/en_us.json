@@ -7,6 +7,7 @@
   "itemGroup.oddc_melee": "Odyssey Melee Weapons",
   "itemGroup.oddc_ranged": "Odyssey Ranged Weapons",
   "itemGroup.oddc_armor": "Odyssey Armor",
+  "itemGroup.oddc_magic": "Odyssey Magic",
   "itemGroup.oddc_spawning": "Odyssey Spawning",
   "block.oddc.silver_ore": "Silver Ore",
   "block.oddc.deepslate_silver_ore": "Deepslate Silver Ore",
@@ -376,5 +377,6 @@
   "item.oddc.smackin_shovel": "Smackin Shovel",
   "item.oddc.blunt_sabre": "Blunt Sabre",
   "entity.oddc.zombie_brute": "Zombie Brute",
-  "item.oddc.zombie_brute_spawn_egg": "Zombie Brute Spawn Egg"
+  "item.oddc.zombie_brute_spawn_egg": "Zombie Brute Spawn Egg",
+  "item.oddc.heavy_tome": "Heavy Tome"
 }
