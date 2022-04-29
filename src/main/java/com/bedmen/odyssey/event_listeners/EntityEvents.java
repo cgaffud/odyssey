@@ -183,7 +183,7 @@ public class EntityEvents {
                 EntityType.SKELETON, EntityEvents::skeletonReplace,
                 EntityType.CREEPER, EntityEvents::creeperReplace,
                 EntityType.ZOMBIE, EntityEvents::zombieReplace,
-                EntityType.HUSK, EntityEvents::zombieReplace,
+                EntityType.SPIDER, EntityEvents::spiderReplace,
                 EntityType.DROWNED, EntityEvents::zombieReplace,
                 EntityType.POLAR_BEAR, EntityEvents::polarBearReplace);
     }
@@ -227,11 +227,19 @@ public class EntityEvents {
     }
 
     private static Optional<EntityType<?>> zombieReplace(Mob mob, Random random){
-        if(random.nextFloat() < 0.05){
-            return Optional.of(EntityTypeRegistry.ZOMBIE_BRUTE.get());
-        }
         if(inPrairieBiome(mob)){
             mob.setBaby(true);
+            return Optional.empty();
+        }
+        if(random.nextFloat() < 0.05f){
+            return Optional.of(EntityTypeRegistry.ZOMBIE_BRUTE.get());
+        }
+        return Optional.empty();
+    }
+
+    private static Optional<EntityType<?>> spiderReplace(Mob mob, Random random){
+        if(inPrairieBiome(mob)){
+            return Optional.of(EntityTypeRegistry.BARN_SPIDER.get());
         }
         return Optional.empty();
     }
