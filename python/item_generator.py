@@ -2,7 +2,7 @@ import json, os, helper
 
 while(True):
     itemID = input("Input itemID: ")
-    langName = helper.input_default_to_id("Lang File Item Name: ")
+    langName = helper.input_langName("Lang File Item Name: ", itemID)
     handheld = helper.yes(input("Is this a tool or melee weapon? (Y/N): "))
     itemPath = 'oddc:item/'+itemID
 

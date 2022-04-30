@@ -17,9 +17,9 @@ public class LevEnchSup {
     }
 
     public static LevEnchSup[] getLevEnchantSupArray(Supplier<Enchantment> enchantmentSupplier, int maxLevel){
-        LevEnchSup[] levEnchSups = new LevEnchSup[maxLevel];
+        LevEnchSup[] levEnchSups = new LevEnchSup[maxLevel+1];
         for(int i = 0; i < levEnchSups.length; i++){
-            levEnchSups[i] = new LevEnchSup(enchantmentSupplier, i+1);
+            levEnchSups[i] = new LevEnchSup(enchantmentSupplier, Integer.max(1, i));
         }
         return levEnchSups;
     }

@@ -164,10 +164,9 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-pieces = ["1","2"]
-open_path1 = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\entity\camo_creeper\gray_creeper.png"
-save_path = r"C:\Users\18029\Documents\odyssey-1.18.1\src\main\resources\assets\oddc\textures\entity\camo_creeper\gray_creeper.png"
-image1 = open_image(open_path1)
-grayscale_recolor_image(image1, [1.2,1.2,1.2], [0,0,0])
+open_path = r"C:\Users\18029\Documents\1.18.2\assets\minecraft\textures\entity\spider\spider.png"
+save_path = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\entity\spider\barn_spider1.png"
+image1 = open_image(open_path)
+grayscale_recolor_image(image1, [2.0,2.0,1.0], [0,0,0])
 save_image(image1, save_path)
 print("Done")
