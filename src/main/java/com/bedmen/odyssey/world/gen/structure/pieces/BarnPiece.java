@@ -87,7 +87,7 @@ public class BarnPiece extends TemplateStructurePiece {
                 new BlockPos.MutableBlockPos(this.boundingBox.maxX()-1, y, this.boundingBox.maxZ()-1));
         for(BlockPos.MutableBlockPos corner : corners){
             while(worldGenLevel.ensureCanWrite(corner) && !WorldGenUtil.isSolid(worldGenLevel, corner)){
-                worldGenLevel.setBlock(corner, Blocks.STRIPPED_ACACIA_LOG.defaultBlockState(), 3);
+                worldGenLevel.setBlock(corner, Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState(), 3);
                 corner.move(Direction.DOWN);
             }
         }
