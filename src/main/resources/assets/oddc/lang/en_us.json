@@ -371,5 +371,7 @@
   "enchantment.oddc.sun_blessing": "Sun's Blessing",
   "enchantment.oddc.moon_blessing": "Moon's Blessing",
   "item.oddc.sunstone": "Sunstone",
-  "item.oddc.moonstone": "Moonstone"
+  "item.oddc.moonstone": "Moonstone",
+  "block.oddc.moonrock": "Moonrock",
+  "block.oddc.polished_moonrock": "Polished Moonrock"
 }

@@ -12,6 +12,8 @@
     "oddc:recycling_furnace",
     "oddc:copper_chest",
     "oddc:ruby_ore",
-    "oddc:deepslate_ruby_ore"
+    "oddc:deepslate_ruby_ore",
+    "oddc:moonrock",
+    "oddc:polished_moonrock"
   ]
 }
