@@ -27,6 +27,11 @@ public class LightEmitterBlock extends Block {
     }
 
     @Override
+    public boolean isRandomlyTicking(BlockState state) {
+        return true;
+    }
+
+    @Override
     public void randomTick(BlockState state, ServerLevel serverLevel, BlockPos blockPos, Random random) {
         System.out.print(this.provider.isLit(state, serverLevel));
         System.out.print(" ");
