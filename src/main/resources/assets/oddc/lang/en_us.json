@@ -380,5 +380,6 @@
   "item.oddc.zombie_brute_spawn_egg": "Zombie Brute Spawn Egg",
   "item.oddc.heavy_tome": "Heavy Tome",
   "entity.oddc.barn_spider": "Barn Spider",
-  "item.oddc.barn_spider_spawn_egg": "Barn Spider Spawn Egg"
+  "item.oddc.barn_spider_spawn_egg": "Barn Spider Spawn Egg",
+  "block.oddc.tomeshelf": "Tomeshelf"
 }

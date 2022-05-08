@@ -6,6 +6,7 @@ import com.bedmen.odyssey.client.model.OdysseyCreeperModel;
 import com.bedmen.odyssey.client.renderer.entity.layer.OdysseyCreeperPowerLayer;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
+import com.bedmen.odyssey.registry.BiomeRegistry;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.data.BuiltinRegistries;
@@ -34,7 +35,13 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
     public static ResourceLocation getTexture(OdysseyCreeper odysseyCreeper) {
         Biome biome = ((CamoCreeper)odysseyCreeper).getBiome();
 
-        if(biome == null || Objects.equals(biome.getRegistryName(), Biomes.LUSH_CAVES.location())){
+        if(biome == null){
+            return GRAY_CREEPER_LOCATION;
+        }
+
+        ResourceLocation registryName = biome.getRegistryName();
+
+        if(Objects.equals(registryName, Biomes.LUSH_CAVES.location())){
             return GRAY_CREEPER_LOCATION;
         }
 
@@ -43,12 +50,15 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
         }
 
         if (odysseyCreeper.position().y < 56
-                || Objects.equals(biome.getRegistryName(), Biomes.STONY_PEAKS.location())
-                || Objects.equals(biome.getRegistryName(), Biomes.STONY_SHORE.location())) {
+                || Objects.equals(registryName, Biomes.STONY_PEAKS.location())
+                || Objects.equals(registryName, Biomes.STONY_SHORE.location())) {
             return STONE_CREEPER_LOCATION;
         }
 
-        if(biome.getBiomeCategory() == Biome.BiomeCategory.DESERT){
+        if(biome.getBiomeCategory() == Biome.BiomeCategory.DESERT ||
+            Objects.equals(registryName, Biomes.BEACH.location()) ||
+            Objects.equals(registryName, Biomes.WARM_OCEAN.location()) ||
+            Objects.equals(registryName, BiomeRegistry.TROPICS_RESOURCE_KEY.location())){
             return DESERT_CREEPER_LOCATION;
         }
 
