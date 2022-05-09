@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.block.light_emitters;
 
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
 
 public interface IsLitProvider {
-    public boolean isLit(BlockState state, Level level);
+    boolean isLit(BlockPos pos, Level level);
 }

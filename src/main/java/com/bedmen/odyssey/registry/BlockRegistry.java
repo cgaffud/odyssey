@@ -48,8 +48,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> STERLING_SILVER_BLOCK = BLOCKS.register("sterling_silver_block", () -> new Block(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(4.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> ELECTRUM_BLOCK = BLOCKS.register("electrum_block", () -> new Block(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().strength(4.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> CLOVER_STONE = BLOCKS.register("clover_stone", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GREEN).requiresCorrectToolForDrops().strength(10.0F)));
-    public static final RegistryObject<Block> MOONROCK = BLOCKS.register("moonrock", () -> new LightEmitterBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(10.0F).randomTicks().lightLevel(litBlockEmission(8)), (BlockState blockstate, Level level) -> atNightEmission(level)));
-    public static final RegistryObject<Block> POLISHED_MOONROCK = BLOCKS.register("polished_moonrock", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).randomTicks().requiresCorrectToolForDrops().strength(10.0F)));
+    private static final int moonrockLightAmount = 8;
+    public static final RegistryObject<Block> MOONROCK = BLOCKS.register("moonrock", () -> new LightEmitterBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(10.0F).randomTicks().lightLevel(litBlockEmission(moonrockLightAmount)), BlockRegistry::atNightSkyEmission));
+    public static final RegistryObject<Block> POLISHED_MOONROCK = BLOCKS.register("polished_moonrock", () -> new LightEmitterBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(10.0F).randomTicks().lightLevel(litBlockEmission(moonrockLightAmount)), BlockRegistry::atNightSkyEmission));
 
 
     public static final RegistryObject<Block> PRAIRIE_GRASS = BLOCKS.register("prairie_grass", () -> new TriplePlantBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
@@ -157,7 +158,11 @@ public class BlockRegistry {
         };
     }
 
-    private static boolean atNightEmission(Level level) {
-        return ((level.getDayTime() % 24000L) >= 12000L);
+    private static boolean atNightSkyEmission(BlockPos pos, Level level) {
+        if (!((level.getDayTime() % 24000L) >= 12000L) || (level.dimension() != Level.OVERWORLD) || level.isRaining() || level.isThundering())
+            return false;
+        return (level.canSeeSkyFromBelowWater(pos.above()) || level.canSeeSkyFromBelowWater(pos.east())
+                || level.canSeeSkyFromBelowWater(pos.west()) || level.canSeeSkyFromBelowWater(pos.north())
+                || level.canSeeSkyFromBelowWater(pos.south()));
     }
 }
