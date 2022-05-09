@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "oddc:block/polished_moonrock",
+    "top": "oddc:block/polished_moonrock",
+    "side": "oddc:block/polished_moonrock"
+  }
+}

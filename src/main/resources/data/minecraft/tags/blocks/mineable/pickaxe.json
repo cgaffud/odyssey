@@ -14,6 +14,11 @@
     "oddc:ruby_ore",
     "oddc:deepslate_ruby_ore",
     "oddc:moonrock",
-    "oddc:polished_moonrock"
+    "oddc:polished_moonrock",
+    "oddc:moonrock_stairs",
+    "oddc:polished_moonrock_stairs",
+    "oddc:moonrock_slab",
+    "oddc:polished_moonrock_slab",
+    "oddc:moonrock_wall"
   ]
 }
