@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "oddc:moonrock"
+  },
+  "result": "oddc:moonrock_slab",
+  "count": 2
+}
