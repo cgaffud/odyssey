@@ -72,7 +72,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> POLISHED_MOONROCK_SLAB = ITEMS.register("polished_moonrock_slab", () -> new BlockItem(BlockRegistry.POLISHED_MOONROCK_SLAB.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     //TODO: fix
 
-    //public static final RegistryObject<Item> MOONROCK_WALL = ITEMS.register("moonrock_wall", () -> new BlockItem(BlockRegistry.MOONROCK_WALL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> MOONROCK_WALL = ITEMS.register("moonrock_wall", () -> new BlockItem(BlockRegistry.MOONROCK_WALL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
 
     //Wood and Plants
     public static final RegistryObject<Item> PRAIRIE_GRASS = ITEMS.register("prairie_grass", () -> new TripleHighBlockItem(BlockRegistry.PRAIRIE_GRASS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
