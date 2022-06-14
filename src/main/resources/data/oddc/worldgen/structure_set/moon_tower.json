@@ -1,0 +1,17 @@
+{
+  "structures": [
+    {
+      "structure": "oddc:moon_tower",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 1967286437,
+
+    "spacing":12,
+
+    "separation": 4,
+
+    "type": "minecraft:random_spread"
+  }
+}

@@ -57,8 +57,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> POLISHED_MOONROCK_SLAB = BLOCKS.register("polished_moonrock_slab", () -> new LightEmitterSlab(BlockBehaviour.Properties.copy(POLISHED_MOONROCK.get()), BlockRegistry::atNightSkyEmission));
     //TODO: fix
 
-    public static final RegistryObject<Block> MOONROCK_WALL = BLOCKS.register("moonrock_wall", () -> new LightEmitterWall(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(10.0F).lightLevel(litBlockEmission(moonrockLightAmount)), BlockRegistry::atNightSkyEmission));
-
+    public static final RegistryObject<Block> MOONROCK_WALL = BLOCKS.register("moonrock_wall", () -> new WallBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(10.0F)));
 
     public static final RegistryObject<Block> PRAIRIE_GRASS = BLOCKS.register("prairie_grass", () -> new TriplePlantBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
 
