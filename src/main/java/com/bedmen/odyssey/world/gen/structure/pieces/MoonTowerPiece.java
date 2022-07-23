@@ -12,6 +12,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -28,11 +30,13 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -45,12 +49,20 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MoonTowerPiece extends TemplateStructurePiece {
     private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"moon_tower/moon_tower");
+    private static final SimpleWeightedRandomList<Block> DEEPSLATE_BRICKS = new SimpleWeightedRandomList.Builder<Block>()
+            .add(Blocks.DEEPSLATE_BRICKS, 1)
+            .add(Blocks.CRACKED_DEEPSLATE_BRICKS, 1).build();
+    private static final SimpleWeightedRandomList<Block> DEEPSLATE_TILES = new SimpleWeightedRandomList.Builder<Block>()
+            .add(Blocks.DEEPSLATE_TILES, 1)
+            .add(Blocks.CRACKED_DEEPSLATE_TILES, 1).build();
+    private static final Map<Block, SimpleWeightedRandomList<Block>> BLOCK_MAP = Map.of(Blocks.DEEPSLATE_BRICKS, DEEPSLATE_BRICKS, Blocks.DEEPSLATE_TILES, DEEPSLATE_TILES);
 
     public MoonTowerPiece(StructureManager structureManager, BlockPos blockPos, Rotation rotation) {
         super(StructurePieceTypeRegistry.MOON_TOWER.get(), 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(rotation), blockPos);
@@ -71,50 +83,8 @@ public class MoonTowerPiece extends TemplateStructurePiece {
         return (new StructurePlaceSettings()).setRotation(rotation).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
     }
 
-    private boolean isValidTowerPosition(WorldGenLevel level, BlockPos pos) {
-        BlockPos.MutableBlockPos  mutx = pos.mutable();
-        for (int x = 0; x < 5; x++){
-            mutx.move(Direction.EAST, 1);
-            if (WorldGenUtil.isEmpty(level, mutx))
-                return false;
-        }
-        mutx.move(Direction.EAST, 1);
-        BlockPos.MutableBlockPos mutz = pos.mutable();
-        for (int z = 0; z < 5; z++) {
-            mutx.move(Direction.SOUTH, 1);
-            mutz.move(Direction.SOUTH, 1);
-            if (WorldGenUtil.isEmpty(level, mutx) || WorldGenUtil.isEmpty(level, mutz))
-                return false;
-        }
-        mutz.move(Direction.SOUTH, 1);
-        for (int x = 0; x < 5; x++) {
-            mutz.move(Direction.EAST, 1);
-            if (WorldGenUtil.isEmpty(level, mutz))
-                return false;
-        }
-        return true;
-    }
-
-
     @Override
     public void postProcess(WorldGenLevel level, StructureFeatureManager manager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
-//        BlockPos.MutableBlockPos mutable = pos.mutable();
-//        for(int y = 200; y > 90; y--){
-//            if (isValidTowerPosition(level, mutable.immutable())) {
-//                mutable.move(0, -1, 0);
-//                this.templatePosition = mutable.immutable();
-//                System.out.print(this.templatePosition.getX());
-//                System.out.print(",");
-//                System.out.println(this.templatePosition.getZ());
-//                System.out.print(level.getChunk(this.templatePosition).getPos().getMinBlockX());
-//                System.out.print(",");
-//                System.out.println(level.getChunk(this.templatePosition).getPos().getMinBlockZ());
-//
-//                super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
-//                return;
-//            }
-//            mutable.move(0,-1,0);
-//        }
         BlockPos entrance = new BlockPos(0, 0, -4).rotate(getRotation()).offset(pos);
         int height = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, entrance.getX(), entrance.getZ());
         BlockPos blockpos2 = this.templatePosition;
@@ -127,14 +97,28 @@ public class MoonTowerPiece extends TemplateStructurePiece {
                     continue;
                 }
                 mutable.setWithOffset(pos, x, y-1, z);
-                System.out.println("Mutable: "+mutable);
                 while(WorldGenUtil.isEmpty(level, mutable)) {
-                    level.setBlock(mutable, Blocks.DEEPSLATE_BRICKS.defaultBlockState(), 3);
+                    level.setBlock(mutable, DEEPSLATE_BRICKS.getRandomValue(random).get().defaultBlockState(), 3);
                     mutable.move(Direction.DOWN);
                 }
             }
         }
         super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
+        for(int x1 = this.boundingBox.minX(); x1 <= this.boundingBox.maxX(); x1++){
+            for(int y1 = this.boundingBox.minY(); y1 <= this.boundingBox.maxY(); y1++){
+                for(int z1 = this.boundingBox.minZ(); z1 <= this.boundingBox.maxZ(); z1++){
+                    BlockPos blockPos1 = new BlockPos(x1, y1, z1);
+                    BlockState blockState = level.getBlockState(blockPos1);
+                    Block block = blockState.getBlock();
+                    if(BLOCK_MAP.containsKey(block)){
+                        SimpleWeightedRandomList<Block> simpleWeightedRandomList = BLOCK_MAP.get(block);
+                        Block block1 = simpleWeightedRandomList.getRandomValue(random).get();
+                        BlockState blockState1 = block1.withPropertiesOf(blockState);
+                        level.setBlock(blockPos1, blockState1, 3);
+                    }
+                }
+            }
+        }
         this.templatePosition = blockpos2;
     }
 
