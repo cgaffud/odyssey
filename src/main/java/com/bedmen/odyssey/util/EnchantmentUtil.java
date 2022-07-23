@@ -18,6 +18,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EnchantmentUtil {
 //    private static final Map<Enchantment, Integer> ENCHANTMENT_TO_INTEGER_MAP = new HashMap<>();
@@ -89,6 +90,34 @@ public class EnchantmentUtil {
             return CURSES_BY_TIER.get(i-1);
         }
         return new ArrayList<>();
+    }
+
+    public static boolean canEnchantOntoItemStack(Enchantment enchantment, ItemStack itemStack){
+        if(!enchantment.canEnchant(itemStack)){
+            return false;
+        }
+        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
+        for(Enchantment enchantment1 : map.keySet()){
+            if(!enchantment1.isCompatibleWith(enchantment)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static List<Pair<Enchantment, Integer>> filterEnchantments(List<Pair<Enchantment, Integer>> enchantmentList, ItemStack itemStack){
+        return enchantmentList.stream().filter((pair) -> canEnchantOntoItemStack(pair.getFirst(), itemStack)).collect(Collectors.toList());
+    }
+
+    public static ItemStack itemWithEnchantmentByTier(Item item, Random random, int tier, double probability) {
+        ItemStack itemStack = new ItemStack(item);
+        if (random.nextDouble() < probability) {
+            List<Pair<Enchantment, Integer>> enchantmentList = EnchantmentUtil.getEnchantmentsByTier(tier);
+            enchantmentList = EnchantmentUtil.filterEnchantments(enchantmentList, itemStack);
+            Pair<Enchantment, Integer> enchantmentIntegerPair = enchantmentList.get(random.nextInt(enchantmentList.size()));
+            itemStack.enchant(enchantmentIntegerPair.getFirst(), enchantmentIntegerPair.getSecond());
+        }
+        return itemStack;
     }
 
 //
