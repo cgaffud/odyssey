@@ -1,7 +1,10 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.monster.OdysseySkeleton;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.util.WorldGenUtil;
@@ -17,8 +20,10 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureFeatureManager;
@@ -101,6 +106,13 @@ public class MoonTowerPiece extends TemplateStructurePiece {
         }
     }
 
+    private static ItemStack itemWithEnchantment(Item item, Random random){
+        ItemStack itemStack = new ItemStack(item);
+        if (random.nextBoolean() || random.nextBoolean())
+            itemStack.enchant(EnchantmentRegistry.ALL_DAMAGE_PROTECTION.get(), 1);
+        return itemStack;
+    }
+
     @Override
     protected void handleDataMarker(String dataMarker, BlockPos blockPos, ServerLevelAccessor accessor, Random random, BoundingBox boundingBox) {
         if ("chests_anchor".equals(dataMarker)) {
@@ -115,34 +127,36 @@ public class MoonTowerPiece extends TemplateStructurePiece {
                     ((ChestBlockEntity) blockentity).setLootTable(OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST, random.nextLong());
                 System.out.println("Lootable Added");
             }
-        } else if ("zombie".equals(dataMarker)) {
+        } else if ("zombie".equals(dataMarker) || "beefy_zombie".equals(dataMarker)) {
             Zombie zombie = EntityType.ZOMBIE.create(accessor.getLevel());
             zombie.setPersistenceRequired();
             zombie.moveTo(blockPos, 0.0F, 0.0F);
 
-            if (zombie.getItemBySlot(EquipmentSlot.CHEST).isEmpty())
-                zombie.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ItemRegistry.STERLING_SILVER_CHESTPLATE.get()));
+            if (zombie.getItemBySlot(EquipmentSlot.HEAD).isEmpty())
+                zombie.setItemSlot(EquipmentSlot.HEAD, itemWithEnchantment(ItemRegistry.STERLING_SILVER_HELMET.get(), random));
             if (zombie.getItemBySlot(EquipmentSlot.FEET).isEmpty() && (random.nextBoolean() || random.nextBoolean()))
-                zombie.setItemSlot(EquipmentSlot.FEET, new ItemStack(ItemRegistry.STERLING_SILVER_BOOTS.get()));
+                zombie.setItemSlot(EquipmentSlot.FEET,  itemWithEnchantment(ItemRegistry.STERLING_SILVER_BOOTS.get(), random));
 
+            if ("beefy_zombie".equals(dataMarker) && zombie.getItemBySlot(EquipmentSlot.CHEST).isEmpty())
+                zombie.setItemSlot(EquipmentSlot.CHEST, itemWithEnchantment(ItemRegistry.STERLING_SILVER_CHESTPLATE.get(), random));
+
+            zombie.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemRegistry.STERLING_SILVER_SWORD.get()));
             zombie.finalizeSpawn(accessor, accessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, (SpawnGroupData)null, (CompoundTag)null);
             accessor.addFreshEntityWithPassengers(zombie);
             accessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 2);
         } else if ("skeleton".equals(dataMarker)) {
-            Skeleton skeleton = EntityType.SKELETON.create(accessor.getLevel());
+            OdysseySkeleton skeleton = EntityTypeRegistry.SKELETON.get().create(accessor.getLevel());
             skeleton.setPersistenceRequired();
             skeleton.moveTo(blockPos, 0.0F, 0.0F);
 
             if (skeleton.getItemBySlot(EquipmentSlot.HEAD).isEmpty())
-                skeleton.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ItemRegistry.STERLING_SILVER_HELMET.get()));
+                skeleton.setItemSlot(EquipmentSlot.HEAD, itemWithEnchantment(ItemRegistry.STERLING_SILVER_HELMET.get(), random));
             if (skeleton.getItemBySlot(EquipmentSlot.LEGS).isEmpty() && random.nextBoolean())
-                skeleton.setItemSlot(EquipmentSlot.LEGS, new ItemStack(ItemRegistry.STERLING_SILVER_LEGGINGS.get()));
-            if (random.nextBoolean() && random.nextBoolean())
-                skeleton.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemRegistry.BONERANG.get()));
-            else
-                skeleton.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemRegistry.BOWN.get()));
+                skeleton.setItemSlot(EquipmentSlot.LEGS, itemWithEnchantment(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random));
 
             skeleton.finalizeSpawn(accessor, accessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, (SpawnGroupData)null, (CompoundTag)null);
+            skeleton.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemRegistry.BOWN.get()));
+
             accessor.addFreshEntityWithPassengers(skeleton);
             accessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 2);
         }

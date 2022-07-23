@@ -13,22 +13,22 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilde
 
 public class MoonTowerFeature extends StructureFeature<NoneFeatureConfiguration> {
     public MoonTowerFeature(Codec<NoneFeatureConfiguration> codec) {
-        super(codec, PieceGeneratorSupplier.simple(MoonTowerFeature::checkLocation, MoonTowerFeature::generatePieces));
+        super(codec, PieceGeneratorSupplier.simple(PieceGeneratorSupplier.checkForBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG), MoonTowerFeature::generatePieces));
     }
 
     public GenerationStep.Decoration step() {
         return GenerationStep.Decoration.SURFACE_STRUCTURES;
     }
 
-    private static boolean checkLocation(PieceGeneratorSupplier.Context<NoneFeatureConfiguration> context) {
-
-        int minX = context.chunkPos().getBlockX(5);
-        int minZ = context.chunkPos().getBlockZ(5);
-        int[] corners = context.getCornerHeights(minX, minX+6, minZ, minZ+6);
-        int minCorner = Math.min(Math.min(corners[0], corners[1]), Math.min(corners[2], corners[3]));
-
-        return context.validBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG) && (minCorner > 90);
-    }
+//    private static boolean checkLocation(PieceGeneratorSupplier.Context<NoneFeatureConfiguration> context) {
+//
+//        int minX = context.chunkPos().getBlockX(5);
+//        int minZ = context.chunkPos().getBlockZ(5);
+//        int[] corners = context.getCornerHeights(minX, minX+6, minZ, minZ+6);
+//        int minCorner = Math.min(Math.min(corners[0], corners[1]), Math.min(corners[2], corners[3]));
+//
+//        return context.validBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG) && (minCorner > 90);
+//    }
 
 
     private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {
