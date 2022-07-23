@@ -3,19 +3,14 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.world.gen.structure.CloverStoneSanctuaryFeature;
 import com.bedmen.odyssey.world.gen.structure.MoonTowerFeature;
-import com.bedmen.odyssey.world.gen.structure.UndergroundRuin;
+import com.bedmen.odyssey.world.gen.structure.UndergroundRuinFeature;
 import com.bedmen.odyssey.world.gen.structure.WeaverColonyFeature;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.HashMap;
 
 public class StructureFeatureRegistry {
 
@@ -26,7 +21,7 @@ public class StructureFeatureRegistry {
     }
 
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> WEAVER_COLONY = STRUCTURE_FEATURES.register("weaver_colony", () -> new WeaverColonyFeature(NoneFeatureConfiguration.CODEC));
-    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> UNDERGROUND_RUIN = STRUCTURE_FEATURES.register("underground_ruin", () -> new UndergroundRuin(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> UNDERGROUND_RUIN = STRUCTURE_FEATURES.register("underground_ruin", () -> new UndergroundRuinFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> CLOVER_STONE_SANCTUARY = STRUCTURE_FEATURES.register("clover_stone_sanctuary", () -> new CloverStoneSanctuaryFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> MOON_TOWER = STRUCTURE_FEATURES.register("moon_tower", () -> new MoonTowerFeature(NoneFeatureConfiguration.CODEC));
 

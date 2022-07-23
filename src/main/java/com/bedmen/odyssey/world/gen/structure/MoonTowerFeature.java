@@ -2,6 +2,7 @@ package com.bedmen.odyssey.world.gen.structure;
 
 import com.bedmen.odyssey.world.gen.structure.pieces.MoonTowerPiece;
 import com.mojang.serialization.Codec;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.core.BlockPos;
@@ -33,7 +34,8 @@ public class MoonTowerFeature extends StructureFeature<NoneFeatureConfiguration>
 
     private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {
         BlockPos blockpos = new BlockPos(context.chunkPos().getMinBlockX(), 200, context.chunkPos().getMinBlockZ());
-        MoonTowerPiece moonTowerPiece = new MoonTowerPiece(context.structureManager(), blockpos);
+        Rotation rotation = Rotation.getRandom(context.random());
+        MoonTowerPiece moonTowerPiece = new MoonTowerPiece(context.structureManager(), blockpos, rotation);
         structurePiecesBuilder.addPiece(moonTowerPiece);
     }
 }

@@ -33,7 +33,7 @@ public class UndergroundRuinPieces {
     private static final int PLACEMENT_RADIUS = 0;
     private static final List<ResourceLocation> HOUSES = Arrays.asList(new ResourceLocation(Odyssey.MOD_ID, "underground_ruins/abandoned_underground_house"));
 
-    public static void addPiece(StructureManager manager, BlockPos blockPos, Rotation rotation, StructurePieceAccessor accessor, Random random) {
+    public static void addPiece(StructureManager manager, BlockPos blockPos, Rotation rotation, StructurePieceAccessor accessor) {
         ResourceLocation structureLoc = HOUSES.get(0);
         accessor.addPiece(new UndergroundRuinPiece(manager, structureLoc, blockPos, rotation));
     }

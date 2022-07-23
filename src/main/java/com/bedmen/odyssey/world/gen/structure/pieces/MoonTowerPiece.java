@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
@@ -46,18 +47,23 @@ import java.util.Random;
 public class MoonTowerPiece extends TemplateStructurePiece {
     private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"moon_tower/moon_tower");
 
-    public MoonTowerPiece(StructureManager structureManager, BlockPos blockPos) {
-        super(StructurePieceTypeRegistry.MOON_TOWER.get(), 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(), blockPos);
+    public MoonTowerPiece(StructureManager structureManager, BlockPos blockPos, Rotation rotation) {
+        super(StructurePieceTypeRegistry.MOON_TOWER.get(), 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(rotation), blockPos);
     }
 
     public MoonTowerPiece(StructureManager structureManager, CompoundTag tag) {
         super(StructurePieceTypeRegistry.MOON_TOWER.get(), tag, structureManager, (loc) -> {
-            return makeSettings();
+            return makeSettings(Rotation.valueOf(tag.getString("Rot")));
         });
     }
 
-    private static StructurePlaceSettings makeSettings() {
-        return (new StructurePlaceSettings()).setRotation(Rotation.NONE).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
+    protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
+        super.addAdditionalSaveData(context, tag);
+        tag.putString("Rot", this.placeSettings.getRotation().name());
+    }
+
+    private static StructurePlaceSettings makeSettings(Rotation rotation) {
+        return (new StructurePlaceSettings()).setRotation(rotation).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
     }
 
     private boolean isValidTowerPosition(WorldGenLevel level, BlockPos pos) {
@@ -117,7 +123,7 @@ public class MoonTowerPiece extends TemplateStructurePiece {
     protected void handleDataMarker(String dataMarker, BlockPos blockPos, ServerLevelAccessor accessor, Random random, BoundingBox boundingBox) {
         if ("chests_anchor".equals(dataMarker)) {
             accessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
-            BlockPos[] chests = {blockPos.above(3), blockPos.below(4), blockPos.south(2).east(2)};
+            BlockPos[] chests = {blockPos.above(3), blockPos.below(4), new BlockPos(2, 0, 2).rotate(getRotation()).offset(blockPos)};
             int loot = random.nextInt(3);
             for (int i = 0; i < 3; i++) {
                 BlockEntity blockentity = accessor.getBlockEntity(chests[i]);
