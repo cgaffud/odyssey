@@ -3,7 +3,8 @@ package com.bedmen.odyssey.block.light_emitters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -11,15 +12,15 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
-public class LightEmitterSlab extends SlabBlock {
+public class LightEmitterStairBlock extends StairBlock {
 
     private IsLitProvider provider;
     private static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    // SET IsRandomlyTicking to true in properties before using
-    public LightEmitterSlab(Properties p_49795_, IsLitProvider provider) {
-        super(p_49795_);
+    public LightEmitterStairBlock(java.util.function.Supplier<BlockState> state, BlockBehaviour.Properties properties, IsLitProvider provider) {
+        super(state, properties);
         this.provider = provider;
         this.registerDefaultState(this.defaultBlockState().setValue(LIT,false));
     }
