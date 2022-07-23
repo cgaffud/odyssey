@@ -76,7 +76,7 @@ public class UndergroundRuinPieces {
             List<Integer> yList = IntStream.rangeClosed(-7, 7).boxed().map((i) -> i*8) .collect(Collectors.toList());
             Collections.shuffle(yList, random);
             BlockPos.MutableBlockPos mutable = blockPos.mutable();
-//
+
             for(Integer x : xList) {
                 for(Integer z : zList) {
                     for(Integer y : yList){

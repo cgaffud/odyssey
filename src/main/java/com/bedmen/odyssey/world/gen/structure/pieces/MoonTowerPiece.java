@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
@@ -42,7 +43,11 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnorePr
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MoonTowerPiece extends TemplateStructurePiece {
     private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"moon_tower/moon_tower");
@@ -93,23 +98,44 @@ public class MoonTowerPiece extends TemplateStructurePiece {
 
     @Override
     public void postProcess(WorldGenLevel level, StructureFeatureManager manager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
-        BlockPos.MutableBlockPos mutable = pos.mutable();
-        for(int y = 200; y > 90; y--){
-            if (isValidTowerPosition(level, mutable.immutable())) {
-                mutable.move(0, -1, 0);
-                this.templatePosition = mutable.immutable();
-                System.out.print(this.templatePosition.getX());
-                System.out.print(",");
-                System.out.println(this.templatePosition.getZ());
-                System.out.print(level.getChunk(this.templatePosition).getPos().getMinBlockX());
-                System.out.print(",");
-                System.out.println(level.getChunk(this.templatePosition).getPos().getMinBlockZ());
-
-                super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
-                return;
+//        BlockPos.MutableBlockPos mutable = pos.mutable();
+//        for(int y = 200; y > 90; y--){
+//            if (isValidTowerPosition(level, mutable.immutable())) {
+//                mutable.move(0, -1, 0);
+//                this.templatePosition = mutable.immutable();
+//                System.out.print(this.templatePosition.getX());
+//                System.out.print(",");
+//                System.out.println(this.templatePosition.getZ());
+//                System.out.print(level.getChunk(this.templatePosition).getPos().getMinBlockX());
+//                System.out.print(",");
+//                System.out.println(level.getChunk(this.templatePosition).getPos().getMinBlockZ());
+//
+//                super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
+//                return;
+//            }
+//            mutable.move(0,-1,0);
+//        }
+        BlockPos entrance = new BlockPos(0, 0, -4).rotate(getRotation()).offset(pos);
+        int height = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, entrance.getX(), entrance.getZ());
+        BlockPos blockpos2 = this.templatePosition;
+        int y = height - 200 - 1;
+        this.templatePosition = this.templatePosition.offset(0, y, 0);
+        BlockPos.MutableBlockPos mutable = BlockPos.ZERO.mutable();
+        for(int x = -3; x <= 3; x++){
+            for(int z = -3; z <= 3; z++){
+                if(Math.abs(x+z) == 6 || Math.abs(x-z) == 6) {
+                    continue;
+                }
+                mutable.setWithOffset(pos, x, y-1, z);
+                System.out.println("Mutable: "+mutable);
+                while(WorldGenUtil.isEmpty(level, mutable)) {
+                    level.setBlock(mutable, Blocks.DEEPSLATE_BRICKS.defaultBlockState(), 3);
+                    mutable.move(Direction.DOWN);
+                }
             }
-            mutable.move(0,-1,0);
         }
+        super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, pos);
+        this.templatePosition = blockpos2;
     }
 
     private static ItemStack itemWithEnchantment(Item item, Random random){
