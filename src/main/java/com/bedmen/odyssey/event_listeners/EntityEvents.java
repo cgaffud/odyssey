@@ -226,8 +226,6 @@ public class EntityEvents {
                     for(Item item : itemITagManager.getTag(OdysseyItemTags.SHIELDS).stream().toList()){
                         player.getCooldowns().addCooldown(item, recoveryTime);
                     }
-                } else {
-                    System.out.println("Error: itemITagManager is null in onShieldBlockEvent");
                 }
             }
         }

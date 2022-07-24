@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.monster.DungeonSkeleton;
+import com.bedmen.odyssey.entity.monster.DungeonZombie;
 import com.bedmen.odyssey.entity.monster.OdysseySkeleton;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
@@ -47,6 +49,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import org.lwjgl.system.CallbackI;
 
 import java.util.Collections;
 import java.util.List;
@@ -142,10 +145,9 @@ public class MoonTowerPiece extends TemplateStructurePiece {
                     ((ChestBlockEntity) blockentity).setLootTable(OdysseyLootTables.MOON_TOWER_CHEST, random.nextLong());
                 else
                     ((ChestBlockEntity) blockentity).setLootTable(OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST, random.nextLong());
-                System.out.println("Lootable Added");
             }
         } else if ("zombie".equals(dataMarker) || "beefy_zombie".equals(dataMarker)) {
-            Zombie zombie = EntityType.ZOMBIE.create(accessor.getLevel());
+            DungeonZombie zombie = new DungeonZombie(EntityTypeRegistry.MOON_TOWER_ZOMBIE.get(), accessor.getLevel(), blockPos);
             zombie.setPersistenceRequired();
             zombie.moveTo(blockPos, 0.0F, 0.0F);
 
@@ -168,7 +170,7 @@ public class MoonTowerPiece extends TemplateStructurePiece {
             accessor.addFreshEntityWithPassengers(zombie);
             accessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 2);
         } else if ("skeleton".equals(dataMarker)) {
-            OdysseySkeleton skeleton = EntityTypeRegistry.SKELETON.get().create(accessor.getLevel());
+            DungeonSkeleton skeleton = new DungeonSkeleton(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), accessor.getLevel(), blockPos);
             skeleton.setPersistenceRequired();
             skeleton.moveTo(blockPos, 0.0F, 0.0F);
 

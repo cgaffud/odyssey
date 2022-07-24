@@ -100,7 +100,6 @@ public class UndergroundRuinPieces {
                 BlockEntity blockentity = accessor.getBlockEntity(blockPos.below());
                 if (blockentity instanceof ChestBlockEntity) {
                     ((ChestBlockEntity)blockentity).setLootTable(OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST, random.nextLong());
-                    System.out.println("Lootable Added");
                 }
             }
         }
