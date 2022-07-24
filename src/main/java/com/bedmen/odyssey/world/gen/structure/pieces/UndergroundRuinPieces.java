@@ -31,8 +31,6 @@ public class UndergroundRuinPieces {
     private static final List<ResourceLocation> HOUSES = Arrays.asList(new ResourceLocation(Odyssey.MOD_ID, "underground_ruins/abandoned_underground_house"));
     static final Map<ResourceLocation, BlockPos> PIVOTS = ImmutableMap.of(HOUSES.get(0), new BlockPos(3, 5, 0));
 
-    public static void addPiece(StructureManager manager, BlockPos blockPos, Rotation rotation, StructurePieceAccessor accessor) {
-        ResourceLocation structureLoc = HOUSES.get(0);
     public static void addPiece(StructureManager manager, BlockPos blockPos, Rotation rotation, StructurePieceAccessor accessor, Random random) {
         ResourceLocation structureLoc = HOUSES.get(random.nextInt(HOUSES.size()));
         accessor.addPiece(new UndergroundRuinPiece(manager, structureLoc, blockPos, rotation));

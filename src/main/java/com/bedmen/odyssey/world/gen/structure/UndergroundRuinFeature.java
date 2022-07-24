@@ -25,7 +25,7 @@ public class UndergroundRuinFeature extends StructureFeature<NoneFeatureConfigur
     private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {
         BlockPos blockpos = new BlockPos(context.chunkPos().getMinBlockX(), 90, context.chunkPos().getMinBlockZ());
         Rotation rotation = Rotation.getRandom(context.random());
-        UndergroundRuinPieces.addPiece(context.structureManager(), blockpos, rotation, structurePiecesBuilder);
+        UndergroundRuinPieces.addPiece(context.structureManager(), blockpos, rotation, structurePiecesBuilder, context.random());
     }
 
 
