@@ -393,5 +393,6 @@
   "entity.oddc.moon_tower_zombie": "Moon Tower Zombie",
   "item.oddc.moon_tower_zombie_spawn_egg": "Moon Tower Zombie Spawn Egg",
   "entity.oddc.moon_tower_skeleton": "Moon Tower Skeleton",
-  "item.oddc.moon_tower_skeleton_spawn_egg": "Moon Tower Skeleton Spawn Egg"
+  "item.oddc.moon_tower_skeleton_spawn_egg": "Moon Tower Skeleton Spawn Egg",
+  "item.oddc.rusty_shield": "Rusty Shield"
 }
