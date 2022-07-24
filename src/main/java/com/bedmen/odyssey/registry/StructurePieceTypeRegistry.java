@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.world.gen.structure.pieces.BarnPiece;
 import com.bedmen.odyssey.world.gen.structure.pieces.CloverStoneSanctuaryPiece;
 import com.bedmen.odyssey.world.gen.structure.pieces.MoonTowerPiece;
 import com.bedmen.odyssey.world.gen.structure.pieces.UndergroundRuinPieces;
@@ -23,4 +24,5 @@ public class StructurePieceTypeRegistry {
     public static final RegistryObject<StructurePieceType> UNDERGROUND_RUIN = STRUCTURE_PIECE_TYPES.register("underground_ruin", () -> (StructurePieceType.StructureTemplateType)(UndergroundRuinPieces.UndergroundRuinPiece::new));
     public static final RegistryObject<StructurePieceType> CLOVER_STONE_SANCTUARY = STRUCTURE_PIECE_TYPES.register("clover_stone_sanctuary", () -> (StructurePieceType.StructureTemplateType)(CloverStoneSanctuaryPiece::new));
     public static final RegistryObject<StructurePieceType> MOON_TOWER = STRUCTURE_PIECE_TYPES.register("moon_tower", ()->(StructurePieceType.StructureTemplateType)(MoonTowerPiece::new));
+    public static final RegistryObject<StructurePieceType> BARN = STRUCTURE_PIECE_TYPES.register("bran", () -> (StructurePieceType.StructureTemplateType)(BarnPiece::new));
 }

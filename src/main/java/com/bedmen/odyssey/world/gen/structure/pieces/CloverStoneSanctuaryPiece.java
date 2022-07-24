@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class CloverStoneSanctuaryPiece extends TemplateStructurePiece {
-    private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"clover_stone_sanctuary/clover_stone_sanctuary");
+    private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"clover_stone_sanctuary");
     private static final SimpleWeightedRandomList<Block> STONE_BRICKS = new SimpleWeightedRandomList.Builder<Block>()
             .add(Blocks.STONE_BRICKS, 1)
             .add(Blocks.MOSSY_STONE_BRICKS, 2)

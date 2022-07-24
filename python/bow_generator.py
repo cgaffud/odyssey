@@ -1,12 +1,8 @@
-import json, os, shutil
+import json, os, shutil, helper
 
-def yes(s):
-    return s.__contains__("Y") or s.__contains__("y")
-
-again = True
-while(again):
+while(True):
     bowID = input("Input bowID: ")
-    langName = input("Lang File Item Name: ")
+    langName = helper.input_langName("Lang File Item Name: ")
     bowPath = 'oddc:item/'+bowID
 
     bowModel = {
@@ -97,7 +93,7 @@ while(again):
     for texture in bowTemplateTextures:
         shutil.copy(texture, textureDirectory)
 
-    if(not yes(input("Again? (Y/N): "))):
-        again = False
+    if(not helper.yes(input("Again? (Y/N): "))):
+        break
 
 print("Done")

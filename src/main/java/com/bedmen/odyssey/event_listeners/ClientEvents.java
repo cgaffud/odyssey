@@ -15,6 +15,7 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.TomeItem;
 import com.bedmen.odyssey.items.equipment.CondAmpMeleeItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.*;
@@ -135,6 +136,8 @@ public class ClientEvents {
             EntityRenderers.register(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaverRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.POLAR_BEAR.get(), PolarBearRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBruteRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpiderRenderer::new);
 
             //Boss Renderings
             EntityRenderers.register(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
@@ -223,5 +226,10 @@ public class ClientEvents {
         event.getItemColors().register((itemStack, i) -> {
             return i <= 0 ? -1 : CondAmpMeleeItem.Gradient.getColor(itemStack);
         }, ItemRegistry.RAIN_SWORD.get());
+        for(TomeItem tomeItem : TomeItem.TOMES){
+            event.getItemColors().register((itemStack, i) -> {
+                return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();
+            }, tomeItem);
+        }
     }
 }

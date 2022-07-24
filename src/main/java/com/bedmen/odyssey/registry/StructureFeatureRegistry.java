@@ -1,8 +1,10 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.world.gen.structure.BarnFeature;
 import com.bedmen.odyssey.world.gen.structure.CloverStoneSanctuaryFeature;
 import com.bedmen.odyssey.world.gen.structure.MoonTowerFeature;
+import com.bedmen.odyssey.world.gen.structure.UndergroundRuinFeature;
 import com.bedmen.odyssey.world.gen.structure.UndergroundRuinFeature;
 import com.bedmen.odyssey.world.gen.structure.WeaverColonyFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
@@ -23,63 +25,6 @@ public class StructureFeatureRegistry {
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> WEAVER_COLONY = STRUCTURE_FEATURES.register("weaver_colony", () -> new WeaverColonyFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> UNDERGROUND_RUIN = STRUCTURE_FEATURES.register("underground_ruin", () -> new UndergroundRuinFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> CLOVER_STONE_SANCTUARY = STRUCTURE_FEATURES.register("clover_stone_sanctuary", () -> new CloverStoneSanctuaryFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> BARN = STRUCTURE_FEATURES.register("barn", () -> new BarnFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> MOON_TOWER = STRUCTURE_FEATURES.register("moon_tower", () -> new MoonTowerFeature(NoneFeatureConfiguration.CODEC));
-
-//    public static void setupStructures() {
-//        setupMapSpacingAndLand(
-//                WEAVER_COLONY.get(),
-//                new StructureFeatureConfiguration(16 /* average distance apart in chunks between spawn attempts */,
-//                        8 /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/,
-//                        24357620 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
-//                false);
-//        setupMapSpacingAndLand(
-//                UNDERGROUND_RUIN.get(),
-//                new StructureFeatureConfiguration(16, 8,97344289),
-//                false);
-//        setupMapSpacingAndLand(
-//                CLOVER_STONE_SANCTUARY.get(),
-//                new StructureFeatureConfiguration(32, 8,52846379),
-//                false);
-//    }
-//
-//    /**
-//     * Adds the provided structure to the registry, and adds the separation settings.
-//     * The rarity of the structure is determined based on the values passed into
-//     * this method in the StructureFeatureConfiguration argument.
-//     * This method is called by setupStructures above.
-//     */
-//    public static <F extends StructureFeature<?>> void setupMapSpacingAndLand(
-//            F structure,
-//            StructureFeatureConfiguration structureFeatureConfiguration,
-//            boolean transformSurroundingLand)
-//    {
-//
-//        StructureFeature.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
-//
-//        if(transformSurroundingLand){
-//            StructureFeature.NOISE_AFFECTING_FEATURES =
-//                    ImmutableList.<StructureFeature<?>>builder()
-//                            .addAll(StructureFeature.NOISE_AFFECTING_FEATURES)
-//                            .add(structure)
-//                            .build();
-//        }
-//
-//        StructureSettings.DEFAULTS =
-//                ImmutableMap.<StructureFeature<?>, StructureFeatureConfiguration>builder()
-//                        .putAll(StructureSettings.DEFAULTS)
-//                        .put(structure, structureFeatureConfiguration)
-//                        .build();
-//
-//        BuiltinRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
-//            Map<StructureFeature<?>, StructureFeatureConfiguration> structureMap = settings.getValue().structureSettings().structureConfig();
-//            if(structureMap instanceof ImmutableMap){
-//                Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(structureMap);
-//                tempMap.put(structure, structureFeatureConfiguration);
-//                settings.getValue().structureSettings().structureConfig = tempMap;
-//            }
-//            else{
-//                structureMap.put(structure, structureFeatureConfiguration);
-//            }
-//        });
-//    }
 }

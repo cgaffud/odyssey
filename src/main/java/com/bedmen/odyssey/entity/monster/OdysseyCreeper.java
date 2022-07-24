@@ -171,11 +171,9 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
     @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         pSpawnData = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
-
         if(EntityEvents.isBaby(this)){
             this.setBaby(true);
         }
-
         return pSpawnData;
     }
 

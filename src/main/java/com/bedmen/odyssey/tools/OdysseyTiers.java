@@ -38,12 +38,13 @@ public class OdysseyTiers {
     public static final Tier COPPER = new ForgeTier(0, 200,2.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(Items.COPPER_INGOT));
     public static final Tier RUSTY_IRON = new ForgeTier(0, 200,2.0F, -1.0f, 0, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.EMPTY);
     public static final Tier AMETHYST = new ForgeTier(0, 750,2.0F, -1.0f, 0, OdysseyBlockTags.STERLING_SILVER_TAG, () -> Ingredient.of(Items.AMETHYST_SHARD));
-    public static final Tier OBSIDIAN = new ForgeTier(0, 2000,2.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(Items.OBSIDIAN));
+    public static final Tier OBSIDIAN = new ForgeTier(0, 1600,2.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(Items.OBSIDIAN));
     public static final Tier ULTRA_1 = new ForgeTier(0, 500,7.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.EMPTY);
     public static final Tier GREATROOT = new ForgeTier(0, 750,2.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(ItemRegistry.GREATROOT.get()));
     public static final Tier ULTRA_2 = new ForgeTier(0, 1561, 8.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.EMPTY);
     //Equipment, Diggers
     public static final Tier TIER_1_UNCRAFTABLE = new ForgeTier(2, 350, 7.0F, -1.0f, 0, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.EMPTY);
+    public static final Tier TIER_2_UNCRAFTABLE = new ForgeTier(2, 700, 9.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.EMPTY);
     public static final Tier CLOVER_STONE = new ForgeTier(2, 131,9.0F, -1.0f, 0, OdysseyBlockTags.STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.CLOVER_STONE.get()));
     public static final Tier MARINE = new ForgeTier(2, 1000,10.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(ItemRegistry.PEARL.get()));
 
