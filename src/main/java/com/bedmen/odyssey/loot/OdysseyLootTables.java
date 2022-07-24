@@ -10,4 +10,6 @@ public class OdysseyLootTables {
     public static final ResourceLocation BARN_TREASURE_CHSET = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/barn_treasure_chest"));
     public static final ResourceLocation STERLING_SILVER_TREASURE_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/sterling_silver_treasure_chest"));
     public static final ResourceLocation HIDDEN_JUNGLE_TEMPLE_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/hidden_jungle_temple_chest"));
+    public static final ResourceLocation MOON_TOWER_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/moon_tower_chest"));
+
 }

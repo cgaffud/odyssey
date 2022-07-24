@@ -32,11 +32,17 @@ public class OreGen {
     public static Holder<PlacedFeature> PLACED_ORE_SILVER;
     public static Holder<PlacedFeature> PLACED_ORE_SILVER_LOWER;
 
+    public static Holder<ConfiguredFeature<OreConfiguration, ?>> CONFIGURED_ORE_MOONROCK_BURIED;
+    public static Holder<PlacedFeature> PLACED_ORE_MOONROCK;
+
     public static void registerOres() {
         ORE_SILVER_TARGET_LIST = List.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, BlockRegistry.SILVER_ORE.get().defaultBlockState()), OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, BlockRegistry.DEEPSLATE_SILVER_ORE.get().defaultBlockState()));
         CONFIGURED_ORE_SILVER_BURIED = FeatureUtils.register("ore_silver_buried", Feature.ORE, new OreConfiguration(ORE_SILVER_TARGET_LIST, 9, 0.5F));
         PLACED_ORE_SILVER = PlacementUtils.register("ore_silver", CONFIGURED_ORE_SILVER_BURIED, commonOrePlacement(4, HeightRangePlacement.triangle(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(32))));
         PLACED_ORE_SILVER_LOWER = PlacementUtils.register("ore_silver_lower", CONFIGURED_ORE_SILVER_BURIED, orePlacement(CountPlacement.of(UniformInt.of(0, 1)), HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(-48))));
+
+        CONFIGURED_ORE_MOONROCK_BURIED = FeatureUtils.register("ore_moonrock_buried", Feature.ORE, new OreConfiguration(List.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, BlockRegistry.MOONROCK.get().defaultBlockState())), 25));
+        PLACED_ORE_MOONROCK = PlacementUtils.register("ore_moonrock", CONFIGURED_ORE_MOONROCK_BURIED, commonOrePlacement(2,  HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(150))));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -53,6 +59,7 @@ public class OreGen {
             //Overworld Ore
             gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, PLACED_ORE_SILVER);
             gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, PLACED_ORE_SILVER_LOWER);
+            gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, PLACED_ORE_MOONROCK);
         }
     }
 

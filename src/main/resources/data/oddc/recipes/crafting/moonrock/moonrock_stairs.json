@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A  ",
+    "AA ",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:moonrock"
+    }
+  },
+  "result": {
+    "item": "oddc:moonrock_stairs",
+    "count": 4
+  }
+}

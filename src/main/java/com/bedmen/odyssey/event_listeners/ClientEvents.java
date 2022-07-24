@@ -28,6 +28,7 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
+import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -126,7 +127,9 @@ public class ClientEvents {
             //Mob Renderings
 //        EntityRenderers.register(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.MOON_TOWER_ZOMBIE.get(), DungeonZombieRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.SKELETON.get(), OdysseySkeletonRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeletonRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);

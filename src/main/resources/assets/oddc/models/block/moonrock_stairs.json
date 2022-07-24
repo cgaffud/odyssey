@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "oddc:block/moonrock",
+    "top": "oddc:block/moonrock",
+    "side": "oddc:block/moonrock"
+  }
+}

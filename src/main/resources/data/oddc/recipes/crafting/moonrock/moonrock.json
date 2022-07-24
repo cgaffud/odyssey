@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AB",
+    "BA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:cobblestone"
+    },
+    "B": {
+      "item": "oddc:moonstone"
+    }
+  },
+  "result": {
+    "item": "oddc:moonrock",
+    "count": 2
+  }
+}

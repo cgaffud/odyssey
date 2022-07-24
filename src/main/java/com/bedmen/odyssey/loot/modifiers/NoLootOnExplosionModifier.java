@@ -42,10 +42,10 @@ public class NoLootOnExplosionModifier extends LootModifier {
         @Override
         public NoLootOnExplosionModifier read(ResourceLocation name, JsonObject object, LootItemCondition[] conditions) {
             ResourceLocation tagLocation = new ResourceLocation(GsonHelper.getAsString(object, "block_tag"));
-            TagKey<Block> blockTag = null;
             ITagManager<Block> blockITagManager = ForgeRegistries.BLOCKS.tags();
+            TagKey<Block> blockTag = null;
             if(blockITagManager != null) {
-                blockTag = blockITagManager.getTagNames().filter((tagkey) -> tagkey.location().equals(tagLocation)).collect(Collectors.toList()).get(0);
+                blockTag = blockITagManager.getTagNames().filter((tagkey) -> tagkey.location().equals(tagLocation)).findFirst().orElse(null);
             }
             return new NoLootOnExplosionModifier(conditions, blockTag);
         }

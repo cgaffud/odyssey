@@ -4,10 +4,10 @@
     {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 0.0,
-        "max": 1.0
+        "min": 0,
+        "max": 1
       },
-      "bonus_rolls": 0.0,
+      "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -94,11 +94,77 @@
     {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 2.0,
-        "max": 3.0
+        "min": 2,
+        "max": 3
       },
-      "bonus_rolls": 0.0,
+      "bonus_rolls": 0,
       "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:sterling_silver_helmet"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:sterling_silver_chestplate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:sterling_silver_leggings"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:sterling_silver_boots"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:reinforced_shield"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:copper_shield"
+        },
         {
           "type": "minecraft:item",
           "weight": 2,
@@ -148,11 +214,22 @@
           "weight": 2,
           "functions": [
             {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:clover_stone_boomerang"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "functions": [
+            {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 16.0,
-                "max": 48.0
+                "min": 16,
+                "max": 48
               },
               "add": false
             }
@@ -167,90 +244,13 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 16.0,
-                "max": 48.0
+                "min": 16,
+                "max": 48
               },
               "add": false
             }
           ],
           "name": "oddc:amethyst_arrow"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "oddc:enchant_with_tier",
-              "tier": 1
-            }
-          ],
-          "name": "oddc:clover_stone_boomerang"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "oddc:enchant_with_tier",
-              "tier": 1
-            }
-          ],
-          "name": "oddc:reinforced_shield"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "oddc:enchant_with_tier",
-              "tier": 1
-            }
-          ],
-          "name": "oddc:copper_shield"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "oddc:enchant_with_tier",
-              "tier": 1
-            }
-          ],
-          "name": "oddc:sterling_silver_helmet"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "oddc:enchant_with_tier",
-              "tier": 1
-            }
-          ],
-          "name": "oddc:sterling_silver_chestplate"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "oddc:enchant_with_tier",
-              "tier": 1
-            }
-          ],
-          "name": "oddc:sterling_silver_leggings"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "oddc:enchant_with_tier",
-              "tier": 1
-            }
-          ],
-          "name": "oddc:sterling_silver_boots"
         },
         {
           "type": "minecraft:item",
@@ -441,12 +441,8 @@
       ]
     },
     {
-      "rolls": {
-        "type": "minecraft:uniform",
-        "min": 4.0,
-        "max": 5.0
-      },
-      "bonus_rolls": 0.0,
+      "rolls": 5,
+      "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -456,61 +452,13 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 20.0
+                "min": 2,
+                "max": 4
               },
               "add": false
             }
           ],
-          "name": "oddc:sterling_silver_nugget"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 5,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 20.0
-              },
-              "add": false
-            }
-          ],
-          "name": "oddc:electrum_nugget"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 5,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 20.0
-              },
-              "add": false
-            }
-          ],
-          "name": "minecraft:gold_nugget"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 5,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 20.0
-              },
-              "add": false
-            }
-          ],
-          "name": "oddc:silver_nugget"
+          "name": "oddc:silver_ingot"
         },
         {
           "type": "minecraft:item",
@@ -520,8 +468,24 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 2.0
+                "min": 2,
+                "max": 4
+              },
+              "add": false
+            }
+          ],
+          "name": "minecraft:gold_ingot"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
               },
               "add": false
             }
@@ -536,92 +500,13 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 2.0
+                "min": 1,
+                "max": 3
               },
               "add": false
             }
           ],
           "name": "oddc:electrum_ingot"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 3.0
-              },
-              "add": false
-            }
-          ],
-          "name": "minecraft:raw_gold"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 3.0
-              },
-              "add": false
-            }
-          ],
-          "name": "oddc:raw_silver"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 4.0
-              },
-              "add": false
-            }
-          ],
-          "name": "minecraft:amethyst_shard"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 4.0
-              },
-              "add": false
-            }
-          ],
-          "name": "minecraft:obsidian"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:constant",
-                "value": 1.0
-              },
-              "add": false
-            }
-          ],
-          "name": "minecraft:diamond"
         },
         {
           "type": "minecraft:item",
@@ -631,8 +516,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 4.0
+                "min": 2,
+                "max": 4
               },
               "add": false
             }
@@ -647,8 +532,55 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 6.0,
-                "max": 12.0
+                "min": 2,
+                "max": 6
+              },
+              "add": false
+            }
+          ],
+          "name": "minecraft:amethyst_shard"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              },
+              "add": false
+            }
+          ],
+          "name": "minecraft:obsidian"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:constant",
+                "value": 1
+              },
+              "add": false
+            }
+          ],
+          "name": "minecraft:diamond"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 6,
+                "max": 12
               },
               "add": false
             }
@@ -663,8 +595,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 6.0,
-                "max": 12.0
+                "min": 6,
+                "max": 12
               },
               "add": false
             }
@@ -679,71 +611,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 2.0
-              },
-              "add": false
-            }
-          ],
-          "name": "oddc:silver_fiber"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 5,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 2.0
-              },
-              "add": false
-            }
-          ],
-          "name": "oddc:golden_fiber"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 5,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 2.0
-              },
-              "add": false
-            }
-          ],
-          "name": "oddc:triweave_fiber"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 5,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:constant",
-                "value": 1.0
-              },
-              "add": false
-            }
-          ],
-          "name": "oddc:diamond_fiber"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 5,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 2.0
+                "min": 2,
+                "max": 4
               },
               "add": false
             }
@@ -758,23 +627,39 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 2.0
+                "min": 1,
+                "max": 3
               },
               "add": false
             }
           ],
           "name": "minecraft:phantom_membrane"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "name": "oddc:leather_pile"
         }
       ]
     },
     {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 0.0,
-        "max": 2.0
+        "min": 1,
+        "max": 2
       },
-      "bonus_rolls": 0.0,
+      "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -783,8 +668,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 0.0,
-                "max": 2.0
+                "min": 1,
+                "max": 2
               },
               "add": false
             }
@@ -798,8 +683,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 0.0,
-                "max": 2.0
+                "min": 1,
+                "max": 2
               },
               "add": false
             }
@@ -811,15 +696,11 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 0.0,
-                "max": 2.0
-              },
+              "count": 1,
               "add": false
             }
           ],
-          "name": "minecraft:bread"
+          "name": "minecraft:golden_apple"
         }
       ]
     }

@@ -105,7 +105,6 @@ public class EnchantmentRegistry {
             else return 2.0f* quadraticMagicFunction(y+64, 128.0f, false);
         }
         if (level.dimension() == Level.NETHER) {
-            System.out.println(y);
             if ((y >= 32) && (y <= 96)) return 0.0f;
             else {
                 float yAdj = (float) Math.min(Math.abs(32-y), Math.abs(y-96));

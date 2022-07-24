@@ -3,6 +3,8 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.world.gen.structure.BarnFeature;
 import com.bedmen.odyssey.world.gen.structure.CloverStoneSanctuaryFeature;
+import com.bedmen.odyssey.world.gen.structure.MoonTowerFeature;
+import com.bedmen.odyssey.world.gen.structure.UndergroundRuinFeature;
 import com.bedmen.odyssey.world.gen.structure.UndergroundRuinFeature;
 import com.bedmen.odyssey.world.gen.structure.WeaverColonyFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
@@ -24,4 +26,5 @@ public class StructureFeatureRegistry {
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> UNDERGROUND_RUIN = STRUCTURE_FEATURES.register("underground_ruin", () -> new UndergroundRuinFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> CLOVER_STONE_SANCTUARY = STRUCTURE_FEATURES.register("clover_stone_sanctuary", () -> new CloverStoneSanctuaryFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> BARN = STRUCTURE_FEATURES.register("barn", () -> new BarnFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> MOON_TOWER = STRUCTURE_FEATURES.register("moon_tower", () -> new MoonTowerFeature(NoneFeatureConfiguration.CODEC));
 }

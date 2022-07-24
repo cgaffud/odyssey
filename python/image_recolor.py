@@ -36,10 +36,13 @@ def uncolor(color):
     b = color - (g << 8)
     return (r,g,b)
 
-def grayscale_pixel(pos, pixel):
+def grayscale_pixel(pixel, weight):
     r,g,b,a = pixel
-    gray = clamp(int((r+g+b) / 3))
-    return (gray,gray,gray,a)
+    gray = clamp((r+g+b) / 3)
+    r = clamp(gray * weight + r * (1-weight))
+    g = clamp(gray * weight + g * (1-weight))
+    b = clamp(gray * weight + b * (1-weight))
+    return (r,g,b,a)
 
 def recolor_pixel(pixel, colorMult, colorAdd):
     r,g,b,a = pixel
@@ -69,8 +72,8 @@ def colormap_pixel(pixel, colormap):
         r,g,b = uncolor(colormap[color1])
     return (r,g,b,a)
 
-def grayscale_image(image):
-     at_every_pixel(image, grayscale_pixel)
+def grayscale_image(image, weight):
+     at_every_pixel(image, lambda pos, pixel: grayscale_pixel(pixel, weight))
      return image
 
 def recolor_image(image, colorMult, colorAdd):
@@ -78,7 +81,7 @@ def recolor_image(image, colorMult, colorAdd):
      return image
 
 def grayscale_recolor_image(image, colorMult, colorAdd):
-     grayscale_image(image)
+     grayscale_image(image, 1.0)
      recolor_image(image, colorMult, colorAdd)
      return image
 
@@ -164,9 +167,10 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-open_path = r"C:\Users\18029\Documents\1.18.2\assets\minecraft\textures\entity\spider\spider.png"
-save_path = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\entity\spider\barn_spider1.png"
-image1 = open_image(open_path)
-grayscale_recolor_image(image1, [2.0,2.0,1.0], [0,0,0])
+open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/entity/skeleton/skeleton.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/skeleton/moon_tower.png"
+image1 = open_image(open_path1)
+grayscale_image(image1, 0.75)
+recolor_image(image1, [0.75,0.75,0.9], [0,0,0])
 save_image(image1, save_path)
 print("Done")

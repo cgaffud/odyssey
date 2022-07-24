@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "oddc:block/moonrock_slab"
+    },
+    "type=double": {
+      "model": "oddc:block/moonrock"
+    },
+    "type=top": {
+      "model": "oddc:block/moonrock_slab_top"
+    }
+  }
+}
