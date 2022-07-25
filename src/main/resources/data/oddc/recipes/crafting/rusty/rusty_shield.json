@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BAB",
+    "CBC",
+    " C "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:rusty_arm"
+    },
+    "B": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:raw_iron"
+    }
+  },
+  "result": {
+    "item": "oddc:rusty_shield"
+  }
+}

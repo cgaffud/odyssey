@@ -23,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITagManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -92,6 +94,26 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     public boolean isSniperScoping() {
         return this.isSniperScoping;
+    }
+
+    public void disableShield(boolean isGuaranteed) {
+        float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(this) * 0.05F;
+        if (isGuaranteed) {
+            f += 0.75F;
+        }
+
+        if (this.random.nextFloat() < f) {
+            Item useItem = this.getUseItem().getItem();
+            int recoveryTime = useItem instanceof OdysseyShieldItem odysseyShieldItem ? odysseyShieldItem.getRecoveryTime() : 100;
+            ITagManager<Item> itemITagManager = ForgeRegistries.ITEMS.tags();
+            if(itemITagManager != null){
+                for(Item item : itemITagManager.getTag(OdysseyItemTags.SHIELDS).stream().toList()){
+                    getPlayerEntity().getCooldowns().addCooldown(item, recoveryTime);
+                }
+                this.stopUsingItem();
+                this.level.broadcastEntityEvent(this, (byte)30);
+            }
+        }
     }
 
     private Player getPlayerEntity(){

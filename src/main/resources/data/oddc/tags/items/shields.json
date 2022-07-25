@@ -4,6 +4,9 @@
     "minecraft:shield",
     "oddc:wooden_shield",
     "oddc:copper_shield",
-    "oddc:reinforced_shield"
+    "oddc:rusty_shield",
+    "oddc:golden_shield",
+    "oddc:reinforced_shield",
+    "oddc:diamond_shield"
   ]
 }
