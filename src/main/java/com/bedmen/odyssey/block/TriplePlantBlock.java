@@ -1,7 +1,5 @@
 package com.bedmen.odyssey.block;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,6 +24,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraftforge.common.PlantType;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 
 public class TriplePlantBlock extends BushBlock implements INeedsToRegisterRenderType {

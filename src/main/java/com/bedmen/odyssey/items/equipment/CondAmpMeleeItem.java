@@ -6,21 +6,15 @@ import com.bedmen.odyssey.enchantment.odyssey.ConditionalAmpEnchantment;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.common.Mod;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class CondAmpMeleeItem extends EquipmentMeleeItem {

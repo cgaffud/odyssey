@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.plugins.jei.categories;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.client.gui.screens.StitchingTableScreen;
 import com.bedmen.odyssey.recipes.WeavingRecipe;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.google.common.cache.CacheBuilder;
@@ -12,7 +11,6 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
-import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;

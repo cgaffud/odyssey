@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.enchantment.TieredEnchantment;
-import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

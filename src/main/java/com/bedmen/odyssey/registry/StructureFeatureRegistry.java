@@ -1,12 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.world.gen.structure.BarnFeature;
-import com.bedmen.odyssey.world.gen.structure.CloverStoneSanctuaryFeature;
-import com.bedmen.odyssey.world.gen.structure.MoonTowerFeature;
-import com.bedmen.odyssey.world.gen.structure.UndergroundRuinFeature;
-import com.bedmen.odyssey.world.gen.structure.UndergroundRuinFeature;
-import com.bedmen.odyssey.world.gen.structure.WeaverColonyFeature;
+import com.bedmen.odyssey.world.gen.structure.*;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;

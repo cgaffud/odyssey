@@ -1,8 +1,5 @@
 package com.bedmen.odyssey.network.packet;
 
-import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
-import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;

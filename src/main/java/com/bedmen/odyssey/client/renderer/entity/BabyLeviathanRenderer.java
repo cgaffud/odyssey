@@ -6,8 +6,6 @@ import com.bedmen.odyssey.entity.monster.BabyLeviathan;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BabyLeviathanRenderer extends MobRenderer<BabyLeviathan, BabyLeviathanModel> {
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/baby_leviathan.png");

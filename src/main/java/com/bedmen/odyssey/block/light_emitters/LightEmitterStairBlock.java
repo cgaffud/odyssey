@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
-import java.util.function.Supplier;
 
 public class LightEmitterStairBlock extends StairBlock {
 

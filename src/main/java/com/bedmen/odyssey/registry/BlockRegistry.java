@@ -2,8 +2,11 @@ package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.*;
+import com.bedmen.odyssey.block.light_emitters.LightEmitterBlock;
+import com.bedmen.odyssey.block.light_emitters.LightEmitterSlabBlock;
+import com.bedmen.odyssey.block.light_emitters.LightEmitterStairBlock;
+import com.bedmen.odyssey.block.light_emitters.LightEmitterWallBlock;
 import com.bedmen.odyssey.block.wood.*;
-import com.bedmen.odyssey.block.light_emitters.*;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

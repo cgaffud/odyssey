@@ -2,7 +2,6 @@ package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -26,7 +25,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty {

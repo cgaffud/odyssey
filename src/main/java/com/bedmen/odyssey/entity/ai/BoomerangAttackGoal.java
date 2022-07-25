@@ -1,14 +1,13 @@
 package com.bedmen.odyssey.entity.ai;
 
-import java.util.EnumSet;
-
 import com.bedmen.odyssey.entity.monster.BoomerangAttackMob;
-import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.EnumSet;
 
 public class BoomerangAttackGoal<T extends net.minecraft.world.entity.Mob & BoomerangAttackMob> extends Goal {
     private final T mob;

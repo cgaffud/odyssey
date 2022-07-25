@@ -2,14 +2,9 @@ package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
-import com.bedmen.odyssey.util.WeaponUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
-
+import com.bedmen.odyssey.util.WeaponUtil;
 import com.google.common.collect.Lists;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -39,8 +34,11 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
 
 public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegisterItemModelProperty {
     private static final int MAX_CHARGE_DURATION = 25;

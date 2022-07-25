@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.client.renderer.entity.layer;
 
 import com.bedmen.odyssey.items.QuiverItem;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ArmedModel;
@@ -19,8 +18,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class OdysseyPlayerItemInHandLayer<T extends Player, M extends EntityModel<T> & ArmedModel & HeadedModel> extends ItemInHandLayer<T, M> {
     private static final float X_ROT_MIN = (-(float)Math.PI / 6F);

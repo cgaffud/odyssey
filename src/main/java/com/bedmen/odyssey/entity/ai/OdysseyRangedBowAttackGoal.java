@@ -1,18 +1,13 @@
 package com.bedmen.odyssey.entity.ai;
 
-import java.util.EnumSet;
-
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+
+import java.util.EnumSet;
 
 public class OdysseyRangedBowAttackGoal<T extends net.minecraft.world.entity.Mob & RangedAttackMob> extends Goal {
     private final T mob;

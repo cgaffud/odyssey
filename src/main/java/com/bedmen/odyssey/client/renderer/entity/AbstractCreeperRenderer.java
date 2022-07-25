@@ -1,16 +1,13 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
-import com.bedmen.odyssey.client.renderer.entity.layer.OdysseyCreeperPowerLayer;
 import com.bedmen.odyssey.client.model.OdysseyCreeperModel;
+import com.bedmen.odyssey.client.renderer.entity.layer.OdysseyCreeperPowerLayer;
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
 

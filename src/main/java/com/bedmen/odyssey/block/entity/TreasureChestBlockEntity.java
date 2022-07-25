@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.block.entity;
 
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;

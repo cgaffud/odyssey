@@ -1,8 +1,6 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.registry.ItemRegistry;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.ComposterBlock;
 
