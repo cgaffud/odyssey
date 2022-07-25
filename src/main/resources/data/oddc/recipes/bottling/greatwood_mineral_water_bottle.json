@@ -1,0 +1,32 @@
+{
+  "type": "oddc:bottling",
+  "ingredients": [
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "oddc:moonrock"
+    },
+    {
+      "item": "oddc:moonrock"
+    },
+    {
+      "item": "oddc:moonrock"
+    },
+    {
+      "item": "oddc:moonrock"
+    },
+    {
+      "item": "oddc:moonrock"
+    },
+    {
+      "item": "oddc:moonrock"
+    },
+    {
+      "item": "oddc:moonrock"
+    }
+  ],
+  "result": {
+    "item": "oddc:greatwood_mineral_water_bottle"
+  }
+}

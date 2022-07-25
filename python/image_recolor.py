@@ -167,9 +167,9 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/shields/diamond_shield_base_nopattern.png"
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/shields/rusty_shield_base_nopattern2.png"
+open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/item/potion_overlay.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/juice.png"
 image1 = open_image(open_path1)
-recolor_image(image1, [0.8,0.8,0.8],[0,0,0])
+recolor_image(image1, [0.4,0.45,0.5], [0,0,0])
 save_image(image1, save_path)
 print("Done")

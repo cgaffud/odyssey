@@ -22,6 +22,7 @@ public class RecipeSerializerRegistry {
     public static final RegistryObject<RecipeSerializer<StitchingRecipe>> STITCHING = RECIPES.register("stitching", StitchingRecipe.Serializer::new);
     public static final RegistryObject<SimpleRecipeSerializer<OdysseyShieldDecorationRecipes>> SHIELD_DECORATION = RECIPES.register("crafting_special_shielddecoration", () -> new SimpleRecipeSerializer<>(OdysseyShieldDecorationRecipes::new));
     public static final RegistryObject<RecipeSerializer<AlloyRecipe>> ALLOYING = RECIPES.register("alloying", AlloyRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<BottlingRecipe>> BOTTLING = RECIPES.register("bottling", BottlingRecipe.Serializer::new);
 //    public static final RegistryObject<RecipeSerializer<ResearchRecipe>> RESEARCH = RECIPES.register("research", ResearchRecipe.Serializer::new);
 //    public static final RegistryObject<RecipeSerializer<OdysseySmithingRecipe>> ODYSSEY_SMITHING = RECIPES.register("odyssey_smithing", OdysseySmithingRecipe.Serializer::new);
 }

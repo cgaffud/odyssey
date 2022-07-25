@@ -16,6 +16,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -51,9 +52,9 @@ public class RootBlock extends TransparentBlock implements SimpleWaterloggedBloc
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.is(ItemTags.DIRT) && !blockState.getValue(DIRTLOGGED)) {
-            level.setBlock(blockPos, this.defaultBlockState().setValue(DIRTLOGGED, Boolean.TRUE), 3);
+            level.setBlock(blockPos, this.defaultBlockState().setValue(DIRTLOGGED, Boolean.TRUE), 11);
             level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
-            level.playSound(player, blockPos, SoundEvents.ROOTED_DIRT_PLACE, SoundSource.BLOCKS, 1.0f, 1.0f);
+            level.playSound(player, blockPos, SoundEvents.GRAVEL_PLACE, SoundSource.BLOCKS, 1.0f, 1.0f);
             if (!player.getAbilities().instabuild) {
                 itemstack.shrink(1);
             }
@@ -79,5 +80,11 @@ public class RootBlock extends TransparentBlock implements SimpleWaterloggedBloc
             levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
         return super.updateShape(blockState, direction, blockState1, levelAccessor, blockPos, blockPos1);
+    }
+
+    public void destroy(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState) {
+        if (blockState.getValue(DIRTLOGGED)) {
+            levelAccessor.setBlock(blockPos, Blocks.DIRT.defaultBlockState(), 11);
+        }
     }
 }

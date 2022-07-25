@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "status=good": {
       "model": "oddc:block/greatwood_sapling"
+    },
+    "status=thirsty": {
+      "model": "oddc:block/greatwood_sapling_thirsty"
     }
   }
 }
