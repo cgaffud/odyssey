@@ -1,18 +1,14 @@
 {
-  "replace": true,
+  "replace": false,
   "values": [
-    "minecraft:emerald_ore",
-    "minecraft:deepslate_emerald_ore",
-    "minecraft:emerald_block",
-    "minecraft:gold_block",
-    "minecraft:raw_gold_block",
-    "minecraft:gold_ore",
-    "minecraft:deepslate_gold_ore",
-    "minecraft:redstone_ore",
-    "minecraft:deepslate_redstone_ore",
     "#oddc:silver_ores",
     "oddc:raw_silver_block",
     "oddc:silver_block",
     "oddc:alloy_furnace"
+  ],
+  "remove": [
+    "minecraft:diamond_block",
+    "minecraft:diamond_ore",
+    "minecraft:deepslate_diamond_ore"
   ]
 }

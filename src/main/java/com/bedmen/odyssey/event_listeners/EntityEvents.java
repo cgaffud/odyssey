@@ -19,6 +19,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.EntityTypeTags;
@@ -293,17 +294,8 @@ public class EntityEvents {
         LivingEntity livingEntity = event.getEntityLiving();
         ItemStack shield = livingEntity.getUseItem();
         if(shield.getItem() instanceof OdysseyShieldItem odysseyShieldItem){
-            event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty()));
-            Entity attacker = event.getDamageSource().getDirectEntity();
-            if(livingEntity instanceof Player player && attacker instanceof LivingEntity livingAttacker && livingAttacker.getMainHandItem().getItem() instanceof AxeItem){
-                int recoveryTime = odysseyShieldItem.getRecoveryTime();
-                ITagManager<Item> itemITagManager = ForgeRegistries.ITEMS.tags();
-                if(itemITagManager != null){
-                    for(Item item : itemITagManager.getTag(OdysseyItemTags.SHIELDS).stream().toList()){
-                        player.getCooldowns().addCooldown(item, recoveryTime);
-                    }
-                }
-            }
+            DamageSource damageSource = event.getDamageSource();
+            event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty(), damageSource));
         }
     }
 }

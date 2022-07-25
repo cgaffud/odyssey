@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:diamond_shield"
+  },
+  "metalCounts": [
+    {
+      "metal": "sterling_silver",
+      "count": 9
+    }
+  ]
+}

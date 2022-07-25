@@ -168,8 +168,8 @@ public class ClientEvents {
     public static void onTextureStitchEvent$Pre(final TextureStitchEvent.Pre event){
         //Shield Textures
         for(OdysseyShieldItem.ShieldType shieldType : OdysseyShieldItem.ShieldType.values()){
-            event.addSprite(OdysseyBlockEntityWithoutLevelRenderer.getShieldRenderMaterial(shieldType, false).texture());
-            event.addSprite(OdysseyBlockEntityWithoutLevelRenderer.getShieldRenderMaterial(shieldType, true).texture());
+            event.addSprite(shieldType.getRenderMaterial(false).texture());
+            event.addSprite(shieldType.getRenderMaterial(true).texture());
         }
         //Treasure Chest Textures
         for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
