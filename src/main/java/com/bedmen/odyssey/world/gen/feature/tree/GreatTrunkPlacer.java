@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.world.gen.feature.tree;
 
-import com.bedmen.odyssey.block.SeedBlock;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
@@ -226,21 +225,6 @@ public class GreatTrunkPlacer extends TrunkPlacer {
         biConsumer.accept(pos, func.apply(this.roots.getState(random, pos)));
     }
 
-    private void placeSeedWithAxis(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int x, int y, int z, Direction.Axis axis) {
-        mutable.setWithOffset(pos, x, y, z);
-        placeSeed(levelSimulatedReader, biConsumer, random, mutable, config, blockState -> blockState.setValue(RotatedPillarBlock.AXIS, axis));
-    }
-    private void placeSeedIfFreeWithAxis(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int x, int y, int z, Direction.Axis axis) {
-        mutable.setWithOffset(pos, x, y, z);
-        if (TreeFeature.validTreePos(levelSimulatedReader,mutable) && TreeFeature.isFree(levelSimulatedReader,mutable))
-            placeSeed(levelSimulatedReader, biConsumer, random, mutable, config, blockState -> blockState.setValue(RotatedPillarBlock.AXIS, axis));
-    }
-
-    private void placeSeedWithOffset(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int x, int y, int z) {
-        mutable.setWithOffset(pos, x, y, z);
-        placeSeed(levelSimulatedReader, biConsumer, random, mutable, config, Function.identity());
-    }
-
     private void placeSeedIfFreeWithOffset(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int x, int y, int z) {
         mutable.setWithOffset(pos, x, y, z);
         if (TreeFeature.validTreePos(levelSimulatedReader,mutable) && TreeFeature.isFree(levelSimulatedReader,pos))
@@ -248,6 +232,6 @@ public class GreatTrunkPlacer extends TrunkPlacer {
     }
 
     private void placeSeed(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos pos, TreeConfiguration config, Function<BlockState, BlockState> func) {
-        biConsumer.accept(pos, BlockRegistry.GREATWOOD_SEED.get().defaultBlockState().setValue(SeedBlock.AGE, 0));
+        biConsumer.accept(pos, BlockRegistry.GREATWOOD_SEED.get().defaultBlockState());
     }
 }
