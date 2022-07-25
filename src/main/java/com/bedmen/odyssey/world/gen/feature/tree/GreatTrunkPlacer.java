@@ -1,14 +1,18 @@
 package com.bedmen.odyssey.world.gen.feature.tree;
 
+import com.bedmen.odyssey.block.wood.RootBlock;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.LevelSimulatedReader;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.feature.TreeFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
@@ -222,7 +226,13 @@ public class GreatTrunkPlacer extends TrunkPlacer {
     }
 
     private void placeRoots(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos pos, TreeConfiguration config, Function<BlockState, BlockState> func) {
-        biConsumer.accept(pos, func.apply(this.roots.getState(random, pos)));
+        boolean isDirt = levelSimulatedReader.isStateAtPosition(pos, blockState -> blockState.is(BlockTags.DIRT));
+        boolean isWater = levelSimulatedReader.isStateAtPosition(pos, blockState -> blockState.is(Blocks.WATER));
+        BlockState blockState = this.roots.getState(random, pos);
+        if (blockState.getBlock() instanceof RootBlock) {
+            blockState = blockState.setValue(RootBlock.DIRTLOGGED, isDirt).setValue(BlockStateProperties.WATERLOGGED, isWater);
+        }
+        biConsumer.accept(pos, func.apply(blockState));
     }
 
     private void placeSeedIfFreeWithOffset(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int x, int y, int z) {

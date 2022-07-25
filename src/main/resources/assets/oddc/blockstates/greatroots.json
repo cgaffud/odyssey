@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "oddc:block/greatroots"
+    "dirtlogged=false": {
+      "model": "oddc:block/greatroots_no_dirt"
+    },
+    "dirtlogged=true": {
+      "model": "oddc:block/greatroots_dirt"
     }
   }
 }
