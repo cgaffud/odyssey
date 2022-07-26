@@ -138,7 +138,12 @@ public class MoonTowerPiece extends TemplateStructurePiece {
         if ("chests_anchor".equals(dataMarker)) {
             accessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
             BlockPos[] chests = {blockPos.above(3), blockPos.below(4), new BlockPos(2, 0, 2).rotate(getRotation()).offset(blockPos)};
-            int loot = random.nextInt(3);
+            int loot;
+            if (random.nextBoolean())
+                loot = 0;
+            else
+                loot = random.nextInt(2) + 1;
+
             for (int i = 0; i < 3; i++) {
                 BlockEntity blockentity = accessor.getBlockEntity(chests[i]);
                 if (i == loot)
@@ -161,10 +166,7 @@ public class MoonTowerPiece extends TemplateStructurePiece {
             if ("beefy_zombie".equals(dataMarker) && zombie.getItemBySlot(EquipmentSlot.CHEST).isEmpty())
                 zombie.setItemSlot(EquipmentSlot.CHEST, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_CHESTPLATE.get(), random, 1, 0.75));
 
-            if (random.nextBoolean() || random.nextBoolean())
-                zombie.setItemInHand(InteractionHand.MAIN_HAND, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_SWORD.get(), random, 1, 1.0));
-            else
-                zombie.setItemInHand(InteractionHand.MAIN_HAND, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_AXE.get(), random, 1, 1.0));
+            zombie.setItemInHand(InteractionHand.MAIN_HAND, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_AXE.get(), random, 1, 1.0));
 
             zombie.finalizeSpawn(accessor, accessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, (SpawnGroupData)null, (CompoundTag)null);
             accessor.addFreshEntityWithPassengers(zombie);
