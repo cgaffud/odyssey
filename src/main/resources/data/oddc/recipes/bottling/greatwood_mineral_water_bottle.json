@@ -2,28 +2,28 @@
   "type": "oddc:bottling",
   "ingredients": [
     {
+      "item": "minecraft:andesite"
+    },
+    {
+      "item": "minecraft:diorite"
+    },
+    {
+      "item": "minecraft:granite"
+    },
+    {
+      "item": "minecraft:calcite"
+    },
+    {
+      "item": "minecraft:tuff"
+    },
+    {
+      "item": "minecraft:dripstone_block"
+    },
+    {
+      "item": "minecraft:clay"
+    },
+    {
       "item": "minecraft:gold_ingot"
-    },
-    {
-      "item": "oddc:moonrock"
-    },
-    {
-      "item": "oddc:moonrock"
-    },
-    {
-      "item": "oddc:moonrock"
-    },
-    {
-      "item": "oddc:moonrock"
-    },
-    {
-      "item": "oddc:moonrock"
-    },
-    {
-      "item": "oddc:moonrock"
-    },
-    {
-      "item": "oddc:moonrock"
     }
   ],
   "result": {

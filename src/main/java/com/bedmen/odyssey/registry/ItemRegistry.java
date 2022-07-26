@@ -178,7 +178,6 @@ public class ItemRegistry {
 
     //Tomes
     public static final RegistryObject<Item> HEAVY_TOME = ITEMS.register("heavy_tome", () -> new TomeItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC), 0x6C3423, BANE_OF_ARTHROPODS[1], SHATTERING[1], KNOCKBACK[1], PUNCH[1], BLAST_PROTECTION[1]));
-    public static final RegistryObject<Item> GREATWOOD_MINERAL_WATER_BOTTLE = ITEMS.register("greatwood_mineral_water_bottle", () -> new TreeWaterBottleItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC), BlockRegistry.GREATWOOD_SAPLING::get));
 
     //Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestMaterial.COPPER));
@@ -198,6 +197,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MARINE_PICKAXE = ITEMS.register("marine_pickaxe", () -> new EquipmentPickaxeItem(OdysseyTiers.MARINE, 4, -2.2f, new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.TOOLS), AQUA_AFFINITY));
     public static final RegistryObject<Item> MARINE_SHOVEL = ITEMS.register("marine_shovel", () -> new EquipmentShovelItem(OdysseyTiers.MARINE, 3.5f, -1.9f, new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.TOOLS), AQUA_AFFINITY));
     public static final RegistryObject<Item> MARINE_HOE = ITEMS.register("marine_hoe", () -> new EquipmentHoeItem(OdysseyTiers.MARINE, 3, -1.0f, new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.TOOLS), AQUA_AFFINITY));
+
+    public static final RegistryObject<Item> GREATWOOD_MINERAL_WATER_BOTTLE = ITEMS.register("greatwood_mineral_water_bottle", () -> new GreatSaplingHelperItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), BlockRegistry.GREATWOOD_SAPLING::get, true));
+    public static final RegistryObject<Item> GREATWOOD_FERTILIZER = ITEMS.register("greatwood_fertilizer", () -> new GreatSaplingHelperItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), BlockRegistry.GREATWOOD_SAPLING::get, false));
 
     //Melee Weapons
     public static final RegistryObject<Item> FLINT_HATCHET = ITEMS.register("flint_hatchet", () -> new DualWieldItem(OdysseyTiers.FLINT, 4.5f, -2.5f, false, new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), SMITE[1]));
