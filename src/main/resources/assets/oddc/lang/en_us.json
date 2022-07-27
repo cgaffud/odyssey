@@ -355,7 +355,6 @@
   "item.oddc.thornmail_leggings": "Thornmail Leggings",
   "item.oddc.thornmail_boots": "Thornmail Boots",
   "block.oddc.greatwood_seed": "Greatwood Seed",
-  "item.oddc.greatwood_seed": "Greatwood Seed",
   "item.oddc.sharp_bone_boomerang": "Sharp Bone Boomerang",
   "item.oddc.heavy_bone_boomerang": "Heavy Bone Boomerang",
   "item.oddc.speedy_bone_boomerang": "Speedy Bone Boomerang",
@@ -446,5 +445,7 @@
   "item.oddc.diamond_shield.white": "White Diamond Shield",
   "item.oddc.diamond_shield.light_gray": "Light Gray Diamond Shield",
   "item.oddc.diamond_shield.gray": "Gray Diamond Shield",
-  "item.oddc.diamond_shield.black": "Black Diamond Shield"
+  "item.oddc.diamond_shield.black": "Black Diamond Shield",
+  "item.oddc.greatwood_mineral_water_bottle": "Greatwood Mineral Water Bottle",
+  "item.oddc.greatwood_fertilizer": "Greatwood Fertilizer"
 }

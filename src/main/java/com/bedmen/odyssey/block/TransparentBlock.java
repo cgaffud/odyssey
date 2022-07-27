@@ -12,5 +12,4 @@ public class TransparentBlock extends Block implements INeedsToRegisterRenderTyp
     public RenderType getRenderType() {
         return RenderType.cutout();
     }
-
 }

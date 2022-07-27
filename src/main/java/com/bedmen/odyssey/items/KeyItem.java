@@ -6,7 +6,7 @@ import net.minecraft.world.item.Item;
 public class KeyItem extends Item {
     private final TreasureChestMaterial chestMaterial;
 
-    public KeyItem(TreasureChestMaterial chestMaterial, Properties properties) {
+    public KeyItem(Properties properties, TreasureChestMaterial chestMaterial) {
         super(properties);
         this.chestMaterial = chestMaterial;
     }
