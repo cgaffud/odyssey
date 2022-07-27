@@ -10,6 +10,11 @@ public class StringUtil {
         return floatFormat(i / 20f) + "s";
     }
 
+    public static String multiplierFormat(float f)
+    {
+        return floatFormat(f) + "x";
+    }
+
     public static String floatFormat(float f)
     {
         if(f == (int) f)

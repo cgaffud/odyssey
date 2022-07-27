@@ -154,7 +154,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
             double d1 = target.getY(0.3333333333333333D) - abstractarrow.getY();
             double d2 = target.getZ() - this.getZ();
             double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-            float velocity = WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * (item instanceof OdysseyBowItem odysseyBowItem ? odysseyBowItem.getVelocity() : 1.0f);
+            float velocity = WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * (item instanceof OdysseyBowItem odysseyBowItem ? odysseyBowItem.velocityMultiplier : 1.0f);
             float accuracyMultiplier = EnchantmentUtil.getAccuracyMultiplier(this);
             float superCharge = EnchantmentUtil.getSuperChargeMultiplier(itemStack);
             abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier / superCharge);

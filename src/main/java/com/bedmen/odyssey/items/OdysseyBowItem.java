@@ -27,53 +27,49 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModelProperty {
-    private final float velocity;
-    private final int chargeTime;
+    public final float velocityMultiplier;
+    public final int baseMaxChargeTicks;
 
-    public OdysseyBowItem(Item.Properties builder, float velocity, int chargeTime) {
+    public OdysseyBowItem(Item.Properties builder, float velocityMultiplier, int baseMaxChargeTicks) {
         super(builder);
-        this.velocity = velocity;
-        this.chargeTime = chargeTime;
+        this.velocityMultiplier = velocityMultiplier;
+        this.baseMaxChargeTicks = baseMaxChargeTicks;
     }
 
-    public float getVelocity(){
-        return this.velocity;
-    }
-
-    public void releaseUsing(ItemStack bow, Level level, LivingEntity livingEntity, int useTime) {
+    public void releaseUsing(ItemStack bow, Level level, LivingEntity livingEntity, int useItemRemainingTicks) {
         if (livingEntity instanceof Player) {
             Player player = (Player)livingEntity;
             boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bow) > 0;
             WeaponUtil.AmmoStack ammoStack = WeaponUtil.getAmmo(player, bow, true);
             ItemStack itemstack = ammoStack.ammo;
 
-            int i = this.getUseDuration(bow) - useTime;
-            i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bow, level, player, i, !itemstack.isEmpty() || flag);
-            if (i < 0) return;
+            int useTicks = this.getUseDuration(bow) - useItemRemainingTicks;
+            useTicks = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bow, level, player, useTicks, !itemstack.isEmpty() || flag);
+            if (useTicks < 0) return;
 
             if (!itemstack.isEmpty() || flag) {
                 if (itemstack.isEmpty()) {
                     itemstack = new ItemStack(Items.ARROW);
                 }
 
-                float superCharge = EnchantmentUtil.getSuperChargeMultiplier(bow);
-                Flag maxVelocityFlag = new Flag();
-                float f = getPowerForTime(i, bow, superCharge, maxVelocityFlag);
+                float superChargeMultiplier = EnchantmentUtil.getSuperChargeMultiplier(bow);
+                float charge = getChargeForTime(useTicks, bow, superChargeMultiplier);
+                float velocityFactor = charge * this.velocityMultiplier;
 
-                if (!((double)f < 0.1D)) {
+                if (!((double)charge < 0.1D)) {
                     boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, bow, player));
                     if (!level.isClientSide) {
                         ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
                         AbstractArrow abstractArrow = arrowitem.createArrow(level, itemstack, player);
 
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(livingEntity);
-                        if(maxVelocityFlag.value && superCharge > 1.0f){
+                        if(superChargeMultiplier > 1.0f && getMaxCharge(bow) == charge){
                             abstractArrow.setCritArrow(true);
-                            inaccuracy /= superCharge;
+                            inaccuracy /= superChargeMultiplier;
                         }
 
                         abstractArrow = customArrow(abstractArrow);
-                        abstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, f * this.velocity * WeaponUtil.BASE_ARROW_VELOCITY, inaccuracy);
+                        abstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, velocityFactor * WeaponUtil.BASE_ARROW_VELOCITY, inaccuracy);
 
                         int j = EnchantmentUtil.getPower(bow);
                         if (j > 0) {
@@ -106,7 +102,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                         level.addFreshEntity(abstractArrow);
                     }
 
-                    level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+                    level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.4F + 1.2F) + velocityFactor * 0.5F);
                     if (!flag1 && !player.getAbilities().instabuild) {
                         itemstack.shrink(1);
                         if (itemstack.isEmpty()) {
@@ -120,20 +116,17 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         }
     }
 
-    public float getPowerForTime(int charge, ItemStack bow) {
-        return getPowerForTime(charge, bow, EnchantmentUtil.getSuperChargeMultiplier(bow), null);
+    public float getChargeForTime(int useTicks, ItemStack bow) {
+        return getChargeForTime(useTicks, bow, EnchantmentUtil.getSuperChargeMultiplier(bow));
     }
 
-    public float getPowerForTime(int charge, ItemStack itemStack, float superCharge, Flag flag) {
-        float f = (float)charge / (float) EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack);
-        if(f >= superCharge){
-            f = superCharge;
-            if(flag != null){
-                flag.value = true;
-            }
-        }
-        f = chargeCurve(f);
-        return f;
+    public float getChargeForTime(int useTicks, ItemStack bow, float superChargeMultiplier) {
+        float chargeFactor = Float.min(getChargeFactor(useTicks, bow),1f);
+        return chargeCurve(chargeFactor * superChargeMultiplier);
+    }
+
+    public float getMaxCharge(ItemStack bow) {
+        return chargeCurve(EnchantmentUtil.getSuperChargeMultiplier(bow));
     }
 
     public static float chargeCurve(float f){
@@ -155,12 +148,12 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         }
     }
 
-    public int getChargeTime(ItemStack itemStack){
-        return Mth.floor(EnchantmentUtil.getQuickChargeTime(this.chargeTime, itemStack) * EnchantmentUtil.getSuperChargeMultiplier(itemStack));
+    public float getChargeFactor(int useTicks, ItemStack itemStack){
+        return (float)useTicks / (float)(this.getChargeTime(itemStack));
     }
 
-    public float getChargeFactor(ItemStack itemStack, LivingEntity livingEntity){
-        return (float)(itemStack.getUseDuration() - livingEntity.getUseItemRemainingTicks()) / (float)(this.getChargeTime(itemStack));
+    public int getChargeTime(ItemStack itemStack){
+        return Mth.floor(EnchantmentUtil.getQuickChargeTime(this.baseMaxChargeTicks, itemStack) * EnchantmentUtil.getSuperChargeMultiplier(itemStack));
     }
 
     public void registerItemModelProperties() {
@@ -168,7 +161,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
             if (livingEntity == null) {
                 return 0.0F;
             } else {
-                return livingEntity.getUseItem() != itemStack ? 0.0F : getChargeFactor(itemStack, livingEntity);
+                return livingEntity.getUseItem() != itemStack ? 0.0F : getChargeFactor(livingEntity.getTicksUsingItem(), itemStack);
             }
         });
         ItemProperties.register(this, new ResourceLocation("pulling"), (itemStack, clientLevel, livingEntity, i) -> {
@@ -176,13 +169,12 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         });
     }
 
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.velocity * chargeCurve(EnchantmentUtil.getSuperChargeMultiplier(stack)))).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(this.getChargeTime(stack))).withStyle(ChatFormatting.BLUE));
-    }
-
-    public static class Flag {
-        public boolean value;
+    public void appendHoverText(ItemStack bow, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(bow, level, tooltip, flagIn);
+        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(this.velocityMultiplier * getMaxCharge(bow))).withStyle(ChatFormatting.BLUE));
+        if (flagIn.isAdvanced()) {
+            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.velocityMultiplier * getMaxCharge(bow) * WeaponUtil.BASE_ARROW_VELOCITY)).withStyle(ChatFormatting.BLUE));
+        }
+        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(this.getChargeTime(bow))).withStyle(ChatFormatting.BLUE));
     }
 }

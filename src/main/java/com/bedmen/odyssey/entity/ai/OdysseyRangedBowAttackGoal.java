@@ -119,7 +119,7 @@ public class OdysseyRangedBowAttackGoal<T extends net.minecraft.world.entity.Mob
                     int i = this.mob.getTicksUsingItem();
                     if (i >= odysseyBowItem.getChargeTime(bow)) {
                         this.mob.stopUsingItem();
-                        this.mob.performRangedAttack(livingentity, odysseyBowItem.getPowerForTime(i, bow));
+                        this.mob.performRangedAttack(livingentity, odysseyBowItem.getChargeForTime(i, bow));
                         this.attackTime = this.attackIntervalMin;
                     }
                 }
