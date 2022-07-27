@@ -40,7 +40,7 @@ public class OreGen {
         PLACED_ORE_SILVER_LOWER = PlacementUtils.register("ore_silver_lower", CONFIGURED_ORE_SILVER_BURIED, orePlacement(CountPlacement.of(UniformInt.of(0, 1)), HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(-48))));
 
         CONFIGURED_ORE_MOONROCK_BURIED = FeatureUtils.register("ore_moonrock_buried", Feature.ORE, new OreConfiguration(List.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, BlockRegistry.MOONROCK.get().defaultBlockState())), 25));
-        PLACED_ORE_MOONROCK = PlacementUtils.register("ore_moonrock", CONFIGURED_ORE_MOONROCK_BURIED, commonOrePlacement(2,  HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(150))));
+        PLACED_ORE_MOONROCK = PlacementUtils.register("ore_moonrock", CONFIGURED_ORE_MOONROCK_BURIED, commonOrePlacement(2,  HeightRangePlacement.triangle(VerticalAnchor.absolute(110), VerticalAnchor.absolute(160))));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
