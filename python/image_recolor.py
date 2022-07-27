@@ -27,7 +27,7 @@ def gray_color(gray):
     return color(gray,gray,gray)
 
 def color(r,g,b):
-    return r << 16 + g << 8 + b
+    return (r << 16) + (g << 8) + b
 
 def uncolor(color):
     r = color >> 16
@@ -167,9 +167,10 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/item/bone_meal.png"
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/greatwood_fertilizer2.png"
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/copper_cobweb.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/block/iron_cobweb.png"
+color_map = {color(218,109,71) : gray_color(130),color(231,124,86):gray_color(169),color(241,143,108):gray_color(191)}
 image1 = open_image(open_path1)
-recolor_image(image1, [1.0,0.8,0.6], [0,0,0])
+colormap_image(image1, color_map)
 save_image(image1, save_path)
 print("Done")

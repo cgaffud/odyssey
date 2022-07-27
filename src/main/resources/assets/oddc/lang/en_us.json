@@ -448,5 +448,7 @@
   "item.oddc.greatwood_mineral_water_bottle": "Greatwood Mineral Water Bottle",
   "item.oddc.greatwood_fertilizer": "Greatwood Fertilizer",
   "item.oddc.boomerang.damage": "Damage: ",
-  "item.oddc.boomerang.turnaround_time": "Turnaround Time: "
+  "item.oddc.boomerang.turnaround_time": "Turnaround Time: ",
+  "block.oddc.iron_cobweb": "Iron Cobweb",
+  "item.oddc.iron_fiber": "Iron Fiber"
 }
