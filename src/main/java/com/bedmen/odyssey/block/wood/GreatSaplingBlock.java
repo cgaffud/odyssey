@@ -77,7 +77,7 @@ public class GreatSaplingBlock extends TransparentSaplingBlock {
         GOOD(null),
         THIRSTY(ParticleTypes.SMOKE),
         HUNGRY(ParticleTypes.DAMAGE_INDICATOR);
-        //WEEDY;
+        //WEEDY; TODO Implement this after overgrowth
 
         public final ParticleOptions particle;
 
