@@ -5,6 +5,7 @@ import com.bedmen.odyssey.entity.monster.BoomerangAttackMob;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -71,7 +72,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
             } else {
                 this.setNoPhysics(true);
                 Vec3 vector3d = new Vec3(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
-                double d0 = 0.04D * (double)this.boomerangType.velocity;
+                double d0 = 0.04D * (double)this.boomerangType.getVelocity(this.thrownStack);
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
 
                 ++this.returningTicks;
@@ -269,18 +270,22 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         BONERANG(5.0d, 1.2f, 0),
         CLOVER_STONE(6.0d, 1.0f, 0),
         GREATROOT(8.0d, 1.2f, 0),
-        SPEEDY_GREATROOT(7.0d, 1.5f, 0),
+        SPEEDY_GREATROOT(8.0d, 1.5f, 0),
         SUPER_GREATROOT(12.0d, 1.25f, 0);
 
 
         public final double damage;
-        public final float velocity;
+        private final float velocity;
         public final int burnTime;
 
         BoomerangType(double damage, float velocity, int burnTime){
             this.damage = damage;
             this.velocity = velocity;
             this.burnTime = burnTime;
+        }
+
+        public float getVelocity(ItemStack boomerang) {
+            return this.velocity * EnchantmentUtil.getSuperChargeMultiplier(boomerang);
         }
     }
 }

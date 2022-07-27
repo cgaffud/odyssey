@@ -4,6 +4,7 @@ import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -130,6 +131,10 @@ public class WeaponUtil {
 
     public static InteractionHand getHandHoldingBow(LivingEntity pLiving) {
         return pLiving.getMainHandItem().getItem() instanceof OdysseyBowItem ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+    }
+
+    public static int getRangedChargeTime(ItemStack itemStack, int baseMaxChargeTicks){
+        return Mth.floor(EnchantmentUtil.getQuickChargeTime(baseMaxChargeTicks, itemStack) * EnchantmentUtil.getSuperChargeMultiplier(itemStack));
     }
 
     public static class AmmoStack{

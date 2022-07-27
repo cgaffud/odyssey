@@ -6,6 +6,7 @@ import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.equipment.base.EquipmentItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
+import com.bedmen.odyssey.util.WeaponUtil;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.minecraft.ChatFormatting;
@@ -34,6 +35,7 @@ import java.util.List;
 
 public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsToRegisterItemModelProperty {
     private final Boomerang.BoomerangType boomerangType;
+    private static final int baseMaxChargeTicks = 10;
     public BoomerangItem(Item.Properties builderIn, Boomerang.BoomerangType boomerangType, LevEnchSup... levEnchSups) {
         super(builderIn, levEnchSups);
         this.boomerangType = boomerangType;
@@ -53,41 +55,41 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         return 72000;
     }
 
-    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity owner, int timeLeft) {
-        if ((this.getUseDuration(itemStack) - timeLeft) >= this.getChargeTime(itemStack)) {
-            releaseBoomerang(itemStack, level, owner, true, null);
+    public void releaseUsing(ItemStack boomerangStack, Level level, LivingEntity owner, int timeLeft) {
+        if ((this.getUseDuration(boomerangStack) - timeLeft) >= this.getChargeTime(boomerangStack)) {
+            releaseBoomerang(boomerangStack, level, owner, true, null);
         }
     }
 
-    public void releaseBoomerang(ItemStack itemStack, Level level, LivingEntity owner, boolean fromView, LivingEntity target){
+    public void releaseBoomerang(ItemStack boomerangStack, Level level, LivingEntity owner, boolean fromView, LivingEntity target){
         Player player = owner instanceof Player player1 ? player1 : null;
         if (!level.isClientSide) {
             if (player != null) {
-                itemStack.hurtAndBreak(1, player, (player1) -> {
+                boomerangStack.hurtAndBreak(1, player, (player1) -> {
                     player1.broadcastBreakEvent(owner.getUsedItemHand());
                 });
             }
-            int multishot = EnchantmentUtil.getMultishot(itemStack);
+            int multishot = EnchantmentUtil.getMultishot(boomerangStack);
             for(int multishotNum = -multishot; multishotNum <= multishot; multishotNum++){
                 float angle = multishot > 0 ? multishotNum * 10f / (multishot) : 0f;
                 Vector3f vector3f = getThrowVector(owner, angle, fromView, target);
-                Boomerang boomerang = shootAndGetBoomerang(level, owner, itemStack, multishotNum, vector3f);
+                Boomerang boomerang = shootAndGetBoomerang(level, owner, boomerangStack, multishotNum, vector3f);
                 level.addFreshEntity(boomerang);
                 if (player != null && player.isCreative()) {
                     boomerang.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
             }
             if (player != null && !player.isCreative()) {
-                player.getInventory().removeItem(itemStack);
+                player.getInventory().removeItem(boomerangStack);
             }
         }
     }
 
-    private Boomerang shootAndGetBoomerang(Level level, LivingEntity owner, ItemStack itemStack, int multishotNum, Vector3f vector3f) {
-        Boomerang boomerang = getBoomerang(level, owner, itemStack, multishotNum != 0);
-        float superCharge = EnchantmentUtil.getSuperChargeMultiplier(itemStack);
+    private Boomerang shootAndGetBoomerang(Level level, LivingEntity owner, ItemStack boomerangStack, int multishotNum, Vector3f vector3f) {
+        Boomerang boomerang = getBoomerang(level, owner, boomerangStack, multishotNum != 0);
+        float superCharge = EnchantmentUtil.getSuperChargeMultiplier(boomerangStack);
         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(owner) / superCharge;
-        boomerang.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.shootSpeed(superCharge), inaccuracy);
+        boomerang.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.boomerangType.getVelocity(boomerangStack), inaccuracy);
         if(multishotNum == 0){
             level.playSound(null, boomerang, SoundEvents.PLAYER_ATTACK_SWEEP, owner instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE, 1.0F, 1.0F);
         } else {
@@ -96,11 +98,11 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         return boomerang;
     }
 
-    private Boomerang getBoomerang(Level level, LivingEntity owner, ItemStack itemStack, boolean isMultishot) {
-        Boomerang boomerang = new Boomerang(level, owner, itemStack, isMultishot);
-        boomerang.setLootingLevel((byte) EnchantmentUtil.getMobLooting(itemStack));
-        boomerang.setKnockback(EnchantmentUtil.getPunch(itemStack));
-        boomerang.setPierceLevel((byte)EnchantmentUtil.getPiercing(itemStack));
+    private Boomerang getBoomerang(Level level, LivingEntity owner, ItemStack boomerangStack, boolean isMultishot) {
+        Boomerang boomerang = new Boomerang(level, owner, boomerangStack, isMultishot);
+        boomerang.setLootingLevel((byte) EnchantmentUtil.getMobLooting(boomerangStack));
+        boomerang.setKnockback(EnchantmentUtil.getPunch(boomerangStack));
+        boomerang.setPierceLevel((byte)EnchantmentUtil.getPiercing(boomerangStack));
         return boomerang;
     }
 
@@ -139,25 +141,21 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         return new Vec3(-f2 * f3, -f4, f1 * f3);
     }
 
-    public float shootSpeed(float superChargeMultiplier){
-        return this.boomerangType.velocity * superChargeMultiplier;
+    public int getChargeTime(ItemStack boomerangStack){
+        return WeaponUtil.getRangedChargeTime(boomerangStack, baseMaxChargeTicks);
     }
 
-    public int getChargeTime(ItemStack itemStack){
-        return EnchantmentUtil.getQuickChargeTime(10, itemStack);
-    }
-
-    public int getTurnaroundTime(ItemStack itemStack){
-        return getChargeTime(itemStack) * 2;
+    public int getTurnaroundTime(ItemStack boomerangStack){
+        return getChargeTime(boomerangStack) * 2;
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {
-        ItemStack itemstack = playerIn.getItemInHand(handIn);
-        if (itemstack.getDamageValue() >= itemstack.getMaxDamage() - 1) {
-            return InteractionResultHolder.fail(itemstack);
+        ItemStack boomerangStack = playerIn.getItemInHand(handIn);
+        if (boomerangStack.getDamageValue() >= boomerangStack.getMaxDamage() - 1) {
+            return InteractionResultHolder.fail(boomerangStack);
         } else {
             playerIn.startUsingItem(handIn);
-            return InteractionResultHolder.consume(itemstack);
+            return InteractionResultHolder.consume(boomerangStack);
         }
     }
 
@@ -194,16 +192,18 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         return this.boomerangType;
     }
 
-    public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType)
+    public int getBurnTime(ItemStack boomerangStack, @Nullable RecipeType<?> recipeType)
     {
         return this.getBoomerangType().burnTime;
     }
 
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(itemStack, level, tooltip, flagIn);
+    public void appendHoverText(ItemStack boomerangStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(boomerangStack, level, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("item.oddc.boomerang.damage").append(StringUtil.doubleFormat(this.boomerangType.damage)).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(this.getChargeTime(itemStack))).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.boomerangType.velocity)).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.boomerang.turnaround_time").append(StringUtil.timeFormat(this.getTurnaroundTime(itemStack))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(this.getChargeTime(boomerangStack))).withStyle(ChatFormatting.BLUE));
+        if (flagIn.isAdvanced()) {
+            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.boomerangType.getVelocity(boomerangStack))).withStyle(ChatFormatting.BLUE));
+            tooltip.add(new TranslatableComponent("item.oddc.boomerang.turnaround_time").append(StringUtil.timeFormat(this.getTurnaroundTime(boomerangStack))).withStyle(ChatFormatting.BLUE));
+        }
     }
 }
