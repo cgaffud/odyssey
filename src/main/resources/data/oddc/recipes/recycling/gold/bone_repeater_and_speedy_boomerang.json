@@ -1,0 +1,17 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "oddc:bone_repeater"
+    },
+    {
+      "item": "oddc:speedy_bone_boomerang"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "gold",
+      "count": 27
+    }
+  ]
+}

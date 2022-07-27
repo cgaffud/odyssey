@@ -264,7 +264,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     }
 
     public enum BoomerangType{
-        WOODEN(4.0d, 0.8f, 500),
+        WOODEN(4.0d, 0.8f, 300),
         BONE(5.0d, 1.0f, 0),
         SPEEDY_BONE(5.0d, 1.2f, 0),
         BONERANG(5.0d, 1.2f, 0),
