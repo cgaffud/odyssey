@@ -23,3 +23,5 @@ run
 updateMappings.md
 /github_token.txt
 /.gradle/
+*.DS_Store
+python/__pycache__/

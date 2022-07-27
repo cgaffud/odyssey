@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "oddc:item/greatwood_seed"
+    "layer0": "oddc:item/greatwood_mineral_water_bottle"
   }
 }

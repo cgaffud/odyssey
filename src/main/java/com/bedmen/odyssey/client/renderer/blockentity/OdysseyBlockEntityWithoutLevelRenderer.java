@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.client.renderer.blockentity;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.items.BEWLRBlockItem;
@@ -15,14 +14,12 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
@@ -30,8 +27,6 @@ import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,12 +34,14 @@ import java.util.Map;
 
 public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLevelRenderer {
 
-    public static final Material WOODEN_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/wooden_shield_base"));
-    public static final Material WOODEN_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/wooden_shield_base_nopattern"));
-    public static final Material COPPER_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base"));
-    public static final Material COPPER_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base_nopattern"));
-    public static final Material REINFORCED_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/reinforced_shield_base"));
-    public static final Material REINFORCED_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/reinforced_shield_base_nopattern"));
+//    public static final Material WOODEN_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/wooden_shield_base"));
+//    public static final Material WOODEN_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/wooden_shield_base_nopattern"));
+//    public static final Material COPPER_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base"));
+//    public static final Material COPPER_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base_nopattern"));
+//    public static final Material COPPER_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base"));
+//    public static final Material COPPER_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base_nopattern"));
+//    public static final Material REINFORCED_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/reinforced_shield_base"));
+//    public static final Material REINFORCED_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/reinforced_shield_base_nopattern"));
     
     private static OdysseyBlockEntityWithoutLevelRenderer instance = null;
     private final EntityModelSet entityModelSet;
@@ -90,13 +87,13 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
             }
         } else {
             if (itemStack.getItem() instanceof OdysseyShieldItem odysseyShieldItem) {
-                boolean flag = BlockItem.getBlockEntityData(itemStack) != null;
+                boolean pattern = BlockItem.getBlockEntityData(itemStack) != null;
                 poseStack.pushPose();
                 poseStack.scale(1.0F, -1.0F, -1.0F);
-                Material material = getShieldRenderMaterial(odysseyShieldItem.getShieldType(), flag);
+                Material material = odysseyShieldItem.getShieldType().getRenderMaterial(pattern);
                 VertexConsumer vertexconsumer = material.sprite().wrap(ItemRenderer.getFoilBufferDirect(multiBufferSource, this.shieldModel.renderType(material.atlasLocation()), true, itemStack.hasFoil()));
                 this.shieldModel.handle().render(poseStack, vertexconsumer, p_108834_, p_108835_, 1.0F, 1.0F, 1.0F, 1.0F);
-                if (flag) {
+                if (pattern) {
                     List<Pair<BannerPattern, DyeColor>> list = BannerBlockEntity.createPatterns(ShieldItem.getColor(itemStack), BannerBlockEntity.getItemPatterns(itemStack));
                     BannerRenderer.renderPatterns(poseStack, multiBufferSource, p_108834_, p_108835_, this.shieldModel.plate(), material, false, list, itemStack.hasFoil());
                 } else {
@@ -107,13 +104,5 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
             }
             super.renderByItem(itemStack, transformType, poseStack, multiBufferSource, p_108834_, p_108835_);
         }
-    }
-
-    public static Material getShieldRenderMaterial(OdysseyShieldItem.ShieldType shieldType, boolean pattern){
-        return switch(shieldType){
-            case WOODEN -> pattern ? WOODEN_MATERIAL : WOODEN_MATERIAL_NOPATTERN;
-            case COPPER -> pattern ? COPPER_MATERIAL : COPPER_MATERIAL_NOPATTERN;
-            case REINFORCED -> pattern ? REINFORCED_MATERIAL : REINFORCED_MATERIAL_NOPATTERN;
-        };
     }
 }

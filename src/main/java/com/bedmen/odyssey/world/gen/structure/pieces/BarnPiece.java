@@ -2,7 +2,6 @@ package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
-import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.util.WorldGenUtil;
 import net.minecraft.core.BlockPos;
@@ -13,13 +12,11 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -28,10 +25,8 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSeriali
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class BarnPiece extends TemplateStructurePiece {

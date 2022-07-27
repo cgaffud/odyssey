@@ -1,11 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.world.gen.structure.pieces.BarnPiece;
-import com.bedmen.odyssey.world.gen.structure.pieces.CloverStoneSanctuaryPiece;
-import com.bedmen.odyssey.world.gen.structure.pieces.MoonTowerPiece;
-import com.bedmen.odyssey.world.gen.structure.pieces.UndergroundRuinPieces;
-import com.bedmen.odyssey.world.gen.structure.pieces.WeaverColonySpherePiece;
+import com.bedmen.odyssey.world.gen.structure.pieces.*;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;

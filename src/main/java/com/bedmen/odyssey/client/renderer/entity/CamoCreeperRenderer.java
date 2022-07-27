@@ -2,17 +2,13 @@ package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.model.CamoCreeperModel;
-import com.bedmen.odyssey.client.model.OdysseyCreeperModel;
-import com.bedmen.odyssey.client.renderer.entity.layer.OdysseyCreeperPowerLayer;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
 

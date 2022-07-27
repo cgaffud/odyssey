@@ -1,8 +1,5 @@
 package com.bedmen.odyssey.items;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.stats.Stats;
@@ -11,7 +8,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -20,6 +16,9 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 public class OdysseyBoatItem extends Item {
     private static final Predicate<Entity> ENTITY_PREDICATE = EntitySelector.NO_SPECTATORS.and(Entity::isPickable);

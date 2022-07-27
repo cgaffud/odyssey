@@ -2,8 +2,11 @@ package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.*;
+import com.bedmen.odyssey.block.light_emitters.LightEmitterBlock;
+import com.bedmen.odyssey.block.light_emitters.LightEmitterSlabBlock;
+import com.bedmen.odyssey.block.light_emitters.LightEmitterStairBlock;
+import com.bedmen.odyssey.block.light_emitters.LightEmitterWallBlock;
 import com.bedmen.odyssey.block.wood.*;
-import com.bedmen.odyssey.block.light_emitters.*;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -92,15 +95,15 @@ public class BlockRegistry {
     public static final RegistryObject<Block> GREATWOOD_FENCE_GATE = BLOCKS.register("greatwood_fence_gate", () -> new FlammableFenceGateBlock(BlockBehaviour.Properties.of(Material.WOOD, PALM_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> GREATWOOD_LEAVES = BLOCKS.register("greatwood_leaves", () -> BlockRegistry.leaves(false));
     public static final RegistryObject<Block> GREATWOOD_PRESSURE_PLATE = BLOCKS.register("greatwood_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.of(Material.WOOD, GREATWOOD_PLANKS.get().defaultMaterialColor()).noCollission().strength(0.5F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> GREATWOOD_SAPLING = BLOCKS.register("greatwood_sapling", () -> new TransparentSaplingBlock(new GreatwoodTreeGrower(), BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> GREATWOOD_SAPLING = BLOCKS.register("greatwood_sapling", () -> new GreatSaplingBlock(new GreatwoodTreeGrower(), BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> GREATWOOD_SIGN = BLOCKS.register("greatwood_sign", () -> new OdysseyStandingSignBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).noCollission().strength(1.0F).sound(SoundType.WOOD), OdysseyWoodType.GREATWOOD));
     public static final RegistryObject<Block> GREATWOOD_SLAB = BLOCKS.register("greatwood_slab", () -> new FlammableSlabBlock(BlockBehaviour.Properties.of(Material.WOOD, GREATWOOD_PLANKS.get().defaultMaterialColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> GREATWOOD_STAIRS = BLOCKS.register("greatwood_stairs", () -> new FlammableStairsBlock(() -> GREATWOOD_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(GREATWOOD_PLANKS.get())));
     public static final RegistryObject<Block> GREATWOOD_TRAPDOOR = BLOCKS.register("greatwood_trapdoor", () -> new TransparentTrapDoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn(BlockRegistry::never)));
     public static final RegistryObject<Block> GREATWOOD_WALL_SIGN = BLOCKS.register("greatwood_wall_sign", () -> new OdysseyWallSignBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(GREATWOOD_SIGN), OdysseyWoodType.GREATWOOD));
     public static final RegistryObject<Block> POTTED_GREATWOOD_SAPLING = BLOCKS.register("potted_greatwood_sapling", () -> new OdysseyFlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, GREATWOOD_SAPLING, BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
-    public static final RegistryObject<Block> GREATROOTS = BLOCKS.register("greatroots", () -> new TransparentBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).noOcclusion().requiresCorrectToolForDrops().strength(5.0F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> GREATWOOD_SEED = BLOCKS.register("greatwood_seed", () -> new SeedBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().requiresCorrectToolForDrops().strength(1.0F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
+    public static final RegistryObject<Block> GREATROOTS = BLOCKS.register("greatroots", () -> new RootBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).noOcclusion().requiresCorrectToolForDrops().strength(5.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> GREATWOOD_SEED = BLOCKS.register("greatwood_seed", () -> new GreatSeedBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().requiresCorrectToolForDrops().strength(1.0F, 3.0F).sound(SoundType.WOOD).noOcclusion(), GREATWOOD_LOG::get));
 
 
     public static final RegistryObject<Block> WEAVER_EGG_COBWEB = BLOCKS.register("weaver_egg_cobweb", () ->  new WeaverEggWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().requiresCorrectToolForDrops().strength(4.0F)));

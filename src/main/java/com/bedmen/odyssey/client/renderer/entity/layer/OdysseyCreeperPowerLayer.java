@@ -2,14 +2,10 @@ package com.bedmen.odyssey.client.renderer.entity.layer;
 
 import com.bedmen.odyssey.client.model.OdysseyCreeperModel;
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EnergySwirlLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
 

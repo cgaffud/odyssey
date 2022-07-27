@@ -167,10 +167,9 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/entity/skeleton/skeleton.png"
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/skeleton/moon_tower.png"
+open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/item/bone_meal.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/greatwood_fertilizer2.png"
 image1 = open_image(open_path1)
-grayscale_image(image1, 0.75)
-recolor_image(image1, [0.75,0.75,0.9], [0,0,0])
+recolor_image(image1, [1.0,0.8,0.6], [0,0,0])
 save_image(image1, save_path)
 print("Done")

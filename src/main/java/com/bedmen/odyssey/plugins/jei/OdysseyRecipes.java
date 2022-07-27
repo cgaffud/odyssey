@@ -1,11 +1,16 @@
 package com.bedmen.odyssey.plugins.jei;
 
-import com.bedmen.odyssey.recipes.*;
+import com.bedmen.odyssey.recipes.AlloyRecipe;
+import com.bedmen.odyssey.recipes.RecyclingRecipe;
+import com.bedmen.odyssey.recipes.StitchingRecipe;
+import com.bedmen.odyssey.recipes.WeavingRecipe;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.List;
 

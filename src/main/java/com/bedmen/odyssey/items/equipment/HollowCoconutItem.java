@@ -4,7 +4,6 @@ import com.bedmen.odyssey.armor.OdysseyArmorMaterials;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.items.equipment.base.EquipmentArmorItem;
 import com.bedmen.odyssey.registry.BlockRegistry;
-import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

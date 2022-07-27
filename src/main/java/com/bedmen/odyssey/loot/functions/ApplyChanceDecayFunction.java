@@ -3,8 +3,6 @@ package com.bedmen.odyssey.loot.functions;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import java.util.Random;
-
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +11,8 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+
+import java.util.Random;
 
 public class ApplyChanceDecayFunction extends LootItemConditionalFunction {
    final float probability;

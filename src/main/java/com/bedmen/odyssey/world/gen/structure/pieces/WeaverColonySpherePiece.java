@@ -1,7 +1,5 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
-import java.util.Random;
-
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
@@ -20,6 +18,8 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.ScatteredFeaturePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+
+import java.util.Random;
 
 public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
     private final double r0;

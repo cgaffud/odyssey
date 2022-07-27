@@ -4,9 +4,7 @@ import com.bedmen.odyssey.entity.projectile.SonicBoom;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.level.Explosion;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;

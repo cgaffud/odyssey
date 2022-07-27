@@ -2,7 +2,6 @@ package com.bedmen.odyssey.block.entity;
 
 import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;
 import com.bedmen.odyssey.recipes.AlloyRecipe;
-
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;
@@ -13,7 +12,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;

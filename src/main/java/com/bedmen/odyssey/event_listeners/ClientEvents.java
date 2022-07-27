@@ -4,10 +4,12 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
 import com.bedmen.odyssey.block.TriplePlantBlock;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
-import com.bedmen.odyssey.client.gui.screens.*;
+import com.bedmen.odyssey.client.gui.screens.AlloyFurnaceScreen;
+import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
+import com.bedmen.odyssey.client.gui.screens.RecyclingFurnaceScreen;
+import com.bedmen.odyssey.client.gui.screens.StitchingTableScreen;
 import com.bedmen.odyssey.client.model.*;
 import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
@@ -28,7 +30,6 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
-import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -168,8 +169,8 @@ public class ClientEvents {
     public static void onTextureStitchEvent$Pre(final TextureStitchEvent.Pre event){
         //Shield Textures
         for(OdysseyShieldItem.ShieldType shieldType : OdysseyShieldItem.ShieldType.values()){
-            event.addSprite(OdysseyBlockEntityWithoutLevelRenderer.getShieldRenderMaterial(shieldType, false).texture());
-            event.addSprite(OdysseyBlockEntityWithoutLevelRenderer.getShieldRenderMaterial(shieldType, true).texture());
+            event.addSprite(shieldType.getRenderMaterial(false).texture());
+            event.addSprite(shieldType.getRenderMaterial(true).texture());
         }
         //Treasure Chest Textures
         for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){

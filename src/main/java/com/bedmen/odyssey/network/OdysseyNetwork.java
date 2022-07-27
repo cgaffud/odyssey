@@ -1,7 +1,9 @@
 package com.bedmen.odyssey.network;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.network.packet.*;
+import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
+import com.bedmen.odyssey.network.packet.ShootSonicBoomPacket;
+import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;

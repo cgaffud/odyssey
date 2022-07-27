@@ -2,7 +2,6 @@ package com.bedmen.odyssey.client.renderer.entity.layer;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.entity.RenderLayerParent;

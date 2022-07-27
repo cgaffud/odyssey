@@ -2,7 +2,6 @@ package com.bedmen.odyssey.items.equipment.base;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.items.OdysseyCrossbowItem;
-import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;

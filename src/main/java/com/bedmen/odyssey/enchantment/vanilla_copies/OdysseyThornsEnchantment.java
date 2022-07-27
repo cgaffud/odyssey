@@ -1,8 +1,5 @@
 package com.bedmen.odyssey.enchantment.vanilla_copies;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -12,6 +9,12 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
 
 public class OdysseyThornsEnchantment extends Enchantment {
     private static final float CHANCE_PER_LEVEL = 0.15F;

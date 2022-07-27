@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.model.OdysseyBoatModel;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.google.common.collect.ImmutableMap;
@@ -9,9 +8,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import java.util.Map;
-import java.util.stream.Stream;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -19,8 +15,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.Map;
+import java.util.stream.Stream;
 
 public class OdysseyBoatRenderer extends EntityRenderer<OdysseyBoat> {
     public final Map<OdysseyBoat.Type, Pair<ResourceLocation, OdysseyBoatModel>> boatResources;

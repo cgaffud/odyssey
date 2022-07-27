@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/shield",
+  "textures": {
+    "particle": "minecraft:raw_iron_block"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "blocking": 1
+      },
+      "model": "oddc:item/rusty_shield_blocking"
+    }
+  ]
+}

@@ -2,7 +2,6 @@ package com.bedmen.odyssey.client.renderer;
 
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.items.equipment.DualWieldItem;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

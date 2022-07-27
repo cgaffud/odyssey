@@ -1,16 +1,18 @@
 package com.bedmen.odyssey.items;
 
-import java.util.*;
-import javax.annotation.Nullable;
-
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+
+import javax.annotation.Nullable;
+import java.util.*;
 
 public class TomeItem extends Item {
     public static final String TAG_LEARNED_ENCHANTMENTS = "LearnedEnchantments";

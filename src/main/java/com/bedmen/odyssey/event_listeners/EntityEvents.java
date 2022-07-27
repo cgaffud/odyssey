@@ -2,7 +2,6 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
-import com.bedmen.odyssey.entity.animal.OdysseyPolarBear;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
@@ -12,52 +11,32 @@ import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
-import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
-import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.Tuple;
-import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.PolarBear;
-import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfig;
-import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.ITag;
-import net.minecraftforge.registries.tags.ITagManager;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
@@ -293,17 +272,8 @@ public class EntityEvents {
         LivingEntity livingEntity = event.getEntityLiving();
         ItemStack shield = livingEntity.getUseItem();
         if(shield.getItem() instanceof OdysseyShieldItem odysseyShieldItem){
-            event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty()));
-            Entity attacker = event.getDamageSource().getDirectEntity();
-            if(livingEntity instanceof Player player && attacker instanceof LivingEntity livingAttacker && livingAttacker.getMainHandItem().getItem() instanceof AxeItem){
-                int recoveryTime = odysseyShieldItem.getRecoveryTime();
-                ITagManager<Item> itemITagManager = ForgeRegistries.ITEMS.tags();
-                if(itemITagManager != null){
-                    for(Item item : itemITagManager.getTag(OdysseyItemTags.SHIELDS).stream().toList()){
-                        player.getCooldowns().addCooldown(item, recoveryTime);
-                    }
-                }
-            }
+            DamageSource damageSource = event.getDamageSource();
+            event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty(), damageSource));
         }
     }
 }

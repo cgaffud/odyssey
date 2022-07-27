@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:rusty_shield"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 72
+    }
+  ]
+}

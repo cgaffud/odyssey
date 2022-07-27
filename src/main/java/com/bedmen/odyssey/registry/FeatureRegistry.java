@@ -1,16 +1,12 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.inventory.QuiverMenu;
-import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.world.gen.feature.AbandonedIronGolemFeature;
 import com.bedmen.odyssey.world.gen.feature.TreasureChestFeature;
 import com.bedmen.odyssey.world.gen.feature.TriplePlantBlockFeature;
 import com.bedmen.odyssey.world.gen.feature.tree.CornerLeafTreeFeature;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.SimpleBlockFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
@@ -19,11 +15,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class FeatureRegistry {
 

@@ -1,10 +1,7 @@
 package com.bedmen.odyssey.inventory;
 
-import javax.annotation.Nullable;
-
 import com.bedmen.odyssey.inventory.slot.StitchingFiberSlot;
 import com.bedmen.odyssey.inventory.slot.StitchingIngredientSlot;
-
 import com.bedmen.odyssey.recipes.StitchingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ContainerRegistry;
@@ -17,12 +14,16 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class StitchingMenu extends AbstractContainerMenu {

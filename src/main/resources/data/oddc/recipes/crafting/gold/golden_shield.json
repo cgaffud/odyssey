@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BAB",
+    "BBB",
+    " B "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:silver_ingot"
+    },
+    "B": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "result": {
+    "item": "oddc:golden_shield"
+  }
+}

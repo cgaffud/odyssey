@@ -1,8 +1,8 @@
 {
   "ambientocclusion": false,
   "textures": {
-    "particle": "oddc:block/greatwood_seed_stage0",
-    "seed": "oddc:block/greatwood_seed_stage0"
+    "particle": "oddc:block/greatwood_seed",
+    "seed": "oddc:block/greatwood_seed"
   },
   "elements": [
     {   "from": [ 6, 10, 6 ],

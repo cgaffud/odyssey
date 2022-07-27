@@ -2,12 +2,11 @@ package com.bedmen.odyssey.items.equipment.base;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.items.OdysseyBowItem;
-import com.bedmen.odyssey.util.OdysseyRarity;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
