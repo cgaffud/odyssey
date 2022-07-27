@@ -2,7 +2,7 @@ package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.items.equipment.base.EquipmentBowItem;
-import net.minecraft.ChatFormatting;
+import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +22,7 @@ public class SniperBowItem extends EquipmentBowItem {
                 .append(" [")
                 .append(new TranslatableComponent("key.sneak"))
                 .append(new TranslatableComponent("item.oddc.equipment.key"))
-                .withStyle(ChatFormatting.GRAY)
+                .withStyle(OdysseyChatFormatting.LAVENDER)
                 );
         super.appendHoverText(stack, level, tooltip, flagIn);
     }

@@ -21,6 +21,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,13 +45,13 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     private static final int MAX_CHARGE_DURATION = 25;
     private boolean startSoundPlayed = false;
     private boolean midLoadSoundPlayed = false;
-    private final float velocity;
-    private final int chargeTime;
+    private final float velocityMultiplier;
+    private final int baseMaxChargeTicks;
 
-    public OdysseyCrossbowItem(Item.Properties propertiesIn, float velocity, int chargeTime) {
+    public OdysseyCrossbowItem(Item.Properties propertiesIn, float velocityMultiplier, int baseMaxChargeTicks) {
         super(propertiesIn);
-        this.velocity = velocity;
-        this.chargeTime = chargeTime;
+        this.velocityMultiplier = velocityMultiplier;
+        this.baseMaxChargeTicks = baseMaxChargeTicks;
     }
 
     public Predicate<ItemStack> getSupportedHeldProjectiles() {
@@ -64,7 +65,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemstack = player.getItemInHand(interactionHand);
         if (isCharged(itemstack)) {
-            performShooting(level, player, interactionHand, itemstack, getShootingPower(itemstack), 1.0F);
+            performShooting(level, player, interactionHand, itemstack, getShootingVelocity(itemstack), 1.0F);
             setCharged(itemstack, false);
             return InteractionResultHolder.consume(itemstack);
         } else if (WeaponUtil.hasAmmo(player,itemstack)) {
@@ -82,7 +83,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
     public void releaseUsing(ItemStack crossbow, Level level, LivingEntity livingEntity, int count) {
         int i = this.getUseDuration(crossbow) - count;
-        float f = getPowerForTime(i, crossbow);
+        float f = this.getChargeFactor(i, crossbow);
         if (f >= 1.0F && !isCharged(crossbow) && tryLoadProjectiles(livingEntity, crossbow)) {
             setCharged(crossbow, true);
             SoundSource soundsource = livingEntity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
@@ -129,18 +130,18 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         return true;
     }
 
-    public static boolean isCharged(ItemStack p_40933_) {
-        CompoundTag compoundtag = p_40933_.getTag();
+    public static boolean isCharged(ItemStack crossbow) {
+        CompoundTag compoundtag = crossbow.getTag();
         return compoundtag != null && compoundtag.getBoolean("Charged");
     }
 
-    public static void setCharged(ItemStack p_40885_, boolean p_40886_) {
-        CompoundTag compoundtag = p_40885_.getOrCreateTag();
-        compoundtag.putBoolean("Charged", p_40886_);
+    public static void setCharged(ItemStack crossbow, boolean isCharged) {
+        CompoundTag compoundtag = crossbow.getOrCreateTag();
+        compoundtag.putBoolean("Charged", isCharged);
     }
 
-    public static void addChargedProjectile(ItemStack p_40929_, ItemStack p_40930_) {
-        CompoundTag compoundtag = p_40929_.getOrCreateTag();
+    public static void addChargedProjectile(ItemStack crossbow, ItemStack ammoStack) {
+        CompoundTag compoundtag = crossbow.getOrCreateTag();
         ListTag listtag;
         if (compoundtag.contains("ChargedProjectiles", 9)) {
             listtag = compoundtag.getList("ChargedProjectiles", 10);
@@ -149,14 +150,14 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         }
 
         CompoundTag compoundtag1 = new CompoundTag();
-        p_40930_.save(compoundtag1);
+        ammoStack.save(compoundtag1);
         listtag.add(compoundtag1);
         compoundtag.put("ChargedProjectiles", listtag);
     }
 
-    private static List<ItemStack> getChargedProjectiles(ItemStack p_40942_) {
+    private static List<ItemStack> getChargedProjectiles(ItemStack crossbow) {
         List<ItemStack> list = Lists.newArrayList();
-        CompoundTag compoundtag = p_40942_.getTag();
+        CompoundTag compoundtag = crossbow.getTag();
         if (compoundtag != null && compoundtag.contains("ChargedProjectiles", 9)) {
             ListTag listtag = compoundtag.getList("ChargedProjectiles", 10);
             if (listtag != null) {
@@ -170,8 +171,8 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         return list;
     }
 
-    private static void clearChargedProjectiles(ItemStack p_40944_) {
-        CompoundTag compoundtag = p_40944_.getTag();
+    private static void clearChargedProjectiles(ItemStack crossbow) {
+        CompoundTag compoundtag = crossbow.getTag();
         if (compoundtag != null) {
             ListTag listtag = compoundtag.getList("ChargedProjectiles", 9);
             listtag.clear();
@@ -180,9 +181,9 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
     }
 
-    public static boolean containsChargedProjectile(ItemStack p_40872_, Item p_40873_) {
-        return getChargedProjectiles(p_40872_).stream().anyMatch((p_40870_) -> {
-            return p_40870_.is(p_40873_);
+    public static boolean containsChargedProjectile(ItemStack crossbow, Item ammoItem) {
+        return getChargedProjectiles(crossbow).stream().anyMatch((ammo) -> {
+            return ammo.is(ammoItem);
         });
     }
 
@@ -211,15 +212,15 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
                 projectile.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), power, inaccuracy);
             }
 
-            crossbow.hurtAndBreak(flag ? 3 : 1, livingEntity, (p_40858_) -> {
-                p_40858_.broadcastBreakEvent(interactionHand);
+            crossbow.hurtAndBreak(flag ? 3 : 1, livingEntity, (livingEntity1) -> {
+                livingEntity1.broadcastBreakEvent(interactionHand);
             });
             level.addFreshEntity(projectile);
             level.playSound((Player)null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, pitch);
         }
     }
 
-    public static void performShooting(Level p_40888_, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, float power, float inaccuracy) {
+    public static void performShooting(Level level, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, float power, float inaccuracy) {
         List<ItemStack> list = getChargedProjectiles(crossbow);
         float[] afloat = getShotPitches(livingEntity.getRandom());
 
@@ -228,47 +229,47 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             boolean flag = livingEntity instanceof Player && ((Player)livingEntity).getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
                 if (i == 0) {
-                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, 0.0F);
+                    shootProjectile(level, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, 0.0F);
                 } else if (i == 1) {
-                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, -10.0F);
+                    shootProjectile(level, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, -10.0F);
                 } else if (i == 2) {
-                    shootProjectile(p_40888_, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, 10.0F);
+                    shootProjectile(level, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, 10.0F);
                 }
             }
         }
 
-        onCrossbowShot(p_40888_, livingEntity, crossbow);
+        onCrossbowShot(level, livingEntity, crossbow);
     }
 
-    private static float[] getShotPitches(Random p_40924_) {
-        boolean flag = p_40924_.nextBoolean();
-        return new float[]{1.0F, getRandomShotPitch(flag, p_40924_), getRandomShotPitch(!flag, p_40924_)};
+    private static float[] getShotPitches(Random random) {
+        boolean randomBool = random.nextBoolean();
+        return new float[]{1.0F, getRandomShotPitch(randomBool, random), getRandomShotPitch(!randomBool, random)};
     }
 
-    private static float getRandomShotPitch(boolean p_150798_, Random p_150799_) {
-        float f = p_150798_ ? 0.63F : 0.43F;
-        return 1.0F / (p_150799_.nextFloat() * 0.5F + 1.8F) + f;
+    private static float getRandomShotPitch(boolean randomBool, Random random) {
+        float f = randomBool ? 0.63F : 0.43F;
+        return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
     }
 
-    private static void onCrossbowShot(Level p_40906_, LivingEntity p_40907_, ItemStack p_40908_) {
-        if (p_40907_ instanceof ServerPlayer) {
-            ServerPlayer serverplayer = (ServerPlayer)p_40907_;
-            if (!p_40906_.isClientSide) {
-                CriteriaTriggers.SHOT_CROSSBOW.trigger(serverplayer, p_40908_);
+    private static void onCrossbowShot(Level level, LivingEntity livingEntity, ItemStack crossbow) {
+        if (livingEntity instanceof ServerPlayer) {
+            ServerPlayer serverplayer = (ServerPlayer)livingEntity;
+            if (!level.isClientSide) {
+                CriteriaTriggers.SHOT_CROSSBOW.trigger(serverplayer, crossbow);
             }
 
-            serverplayer.awardStat(Stats.ITEM_USED.get(p_40908_.getItem()));
+            serverplayer.awardStat(Stats.ITEM_USED.get(crossbow.getItem()));
         }
 
-        clearChargedProjectiles(p_40908_);
+        clearChargedProjectiles(crossbow);
     }
 
-    public void onUseTick(Level p_40910_, LivingEntity p_40911_, ItemStack p_40912_, int p_40913_) {
-        if (!p_40910_.isClientSide) {
-            int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, p_40912_);
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack crossbow, int i1) {
+        if (!level.isClientSide) {
+            int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, crossbow);
             SoundEvent soundevent = this.getStartSound(i);
             SoundEvent soundevent1 = i == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
-            float f = (float)(p_40912_.getUseDuration() - p_40913_) / (float)getChargeDuration(p_40912_);
+            float f = getChargeFactor(livingEntity.getTicksUsingItem(), crossbow);
             if (f < 0.2F) {
                 this.startSoundPlayed = false;
                 this.midLoadSoundPlayed = false;
@@ -276,27 +277,27 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
             if (f >= 0.2F && !this.startSoundPlayed) {
                 this.startSoundPlayed = true;
-                p_40910_.playSound((Player)null, p_40911_.getX(), p_40911_.getY(), p_40911_.getZ(), soundevent, SoundSource.PLAYERS, 0.5F, 1.0F);
+                level.playSound((Player)null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), soundevent, SoundSource.PLAYERS, 0.5F, 1.0F);
             }
 
             if (f >= 0.5F && soundevent1 != null && !this.midLoadSoundPlayed) {
                 this.midLoadSoundPlayed = true;
-                p_40910_.playSound((Player)null, p_40911_.getX(), p_40911_.getY(), p_40911_.getZ(), soundevent1, SoundSource.PLAYERS, 0.5F, 1.0F);
+                level.playSound((Player)null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), soundevent1, SoundSource.PLAYERS, 0.5F, 1.0F);
             }
         }
 
     }
 
-    public int getUseDuration(ItemStack p_40938_) {
-        return getChargeDuration(p_40938_) + 3;
+    public int getUseDuration(ItemStack crossbow) {
+        return this.getChargeTime(crossbow) + 3;
     }
 
-    public UseAnim getUseAnimation(ItemStack p_40935_) {
+    public UseAnim getUseAnimation(ItemStack crossbow) {
         return UseAnim.CROSSBOW;
     }
 
-    private SoundEvent getStartSound(int p_40852_) {
-        switch(p_40852_) {
+    private SoundEvent getStartSound(int quickChargeLevel) {
+        switch(quickChargeLevel) {
             case 1:
                 return SoundEvents.CROSSBOW_QUICK_CHARGE_1;
             case 2:
@@ -312,14 +313,14 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         return 8;
     }
 
-    public float getShootingPower(ItemStack itemStack) {
-        float f = WeaponUtil.BASE_ARROW_VELOCITY * this.velocity;
+    public float getShootingVelocity(ItemStack itemStack) {
+        float f = WeaponUtil.BASE_ARROW_VELOCITY * this.velocityMultiplier;
         f *= containsChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 0.5f : 1.0f;
         return f;
     }
 
-    public float getVelocity(){
-        return this.velocity;
+    public float getVelocityMultiplier(){
+        return this.velocityMultiplier;
     }
 
     public static boolean loadProjectile(LivingEntity livingEntity, ItemStack crossbow, ItemStack ammo, boolean multishotArrow, boolean inCreative) {
@@ -376,27 +377,12 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         return abstractArrow;
     }
 
-    public static int getChargeDuration(ItemStack itemStack) {
-        Item item = itemStack.getItem();
-        if(item instanceof OdysseyCrossbowItem){
-            return EnchantmentUtil.getQuickChargeTime(((OdysseyCrossbowItem)item).chargeTime, itemStack);
-        }
-        return EnchantmentUtil.getQuickChargeTime(MAX_CHARGE_DURATION, itemStack);
+    public int getChargeTime(ItemStack crossbow) {
+        return WeaponUtil.getRangedChargeTime(crossbow, baseMaxChargeTicks);
     }
 
-    public static float getPowerForTime(int p_40854_, ItemStack p_40855_) {
-        float f = (float)p_40854_ / (float)getChargeDuration(p_40855_);
-        if (f > 1.0F) {
-            f = 1.0F;
-        }
-
-        return f;
-    }
-
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(getChargeDuration(stack))).withStyle(ChatFormatting.BLUE));
+    public float getChargeFactor(int useTicks, ItemStack crossbow){
+        return Mth.clamp((float)useTicks / (float)getChargeTime(crossbow), 0f, 1f);
     }
 
     //Basically isCrossbow
@@ -405,21 +391,30 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     }
 
     public void registerItemModelProperties(){
-        ItemProperties.register(this, new ResourceLocation("pull"), (p_174620_, p_174621_, p_174622_, p_174623_) -> {
-            if (p_174622_ == null) {
+        ItemProperties.register(this, new ResourceLocation("pull"), (itemStack, clientLevel, livingEntity, i) -> {
+            if (livingEntity == null) {
                 return 0.0F;
             } else {
-                return CrossbowItem.isCharged(p_174620_) ? 0.0F : (float)(p_174620_.getUseDuration() - p_174622_.getUseItemRemainingTicks()) / (float)getChargeDuration(p_174620_);
+                return CrossbowItem.isCharged(itemStack) ? 0.0F : getChargeFactor(livingEntity.getTicksUsingItem(), itemStack);
             }
         });
-        ItemProperties.register(this, new ResourceLocation("pulling"), (p_174615_, p_174616_, p_174617_, p_174618_) -> {
-            return p_174617_ != null && p_174617_.isUsingItem() && p_174617_.getUseItem() == p_174615_ && !CrossbowItem.isCharged(p_174615_) ? 1.0F : 0.0F;
+        ItemProperties.register(this, new ResourceLocation("pulling"), (itemStack, clientLevel, livingEntity, i) -> {
+            return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == itemStack && !CrossbowItem.isCharged(itemStack) ? 1.0F : 0.0F;
         });
-        ItemProperties.register(this, new ResourceLocation("charged"), (p_174610_, p_174611_, p_174612_, p_174613_) -> {
-            return p_174612_ != null && CrossbowItem.isCharged(p_174610_) ? 1.0F : 0.0F;
+        ItemProperties.register(this, new ResourceLocation("charged"), (itemStack, clientLevel, livingEntity, i) -> {
+            return livingEntity != null && CrossbowItem.isCharged(itemStack) ? 1.0F : 0.0F;
         });
-        ItemProperties.register(this, new ResourceLocation("firework"), (p_174605_, p_174606_, p_174607_, p_174608_) -> {
-            return p_174607_ != null && CrossbowItem.isCharged(p_174605_) && CrossbowItem.containsChargedProjectile(p_174605_, Items.FIREWORK_ROCKET) ? 1.0F : 0.0F;
+        ItemProperties.register(this, new ResourceLocation("firework"), (itemStack, clientLevel, livingEntity, i) -> {
+            return livingEntity != null && CrossbowItem.isCharged(itemStack) && CrossbowItem.containsChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.0F : 0.0F;
         });
+    }
+
+    public void appendHoverText(ItemStack crossbow, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(crossbow, level, tooltip, flagIn);
+        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(this.velocityMultiplier)).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(this.getChargeTime(crossbow))).withStyle(ChatFormatting.BLUE));
+        if (flagIn.isAdvanced()) {
+            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.velocityMultiplier * WeaponUtil.BASE_ARROW_VELOCITY)).withStyle(ChatFormatting.BLUE));
+        }
     }
 }

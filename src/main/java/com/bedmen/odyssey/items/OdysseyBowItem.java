@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -91,8 +92,8 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                             ((OdysseyAbstractArrow) abstractArrow).setLootingLevel((byte)j);
                         }
 
-                        bow.hurtAndBreak(1, player, (p_40665_) -> {
-                            p_40665_.broadcastBreakEvent(player.getUsedItemHand());
+                        bow.hurtAndBreak(1, player, (player1) -> {
+                            player1.broadcastBreakEvent(player.getUsedItemHand());
                         });
                         if (!ammoStack.canPickUp || flag1 || player.getAbilities().instabuild && (ammo.is(Items.SPECTRAL_ARROW) || ammo.is(Items.TIPPED_ARROW))) {
                             abstractArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
@@ -120,8 +121,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
     }
 
     public float getChargeForTime(int useTicks, ItemStack bow, float superChargeMultiplier) {
-        float chargeFactor = Float.min(getChargeFactor(useTicks, bow),1f);
-        return chargeCurve(chargeFactor * superChargeMultiplier);
+        return chargeCurve(getChargeFactor(useTicks, bow) * superChargeMultiplier);
     }
 
     public float getMaxCharge(ItemStack bow) {
@@ -148,13 +148,12 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
     }
 
     public float getChargeFactor(int useTicks, ItemStack bow){
-        return (float)useTicks / (float)(getChargeTime(bow));
+        return Mth.clamp((float)useTicks / (float)getChargeTime(bow), 0f, 1f);
     }
 
     public int getChargeTime(ItemStack bow) {
         return WeaponUtil.getRangedChargeTime(bow, this.baseMaxChargeTicks);
     }
-
 
     public void registerItemModelProperties() {
         ItemProperties.register(this, new ResourceLocation("pull"), (itemStack, clientLevel, livingEntity, i) -> {
@@ -172,9 +171,9 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
     public void appendHoverText(ItemStack bow, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(bow, level, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(this.velocityMultiplier * getMaxCharge(bow))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(WeaponUtil.getRangedChargeTime(bow, this.baseMaxChargeTicks))).withStyle(ChatFormatting.BLUE));
         if (flagIn.isAdvanced()) {
             tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.velocityMultiplier * getMaxCharge(bow) * WeaponUtil.BASE_ARROW_VELOCITY)).withStyle(ChatFormatting.BLUE));
         }
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(WeaponUtil.getRangedChargeTime(bow, this.baseMaxChargeTicks))).withStyle(ChatFormatting.BLUE));
     }
 }
