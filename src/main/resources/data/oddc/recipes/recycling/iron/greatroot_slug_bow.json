@@ -5,12 +5,8 @@
   },
   "metalCounts": [
     {
-      "metal": "copper",
-      "count": 18
-    },
-    {
       "metal": "iron",
-      "count": 4.5
+      "count": 22.5
     }
   ]
 }
