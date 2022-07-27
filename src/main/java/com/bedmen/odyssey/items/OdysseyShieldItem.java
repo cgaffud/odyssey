@@ -90,7 +90,7 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
         if (this.shieldType.bonusMessage != null) {
             tooltip.add(new TranslatableComponent(this.shieldType.bonusMessage).append(StringUtil.floatFormat(this.getBaseDamageBlock(difficulty) * this.shieldType.bonusMultiplier)).withStyle(ChatFormatting.BLUE));
         }
-        tooltip.add(new TranslatableComponent("item.oddc.shield.recovery_time").append(StringUtil.floatFormat(this.getRecoveryTime()/20f)).append("s").withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.shield.recovery_time").append(StringUtil.timeFormat(this.getRecoveryTime())).withStyle(ChatFormatting.BLUE));
         BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
     }
 

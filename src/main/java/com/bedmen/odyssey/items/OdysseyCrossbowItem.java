@@ -395,8 +395,8 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.bow.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.bow.charge_time").append(StringUtil.floatFormat(getChargeDuration(stack)/20f)).append("s").withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.velocity)).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(getChargeDuration(stack))).withStyle(ChatFormatting.BLUE));
     }
 
     //Basically isCrossbow

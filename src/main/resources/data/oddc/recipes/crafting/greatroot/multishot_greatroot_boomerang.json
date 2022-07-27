@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "A  ",
-    " BE",
-    " CD"
+    "A E",
+    " BB",
+    "CBD"
   ],
   "key": {
     "A": {
       "item": "minecraft:diamond"
     },
     "B": {
-      "item": "oddc:greatroot_boomerang"
+      "item": "oddc:greatroot"
     },
     "C": {
       "item": "minecraft:copper_ingot"

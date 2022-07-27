@@ -2,7 +2,6 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.entity.ai.BoomerangAttackGoal;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
-import com.bedmen.odyssey.entity.projectile.Boomerang;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.OdysseyCrossbowItem;
@@ -45,7 +44,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(OdysseyAbstractSkeleton.class, EntityDataSerializers.BOOLEAN);
     public final OdysseyRangedBowAttackGoal<OdysseyAbstractSkeleton> odysseyBowGoal = new OdysseyRangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
     public final RangedCrossbowAttackGoal<OdysseyAbstractSkeleton> crossBowGoal = new RangedCrossbowAttackGoal<>(this, 1.0D, 8.0F);
-    public final BoomerangAttackGoal<OdysseyAbstractSkeleton> boomerangGoal = new BoomerangAttackGoal<>(this, 0.0D, 20, 15.0F);
+    public final BoomerangAttackGoal<OdysseyAbstractSkeleton> boomerangGoal = new BoomerangAttackGoal<>(this, 0.0D, 50, 15.0F);
     private boolean crossbowMode = false;
     private int noBoomerangTick;
     private Item boomerangItem = null;
@@ -72,6 +71,8 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
                 }
                 this.noBoomerangTick = 0;
             }
+        } else {
+            this.noBoomerangTick = 0;
         }
     }
 
@@ -112,15 +113,17 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         if(this.boomerangItem != null){
             compoundTag.put("BoomerangItem", this.boomerangItem.getDefaultInstance().save(new CompoundTag()));
         }
+        compoundTag.putInt("NoBoomerangTick", this.noBoomerangTick);
         compoundTag.putBoolean("IsBaby", this.isBaby());
     }
 
     public void readAdditionalSaveData(CompoundTag compoundTag) {
-        super.readAdditionalSaveData(compoundTag);
         if(compoundTag.contains("BoomerangItem")){
             this.boomerangItem = ItemStack.of((CompoundTag) Objects.requireNonNull(compoundTag.get("BoomerangItem"))).getItem();
         }
+        this.noBoomerangTick = compoundTag.getInt("NoBoomerangTick");
         this.setBaby(compoundTag.getBoolean("IsBaby"));
+        super.readAdditionalSaveData(compoundTag);
     }
 
     protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
@@ -185,34 +188,43 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     }
 
     protected void populateBabyEquipmentSlots() {
-        Item item = random.nextInt(5) == 0 ? ItemRegistry.BONERANG.get() : ItemRegistry.BONE_BOOMERANG.get();
+        Item item = switch(random.nextInt(10)){
+            default -> ItemRegistry.WOODEN_BOOMERANG.get();
+            case 0 -> ItemRegistry.BONERANG.get();
+            case 1 -> ItemRegistry.HEAVY_BONE_BOOMERANG.get();
+            case 2 -> ItemRegistry.SHARP_BONE_BOOMERANG.get();
+            case 3 -> ItemRegistry.SPEEDY_BONE_BOOMERANG.get();
+        };
         this.boomerangItem = item;
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
         this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
-        this.reassessWeaponGoal();
     }
 
     public void reassessWeaponGoal() {
         if (!this.level.isClientSide) {
+            this.crossbowMode = false;
+            if(this.isBaby()){
+                if (this.goalSelector.getAvailableGoals().stream()
+                        .noneMatch(wrappedGoal -> wrappedGoal.getGoal() == this.boomerangGoal)){
+                    ItemStack boomerang = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BoomerangItem));
+                    if(boomerang.getItem() instanceof BoomerangItem boomerangItem){
+                        int i = boomerangItem.getChargeTime(boomerang);
+                        if (this.level.getDifficulty() == Difficulty.HARD) {
+                            i *= 3;
+                        } else {
+                            i *= 5;
+                        }
+                        this.boomerangGoal.setMinAttackInterval(i);
+                    }
+                    this.goalSelector.addGoal(4, this.boomerangGoal);
+                }
+                return;
+            }
             this.goalSelector.removeGoal(this.meleeGoal);
             this.goalSelector.removeGoal(this.bowGoal);
             this.goalSelector.removeGoal(this.odysseyBowGoal);
             this.goalSelector.removeGoal(this.crossBowGoal);
             this.goalSelector.removeGoal(this.boomerangGoal);
-            this.crossbowMode = false;
-            if(this.isBaby()){
-                ItemStack boomerang = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BoomerangItem));
-                int i = 40;
-                if(boomerang.getItem() instanceof BoomerangItem boomerangItem){
-                    i = boomerangItem.getBoomerangType().getReturnTime();
-                }
-                if (this.level.getDifficulty() != Difficulty.HARD) {
-                    i *= 2;
-                }
-                this.boomerangGoal.setMinAttackInterval(i);
-                this.goalSelector.addGoal(4, this.boomerangGoal);
-                return;
-            }
             ItemStack bow = this.getItemInHand(WeaponUtil.getHandHoldingBow(this));
             Item bowItem = bow.getItem();
             ItemStack crossbow = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem));
@@ -289,13 +301,8 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         if(this.hasBoomerang()){
             InteractionHand hand = this.getBoomerangHand();
             ItemStack itemstack = new ItemStack(this.getItemInHand(hand).getItem());
-            Boomerang boomerang = new Boomerang(this.level, this, itemstack, false);
-            double d0 = target.getX() - this.getX();
-            double d1 = target.getBbHeight()/2f - this.getEyeHeight() + target.getY() - this.getY();
-            double d2 = target.getZ() - this.getZ();
-            boomerang.shoot(d0, d1, d2, ((BoomerangItem)itemstack.getItem()).shootSpeed(1f), (float)(14 - this.level.getDifficulty().getId() * 4));
-            this.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-            this.level.addFreshEntity(boomerang);
+            BoomerangItem boomerangItem = (BoomerangItem) itemstack.getItem();
+            boomerangItem.releaseBoomerang(itemstack, this.level, this, false, target);
             this.setItemInHand(hand, ItemStack.EMPTY);
         }
     }

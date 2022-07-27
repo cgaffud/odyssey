@@ -260,23 +260,23 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
         }
     }
 
-    private void renderArmWithItem(AbstractClientPlayer p_109372_, float p_109373_, float p_109374_, InteractionHand p_109375_, float p_109376_, ItemStack p_109377_, float p_109378_, PoseStack p_109379_, MultiBufferSource p_109380_, int p_109381_) {
+    private void renderArmWithItem(AbstractClientPlayer p_109372_, float p_109373_, float p_109374_, InteractionHand p_109375_, float p_109376_, ItemStack itemStack, float p_109378_, PoseStack p_109379_, MultiBufferSource p_109380_, int p_109381_) {
         if (!p_109372_.isScoping()) {
             boolean flag = p_109375_ == InteractionHand.MAIN_HAND;
             HumanoidArm humanoidarm = flag ? p_109372_.getMainArm() : p_109372_.getMainArm().getOpposite();
             p_109379_.pushPose();
-            if (p_109377_.isEmpty()) {
+            if (itemStack.isEmpty()) {
                 if (flag && !p_109372_.isInvisible()) {
                     this.renderPlayerArm(p_109379_, p_109380_, p_109381_, p_109378_, p_109376_, humanoidarm);
                 }
-            } else if (p_109377_.is(Items.FILLED_MAP)) {
+            } else if (itemStack.is(Items.FILLED_MAP)) {
                 if (flag && this.offHandItem.isEmpty()) {
                     this.renderTwoHandedMap(p_109379_, p_109380_, p_109381_, p_109374_, p_109378_, p_109376_);
                 } else {
-                    this.renderOneHandedMap(p_109379_, p_109380_, p_109381_, p_109378_, humanoidarm, p_109376_, p_109377_);
+                    this.renderOneHandedMap(p_109379_, p_109380_, p_109381_, p_109378_, humanoidarm, p_109376_, itemStack);
                 }
-            } else if (p_109377_.getItem() instanceof CrossbowItem) {
-                boolean flag1 = CrossbowItem.isCharged(p_109377_);
+            } else if (itemStack.getItem() instanceof CrossbowItem) {
+                boolean flag1 = CrossbowItem.isCharged(itemStack);
                 boolean flag2 = humanoidarm == HumanoidArm.RIGHT;
                 int i = flag2 ? 1 : -1;
                 if (p_109372_.isUsingItem() && p_109372_.getUseItemRemainingTicks() > 0 && p_109372_.getUsedItemHand() == p_109375_) {
@@ -285,8 +285,8 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
                     p_109379_.mulPose(Vector3f.XP.rotationDegrees(-11.935F));
                     p_109379_.mulPose(Vector3f.YP.rotationDegrees((float)i * 65.3F));
                     p_109379_.mulPose(Vector3f.ZP.rotationDegrees((float)i * -9.785F));
-                    float f9 = (float)p_109377_.getUseDuration() - ((float)this.minecraft.player.getUseItemRemainingTicks() - p_109373_ + 1.0F);
-                    float f13 = f9 / (float)CrossbowItem.getChargeDuration(p_109377_);
+                    float f9 = (float)itemStack.getUseDuration() - ((float)this.minecraft.player.getUseItemRemainingTicks() - p_109373_ + 1.0F);
+                    float f13 = f9 / (float)CrossbowItem.getChargeDuration(itemStack);
                     if (f13 > 1.0F) {
                         f13 = 1.0F;
                     }
@@ -314,18 +314,18 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
                     }
                 }
 
-                this.renderItem(p_109372_, p_109377_, flag2 ? ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND : ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND, !flag2, p_109379_, p_109380_, p_109381_);
+                this.renderItem(p_109372_, itemStack, flag2 ? ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND : ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND, !flag2, p_109379_, p_109380_, p_109381_);
             } else {
                 boolean flag3 = humanoidarm == HumanoidArm.RIGHT;
                 if (p_109372_.isUsingItem() && p_109372_.getUseItemRemainingTicks() > 0 && p_109372_.getUsedItemHand() == p_109375_) {
                     int k = flag3 ? 1 : -1;
-                    switch(p_109377_.getUseAnimation()) {
+                    switch(itemStack.getUseAnimation()) {
                         case NONE:
                             this.applyItemArmTransform(p_109379_, humanoidarm, p_109378_);
                             break;
                         case EAT:
                         case DRINK:
-                            this.applyEatTransform(p_109379_, p_109373_, humanoidarm, p_109377_);
+                            this.applyEatTransform(p_109379_, p_109373_, humanoidarm, itemStack);
                             this.applyItemArmTransform(p_109379_, humanoidarm, p_109378_);
                             break;
                         case BLOCK:
@@ -337,7 +337,7 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
                             p_109379_.mulPose(Vector3f.XP.rotationDegrees(-13.935F));
                             p_109379_.mulPose(Vector3f.YP.rotationDegrees((float)k * 35.3F));
                             p_109379_.mulPose(Vector3f.ZP.rotationDegrees((float)k * -9.785F));
-                            float f8 = (float)p_109377_.getUseDuration() - ((float)this.minecraft.player.getUseItemRemainingTicks() - p_109373_ + 1.0F);
+                            float f8 = (float)itemStack.getUseDuration() - ((float)this.minecraft.player.getUseItemRemainingTicks() - p_109373_ + 1.0F);
                             float f12 = f8 / 20.0F;
                             f12 = (f12 * f12 + f12 * 2.0F) / 3.0F;
                             if (f12 > 1.0F) {
@@ -361,8 +361,8 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
                             p_109379_.mulPose(Vector3f.XP.rotationDegrees(-55.0F));
                             p_109379_.mulPose(Vector3f.YP.rotationDegrees((float)k * 35.3F));
                             p_109379_.mulPose(Vector3f.ZP.rotationDegrees((float)k * -9.785F));
-                            float f7 = (float)p_109377_.getUseDuration() - ((float)this.minecraft.player.getUseItemRemainingTicks() - p_109373_ + 1.0F);
-                            float f11 = f7 / (float)(p_109377_.getItem() instanceof BoomerangItem boomerangItem ? boomerangItem.getBoomerangType().getChargeTime() : 10);
+                            float f7 = (float)itemStack.getUseDuration() - ((float)this.minecraft.player.getUseItemRemainingTicks() - p_109373_ + 1.0F);
+                            float f11 = f7 / (float)(itemStack.getItem() instanceof BoomerangItem boomerangItem ? boomerangItem.getChargeTime(itemStack) : 10);
                             if (f11 > 1.0F) {
                                 f11 = 1.0F;
                             }
@@ -394,7 +394,7 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
                     this.applyItemArmAttackTransform(p_109379_, humanoidarm, p_109376_);
                 }
 
-                this.renderItem(p_109372_, p_109377_, flag3 ? ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND : ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND, !flag3, p_109379_, p_109380_, p_109381_);
+                this.renderItem(p_109372_, itemStack, flag3 ? ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND : ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND, !flag3, p_109379_, p_109380_, p_109381_);
             }
 
             p_109379_.popPose();
