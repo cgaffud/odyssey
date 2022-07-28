@@ -7,8 +7,9 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 public class OdysseyEnchantmentCategory {
 
     public static final EnchantmentCategory NONE = EnchantmentCategory.create("NONE", (Item item) -> false);
+    // Todo remove AXE
     public static final EnchantmentCategory AXE = EnchantmentCategory.create("AXE", (Item item) -> item instanceof AxeItem);
-    public static final EnchantmentCategory MAIN_MELEE = EnchantmentCategory.create("MAIN_MELEE", (Item item) -> item instanceof AxeItem || item instanceof SwordItem || item instanceof EquipmentMeleeItem);
+    public static final EnchantmentCategory MAIN_MELEE = EnchantmentCategory.create("MAIN_MELEE", (Item item) -> item instanceof SwordItem || item instanceof EquipmentMeleeItem);
     public static final EnchantmentCategory ALL_MELEE = EnchantmentCategory.create("ALL_MELEE", (Item item) -> MAIN_MELEE.canEnchant(item) || item instanceof DiggerItem);
     //TODO OdysseyTrident
     public static final EnchantmentCategory ODYSSEY_TRIDENT = EnchantmentCategory.create("ODYSSEY_TRIDENT", (Item item) -> item instanceof TridentItem /*|| item instanceof OdysseyTridentItem*/);

@@ -3,6 +3,7 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.equipment.SniperBowItem;
+import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -33,6 +34,8 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
     public void awardStat(Stat<?> p_36247_) {}
     @Shadow
     public float getCurrentItemAttackStrengthDelay() {return 0.0f;}
+
+    @Shadow public abstract void increaseScore(int p_36402_);
 
     private int attackStrengthTickerO;
     private boolean isSniperScoping;
@@ -88,6 +91,14 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     public boolean isSniperScoping() {
         return this.isSniperScoping;
+    }
+
+    protected void blockUsingShield(LivingEntity livingEntity) {
+        super.blockUsingShield(livingEntity);
+        if (livingEntity.getMainHandItem().getItem() instanceof EquipmentMeleeItem equipmentMeleeItem
+        && equipmentMeleeItem.meleeWeaponClass.canBreakShield) {
+            this.disableShield(true);
+        }
     }
 
     public void disableShield(boolean isGuaranteed) {
