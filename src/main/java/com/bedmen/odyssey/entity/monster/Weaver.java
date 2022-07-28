@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public class Weaver extends Monster {
     private static final UUID DAMAGE_MODIFIER_QUEEN_UUID = UUID.fromString("aae4f1af-b9c8-4221-ba0e-f4794f87a651");
     private static final AttributeModifier DAMAGE_MODIFIER_QUEEN = new AttributeModifier(DAMAGE_MODIFIER_QUEEN_UUID, "Queen damage boost", 1.0D, AttributeModifier.Operation.MULTIPLY_BASE);
     private static final Multimap<Attribute, AttributeModifier> QUEEN_MODIFIER_MAP = Util.make(() -> {
-        Multimap<Attribute, AttributeModifier> map = HashMultimap.create();
+        Multimap<Attribute, AttributeModifier> map = LinkedHashMultimap.create();
         map.put(Attributes.MOVEMENT_SPEED, SPEED_MODIFIER_QUEEN);
         map.put(Attributes.MAX_HEALTH, HEALTH_MODIFIER_QUEEN);
         map.put(Attributes.ATTACK_DAMAGE, DAMAGE_MODIFIER_QUEEN);

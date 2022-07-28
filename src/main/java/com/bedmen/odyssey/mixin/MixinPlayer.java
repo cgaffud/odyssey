@@ -2,9 +2,9 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
-import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.bedmen.odyssey.items.equipment.SniperBowItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
+import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
@@ -55,7 +55,7 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     @Inject(method = "getCurrentItemAttackStrengthDelay", at = @At("HEAD"), cancellable = true)
     private void onGetCurrentItemAttackStrengthDelay(CallbackInfoReturnable<Float> cir) {
-        if(DualWieldItem.isDualWielding(getPlayerEntity())){
+        if(WeaponUtil.isDualWielding(getPlayerEntity())){
             cir.setReturnValue((float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 10.0D));
             cir.cancel();
         }

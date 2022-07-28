@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.loot.modifiers;
 
-import com.bedmen.odyssey.items.equipment.DualWieldItem;
+import com.bedmen.odyssey.util.WeaponUtil;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -13,8 +13,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DoubleHatchetModifier extends LootModifier {
-    public DoubleHatchetModifier(LootItemCondition[] conditions) {
+public class DoubleDualWieldItemModifier extends LootModifier {
+    public DoubleDualWieldItemModifier(LootItemCondition[] conditions) {
         super(conditions);
     }
 
@@ -23,7 +23,7 @@ public class DoubleHatchetModifier extends LootModifier {
     public List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
         List<ItemStack> addList = new ArrayList<>();
         for(ItemStack itemStack : generatedLoot){
-            if(itemStack.getItem() instanceof DualWieldItem){
+            if(WeaponUtil.isDualWieldItem(itemStack)){
                 addList.add(itemStack.copy());
             }
         }
@@ -31,15 +31,15 @@ public class DoubleHatchetModifier extends LootModifier {
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<DoubleHatchetModifier> {
+    public static class Serializer extends GlobalLootModifierSerializer<DoubleDualWieldItemModifier> {
 
         @Override
-        public DoubleHatchetModifier read(ResourceLocation name, JsonObject object, LootItemCondition[] conditions) {
-            return new DoubleHatchetModifier(conditions);
+        public DoubleDualWieldItemModifier read(ResourceLocation name, JsonObject object, LootItemCondition[] conditions) {
+            return new DoubleDualWieldItemModifier(conditions);
         }
 
         @Override
-        public JsonObject write(DoubleHatchetModifier instance) {
+        public JsonObject write(DoubleDualWieldItemModifier instance) {
             return makeConditions(instance.conditions);
         }
     }
