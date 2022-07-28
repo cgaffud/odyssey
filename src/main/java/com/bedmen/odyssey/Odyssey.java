@@ -136,6 +136,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.POLAR_BEAR.get(), PolarBear.createAttributes().build());
         event.put(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBrute.createAttributes().build());
         event.put(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpider.createAttributes().build());
+        event.put(EntityTypeRegistry.WRAITH.get(), Wraith.createAttributes().build());
 //
 //        //Bosses
         event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolem.createAttributes().build());
