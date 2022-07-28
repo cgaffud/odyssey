@@ -15,8 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -90,9 +88,7 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         float superCharge = EnchantmentUtil.getSuperChargeMultiplier(boomerangStack);
         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(owner) / superCharge;
         boomerang.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.boomerangType.getVelocity(boomerangStack), inaccuracy);
-        if(multishotNum == 0){
-            level.playSound(null, boomerang, SoundEvents.PLAYER_ATTACK_SWEEP, owner instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE, 1.0F, 1.0F);
-        } else {
+        if(multishotNum != 0){
             boomerang.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         }
         return boomerang;
@@ -122,17 +118,6 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         return calculateVector((float) (xRot - Math.PI/2d), yRot);
     }
 
-    private Vector3f getThrowVectorFromTarget(LivingEntity owner, LivingEntity target, float multiShotAngle){
-        Vec3 vec3 = target.position().subtract(owner.position());
-        float xRot = (float) -Math.atan2(vec3.y, vec3.horizontalDistance());
-        float yRot = (float) Math.atan2(-vec3.x, vec3.z);
-        Vec3 upVector = calculateVector((float) (xRot - Math.PI/2d), yRot);
-        Quaternion quaternion = new Quaternion(new Vector3f(upVector), multiShotAngle, true);
-        Vector3f vector3f = new Vector3f(vec3);
-        vector3f.transform(quaternion);
-        return vector3f;
-    }
-
     private static Vec3 calculateVector(float xRot, float yRot) {
         float f1 = Mth.cos(yRot);
         float f2 = Mth.sin(yRot);
@@ -151,12 +136,8 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
 
     public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {
         ItemStack boomerangStack = playerIn.getItemInHand(handIn);
-        if (boomerangStack.getDamageValue() >= boomerangStack.getMaxDamage() - 1) {
-            return InteractionResultHolder.fail(boomerangStack);
-        } else {
-            playerIn.startUsingItem(handIn);
-            return InteractionResultHolder.consume(boomerangStack);
-        }
+        playerIn.startUsingItem(handIn);
+        return InteractionResultHolder.consume(boomerangStack);
     }
 
     /**

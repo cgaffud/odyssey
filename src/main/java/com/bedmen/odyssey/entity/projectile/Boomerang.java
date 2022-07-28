@@ -12,6 +12,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -65,24 +66,30 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
             this.dealtDamage = true;
         }
 
-        Entity entity = this.getOwner();
-        if ((this.dealtDamage || this.isNoPhysics()) && entity != null) {
+        Entity owner = this.getOwner();
+        if ((this.dealtDamage || this.isNoPhysics()) && owner != null) {
             if (!this.isAcceptibleReturnOwner()) {
                 despawn();
             } else {
                 this.setNoPhysics(true);
-                Vec3 vector3d = new Vec3(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
+                Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
                 double d0 = 0.04D * (double)this.boomerangType.getVelocity(this.thrownStack);
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
 
                 ++this.returningTicks;
             }
-        } else if (entity == null && this.getDeltaMovement().length() < 0.01){
+        } else if (owner == null && this.getDeltaMovement().length() < 0.01){
             this.despawnTicks++;
         }
 
         if(this.despawnTicks > 20){
             despawn();
+        }
+
+        float velocity = ((BoomerangItem)this.thrownStack.getItem()).getBoomerangType().getVelocity(this.thrownStack);
+        int tickFrequency = Integer.max((int)(5f/velocity), 2);
+        if (!this.level.isClientSide && this.tickCount % tickFrequency == 1) {
+            this.level.playSound(null, this, SoundEvents.PLAYER_ATTACK_SWEEP, owner instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE, 1.0f, velocity);
         }
 
         super.tick();
@@ -114,7 +121,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         if(this.dealtDamage){
             if(!this.level.isClientSide){
                 AABB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
-                this.level.getEntities(this, box, this::isBoomerangOwner)
+                this.level.getEntities(this, box, this::isNonPlayerBoomerangOwner)
                         .stream().findFirst()
                         .ifPresent(owner -> {
                             if (!this.isMultishotClone) {
@@ -134,11 +141,11 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return null;
     }
 
-    private boolean isBoomerangOwner(Entity entity){
+    private boolean isNonPlayerBoomerangOwner(Entity entity){
         if(this.getOwner() == null){
             return false;
         }
-        return entity instanceof BoomerangAttackMob && entity instanceof LivingEntity && entity.getUUID() == this.getOwner().getUUID();
+        return entity instanceof BoomerangAttackMob && entity instanceof LivingEntity && this.ownedBy(entity);
     }
 
     protected void onHitEntity(EntityHitResult entityHitResult) {
