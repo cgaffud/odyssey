@@ -207,7 +207,29 @@
               "tier": 1
             }
           ],
-          "name": "oddc:bone_boomerang"
+          "name": "oddc:sharp_bone_boomerang"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:speedy_bone_boomerang"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:heavy_bone_boomerang"
         },
         {
           "type": "minecraft:item",
@@ -272,7 +294,29 @@
               "tier": 1
             }
           ],
+          "name": "oddc:sterling_silver_mace"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
           "name": "oddc:clover_stone_sword"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "oddc:enchant_with_tier",
+              "tier": 1
+            }
+          ],
+          "name": "oddc:clover_stone_mace"
         },
         {
           "type": "minecraft:item",

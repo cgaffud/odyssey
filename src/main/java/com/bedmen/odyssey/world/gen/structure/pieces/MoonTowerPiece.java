@@ -150,7 +150,7 @@ public class MoonTowerPiece extends TemplateStructurePiece {
             if ("beefy_zombie".equals(dataMarker) && zombie.getItemBySlot(EquipmentSlot.CHEST).isEmpty())
                 zombie.setItemSlot(EquipmentSlot.CHEST, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_CHESTPLATE.get(), random, 1, 0.75));
 
-            zombie.setItemInHand(InteractionHand.MAIN_HAND, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_AXE.get(), random, 1, 1.0));
+            zombie.setItemInHand(InteractionHand.MAIN_HAND, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_MACE.get(), random, 1, 1.0));
 
             zombie.finalizeSpawn(accessor, accessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, (SpawnGroupData)null, (CompoundTag)null);
             accessor.addFreshEntityWithPassengers(zombie);

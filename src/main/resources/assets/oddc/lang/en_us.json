@@ -450,5 +450,13 @@
   "item.oddc.boomerang.damage": "Damage: ",
   "item.oddc.boomerang.turnaround_time": "Turnaround Time: ",
   "block.oddc.iron_cobweb": "Iron Cobweb",
-  "item.oddc.iron_fiber": "Iron Fiber"
+  "item.oddc.iron_fiber": "Iron Fiber",
+  "item.oddc.wooden_mace": "Wooden Mace",
+  "item.oddc.stone_mace": "Stone Mace",
+  "item.oddc.iron_mace": "Iron Mace",
+  "item.oddc.golden_mace": "Golden Mace",
+  "item.oddc.diamond_mace": "Diamond Mace",
+  "item.oddc.sterling_silver_mace": "Sterling Silver Mace",
+  "item.oddc.netherite_mace": "Netherite Mace",
+  "item.oddc.clover_stone_mace": "Clover Stone Mace"
 }

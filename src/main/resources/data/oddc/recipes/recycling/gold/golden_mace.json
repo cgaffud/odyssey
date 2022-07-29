@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:golden_mace"
+  },
+  "metalCounts": [
+    {
+      "metal": "gold",
+      "count": 27
+    }
+  ]
+}

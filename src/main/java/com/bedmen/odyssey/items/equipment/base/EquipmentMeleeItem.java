@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items.equipment.base;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.items.MeleeWeaponClass;
+import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import com.bedmen.odyssey.util.WeaponUtil;
 import com.google.common.collect.*;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -124,6 +126,11 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
     {
         return this.getInnateEnchantmentLevel(enchantment) == 0 && enchantment.category.canEnchant(stack.getItem());
+    }
+
+    public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType)
+    {
+        return this.getTier() == OdysseyTiers.WOOD ? 200 : 0;
     }
 
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {

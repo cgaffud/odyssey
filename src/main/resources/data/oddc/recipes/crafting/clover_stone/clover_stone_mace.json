@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "ABA",
+    " B "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:clover_stone"
+    },
+    "B": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "oddc:clover_stone_mace"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:iron_mace"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 27
+    }
+  ]
+}
