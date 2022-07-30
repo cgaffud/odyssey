@@ -81,7 +81,6 @@ public class Odyssey
             OdysseyLootItemFunctions.registerFunctions();
             OdysseyTrades.addTrades();
             EntityEvents.initEntityMap();
-            ((RangedAttribute) Attributes.ARMOR).minValue = -40.0d;
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
 
             //Equipment / Enchantments
