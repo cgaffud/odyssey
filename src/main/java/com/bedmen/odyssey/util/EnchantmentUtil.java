@@ -408,4 +408,8 @@ public class EnchantmentUtil {
     public static int getLoyalty(ItemStack itemStack){
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.LOYALTY.get(), itemStack);
     }
+
+    public static int getImpenetrable(LivingEntity livingEntity) {
+        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.IMPENETRABLE.get(), livingEntity);
+    }
 }

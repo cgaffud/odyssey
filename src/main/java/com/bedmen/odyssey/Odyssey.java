@@ -86,6 +86,7 @@ public class Odyssey
 
             //Equipment / Enchantments
             EquipmentArmorItem.initEquipment();
+            EquipmentShieldItem.initEquipment();
             EquipmentMeleeItem.initEquipment();
             EquipmentItem.initEquipment();
             EquipmentPickaxeItem.initEquipment();

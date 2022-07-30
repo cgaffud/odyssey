@@ -178,6 +178,7 @@ public class ItemRegistry {
     public static final LevEnchSup MOON_BLESSING = new LevEnchSup(EnchantmentRegistry.MOON_BLESSING);
     public static final LevEnchSup SKY_BLESSING = new LevEnchSup(EnchantmentRegistry.SKY_BLESSING);
     public static final LevEnchSup BOTANICAL = new LevEnchSup(EnchantmentRegistry.BOTANICAL);
+    public static final LevEnchSup[] IMPENETRABLE = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.IMPENETRABLE, 1);
 
     //Tomes
     public static final RegistryObject<Item> HEAVY_TOME = ITEMS.register("heavy_tome", () -> new TomeItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC), 0x6C3423, BANE_OF_ARTHROPODS[1], SHATTERING[1], KNOCKBACK[1], PUNCH[1], BLAST_PROTECTION[1]));
@@ -320,10 +321,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> TURTLE_LEGGINGS = ITEMS.register("turtle_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterials.TURTLE, EquipmentSlot.LEGS, new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.ARMOR), DEPTH_STRIDER[1]));
     public static final RegistryObject<Item> TURTLE_BOOTS = ITEMS.register("turtle_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterials.TURTLE, EquipmentSlot.FEET, new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.ARMOR), DEPTH_STRIDER[1]));
 
-    public static final RegistryObject<Item> WOODEN_SHIELD = ITEMS.register("wooden_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyShieldItem.ShieldType.WOODEN));
-    public static final RegistryObject<Item> COPPER_SHIELD = ITEMS.register("copper_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyShieldItem.ShieldType.COPPER));
-    public static final RegistryObject<Item> RUSTY_SHIELD = ITEMS.register("rusty_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyShieldItem.ShieldType.RUSTY));
-    public static final RegistryObject<Item> GOLDEN_SHIELD = ITEMS.register("golden_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyShieldItem.ShieldType.GOLDEN));
+    public static final RegistryObject<Item> WOODEN_SHIELD = ITEMS.register("wooden_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.WOODEN));
+    public static final RegistryObject<Item> COPPER_SHIELD = ITEMS.register("copper_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.COPPER));
+    public static final RegistryObject<Item> RUSTY_SHIELD = ITEMS.register("rusty_shield", () -> new EquipmentShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.RUSTY, IMPENETRABLE[1]));
+    public static final RegistryObject<Item> GOLDEN_SHIELD = ITEMS.register("golden_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.GOLDEN));
 
     private static final Map<Attribute, Supplier<AttributeModifier>> DAMAGE_BOOST = Map.of(Attributes.ATTACK_DAMAGE, () -> new AttributeModifier("Weapon modifier", 0.25, AttributeModifier.Operation.ADDITION));
     public static final RegistryObject<Item> THORNMAIL_HELMET = ITEMS.register("thornmail_helmet", () -> new AttributeArmorItem(OdysseyArmorMaterials.THORNMAIL, EquipmentSlot.HEAD, DAMAGE_BOOST, new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.ARMOR)));
@@ -357,8 +358,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ARCTIC_LEGGINGS = ITEMS.register("arctic_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterials.ARCTIC, EquipmentSlot.LEGS, new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.ARMOR), FIRE_PROTECTION[1]));
     public static final RegistryObject<Item> ARCTIC_BOOTS = ITEMS.register("arctic_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterials.ARCTIC, EquipmentSlot.FEET, new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.ARMOR), FIRE_PROTECTION[1]));
 
-    public static final RegistryObject<Item> REINFORCED_SHIELD = ITEMS.register("reinforced_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyShieldItem.ShieldType.REINFORCED));
-    public static final RegistryObject<Item> DIAMOND_SHIELD = ITEMS.register("diamond_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyShieldItem.ShieldType.DIAMOND));
+    public static final RegistryObject<Item> REINFORCED_SHIELD = ITEMS.register("reinforced_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.REINFORCED));
+    public static final RegistryObject<Item> DIAMOND_SHIELD = ITEMS.register("diamond_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.DIAMOND));
 
     public static final RegistryObject<Item> NETHERITE_HORSE_ARMOR = ITEMS.register("netherite_horse_armor", () -> new HorseArmorItem(OdysseyArmorMaterials.NETHERITE.getTotalDefense(), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/horse/armor/horse_armor_netherite.png"), (new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyCreativeModeTab.ARMOR)));
 

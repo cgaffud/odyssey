@@ -90,7 +90,7 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
                 boolean pattern = BlockItem.getBlockEntityData(itemStack) != null;
                 poseStack.pushPose();
                 poseStack.scale(1.0F, -1.0F, -1.0F);
-                Material material = odysseyShieldItem.getShieldType().getRenderMaterial(pattern);
+                Material material = odysseyShieldItem.shieldType.getRenderMaterial(pattern);
                 VertexConsumer vertexconsumer = material.sprite().wrap(ItemRenderer.getFoilBufferDirect(multiBufferSource, this.shieldModel.renderType(material.atlasLocation()), true, itemStack.hasFoil()));
                 this.shieldModel.handle().render(poseStack, vertexconsumer, p_108834_, p_108835_, 1.0F, 1.0F, 1.0F, 1.0F);
                 if (pattern) {

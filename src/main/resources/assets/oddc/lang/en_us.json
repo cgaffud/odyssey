@@ -460,5 +460,6 @@
   "item.oddc.netherite_mace": "Netherite Mace",
   "item.oddc.clover_stone_mace": "Clover Stone Mace",
   "enchantment.oddc.xerophilic": "Xerophilic",
-  "enchantment.oddc.cryophilic": "Cryophilic"
+  "enchantment.oddc.cryophilic": "Cryophilic",
+  "enchantment.oddc.impenetrable": "Impenetrable"
 }
