@@ -32,16 +32,22 @@ public class CondAmpMeleeItem extends EquipmentMeleeItem {
         return 0.0f;
     }
 
-    public static class Binary extends CondAmpMeleeItem implements INeedsToRegisterItemModelProperty {
+    public static class Numerical extends CondAmpMeleeItem implements INeedsToRegisterItemModelProperty {
 
-        public Binary(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, Properties builderIn, LevEnchSup levEnchSup) {
+        private int intervals;
+        public Numerical(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, int numTextures, Properties builderIn, LevEnchSup levEnchSup) {
             super(tier, attackDamageIn, attackSpeedIn, canSweep, builderIn, levEnchSup);
+            this.intervals = numTextures-1;
         }
 
         public void registerItemModelProperties() {
             ItemProperties.register(this, new ResourceLocation("active"), (itemStack, clientLevel, livingEntity, i) -> {
-                if ((livingEntity != null) && (activeFraction(itemStack, livingEntity) > 0.0f)) {
-                    return 1.0F;
+                if ((livingEntity == null) || (activeFraction(itemStack, livingEntity) == 0))
+                    return 0.0F;
+                for (int j = 0; j < this.intervals; j++) {
+                    float frac = activeFraction(itemStack, livingEntity);
+                    if ((frac > ((float)j)/this.intervals) && (frac <= ((float)(j+1)/this.intervals)))
+                        return j+1;
                 }
                 return 0.0F;
             });
