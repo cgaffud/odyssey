@@ -14,6 +14,7 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.trades.OdysseyTrades;
+import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.FeatureGen;
@@ -97,6 +98,7 @@ public class Odyssey
             EnchantmentUtil.init();
 
             //Generation
+            BiomeUtil.init();
             OreGen.registerOres();
             FeatureGen.registerFeatures();
             TreeGen.registerTrees();

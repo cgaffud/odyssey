@@ -11,6 +11,7 @@ import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.items.equipment.base.*;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -176,7 +177,7 @@ public class ItemRegistry {
     public static final LevEnchSup SUN_BLESSING = new LevEnchSup(EnchantmentRegistry.SUN_BLESSING);
     public static final LevEnchSup MOON_BLESSING = new LevEnchSup(EnchantmentRegistry.MOON_BLESSING);
     public static final LevEnchSup SKY_BLESSING = new LevEnchSup(EnchantmentRegistry.SKY_BLESSING);
-    public static final LevEnchSup HYDROCLIMATIC = new LevEnchSup(EnchantmentRegistry.HYDROCLIMATIC);
+    public static final LevEnchSup BOTANICAL = new LevEnchSup(EnchantmentRegistry.BOTANICAL);
 
     //Tomes
     public static final RegistryObject<Item> HEAVY_TOME = ITEMS.register("heavy_tome", () -> new TomeItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC), 0x6C3423, BANE_OF_ARTHROPODS[1], SHATTERING[1], KNOCKBACK[1], PUNCH[1], BLAST_PROTECTION[1]));
@@ -252,7 +253,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SLEDGEAXE = ITEMS.register("sledgeaxe", () -> new EquipmentMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_2_UNCRAFTABLE, MeleeWeaponClass.BATTLE_AXE,  10f, SMITE[1], SHATTERING[1]));
     public static final RegistryObject<Item> BLUNT_SABRE = ITEMS.register("blunt_sabre", () -> new EquipmentMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_2_UNCRAFTABLE, MeleeWeaponClass.SABRE, 8f, BANE_OF_ARTHROPODS[1], SWEEPING_EDGE[1]));
     public static final RegistryObject<Item> MOON_SWORD = ITEMS.register("moon_sword", () -> new CondAmpMeleeItem.Binary(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.SWORD, 7f, MOON_BLESSING));
-    public static final RegistryObject<Item> RAIN_SWORD = ITEMS.register("rain_sword", () -> new CondAmpMeleeItem.Gradient(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.SWORD, 7f, (Level level, Entity entity) -> level.getBiome(entity.eyeBlockPosition()).value().getFoliageColor(), 9551193, HYDROCLIMATIC));
+    public static final RegistryObject<Item> RAIN_SWORD = ITEMS.register("rain_sword", () -> new CondAmpMeleeItem.Gradient(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.SWORD, 7f, (Level level, Entity entity) -> BiomeUtil.getFoliageColor(BiomeUtil.getClimate(level.getBiome(entity.eyeBlockPosition()))), 9551193, BOTANICAL));
 
     public static final RegistryObject<Item> BROKEN_SEA_SWORD = ITEMS.register("broken_sea_sword", () -> new EquipmentMeleeItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.SWORD, 7f, DOWNPOUR[1]));
 

@@ -369,7 +369,7 @@
   "item.oddc.sun_sword": "Sunblade",
   "item.oddc.moon_sword": "Moonblade",
   "item.oddc.rain_sword": "Stabsprout",
-  "enchantment.oddc.hydroclimatic": "Hydroclimatic",
+  "enchantment.oddc.botanical": "Botanical",
   "enchantment.oddc.sun_blessing": "Sun's Blessing",
   "enchantment.oddc.moon_blessing": "Moon's Blessing",
   "item.oddc.sledgeaxe": "Sledgeaxe",
@@ -458,5 +458,7 @@
   "item.oddc.diamond_mace": "Diamond Mace",
   "item.oddc.sterling_silver_mace": "Sterling Silver Mace",
   "item.oddc.netherite_mace": "Netherite Mace",
-  "item.oddc.clover_stone_mace": "Clover Stone Mace"
+  "item.oddc.clover_stone_mace": "Clover Stone Mace",
+  "enchantment.oddc.xerophilic": "Xerophilic",
+  "enchantment.oddc.cryophilic": "Cryophilic"
 }

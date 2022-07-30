@@ -29,7 +29,7 @@ public class CondAmpMeleeItem extends EquipmentMeleeItem {
 
     public static float activeFraction(ItemStack itemStack, LivingEntity livingEntity) {
         if (itemStack.getItem() instanceof CondAmpMeleeItem lightMeleeItem && lightMeleeItem.enchSup.get() instanceof ConditionalAmpEnchantment conditionalAmpEnchantment)
-            return conditionalAmpEnchantment.getActiveFraction(livingEntity.level, livingEntity);
+            return conditionalAmpEnchantment.getActiveFactor(livingEntity.level, livingEntity);
         return 0.0f;
     }
 

@@ -9,30 +9,29 @@ import net.minecraft.world.level.Level;
 
 public class ConditionalAmpEnchantment extends Enchantment {
 
-    public interface AttackBoostCalculator {
-        float getBoost(BlockPos pos, Level level);
+    public interface AttackBoostFactorFunction {
+        float getBoostFactor(BlockPos pos, Level level);
     }
 
     private int maxLevel;
-    private AttackBoostCalculator calculator;
-    private float attackBoost;
+    private AttackBoostFactorFunction factorFunction;
+    private float baseMaxBoost;
 
-    public ConditionalAmpEnchantment(Rarity rarity, int maxLevel, float attackBoost, AttackBoostCalculator calculator, EquipmentSlot... slots) {
+    public ConditionalAmpEnchantment(Rarity rarity, int maxLevel, float baseMaxBoost, AttackBoostFactorFunction factorFunction, EquipmentSlot... slots) {
         super(rarity, EnchantmentCategory.BREAKABLE, slots);
         this.maxLevel = maxLevel;
-        this.calculator = calculator;
-        this.attackBoost = attackBoost;
+        this.factorFunction = factorFunction;
+        this.baseMaxBoost = baseMaxBoost;
     }
 
     public float getActiveBoost(Level level, LivingEntity livingEntity) {
-        return this.getActiveFraction(level,livingEntity) * this.attackBoost;
+        return this.getActiveFactor(level,livingEntity) * this.baseMaxBoost;
     }
 
-    public float getActiveFraction(Level level, LivingEntity livingEntity){
+    public float getActiveFactor(Level level, LivingEntity livingEntity){
         BlockPos eyeLevel = new BlockPos(livingEntity.getX(), livingEntity.getEyeY(), livingEntity.getZ());
-        return this.calculator.getBoost(eyeLevel, level);
+        return this.factorFunction.getBoostFactor(eyeLevel, level);
     }
-
 
     /**
      * Returns the maximum level that the enchantment can have.
