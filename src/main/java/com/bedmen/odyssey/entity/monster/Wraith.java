@@ -65,7 +65,6 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
 
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
         this.targetSelector.addGoal(3, new ResetUniversalAngerTargetGoal<>(this, false));
@@ -97,9 +96,9 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
                     i = 40;
 
                 this.bowGoal.setMinAttackInterval(i);
-                this.goalSelector.addGoal(4, this.bowGoal);
+                this.goalSelector.addGoal(2, this.bowGoal);
             } else {
-                this.goalSelector.addGoal(4, this.meleeGoal);
+                this.goalSelector.addGoal(2, this.meleeGoal);
             }
 
         }
@@ -168,6 +167,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     }
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
+        System.out.println("populateDefaultEquipmentSolts");
         super.populateDefaultEquipmentSlots(difficultyInstance);
         Item item = random.nextBoolean() ? ItemRegistry.BOW.get() : ItemRegistry.STERLING_SILVER_SWORD.get();
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());

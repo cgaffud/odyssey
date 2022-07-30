@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class WraithRenderer<T extends Wraith> extends MobRenderer<T, WraithModel<T>> {
@@ -16,6 +17,7 @@ public class WraithRenderer<T extends Wraith> extends MobRenderer<T, WraithModel
 
     public WraithRenderer(EntityRendererProvider.Context context) {
         super(context, new WraithModel<>(context.bakeLayer(WraithModel.LAYER_LOCATION)), 0.8F);
+        this.addLayer(new ItemInHandLayer<>(this));
     }
 
     protected void scale(T entity, PoseStack poseStack, float partialTicks) {
