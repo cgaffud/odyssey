@@ -30,6 +30,8 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
+import net.minecraft.client.renderer.entity.ZombieRenderer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -139,6 +141,7 @@ public class ClientEvents {
             EntityRenderers.register(EntityTypeRegistry.POLAR_BEAR.get(), PolarBearRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBruteRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpiderRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.WRAITH.get(), WraithRenderer::new);
 
             //Boss Renderings
             EntityRenderers.register(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
@@ -193,6 +196,7 @@ public class ClientEvents {
         event.registerLayerDefinition(WeaverModel.LAYER_LOCATION, WeaverModel::createBodyLayer);
         event.registerLayerDefinition(AbandonedIronGolemModel.LAYER_LOCATION, AbandonedIronGolemModel::createBodyLayer);
         event.registerLayerDefinition(BabyLeviathanModel.LAYER_LOCATION, BabyLeviathanModel::createBodyLayer);
+        event.registerLayerDefinition(WraithModel.LAYER_LOCATION, WraithModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanHeadModel.LAYER_LOCATION, MineralLeviathanHeadModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanBodyModel.LAYER_LOCATION, MineralLeviathanBodyModel::createBodyLayer);
     }
