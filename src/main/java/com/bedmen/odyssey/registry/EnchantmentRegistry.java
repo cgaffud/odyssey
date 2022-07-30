@@ -5,12 +5,16 @@ import com.bedmen.odyssey.enchantment.OdysseyEnchantmentCategory;
 import com.bedmen.odyssey.enchantment.odyssey.*;
 import com.bedmen.odyssey.enchantment.upgrades.*;
 import com.bedmen.odyssey.enchantment.vanilla_copies.*;
+import com.bedmen.odyssey.util.BiomeUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.ArrowDamageEnchantment;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -25,7 +29,7 @@ public class EnchantmentRegistry {
         ENCHANTMENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    //Vanilla Copies
+    // ------ Vanilla Copies ------
 
     //Protections
     public static final RegistryObject<Enchantment> ALL_DAMAGE_PROTECTION = ENCHANTMENTS.register("protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.COMMON, OdysseyProtectionEnchantment.Type.ALL, EnchantmentCategory.ARMOR, ARMOR_SLOTS));
@@ -58,18 +62,24 @@ public class EnchantmentRegistry {
     //Other
     public static final RegistryObject<Enchantment> THORNS = ENCHANTMENTS.register("thorns", () -> new OdysseyThornsEnchantment(Enchantment.Rarity.VERY_RARE, ARMOR_SLOTS));
 
-    //Odyssey Enchantments
+    // ------ Odyssey Enchantments ------
+    
+    // Conditional Enchantments
+    public static final RegistryObject<Enchantment> SUN_BLESSING = ENCHANTMENTS.register("sun_blessing",() -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, EnchantmentRegistry::getSunBoost, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> MOON_BLESSING = ENCHANTMENTS.register("moon_blessing",() -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, EnchantmentRegistry::getMoonBoost, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> SKY_BLESSING = ENCHANTMENTS.register("sky_blessing",()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, EnchantmentRegistry::getSkyBoost, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> BOTANICAL = ENCHANTMENTS.register("botanical", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, EnchantmentRegistry::getHotHumidBoost, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> XEROPHILIC = ENCHANTMENTS.register("xerophilic", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, EnchantmentRegistry::getHotDryBoost, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> CRYOPHILIC = ENCHANTMENTS.register("cryophilic", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, EnchantmentRegistry::getColdBoost, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> VOID_AMPLIFICATION = ENCHANTMENTS.register("void_amplification", () -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 4.0f, EnchantmentRegistry::getBoostFromVoid, EquipmentSlot.MAINHAND));
+    
+    //Misc Enchantments
     public static final RegistryObject<Enchantment> SHATTERING = ENCHANTMENTS.register("shattering", () -> new ShatteringEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> SUPER_CHARGE = ENCHANTMENTS.register("super_charge", () -> new SuperChargeEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> ICE_PROTECTION = ENCHANTMENTS.register("ice_protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.UNCOMMON, OdysseyProtectionEnchantment.Type.ICE, EnchantmentCategory.ARMOR_CHEST, EquipmentSlot.CHEST));
     public static final RegistryObject<Enchantment> DOWNPOUR = ENCHANTMENTS.register("downpour", () -> new OdysseyDamageEnchantment(Enchantment.Rarity.RARE, OdysseyDamageEnchantment.DamageType.HYDROPHOBIC, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> FLING = ENCHANTMENTS.register("fling", () -> new FlingEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> KINETIC_PROTECTION = ENCHANTMENTS.register("kinetic_protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.UNCOMMON, OdysseyProtectionEnchantment.Type.KINETIC, EnchantmentCategory.ARMOR_FEET, EquipmentSlot.FEET));
-    public static final RegistryObject<Enchantment> SUN_BLESSING = ENCHANTMENTS.register("sun_blessing",() -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level) && ((level.getDayTime() % 24000L) < 12000L)) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
-    public static final RegistryObject<Enchantment> MOON_BLESSING = ENCHANTMENTS.register("moon_blessing",() -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level) && ((level.getDayTime() % 24000L) >= 12000L) ) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
-    public static final RegistryObject<Enchantment> SKY_BLESSING = ENCHANTMENTS.register("sky_blessing",()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, (BlockPos pos, Level level) -> (getsOverworldLight(pos, level)) ? 1.0f : 0.0f, EquipmentSlot.MAINHAND));
-    public static final RegistryObject<Enchantment> HYDROCLIMATIC = ENCHANTMENTS.register("hydroclimatic", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 1.5f, (BlockPos pos, Level level) -> (level.isRaining() ? 1.0f : level.getBiome(pos).value().getDownfall()), EquipmentSlot.MAINHAND));
-    public static final RegistryObject<Enchantment> VOID_AMPLIFICATION = ENCHANTMENTS.register("void_amplification", () -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 4.0f, EnchantmentRegistry::getBoostFromVoid, EquipmentSlot.MAINHAND));
 
     //Volcanic Enchantments
     public static final RegistryObject<Enchantment> VULCAN_STRIDER = ENCHANTMENTS.register("vulcan_strider", () -> new VulcanStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
@@ -90,9 +100,44 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> DROWNING = ENCHANTMENTS.register("drowning", () -> new BasicCurseEnchantment(Enchantment.Rarity.RARE, 1, EquipmentSlot.values()));
     public static final RegistryObject<Enchantment> VOLATILE = ENCHANTMENTS.register("volatile", () -> new BasicCurseEnchantment(Enchantment.Rarity.RARE, OdysseyEnchantmentCategory.ALL_MELEE, 1, EquipmentSlot.values()));
 
-    //Damage Boost Calculators
-    private static boolean getsOverworldLight(BlockPos pos, Level level) {
-        return (level.canSeeSky(pos) && !level.isThundering() && !level.isRaining() && (level.dimension() == Level.OVERWORLD));
+    //Damage Boost Functions
+    private static float getSunBoost(BlockPos pos, Level level) {
+        return getSkyBoost(pos, level) * (((level.getDayTime() % 24000L) < 12000L) ? 1.0f : 0.0f);
+    }
+
+    private static float getMoonBoost(BlockPos pos, Level level) {
+        return 1.0f - getSunBoost(pos, level);
+    }
+    
+    private static float getSkyBoost(BlockPos pos, Level level) {
+        return (level.canSeeSky(pos) && !level.isThundering() && !level.isRaining() && (level.dimension() == Level.OVERWORLD)) ? 1.0f : 0.0f;
+    }
+
+    public static float getHotHumidBoost(BlockPos pos, Level level) {
+        return Mth.sqrt(getHotBoost(pos, level) * getHumidBoost(pos, level));
+    }
+
+    private static float getHotDryBoost(BlockPos pos, Level level) {
+        return Mth.sqrt(getHotBoost(pos, level) * getDryBoost(pos, level));
+    }
+
+    private static float getHotBoost(BlockPos pos, Level level) {
+        return Mth.clamp(BiomeUtil.getClimate(level.getBiome(pos)).temperature, 0.0f, 1.0f);
+    }
+
+    private static float getColdBoost(BlockPos pos, Level level) {
+        return 1.0f - getHotBoost(pos, level);
+    }
+
+    private static float getHumidBoost(BlockPos pos, Level level) {
+        Holder<Biome> biomeHolder = level.getBiome(pos);
+        Biome biome = level.getBiome(pos).value();
+        System.out.println(BiomeUtil.getClimate(biomeHolder).downfall);
+        return level.isRaining() && biome.getPrecipitation() == Biome.Precipitation.RAIN ? 1.0f : Mth.clamp(BiomeUtil.getClimate(biomeHolder).downfall, 0.0f, 1.0f);
+    }
+
+    private static float getDryBoost(BlockPos pos, Level level) {
+        return 1f - getHumidBoost(pos, level);
     }
 
     private static float quadraticMagicFunction(float y, float intercept, boolean incr){

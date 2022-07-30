@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.monster.Weaver;
+import com.bedmen.odyssey.items.MeleeWeaponClass;
 import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.StringUtil;
@@ -22,8 +23,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class WeaverFangDaggerItem extends EquipmentMeleeItem {
-    public WeaverFangDaggerItem(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, Properties builderIn, LevEnchSup... levEnchSups) {
-        super(tier, attackDamageIn, attackSpeedIn, canSweep, builderIn, levEnchSups);
+
+    public WeaverFangDaggerItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, LevEnchSup... levEnchSups) {
+        super(builderIn, tier, meleeWeaponClass, damage, levEnchSups);
     }
 
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity target)
@@ -39,8 +41,8 @@ public class WeaverFangDaggerItem extends EquipmentMeleeItem {
         return false;
     }
 
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(itemStack, level, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("item.oddc.weaver_fang.web_chance").append(StringUtil.percentFormat(Weaver.WEB_ATTACK_CHANCE)).withStyle(ChatFormatting.BLUE));
     }
 }

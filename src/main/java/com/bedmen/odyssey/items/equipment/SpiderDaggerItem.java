@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.items.MeleeWeaponClass;
 import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.StringUtil;
@@ -22,26 +23,25 @@ import java.util.List;
 
 public class SpiderDaggerItem extends EquipmentMeleeItem {
 
-    private int poisonTime;
+    private static final int POISON_TICKS = 40;
 
-    public SpiderDaggerItem(Tier tier, float attackDamageIn, float attackSpeedIn, int poisonTime, boolean canSweep, Properties builderIn, LevEnchSup... levEnchSups) {
-        super(tier, attackDamageIn, attackSpeedIn, canSweep, builderIn, levEnchSups);
-        this.poisonTime = poisonTime;
+    public SpiderDaggerItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, LevEnchSup... levEnchSups) {
+        super(builderIn, tier, meleeWeaponClass, damage, levEnchSups);
     }
 
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity target)
     {
         if(!player.level.isClientSide && target instanceof LivingEntity livingTarget) {
             if (player.getMainHandItem().is(ItemRegistry.SPIDER_DAGGER.get())) {
-                livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, this.poisonTime, 1));
+                livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, POISON_TICKS, 1));
             }
         }
         return false;
     }
 
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.spider_dagger.damage_modifier", StringUtil.floatFormat(((float)this.poisonTime) / 20)).withStyle(ChatFormatting.BLUE));
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(itemStack, level, tooltip, flagIn);
+        tooltip.add(new TranslatableComponent("item.oddc.spider_dagger.damage_modifier", StringUtil.floatFormat((float)POISON_TICKS / 20f)).withStyle(ChatFormatting.BLUE));
     }
 
 }

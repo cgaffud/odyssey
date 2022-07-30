@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " AB",
+    "CAB",
     "A B",
-    " AB"
+    "CAB"
   ],
   "key": {
     "A": {
@@ -11,6 +11,9 @@
     },
     "B": {
       "item": "oddc:golden_fiber"
+    },
+    "C": {
+      "item": "minecraft:gold_ingot"
     }
   },
   "result": {

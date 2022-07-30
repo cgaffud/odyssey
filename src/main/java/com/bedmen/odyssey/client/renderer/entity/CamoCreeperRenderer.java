@@ -44,12 +44,13 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
             return STONE_CREEPER_LOCATION;
         }
 
-        if(biome.getBiomeCategory() == Biome.BiomeCategory.DESERT){
-            return DESERT_CREEPER_LOCATION;
-        }
-
         if(biome.coldEnoughToSnow(odysseyCreeper.blockPosition())){
             return SNOW_CREEPER_LOCATION;
+        }
+
+        if(biome.getBiomeCategory() == Biome.BiomeCategory.DESERT
+        || biome.getBiomeCategory() == Biome.BiomeCategory.BEACH){
+            return DESERT_CREEPER_LOCATION;
         }
 
         return GRAY_CREEPER_LOCATION;

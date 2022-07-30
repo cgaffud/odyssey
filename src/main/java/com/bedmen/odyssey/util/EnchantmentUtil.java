@@ -67,7 +67,9 @@ public class EnchantmentUtil {
                 (ConditionalAmpEnchantment) EnchantmentRegistry.SUN_BLESSING.get(),
                 (ConditionalAmpEnchantment) EnchantmentRegistry.MOON_BLESSING.get(),
                 (ConditionalAmpEnchantment) EnchantmentRegistry.SKY_BLESSING.get(),
-                (ConditionalAmpEnchantment) EnchantmentRegistry.HYDROCLIMATIC.get(),
+                (ConditionalAmpEnchantment) EnchantmentRegistry.BOTANICAL.get(),
+                (ConditionalAmpEnchantment) EnchantmentRegistry.XEROPHILIC.get(),
+                (ConditionalAmpEnchantment) EnchantmentRegistry.CRYOPHILIC.get(),
                 (ConditionalAmpEnchantment) EnchantmentRegistry.VOID_AMPLIFICATION.get()
         );
 //        int i = 0;
@@ -262,7 +264,9 @@ public class EnchantmentUtil {
         if (entity != null) {
             for (ConditionalAmpEnchantment enchantment : CONDITIONAL_AMP_ENCHANTS) {
                 int level = EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemStack);
-                boost += ((float) level) * enchantment.getActiveBoost(entity.getLevel(), entity);
+                if (level > 0) {
+                    boost += ((float) level) * enchantment.getActiveBoost(entity.getLevel(), entity);
+                }
             }
         }
         return boost;

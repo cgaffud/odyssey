@@ -1,0 +1,7 @@
+{
+  "type": "oddc:weaving",
+  "ingredient": {
+    "item": "minecraft:iron_ingot"
+  },
+  "result": "oddc:iron_cobweb"
+}

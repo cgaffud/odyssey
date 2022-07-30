@@ -61,13 +61,13 @@ public class BoomerangAttackGoal<T extends net.minecraft.world.entity.Mob & Boom
         LivingEntity livingentity = this.mob.getTarget();
         if (livingentity != null) {
             double d0 = this.mob.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
-            boolean flag = this.mob.getSensing().hasLineOfSight(livingentity);
-            boolean flag1 = this.seeTime > 0;
-            if (flag != flag1) {
+            boolean hasLineOfSight = this.mob.getSensing().hasLineOfSight(livingentity);
+            boolean hasPositiveSeeTime = this.seeTime > 0;
+            if (hasLineOfSight != hasPositiveSeeTime) {
                 this.seeTime = 0;
             }
 
-            if (flag) {
+            if (hasLineOfSight) {
                 ++this.seeTime;
             } else {
                 --this.seeTime;
@@ -105,15 +105,14 @@ public class BoomerangAttackGoal<T extends net.minecraft.world.entity.Mob & Boom
             } else {
                 this.mob.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
             }
-
             if (this.mob.isUsingItem()) {
-                ItemStack bow = this.mob.getUseItem();
-                BoomerangItem boomerangItem = (BoomerangItem)bow.getItem();
-                if (!flag && this.seeTime < -60) {
+                ItemStack boomerangStack = this.mob.getUseItem();
+                BoomerangItem boomerangItem = (BoomerangItem)boomerangStack.getItem();
+                if (!hasLineOfSight && this.seeTime < -60) {
                     this.mob.stopUsingItem();
-                } else if (flag) {
+                } else if (hasLineOfSight) {
                     int i = this.mob.getTicksUsingItem();
-                    if (i >= boomerangItem.getBoomerangType().getReturnTime()) {
+                    if (i >= boomerangItem.getChargeTime(boomerangStack)) {
                         this.mob.stopUsingItem();
                         this.mob.performBoomerangAttack(livingentity);
                         this.attackTime = this.attackIntervalMin;

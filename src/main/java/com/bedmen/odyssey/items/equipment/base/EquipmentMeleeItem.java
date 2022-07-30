@@ -1,10 +1,14 @@
 package com.bedmen.odyssey.items.equipment.base;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.bedmen.odyssey.items.MeleeWeaponClass;
+import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.util.OdysseyChatFormatting;
+import com.bedmen.odyssey.util.WeaponUtil;
+import com.google.common.collect.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -23,26 +28,29 @@ import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquipment {
     /** Modifiers applied when the item is in the mainhand of a user. */
     protected final Multimap<Attribute, AttributeModifier> attributeModifiers;
+    public final MeleeWeaponClass meleeWeaponClass;
     protected final Set<LevEnchSup> levEnchSupSet = new HashSet<>();
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentMeleeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
-    private final boolean canSweep;
 
-    public EquipmentMeleeItem(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, Properties builderIn, LevEnchSup... levEnchSups) {
+    public EquipmentMeleeItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, LevEnchSup... levEnchSups) {
         super(tier, builderIn);
-        float attackDamage = attackDamageIn + tier.getAttackDamageBonus();
-        HashMultimap<Attribute, AttributeModifier> attributeModifiers = HashMultimap.create();
-        attributeModifiers.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double) attackDamage, AttributeModifier.Operation.ADDITION));
-        attributeModifiers.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)attackSpeedIn, AttributeModifier.Operation.ADDITION));
+        this.meleeWeaponClass = meleeWeaponClass;
+        float attackDamage = damage + tier.getAttackDamageBonus();
+
+        Multimap<Attribute, AttributeModifier> attributeModifiers = LinkedHashMultimap.create();
+        attributeModifiers.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", attackDamage, AttributeModifier.Operation.ADDITION));
+        attributeModifiers.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)meleeWeaponClass.attackRate - 4.0d, AttributeModifier.Operation.ADDITION));
         this.attributeModifiers = attributeModifiers;
+
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);
-        this.canSweep = canSweep;
     }
 
     public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
@@ -52,7 +60,7 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
     public boolean canPerformAction(ItemStack stack, ToolAction toolAction)
     {
         if(toolAction == ToolActions.SWORD_SWEEP){
-            return this.canSweep;
+            return this.meleeWeaponClass.canSweep;
         }
         return super.canPerformAction(stack, toolAction);
     }
@@ -84,7 +92,7 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
     }
 
     public boolean isCorrectToolForDrops(BlockState blockIn) {
-        return blockIn.is(Blocks.COBWEB) && this.canSweep;
+        return blockIn.is(Blocks.COBWEB) && this.meleeWeaponClass.canSweep;
     }
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
@@ -120,7 +128,25 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
         return this.getInnateEnchantmentLevel(enchantment) == 0 && enchantment.category.canEnchant(stack.getItem());
     }
 
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+    public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType)
+    {
+        return this.getTier() == OdysseyTiers.WOOD ? 200 : 0;
+    }
+
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+        if(entity instanceof Player player && WeaponUtil.isDualWielding(player) && player.getRandom().nextBoolean()){
+            player.getOffhandItem().hurtAndBreak(amount, entity, (p_41007_) -> {
+                p_41007_.broadcastBreakEvent(EquipmentSlot.OFFHAND);
+            });
+            return 0;
+        }
+        return super.damageItem(stack, amount, entity, onBroken);
+    }
+
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+        if (WeaponUtil.isDualWieldItem(itemStack)) {
+            tooltip.add(new TranslatableComponent("item.oddc.dualwield").withStyle(OdysseyChatFormatting.LAVENDER));
+        }
         this.appendInnateEnchantments(tooltip, flagIn);
     }
 }

@@ -27,7 +27,7 @@ def gray_color(gray):
     return color(gray,gray,gray)
 
 def color(r,g,b):
-    return r << 16 + g << 8 + b
+    return (r << 16) + (g << 8) + b
 
 def uncolor(color):
     r = color >> 16
@@ -120,6 +120,7 @@ def color_towards_average(image, w):
                 g += g1
                 b += b1
                 num += 1
+    print((r/num,g/num,b/num))
     r = clamp(r/num)
     g = clamp(g/num)
     b = clamp(b/num)
@@ -167,16 +168,45 @@ def stripe_pixel(pos, pixel, w):
         return recolor_pixel(pixel, [w,w,w], [0,0,0])
     return pixel
 
-#open_path1 = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/item/bone_meal.png"
-#save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/greatwood_fertilizer2.png"
-#image1 = open_image(open_path1)
-#recolor_image(image1, [1.0,0.8,0.6], [0,0,0])
-#save_image(image1, save_path)
+# Guesses the recolor that turned image1 into image2, applies to image3
+def useSameRecolor(image1, image2, image3):
+    width, height = image1.size
+    colorPoint1 = None
+    colorPoint2 = None
+    for i in range(width):
+        for j in range(height):
+            pos = (i,j)
+            r1,g1,b1,a1 = image1.getpixel(pos)
+            r2,g2,b2,a2 = image2.getpixel(pos)
+            if a1 >= 255 and a2 >= 255:
+                if colorPoint1 == None:
+                    colorPoint1 = [(r1,r2),(g1,g2),(b1,b2)]
+                elif colorPoint2 == None and color(r1,g1,b1) != color(colorPoint1[0][0],colorPoint1[1][0],colorPoint1[2][0]):
+                   colorPoint2 = [(r1,r2),(g1,g2),(b1,b2)]
+    colorM = [(colorPoint2[i][1]-colorPoint1[i][1])/(colorPoint2[i][0]-colorPoint1[i][0]) for i in range(3)]
+    colorB = [colorPoint1[i][1]-colorPoint1[i][0]*colorM[i] for i in range(3)]
+    recolor_image(image3, colorM, colorB)
 
-image1 = open_image(r"/Users/Christoph/Documents/mod fun/odyssey/python/out/0.png")
-image2 = open_image(r"/Users/Christoph/Documents/mod fun/odyssey/python/out/8.png")
-for i in range(7):
-    img = combine_image(image1, image2, float(i+1)/7.0)
-    save_image(img, r"/Users/Christoph/Documents/mod fun/odyssey/python/out/" + str(i+1) + ".png")
-    
+def redInfo(image1, image2):
+    width, height = image1.size
+    maxRatio = 0
+    minRatio = 2
+    for i in range(width):
+        for j in range(height):
+            pos = (i,j)
+            r1,g1,b1,a1 = image1.getpixel(pos)
+            r2,g2,b2,a2 = image2.getpixel(pos)
+            if r1 > 0:
+                ratio = r2/r1
+                if ratio > maxRatio:
+                    maxRatio = ratio
+                if ratio < minRatio:
+                    minRatio = ratio
+    print((maxRatio, minRatio))
+
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/stone_mace.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/clover_stone_mace.png"
+image1 = open_image(open_path1)
+recolor_image_randomly(image1, [0.95,1,0.95], [0.8,1,0.8])
+save_image(image1, save_path)
 print("Done")
