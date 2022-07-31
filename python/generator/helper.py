@@ -2,7 +2,8 @@ import functools, json
 
 resourcesPath = "../../src/main/resources"
 assetsPath = "%s/assets/oddc" % (resourcesPath)
-dataPath = "%s/data/oddc" % (resourcesPath)
+baseDataPath = "%s/data" % (resourcesPath)
+dataPath = "%s/oddc" % (baseDataPath)
 langPath = "%s/lang/en_us.json" % (assetsPath)
 blockstatesPath = "%s/blockstates" % (assetsPath)
 modelsPath = "%s/models" % (assetsPath)
@@ -12,9 +13,9 @@ texturePath = "%s/textures" % (assetsPath)
 itemTexturePath = "%s/item" % (texturePath)
 blockTexturePath = "%s/block" % (texturePath)
 blockTagsPath = "tags/blocks"
-minecraftTagsPath = "%s/minecraft/%s" % (dataPath,blockTagsPath)
-forgeTagsPath = "%s/forge/%s" % (dataPath,blockTagsPath)
-oddcTagsPath = "%s/oddc/%s" % (dataPath,blockTagsPath)
+minecraftTagsPath = "%s/minecraft/%s" % (baseDataPath,blockTagsPath)
+forgeTagsPath = "%s/forge/%s" % (baseDataPath,blockTagsPath)
+oddcTagsPath = "%s/%s" % (dataPath,blockTagsPath)
 lootTablesPath = "%s/loot_tables" % (dataPath)
 blockLootTablesPath = "%s/blocks" % (lootTablesPath)
 
