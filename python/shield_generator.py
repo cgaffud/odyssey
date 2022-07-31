@@ -1,10 +1,6 @@
 import json, os, helper
 
-resourcesPath = "../src/main/resources"
-assetsPath = "%s/assets/oddc" % (resourcesPath)
-dataPath = "%s/data/oddc" % (resourcesPath)
-shieldTagPath = "%s/tags/items/shields.json" % (dataPath)
-langPath = "%s/lang/en_us.json" % (assetsPath)
+shieldTagPath = "%s/tags/items/shields.json" % (helper.dataPath)
 
 def getColorName(s):
     index = s.find('_')
@@ -17,7 +13,7 @@ colorNames = {color:getColorName(color) for color in colors}
 
 while(True):
     itemID = input("Input shieldID: ")
-    langName = helper.input_langName("Lang File Shield Name: ", itemID)
+    langName = helper.inputLangName("Lang File Shield Name: ", itemID)
     particle = input("ID of block texture for particles (such as minecraft:dark_oak_planks or oddc:silver_block): ")
     itemPath = "oddc:item/"+itemID
     fullItemID = "oddc:"+itemID
@@ -45,8 +41,8 @@ while(True):
     }
 }
 
-    itemModelPath = "%s/models/item/%s.json" % (assetsPath,itemID)
-    blockingModelPath = "%s/models/item/%s_blocking.json" % (assetsPath,itemID)
+    itemModelPath = "%s/models/item/%s.json" % (helper.assetsPath,itemID)
+    blockingModelPath = "%s/models/item/%s_blocking.json" % (helper.assetsPath,itemID)
 
     with open(itemModelPath,'w') as file:
         json.dump(itemModel, file,  indent = 2)
@@ -60,15 +56,11 @@ while(True):
         D["values"].append(fullItemID)
         json.dump(D, file, indent = 2)
 
-    with open(langPath, 'r+') as file:
-        D = json.load(file)
-        file.seek(0)
-        D["item.oddc.%s" % (itemID)] = langName
-        for color in colors:
-                D["item.oddc.%s.%s" % (itemID,color)] = colorNames[color]+" "+langName
-        json.dump(D, file, indent = 2)
+    helper.addItemToLang(itemID, langName)
+    for color in colors:
+        helper.addItemToLang(itemID+"."+color, colorNames[color]+" "+langName)
 
-    if(not helper.yes(input("Again? (Y/N): "))):
+    if(not helper.goAgain()):
         break
 
 print("Done")

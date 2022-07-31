@@ -1,23 +1,16 @@
 import json, os, helper
 
-assetsPath = "../src/main/resources/assets/oddc"
-dataPath = "../src/main/resources/data"
-blockTagsPath = "/tags/blocks"
-minecraftTagsPath = "%s/minecraft%s" % (dataPath,blockTagsPath)
-forgeTagsPath = "%s/forge%s" % (dataPath,blockTagsPath)
-oddcTagsPath = "%s/oddc%s" % (dataPath,blockTagsPath)
-
 toolTypes = {0:"none", 1:"pickaxe", 2:"axe", 3:"shovel", 4:"hoe"}
 harvestLevelPaths = {0:"none",
-                     1:"%s/needs_stone_tool.json" % (minecraftTagsPath),
-                     2:"%s/needs_iron_tool.json" % (minecraftTagsPath),
-                     3:"%s/needs_sterling_silver_tool.json" % (oddcTagsPath),
-                     4:"%s/needs_diamond_tool.json" % (minecraftTagsPath),
-                     5:"%s/needs_netherite_tool.json" % (forgeTagsPath)}
+                     1:"%s/needs_stone_tool.json" % (helper.minecraftTagsPath),
+                     2:"%s/needs_iron_tool.json" % (helper.minecraftTagsPath),
+                     3:"%s/needs_sterling_silver_tool.json" % (helper.oddcTagsPath),
+                     4:"%s/needs_diamond_tool.json" % (helper.minecraftTagsPath),
+                     5:"%s/needs_netherite_tool.json" % (helper.forgeTagsPath)}
 
 while(True):
     blockID = input("Input blockID: ")
-    langName = helper.input_langName("Lang File Block Name: ", blockID)
+    langName = helper.inputLangName("Lang File Block Name: ", blockID)
     while(True):
         toolType = int(input("Tool Type? (0 : None, 1 : Pickaxe, 2 : Axe, 3 : Shovel, 4 : Hoe): "))
         if(toolType in toolTypes): 
@@ -74,12 +67,11 @@ while(True):
             }
     }
 
-    blockModelPath = "%s/models/block/%s.json" % (assetsPath,blockID)
-    itemModelPath = "%s/models/item/%s.json" % (assetsPath,blockID)
-    blockStatePath = "%s/blockstates/%s.json" % (assetsPath,blockID)
-    lootTablePath = "%s/oddc/loot_tables/blocks/%s.json" % (dataPath,blockID)
-    langPath = "%s/lang/en_us.json" % (assetsPath)
-    minecraftMineableTagsPath = "%s/mineable/%s.json" % (minecraftTagsPath, toolType)
+    blockModelPath = "%s/models/block/%s.json" % (helper.assetsPath,blockID)
+    itemModelPath = "%s/models/item/%s.json" % (helper.assetsPath,blockID)
+    blockStatePath = "%s/blockstates/%s.json" % (helper.assetsPath,blockID)
+    lootTablePath = "%s/oddc/loot_tables/blocks/%s.json" % (helper.dataPath,blockID)
+    minecraftMineableTagsPath = "%s/mineable/%s.json" % (helper.minecraftTagsPath, toolType)
     harvestLevelPath = harvestLevelPaths[harvestLevel]
 
     with open(blockModelPath,'w') as blockModelFile:
@@ -94,11 +86,7 @@ while(True):
     with open(lootTablePath,'w') as lootTableFile:
         json.dump(lootTable, lootTableFile,  indent = 2)
 
-    with open(langPath, 'r+') as langFile:
-        langDictionary = json.load(langFile)
-        langFile.seek(0)
-        langDictionary["block.oddc."+blockID] = langName
-        json.dump(langDictionary, langFile, indent = 2)
+    helper.addBlockToLang(blockID, langName)
 
     if(toolType != "none"):
         with open(minecraftMineableTagsPath, 'r+') as mineableTagFile:
@@ -116,7 +104,7 @@ while(True):
                 dictionary["values"].append(blockTagPath)
             json.dump(dictionary, harvestLevelFile, indent = 2)
 
-    if(not helper.yes(input("Again? (Y/N): "))):
+    if(not helper.goAgain()):
         break
 
 print("Done")

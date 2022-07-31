@@ -1,15 +1,12 @@
 import json, os, helper
 
-assetsPath = "../src/main/resources/assets/oddc"
-dataPath = "../src/main/resources/data"
-
 while(True):
     weavingInputID = input("ID of weaving input (eg. minecraft:diamond): ")
     ID = input("Input cobweb/fiber ID: ")
     cobwebID = ID+"_cobweb"
     fiberID = ID+"_fiber"
-    cobwebLangName = helper.id_to_lang(cobwebID)
-    fiberLangName = helper.id_to_lang(fiberID)
+    cobwebLangName = helper.idToLang(cobwebID)
+    fiberLangName = helper.idToLang(fiberID)
             
     cobwebBlockPath = 'oddc:block/'+cobwebID
     cobwebPath = 'oddc:'+cobwebID
@@ -112,13 +109,12 @@ while(True):
   "result": cobwebPath
 }
 
-    cobwebBlockModelPath = "%s/models/block/%s.json" % (assetsPath,cobwebID)
-    cobwebItemModelPath = "%s/models/item/%s.json" % (assetsPath,cobwebID)
-    fiberItemModelPath = "%s/models/item/%s.json" % (assetsPath,fiberID)
-    cobwebBlockStatePath = "%s/blockstates/%s.json" % (assetsPath,cobwebID)
-    cobwebLootTablePath = "%s/oddc/loot_tables/blocks/%s.json" % (dataPath,cobwebID)
-    weavingPath = "%s/oddc/recipes/weaving/%s.json" % (dataPath,ID)
-    langPath = "%s/lang/en_us.json" % (assetsPath)
+    cobwebBlockModelPath = "%s/models/block/%s.json" % (helper.assetsPath,cobwebID)
+    cobwebItemModelPath = "%s/models/item/%s.json" % (helper.assetsPath,cobwebID)
+    fiberItemModelPath = "%s/models/item/%s.json" % (helper.assetsPath,fiberID)
+    cobwebBlockStatePath = "%s/blockstates/%s.json" % (helper.assetsPath,cobwebID)
+    cobwebLootTablePath = "%s/oddc/loot_tables/blocks/%s.json" % (helper.dataPath,cobwebID)
+    weavingPath = "%s/oddc/recipes/weaving/%s.json" % (helper.dataPath,ID)
 
     with open(cobwebBlockModelPath,'w') as cobwebBlockModelFile:
         json.dump(cobwebBlockModel, cobwebBlockModelFile,  indent = 2)
@@ -138,14 +134,10 @@ while(True):
     with open(weavingPath,'w') as weavingRecipeFile:
         json.dump(weavingRecipe, weavingRecipeFile,  indent = 2)
 
-    with open(langPath, 'r+') as langFile:
-        langDictionary = json.load(langFile)
-        langFile.seek(0)
-        langDictionary["block.oddc."+cobwebID] = cobwebLangName
-        langDictionary["item.oddc."+fiberID] = fiberLangName
-        json.dump(langDictionary, langFile, indent = 2)
+    helper.addBlockToLang(cobwebID, cobwebLangName)
+    helper.addItemToLang(fiberID, fiberLangName)
 
-    if(not helper.yes(input("Again? (Y/N): "))):
+    if(not helper.goAgain()):
         break
 
 print("Done")

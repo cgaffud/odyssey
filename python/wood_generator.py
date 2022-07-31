@@ -27,7 +27,7 @@ def doBlockStates(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"..\src\main\resources\assets\oddc\blockstates\\"+itemName+".json" for itemName in itemNames]
+    fileNames = [r"%s\blockstates\%s.json" & (helper.assetsPath, itemName) for itemName in itemNames]
     blockStates = [
         {
           "variants": {
@@ -848,7 +848,7 @@ def doBlockModels(name):
         "stripped_"+name+"_log_horizontal",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"..\src\main\resources\assets\oddc\models\block\\"+itemName+".json" for itemName in itemNames]
+    fileNames = [r"%s\models\block\%s.json" % (helper.assetsPath, itemName) for itemName in itemNames]
     blockModels = [
         {
           "parent": "minecraft:block/button",
@@ -1102,7 +1102,7 @@ def doItemModels(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"..\src\main\resources\assets\oddc\models\item\\"+itemName+".json" for itemName in itemNames]
+    fileNames = [r"%s\models\item\%s.json" % (helper.assetsPath, itemName) for itemName in itemNames]
     itemModels = [
         {
           "parent": "minecraft:item/generated",
@@ -1190,7 +1190,7 @@ def doLootTables(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"..\src\main\resources\data\oddc\loot_tables\blocks\\"+itemName+".json" for itemName in itemNames]
+    fileNames = [r"%s\loot_tables\blocks\%s.json" % (helper.dataPath, itemName) for itemName in itemNames]
     lootTables = [
         {
           "type": "minecraft:block",
@@ -1704,11 +1704,9 @@ def doRecipes(name):
         name+"_wood",
         "stripped_"+name+"_wood"
     ]
-    try:
-        os.mkdir(r"..\src\main\resources\data\oddc\recipes\crafting\\"+name)
-    except:
-        print("Directory "+name+" already exists")
-    fileNames = [r"..\src\main\resources\data\oddc\recipes\crafting\\"+name+"\\"+itemName+".json" for itemName in itemNames]
+    directoryPath = r"%s\recipes\crafting\%s" % (helper.dataPath, name)
+    helper.makeDirectory(directoryPath)
+    fileNames = [r"%s\%s.json" % (directoryPath, itemName) for itemName in itemNames]
     recipes = [
         {
           "type": "minecraft:crafting_shaped",
@@ -1947,7 +1945,7 @@ def doBlockTags(name):
 
     with open(r"..\src\main\resources\data\oddc\tags\items\\"+name+"_logs.json", 'w') as logFile:
         json.dump(logsList, logFile, indent = 2)
-    
+
     tagDataPairs = [
         ("fence_gates","oddc:"+name+"_fence_gate"),
         ("leaves","oddc:"+name+"_leaves"),
@@ -1975,7 +1973,7 @@ def doBlockTags(name):
 
 def doItemTags(name):
     filepath = r"..\src\main\resources\data\minecraft\tags\items\\"
-    
+
     logsList ={
           "replace": False,
           "values": [
@@ -1985,7 +1983,7 @@ def doItemTags(name):
             "oddc:stripped_"+name+"_wood"
           ]
         }
-    
+
     with open(r"..\src\main\resources\data\oddc\tags\items\\"+name+"_logs.json", 'w') as logFile:
             json.dump(logsList, logFile, indent = 2)
             
@@ -2014,9 +2012,7 @@ def doItemTags(name):
             json.dump(tagList, tagFile, indent = 2)
 
 def doLang(name, lang_name):
-    langPath = r"..\src\main\resources\assets\oddc\lang\en_us.json"
-    
-    blockNames = [
+    langList = [
         ("block.oddc."+name+"_button", lang_name+" Button"),
         ("block.oddc."+name+"_door", lang_name+" Door"),
         ("block.oddc."+name+"_fence", lang_name+" Fence"),
@@ -2037,14 +2033,8 @@ def doLang(name, lang_name):
         ("block.oddc.stripped_"+name+"_wood", "Stripped "+lang_name+" Wood"),
         ("item.oddc."+name+"_boat", lang_name+" Boat") 
     ]
-    
-    with open(langPath, 'r+') as langFile:
-        langDictionary = json.load(langFile)
-        langFile.seek(0)
-        for (key,value) in blockNames:
-            if(key not in langDictionary):
-                langDictionary[key] = value
-        json.dump(langDictionary, langFile, indent = 2)
+    for (key, value) in langList:
+        helper.addToLang(key, value)
 
 def doCopyables(name, color = "MaterialColor.COLOR_BROWN"):
     out = open("wood_generator_register_items.txt", "w")
@@ -2112,7 +2102,7 @@ def doCopyables(name, color = "MaterialColor.COLOR_BROWN"):
         
 name = input("Input Wood ID: ")
 color = input("Color (if none specified, hit Enter):")
-langName = helper.input_langName("Lang File Wood Name: ")
+langName = helper.inputLangName("Lang File Wood Name: ")
 
 if color == "":
     doCopyables(name)

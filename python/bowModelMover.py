@@ -24,36 +24,34 @@ for root, dirs, files in os.walk(path):
 # make a directory, move the extra models to that directory
 for name in names:
     directoryPath = path+"/"+name
-    if not os.path.exists(directoryPath):
-        os.mkdir(directoryPath)
+    helper.makeDirectory(directoryPath)
     for model in nameToFiles[name]:
         os.rename(directoryPath+"_"+model, directoryPath+"/"+model)
 
 # edit main models to point to new directories
 for name in names:
     filePath = path+"/"+name+".json"
-    print(filePath)
     with open(filePath, 'r+') as file:
         model = json.load(file)
         file.seek(0)
         for i in range(len(model["overrides"])):
-            modelValue = model["overrides"][i]["model"]
+            modelPath = model["overrides"][i]["model"]
             try:
-                index = modelValue.index("_pulling")
+                index = modelPath.index("_pulling")
             except:
                 try:
-                    index = modelValue.index("_arrow")
+                    index = modelPath.index("_arrow")
                 except:
                     try:
-                        index = modelValue.index("_firework")
+                        index = modelPath.index("_firework")
                     except:
                         index = -1
                         print("FAIL")
             if index > -1:
-                newModelValue = modelValue[:index]+"/"+modelValue[index+1:]
+                newModelPath = modelPath[:index]+"/"+modelPath[index+1:]
             else:
-                newModelValue = modelValue
-            model["overrides"][i]["model"] = newModelValue
+                newModelPath = modelPath
+            model["overrides"][i]["model"] = newModelPath
         json.dump(model, file, indent = 2)
 
 print("Done")
