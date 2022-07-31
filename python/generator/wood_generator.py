@@ -2098,7 +2098,7 @@ def doCopyables(name, color = "MaterialColor.COLOR_BROWN"):
         
 name = input("Input Wood ID: ")
 color = input("Color (if none specified, hit Enter):")
-langName = helper.inputLangName("Lang File Wood Name: ")
+langName = helper.inputLangName("Lang File Wood Name: ", name)
 
 if color == "":
     doCopyables(name)
