@@ -2045,15 +2045,15 @@ def doCraftingRecipes(name):
 
     files = list(map(lambda file : file.replace("greatwood", name), greatwoodFiles))
 
-    def traverseAndReplace(D, string1, string2):
-        for key, value in D:
-            if isinstance(value, str):
-                D[key] = value.replace(string1, string2)
-            if isinstance(value, list):
-                D[key] = [traverseAndReplace(value, string1, string2) for item in value]
-            if isinstance(value, dict) or isinstance(value, list):
-                D[key] = traverseAndReplace(value, string1, string2)
-        return D
+    def traverseAndReplace(item, string1, string2):
+        if isinstance(item, str):
+            return item.replace(string1, string2)
+        if isinstance(item, dict):
+            for key, value in item.items():
+                item[key] = traverseAndReplace(value, string1, string2)
+        if isinstance(item, list):
+            return [traverseAndReplace(listItem, string1, string2) for listItem in item]
+        return item
 
     for i in range(len(files)):
         greatwoodFile = greatwoodFiles[i]
