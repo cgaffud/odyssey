@@ -2,7 +2,7 @@ import json, os, shutil, helper
 
 while(True):
     bowID = input("Input bowID: ")
-    langName = helper.inputLangName("Lang File Item Name: ")
+    langName = helper.inputLangName("Lang File Item Name: ", bowID)
     bowPath = 'oddc:item/'+bowID
 
     bowModel = {
