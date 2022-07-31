@@ -848,7 +848,7 @@ def doBlockModels(name):
         "stripped_"+name+"_log_horizontal",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"%s\models\block\%s.json" % (helper.assetsPath, itemName) for itemName in itemNames]
+    fileNames = [r"%s/%s.json" % (helper.blockModelsPath, itemName) for itemName in itemNames]
     blockModels = [
         {
           "parent": "minecraft:block/button",
@@ -1102,7 +1102,7 @@ def doItemModels(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"%s\models\item\%s.json" % (helper.assetsPath, itemName) for itemName in itemNames]
+    fileNames = [r"%s/%s.json" % (helper.itemModelsPath, itemName) for itemName in itemNames]
     itemModels = [
         {
           "parent": "minecraft:item/generated",
@@ -1190,7 +1190,7 @@ def doLootTables(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"%s\loot_tables\blocks\%s.json" % (helper.dataPath, itemName) for itemName in itemNames]
+    fileNames = [r"%s/%s.json" % (helper.blockLootTablesPath, itemName) for itemName in itemNames]
     lootTables = [
         {
           "type": "minecraft:block",
@@ -1704,9 +1704,9 @@ def doRecipes(name):
         name+"_wood",
         "stripped_"+name+"_wood"
     ]
-    directoryPath = r"%s\recipes\crafting\%s" % (helper.dataPath, name)
+    directoryPath = r"%s/%s" % (helper.craftingRecipesPath, name)
     helper.makeDirectory(directoryPath)
-    fileNames = [r"%s\%s.json" % (directoryPath, itemName) for itemName in itemNames]
+    fileNames = [r"%s/%s.json" % (directoryPath, itemName) for itemName in itemNames]
     recipes = [
         {
           "type": "minecraft:crafting_shaped",
@@ -1931,8 +1931,6 @@ def doRecipes(name):
     write(fileNames, recipes)
 
 def doBlockTags(name):
-    filepath = r"..\src\main\resources\data\minecraft\tags\blocks\\"
-
     logsList ={
           "replace": False,
           "values": [
@@ -1943,7 +1941,7 @@ def doBlockTags(name):
           ]
         }
 
-    with open(r"..\src\main\resources\data\oddc\tags\items\\"+name+"_logs.json", 'w') as logFile:
+    with open("%s/%s_logs.json" % (helper.oddcBlockTagsPath, name), 'w') as logFile:
         json.dump(logsList, logFile, indent = 2)
 
     tagDataPairs = [
@@ -1964,7 +1962,7 @@ def doBlockTags(name):
     ]
 
     for (tagGroup,value) in tagDataPairs:
-        tagPath = filepath+tagGroup+".json"
+        tagPath = "%s/%s.json" % (helper.minecraftBlockTagsPath, tagGroup)
         with open(tagPath, 'r+') as tagFile:
             tagList = json.load(tagFile)
             tagFile.seek(0)
@@ -1972,8 +1970,6 @@ def doBlockTags(name):
             json.dump(tagList, tagFile, indent = 2)
 
 def doItemTags(name):
-    filepath = r"..\src\main\resources\data\minecraft\tags\items\\"
-
     logsList ={
           "replace": False,
           "values": [
@@ -1984,7 +1980,7 @@ def doItemTags(name):
           ]
         }
 
-    with open(r"..\src\main\resources\data\oddc\tags\items\\"+name+"_logs.json", 'w') as logFile:
+    with open("%s/%s_logs.json" % (helper.oddcItemTagsPath, name), 'w') as logFile:
             json.dump(logsList, logFile, indent = 2)
             
     tagDataPairs = [
@@ -2004,7 +2000,7 @@ def doItemTags(name):
     ]
     
     for (tagGroup,value) in tagDataPairs:
-        tagPath = filepath+tagGroup+".json"
+        tagPath = "%s/%s.json" % (helper.minecraftItemTagsPath, tagGroup)
         with open(tagPath, 'r+') as tagFile:
             tagList = json.load(tagFile)
             tagFile.seek(0)

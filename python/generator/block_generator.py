@@ -2,11 +2,11 @@ import json, os, helper
 
 toolTypes = {0:"none", 1:"pickaxe", 2:"axe", 3:"shovel", 4:"hoe"}
 harvestLevelPaths = {0:"none",
-                     1:"%s/needs_stone_tool.json" % (helper.minecraftTagsPath),
-                     2:"%s/needs_iron_tool.json" % (helper.minecraftTagsPath),
-                     3:"%s/needs_sterling_silver_tool.json" % (helper.oddcTagsPath),
-                     4:"%s/needs_diamond_tool.json" % (helper.minecraftTagsPath),
-                     5:"%s/needs_netherite_tool.json" % (helper.forgeTagsPath)}
+                     1:"%s/needs_stone_tool.json" % (helper.minecraftBlockTagsPath),
+                     2:"%s/needs_iron_tool.json" % (helper.minecraftBlockTagsPath),
+                     3:"%s/needs_sterling_silver_tool.json" % (helper.oddcBlockTagsPath),
+                     4:"%s/needs_diamond_tool.json" % (helper.minecraftBlockTagsPath),
+                     5:"%s/needs_netherite_tool.json" % (helper.forgeBlockTagsPath)}
 
 while(True):
     blockID = input("Input blockID: ")
@@ -71,7 +71,7 @@ while(True):
     itemModelPath = "%s/%s.json" % (helper.itemModelsPath, blockID)
     blockStatePath = "%s/%s.json" % (helper.blockstatesPath, blockID)
     lootTablePath = "%s/%s.json" % (helper.blockLootTablesPath, blockID)
-    minecraftMineableTagsPath = "%s/mineable/%s.json" % (helper.minecraftTagsPath, toolType)
+    minecraftMineableTagsPath = "%s/mineable/%s.json" % (helper.minecraftBlockTagsPath, toolType)
     harvestLevelPath = harvestLevelPaths[harvestLevel]
 
     with open(blockModelPath,'w') as blockModelFile:

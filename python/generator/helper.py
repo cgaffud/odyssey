@@ -4,21 +4,36 @@ resourcesPath = "../../src/main/resources"
 assetsPath = "%s/assets/oddc" % (resourcesPath)
 baseDataPath = "%s/data" % (resourcesPath)
 dataPath = "%s/oddc" % (baseDataPath)
+minecraftDataPath = "%s/minecraft" % (baseDataPath)
+forgeDataPath = "%s/forge" % (baseDataPath)
+dataPath = "%s/oddc" % (baseDataPath)
+
 langPath = "%s/lang/en_us.json" % (assetsPath)
+
 blockstatesPath = "%s/blockstates" % (assetsPath)
+
 modelsPath = "%s/models" % (assetsPath)
 blockModelsPath = "%s/block" % (modelsPath)
 itemModelsPath = "%s/item" % (modelsPath)
+
 texturePath = "%s/textures" % (assetsPath)
 itemTexturePath = "%s/item" % (texturePath)
 blockTexturePath = "%s/block" % (texturePath)
-blockTagsPath = "tags/blocks"
-minecraftTagsPath = "%s/minecraft/%s" % (baseDataPath,blockTagsPath)
-forgeTagsPath = "%s/forge/%s" % (baseDataPath,blockTagsPath)
-oddcTagsPath = "%s/%s" % (dataPath,blockTagsPath)
+
+minecraftTagsPath = "%s/tags" % (minecraftDataPath)
+forgeTagsPath = "%s/%s" % (forgeDataPath)
+oddcTagsPath = "%s/%s" % (dataPath)
+minecraftBlockTagsPath = "%s/blocks" % (minecraftTagsPath)
+forgeBlockTagsPath = "%s/blocks" % (forgeTagsPath)
+oddcBlockTagsPath = "%s/blocks" % (oddcTagsPath)
+minecraftItemTagsPath = "%s/items" % (minecraftTagsPath)
+forgeItemTagsPath = "%s/items" % (forgeTagsPath)
+oddcItemTagsPath = "%s/items" % (oddcTagsPath)
+
 lootTablesPath = "%s/loot_tables" % (dataPath)
 blockLootTablesPath = "%s/blocks" % (lootTablesPath)
 recipesPath = "%s/recipes" % (dataPath)
+craftingRecipesPath = "%s/crafting" % (recipesPath)
 
 def goAgain():
     yes(input("Again? (Y/N): "))
