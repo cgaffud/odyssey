@@ -1,13 +1,16 @@
 import functools, json
 
-resourcesPath = "../src/main/resources"
+resourcesPath = "../../src/main/resources"
 assetsPath = "%s/assets/oddc" % (resourcesPath)
 dataPath = "%s/data/oddc" % (resourcesPath)
 langPath = "%s/lang/en_us.json" % (assetsPath)
-blockTagsPath = "/tags/blocks"
-minecraftTagsPath = "%s/minecraft%s" % (dataPath,blockTagsPath)
-forgeTagsPath = "%s/forge%s" % (dataPath,blockTagsPath)
-oddcTagsPath = "%s/oddc%s" % (dataPath,blockTagsPath)
+texturePath = "%s/textures" % (assetsPath)
+itemTexturePath = "%s/item" % (texturePath)
+blockTexturePath = "%s/block" % (texturePath)
+blockTagsPath = "tags/blocks"
+minecraftTagsPath = "%s/minecraft/%s" % (dataPath,blockTagsPath)
+forgeTagsPath = "%s/forge/%s" % (dataPath,blockTagsPath)
+oddcTagsPath = "%s/oddc/%s" % (dataPath,blockTagsPath)
 
 def goAgain():
     yes(input("Again? (Y/N): "))

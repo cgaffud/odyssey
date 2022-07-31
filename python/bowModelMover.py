@@ -2,7 +2,7 @@ import os, json
 
 #Get program directory path
 path = os.getcwd()
-path += "/../src/main/resources/assets/oddc/models/item"
+path += "%s/models/item" % (helper.assetsPath)
 
 names = []
 

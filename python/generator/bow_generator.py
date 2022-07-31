@@ -73,7 +73,7 @@ while(True):
 
     helper.addItemToLang(bowID, langName)
 
-    textureDirectory = r"../src/main/resources/assets/oddc/textures/item/"+bowID
+    textureDirectory = "%s/%s" % (helper.itemTexturePath, bowID)
     helper.makeDirectory(textureDirectory)
 
     bowTemplateTextures = [

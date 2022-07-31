@@ -107,7 +107,7 @@ while(True):
 
     helper.addItemToLang(crossbowID, langName)
 
-    textureDirectory = "%s/textures/item/%s" % (helper.assetsPath, crossbowID)
+    textureDirectory = "%s/%s" % (helper.itemTexturePath, crossbowID)
     helper.makeDirectory(textureDirectory)
 
     crossbowTemplateTextures = [
