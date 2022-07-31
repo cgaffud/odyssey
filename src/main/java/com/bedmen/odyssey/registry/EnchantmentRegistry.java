@@ -132,7 +132,6 @@ public class EnchantmentRegistry {
     private static float getHumidBoost(BlockPos pos, Level level) {
         Holder<Biome> biomeHolder = level.getBiome(pos);
         Biome biome = level.getBiome(pos).value();
-        System.out.println(BiomeUtil.getClimate(biomeHolder).downfall);
         return level.isRaining() && biome.getPrecipitation() == Biome.Precipitation.RAIN ? 1.0f : Mth.clamp(BiomeUtil.getClimate(biomeHolder).downfall, 0.0f, 1.0f);
     }
 
