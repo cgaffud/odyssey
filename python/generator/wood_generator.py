@@ -2055,7 +2055,7 @@ def doCraftingRecipes(name):
                 D[key] = traverseAndReplace(value, string1, string2)
         return D
 
-    for i in range(len(files):
+    for i in range(len(files)):
         greatwoodFile = greatwoodFiles[i]
         file = files[i]
         recipe = {}
