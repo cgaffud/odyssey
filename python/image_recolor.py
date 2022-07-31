@@ -204,9 +204,9 @@ def redInfo(image1, image2):
                     minRatio = ratio
     print((maxRatio, minRatio))
 
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/arid_mace_overlay.png"
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/arid_mace_overlay.png"
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/cryosliver.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/cryosliver.png"
 image1 = open_image(open_path1)
-grayscale_recolor_image(image1, [0.67,0.67,0.67],[32,32,32])
+grayscale_recolor_image(image1, [1.0,1.0,1.0],[16,16,16])
 save_image(image1, save_path)
 print("Done")

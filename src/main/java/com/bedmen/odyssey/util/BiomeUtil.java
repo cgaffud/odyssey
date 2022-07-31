@@ -77,4 +77,15 @@ public class BiomeUtil {
         ARID_COLOR_MAP.put(key, color);
         return color;
     }
+
+    private static final Map<Double, Integer> COLD_COLOR_MAP = new ConcurrentHashMap<>();
+    public static int getColdColor(Level level, Entity entity) {
+        double coldFactor = EnchantmentRegistry.getColdBoost(entity.eyeBlockPosition(), level);
+        if(COLD_COLOR_MAP.containsKey(coldFactor)){
+            return COLD_COLOR_MAP.get(coldFactor);
+        }
+        int color = Color.getHSBColor((float) (0.67f - 0.07f * coldFactor), (float) (0.6f - 0.1f * coldFactor), (float) (0.6f + 0.4f * coldFactor)).getRGB();
+        COLD_COLOR_MAP.put(coldFactor, color);
+        return color;
+    }
 }

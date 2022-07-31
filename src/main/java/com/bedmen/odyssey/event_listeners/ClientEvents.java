@@ -229,6 +229,9 @@ public class ClientEvents {
         event.getItemColors().register((itemStack, i) -> {
             return i <= 0 ? -1 : CondAmpMeleeItem.Gradient.getColor(itemStack);
         }, ItemRegistry.RAIN_SWORD.get(), ItemRegistry.ARID_MACE.get());
+        event.getItemColors().register((itemStack, i) -> {
+            return CondAmpMeleeItem.Gradient.getColor(itemStack);
+        }, ItemRegistry.CRYOSLIVER.get());
         for(TomeItem tomeItem : TomeItem.TOMES){
             event.getItemColors().register((itemStack, i) -> {
                 return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();
