@@ -55,7 +55,7 @@ while(True):
     }
 }
 
-    bowModelPath = "%s/models/item/%s.json" % (helper.assetsPath,bowID)
+    bowModelPath = "%s/%s.json" % (helper.itemModelsPath,bowID)
     extraModelDirectoryPath = "%s/models/item/%s" % (helper.assetsPath,bowID)
     helper.makeDirectory(extraModelDirectoryPath)
     bowModelPathPulling0 = "%s/pulling_0.json" % (extraModelDirectoryPath)

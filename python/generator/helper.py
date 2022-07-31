@@ -4,6 +4,10 @@ resourcesPath = "../../src/main/resources"
 assetsPath = "%s/assets/oddc" % (resourcesPath)
 dataPath = "%s/data/oddc" % (resourcesPath)
 langPath = "%s/lang/en_us.json" % (assetsPath)
+blockstatesPath = "%s/blockstates" % (assetsPath)
+modelsPath = "%s/models" % (assetsPath)
+blockModelsPath = "%s/block" % (modelsPath)
+itemModelsPath = "%s/item" % (modelsPath)
 texturePath = "%s/textures" % (assetsPath)
 itemTexturePath = "%s/item" % (texturePath)
 blockTexturePath = "%s/block" % (texturePath)
@@ -11,6 +15,8 @@ blockTagsPath = "tags/blocks"
 minecraftTagsPath = "%s/minecraft/%s" % (dataPath,blockTagsPath)
 forgeTagsPath = "%s/forge/%s" % (dataPath,blockTagsPath)
 oddcTagsPath = "%s/oddc/%s" % (dataPath,blockTagsPath)
+lootTablesPath = "%s/loot_tables" % (dataPath)
+blockLootTablesPath = "%s/blocks" % (lootTablesPath)
 
 def goAgain():
     yes(input("Again? (Y/N): "))

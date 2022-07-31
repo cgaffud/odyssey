@@ -27,7 +27,7 @@ def doBlockStates(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"%s\blockstates\%s.json" & (helper.assetsPath, itemName) for itemName in itemNames]
+    fileNames = [r"%s/%s.json" & (helper.blockstatesPath, itemName) for itemName in itemNames]
     blockStates = [
         {
           "variants": {

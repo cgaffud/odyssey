@@ -41,7 +41,7 @@ while(True):
     }
 }
 
-    itemModelPath = "%s/models/item/%s.json" % (helper.assetsPath,itemID)
+    itemModelPath = "%s/%s.json" % (helper.itemModelsPath,itemID)
     blockingModelPath = "%s/models/item/%s_blocking.json" % (helper.assetsPath,itemID)
 
     with open(itemModelPath,'w') as file:

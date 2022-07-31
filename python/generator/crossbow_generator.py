@@ -83,7 +83,7 @@ while(True):
     }
 }
 
-    crossbowModelPath = "%s/models/item/%s.json" % (helper.assetsPath,crossbowID)
+    crossbowModelPath = "%s/%s.json" % (helper.itemModelsPath,crossbowID)
     extraModelDirectoryPath = "%s/models/item/%s" % (helper.assetsPath,crossbowID)
     helper.makeDirectory(extraModelDirectoryPath)
     crossbowModelPathPulling0 = "%s/pulling_0.json" % (extraModelDirectoryPath)

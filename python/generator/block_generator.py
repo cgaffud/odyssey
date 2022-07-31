@@ -67,10 +67,10 @@ while(True):
             }
     }
 
-    blockModelPath = "%s/models/block/%s.json" % (helper.assetsPath,blockID)
-    itemModelPath = "%s/models/item/%s.json" % (helper.assetsPath,blockID)
-    blockStatePath = "%s/blockstates/%s.json" % (helper.assetsPath,blockID)
-    lootTablePath = "%s/oddc/loot_tables/blocks/%s.json" % (helper.dataPath,blockID)
+    blockModelPath = "%s/%s.json" % (helper.blockModelsPath, blockID)
+    itemModelPath = "%s/%s.json" % (helper.itemModelsPath, blockID)
+    blockStatePath = "%s/%s.json" % (helper.blockstatesPath, blockID)
+    lootTablePath = "%s/%s.json" % (helper.blockLootTablesPath, blockID)
     minecraftMineableTagsPath = "%s/mineable/%s.json" % (helper.minecraftTagsPath, toolType)
     harvestLevelPath = harvestLevelPaths[harvestLevel]
 

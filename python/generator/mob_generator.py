@@ -10,7 +10,7 @@ while(True):
       "parent": "minecraft:item/template_spawn_egg"
     }
 
-    spawnEggModelPath = "%s/models/item/%s.json" % (helper.assetsPath,spawnEggID)
+    spawnEggModelPath = "%s/%s.json" % (helper.itemModelsPath,spawnEggID)
 
     with open(spawnEggModelPath,'w') as spawnEggModelFile:
         json.dump(spawnEggModel, spawnEggModelFile,  indent = 2)

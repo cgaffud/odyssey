@@ -23,7 +23,7 @@ while(True):
     if(handheld):
         itemModel = handheldModel
 
-    itemModelPath = "%s/models/item/%s.json" % (helper.assetsPath,itemID)
+    itemModelPath = "%s/%s.json" % (helper.itemModelsPath,itemID)
 
     with open(itemModelPath,'w') as itemModelFile:
         json.dump(itemModel, itemModelFile,  indent = 2)

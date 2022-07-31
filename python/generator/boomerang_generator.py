@@ -27,8 +27,8 @@ while(True):
   }
 }
 
-    itemModelPath = "%s/models/item/%s.json" % (helper.assetsPath,itemID)
-    throwingModelPath = "%s/models/item/%s.json" % (helper.assetsPath,itemID+"_throwing")
+    itemModelPath = "%s/%s.json" % (helper.itemModelsPath,itemID)
+    throwingModelPath = "%s/%s.json" % (helper.itemModelsPath,itemID+"_throwing")
 
     with open(itemModelPath,'w') as file:
         json.dump(itemModel, file,  indent = 2)

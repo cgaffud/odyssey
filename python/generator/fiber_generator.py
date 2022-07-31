@@ -109,11 +109,11 @@ while(True):
   "result": cobwebPath
 }
 
-    cobwebBlockModelPath = "%s/models/block/%s.json" % (helper.assetsPath,cobwebID)
-    cobwebItemModelPath = "%s/models/item/%s.json" % (helper.assetsPath,cobwebID)
-    fiberItemModelPath = "%s/models/item/%s.json" % (helper.assetsPath,fiberID)
-    cobwebBlockStatePath = "%s/blockstates/%s.json" % (helper.assetsPath,cobwebID)
-    cobwebLootTablePath = "%s/oddc/loot_tables/blocks/%s.json" % (helper.dataPath,cobwebID)
+    cobwebBlockModelPath = "%s/%s.json" % (helper.blockModelsPath,cobwebID)
+    cobwebItemModelPath = "%s/%s.json" % (helper.itemModelsPath,cobwebID)
+    fiberItemModelPath = "%s/%s.json" % (helper.itemModelsPath,fiberID)
+    cobwebBlockStatePath = "%s/%s.json" % (helper.blockstatesPath,cobwebID)
+    cobwebLootTablePath = "%s/oddc/%s.json" % (helper.blockLootTablesPath,cobwebID)
     weavingPath = "%s/oddc/recipes/weaving/%s.json" % (helper.dataPath,ID)
 
     with open(cobwebBlockModelPath,'w') as cobwebBlockModelFile:

@@ -32,7 +32,7 @@ while(True):
     for piece in pieces:
         names[piece] = langName+" "+names[piece]
 
-    itemModelPaths = {piece:"%s/models/item/%s.json" % (helper.assetsPath,itemIDs[piece]) for piece in pieces}
+    itemModelPaths = {piece:"%s/%s.json" % (helper.itemModelsPath,itemIDs[piece]) for piece in pieces}
 
     for piece in pieces:
         with open(itemModelPaths[piece],'w') as file:
