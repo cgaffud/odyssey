@@ -1,4 +1,4 @@
-import functools, json
+import functools, json, os
 
 resourcesPath = "../../src/main/resources"
 assetsPath = "%s/assets/oddc" % (resourcesPath)
