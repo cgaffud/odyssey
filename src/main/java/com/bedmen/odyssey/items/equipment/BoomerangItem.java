@@ -134,9 +134,9 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         return getChargeTime(boomerangStack) * 2;
     }
 
-    public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {
-        ItemStack boomerangStack = playerIn.getItemInHand(handIn);
-        playerIn.startUsingItem(handIn);
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand handIn) {
+        ItemStack boomerangStack = player.getItemInHand(handIn);
+        player.startUsingItem(handIn);
         return InteractionResultHolder.consume(boomerangStack);
     }
 
