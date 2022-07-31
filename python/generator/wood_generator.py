@@ -27,7 +27,7 @@ def doBlockStates(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"%s/%s.json" & (helper.blockstatesPath, itemName) for itemName in itemNames]
+    fileNames = ["%s/%s.json" % (helper.blockstatesPath, itemName) for itemName in itemNames]
     blockStates = [
         {
           "variants": {
@@ -848,7 +848,7 @@ def doBlockModels(name):
         "stripped_"+name+"_log_horizontal",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"%s/%s.json" % (helper.blockModelsPath, itemName) for itemName in itemNames]
+    fileNames = ["%s/%s.json" % (helper.blockModelsPath, itemName) for itemName in itemNames]
     blockModels = [
         {
           "parent": "minecraft:block/button",
@@ -1102,7 +1102,7 @@ def doItemModels(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"%s/%s.json" % (helper.itemModelsPath, itemName) for itemName in itemNames]
+    fileNames = ["%s/%s.json" % (helper.itemModelsPath, itemName) for itemName in itemNames]
     itemModels = [
         {
           "parent": "minecraft:item/generated",
@@ -1190,7 +1190,7 @@ def doLootTables(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"%s/%s.json" % (helper.blockLootTablesPath, itemName) for itemName in itemNames]
+    fileNames = ["%s/%s.json" % (helper.blockLootTablesPath, itemName) for itemName in itemNames]
     lootTables = [
         {
           "type": "minecraft:block",
@@ -1704,9 +1704,9 @@ def doRecipes(name):
         name+"_wood",
         "stripped_"+name+"_wood"
     ]
-    directoryPath = r"%s/%s" % (helper.craftingRecipesPath, name)
+    directoryPath = "%s/%s" % (helper.craftingRecipesPath, name)
     helper.makeDirectory(directoryPath)
-    fileNames = [r"%s/%s.json" % (directoryPath, itemName) for itemName in itemNames]
+    fileNames = ["%s/%s.json" % (directoryPath, itemName) for itemName in itemNames]
     recipes = [
         {
           "type": "minecraft:crafting_shaped",
@@ -2104,18 +2104,13 @@ if color == "":
     doCopyables(name)
 else:
     doCopyables(name,color)
-#doBlockStates(name)
-#doBlockModels(name)
-#doItemModels(name)
-#doLootTables(name)
-#doRecipes(name)
-#doBlockTags(name)
-#doItemTags(name)
-#doLang(name, langName)
-
-
-# Missing funcitonality
-# Block Registration
-# Item Registration
+doBlockStates(name)
+doBlockModels(name)
+doItemModels(name)
+doLootTables(name)
+doRecipes(name)
+doBlockTags(name)
+doItemTags(name)
+doLang(name, langName)
 
 print("Done")
