@@ -2032,6 +2032,39 @@ def doLang(name, lang_name):
     for (key, value) in langList:
         helper.addToLang(key, value)
 
+def doCraftingRecipes(name):
+    newCraftingRecipePath = "%s/%s" % (helper.craftingRecipesPath, name)
+    helper.makeDirectory(newCraftingRecipePath)
+
+    greatwoodPath = "%s/greatwood" % (helper.craftingRecipesPath)
+
+    greatwoodFiles = []
+    for root, dirs, files in os.walk(greatwoodPath):
+        greatwoodFiles = files
+
+
+    files = list(map(lambda file : file.replace("greatwood", name), greatwoodFiles))
+
+    def traverseAndReplace(D, string1, string2):
+        for key, value in D:
+            if isinstance(value, str):
+                D[key] = value.replace(string1, string2)
+            if isinstance(value, list):
+                D[key] = [traverseAndReplace(value, string1, string2) for item in value]
+            if isinstance(value, dict) or isinstance(value, list):
+                D[key] = traverseAndReplace(value, string1, string2)
+        return D
+
+    for i in range(len(files):
+        greatwoodFile = greatwoodFiles[i]
+        file = files[i]
+        recipe = {}
+        with open(greatwoodPath+"/"+greatwoodFile,'r') as greatwoodRecipeFile:
+            recipe = json.load(greatwoodRecipeFile)
+        newRecipe = traverseAndReplace(recipe, "greatwood", name)
+        with open(newCraftingRecipePath+"/"+file,'w') as newRecipeFile:
+            json.dump(newRecipe, newRecipeFile, indent = 2)
+
 def doCopyables(name, color = "MaterialColor.COLOR_BROWN"):
     out = open("wood_generator_register_items.txt", "w")
     out.write("BLOCK REGISTRY:\n")
@@ -2112,5 +2145,6 @@ doRecipes(name)
 doBlockTags(name)
 doItemTags(name)
 doLang(name, langName)
+doCraftingRecipes(name)
 
 print("Done")
