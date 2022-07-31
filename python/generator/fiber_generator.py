@@ -114,7 +114,7 @@ while(True):
     fiberItemModelPath = "%s/%s.json" % (helper.itemModelsPath,fiberID)
     cobwebBlockStatePath = "%s/%s.json" % (helper.blockstatesPath,cobwebID)
     cobwebLootTablePath = "%s/%s.json" % (helper.blockLootTablesPath,cobwebID)
-    weavingPath = "%s/oddc/recipes/weaving/%s.json" % (helper.dataPath,ID)
+    weavingPath = "%s/weaving/%s.json" % (helper.recipesPath,ID)
 
     with open(cobwebBlockModelPath,'w') as cobwebBlockModelFile:
         json.dump(cobwebBlockModel, cobwebBlockModelFile,  indent = 2)

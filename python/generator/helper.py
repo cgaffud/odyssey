@@ -18,6 +18,7 @@ forgeTagsPath = "%s/forge/%s" % (baseDataPath,blockTagsPath)
 oddcTagsPath = "%s/%s" % (dataPath,blockTagsPath)
 lootTablesPath = "%s/loot_tables" % (dataPath)
 blockLootTablesPath = "%s/blocks" % (lootTablesPath)
+recipesPath = "%s/recipes" % (dataPath)
 
 def goAgain():
     yes(input("Again? (Y/N): "))
