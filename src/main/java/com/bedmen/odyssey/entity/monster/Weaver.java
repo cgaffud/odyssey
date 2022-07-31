@@ -166,8 +166,10 @@ public class Weaver extends Monster {
         super.dropCustomDeathLoot(damageSource, looting, recentlyHit);
         if(this.isQueen()){
             this.spawnAtLocation(ItemRegistry.WEAVER_EGG.get());
-            if(this.random.nextBoolean()){
-                this.spawnAtLocation(ItemRegistry.WEAVER_FANG.get());
+            for(int i = 0; i < 2 + looting; i++) {
+                if(this.random.nextFloat() < 0.5f) {
+                    this.spawnAtLocation(ItemRegistry.WEAVER_FANG.get());
+                }
             }
         }
     }

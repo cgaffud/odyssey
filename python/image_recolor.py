@@ -204,9 +204,13 @@ def redInfo(image1, image2):
                     minRatio = ratio
     print((maxRatio, minRatio))
 
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/stone_mace.png"
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/clover_stone_mace.png"
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/brown_pixels.png"
+open_path2 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/blue_pixels.png"
+open_path3 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/entity/projectiles/weaver_fang_arrow.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/blue_arrow.png"
 image1 = open_image(open_path1)
-recolor_image_randomly(image1, [0.95,1,0.95], [0.8,1,0.8])
-save_image(image1, save_path)
+image2 = open_image(open_path2)
+image3 = open_image(open_path3)
+useSameRecolor(image1, image2, image3)
+save_image(image3, save_path)
 print("Done")
