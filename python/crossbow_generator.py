@@ -15,34 +15,34 @@ while(True):
             "predicate": {
                 "pulling": 1
             },
-            "model": "%s_pulling_0" % (crossbowPath)
+            "model": "%s/pulling_0" % (crossbowPath)
         },
         {
             "predicate": {
                 "pulling": 1,
                 "pull": 0.58
             },
-            "model": "%s_pulling_1" % (crossbowPath)
+            "model": "%s/pulling_1" % (crossbowPath)
         },
         {
             "predicate": {
                 "pulling": 1,
                 "pull": 1.0
             },
-            "model": "%s_pulling_2" % (crossbowPath)
+            "model": "%s/pulling_2" % (crossbowPath)
         },
         {
             "predicate": {
                 "charged": 1
             },
-            "model": "%s_arrow" % (crossbowPath)
+            "model": "%s/arrow" % (crossbowPath)
         },
         {
             "predicate": {
                 "charged": 1,
                 "firework": 1
             },
-            "model": "%s_firework" % (crossbowPath)
+            "model": "%s/firework" % (crossbowPath)
         }
     ]
 }
@@ -87,11 +87,14 @@ while(True):
     assetsPath = "../src/main/resources/assets/oddc"
 
     crossbowModelPath = "%s/models/item/%s.json" % (assetsPath,crossbowID)
-    crossbowModelPathPulling0 = "%s/models/item/%s_pulling_0.json" % (assetsPath,crossbowID)
-    crossbowModelPathPulling1 = "%s/models/item/%s_pulling_1.json" % (assetsPath,crossbowID)
-    crossbowModelPathPulling2 = "%s/models/item/%s_pulling_2.json" % (assetsPath,crossbowID)
-    crossbowModelPathArrow = "%s/models/item/%s_arrow.json" % (assetsPath,crossbowID)
-    crossbowModelPathFirework = "%s/models/item/%s_firework.json" % (assetsPath,crossbowID)
+    extraModelDirectoryPath = "%s/models/item/%s" % (assetsPath,crossbowID)
+    if not os.path.exists(extraModelDirectoryPath):
+        os.mkdir(extraModelDirectoryPath)
+    crossbowModelPathPulling0 = "%s/pulling_0.json" % (extraModelDirectoryPath)
+    crossbowModelPathPulling1 = "%s/pulling_1.json" % (extraModelDirectoryPath)
+    crossbowModelPathPulling2 = "%s/pulling_2.json" % (extraModelDirectoryPath)
+    crossbowModelPathArrow = "%s/arrow.json" % (extraModelDirectoryPath)
+    crossbowModelPathFirework = "%s/firework.json" % (extraModelDirectoryPath)
     langPath = "%s/lang/en_us.json" % (assetsPath)
 
     with open(crossbowModelPath,'w') as itemModelFile:

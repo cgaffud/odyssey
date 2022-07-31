@@ -15,21 +15,21 @@ while(True):
             "predicate": {
                 "pulling": 1
             },
-            "model": "%s_pulling_0" % (bowPath)
+            "model": "%s/pulling_0" % (bowPath)
         },
         {
             "predicate": {
                 "pulling": 1,
                 "pull": 0.65
             },
-            "model": "%s_pulling_1" % (bowPath)
+            "model": "%s/pulling_1" % (bowPath)
         },
         {
             "predicate": {
                 "pulling": 1,
                 "pull": 0.9
             },
-            "model": "%s_pulling_2" % (bowPath)
+            "model": "%s/pulling_2" % (bowPath)
         }
     ]
 }
@@ -58,9 +58,12 @@ while(True):
     assetsPath = "../src/main/resources/assets/oddc"
 
     bowModelPath = "%s/models/item/%s.json" % (assetsPath,bowID)
-    bowModelPathPulling0 = "%s/models/item/%s_pulling_0.json" % (assetsPath,bowID)
-    bowModelPathPulling1 = "%s/models/item/%s_pulling_1.json" % (assetsPath,bowID)
-    bowModelPathPulling2 = "%s/models/item/%s_pulling_2.json" % (assetsPath,bowID)
+    extraModelDirectoryPath = "%s/models/item/%s" % (assetsPath,bowID)
+    if not os.path.exists(extraModelDirectoryPath):
+        os.mkdir(extraModelDirectoryPath)
+    bowModelPathPulling0 = "%s/pulling_0.json" % (extraModelDirectoryPath)
+    bowModelPathPulling1 = "%s/pulling_1.json" % (extraModelDirectoryPath)
+    bowModelPathPulling2 = "%s/pulling_2.json" % (extraModelDirectoryPath)
     langPath = "%s/lang/en_us.json" % (assetsPath)
 
     with open(bowModelPath,'w') as itemModelFile:
