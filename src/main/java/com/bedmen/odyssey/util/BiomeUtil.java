@@ -1,16 +1,21 @@
 package com.bedmen.odyssey.util;
 
+import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BiomeUtil {
 
@@ -53,9 +58,23 @@ public class BiomeUtil {
         return new Climate(biomeHolder.value().getBaseTemperature(), biomeHolder.value().getDownfall());
     }
 
-    public static int getFoliageColor(Climate climate) {
-        double d0 = Mth.clamp(climate.temperature, 0.0F, 1.0F);
-        double d1 = Mth.clamp(climate.downfall, 0.0F, 1.0F);
-        return FoliageColor.get(d0, d1);
+    public static int getFoliageColor(Level level, Entity entity) {
+        double temperatureFactor = EnchantmentRegistry.getHotBoost(entity.eyeBlockPosition(), level);
+        double downfallFactor = EnchantmentRegistry.getHumidBoost(entity.eyeBlockPosition(), level);
+        return FoliageColor.get(temperatureFactor, downfallFactor);
+    }
+
+    private static final Map<Double, Integer> ARID_COLOR_MAP = new ConcurrentHashMap<>();
+    public static int getAridColor(Level level, Entity entity) {
+        double temperatureFactor = EnchantmentRegistry.getHotBoost(entity.eyeBlockPosition(), level);
+        double downfallFactor = EnchantmentRegistry.getHumidBoost(entity.eyeBlockPosition(), level);
+        double adjustedDownfallFactor = Mth.clamp(downfallFactor, 0, temperatureFactor);
+        double key = 2 * temperatureFactor + adjustedDownfallFactor;
+        if(ARID_COLOR_MAP.containsKey(key)){
+            return ARID_COLOR_MAP.get(key);
+        }
+        int color = Color.getHSBColor(0.072f, (float) (temperatureFactor * 0.8f), (float) (1.0f - 0.6f * adjustedDownfallFactor)).getRGB();
+        ARID_COLOR_MAP.put(key, color);
+        return color;
     }
 }

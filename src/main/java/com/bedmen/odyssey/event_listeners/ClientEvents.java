@@ -228,7 +228,7 @@ public class ClientEvents {
         }, ItemRegistry.PARKA_HELMET.get(), ItemRegistry.PARKA_CHESTPLATE.get(), ItemRegistry.PARKA_LEGGINGS.get(), ItemRegistry.PARKA_BOOTS.get());
         event.getItemColors().register((itemStack, i) -> {
             return i <= 0 ? -1 : CondAmpMeleeItem.Gradient.getColor(itemStack);
-        }, ItemRegistry.RAIN_SWORD.get());
+        }, ItemRegistry.RAIN_SWORD.get(), ItemRegistry.ARID_MACE.get());
         for(TomeItem tomeItem : TomeItem.TOMES){
             event.getItemColors().register((itemStack, i) -> {
                 return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();

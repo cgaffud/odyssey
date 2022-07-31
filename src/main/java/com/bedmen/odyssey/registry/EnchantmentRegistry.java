@@ -119,26 +119,25 @@ public class EnchantmentRegistry {
         return Mth.sqrt(getHotBoost(pos, level) * getHumidBoost(pos, level));
     }
 
-    private static float getHotDryBoost(BlockPos pos, Level level) {
+    public static float getHotDryBoost(BlockPos pos, Level level) {
         return Mth.sqrt(getHotBoost(pos, level) * getDryBoost(pos, level));
     }
 
-    private static float getHotBoost(BlockPos pos, Level level) {
+    public static float getHotBoost(BlockPos pos, Level level) {
         return Mth.clamp(BiomeUtil.getClimate(level.getBiome(pos)).temperature, 0.0f, 1.0f);
     }
 
-    private static float getColdBoost(BlockPos pos, Level level) {
+    public static float getColdBoost(BlockPos pos, Level level) {
         return 1.0f - getHotBoost(pos, level);
     }
 
-    private static float getHumidBoost(BlockPos pos, Level level) {
+    public static float getHumidBoost(BlockPos pos, Level level) {
         Holder<Biome> biomeHolder = level.getBiome(pos);
         Biome biome = level.getBiome(pos).value();
-        System.out.println(BiomeUtil.getClimate(biomeHolder).downfall);
         return level.isRaining() && biome.getPrecipitation() == Biome.Precipitation.RAIN ? 1.0f : Mth.clamp(BiomeUtil.getClimate(biomeHolder).downfall, 0.0f, 1.0f);
     }
 
-    private static float getDryBoost(BlockPos pos, Level level) {
+    public static float getDryBoost(BlockPos pos, Level level) {
         return 1f - getHumidBoost(pos, level);
     }
 
