@@ -1,0 +1,17 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": [
+    {
+      "item": "oddc:greatroot_repeater"
+    },
+    {
+      "item": "oddc:speedy_greatroot_boomerang"
+    }
+  ],
+  "metalCounts": [
+    {
+      "metal": "gold",
+      "count": 45
+    }
+  ]
+}

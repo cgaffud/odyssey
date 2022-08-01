@@ -9,6 +9,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +25,7 @@ import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
     public static final float WEAVER_FANG_ARROW_WEB_AMPLIFY = 2f;
@@ -35,7 +38,7 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
     public OdysseyArrow(Level p_i46768_1_, LivingEntity p_i46768_2_, ArrowType arrowType) {
         super(EntityTypeRegistry.ARROW.get(), p_i46768_2_, p_i46768_1_);
         this.arrowType = arrowType;
-        this.setBaseDamage(arrowType.getDamage());
+        this.setBaseDamage(arrowType.damage);
     }
 
     public OdysseyArrow(Level p_i46769_1_, double p_i46769_2_, double p_i46769_4_, double p_i46769_6_) {
@@ -55,7 +58,7 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         if (compoundNBT.contains("ArrowType")) {
             this.arrowType = ArrowType.valueOf(compoundNBT.getString("ArrowType"));
         }
-        this.setBaseDamage(this.getArrowType().getDamage());
+        this.setBaseDamage(this.getArrowType().damage);
     }
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
@@ -78,13 +81,7 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
     }
 
     protected void onHitEntity(EntityHitResult entityHitResult) {
-        if(this.arrowType == ArrowType.WEAVER_FANG && this.random.nextFloat() < Weaver.WEB_ATTACK_CHANCE * WEAVER_FANG_ARROW_WEB_AMPLIFY){
-            Entity entity = entityHitResult.getEntity();
-            BlockPos blockPos = new BlockPos(entity.getPosition(1f));
-            if (entity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
-                entity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
-            }
-        }
+        this.arrowType.onEntityHit(entityHitResult);
         super.onHitEntity(entityHitResult);
     }
 
@@ -113,40 +110,64 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
     }
 
     public enum ArrowType{
-        FLINT(ItemRegistry.ARROW::get, 5.0d, 0, new ResourceLocation("textures/entity/projectiles/arrow.png")),
-        WEAVER_FANG(ItemRegistry.WEAVER_FANG_ARROW::get, 5.5d, 0),
-        CLOVER_STONE(ItemRegistry.CLOVER_STONE_ARROW::get, 5.5d, 1),
-        AMETHYST(ItemRegistry.AMETHYST_ARROW::get, 6.0d, 0);
+        FLINT(ItemRegistry.ARROW::get, 5.0d, new ResourceLocation("textures/entity/projectiles/arrow.png")),
+        SPIDER_FANG(ItemRegistry.SPIDER_FANG_ARROW::get, 5d, (entityHitResult) -> {
+            Entity entity = entityHitResult.getEntity();
+            if(!entity.level.isClientSide && entity instanceof LivingEntity livingTarget) {
+                livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + 25, 0));
+            }
+        }),
+        WEAVER_FANG(ItemRegistry.WEAVER_FANG_ARROW::get, 5.5, (entityHitResult) -> {
+            Entity entity = entityHitResult.getEntity();
+            if(entity.level.random.nextFloat() < Weaver.WEB_ATTACK_CHANCE * WEAVER_FANG_ARROW_WEB_AMPLIFY){
+                BlockPos blockPos = new BlockPos(entity.getPosition(1f));
+                if (entity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
+                    entity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
+                }
+            }
+        }),
+        CLOVER_STONE(ItemRegistry.CLOVER_STONE_ARROW::get, 6d, 1),
+        AMETHYST(ItemRegistry.AMETHYST_ARROW::get, 6.0d);
 
         private final Lazy<Item> lazyItem;
-        private final double damage;
-        private final int looting;
-        private final ResourceLocation resourceLocation;
+        public final double damage;
+        private int looting;
+        private Consumer<EntityHitResult> onEntityHit;
+        private ResourceLocation resourceLocation;
 
-        ArrowType(Lazy<Item> lazyItem, double damage, int looting){
-            this.lazyItem = lazyItem;
-            this.damage = damage;
-            this.looting = looting;
-            this.resourceLocation = new ResourceLocation(Odyssey.MOD_ID, String.format("textures/entity/projectiles/%s_arrow.png", this.name().toLowerCase(Locale.ROOT)));
+        ArrowType(Lazy<Item> lazyItem, double damage, ResourceLocation resourceLocation){
+            this(lazyItem, damage);
+            this.resourceLocation = resourceLocation;
         }
 
-        ArrowType(Lazy<Item> lazyItem, double damage, int looting, ResourceLocation resourceLocation){
+        ArrowType(Lazy<Item> lazyItem, double damage, int looting){
+            this(lazyItem, damage);
+            this.looting = looting;
+        }
+
+        ArrowType(Lazy<Item> lazyItem, double damage, Consumer<EntityHitResult> onEntityHit){
+            this(lazyItem, damage);
+            this.onEntityHit = onEntityHit;
+        }
+
+        ArrowType(Lazy<Item> lazyItem, double damage){
             this.lazyItem = lazyItem;
             this.damage = damage;
-            this.looting = looting;
-            this.resourceLocation = resourceLocation;
+            this.looting = 0;
+            this.onEntityHit = (entityHitResult) -> {};
+            this.resourceLocation = new ResourceLocation(Odyssey.MOD_ID, String.format("textures/entity/projectiles/%s_arrow.png", this.name().toLowerCase(Locale.ROOT)));
         }
 
         public Item getItem(){
             return this.lazyItem.get();
         }
 
-        public double getDamage(){
-            return this.damage;
-        }
-
         public int getLooting(){
             return this.looting;
+        }
+
+        public void onEntityHit(EntityHitResult entityHitResult) {
+            this.onEntityHit.accept(entityHitResult);
         }
 
         public ResourceLocation getResourceLocation(){

@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.enchantment.odyssey.ConditionalAmpEnchantment;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
+import com.bedmen.odyssey.items.MeleeWeaponClass;
 import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.nbt.CompoundTag;
@@ -19,29 +20,35 @@ import java.util.function.Supplier;
 
 public class CondAmpMeleeItem extends EquipmentMeleeItem {
 
-    public Supplier<Enchantment> enchSup;
+    public final Supplier<Enchantment> enchSup;
 
-    public CondAmpMeleeItem(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, Properties builderIn, LevEnchSup levEnchSup) {
-        super(tier, attackDamageIn, attackSpeedIn, canSweep, builderIn, levEnchSup);
+    public CondAmpMeleeItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, LevEnchSup levEnchSup) {
+        super(builderIn, tier, meleeWeaponClass, damage, levEnchSup);
         this.enchSup = levEnchSup.enchantmentSupplier;
     }
 
     public static float activeFraction(ItemStack itemStack, LivingEntity livingEntity) {
         if (itemStack.getItem() instanceof CondAmpMeleeItem lightMeleeItem && lightMeleeItem.enchSup.get() instanceof ConditionalAmpEnchantment conditionalAmpEnchantment)
-            return conditionalAmpEnchantment.getActiveFraction(livingEntity.level, livingEntity);
+            return conditionalAmpEnchantment.getActiveFactor(livingEntity.level, livingEntity);
         return 0.0f;
     }
 
-    public static class Binary extends CondAmpMeleeItem implements INeedsToRegisterItemModelProperty {
+    public static class Numerical extends CondAmpMeleeItem implements INeedsToRegisterItemModelProperty {
 
-        public Binary(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, Properties builderIn, LevEnchSup levEnchSup) {
-            super(tier, attackDamageIn, attackSpeedIn, canSweep, builderIn, levEnchSup);
+        private int intervals;
+        public Numerical(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, int numTextures, LevEnchSup levEnchSup){
+            super(builderIn, tier, meleeWeaponClass, damage, levEnchSup);
+            this.intervals = numTextures-1;
         }
 
         public void registerItemModelProperties() {
             ItemProperties.register(this, new ResourceLocation("active"), (itemStack, clientLevel, livingEntity, i) -> {
-                if ((livingEntity != null) && (activeFraction(itemStack, livingEntity) > 0.0f)) {
-                    return 1.0F;
+                if ((livingEntity == null) || (activeFraction(itemStack, livingEntity) == 0))
+                    return 0.0F;
+                for (int j = 0; j < this.intervals; j++) {
+                    float frac = activeFraction(itemStack, livingEntity);
+                    if ((frac > ((float)j)/this.intervals) && (frac <= ((float)(j+1)/this.intervals)))
+                        return j+1;
                 }
                 return 0.0F;
             });
@@ -56,17 +63,18 @@ public class CondAmpMeleeItem extends EquipmentMeleeItem {
         public interface ColorProvider {
             int getColor(Level level, Entity entity);
         }
-        private ColorProvider colorer;
-        private int colorDefault;
-        public Gradient(Tier tier, float attackDamageIn, float attackSpeedIn, boolean canSweep, ColorProvider colorer, int colorDefault, Properties builderIn, LevEnchSup levEnchSup){
-            super(tier, attackDamageIn, attackSpeedIn, canSweep, builderIn, levEnchSup);
-            this.colorer = colorer;
+        private final ColorProvider colorProvider;
+        private final int colorDefault;
+
+        public Gradient(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, ColorProvider colorProvider, int colorDefault, LevEnchSup levEnchSup) {
+            super(builderIn, tier, meleeWeaponClass, damage, levEnchSup);
+            this.colorProvider = colorProvider;
             this.colorDefault = colorDefault;
         }
 
         public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
             /*TODO: use a more accurate tag?*/
-            itemStack.getOrCreateTag().putInt(Odyssey.MOD_ID+"_gradient_color",this.colorer.getColor(level, entity));
+            itemStack.getOrCreateTag().putInt(Odyssey.MOD_ID+"_gradient_color",this.colorProvider.getColor(level, entity));
             super.inventoryTick(itemStack, level, entity, compartments, selected);
         }
 

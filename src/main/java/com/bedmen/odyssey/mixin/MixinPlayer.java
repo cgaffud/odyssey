@@ -2,21 +2,27 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
-import com.bedmen.odyssey.items.equipment.DualWieldItem;
 import com.bedmen.odyssey.items.equipment.SniperBowItem;
+import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITagManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,6 +39,8 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
     public void awardStat(Stat<?> p_36247_) {}
     @Shadow
     public float getCurrentItemAttackStrengthDelay() {return 0.0f;}
+
+    @Shadow public abstract void increaseScore(int p_36402_);
 
     private int attackStrengthTickerO;
     private boolean isSniperScoping;
@@ -55,7 +63,7 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     @Inject(method = "getCurrentItemAttackStrengthDelay", at = @At("HEAD"), cancellable = true)
     private void onGetCurrentItemAttackStrengthDelay(CallbackInfoReturnable<Float> cir) {
-        if(DualWieldItem.isDualWielding(getPlayerEntity())){
+        if(WeaponUtil.isDualWielding(getPlayerEntity())){
             cir.setReturnValue((float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 10.0D));
             cir.cancel();
         }
@@ -90,6 +98,14 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
         return this.isSniperScoping;
     }
 
+    protected void blockUsingShield(LivingEntity livingEntity) {
+        super.blockUsingShield(livingEntity);
+        if (livingEntity.getMainHandItem().getItem() instanceof EquipmentMeleeItem equipmentMeleeItem
+        && equipmentMeleeItem.meleeWeaponClass.canBreakShield) {
+            this.disableShield(true);
+        }
+    }
+
     public void disableShield(boolean isGuaranteed) {
         float f = 0.25F + (float)EnchantmentHelper.getBlockEfficiency(this) * 0.05F;
         if (isGuaranteed) {
@@ -108,6 +124,32 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
                 this.level.broadcastEntityEvent(this, (byte)30);
             }
         }
+    }
+
+    public boolean isDamageSourceBlocked(DamageSource damageSource) {
+        Entity entity = damageSource.getDirectEntity();
+        boolean flag = false;
+        if (entity instanceof AbstractArrow) {
+            AbstractArrow abstractarrow = (AbstractArrow)entity;
+            // Change from > 0 to > EnchantmentUtil.getImpenetrable(this)
+            if (abstractarrow.getPierceLevel() > EnchantmentUtil.getImpenetrable(this)) {
+                flag = true;
+            }
+        }
+
+        if (!damageSource.isBypassArmor() && this.isBlocking() && !flag) {
+            Vec3 vec32 = damageSource.getSourcePosition();
+            if (vec32 != null) {
+                Vec3 vec3 = this.getViewVector(1.0F);
+                Vec3 vec31 = vec32.vectorTo(this.position()).normalize();
+                vec31 = new Vec3(vec31.x, 0.0D, vec31.z);
+                if (vec31.dot(vec3) < 0.0D) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private Player getPlayerEntity(){

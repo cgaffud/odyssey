@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.block;
 
+import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +24,7 @@ public class OdysseyWebBlock extends WebBlock implements INeedsToRegisterRenderT
     public float getDestroyProgress(BlockState blockState, Player player, BlockGetter blockGetter, BlockPos blockPos) {
         float f = blockState.getDestroySpeed(blockGetter, blockPos);
         Item item = player.getMainHandItem().getItem();
-        if(item instanceof SwordItem || item == Items.SHEARS){
+        if(item instanceof SwordItem || item == Items.SHEARS || (item instanceof EquipmentMeleeItem equipmentMeleeItem && equipmentMeleeItem.meleeWeaponClass.canSweep)){
             f /= 15f;
         }
         int i = ForgeHooks.isCorrectToolForDrops(blockState, player) ? 30 : 100;

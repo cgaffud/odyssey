@@ -51,6 +51,9 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<Weaver>> WEAVER = ENTITY_TYPE.register("weaver", () -> EntityType.Builder.<Weaver>of(Weaver::new, MobCategory.MONSTER).sized(1.4F, 0.8F).clientTrackingRange(10).build(new ResourceLocation(Odyssey.MOD_ID, "weaver").toString()));
     public static final RegistryObject<EntityType<BabyLeviathan>> BABY_LEVIATHAN = ENTITY_TYPE.register("baby_leviathan", () -> EntityType.Builder.<BabyLeviathan>of(BabyLeviathan::new, MobCategory.MONSTER).sized(0.75F, 0.2F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "baby_leviathan").toString()));
 
+    // - Wraith
+    public static final RegistryObject<EntityType<Wraith>> WRAITH = ENTITY_TYPE.register("wraith", () -> EntityType.Builder.<Wraith>of(Wraith::new, MobCategory.MONSTER).sized(0.9F, 2.85F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith").toString()));
+
     // Animals
     public static final RegistryObject<EntityType<PassiveWeaver>> PASSIVE_WEAVER = ENTITY_TYPE.register("passive_weaver", () -> EntityType.Builder.<PassiveWeaver>of(PassiveWeaver::new, MobCategory.CREATURE).sized(1.4F, 0.8F).clientTrackingRange(10).build(new ResourceLocation(Odyssey.MOD_ID, "passive_weaver").toString()));
     public static final RegistryObject<EntityType<OdysseyPolarBear>> POLAR_BEAR = ENTITY_TYPE.register("polar_bear", () -> EntityType.Builder.<OdysseyPolarBear>of(OdysseyPolarBear::new, MobCategory.CREATURE).immuneTo(Blocks.POWDER_SNOW).sized(1.4F, 1.4F).clientTrackingRange(10).build(new ResourceLocation(Odyssey.MOD_ID, "polar_bear").toString()));

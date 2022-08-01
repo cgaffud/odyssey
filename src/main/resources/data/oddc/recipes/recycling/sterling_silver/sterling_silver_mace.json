@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:sterling_silver_mace"
+  },
+  "metalCounts": [
+    {
+      "metal": "sterling_silver",
+      "count": 27
+    }
+  ]
+}

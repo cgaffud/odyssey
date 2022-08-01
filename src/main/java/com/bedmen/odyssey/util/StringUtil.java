@@ -5,6 +5,16 @@ import java.text.DecimalFormat;
 public class StringUtil {
     public static final DecimalFormat df = new DecimalFormat("#.##");
 
+    public static String timeFormat(int i)
+    {
+        return floatFormat(i / 20f) + "s";
+    }
+
+    public static String multiplierFormat(float f)
+    {
+        return floatFormat(f) + "x";
+    }
+
     public static String floatFormat(float f)
     {
         if(f == (int) f)

@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " A ",
-    "ABA",
-    " A "
+    " AA",
+    "ABB",
+    "AB "
   ],
   "key": {
     "A": {
       "item": "minecraft:copper_ingot"
     },
     "B": {
-      "item": "oddc:bone_boomerang"
+      "item": "minecraft:bone"
     }
   },
   "result": {

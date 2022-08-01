@@ -62,6 +62,11 @@
           ],
           "name": "oddc:rusty_arm"
         }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:killed_by_player"
+        }
       ]
     }
   ]

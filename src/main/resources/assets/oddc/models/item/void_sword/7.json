@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/void_sword",
+  "textures": {
+    "layer0": "oddc:item/void_sword/7"
+  }
+}

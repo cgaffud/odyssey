@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.loot.modifiers.DoubleHatchetModifier;
+import com.bedmen.odyssey.loot.modifiers.DoubleDualWieldItemModifier;
 import com.bedmen.odyssey.loot.modifiers.NoLootOnExplosionModifier;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -18,5 +18,5 @@ public class LootModifierRegistry {
     }
 
     public static final RegistryObject<GlobalLootModifierSerializer<?>> NO_LOOT_ON_EXPLOSION = LOOT_MODIFIER.register("no_loot_on_explosion", NoLootOnExplosionModifier.Serializer::new);
-    public static final RegistryObject<GlobalLootModifierSerializer<?>> DOUBLE_HATCHETS = LOOT_MODIFIER.register("double_hatchets", DoubleHatchetModifier.Serializer::new);
+    public static final RegistryObject<GlobalLootModifierSerializer<?>> DOUBLE_DUAL_WIELD_ITEM = LOOT_MODIFIER.register("double_dual_wield_item", DoubleDualWieldItemModifier.Serializer::new);
 }

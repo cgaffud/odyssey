@@ -14,6 +14,7 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.trades.OdysseyTrades;
+import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.FeatureGen;
@@ -80,11 +81,11 @@ public class Odyssey
             OdysseyLootItemFunctions.registerFunctions();
             OdysseyTrades.addTrades();
             EntityEvents.initEntityMap();
-            ((RangedAttribute) Attributes.ARMOR).minValue = -40.0d;
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
 
             //Equipment / Enchantments
             EquipmentArmorItem.initEquipment();
+            EquipmentShieldItem.initEquipment();
             EquipmentMeleeItem.initEquipment();
             EquipmentItem.initEquipment();
             EquipmentPickaxeItem.initEquipment();
@@ -97,6 +98,7 @@ public class Odyssey
             EnchantmentUtil.init();
 
             //Generation
+            BiomeUtil.init();
             OreGen.registerOres();
             FeatureGen.registerFeatures();
             TreeGen.registerTrees();
@@ -136,6 +138,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.POLAR_BEAR.get(), PolarBear.createAttributes().build());
         event.put(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBrute.createAttributes().build());
         event.put(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpider.createAttributes().build());
+        event.put(EntityTypeRegistry.WRAITH.get(), Wraith.createAttributes().build());
 //
 //        //Bosses
         event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolem.createAttributes().build());

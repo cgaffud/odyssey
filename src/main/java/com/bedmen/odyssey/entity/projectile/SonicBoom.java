@@ -19,9 +19,9 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
-public class SonicBoom extends AbstractHurtingProjectile {
+public class SonicBoom extends AbstractHurtingProjectile implements SwungProjectile {
     private static final int MAX_TICKS = 40;
-    public static final double INITIAL_SPEED = 1.2d;
+    public static final float INITIAL_SPEED = 1.2f;
 
     public SonicBoom(EntityType<? extends SonicBoom> entityType, Level world) {
         super(entityType, world);
@@ -173,5 +173,9 @@ public class SonicBoom extends AbstractHurtingProjectile {
             this.setYRot((float)(Mth.atan2(vector3d.x, vector3d.z) * (double)(180F / (float)Math.PI)));
             this.yRotO = this.getYRot();
         }
+    }
+
+    public void launch(Entity entity, float xRot, float yRot, float zRot, float inaccuracy) {
+        shootFromRotation(entity, xRot, yRot, zRot, INITIAL_SPEED, inaccuracy);
     }
 }

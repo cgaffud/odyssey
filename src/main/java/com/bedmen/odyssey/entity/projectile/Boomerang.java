@@ -9,12 +9,10 @@ import com.bedmen.odyssey.util.EnchantmentUtil;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -33,10 +31,9 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import javax.annotation.Nullable;
 
 public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
-    private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(Boomerang.class, EntityDataSerializers.BYTE);
     private BoomerangType boomerangType = BoomerangType.WOODEN;
     private ItemStack thrownStack = new ItemStack(ItemRegistry.WOODEN_BOOMERANG.get());
-    private boolean multishot = false;
+    private boolean isMultishotClone = false;
     private boolean dealtDamage;
     public int returningTicks;
     private int despawnTicks;
@@ -45,12 +42,11 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         super(type, level);
     }
 
-    public Boomerang(Level level, LivingEntity thrower, ItemStack thrownStackIn, boolean multishot) {
+    public Boomerang(Level level, LivingEntity thrower, ItemStack thrownStackIn, boolean isMultishotClone) {
         super(EntityTypeRegistry.BOOMERANG.get(), thrower, level);
         this.thrownStack = thrownStackIn.copy();
-        this.entityData.set(ID_LOYALTY, (byte) EnchantmentUtil.getLoyalty(thrownStackIn));
         this.boomerangType = ((BoomerangItem)this.thrownStack.getItem()).getBoomerangType();
-        this.multishot = multishot;
+        this.isMultishotClone = isMultishotClone;
     }
 
     public Boomerang(Level p_i48791_1_, double p_i48791_2_, double p_i48791_4_, double p_i48791_6_) {
@@ -59,7 +55,6 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ID_LOYALTY, (byte)0);
     }
 
     /**
@@ -67,29 +62,34 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
      */
     public void tick() {
         this.setNoGravity(true);
-        if (this.inGroundTime > 0 || this.tickCount > this.getBoomerangType().getReturnTime()) {
+        if (this.inGroundTime > 0 || this.tickCount > ((BoomerangItem)this.thrownStack.getItem()).getTurnaroundTime(this.thrownStack)) {
             this.dealtDamage = true;
         }
 
-        Entity entity = this.getOwner();
-        if ((this.dealtDamage || this.isNoPhysics()) && entity != null) {
-            int loyalty = this.getLoyalty();
+        Entity owner = this.getOwner();
+        if ((this.dealtDamage || this.isNoPhysics()) && owner != null) {
             if (!this.isAcceptibleReturnOwner()) {
                 despawn();
             } else {
                 this.setNoPhysics(true);
-                Vec3 vector3d = new Vec3(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
-                double d0 = 0.03D * (double)(loyalty+1);
+                Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
+                double d0 = 0.04D * (double)this.boomerangType.getVelocity(this.thrownStack);
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
 
                 ++this.returningTicks;
             }
-        } else if (entity == null && this.getDeltaMovement().length() < 0.01){
+        } else if (owner == null && this.getDeltaMovement().length() < 0.01){
             this.despawnTicks++;
         }
 
         if(this.despawnTicks > 20){
             despawn();
+        }
+
+        float velocity = ((BoomerangItem)this.thrownStack.getItem()).getBoomerangType().getVelocity(this.thrownStack);
+        int tickFrequency = Integer.max((int)(5f/velocity), 2);
+        if (!this.level.isClientSide && this.tickCount % tickFrequency == 1) {
+            this.level.playSound(null, this, SoundEvents.PLAYER_ATTACK_SWEEP, owner instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE, 1.0f, velocity);
         }
 
         super.tick();
@@ -113,11 +113,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     }
 
     protected ItemStack getPickupItem() {
-        return this.multishot ? ItemStack.EMPTY : this.thrownStack.copy();
-    }
-
-    public int getLoyalty() {
-        return this.entityData.get(ID_LOYALTY);
+        return this.isMultishotClone ? ItemStack.EMPTY : this.thrownStack.copy();
     }
 
     @Nullable
@@ -125,16 +121,19 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         if(this.dealtDamage){
             if(!this.level.isClientSide){
                 AABB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
-                for(Entity entity : this.level.getEntities(this, box, this::isBoomerangOwner)) {
-                    LivingEntity livingEntity = (LivingEntity)entity;
-                    if(livingEntity.getMainHandItem().isEmpty()){
-                        livingEntity.setItemInHand(InteractionHand.MAIN_HAND, this.thrownStack);
-                    } else if (livingEntity.getOffhandItem().isEmpty()){
-                        livingEntity.setItemInHand(InteractionHand.OFF_HAND, this.thrownStack);
-                    }
-                    this.discard();
-                    break;
-                }
+                this.level.getEntities(this, box, this::isNonPlayerBoomerangOwner)
+                        .stream().findFirst()
+                        .ifPresent(owner -> {
+                            if (!this.isMultishotClone) {
+                                LivingEntity livingEntity = (LivingEntity)owner;
+                                if(livingEntity.getMainHandItem().isEmpty()){
+                                    livingEntity.setItemInHand(InteractionHand.MAIN_HAND, this.thrownStack);
+                                } else if (livingEntity.getOffhandItem().isEmpty()){
+                                    livingEntity.setItemInHand(InteractionHand.OFF_HAND, this.thrownStack);
+                                }
+                            }
+                            this.discard();
+                        });
             }
         } else if(!this.isNoPhysics()) {
             return super.findHitEntity(startVec, endVec);
@@ -142,27 +141,33 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return null;
     }
 
-    private boolean isBoomerangOwner(Entity entity){
+    private boolean isNonPlayerBoomerangOwner(Entity entity){
         if(this.getOwner() == null){
             return false;
         }
-        return entity instanceof BoomerangAttackMob && entity instanceof LivingEntity && entity.getUUID() == this.getOwner().getUUID();
+        return entity instanceof BoomerangAttackMob && entity instanceof LivingEntity && this.ownedBy(entity);
     }
 
     protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
-        float f = (float)this.getBoomerangType().getDamage();
+        if (this.piercingIgnoreEntityIds == null) {
+            this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
+        }
+        if (this.piercingIgnoreEntityIds.contains(entity.getId())) {
+            return;
+        }
+        this.piercingIgnoreEntityIds.add(entity.getId());
+        float f = (float)this.getBoomerangType().damage;
         if (entity instanceof LivingEntity) {
             LivingEntity livingentity = (LivingEntity)entity;
             f += EnchantmentHelper.getDamageBonus(this.thrownStack, livingentity.getMobType());
         }
-        Entity entity1 = this.getOwner();
-        DamageSource damagesource = OdysseyDamageSource.boomerang(this, entity1 == null ? this : entity1);
+        Entity owner = this.getOwner();
+        DamageSource damagesource = OdysseyDamageSource.boomerang(this, owner == null ? this : owner);
         if (entity.hurt(damagesource, f)) {
             if (entity.getType() == EntityType.ENDERMAN) {
                 return;
             }
-
             if (entity instanceof LivingEntity livingEntity) {
                 if (this.knockback > 0) {
                     Vec3 vec3 = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double)this.knockback * 0.6D);
@@ -171,18 +176,14 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
                     }
                 }
 
-                if (entity1 instanceof LivingEntity) {
-                    EnchantmentHelper.doPostHurtEffects(livingEntity, entity1);
-                    EnchantmentHelper.doPostDamageEffects((LivingEntity)entity1, livingEntity);
+                if (owner instanceof LivingEntity) {
+                    EnchantmentHelper.doPostHurtEffects(livingEntity, owner);
+                    EnchantmentHelper.doPostDamageEffects((LivingEntity)owner, livingEntity);
                 }
 
                 this.doPostHurtEffects(livingEntity);
             }
         }
-        if (this.piercingIgnoreEntityIds == null) {
-            this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
-        }
-        this.piercingIgnoreEntityIds.add(entity.getId());
         if (this.piercingIgnoreEntityIds.size() >= this.getPierceLevel() + 1) {
             this.dealtDamage = true;
             this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
@@ -202,7 +203,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
 
     protected boolean tryPickup(Player player) {
         boolean flag = this.isNoPhysics() && this.ownedBy(player);
-        if(flag && this.multishot){
+        if(flag && this.isMultishotClone){
             this.discard();
             return false;
         }
@@ -215,11 +216,10 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
             this.thrownStack = ItemStack.of(compoundNBT.getCompound("Boomerang"));
         }
         this.dealtDamage = compoundNBT.getBoolean("DealtDamage");
-        this.entityData.set(ID_LOYALTY, (byte)EnchantmentUtil.getLoyalty(this.thrownStack));
         if (compoundNBT.contains("BoomerangType")) {
             this.boomerangType = BoomerangType.valueOf(compoundNBT.getString("BoomerangType"));
         }
-        this.multishot = compoundNBT.getBoolean("IsMultishot");
+        this.isMultishotClone = compoundNBT.getBoolean("IsMultishot");
     }
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
@@ -227,7 +227,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         compoundNBT.put("Boomerang", this.thrownStack.save(new CompoundTag()));
         compoundNBT.putBoolean("DealtDamage", this.dealtDamage);
         compoundNBT.putString("BoomerangType", this.boomerangType.name());
-        compoundNBT.putBoolean("IsMultishot", this.multishot);
+        compoundNBT.putBoolean("IsMultishot", this.isMultishotClone);
     }
 
 
@@ -240,11 +240,9 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     }
 
     public void tickDespawn() {
-        int i = this.entityData.get(ID_LOYALTY);
-        if (this.pickup != Pickup.ALLOWED || i <= 0) {
+        if (this.pickup != Pickup.ALLOWED) {
             super.tickDespawn();
         }
-
     }
 
     protected float getWaterInertia() {
@@ -273,46 +271,28 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     }
 
     public enum BoomerangType{
-        WOODEN(4.0d, 20, 500),
-        BONE(5.0d, 20, 0),
-        UPGRADED_BONE(6.0d, 20, 0),
-        SPEEDY_BONE(5.0d, 14, 0),
-        BONERANG(6.0d, 14, 0),
-        CLOVER_STONE(6.5d, 20, 0),
-        GREATROOT(7.0d, 20, 0),
-        UPGRADED_GREATROOT(8.0d, 20, 0),
-        SPEEDY_GREATROOT(7.0d, 12, 0),
-        SUPER_GREATROOT(12.0d, 30, 0);
+        WOODEN(4.0d, 0.8f, 200),
+        BONE(5.0d, 1.0f, 0),
+        SPEEDY_BONE(5.0d, 1.2f, 0),
+        BONERANG(5.0d, 1.2f, 0),
+        CLOVER_STONE(6.0d, 1.0f, 0),
+        GREATROOT(8.0d, 1.2f, 0),
+        SPEEDY_GREATROOT(8.0d, 1.5f, 0),
+        SUPER_GREATROOT(12.0d, 1.25f, 0);
 
 
-        private final double damage;
-        private final int returnTime;
-        private final int burnTime;
+        public final double damage;
+        private final float velocity;
+        public final int burnTime;
 
-        BoomerangType(double damage, int returnTime, int burnTime){
+        BoomerangType(double damage, float velocity, int burnTime){
             this.damage = damage;
-            this.returnTime = returnTime;
+            this.velocity = velocity;
             this.burnTime = burnTime;
         }
 
-        public double getDamage(){
-            return this.damage;
-        }
-
-        public int getReturnTime(){
-            return this.returnTime;
-        }
-
-        public int getChargeTime(){
-            return this.returnTime / 2;
-        }
-
-        public float getAttackTime(){
-            return Math.round(10f * 20f / (float)this.getReturnTime()) / 10f - 4f;
-        }
-
-        public int getBurnTime(){
-            return this.burnTime;
+        public float getVelocity(ItemStack boomerang) {
+            return this.velocity * EnchantmentUtil.getSuperChargeMultiplier(boomerang);
         }
     }
 }
