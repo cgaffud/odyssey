@@ -180,6 +180,7 @@ public class ItemRegistry {
     public static final LevEnchSup BOTANICAL = new LevEnchSup(EnchantmentRegistry.BOTANICAL);
     public static final LevEnchSup XEROPHILIC = new LevEnchSup(EnchantmentRegistry.XEROPHILIC);
     public static final LevEnchSup CRYOPHILIC = new LevEnchSup(EnchantmentRegistry.CRYOPHILIC);
+    public static final LevEnchSup VOID_AMPLIFICATION = new LevEnchSup(EnchantmentRegistry.VOID_AMPLIFICATION);
     public static final LevEnchSup[] IMPENETRABLE = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.IMPENETRABLE, 1);
 
     // # Magic
@@ -260,6 +261,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> RAIN_SWORD = ITEMS.register("rain_sword", () -> new CondAmpMeleeItem.Gradient(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.SWORD, 7f, BiomeUtil::getFoliageColor, 9551193, BOTANICAL));
     public static final RegistryObject<Item> ARID_MACE = ITEMS.register("arid_mace", () -> new CondAmpMeleeItem.Gradient(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.MACE, 9f, BiomeUtil::getAridColor, 0xFF8B33, XEROPHILIC));
     public static final RegistryObject<Item> CRYOSLIVER = ITEMS.register("cryosliver", () -> new CondAmpMeleeItem.Gradient(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.DAGGER, 6f, BiomeUtil::getColdColor, 0x66A6FF, CRYOPHILIC));
+    public static final RegistryObject<Item> VOID_SWORD = ITEMS.register("void_sword", () -> new CondAmpMeleeItem.Numerical(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.SWORD, 7f, 9, VOID_AMPLIFICATION));
     public static final RegistryObject<Item> BROKEN_SEA_SWORD = ITEMS.register("broken_sea_sword", () -> new EquipmentMeleeItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.DAGGER, 7f, DOWNPOUR[1]));
 
     // ## Tier 3

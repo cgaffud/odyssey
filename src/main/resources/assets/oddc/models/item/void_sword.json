@@ -1,0 +1,56 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "oddc:item/void_sword/0"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "active": 1
+      },
+      "model": "oddc:item/void_sword/1"
+    },
+    {
+      "predicate": {
+        "active": 2
+      },
+      "model": "oddc:item/void_sword/2"
+    },
+    {
+      "predicate": {
+        "active": 3
+      },
+      "model": "oddc:item/void_sword/3"
+    },
+    {
+      "predicate": {
+        "active": 4
+      },
+      "model": "oddc:item/void_sword/4"
+    },
+    {
+      "predicate": {
+        "active": 5
+      },
+      "model": "oddc:item/void_sword/5"
+    },
+    {
+      "predicate": {
+        "active": 6
+      },
+      "model": "oddc:item/void_sword/6"
+    },
+    {
+      "predicate": {
+        "active": 7
+      },
+      "model": "oddc:item/void_sword/7"
+    },
+    {
+      "predicate": {
+        "active": 8
+      },
+      "model": "oddc:item/void_sword/8"
+    }
+  ]
+}
