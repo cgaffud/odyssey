@@ -1,11 +1,13 @@
 package com.bedmen.odyssey.items;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +17,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -54,7 +57,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
 
                 float superChargeMultiplier = EnchantmentUtil.getSuperChargeMultiplier(bow);
                 float charge = getChargeForTime(useTicks, bow, superChargeMultiplier);
-                float velocityFactor = charge * this.velocityMultiplier;
+                float velocityFactor = charge * this.getEffectiveVelocityMultiplier(bow);
 
                 if (!((double)charge < 0.1D)) {
                     boolean flag1 = player.getAbilities().instabuild || (ammo.getItem() instanceof ArrowItem && ((ArrowItem)ammo.getItem()).isInfinite(ammo, bow, player));
@@ -170,10 +173,27 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
 
     public void appendHoverText(ItemStack bow, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(bow, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(this.velocityMultiplier * getMaxCharge(bow))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(this.getEffectiveVelocityMultiplier(bow) * getMaxCharge(bow))).withStyle(ChatFormatting.BLUE));
         tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(WeaponUtil.getRangedChargeTime(bow, this.baseMaxChargeTicks))).withStyle(ChatFormatting.BLUE));
         if (flagIn.isAdvanced()) {
-            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.velocityMultiplier * getMaxCharge(bow) * WeaponUtil.BASE_ARROW_VELOCITY)).withStyle(ChatFormatting.BLUE));
+            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getEffectiveVelocityMultiplier(bow) * getMaxCharge(bow) * WeaponUtil.BASE_ARROW_VELOCITY)).withStyle(ChatFormatting.BLUE));
         }
+    }
+
+    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
+        float bonus = 0.0f;
+        if (entity instanceof LivingEntity livingEntity)
+            bonus = EnchantmentUtil.getConditionalAmpBonusRanged(itemStack, livingEntity);
+        itemStack.getOrCreateTag().putFloat(Odyssey.MOD_ID+"_conditional_amp", bonus);
+        super.inventoryTick(itemStack, level, entity, compartments, selected);
+    }
+
+    private float getEffectiveVelocityMultiplier(ItemStack bow) {
+        CompoundTag tag = bow.getTag();
+        float conditionalAmpBonus = 1.0f;
+        if (tag != null) {
+            conditionalAmpBonus = tag.getFloat(Odyssey.MOD_ID + "_conditional_amp") + 1.0F;
+        }
+        return this.velocityMultiplier * conditionalAmpBonus;
     }
 }
