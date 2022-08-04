@@ -462,6 +462,6 @@
   "enchantment.oddc.xerophilic": "Xerophilic",
   "enchantment.oddc.cryophilic": "Cryophilic",
   "item.oddc.void_sword": "Ethereal Edge",
-  "enchantment.oddc.void_amplification": "Void Amplification"
-
+  "enchantment.oddc.void_amplification": "Void Amplification",
+  "item.oddc.void_bow": "Ethereal Fury"
 }
