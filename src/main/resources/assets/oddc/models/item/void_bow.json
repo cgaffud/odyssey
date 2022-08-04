@@ -1,0 +1,263 @@
+{
+  "parent": "minecraft:item/bow",
+  "textures": {
+    "layer0": "oddc:item/void_bow/bow"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "active": 0,
+        "pulling": 1
+      },
+      "model": "oddc:item/void_bow/pulling_0"
+    },
+    {
+      "predicate": {
+        "active": 0,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "oddc:item/void_bow/pulling_1"
+    },
+    {
+      "predicate": {
+        "active": 0,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "oddc:item/void_bow/pulling_2"
+    },
+    {
+      "predicate": {
+        "active": 1
+      },
+      "model": "oddc:item/void_bow/active_1"
+    },
+    {
+      "predicate": {
+        "active": 1,
+        "pulling": 1
+      },
+      "model": "oddc:item/void_bow/active_1_pulling_0"
+    },
+    {
+      "predicate": {
+        "active": 1,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "oddc:item/void_bow/active_1_pulling_1"
+    },
+    {
+      "predicate": {
+        "active": 1,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "oddc:item/void_bow/active_1_pulling_2"
+    },
+    {
+      "predicate": {
+        "active": 2
+      },
+      "model": "oddc:item/void_bow/active_2"
+    },
+    {
+      "predicate": {
+        "active": 2,
+        "pulling": 1
+      },
+      "model": "oddc:item/void_bow/active_2_pulling_0"
+    },
+    {
+      "predicate": {
+        "active": 2,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "oddc:item/void_bow/active_2_pulling_1"
+    },
+    {
+      "predicate": {
+        "active": 2,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "oddc:item/void_bow/active_2_pulling_2"
+    },
+    {
+      "predicate": {
+        "active": 3
+      },
+      "model": "oddc:item/void_bow/active_3"
+    },
+    {
+      "predicate": {
+        "active": 3,
+        "pulling": 1
+      },
+      "model": "oddc:item/void_bow/active_3_pulling_0"
+    },
+    {
+      "predicate": {
+        "active": 3,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "oddc:item/void_bow/active_3_pulling_1"
+    },
+    {
+      "predicate": {
+        "active": 3,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "oddc:item/void_bow/active_3_pulling_2"
+    },
+    {
+      "predicate": {
+        "active": 4
+      },
+      "model": "oddc:item/void_bow/active_4"
+    },
+    {
+      "predicate": {
+        "active": 4,
+        "pulling": 1
+      },
+      "model": "oddc:item/void_bow/active_4_pulling_0"
+    },
+    {
+      "predicate": {
+        "active": 4,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "oddc:item/void_bow/active_4_pulling_1"
+    },
+    {
+      "predicate": {
+        "active": 4,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "oddc:item/void_bow/active_4_pulling_2"
+    },
+    {
+      "predicate": {
+        "active": 5
+      },
+      "model": "oddc:item/void_bow/active_5"
+    },
+    {
+      "predicate": {
+        "active": 5,
+        "pulling": 1
+      },
+      "model": "oddc:item/void_bow/active_5_pulling_0"
+    },
+    {
+      "predicate": {
+        "active": 5,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "oddc:item/void_bow/active_5_pulling_1"
+    },
+    {
+      "predicate": {
+        "active": 5,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "oddc:item/void_bow/active_5_pulling_2"
+    },
+    {
+      "predicate": {
+        "active": 6
+      },
+      "model": "oddc:item/void_bow/active_6"
+    },
+    {
+      "predicate": {
+        "active": 6,
+        "pulling": 1
+      },
+      "model": "oddc:item/void_bow/active_6_pulling_0"
+    },
+    {
+      "predicate": {
+        "active": 6,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "oddc:item/void_bow/active_6_pulling_1"
+    },
+    {
+      "predicate": {
+        "active": 6,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "oddc:item/void_bow/active_6_pulling_2"
+    },
+    {
+      "predicate": {
+        "active": 7
+      },
+      "model": "oddc:item/void_bow/active_7"
+    },
+    {
+      "predicate": {
+        "active": 7,
+        "pulling": 1
+      },
+      "model": "oddc:item/void_bow/active_7_pulling_0"
+    },
+    {
+      "predicate": {
+        "active": 7,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "oddc:item/void_bow/active_7_pulling_1"
+    },
+    {
+      "predicate": {
+        "active": 7,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "oddc:item/void_bow/active_7_pulling_2"
+    },
+    {
+      "predicate": {
+        "active": 8
+      },
+      "model": "oddc:item/void_bow/active_8"
+    },
+    {
+      "predicate": {
+        "active": 8,
+        "pulling": 1
+      },
+      "model": "oddc:item/void_bow/active_8_pulling_0"
+    },
+    {
+      "predicate": {
+        "active": 8,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "oddc:item/void_bow/active_8_pulling_1"
+    },
+    {
+      "predicate": {
+        "active": 8,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "oddc:item/void_bow/active_8_pulling_2"
+    }
+  ]
+}

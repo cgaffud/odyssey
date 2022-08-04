@@ -204,9 +204,10 @@ def redInfo(image1, image2):
                     minRatio = ratio
     print((maxRatio, minRatio))
 
-open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/stone_mace.png"
-save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/clover_stone_mace.png"
-image1 = open_image(open_path1)
-recolor_image_randomly(image1, [0.95,1,0.95], [0.8,1,0.8])
-save_image(image1, save_path)
+image1 = open_image(r"/Users/Christoph/Documents/mod fun/odyssey/python/out/pulling_2.png")
+image2 = open_image(r"/Users/Christoph/Documents/mod fun/odyssey/python/out/active_8_pulling_2.png")
+for i in range(7):
+    img = combine_image(image1, image2, float(i+1)/7.0)
+    save_image(img, r"/Users/Christoph/Documents/mod fun/odyssey/python/out/active_" + str(i+1) + "_pulling_2.png")
+    
 print("Done")
