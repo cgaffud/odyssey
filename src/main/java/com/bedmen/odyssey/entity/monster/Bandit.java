@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.items.OdysseyCrossbowItem;
+import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -68,10 +69,14 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
         super.populateDefaultEquipmentSlots(difficultyInstance);
-        Item item = switch(random.nextInt(2)){
+        Item item = switch(random.nextInt(10)){
             default -> ItemRegistry.CROSSBOW.get();
+            case 0 -> ItemRegistry.BANDIT_DAGGER.get();
         };
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
+        if (item instanceof EquipmentMeleeItem equipmentMeleeItem && equipmentMeleeItem.meleeWeaponClass.isDualWield) {
+            this.setItemSlot(EquipmentSlot.OFFHAND, item.getDefaultInstance());
+        }
         this.reassessWeaponGoal();
     }
 
