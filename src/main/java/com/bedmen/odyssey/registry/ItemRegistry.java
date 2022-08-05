@@ -396,6 +396,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ODYSSEY_POLAR_BEAR_SPAWN_EGG = ITEMS.register("polar_bear_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.POLAR_BEAR, 15921906, 9803152, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> ZOMBIE_BRUTE_SPAWN_EGG = ITEMS.register("zombie_brute_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.ZOMBIE_BRUTE, 0x6464, 7969893, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> BARN_SPIDER_SPAWN_EGG = ITEMS.register("barn_spider_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BARN_SPIDER, 0x8A8A45, 11013646, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> BANDIT_SPAWN_EGG = ITEMS.register("bandit_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BANDIT, 0x503213, 0x282828, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
 
     /////////////////////////////////////////////////////////////////////////
 

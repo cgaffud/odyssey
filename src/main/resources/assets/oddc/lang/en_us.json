@@ -127,6 +127,7 @@
   "enchantment.oddc.thorns": "Thorns",
   "enchantment.oddc.turtling": "Turtling",
   "enchantment.oddc.unenchantable": "Unenchantable",
+  "enchantment.oddc.void_amplification": "Void Amplification",
   "enchantment.oddc.volatile": "Volatility",
   "enchantment.oddc.vulcan_strider": "Vulcan Strider",
   "enchantment.oddc.xerophilic": "Xerophilic",
@@ -136,6 +137,7 @@
   "entity.oddc.abandoned_iron_golem": "Abandoned Iron Golem",
   "entity.oddc.baby_creeper": "Baby Creeper",
   "entity.oddc.baby_leviathan": "Baby Leviathan",
+  "entity.oddc.bandit": "Bandit",
   "entity.oddc.barn_spider": "Barn Spider",
   "entity.oddc.boomerang": "Boomerang",
   "entity.oddc.camo_creeper": "Camo Creeper",
@@ -165,6 +167,7 @@
   "item.oddc.baby_creeper_spawn_egg": "Baby Creeper Spawn Egg",
   "item.oddc.baby_leviathan_bucket": "Bucket of Baby Leviathan",
   "item.oddc.baby_leviathan_spawn_egg": "Baby Leviathan Spawn Egg",
+  "item.oddc.bandit_spawn_egg": "Bandit Spawn Egg",
   "item.oddc.barn_spider_spawn_egg": "Barn Spider Spawn Egg",
   "item.oddc.battle_pickaxe": "Battle Pickaxe",
   "item.oddc.blunt_sabre": "Blunt Sabre",
@@ -421,6 +424,7 @@
   "item.oddc.turtle_chestplate": "Turtle Shell",
   "item.oddc.turtle_helmet": "Turtle Helmet",
   "item.oddc.turtle_leggings": "Turtle Leggings",
+  "item.oddc.void_sword": "Ethereal Edge",
   "item.oddc.weaver_egg": "Weaver Egg",
   "item.oddc.weaver_fang": "Weaver Fang",
   "item.oddc.weaver_fang.web_chance": "Cobweb Chance: ",
@@ -465,7 +469,5 @@
   "stat.oddc.interact_with_recycling_furnace": "Interactions with Recycling Furnace",
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
-  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
-  "item.oddc.void_sword": "Ethereal Edge",
-  "enchantment.oddc.void_amplification": "Void Amplification"
+  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened"
 }

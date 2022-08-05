@@ -140,6 +140,7 @@ public class ClientEvents {
             EntityRenderers.register(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBruteRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpiderRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WRAITH.get(), WraithRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.BANDIT.get(), BanditRenderer::new);
 
             //Boss Renderings
             EntityRenderers.register(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
