@@ -105,6 +105,7 @@
   "enchantment.oddc.ice_protection": "Ice Protection",
   "enchantment.oddc.impenetrable": "Impenetrable",
   "enchantment.oddc.kinetic_protection": "Antikinetic",
+  "enchantment.oddc.larceny": "Larceny",
   "enchantment.oddc.loyalty": "Loyalty",
   "enchantment.oddc.molten_affinity": "Molten Affinity",
   "enchantment.oddc.moon_blessing": "Lunar Blessing",
@@ -167,7 +168,10 @@
   "item.oddc.baby_creeper_spawn_egg": "Baby Creeper Spawn Egg",
   "item.oddc.baby_leviathan_bucket": "Bucket of Baby Leviathan",
   "item.oddc.baby_leviathan_spawn_egg": "Baby Leviathan Spawn Egg",
-  "item.oddc.bandit_dagger": "Greed Thorn",
+  "item.oddc.bandit_dagger": "Greedthorn",
+  "item.oddc.bandit_dagger.emerald_count": "Emeralds Found: ",
+  "item.oddc.bandit_dagger.illager_count": "Illagers Killed: ",
+  "item.oddc.bandit_dagger.villager_count": "Villagers Killed: ",
   "item.oddc.bandit_spawn_egg": "Bandit Spawn Egg",
   "item.oddc.barn_spider_spawn_egg": "Barn Spider Spawn Egg",
   "item.oddc.battle_pickaxe": "Battle Pickaxe",
@@ -470,8 +474,5 @@
   "stat.oddc.interact_with_recycling_furnace": "Interactions with Recycling Furnace",
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
-  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
-  "item.oddc.bandit_dagger.villager_count": "Villagers Killed: ",
-  "item.oddc.bandit_dagger.illager_count": "Illagers Killed: ",
-  "item.oddc.bandit_dagger.emerald_count": "Emeralds Found: "
+  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened"
 }

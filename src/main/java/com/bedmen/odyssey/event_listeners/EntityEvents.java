@@ -4,7 +4,6 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
-import com.bedmen.odyssey.items.equipment.BanditDaggerItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.registry.BiomeRegistry;
@@ -21,9 +20,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -277,19 +274,6 @@ public class EntityEvents {
         if(shield.getItem() instanceof OdysseyShieldItem odysseyShieldItem){
             DamageSource damageSource = event.getDamageSource();
             event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty(), damageSource));
-        }
-    }
-
-    @SubscribeEvent
-    public static void onLivingDeathEvent(final LivingDeathEvent event){
-        DamageSource damageSource = event.getSource();
-        Entity killer = damageSource.getDirectEntity();
-        if (killer instanceof Player player && player.getMainHandItem().is(ItemRegistry.BANDIT_DAGGER.get())) {
-            ItemStack itemStack = player.getMainHandItem();
-            LivingEntity livingEntity = event.getEntityLiving();
-            if (livingEntity instanceof AbstractVillager || livingEntity instanceof AbstractIllager) {
-                BanditDaggerItem.performKill(itemStack, livingEntity);
-            }
         }
     }
 }
