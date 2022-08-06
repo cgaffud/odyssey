@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -154,5 +155,21 @@ public abstract class MixinEnchantmentHelper {
             mutablefloat.add(enchantment.getDamageBonus(enchantmentLevel, mobType));
         }, itemStack);
         return mutablefloat.floatValue() * (WeaponUtil.isDualWieldItem(itemStack) ? 0.5f : 1f);
+    }
+
+    /**
+     * @author JemBren
+     * @reason Vanilla method is bugged, allows for offhand enchantment application and double method call
+     */
+    @Overwrite
+    public static void doPostDamageEffects(LivingEntity livingEntity, Entity entity) {
+        EnchantmentHelper.EnchantmentVisitor enchantmenthelper$enchantmentvisitor = (p_44829_, p_44830_) -> {
+            p_44829_.doPostAttack(livingEntity, entity, p_44830_);
+        };
+
+        if (livingEntity != null) {
+            runIterationOnItem(enchantmenthelper$enchantmentvisitor, livingEntity.getMainHandItem());
+        }
+
     }
 }

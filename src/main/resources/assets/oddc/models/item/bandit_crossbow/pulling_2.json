@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/bandit_crossbow",
+  "textures": {
+    "layer0": "oddc:item/bandit_crossbow/pulling_2"
+  }
+}

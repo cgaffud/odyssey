@@ -287,6 +287,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> RUSTY_SONIC_FORK = ITEMS.register("rusty_sonic_fork", () -> new ProjectileLaunchItem(new Item.Properties().durability(OdysseyTiers.RUSTY_IRON.getUses()).rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.RANGED), 1.2f, SonicBoom::new));
 
     // ## Tier 2
+    public static final RegistryObject<Item> BANDIT_CROSSBOW = ITEMS.register("bandit_crossbow", () -> new EquipmentCrossbowItem(new Item.Properties().durability(OdysseyTiers.IRON.getUses()).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.RANGED), 1.5f, 20, LARCENY));
     public static final RegistryObject<Item> CLOVER_STONE_BOOMERANG = ITEMS.register("clover_stone_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.CLOVER_STONE.getUses()).rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.CLOVER_STONE, LOYALTY[1], LOOTING[1]));
 
     public static final RegistryObject<Item> SHARP_GREATROOT_BOOMERANG = ITEMS.register("sharp_greatroot_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.GREATROOT, LOYALTY[2], PIERCING[2]));
