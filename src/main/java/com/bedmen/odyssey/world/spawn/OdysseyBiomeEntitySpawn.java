@@ -21,6 +21,7 @@ public class OdysseyBiomeEntitySpawn {
 //    public static MobSpawnSettings.SpawnerData ARCTIHORN_SPAWNER;
     public static MobSpawnSettings.SpawnerData BABY_LEVIATHAN;
     public static MobSpawnSettings.SpawnerData WEAVER;
+    public static MobSpawnSettings.SpawnerData WRAITH;
 //    public static MobCategory HARD_BIOME =  MobCategory.create("hard_biome", "hard_biome", 35, false, false, 128);
 
     public static void registerSpawners() {
@@ -28,6 +29,7 @@ public class OdysseyBiomeEntitySpawn {
 //        ARCTIHORN_SPAWNER = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.ARCTIHORN.get(), 100, 1, 4);
         BABY_LEVIATHAN = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.BABY_LEVIATHAN.get(), 40, 1, 1);
         WEAVER = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.WEAVER.get(), 50, 1, 4);
+        WRAITH = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.WRAITH.get(), 40, 1, 2);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -44,6 +46,7 @@ public class OdysseyBiomeEntitySpawn {
         else {
             monsterSpawns.add(BABY_LEVIATHAN);
             monsterSpawns.add(WEAVER);
+            monsterSpawns.add(WRAITH);
             for(MobSpawnSettings.SpawnerData spawnerData : creatureSpawns){
                 if(spawnerData.type == EntityType.POLAR_BEAR){
                     polarBearSpawns.add(new MobSpawnSettings.SpawnerData(EntityTypeRegistry.POLAR_BEAR.get(), spawnerData.getWeight(), spawnerData.minCount, spawnerData.maxCount));
