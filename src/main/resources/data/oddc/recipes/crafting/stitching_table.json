@@ -9,7 +9,7 @@
       "item": "minecraft:string"
     },
     "B": {
-      "item": "minecraft:iron_nugget"
+      "item": "oddc:sterling_silver_nugget"
     },
     "C": {
       "tag": "minecraft:planks"

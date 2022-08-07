@@ -315,6 +315,7 @@
   "item.oddc.moon_tower_zombie_spawn_egg": "Moon Tower Zombie Spawn Egg",
   "item.oddc.moonstone": "Moonstone",
   "item.oddc.multishot_greatroot_boomerang": "Multishot Greatroot Boomerang",
+  "item.oddc.music_disc_mesa": "Music Disc",
   "item.oddc.netherite_horse_armor": "Netherite Horse Armor",
   "item.oddc.netherite_mace": "Netherite Mace",
   "item.oddc.netherite_nugget": "Netherite Nugget",
@@ -465,6 +466,7 @@
   "itemGroup.oddc_building_blocks": "Odyssey Building Blocks",
   "itemGroup.oddc_food": "Odyssey Food",
   "itemGroup.oddc_magic": "Odyssey Magic",
+  "itemGroup.oddc_misc": "Odyssey Miscellaneous",
   "itemGroup.oddc_materials": "Odyssey Materials",
   "itemGroup.oddc_melee": "Odyssey Melee Weapons",
   "itemGroup.oddc_ranged": "Odyssey Ranged Weapons",
@@ -475,5 +477,6 @@
   "stat.oddc.interact_with_recycling_furnace": "Interactions with Recycling Furnace",
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
-  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened"
+  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
+  "item.oddc.music_disc_mesa.desc": "Nintendo - Gerudo Valley"
 }

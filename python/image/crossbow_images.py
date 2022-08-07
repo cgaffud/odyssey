@@ -125,7 +125,7 @@ def generate(imagePath, folderPath, colorFunction):
     atEveryPixel(image, lambda image,pos : combinePixel(image, image2, pos))
     helper.saveImage(image, "%s/%s" % (folderPath,"firework.png"))
 
-openPath = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/c.png"
+openPath = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/item/music_disc_cat.png"
 folderPath = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/bandit_crossbow"
 darkColor = (0, 122, 24)
 midColor = (0, 170, 43)

@@ -56,5 +56,14 @@
         "stream": true
       }
     ]
+  },
+  "music_disc.mesa": {
+    "category": "music",
+    "sounds": [
+      {
+        "name": "oddc:music_disc/mesa",
+        "stream": true
+      }
+    ]
   }
 }
