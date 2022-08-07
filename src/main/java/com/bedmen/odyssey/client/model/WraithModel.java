@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.AgeableListModel;
+import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -21,6 +22,8 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.EnumSet;
 
@@ -60,22 +63,32 @@ public class WraithModel<T extends Wraith> extends AgeableListModel<T> implement
 
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.setupAttackAnimation(entity, ageInTicks);
+        //this.setupAttackAnimation(entity, ageInTicks);
         this.right_arm.xRot = (float)(Math.atan(limbSwing * 0.6662F) * 0.1 * limbSwingAmount);
         this.left_arm.xRot = (float)(Math.atan(limbSwing * 0.6662F) * 0.1 * limbSwingAmount);
         this.right_arm.zRot = 0.0F;
         this.left_arm.zRot = 0.0F;
         this.right_arm.y = 2.0F;
         this.left_arm.y = 2.0F;
-        this.torso.xRot = (float)(Math.atan(limbSwing * 0.6662) * 0.3 * limbSwingAmount);
+        this.torso.xRot = (float)(Math.atan(limbSwing * 0.6662) * 0.15 * limbSwingAmount);
         this.torso.yRot = 0.0F;
         this.torso.zRot = 0.0F;
 
-        this.body.xRot = 0.0F;
-        this.torso.z = 0.1F;
-        this.torso.y = 12.0F;
-        this.head.y = 0.0F;
-        this.body.y = 0.0F;
+        ItemStack itemstack = entity.getMainHandItem();
+        if (entity.isAggressive() && (itemstack.isEmpty() || !(itemstack.getItem() instanceof CrossbowItem))) {
+            float f = Mth.sin(this.attackTime * (float)Math.PI);
+            float f1 = Mth.sin((1.0F - (1.0F - this.attackTime) * (1.0F - this.attackTime)) * (float)Math.PI);
+            this.right_arm.zRot = 0.0F;
+            this.left_arm.zRot = 0.0F;
+            this.right_arm.yRot = -(0.1F - f * 0.6F);
+            this.left_arm.yRot = 0.1F - f * 0.6F;
+            this.right_arm.xRot = (-(float)Math.PI / 2F);
+            this.left_arm.xRot = (-(float)Math.PI / 2F);
+            this.right_arm.xRot -= f * 1.2F - f1 * 0.4F;
+            this.left_arm.xRot -= f * 1.2F - f1 * 0.4F;
+//            AnimationUtils.bobArms(this.right_arm, this.left_arm, ageInTicks);
+        }
+
     }
 
     @Override

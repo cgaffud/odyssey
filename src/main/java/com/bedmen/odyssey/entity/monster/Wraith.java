@@ -83,8 +83,8 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
         if (this.level != null && !this.level.isClientSide) {
             this.goalSelector.removeGoal(this.meleeGoal);
             this.goalSelector.removeGoal(this.bowGoal);
-            ItemStack itemstack = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem));
-            if (itemstack.is(Items.BOW)) {
+            ItemStack itemstack = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BowItem));
+            if (itemstack.getItem() instanceof BowItem) {
                 int i = 20;
                 if (this.level.getDifficulty() != Difficulty.HARD)
                     i = 40;
@@ -163,7 +163,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
         System.out.println("populateDefaultEquipmentSolts");
         super.populateDefaultEquipmentSlots(difficultyInstance);
-        Item item = random.nextBoolean() ? ItemRegistry.BOW.get() : ItemRegistry.STERLING_SILVER_SWORD.get();
+        Item item = random.nextBoolean() ? ItemRegistry.VOID_BOW.get() : ItemRegistry.VOID_SWORD.get();
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
     }
 
