@@ -12,8 +12,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
+
 public class LarcenyEnchantment extends Enchantment {
-    private static final float LARCNEY_CHANCE = 0.05f;
+    private static final float LARCNEY_CHANCE = 0.1f;
     public LarcenyEnchantment(Rarity rarity, EquipmentSlot... equipmentSlots) {
         super(rarity, OdysseyEnchantmentCategory.MAIN_MELEE, equipmentSlots);
     }
@@ -24,7 +26,7 @@ public class LarcenyEnchantment extends Enchantment {
 
     public void doPostAttack(LivingEntity user, Entity target, int enchantmentLevel) {
         if(target instanceof LivingEntity livingTarget && !target.level.isClientSide) {
-            for(EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
+            for(EquipmentSlot equipmentSlot : List.of(EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND)) {
                 ItemStack itemStack = livingTarget.getItemBySlot(equipmentSlot);
                 tryStealItem(itemStack, user, livingTarget, equipmentSlot);
             }

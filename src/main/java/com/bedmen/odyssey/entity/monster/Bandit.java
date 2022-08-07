@@ -30,6 +30,7 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 
@@ -69,9 +70,12 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
         super.populateDefaultEquipmentSlots(difficultyInstance);
-        Item item = switch(random.nextInt(10)){
+        Item item = switch(random.nextInt(7)){
             default -> ItemRegistry.CROSSBOW.get();
             case 0 -> ItemRegistry.BANDIT_DAGGER.get();
+            case 1 -> ItemRegistry.BANDIT_CROSSBOW.get();
+            case 2 -> ItemRegistry.GOLDEN_MACE.get();
+            case 3,4 -> Items.GOLDEN_SWORD;
         };
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
         if (item instanceof EquipmentMeleeItem equipmentMeleeItem && equipmentMeleeItem.meleeWeaponClass.isDualWield) {
@@ -91,6 +95,13 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
             } else {
                 this.goalSelector.addGoal(4, this.meleeGoal);
             }
+        }
+    }
+
+    public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
+        super.setItemSlot(equipmentSlot, itemStack);
+        if (!this.level.isClientSide) {
+            this.reassessWeaponGoal();
         }
     }
 
@@ -144,5 +155,10 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
         } else {
             return this.isAggressive() ? AbstractIllager.IllagerArmPose.ATTACKING : AbstractIllager.IllagerArmPose.NEUTRAL;
         }
+    }
+
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.reassessWeaponGoal();
     }
 }
