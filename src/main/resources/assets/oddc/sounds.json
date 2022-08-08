@@ -42,7 +42,11 @@
     "subtitle": "entity.mineral_leviathan.hurt.sub",
     "sounds": [
       {
-        "name": "oddc:entity/mineral_leviathan/hurt",
+        "name": "oddc:entity/wraith/hurt1",
+        "stream": true
+      },
+      {
+        "name": "oddc:entity/wraith/hurt2",
         "stream": true
       }
     ]
@@ -56,5 +60,25 @@
         "stream": true
       }
     ]
-  }
+  },
+  "entity.wraith.hurt": {
+    "category": "hostile",
+    "subtitle": "entity.wraith.hurt.sub",
+    "sounds": [
+      {
+        "name": "oddc:entity/wraith/hurt1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.wraith.death": {
+    "category": "hostile",
+    "subtitle": "entity.wraith.death.sub",
+    "sounds": [
+      {
+        "name": "oddc:entity/wraith/death",
+        "stream": true
+      }
+    ]
+  }    
 }

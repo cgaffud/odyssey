@@ -25,4 +25,9 @@ public class SoundEventRegistry {
     public static final RegistryObject<SoundEvent> MINERAL_LEVIATHAN_ROAR = SOUND_EVENTS.register("mineral_leviathan_roar", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.mineral_leviathan.roar")));
     public static final RegistryObject<SoundEvent> MINERAL_LEVIATHAN_HURT = SOUND_EVENTS.register("mineral_leviathan_hurt", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.mineral_leviathan.hurt")));
     public static final RegistryObject<SoundEvent> MINERAL_LEVIATHAN_DEATH = SOUND_EVENTS.register("mineral_leviathan_death", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.mineral_leviathan.death")));
+
+    //Wraith
+    public static final RegistryObject<SoundEvent> WRAITH_HURT = SOUND_EVENTS.register("wraith_hurt", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.wraith.hurt")));
+    public static final RegistryObject<SoundEvent> WRAITH_DEATH = SOUND_EVENTS.register("wraith_death", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.wraith.death")));
+
 }

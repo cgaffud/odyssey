@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.registry.SoundEventRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.BlockPos;
@@ -127,11 +128,20 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     }
 
     protected SoundEvent getHurtSound(DamageSource DamageSource) {
-        return SoundEvents.ZOMBIE_HURT;
+        return SoundEventRegistry.WRAITH_HURT.get();
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ZOMBIE_DEATH;
+        return SoundEventRegistry.WRAITH_DEATH.get();
+    }
+
+    @Override
+    public void playAmbientSound() {
+        SoundEvent soundevent = this.getAmbientSound();
+        if (soundevent != null && (this.getRandom().nextBoolean() && this.getRandom().nextBoolean())) {
+            this.playSound(soundevent, this.getSoundVolume(), this.getVoicePitch());
+        }
+
     }
 
     @Override
