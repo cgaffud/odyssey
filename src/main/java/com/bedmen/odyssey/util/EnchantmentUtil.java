@@ -271,6 +271,18 @@ public class EnchantmentUtil {
         }
         return boost;
     }
+    public static float getConditionalAmpBonusRanged(ItemStack itemStack, LivingEntity entity){
+        float boost = 0.0f;
+        if (entity != null) {
+            for (ConditionalAmpEnchantment enchantment : CONDITIONAL_AMP_ENCHANTS) {
+                int level = EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemStack);
+                if (level > 0) {
+                    boost += ((float) level) * enchantment.getActiveFactor(entity.getLevel(), entity) * 0.2f;
+                }
+            }
+        }
+        return boost;
+    }
 
 
     public static Component getUnenchantableName(){

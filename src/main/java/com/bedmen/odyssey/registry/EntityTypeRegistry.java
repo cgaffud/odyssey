@@ -52,7 +52,7 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<BabyLeviathan>> BABY_LEVIATHAN = ENTITY_TYPE.register("baby_leviathan", () -> EntityType.Builder.<BabyLeviathan>of(BabyLeviathan::new, MobCategory.MONSTER).sized(0.75F, 0.2F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "baby_leviathan").toString()));
 
     // ## Wraith
-    public static final RegistryObject<EntityType<Wraith>> WRAITH = ENTITY_TYPE.register("wraith", () -> EntityType.Builder.<Wraith>of(Wraith::new, MobCategory.MONSTER).sized(0.9F, 2.85F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith").toString()));
+    public static final RegistryObject<EntityType<Wraith>> WRAITH = ENTITY_TYPE.register("wraith", () -> EntityType.Builder.<Wraith>of(Wraith::new, MobCategory.MONSTER).sized(0.55F, 1.85F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith").toString()));
 
     // ## Illager
     public static final RegistryObject<EntityType<Bandit>> BANDIT = ENTITY_TYPE.register("bandit", () -> EntityType.Builder.<Bandit>of(Bandit::new, MobCategory.MONSTER).sized(0.6F, 1.95F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "bandit").toString()));

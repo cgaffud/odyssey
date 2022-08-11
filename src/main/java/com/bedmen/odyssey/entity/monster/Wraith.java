@@ -2,8 +2,10 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.registry.SoundEventRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.WeaponUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -31,6 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
 import java.util.UUID;
 
 public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
@@ -83,8 +86,8 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
         if (this.level != null && !this.level.isClientSide) {
             this.goalSelector.removeGoal(this.meleeGoal);
             this.goalSelector.removeGoal(this.bowGoal);
-            ItemStack itemstack = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem));
-            if (itemstack.is(Items.BOW)) {
+            ItemStack itemstack = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BowItem));
+            if (itemstack.getItem() instanceof BowItem) {
                 int i = 20;
                 if (this.level.getDifficulty() != Difficulty.HARD)
                     i = 40;
@@ -125,11 +128,20 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     }
 
     protected SoundEvent getHurtSound(DamageSource DamageSource) {
-        return SoundEvents.ZOMBIE_HURT;
+        return SoundEventRegistry.WRAITH_HURT.get();
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ZOMBIE_DEATH;
+        return SoundEventRegistry.WRAITH_DEATH.get();
+    }
+
+    @Override
+    public void playAmbientSound() {
+        SoundEvent soundevent = this.getAmbientSound();
+        if (soundevent != null && (this.getRandom().nextBoolean() && this.getRandom().nextBoolean())) {
+            this.playSound(soundevent, this.getSoundVolume(), this.getVoicePitch());
+        }
+
     }
 
     @Override
@@ -163,7 +175,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
         System.out.println("populateDefaultEquipmentSolts");
         super.populateDefaultEquipmentSlots(difficultyInstance);
-        Item item = random.nextBoolean() ? ItemRegistry.BOW.get() : ItemRegistry.STERLING_SILVER_SWORD.get();
+        Item item = random.nextBoolean() ? ItemRegistry.VOID_BOW.get() : ItemRegistry.VOID_SWORD.get();
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
     }
 
@@ -196,6 +208,10 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     @Override
     protected void dropEquipment() {
         super.dropEquipment();
+    }
+
+    public static boolean spawnPredicate(EntityType<? extends Monster> pType, ServerLevelAccessor pLevel, MobSpawnType pReason, BlockPos pPos, Random pRandom) {
+        return Monster.checkMonsterSpawnRules(pType, pLevel, pReason, pPos, pRandom) && pPos.getY() <= -16;
     }
 
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/void_bow",
+  "textures": {
+    "layer0": "oddc:item/void_bow/pulling_2"
+  }
+}
