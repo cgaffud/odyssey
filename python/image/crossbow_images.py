@@ -1,5 +1,5 @@
 from PIL import Image
-import image_recolor as helper
+from image_recolor import *
 
 standby = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -97,33 +97,33 @@ def combinePixel(image1, image2, pos):
     return image1.getpixel(pos)
 
 def generate(imagePath, folderPath, colorFunction):
-    image = helper.openImage(imagePath)
+    image = openImage(imagePath)
     atEveryPixel(image, lambda image,pos : colorFunction(image, pos, standby))
-    helper.saveImage(image, "%s/%s" % (folderPath,"standby.png"))
+    saveImage(image, "%s/%s" % (folderPath,"standby.png"))
 
-    image = helper.openImage(imagePath)
+    image = openImage(imagePath)
     atEveryPixel(image, lambda image,pos : colorFunction(image, pos, pulling0))
-    helper.saveImage(image, "%s/%s" % (folderPath,"pulling_0.png"))
+    saveImage(image, "%s/%s" % (folderPath,"pulling_0.png"))
 
-    image = helper.openImage(imagePath)
+    image = openImage(imagePath)
     atEveryPixel(image, lambda image,pos : colorFunction(image, pos, pulling1))
-    helper.saveImage(image, "%s/%s" % (folderPath,"pulling_1.png"))
+    saveImage(image, "%s/%s" % (folderPath,"pulling_1.png"))
 
-    image = helper.openImage(imagePath)
+    image = openImage(imagePath)
     atEveryPixel(image, lambda image,pos : colorFunction(image, pos, pulling2))
-    helper.saveImage(image, "%s/%s" % (folderPath,"pulling_2.png"))
+    saveImage(image, "%s/%s" % (folderPath,"pulling_2.png"))
 
-    image = helper.openImage(imagePath)
-    image2 = helper.openImage("arrow.png")
-    atEveryPixel(image, lambda image,pos : colorFunction(image, pos, pulling2))
-    atEveryPixel(image, lambda image,pos : combinePixel(image, image2, pos))
-    helper.saveImage(image, "%s/%s" % (folderPath,"arrow.png"))
-
-    image = helper.openImage(imagePath)
-    image2 = helper.openImage("firework.png")
+    image = openImage(imagePath)
+    image2 = openImage("arrow.png")
     atEveryPixel(image, lambda image,pos : colorFunction(image, pos, pulling2))
     atEveryPixel(image, lambda image,pos : combinePixel(image, image2, pos))
-    helper.saveImage(image, "%s/%s" % (folderPath,"firework.png"))
+    saveImage(image, "%s/%s" % (folderPath,"arrow.png"))
+
+    image = openImage(imagePath)
+    image2 = openImage("firework.png")
+    atEveryPixel(image, lambda image,pos : colorFunction(image, pos, pulling2))
+    atEveryPixel(image, lambda image,pos : combinePixel(image, image2, pos))
+    saveImage(image, "%s/%s" % (folderPath,"firework.png"))
 
 openPath = r"/Users/jeremybrennan/Documents/1.18.1/assets/minecraft/textures/item/music_disc_cat.png"
 folderPath = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/bandit_crossbow"
