@@ -232,7 +232,7 @@ public class ClientEvents {
         }, ItemRegistry.RAIN_SWORD.get(), ItemRegistry.ARID_MACE.get());
         event.getItemColors().register((itemStack, i) -> {
             return CondAmpMeleeItem.Gradient.getColor(itemStack);
-        }, ItemRegistry.CRYOSLIVER.get());
+        }, ItemRegistry.ICE_DAGGER.get());
         for(TomeItem tomeItem : TomeItem.TOMES){
             event.getItemColors().register((itemStack, i) -> {
                 return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();
