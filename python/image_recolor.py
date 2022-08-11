@@ -204,10 +204,9 @@ def redInfo(image1, image2):
                     minRatio = ratio
     print((maxRatio, minRatio))
 
-image1 = open_image(r"/Users/Christoph/Documents/mod fun/odyssey/python/out/pulling_2.png")
-image2 = open_image(r"/Users/Christoph/Documents/mod fun/odyssey/python/out/active_8_pulling_2.png")
-for i in range(7):
-    img = combine_image(image1, image2, float(i+1)/7.0)
-    save_image(img, r"/Users/Christoph/Documents/mod fun/odyssey/python/out/active_" + str(i+1) + "_pulling_2.png")
-    
+open_path1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/cryosliver.png"
+save_path = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/item/cryosliver.png"
+image1 = open_image(open_path1)
+grayscale_recolor_image(image1, [1.0,1.0,1.0],[16,16,16])
+save_image(image1, save_path)
 print("Done")

@@ -20,15 +20,10 @@ public class ShatteringEnchantment extends Enchantment{
 
     public void doPostAttack(LivingEntity user, Entity target, int enchantmentLevel) {
         if(!user.level.isClientSide && (!(user instanceof IOdysseyPlayer odysseyPlayer) || odysseyPlayer.getAttackStrengthScaleO() > 0.9f) && target instanceof LivingEntity livingTarget) {
-            MobEffectInstance effectInstance = livingTarget.getEffect(EffectRegistry.SHATTERED.get());
-            if (effectInstance != null) {
-                livingTarget.removeEffect(EffectRegistry.SHATTERED.get());
-                int amp = effectInstance.getAmplifier();
-                effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + enchantmentLevel * 20, Integer.min(amp + 1, 1 + 2 * enchantmentLevel), false, true, true);
-            } else {
-                effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), 80 + enchantmentLevel * 20, 0, false, true, true);
+            for(int i = 0; i <= enchantmentLevel; i++) {
+                MobEffectInstance effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), (enchantmentLevel - i + 1) * 40, i, false, true, true);
+                livingTarget.addEffect(effectInstance);
             }
-            livingTarget.addEffect(effectInstance);
         }
     }
 }

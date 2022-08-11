@@ -19,20 +19,20 @@ public class EquipmentItem extends Item implements IEquipment {
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
-    public EquipmentItem(Properties builderIn, LevEnchSup... levEnchSups) {
-        super(builderIn);
+    public EquipmentItem(Properties properties, LevEnchSup... levEnchSups) {
+        super(properties);
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);
     }
 
-    public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
-        ItemStack itemstack = playerEntity.getItemInHand(hand);
-        ItemStack itemstack1 = playerEntity.getInventory().getItem(41);
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        ItemStack itemstack1 = player.getInventory().getItem(41);
         if (itemstack1.isEmpty()) {
-            playerEntity.getInventory().setItem(41, itemstack.copy());
+            player.getInventory().setItem(41, itemstack.copy());
             itemstack.setCount(0);
-            return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide());
+            return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
         } else {
             return InteractionResultHolder.fail(itemstack);
         }

@@ -27,7 +27,7 @@ def doBlockStates(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"..\src\main\resources\assets\oddc\blockstates\\"+itemName+".json" for itemName in itemNames]
+    fileNames = ["%s/%s.json" % (helper.blockstatesPath, itemName) for itemName in itemNames]
     blockStates = [
         {
           "variants": {
@@ -848,7 +848,7 @@ def doBlockModels(name):
         "stripped_"+name+"_log_horizontal",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"..\src\main\resources\assets\oddc\models\block\\"+itemName+".json" for itemName in itemNames]
+    fileNames = ["%s/%s.json" % (helper.blockModelsPath, itemName) for itemName in itemNames]
     blockModels = [
         {
           "parent": "minecraft:block/button",
@@ -1102,7 +1102,7 @@ def doItemModels(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"..\src\main\resources\assets\oddc\models\item\\"+itemName+".json" for itemName in itemNames]
+    fileNames = ["%s/%s.json" % (helper.itemModelsPath, itemName) for itemName in itemNames]
     itemModels = [
         {
           "parent": "minecraft:item/generated",
@@ -1190,7 +1190,7 @@ def doLootTables(name):
         "stripped_"+name+"_log",
         "stripped_"+name+"_wood"
     ]
-    fileNames = [r"..\src\main\resources\data\oddc\loot_tables\blocks\\"+itemName+".json" for itemName in itemNames]
+    fileNames = ["%s/%s.json" % (helper.blockLootTablesPath, itemName) for itemName in itemNames]
     lootTables = [
         {
           "type": "minecraft:block",
@@ -1704,11 +1704,9 @@ def doRecipes(name):
         name+"_wood",
         "stripped_"+name+"_wood"
     ]
-    try:
-        os.mkdir(r"..\src\main\resources\data\oddc\recipes\crafting\\"+name)
-    except:
-        print("Directory "+name+" already exists")
-    fileNames = [r"..\src\main\resources\data\oddc\recipes\crafting\\"+name+"\\"+itemName+".json" for itemName in itemNames]
+    directoryPath = "%s/%s" % (helper.craftingRecipesPath, name)
+    helper.makeDirectory(directoryPath)
+    fileNames = ["%s/%s.json" % (directoryPath, itemName) for itemName in itemNames]
     recipes = [
         {
           "type": "minecraft:crafting_shaped",
@@ -1933,8 +1931,6 @@ def doRecipes(name):
     write(fileNames, recipes)
 
 def doBlockTags(name):
-    filepath = r"..\src\main\resources\data\minecraft\tags\blocks\\"
-
     logsList ={
           "replace": False,
           "values": [
@@ -1945,9 +1941,9 @@ def doBlockTags(name):
           ]
         }
 
-    with open(r"..\src\main\resources\data\oddc\tags\items\\"+name+"_logs.json", 'w') as logFile:
+    with open("%s/%s_logs.json" % (helper.oddcBlockTagsPath, name), 'w') as logFile:
         json.dump(logsList, logFile, indent = 2)
-    
+
     tagDataPairs = [
         ("fence_gates","oddc:"+name+"_fence_gate"),
         ("leaves","oddc:"+name+"_leaves"),
@@ -1966,7 +1962,7 @@ def doBlockTags(name):
     ]
 
     for (tagGroup,value) in tagDataPairs:
-        tagPath = filepath+tagGroup+".json"
+        tagPath = "%s/%s.json" % (helper.minecraftBlockTagsPath, tagGroup)
         with open(tagPath, 'r+') as tagFile:
             tagList = json.load(tagFile)
             tagFile.seek(0)
@@ -1974,8 +1970,6 @@ def doBlockTags(name):
             json.dump(tagList, tagFile, indent = 2)
 
 def doItemTags(name):
-    filepath = r"..\src\main\resources\data\minecraft\tags\items\\"
-    
     logsList ={
           "replace": False,
           "values": [
@@ -1985,8 +1979,8 @@ def doItemTags(name):
             "oddc:stripped_"+name+"_wood"
           ]
         }
-    
-    with open(r"..\src\main\resources\data\oddc\tags\items\\"+name+"_logs.json", 'w') as logFile:
+
+    with open("%s/%s_logs.json" % (helper.oddcItemTagsPath, name), 'w') as logFile:
             json.dump(logsList, logFile, indent = 2)
             
     tagDataPairs = [
@@ -2006,7 +2000,7 @@ def doItemTags(name):
     ]
     
     for (tagGroup,value) in tagDataPairs:
-        tagPath = filepath+tagGroup+".json"
+        tagPath = "%s/%s.json" % (helper.minecraftItemTagsPath, tagGroup)
         with open(tagPath, 'r+') as tagFile:
             tagList = json.load(tagFile)
             tagFile.seek(0)
@@ -2014,9 +2008,7 @@ def doItemTags(name):
             json.dump(tagList, tagFile, indent = 2)
 
 def doLang(name, lang_name):
-    langPath = r"..\src\main\resources\assets\oddc\lang\en_us.json"
-    
-    blockNames = [
+    langList = [
         ("block.oddc."+name+"_button", lang_name+" Button"),
         ("block.oddc."+name+"_door", lang_name+" Door"),
         ("block.oddc."+name+"_fence", lang_name+" Fence"),
@@ -2037,14 +2029,41 @@ def doLang(name, lang_name):
         ("block.oddc.stripped_"+name+"_wood", "Stripped "+lang_name+" Wood"),
         ("item.oddc."+name+"_boat", lang_name+" Boat") 
     ]
-    
-    with open(langPath, 'r+') as langFile:
-        langDictionary = json.load(langFile)
-        langFile.seek(0)
-        for (key,value) in blockNames:
-            if(key not in langDictionary):
-                langDictionary[key] = value
-        json.dump(langDictionary, langFile, indent = 2)
+    for (key, value) in langList:
+        helper.addToLang(key, value)
+
+def doCraftingRecipes(name):
+    newCraftingRecipePath = "%s/%s" % (helper.craftingRecipesPath, name)
+    helper.makeDirectory(newCraftingRecipePath)
+
+    greatwoodPath = "%s/greatwood" % (helper.craftingRecipesPath)
+
+    greatwoodFiles = []
+    for root, dirs, files in os.walk(greatwoodPath):
+        greatwoodFiles = files
+
+
+    files = list(map(lambda file : file.replace("greatwood", name), greatwoodFiles))
+
+    def traverseAndReplace(item, string1, string2):
+        if isinstance(item, str):
+            return item.replace(string1, string2)
+        if isinstance(item, dict):
+            for key, value in item.items():
+                item[key] = traverseAndReplace(value, string1, string2)
+        if isinstance(item, list):
+            return [traverseAndReplace(listItem, string1, string2) for listItem in item]
+        return item
+
+    for i in range(len(files)):
+        greatwoodFile = greatwoodFiles[i]
+        file = files[i]
+        recipe = {}
+        with open(greatwoodPath+"/"+greatwoodFile,'r') as greatwoodRecipeFile:
+            recipe = json.load(greatwoodRecipeFile)
+        newRecipe = traverseAndReplace(recipe, "greatwood", name)
+        with open(newCraftingRecipePath+"/"+file,'w') as newRecipeFile:
+            json.dump(newRecipe, newRecipeFile, indent = 2)
 
 def doCopyables(name, color = "MaterialColor.COLOR_BROWN"):
     out = open("wood_generator_register_items.txt", "w")
@@ -2112,24 +2131,20 @@ def doCopyables(name, color = "MaterialColor.COLOR_BROWN"):
         
 name = input("Input Wood ID: ")
 color = input("Color (if none specified, hit Enter):")
-langName = helper.input_langName("Lang File Wood Name: ")
+langName = helper.inputLangName("Lang File Wood Name: ", name)
 
 if color == "":
     doCopyables(name)
 else:
     doCopyables(name,color)
-#doBlockStates(name)
-#doBlockModels(name)
-#doItemModels(name)
-#doLootTables(name)
-#doRecipes(name)
-#doBlockTags(name)
-#doItemTags(name)
-#doLang(name, langName)
-
-
-# Missing funcitonality
-# Block Registration
-# Item Registration
+doBlockStates(name)
+doBlockModels(name)
+doItemModels(name)
+doLootTables(name)
+doRecipes(name)
+doBlockTags(name)
+doItemTags(name)
+doLang(name, langName)
+doCraftingRecipes(name)
 
 print("Done")

@@ -2,7 +2,7 @@ import json, os, shutil, helper
 
 while(True):
     bowID = input("Input bowID: ")
-    langName = helper.input_langName("Lang File Item Name: ")
+    langName = helper.inputLangName("Lang File Item Name: ", bowID)
     bowPath = 'oddc:item/'+bowID
 
     bowModel = {
@@ -15,21 +15,21 @@ while(True):
             "predicate": {
                 "pulling": 1
             },
-            "model": "%s_pulling_0" % (bowPath)
+            "model": "%s/pulling_0" % (bowPath)
         },
         {
             "predicate": {
                 "pulling": 1,
                 "pull": 0.65
             },
-            "model": "%s_pulling_1" % (bowPath)
+            "model": "%s/pulling_1" % (bowPath)
         },
         {
             "predicate": {
                 "pulling": 1,
                 "pull": 0.9
             },
-            "model": "%s_pulling_2" % (bowPath)
+            "model": "%s/pulling_2" % (bowPath)
         }
     ]
 }
@@ -55,13 +55,12 @@ while(True):
     }
 }
 
-    assetsPath = "../src/main/resources/assets/oddc"
-
-    bowModelPath = "%s/models/item/%s.json" % (assetsPath,bowID)
-    bowModelPathPulling0 = "%s/models/item/%s_pulling_0.json" % (assetsPath,bowID)
-    bowModelPathPulling1 = "%s/models/item/%s_pulling_1.json" % (assetsPath,bowID)
-    bowModelPathPulling2 = "%s/models/item/%s_pulling_2.json" % (assetsPath,bowID)
-    langPath = "%s/lang/en_us.json" % (assetsPath)
+    bowModelPath = "%s/%s.json" % (helper.itemModelsPath,bowID)
+    extraModelDirectoryPath = "%s/models/item/%s" % (helper.assetsPath,bowID)
+    helper.makeDirectory(extraModelDirectoryPath)
+    bowModelPathPulling0 = "%s/pulling_0.json" % (extraModelDirectoryPath)
+    bowModelPathPulling1 = "%s/pulling_1.json" % (extraModelDirectoryPath)
+    bowModelPathPulling2 = "%s/pulling_2.json" % (extraModelDirectoryPath)
 
     with open(bowModelPath,'w') as itemModelFile:
         json.dump(bowModel, itemModelFile,  indent = 2)
@@ -72,17 +71,10 @@ while(True):
     with open(bowModelPathPulling2,'w') as itemModelFile:
         json.dump(bowModelPulling2, itemModelFile,  indent = 2)
 
-    with open(langPath, 'r+') as langFile:
-        langDictionary = json.load(langFile)
-        langFile.seek(0)
-        langDictionary["item.oddc."+bowID] = langName
-        json.dump(langDictionary, langFile, indent = 2)
+    helper.addItemToLang(bowID, langName)
 
-    textureDirectory = r"../src/main/resources/assets/oddc/textures/item/"+bowID
-    try:
-        os.mkdir(textureDirectory)
-    except:
-        print("Directory "+bowID+" already exists")
+    textureDirectory = "%s/%s" % (helper.itemTexturePath, bowID)
+    helper.makeDirectory(textureDirectory)
 
     bowTemplateTextures = [
         "bow_template/bow.png",
@@ -93,7 +85,7 @@ while(True):
     for texture in bowTemplateTextures:
         shutil.copy(texture, textureDirectory)
 
-    if(not helper.yes(input("Again? (Y/N): "))):
+    if(not helper.goAgain()):
         break
 
 print("Done")

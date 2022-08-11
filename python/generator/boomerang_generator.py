@@ -2,7 +2,7 @@ import json, os, helper
 
 while(True):
     itemID = input("Input boomerangID: ")
-    langName =helper.input_langName("Lang File Item Name: ", itemID)
+    langName =helper.inputLangName("Lang File Item Name: ", itemID)
     itemPath = 'oddc:item/'+itemID
     throwingPath = itemPath + "_throwing"
 
@@ -27,23 +27,17 @@ while(True):
   }
 }
 
-    assetsPath = "../src/main/resources/assets/oddc"
-    itemModelPath = "%s/models/item/%s.json" % (assetsPath,itemID)
-    throwingModelPath = "%s/models/item/%s.json" % (assetsPath,itemID+"_throwing")
-    langPath = "%s/lang/en_us.json" % (assetsPath)
+    itemModelPath = "%s/%s.json" % (helper.itemModelsPath,itemID)
+    throwingModelPath = "%s/%s.json" % (helper.itemModelsPath,itemID+"_throwing")
 
     with open(itemModelPath,'w') as file:
         json.dump(itemModel, file,  indent = 2)
     with open(throwingModelPath,'w') as file:
         json.dump(throwingModel, file,  indent = 2)    
 
-    with open(langPath, 'r+') as langFile:
-        langDictionary = json.load(langFile)
-        langFile.seek(0)
-        langDictionary["item.oddc."+itemID] = langName
-        json.dump(langDictionary, langFile, indent = 2)
+    helper.addItemToLang(itemID, langName)
 
-    if(not helper.yes(input("Again? (Y/N): "))):
+    if(not helper.goAgain()):
         break
 
 print("Done")

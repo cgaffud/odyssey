@@ -80,6 +80,7 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> DOWNPOUR = ENCHANTMENTS.register("downpour", () -> new OdysseyDamageEnchantment(Enchantment.Rarity.RARE, OdysseyDamageEnchantment.DamageType.HYDROPHOBIC, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> FLING = ENCHANTMENTS.register("fling", () -> new FlingEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> KINETIC_PROTECTION = ENCHANTMENTS.register("kinetic_protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.UNCOMMON, OdysseyProtectionEnchantment.Type.KINETIC, EnchantmentCategory.ARMOR_FEET, EquipmentSlot.FEET));
+    public static final RegistryObject<Enchantment> IMPENETRABLE = ENCHANTMENTS.register("impenetrable", () -> new ShieldEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND));
 
     //Volcanic Enchantments
     public static final RegistryObject<Enchantment> VULCAN_STRIDER = ENCHANTMENTS.register("vulcan_strider", () -> new VulcanStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
@@ -102,7 +103,8 @@ public class EnchantmentRegistry {
 
     //Damage Boost Functions
     private static float getSunBoost(BlockPos pos, Level level) {
-        return getSkyBoost(pos, level) * (((level.getDayTime() % 24000L) < 12000L) ? 1.0f : 0.0f);
+        long time = level.getDayTime() % 24000L;
+        return getSkyBoost(pos, level) * ((time < 13000L && time > 1000L) ? 1.0f : 0.0f);
     }
 
     private static float getMoonBoost(BlockPos pos, Level level) {
@@ -117,25 +119,25 @@ public class EnchantmentRegistry {
         return Mth.sqrt(getHotBoost(pos, level) * getHumidBoost(pos, level));
     }
 
-    private static float getHotDryBoost(BlockPos pos, Level level) {
+    public static float getHotDryBoost(BlockPos pos, Level level) {
         return Mth.sqrt(getHotBoost(pos, level) * getDryBoost(pos, level));
     }
 
-    private static float getHotBoost(BlockPos pos, Level level) {
+    public static float getHotBoost(BlockPos pos, Level level) {
         return Mth.clamp(BiomeUtil.getClimate(level.getBiome(pos)).temperature, 0.0f, 1.0f);
     }
 
-    private static float getColdBoost(BlockPos pos, Level level) {
+    public static float getColdBoost(BlockPos pos, Level level) {
         return 1.0f - getHotBoost(pos, level);
     }
 
-    private static float getHumidBoost(BlockPos pos, Level level) {
+    public static float getHumidBoost(BlockPos pos, Level level) {
         Holder<Biome> biomeHolder = level.getBiome(pos);
         Biome biome = level.getBiome(pos).value();
         return level.isRaining() && biome.getPrecipitation() == Biome.Precipitation.RAIN ? 1.0f : Mth.clamp(BiomeUtil.getClimate(biomeHolder).downfall, 0.0f, 1.0f);
     }
 
-    private static float getDryBoost(BlockPos pos, Level level) {
+    public static float getDryBoost(BlockPos pos, Level level) {
         return 1f - getHumidBoost(pos, level);
     }
 

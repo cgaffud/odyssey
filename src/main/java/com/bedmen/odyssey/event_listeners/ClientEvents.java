@@ -16,7 +16,7 @@ import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
-import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.ShieldType;
 import com.bedmen.odyssey.items.TomeItem;
 import com.bedmen.odyssey.items.equipment.CondAmpMeleeItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
@@ -30,8 +30,6 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
-import net.minecraft.client.renderer.entity.ZombieRenderer;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -171,7 +169,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onTextureStitchEvent$Pre(final TextureStitchEvent.Pre event){
         //Shield Textures
-        for(OdysseyShieldItem.ShieldType shieldType : OdysseyShieldItem.ShieldType.values()){
+        for(ShieldType shieldType : ShieldType.values()){
             event.addSprite(shieldType.getRenderMaterial(false).texture());
             event.addSprite(shieldType.getRenderMaterial(true).texture());
         }
@@ -230,7 +228,10 @@ public class ClientEvents {
         }, ItemRegistry.PARKA_HELMET.get(), ItemRegistry.PARKA_CHESTPLATE.get(), ItemRegistry.PARKA_LEGGINGS.get(), ItemRegistry.PARKA_BOOTS.get());
         event.getItemColors().register((itemStack, i) -> {
             return i <= 0 ? -1 : CondAmpMeleeItem.Gradient.getColor(itemStack);
-        }, ItemRegistry.RAIN_SWORD.get());
+        }, ItemRegistry.RAIN_SWORD.get(), ItemRegistry.ARID_MACE.get());
+        event.getItemColors().register((itemStack, i) -> {
+            return CondAmpMeleeItem.Gradient.getColor(itemStack);
+        }, ItemRegistry.CRYOSLIVER.get());
         for(TomeItem tomeItem : TomeItem.TOMES){
             event.getItemColors().register((itemStack, i) -> {
                 return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();

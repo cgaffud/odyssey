@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.items;
 
 public class MeleeWeaponClass {
+    public static final MeleeWeaponClass PADDLE = new MeleeWeaponClass(0.7f, false, false, false);
     public static final MeleeWeaponClass HAMMER = new MeleeWeaponClass(0.8f, true, false, false);
     public static final MeleeWeaponClass BATTLE_AXE = new MeleeWeaponClass(1.0f, true, false, false);
     public static final MeleeWeaponClass MACE = new MeleeWeaponClass(1.2f, true, false, false);
@@ -20,5 +21,9 @@ public class MeleeWeaponClass {
         this.canBreakShield = canBreakShield;
         this.canSweep = canSweep;
         this.isDualWield = isDualWield;
+    }
+
+    public MeleeWeaponClass withAttackSpeedMultiplier(float attackSpeedMultiplier) {
+        return new MeleeWeaponClass(attackRate * attackSpeedMultiplier, canBreakShield, canSweep, isDualWield);
     }
 }

@@ -2,7 +2,7 @@ import json, os, helper
 
 while(True):
     itemID = input("Input itemID: ")
-    langName = helper.input_langName("Lang File Item Name: ", itemID)
+    langName = helper.inputLangName("Lang File Item Name: ", itemID)
     handheld = helper.yes(input("Is this a tool or melee weapon? (Y/N): "))
     itemPath = 'oddc:item/'+itemID
 
@@ -23,21 +23,14 @@ while(True):
     if(handheld):
         itemModel = handheldModel
 
-    assetsPath = "../src/main/resources/assets/oddc"
-
-    itemModelPath = "%s/models/item/%s.json" % (assetsPath,itemID)
-    langPath = "%s/lang/en_us.json" % (assetsPath)
+    itemModelPath = "%s/%s.json" % (helper.itemModelsPath,itemID)
 
     with open(itemModelPath,'w') as itemModelFile:
         json.dump(itemModel, itemModelFile,  indent = 2)
 
-    with open(langPath, 'r+') as langFile:
-        langDictionary = json.load(langFile)
-        langFile.seek(0)
-        langDictionary["item.oddc."+itemID] = langName
-        json.dump(langDictionary, langFile, indent = 2)
+    helper.addItemToLang(itemID, langName)
 
-    if(not helper.yes(input("Again? (Y/N): "))):
+    if(not helper.goAgain()):
         break
 
 print("Done")

@@ -1,10 +1,10 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.items.equipment.ProjectileLaunchItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
-import com.bedmen.odyssey.network.packet.ShootSonicBoomPacket;
+import com.bedmen.odyssey.network.packet.ShootSwungProjectilePacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -28,9 +28,9 @@ public class InputEvents {
                 OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket());
             }
             if(event.isAttack()){
-                if(itemStack.getItem() == ItemRegistry.RUSTY_SONIC_FORK.get() && localPlayer.getAttackStrengthScale(0.5F) > 0.9f){
+                if(itemStack.getItem() instanceof ProjectileLaunchItem && localPlayer.getAttackStrengthScale(0.5F) > 0.9f){
                     localPlayer.resetAttackStrengthTicker();
-                    OdysseyNetwork.CHANNEL.sendToServer(new ShootSonicBoomPacket(hand));
+                    OdysseyNetwork.CHANNEL.sendToServer(new ShootSwungProjectilePacket(hand));
                 }
             }
         }
