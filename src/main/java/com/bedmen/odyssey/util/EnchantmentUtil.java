@@ -284,7 +284,6 @@ public class EnchantmentUtil {
         return boost;
     }
 
-
     public static Component getUnenchantableName(){
         return new TranslatableComponent("enchantment.oddc.unenchantable").withStyle(ChatFormatting.DARK_RED);
     }

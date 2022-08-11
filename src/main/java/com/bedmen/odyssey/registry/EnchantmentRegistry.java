@@ -105,7 +105,7 @@ public class EnchantmentRegistry {
     //Damage Boost Functions
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
-        return getSkyBoost(pos, level) * ((time < 13000L && time > 1000L) ? 1.0f : 0.0f);
+        return getSkyBoost(pos, level) * (time < 12000L ? 1.0f : 0.0f);
     }
 
     private static float getMoonBoost(BlockPos pos, Level level) {
