@@ -1,6 +1,14 @@
 from PIL import Image
 import random, helper
 
+def openImage(path):
+    newImage = Image.open(path)
+    newImage = newImage.convert("RGBA")
+    return newImage
+
+def saveImage(image, path):
+    image.save(path, 'png')
+
 def atEveryPixel(image, f):
     width, height = image.size
     for i in range(width):
@@ -198,7 +206,7 @@ def redInfo(image1, image2):
 
 openPath1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/c.png"
 savePath = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/c2.png"
-image1 = helper.openImage(openPath1)
+image1 = openImage(openPath1)
 grayscaleRecolorImage(image1, [0.9,0.9,0.9],[0,0,0])
-helper.saveImage(image1, savePath)
+saveImage(image1, savePath)
 print("Done")

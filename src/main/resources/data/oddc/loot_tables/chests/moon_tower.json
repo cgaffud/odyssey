@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "conditions": [],
+      "functions": [],
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:moon_sword"
+        }
+      ]
+    },
+    {
+      "conditions": [],
+      "functions": [],
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:chests/sterling_silver_treasure"
+        }
+      ]
+    }
+  ]
+}

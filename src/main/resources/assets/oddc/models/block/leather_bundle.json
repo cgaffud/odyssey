@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "oddc:block/leather_bundle_end",
+    "side": "oddc:block/leather_bundle_side"
+  }
+}

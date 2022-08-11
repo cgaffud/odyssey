@@ -1,5 +1,5 @@
 from PIL import Image
-import helper
+import image_recolor as helper
 
 standby = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],

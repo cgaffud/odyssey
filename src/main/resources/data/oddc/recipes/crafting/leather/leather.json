@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "oddc:leather_pile"
+      "item": "oddc:leather_bundle"
     }
   ],
   "result": {
