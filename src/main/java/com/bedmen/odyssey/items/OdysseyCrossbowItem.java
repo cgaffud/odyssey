@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.bedmen.odyssey.util.WeaponUtil;
@@ -24,6 +25,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.player.Player;
@@ -63,21 +65,21 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
-        ItemStack itemstack = player.getItemInHand(interactionHand);
-        if (isCharged(itemstack)) {
-            performShooting(level, player, interactionHand, itemstack, getShootingVelocity(itemstack), 1.0F);
-            setCharged(itemstack, false);
-            return InteractionResultHolder.consume(itemstack);
-        } else if (WeaponUtil.hasAmmo(player,itemstack)) {
-            if (!isCharged(itemstack)) {
+        ItemStack crossbow = player.getItemInHand(interactionHand);
+        if (isCharged(crossbow)) {
+            performShooting(level, player, interactionHand, crossbow, getShootingVelocity(crossbow), 1.0F);
+            setCharged(crossbow, false);
+            return InteractionResultHolder.consume(crossbow);
+        } else if (WeaponUtil.hasAmmo(player,crossbow)) {
+            if (!isCharged(crossbow)) {
                 this.startSoundPlayed = false;
                 this.midLoadSoundPlayed = false;
                 player.startUsingItem(interactionHand);
             }
 
-            return InteractionResultHolder.consume(itemstack);
+            return InteractionResultHolder.consume(crossbow);
         } else {
-            return InteractionResultHolder.fail(itemstack);
+            return InteractionResultHolder.fail(crossbow);
         }
     }
 
@@ -313,14 +315,10 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         return 8;
     }
 
-    public float getShootingVelocity(ItemStack itemStack) {
-        float f = WeaponUtil.BASE_ARROW_VELOCITY * this.velocityMultiplier;
-        f *= containsChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 0.5f : 1.0f;
+    public float getShootingVelocity(ItemStack crossbow) {
+        float f = WeaponUtil.BASE_ARROW_VELOCITY * this.getEffectiveVelocityMultiplier(crossbow);
+        f *= containsChargedProjectile(crossbow, Items.FIREWORK_ROCKET) ? 0.5f : 1.0f;
         return f;
-    }
-
-    public float getVelocityMultiplier(){
-        return this.velocityMultiplier;
     }
 
     public static boolean loadProjectile(LivingEntity livingEntity, ItemStack crossbow, ItemStack ammo, boolean multishotArrow, boolean inCreative) {
@@ -390,6 +388,15 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         return true;
     }
 
+    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
+        ConditionalAmpUtil.setDamageTag(itemStack, entity, false);
+        super.inventoryTick(itemStack, level, entity, compartments, selected);
+    }
+
+    public float getEffectiveVelocityMultiplier(ItemStack crossbow) {
+        return this.velocityMultiplier + ConditionalAmpUtil.getDamageTag(crossbow);
+    }
+
     public void registerItemModelProperties(){
         ItemProperties.register(this, new ResourceLocation("pull"), (itemStack, clientLevel, livingEntity, i) -> {
             if (livingEntity == null) {
@@ -411,10 +418,10 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
     public void appendHoverText(ItemStack crossbow, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(crossbow, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(this.velocityMultiplier)).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(this.getEffectiveVelocityMultiplier(crossbow))).withStyle(ChatFormatting.BLUE));
         tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(this.getChargeTime(crossbow))).withStyle(ChatFormatting.BLUE));
         if (flagIn.isAdvanced()) {
-            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.velocityMultiplier * WeaponUtil.BASE_ARROW_VELOCITY)).withStyle(ChatFormatting.BLUE));
+            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getEffectiveVelocityMultiplier(crossbow) * WeaponUtil.BASE_ARROW_VELOCITY)).withStyle(ChatFormatting.BLUE));
         }
     }
 }

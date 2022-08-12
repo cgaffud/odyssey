@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -255,35 +256,18 @@ public class EnchantmentUtil {
         return sum;
     }
 
-    public static float getConditionalAmpBonus(LivingEntity entity){
-        return getConditionalAmpBonus(entity.getMainHandItem(), entity);
-    }
-
-    public static float getConditionalAmpBonus(ItemStack itemStack, LivingEntity entity){
+    public static float getConditionalAmpBonus(ItemStack itemStack, Entity entity, boolean isMelee){
         float boost = 0.0f;
         if (entity != null) {
             for (ConditionalAmpEnchantment enchantment : CONDITIONAL_AMP_ENCHANTS) {
                 int level = EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemStack);
                 if (level > 0) {
-                    boost += ((float) level) * enchantment.getActiveBoost(entity.getLevel(), entity);
+                    boost += ((float) level) * enchantment.getActiveBoost(entity.getLevel(), entity, isMelee);
                 }
             }
         }
         return boost;
     }
-    public static float getConditionalAmpBonusRanged(ItemStack itemStack, LivingEntity entity){
-        float boost = 0.0f;
-        if (entity != null) {
-            for (ConditionalAmpEnchantment enchantment : CONDITIONAL_AMP_ENCHANTS) {
-                int level = EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemStack);
-                if (level > 0) {
-                    boost += ((float) level) * enchantment.getActiveFactor(entity.getLevel(), entity) * 0.2f;
-                }
-            }
-        }
-        return boost;
-    }
-
 
     public static Component getUnenchantableName(){
         return new TranslatableComponent("enchantment.oddc.unenchantable").withStyle(ChatFormatting.DARK_RED);
