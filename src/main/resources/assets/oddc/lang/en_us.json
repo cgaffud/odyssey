@@ -120,6 +120,7 @@
   "enchantment.oddc.riptide": "Riptide",
   "enchantment.oddc.sharpness": "Sharpness",
   "enchantment.oddc.shattering": "Shattering",
+  "enchantment.oddc.sky_blessing": "Celestial Blessing",
   "enchantment.oddc.slow_falling": "Slow Falling",
   "enchantment.oddc.smite": "Smite",
   "enchantment.oddc.sun_blessing": "Solar Blessing",
@@ -127,6 +128,7 @@
   "enchantment.oddc.thorns": "Thorns",
   "enchantment.oddc.turtling": "Turtling",
   "enchantment.oddc.unenchantable": "Unenchantable",
+  "enchantment.oddc.void_amplification": "Void Amplification",
   "enchantment.oddc.volatile": "Volatility",
   "enchantment.oddc.vulcan_strider": "Vulcan Strider",
   "enchantment.oddc.xerophilic": "Xerophilic",
@@ -421,6 +423,8 @@
   "item.oddc.turtle_chestplate": "Turtle Shell",
   "item.oddc.turtle_helmet": "Turtle Helmet",
   "item.oddc.turtle_leggings": "Turtle Leggings",
+  "item.oddc.void_bow": "Ethereal Fury",
+  "item.oddc.void_sword": "Ethereal Edge",
   "item.oddc.weaver_egg": "Weaver Egg",
   "item.oddc.weaver_fang": "Weaver Fang",
   "item.oddc.weaver_fang.web_chance": "Cobweb Chance: ",
@@ -465,8 +469,5 @@
   "stat.oddc.interact_with_recycling_furnace": "Interactions with Recycling Furnace",
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
-  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
-  "item.oddc.void_sword": "Ethereal Edge",
-  "enchantment.oddc.void_amplification": "Void Amplification",
-  "item.oddc.void_bow": "Ethereal Fury"
+  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened"
 }

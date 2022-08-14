@@ -71,7 +71,7 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> BOTANICAL = ENCHANTMENTS.register("botanical", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, EnchantmentRegistry::getHotHumidBoost, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> XEROPHILIC = ENCHANTMENTS.register("xerophilic", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, EnchantmentRegistry::getHotDryBoost, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> CRYOPHILIC = ENCHANTMENTS.register("cryophilic", ()-> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, EnchantmentRegistry::getColdBoost, EquipmentSlot.MAINHAND));
-    public static final RegistryObject<Enchantment> VOID_AMPLIFICATION = ENCHANTMENTS.register("void_amplification", () -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 4.0f, EnchantmentRegistry::getBoostFromVoid, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> VOID_AMPLIFICATION = ENCHANTMENTS.register("void_amplification", () -> new ConditionalAmpEnchantment(Enchantment.Rarity.RARE, 1, 2.0f, 0.35f, EnchantmentRegistry::getBoostFromVoid, EquipmentSlot.MAINHAND));
     
     //Misc Enchantments
     public static final RegistryObject<Enchantment> SHATTERING = ENCHANTMENTS.register("shattering", () -> new ShatteringEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));
@@ -141,25 +141,28 @@ public class EnchantmentRegistry {
         return 1f - getHumidBoost(pos, level);
     }
 
-    private static float quadraticMagicFunction(float y, float intercept, boolean incr){
-        float num  = incr ? (-0.5f * intercept - y) : (1.5f * intercept - y);
-        return ((num * num)/(8.0f * intercept * intercept) - 1 / 32.0f);
+    /**
+     * Gives a 0 if y is at or beyond badY, a 1 if y is at or beyond goodY, quadratic scale in between
+     */
+    private static float quadraticDistanceFactorToVoid(float y, float badY, float goodY) {
+        float f = Mth.clamp((y - badY) / (goodY - badY), 0.0f, 1.0f);
+        return f * f;
     }
 
     private static float getBoostFromVoid(BlockPos pos, Level level) {
         int y = pos.getY();
-        if (level.dimension() == Level.OVERWORLD) {
-            if (y >= 64) return 0.0f;
-            else return 2.0f* quadraticMagicFunction(y+64, 128.0f, false);
+        if (level.dimension() == Level.END) {
+            // Usually these boost numbers are only from 0 to 1 but this is an exception
+            return 2.0f;
         }
         if (level.dimension() == Level.NETHER) {
-            if ((y >= 32) && (y <= 96)) return 0.0f;
-            else {
-                float yAdj = (float) Math.min(Math.abs(32-y), Math.abs(y-96));
-                return (yAdj * yAdj)/(32.0f*32.0f) * 0.5f;
+            if (y > 64) {
+                return quadraticDistanceFactorToVoid(y, 96, 128);
+            } else {
+                return quadraticDistanceFactorToVoid(y, 32, 0);
             }
         }
-        return 1.0f;
+        // Gonna assume any other custom dimensions are similar to the overworld
+        return quadraticDistanceFactorToVoid(y, 64, -64);
     }
-
 }

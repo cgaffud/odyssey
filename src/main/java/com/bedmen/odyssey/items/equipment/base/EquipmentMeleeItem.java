@@ -3,13 +3,16 @@ package com.bedmen.odyssey.items.equipment.base;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.items.MeleeWeaponClass;
 import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import com.bedmen.odyssey.util.WeaponUtil;
-import com.google.common.collect.*;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -29,6 +32,7 @@ import net.minecraftforge.common.ToolActions;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquipment {
     /** Modifiers applied when the item is in the mainhand of a user. */
@@ -38,8 +42,8 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
     private final Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
     protected static final List<EquipmentMeleeItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
-    public EquipmentMeleeItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, LevEnchSup... levEnchSups) {
-        super(tier, builderIn);
+    public EquipmentMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, LevEnchSup... levEnchSups) {
+        super(tier, properties);
         this.meleeWeaponClass = meleeWeaponClass;
         float attackDamage = damage + tier.getAttackDamageBonus();
 
@@ -97,6 +101,36 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
         return equipmentSlot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getDefaultAttributeModifiers(equipmentSlot);
+    }
+
+    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
+        ConditionalAmpUtil.setDamageTag(itemStack, entity, true);
+        super.inventoryTick(itemStack, level, entity, compartments, selected);
+    }
+
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack)
+    {
+        if (equipmentSlot == EquipmentSlot.MAINHAND) {
+            Multimap<Attribute, AttributeModifier> stackAttributeModifiers = LinkedHashMultimap.create();
+            float conditionalAmpBonus = ConditionalAmpUtil.getDamageTag(itemStack);
+            for(Map.Entry<Attribute, Collection<AttributeModifier>> entry : this.attributeModifiers.asMap().entrySet()){
+                if (entry.getKey() == Attributes.ATTACK_DAMAGE && conditionalAmpBonus > 0.0f) {
+                    Collection<AttributeModifier> newDamageModifiers = entry.getValue().stream()
+                            .map(attributeModifier -> {
+                                if (attributeModifier.getId() == BASE_ATTACK_DAMAGE_UUID) {
+                                    return new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", attributeModifier.getAmount() + conditionalAmpBonus, AttributeModifier.Operation.ADDITION);
+                                }
+                                return attributeModifier;
+                            })
+                            .collect(Collectors.toSet());
+                    stackAttributeModifiers.putAll(entry.getKey(), newDamageModifiers);
+                } else {
+                    stackAttributeModifiers.putAll(entry.getKey(), entry.getValue());
+                }
+            }
+            return stackAttributeModifiers;
+        }
+        return super.getAttributeModifiers(equipmentSlot, itemStack);
     }
 
     public static void initEquipment(){
