@@ -1,13 +1,12 @@
 package com.bedmen.odyssey.items;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -158,6 +157,15 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         return WeaponUtil.getRangedChargeTime(bow, this.baseMaxChargeTicks);
     }
 
+    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
+        ConditionalAmpUtil.setDamageTag(itemStack, entity, false);
+        super.inventoryTick(itemStack, level, entity, compartments, selected);
+    }
+
+    private float getEffectiveVelocityMultiplier(ItemStack bow) {
+        return this.velocityMultiplier + ConditionalAmpUtil.getDamageTag(bow);
+    }
+
     public void registerItemModelProperties() {
         ItemProperties.register(this, new ResourceLocation("pull"), (itemStack, clientLevel, livingEntity, i) -> {
             if (livingEntity == null) {
@@ -178,22 +186,5 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         if (flagIn.isAdvanced()) {
             tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getEffectiveVelocityMultiplier(bow) * getMaxCharge(bow) * WeaponUtil.BASE_ARROW_VELOCITY)).withStyle(ChatFormatting.BLUE));
         }
-    }
-
-    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
-        float bonus = 0.0f;
-        if (entity instanceof LivingEntity livingEntity)
-            bonus = EnchantmentUtil.getConditionalAmpBonusRanged(itemStack, livingEntity);
-        itemStack.getOrCreateTag().putFloat(Odyssey.MOD_ID+"_conditional_amp", bonus);
-        super.inventoryTick(itemStack, level, entity, compartments, selected);
-    }
-
-    private float getEffectiveVelocityMultiplier(ItemStack bow) {
-        CompoundTag tag = bow.getTag();
-        float conditionalAmpBonus = 1.0f;
-        if (tag != null) {
-            conditionalAmpBonus = tag.getFloat(Odyssey.MOD_ID + "_conditional_amp") + 1.0F;
-        }
-        return this.velocityMultiplier * conditionalAmpBonus;
     }
 }

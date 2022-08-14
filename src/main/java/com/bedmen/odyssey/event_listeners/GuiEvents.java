@@ -14,9 +14,6 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GuiEvents {
 
-    /**
-     * Custom Creative Screen
-     */
     @SubscribeEvent
     public static void onScreenOpenEvent(final ScreenOpenEvent event){
         Screen screen = event.getScreen();

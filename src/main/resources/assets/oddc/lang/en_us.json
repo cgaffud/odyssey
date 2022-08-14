@@ -121,6 +121,7 @@
   "enchantment.oddc.riptide": "Riptide",
   "enchantment.oddc.sharpness": "Sharpness",
   "enchantment.oddc.shattering": "Shattering",
+  "enchantment.oddc.sky_blessing": "Celestial Blessing",
   "enchantment.oddc.slow_falling": "Slow Falling",
   "enchantment.oddc.smite": "Smite",
   "enchantment.oddc.sun_blessing": "Solar Blessing",
@@ -478,6 +479,7 @@
   "stat.oddc.interact_with_recycling_furnace": "Interactions with Recycling Furnace",
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
+  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened"
   "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
   "item.oddc.music_disc_mesa.desc": "Nintendo - Gerudo Valley"
 }

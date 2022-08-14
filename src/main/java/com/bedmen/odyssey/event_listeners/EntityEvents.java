@@ -102,7 +102,6 @@ public class EntityEvents {
             int downpourLevel = EnchantmentUtil.getDownpour(attackingEntity);
             if (downpourLevel > 0 && livingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
                 amount += (float)downpourLevel * 3f;
-            amount += EnchantmentUtil.getConditionalAmpBonus(attackingEntity);
         }
 
         if(amount >= 10.0f && livingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){

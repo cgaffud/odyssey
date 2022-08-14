@@ -18,9 +18,9 @@ import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.ShieldType;
 import com.bedmen.odyssey.items.TomeItem;
-import com.bedmen.odyssey.items.equipment.CondAmpMeleeItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.*;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
@@ -92,15 +92,15 @@ public class ClientEvents {
 
             //Block Render Types
             for(Block block : ForgeRegistries.BLOCKS.getValues()) {
-                if (block instanceof INeedsToRegisterRenderType) {
-                    ItemBlockRenderTypes.setRenderLayer(block, ((INeedsToRegisterRenderType) block).getRenderType());
+                if (block instanceof INeedsToRegisterRenderType block1) {
+                    ItemBlockRenderTypes.setRenderLayer(block, block1.getRenderType());
                 }
             }
 
             //Item Model Properties
             for(Item item : ForgeRegistries.ITEMS.getValues()){
-                if(item instanceof INeedsToRegisterItemModelProperty){
-                    ((INeedsToRegisterItemModelProperty) item).registerItemModelProperties();
+                if(item instanceof INeedsToRegisterItemModelProperty item1){
+                    item1.registerItemModelProperties();
                 }
             }
 
@@ -228,10 +228,10 @@ public class ClientEvents {
             return i > 0 ? -1 : ((DyeableLeatherItem)itemStack.getItem()).getColor(itemStack);
         }, ItemRegistry.PARKA_HELMET.get(), ItemRegistry.PARKA_CHESTPLATE.get(), ItemRegistry.PARKA_LEGGINGS.get(), ItemRegistry.PARKA_BOOTS.get());
         event.getItemColors().register((itemStack, i) -> {
-            return i <= 0 ? -1 : CondAmpMeleeItem.Gradient.getColor(itemStack);
+            return i <= 0 ? -1 : ConditionalAmpUtil.getColorTag(itemStack);
         }, ItemRegistry.RAIN_SWORD.get(), ItemRegistry.ARID_MACE.get());
         event.getItemColors().register((itemStack, i) -> {
-            return CondAmpMeleeItem.Gradient.getColor(itemStack);
+            return ConditionalAmpUtil.getColorTag(itemStack);
         }, ItemRegistry.ICE_DAGGER.get());
         for(TomeItem tomeItem : TomeItem.TOMES){
             event.getItemColors().register((itemStack, i) -> {
