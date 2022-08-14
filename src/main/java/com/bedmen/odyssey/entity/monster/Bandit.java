@@ -129,7 +129,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
 
     @Override
     public void shootCrossbowProjectile(LivingEntity livingEntity, ItemStack crossbow, Projectile projectile, float angle) {
-        float velocity = (crossbow.getItem() instanceof OdysseyCrossbowItem odysseyCrossbowItem ? odysseyCrossbowItem.getVelocityMultiplier() : 1.25f);
+        float velocity = (crossbow.getItem() instanceof OdysseyCrossbowItem odysseyCrossbowItem ? odysseyCrossbowItem.getEffectiveVelocityMultiplier(crossbow) : 1.25f);
         this.shootCrossbowProjectile(this, livingEntity, projectile, angle, WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * velocity);
     }
 
