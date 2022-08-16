@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.client.model;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.boss.MineralLeviathanHead;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;

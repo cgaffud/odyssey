@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.entity.boss;
+package com.bedmen.odyssey.entity.boss.mineralLeviathan;
 
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import net.minecraft.nbt.CompoundTag;

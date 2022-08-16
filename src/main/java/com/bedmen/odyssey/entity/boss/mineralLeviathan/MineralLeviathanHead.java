@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.entity.boss;
+package com.bedmen.odyssey.entity.boss.mineralLeviathan;
 
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -121,9 +121,6 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
         float alpha = (float)this.mouthAngleTimer / 10f;
         this.mouthAngle = this.mouthAngle * (1f-alpha) + f * alpha;
     }
-
-
-
 
     public void aiStep() {
         //Server side Init Body

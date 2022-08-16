@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.entity.monster;
 
-import com.bedmen.odyssey.entity.boss.MineralLeviathanHead;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.advancements.CriteriaTriggers;

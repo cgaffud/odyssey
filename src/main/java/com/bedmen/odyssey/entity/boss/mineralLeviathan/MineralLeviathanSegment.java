@@ -1,5 +1,6 @@
-package com.bedmen.odyssey.entity.boss;
+package com.bedmen.odyssey.entity.boss.mineralLeviathan;
 
+import com.bedmen.odyssey.entity.boss.Boss;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
