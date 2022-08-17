@@ -57,6 +57,16 @@ public abstract class BossEntity extends LivingEntity {
         serverBossEvent.setName(this.getDisplayName());
     }
 
+    public void startSeenByPlayer(ServerPlayer serverPlayer) {
+        super.startSeenByPlayer(serverPlayer);
+        this.getBossEvent().addPlayer(serverPlayer);
+    }
+
+    public void stopSeenByPlayer(ServerPlayer serverPlayer) {
+        super.stopSeenByPlayer(serverPlayer);
+        this.getBossEvent().removePlayer(serverPlayer);
+    }
+
     public void checkDespawn() {
         if (this.level.getDifficulty() == Difficulty.PEACEFUL || this.despawnTimer > DESPAWN_TIME) {
             this.discard();
@@ -128,7 +138,7 @@ public abstract class BossEntity extends LivingEntity {
     public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {}
 
     public HumanoidArm getMainArm() {
-        return HumanoidArm.RIGHT;
+        return null;
     }
 
     public Packet<?> getAddEntityPacket() {
