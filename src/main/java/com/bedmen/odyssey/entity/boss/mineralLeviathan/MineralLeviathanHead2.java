@@ -88,7 +88,7 @@ public class MineralLeviathanHead2 extends MineralLeviathanSegment2 {
 
                     case IDLE:
                         if(this.random.nextInt(80) == 0){
-                            this.randomTargetVelocity = new Vec3(this.random.nextDouble()*2d-1d, this.random.nextDouble()*2d-2d, this.random.nextDouble()*2d-1d);
+                            this.randomTargetVelocity = getRandomDownwardVector();
                         }
                         this.rotateTowards(this.randomTargetVelocity, 0.1d, 0.002d);
                         break;
@@ -164,6 +164,14 @@ public class MineralLeviathanHead2 extends MineralLeviathanSegment2 {
             }
         }
         super.aiStep();
+    }
+
+    public Vec3 getRandomDownwardVector() {
+        double theta = this.random.nextDouble() * Math.PI * 2.0d;
+        // phi is an angle between 0 and pi/4, with a higher chance of being near pi/4
+        double phi = Math.acos(-this.level.random.nextDouble() * (1.0d - (1.0d / Math.sqrt(2.0d))) + 1.0d);
+        double horizontalScaler = Math.sin(phi);
+        return new Vec3(horizontalScaler * Math.cos(theta), -Math.cos(phi), horizontalScaler * Math.sin(theta));
     }
 
     protected void moveTowards(Vec3 vector3d, double acceleration){

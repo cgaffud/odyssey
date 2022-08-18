@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity;
 
 import com.bedmen.odyssey.entity.boss.BossMaster2;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
@@ -11,6 +12,8 @@ public interface SubEntity<T extends BossMaster2> extends IEntityAdditionalSpawn
     Optional<T> getMasterEntity();
 
     void setMasterEntity(T master);
+
+    boolean hurtDirectly(DamageSource damageSource, float amount);
 
     default Entity asEntity(){
         return (Entity)this;
@@ -32,17 +35,23 @@ public interface SubEntity<T extends BossMaster2> extends IEntityAdditionalSpawn
     // Copy and paste
     /*
     public void remove(RemovalReason removalReason) {
-        if(removalReason == Entity.RemovalReason.DISCARDED || this.getMasterEntity().isEmpty()) {
+        if(removalReason == RemovalReason.DISCARDED || removalReason == RemovalReason.KILLED || this.getMasterEntity().isEmpty()) {
             super.remove(removalReason);
         } else {
-            this.getMasterEntity().ifPresent(master -> {
-                master.handleSubEntity(this);
-            });
+            this.getMasterEntity().ifPresent(master -> master.handleSubEntity(this));
         }
     }
 
     public boolean save(CompoundTag compoundTag) {
         return false;
+    }
+
+    public boolean hurtDirectly(DamageSource damageSource, float amount) {
+        return super.hurt(damageSource, amount);
+    }
+
+    public void kill() {
+        this.hurtDirectly(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
     }
     */
 }

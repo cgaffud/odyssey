@@ -30,21 +30,20 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-public abstract class MineralLeviathanSegment2 extends Monster implements IEntityAdditionalSpawnData, SubEntity<MineralLeviathanMaster2> {
+public abstract class MineralLeviathanSegment2 extends Monster implements SubEntity<MineralLeviathanMaster2> {
     protected static final EntityDataAccessor<Float> DATA_SHELL_HEALTH_ID = SynchedEntityData.defineId(MineralLeviathanSegment2.class, EntityDataSerializers.FLOAT);
     protected ShellType shellType;
-    private int silverFishSpawned;
     protected Optional<MineralLeviathanMaster2> master;
 
     public MineralLeviathanSegment2(EntityType<? extends MineralLeviathanSegment2> entityType, Level level) {
         this(entityType, level, Optional.empty());
+        this.xpReward = 5;
     }
 
     public MineralLeviathanSegment2(EntityType<? extends MineralLeviathanSegment2> entityType, Level level, Optional<MineralLeviathanMaster2> master) {
@@ -69,19 +68,12 @@ public abstract class MineralLeviathanSegment2 extends Monster implements IEntit
     }
 
     public void aiStep() {
-
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
                 //Damage
                 this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())
-                        .stream().filter(livingEntity -> !(livingEntity instanceof MineralLeviathanSegment2 || livingEntity instanceof MineralLeviathanMaster2))
+                        .stream().filter(livingEntity -> !(livingEntity instanceof MineralLeviathanSegment2 || livingEntity instanceof MineralLeviathanMaster2 || livingEntity instanceof Silverfish))
                         .forEach(livingEntity -> livingEntity.hurt(DamageSource.mobAttack(this).setScalesWithDifficulty(), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE)));
-                //Spawn SilverFish
-                if(!this.hasShell() && this.silverFishSpawned < this.getMaxSilverFish() && this.random.nextFloat() < MineralLeviathanMaster2.SILVER_FISH_CHANCE){
-                    Silverfish silverfishEntity = EntityType.SILVERFISH.spawn((ServerLevel) this.level, null, null, null, this.blockPosition(), MobSpawnType.REINFORCEMENT, false, false);
-                    silverfishEntity.setPos(this.getX(), this.getY(), this.getZ());
-                    this.silverFishSpawned++;
-                }
             }
         }
         super.aiStep();
@@ -116,7 +108,7 @@ public abstract class MineralLeviathanSegment2 extends Monster implements IEntit
         return this.getShellHealth() > 0.0f;
     }
 
-    public int getMaxSilverFish(){
+    public int getSilverFishCount(){
         int i = switch (this.level.getDifficulty()) {
             case HARD -> 6;
             case NORMAL -> 4;
@@ -139,6 +131,10 @@ public abstract class MineralLeviathanSegment2 extends Monster implements IEntit
         if(compoundNBT.contains("ShellHealth")){
             this.setShellHealth(compoundNBT.getFloat("ShellHealth"));
         }
+    }
+
+    public boolean hurtDirectly(DamageSource damageSource, float amount) {
+        return super.hurt(damageSource, amount);
     }
 
     public boolean hurt(DamageSource damageSource, float amount) {
@@ -182,6 +178,12 @@ public abstract class MineralLeviathanSegment2 extends Monster implements IEntit
                     this.playSound(SoundEvents.IRON_GOLEM_DAMAGE, 1.0F, 1.0F);
                     if(!this.level.isClientSide){
                         this.shellType.spawnLoot((ServerLevel) this.level, damageSource, this, itemStack);
+                        int silverFishCount = this.getSilverFishCount();
+                        for(int i = 0; i < silverFishCount; i++) {
+                            Silverfish silverfishEntity = EntityType.SILVERFISH.spawn((ServerLevel) this.level, null, null, null, this.blockPosition(), MobSpawnType.REINFORCEMENT, false, false);
+                            silverfishEntity.moveTo(this.getX(), this.getY(), this.getZ());
+                            silverfishEntity.setDeltaMovement(new Vec3(this.random.nextDouble()*2.0d-1.0d, 0.5d, this.random.nextDouble()*2.0d-1.0d));
+                        }
                     }
                 }
             }
@@ -229,8 +231,12 @@ public abstract class MineralLeviathanSegment2 extends Monster implements IEntit
         this.master = Optional.of(master);
     }
 
+    public void kill() {
+        this.hurtDirectly(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
+    }
+
     public void remove(RemovalReason removalReason) {
-        if(removalReason == RemovalReason.DISCARDED || this.getMasterEntity().isEmpty()) {
+        if(removalReason == RemovalReason.DISCARDED || removalReason == RemovalReason.KILLED || this.getMasterEntity().isEmpty()) {
             super.remove(removalReason);
         } else {
             this.getMasterEntity().ifPresent(master -> master.handleSubEntity(this));

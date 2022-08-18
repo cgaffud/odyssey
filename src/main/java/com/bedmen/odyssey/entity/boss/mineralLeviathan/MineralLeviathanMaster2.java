@@ -17,6 +17,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -46,6 +47,14 @@ public class MineralLeviathanMaster2 extends BossMaster2 {
 
     public MineralLeviathanMaster2(EntityType<? extends MineralLeviathanMaster2> entityType, Level level) {
         super(entityType, level);
+    }
+
+    public void clientTick() {
+        for(Entity entity : this.getSubEntities()){
+            if(entity instanceof LivingEntity livingEntity) {
+                livingEntity.hurtTime = this.hurtTime;
+            }
+        }
     }
 
     public Collection<Entity> getSubEntities() {

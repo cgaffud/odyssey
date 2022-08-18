@@ -58,8 +58,10 @@ public abstract class BossMaster2 extends Boss {
     }
 
     public void remove(@NotNull RemovalReason removalReason) {
-        for(Entity entity: this.getSubEntities()) {
-            entity.discard();
+        if(removalReason == RemovalReason.KILLED) {
+            this.getSubEntities().forEach(Entity::kill);
+        } else {
+            this.getSubEntities().forEach(Entity::discard);
         }
         super.remove(removalReason);
     }
