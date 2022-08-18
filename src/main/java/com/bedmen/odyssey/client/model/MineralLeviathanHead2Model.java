@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.client.model;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.Segment;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead2;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-public class MineralLeviathanHead2Model extends EntityModel<Segment> {
+public class MineralLeviathanHead2Model extends EntityModel<MineralLeviathanHead2> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(Odyssey.MOD_ID, "mineral_leviathan_head"), "main");
 	private final ModelPart base;
 	private final ModelPart s_mouth;
@@ -98,7 +98,7 @@ public class MineralLeviathanHead2Model extends EntityModel<Segment> {
 	}
 
 	@Override
-	public void setupAnim(Segment entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(MineralLeviathanHead2 entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.base.yRot = Mth.rotLerp(ageInTicks % 1.0f, entity.yRotO, entity.getYRot()) * (float)Math.PI / -90f; //Game automatically rotates models the wrong way based on yrot, so we rotate them back by double
         this.base.xRot = (Mth.rotLerp(ageInTicks % 1.0f, entity.xRotO, entity.getXRot()) - 90f) * (float)Math.PI / -180f;
         float mouthAngle = Mth.rotLerp(ageInTicks % 1.0f, entity.mouthAngleO, entity.mouthAngle) * (float)Math.PI / 180f;

@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -35,6 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -42,7 +42,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AbandonedIronGolem extends Boss {
-    private final ServerBossEvent bossEvent = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
     private int attackAnimationTick;
     private int clapCooldown = 0;
     private static final float CLAP_CHANCE = 0.03f;
@@ -148,13 +147,13 @@ public class AbandonedIronGolem extends Boss {
         }
     }
 
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("ClapCooldown", this.clapCooldown);
         compoundTag.putString("Phase", this.getPhase().name());
     }
 
-    public void readAdditionalSaveData(CompoundTag compoundTag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.clapCooldown = compoundTag.getInt("ClapCooldown");
         if(compoundTag.contains("Phase")){
@@ -264,18 +263,8 @@ public class AbandonedIronGolem extends Boss {
         return IronGolem.Crackiness.byFraction(this.getHealth() / this.getMaxHealth());
     }
 
-    public ServerBossEvent getBossEvent(){
-        return this.bossEvent;
-    }
-
-    public void startSeenByPlayer(ServerPlayer p_184178_1_) {
-        super.startSeenByPlayer(p_184178_1_);
-        this.bossEvent.addPlayer(p_184178_1_);
-    }
-
-    public void stopSeenByPlayer(ServerPlayer p_184203_1_) {
-        super.stopSeenByPlayer(p_184203_1_);
-        this.bossEvent.removePlayer(p_184203_1_);
+    public BossEvent.BossBarColor getBossBarColor() {
+        return BossEvent.BossBarColor.WHITE;
     }
 
     enum Phase {

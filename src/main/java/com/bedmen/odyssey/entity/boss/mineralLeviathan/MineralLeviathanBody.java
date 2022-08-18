@@ -4,8 +4,8 @@ import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,14 +96,14 @@ public class MineralLeviathanBody extends MineralLeviathanSegment {
         super.aiStep();
     }
 
-    public void addAdditionalSaveData(CompoundTag compoundNBT) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
         for(int i = 0; i < this.dependencyUUIDs.length; i++){
             compoundNBT.putUUID("BodyUUID"+i, this.dependencyUUIDs[i]);
         }
     }
 
-    public void readAdditionalSaveData(CompoundTag compoundNBT) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
         for(int i = 0; i < 2; i++){
             if (compoundNBT.hasUUID("BodyUUID"+i)) {
@@ -123,20 +124,13 @@ public class MineralLeviathanBody extends MineralLeviathanSegment {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 1.0D).add(Attributes.ATTACK_DAMAGE, MineralLeviathanHead.DAMAGE * 0.5d);
     }
 
-    public ServerBossEvent getBossEvent(){
-        if(this.head != null){
-            return this.head.getBossEvent();
-        }
-        return null;
+    protected BossEvent.BossBarColor getBossBarColor() {
+        return BossEvent.BossBarColor.RED;
     }
 
     public void checkDespawn() {
         if (this.head != null && this.head.isRemoved()) {
             this.discard();
         }
-    }
-
-    public boolean canChangeBossEvent(){
-        return false;
     }
 }

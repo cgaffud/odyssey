@@ -3,9 +3,7 @@ package com.bedmen.odyssey;
 import com.bedmen.odyssey.block.wood.OdysseyFlowerPotBlock;
 import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.*;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.TomeItem;
@@ -148,9 +146,9 @@ public class Odyssey
         event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolem.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHead.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBody.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_MASTER.get(), MineralLeviathanMaster.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_HEAD_2.get(), MineralLeviathanMaster.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY_2.get(), MineralLeviathanMaster.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_MASTER_2.get(), MineralLeviathanMaster2.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_HEAD_2.get(), MineralLeviathanHead2.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY_2.get(), MineralLeviathanBody2.createAttributes().build());
 //        event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
     }
 }

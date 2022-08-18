@@ -146,7 +146,7 @@ public class ClientEvents {
             EntityRenderers.register(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyRenderer::new);
-            EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_MASTER.get(), MineralLeviathanMasterRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_MASTER_2.get(), MineralLeviathanMaster2Renderer::new);
             EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_HEAD_2.get(), MineralLeviathanHead2Renderer::new);
             EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY_2.get(), MineralLeviathanBody2Renderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);

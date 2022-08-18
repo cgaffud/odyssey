@@ -9,11 +9,11 @@ import java.util.List;
 public class OdysseyDataSerializers {
     public static final EntityDataSerializer<List<Integer>> INT_LIST = new EntityDataSerializer<>() {
         public void write(FriendlyByteBuf buffer, List<Integer> integerList) {
-            buffer.writeCollection(integerList, FriendlyByteBuf::writeInt);
+            buffer.writeCollection(integerList, FriendlyByteBuf::writeVarInt);
         }
 
         public List<Integer> read(FriendlyByteBuf buffer) {
-            return buffer.readList(FriendlyByteBuf::readInt);
+            return buffer.readList(FriendlyByteBuf::readVarInt);
         }
 
         public List<Integer> copy(List<Integer> integerList) {

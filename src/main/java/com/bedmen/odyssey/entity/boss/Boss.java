@@ -1,9 +1,11 @@
 package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.registry.EffectRegistry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -14,56 +16,53 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public abstract class Boss extends Monster {
+    @NotNull
+    public final ServerBossEvent bossEvent = new ServerBossEvent(this.getDisplayName(), this.getBossBarColor(), BossEvent.BossBarOverlay.PROGRESS);
     private static final int DESPAWN_TIME = 1200;
     private int despawnTimer;
     protected float damageReduction = 1.0f;
     private int cachedNearbyPlayers = 0;
-    protected Boss(EntityType<? extends Monster> p_i48576_1_, Level p_i48576_2_) {
-        super(p_i48576_1_, p_i48576_2_);
+    protected Boss(EntityType<? extends Boss> entityType, Level level) {
+        super(entityType, level);
     }
 
     public void tick(){
+        this.cachedNearbyPlayers = (int) this.bossEvent.getPlayers().stream().filter(this::validTargetPredicate).count();
+        this.damageReduction = this.difficultyDamageReductionMultiplier() * this.nearbyPlayerDamageReductionMultiplier();
         super.tick();
-        if(this.getTarget() == null){
+        if(this.cachedNearbyPlayers <= 0){
             this.despawnTimer++;
         }
-        this.damageReduction = this.difficultyDamageReductionMultiplier() * this.nearbyPlayerDamageReductionMultiplier();
-        ServerBossEvent serverBossInfo = this.getBossEvent();
-        if(serverBossInfo == null){
-            this.cachedNearbyPlayers = 0;
+        if(this.level.isClientSide){
+            this.clientTick();
         } else {
-            this.cachedNearbyPlayers = (int) serverBossInfo.getPlayers().stream().filter(this::validTargetPredicate).count();
+            this.serverTick();
         }
     }
 
+    public void clientTick() {}
+
+    public void serverTick() {}
+
     public void setCustomName(@Nullable Component component) {
         super.setCustomName(component);
-        ServerBossEvent serverBossEvent = this.getBossEvent();
-        if(canChangeBossEvent() && serverBossEvent != null){
-            serverBossEvent.setName(this.getDisplayName());
-        }
+        this.bossEvent.setName(this.getDisplayName());
     }
 
     protected void customServerAiStep() {
         super.customServerAiStep();
-        ServerBossEvent serverBossEvent = this.getBossEvent();
-        if(canChangeBossEvent() && serverBossEvent != null){
-            serverBossEvent.setProgress(this.getHealth() / this.getMaxHealth());
-        }
+        this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
     }
 
-    public abstract ServerBossEvent getBossEvent();
-
-    public boolean canChangeBossEvent(){
-        return true;
-    }
+    protected abstract BossEvent.BossBarColor getBossBarColor();
 
     public void checkDespawn() {
-        if ((this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) || this.despawnTimer > DESPAWN_TIME) {
+        if (this.level.getDifficulty() == Difficulty.PEACEFUL || this.despawnTimer > DESPAWN_TIME) {
             this.discard();
         } else {
             this.noActionTime = 0;
@@ -104,10 +103,9 @@ public abstract class Boss extends Monster {
     }
 
     public void setTarget(@Nullable LivingEntity livingEntity) {
-        if(livingEntity instanceof Monster){
-            return;
+        if(livingEntity instanceof ServerPlayer serverPlayer && validTargetPredicate(serverPlayer)){
+            super.setTarget(livingEntity);
         }
-        super.setTarget(livingEntity);
     }
 
     public boolean validTargetPredicate(ServerPlayer serverPlayer){
@@ -129,5 +127,31 @@ public abstract class Boss extends Monster {
             case NORMAL: return 1.0f;
             case HARD: return 2.0f/3.0f;
         }
+    }
+
+    public void startSeenByPlayer(ServerPlayer serverPlayer) {
+        super.startSeenByPlayer(serverPlayer);
+        this.bossEvent.addPlayer(serverPlayer);
+    }
+
+    public void stopSeenByPlayer(ServerPlayer serverPlayer) {
+        super.stopSeenByPlayer(serverPlayer);
+        this.bossEvent.removePlayer(serverPlayer);
+    }
+
+    public float getDamageReduction() {
+        return this.damageReduction;
+    }
+
+    private static final String DESPAWN_TIMER_TAG = "DespawnTimer";
+
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putInt(DESPAWN_TIMER_TAG, this.despawnTimer);
+    }
+
+    public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.despawnTimer = compoundTag.getInt(DESPAWN_TIMER_TAG);
     }
 }

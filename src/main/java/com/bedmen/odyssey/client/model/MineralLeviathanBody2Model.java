@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.client.model;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.Segment;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody2;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-public class MineralLeviathanBody2Model extends EntityModel<Segment> {
+public class MineralLeviathanBody2Model extends EntityModel<MineralLeviathanBody2> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(Odyssey.MOD_ID, "mineral_leviathan_body"), "main");
 	private final ModelPart bb_main;
 
@@ -21,13 +21,6 @@ public class MineralLeviathanBody2Model extends EntityModel<Segment> {
 	}
 
 	public static LayerDefinition createBodyLayer() {
-//		MeshDefinition meshdefinition = new MeshDefinition();
-//		PartDefinition partdefinition = meshdefinition.getRoot();
-//
-//		PartDefinition bb_main = partdefinition.addOrReplaceChild("bb_main", CubeListBuilder.create().texOffs(0, 0).addBox(-16.0F, -32.0F, -16.0F, 32.0F, 32.0F, 32.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
-//
-//		return LayerDefinition.create(meshdefinition, 128, 64);
-
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
@@ -37,7 +30,7 @@ public class MineralLeviathanBody2Model extends EntityModel<Segment> {
 	}
 
 	@Override
-	public void setupAnim(Segment entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(MineralLeviathanBody2 entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.bb_main.yRot = Mth.rotLerp(ageInTicks % 1.0f, entity.yRotO, entity.getYRot()) * (float)Math.PI / -90f; //Game automatically rotates models the wrong way based on yrot, so we rotate them back by double
         this.bb_main.xRot = Mth.rotLerp(ageInTicks % 1.0f, entity.xRotO, entity.getXRot()) * (float)Math.PI / -180f;
 	}

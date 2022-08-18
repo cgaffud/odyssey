@@ -30,5 +30,4 @@ public class GeneralUtil {
         double t = (maxRadianChange / theta) * (Math.PI / 2.0d);
         return target.scale(Math.sin(t)).add(current.scale(Math.cos(t))).normalize();
     }
-
 }
