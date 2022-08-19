@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.network;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.boss.BossMaster2;
+import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.network.packet.ShootSwungProjectilePacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
@@ -30,6 +30,6 @@ public class OdysseyNetwork {
 //        CHANNEL.registerMessage(5, SoundPacket.class, SoundPacket::encode, SoundPacket::decode, SoundPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 //        CHANNEL.registerMessage(6, PermanentBuffsPacket.class, PermanentBuffsPacket::encode, PermanentBuffsPacket::decode, PermanentBuffsPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 
-        BossMaster2.initBossPackets();
+        BossMaster.initBossPackets();
     }
 }

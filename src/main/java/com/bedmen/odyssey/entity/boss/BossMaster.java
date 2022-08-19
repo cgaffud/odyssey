@@ -1,11 +1,12 @@
 package com.bedmen.odyssey.entity.boss;
 
-import com.bedmen.odyssey.entity.SubEntity;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
@@ -19,11 +20,11 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class BossMaster2 extends Boss {
+public abstract class BossMaster extends Boss {
 
     public static final Set<PacketDefinition<?>> UNREGISTERED_PACKET_SET = new HashSet<>();
 
-    protected BossMaster2(EntityType<? extends BossMaster2> entityType, Level level) {
+    protected BossMaster(EntityType<? extends BossMaster> entityType, Level level) {
         super(entityType, level);
         this.noPhysics = true;
         this.setNoGravity(true);
@@ -64,6 +65,17 @@ public abstract class BossMaster2 extends Boss {
             this.getSubEntities().forEach(Entity::discard);
         }
         super.remove(removalReason);
+    }
+
+    public void die(DamageSource damageSource) {
+        this.getSubEntities().forEach(entity -> {
+            if(entity instanceof LivingEntity livingEntity) {
+                livingEntity.die(damageSource);
+            } else {
+                entity.kill();
+            }
+        });
+        super.die(damageSource);
     }
 
     public abstract void performMasterMovement();

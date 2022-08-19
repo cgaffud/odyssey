@@ -1,6 +1,5 @@
-package com.bedmen.odyssey.entity;
+package com.bedmen.odyssey.entity.boss;
 
-import com.bedmen.odyssey.entity.boss.BossMaster2;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -8,7 +7,7 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import java.util.Optional;
 
-public interface SubEntity<T extends BossMaster2> extends IEntityAdditionalSpawnData {
+public interface SubEntity<T extends BossMaster> extends IEntityAdditionalSpawnData {
     Optional<T> getMasterEntity();
 
     void setMasterEntity(T master);

@@ -21,13 +21,6 @@ public class MineralLeviathanBodyModel extends EntityModel<MineralLeviathanBody>
 	}
 
 	public static LayerDefinition createBodyLayer() {
-//		MeshDefinition meshdefinition = new MeshDefinition();
-//		PartDefinition partdefinition = meshdefinition.getRoot();
-//
-//		PartDefinition bb_main = partdefinition.addOrReplaceChild("bb_main", CubeListBuilder.create().texOffs(0, 0).addBox(-16.0F, -32.0F, -16.0F, 32.0F, 32.0F, 32.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
-//
-//		return LayerDefinition.create(meshdefinition, 128, 64);
-
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 

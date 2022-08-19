@@ -144,11 +144,9 @@ public class Odyssey
 //
 //        //Bosses
         event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolem.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHead.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_MASTER.get(), MineralLeviathanMaster.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_HEAD.get(), MineralLeviathanHead.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBody.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_MASTER_2.get(), MineralLeviathanMaster2.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_HEAD_2.get(), MineralLeviathanHead2.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY_2.get(), MineralLeviathanBody2.createAttributes().build());
 //        event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
     }
 }

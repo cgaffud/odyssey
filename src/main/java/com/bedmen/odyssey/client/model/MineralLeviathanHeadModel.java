@@ -101,7 +101,7 @@ public class MineralLeviathanHeadModel extends EntityModel<MineralLeviathanHead>
 	public void setupAnim(MineralLeviathanHead entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.base.yRot = Mth.rotLerp(ageInTicks % 1.0f, entity.yRotO, entity.getYRot()) * (float)Math.PI / -90f; //Game automatically rotates models the wrong way based on yrot, so we rotate them back by double
         this.base.xRot = (Mth.rotLerp(ageInTicks % 1.0f, entity.xRotO, entity.getXRot()) - 90f) * (float)Math.PI / -180f;
-        float mouthAngle = Mth.rotLerp(ageInTicks % 1.0f, entity.getMouthAngleO(), entity.getMouthAngle()) * (float)Math.PI / 180f;
+        float mouthAngle = Mth.rotLerp(ageInTicks % 1.0f, entity.mouthAngleO, entity.mouthAngle) * (float)Math.PI / 180f;
         this.n_mouth.xRot = mouthAngle;
         this.s_mouth.xRot = -mouthAngle;
         this.e_mouth.zRot = -mouthAngle;
