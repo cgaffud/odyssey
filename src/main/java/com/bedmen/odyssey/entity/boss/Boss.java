@@ -37,6 +37,8 @@ public abstract class Boss extends Monster {
         super.tick();
         if(this.cachedNearbyPlayers <= 0){
             this.despawnTimer++;
+        } else {
+            this.despawnTimer = 0;
         }
         if(this.level.isClientSide){
             this.clientTick();
