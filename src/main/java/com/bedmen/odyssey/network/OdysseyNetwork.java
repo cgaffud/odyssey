@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.network;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.network.packet.ShootSwungProjectilePacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;

@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "leather_pile",
+  "group": "leather_bundle",
   "pattern": [
     "###",
     "###",
@@ -12,6 +12,6 @@
     }
   },
   "result": {
-    "item": "oddc:leather_pile"
+    "item": "oddc:leather_bundle"
   }
 }

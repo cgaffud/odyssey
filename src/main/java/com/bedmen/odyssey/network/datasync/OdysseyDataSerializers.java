@@ -1,25 +1,25 @@
 package com.bedmen.odyssey.network.datasync;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class OdysseyDataSerializers {
-    public static final EntityDataSerializer<List<Integer>> INT_LIST = new EntityDataSerializer<>() {
-        public void write(FriendlyByteBuf buffer, List<Integer> integerList) {
-            buffer.writeCollection(integerList, FriendlyByteBuf::writeInt);
+    public static final EntityDataSerializer<IntList> INT_LIST = new EntityDataSerializer<>() {
+        public void write(FriendlyByteBuf buffer, @NotNull IntList intList) {
+            buffer.writeCollection(intList, FriendlyByteBuf::writeVarInt);
         }
 
-        public List<Integer> read(FriendlyByteBuf buffer) {
-            return buffer.readList(FriendlyByteBuf::readInt);
+        public IntList read(FriendlyByteBuf buffer) {
+            return new IntArrayList(buffer.readList(FriendlyByteBuf::readVarInt));
         }
 
-        public List<Integer> copy(List<Integer> integerList) {
-            List<Integer> integerList1 = new ArrayList<>();
-            integerList1.addAll(integerList);
-            return integerList1;
+        public IntList copy(@NotNull IntList intList) {
+            IntList intList1 = new IntArrayList();
+            intList1.addAll(intList);
+            return intList1;
         }
     };
 }

@@ -3,14 +3,13 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.enchantment.TieredEnchantment;
 import com.bedmen.odyssey.items.equipment.base.IEquipment;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +17,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import org.apache.commons.lang3.mutable.MutableFloat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -145,14 +143,17 @@ public abstract class MixinEnchantmentHelper {
 
     /**
      * @author JemBren
-     * @reason To check if item is Dual Wild Item
+     * @reason Vanilla method is bugged, allows for offhand enchantment application and double method call
      */
     @Overwrite
-    public static float getDamageBonus(ItemStack itemStack, MobType mobType) {
-        MutableFloat mutablefloat = new MutableFloat();
-        runIterationOnItem((enchantment, enchantmentLevel) -> {
-            mutablefloat.add(enchantment.getDamageBonus(enchantmentLevel, mobType));
-        }, itemStack);
-        return mutablefloat.floatValue() * (WeaponUtil.isDualWieldItem(itemStack) ? 0.5f : 1f);
+    public static void doPostDamageEffects(LivingEntity livingEntity, Entity entity) {
+        EnchantmentHelper.EnchantmentVisitor enchantmenthelper$enchantmentvisitor = (p_44829_, p_44830_) -> {
+            p_44829_.doPostAttack(livingEntity, entity, p_44830_);
+        };
+
+        if (livingEntity != null) {
+            runIterationOnItem(enchantmenthelper$enchantmentvisitor, livingEntity.getMainHandItem());
+        }
+
     }
 }

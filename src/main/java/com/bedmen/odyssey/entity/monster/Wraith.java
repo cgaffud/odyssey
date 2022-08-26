@@ -173,7 +173,6 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     }
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
-        System.out.println("populateDefaultEquipmentSolts");
         super.populateDefaultEquipmentSlots(difficultyInstance);
         Item item = random.nextBoolean() ? ItemRegistry.VOID_BOW.get() : ItemRegistry.VOID_SWORD.get();
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());

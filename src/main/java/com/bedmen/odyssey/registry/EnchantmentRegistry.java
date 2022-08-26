@@ -81,6 +81,7 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> FLING = ENCHANTMENTS.register("fling", () -> new FlingEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> KINETIC_PROTECTION = ENCHANTMENTS.register("kinetic_protection", () -> new OdysseyProtectionEnchantment(Enchantment.Rarity.UNCOMMON, OdysseyProtectionEnchantment.Type.KINETIC, EnchantmentCategory.ARMOR_FEET, EquipmentSlot.FEET));
     public static final RegistryObject<Enchantment> IMPENETRABLE = ENCHANTMENTS.register("impenetrable", () -> new ShieldEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND));
+    public static final RegistryObject<Enchantment> LARCENY = ENCHANTMENTS.register("larceny", () -> new LarcenyEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND));
 
     //Volcanic Enchantments
     public static final RegistryObject<Enchantment> VULCAN_STRIDER = ENCHANTMENTS.register("vulcan_strider", () -> new VulcanStriderEnchantment(Enchantment.Rarity.RARE, ARMOR_SLOTS));
@@ -104,7 +105,7 @@ public class EnchantmentRegistry {
     //Damage Boost Functions
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
-        return getSkyBoost(pos, level) * ((time < 13000L && time > 1000L) ? 1.0f : 0.0f);
+        return getSkyBoost(pos, level) * (time < 12000L ? 1.0f : 0.0f);
     }
 
     private static float getMoonBoost(BlockPos pos, Level level) {
