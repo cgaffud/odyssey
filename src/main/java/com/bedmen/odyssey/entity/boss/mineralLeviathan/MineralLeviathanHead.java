@@ -64,7 +64,7 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
     }
 
     public void aiStep() {
-        Optional<MineralLeviathanMaster> master = this.getMasterEntity();
+        Optional<MineralLeviathanMaster> master = this.getMaster();
         if(!this.isNoAi() && master.isPresent()){
             MineralLeviathanMaster mineralLeviathanMaster = master.get();
             if(!this.level.isClientSide){
@@ -136,7 +136,7 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
                 }
             //Client Side
             } else {
-                for(MineralLeviathanBody mineralLeviathanBody : mineralLeviathanMaster.bodyParts){
+                for(MineralLeviathanBody mineralLeviathanBody : mineralLeviathanMaster.getBodyParts()){
                     if(mineralLeviathanBody != null){
                         mineralLeviathanBody.hurtTime = this.hurtTime;
                     }

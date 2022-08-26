@@ -22,8 +22,6 @@ import java.util.function.Supplier;
 
 public abstract class BossMaster extends Boss {
 
-    public static final Set<PacketDefinition<?>> UNREGISTERED_PACKET_SET = new HashSet<>();
-
     protected BossMaster(EntityType<? extends BossMaster> entityType, Level level) {
         super(entityType, level);
         this.noPhysics = true;
@@ -33,7 +31,6 @@ public abstract class BossMaster extends Boss {
     public void onAddedToWorld() {
         if(!this.level.isClientSide) {
             this.spawnSubEntities();
-            this.updateClientSubEntities();
         }
     }
 
@@ -89,20 +86,4 @@ public abstract class BossMaster extends Boss {
     public abstract void saveSubEntities(CompoundTag compoundTag);
 
     public abstract void loadSubEntities(CompoundTag compoundTag);
-
-    public abstract void updateClientSubEntities();
-
-    public record PacketDefinition<MSG>(Class<MSG> clazz,
-                                        BiConsumer<MSG, FriendlyByteBuf> encode,
-                                        Function<FriendlyByteBuf, MSG> decode,
-                                        BiConsumer<MSG, Supplier<NetworkEvent.Context>> handle) {}
-    
-    public static void initBossPackets() {
-        int id = 100;
-        for(PacketDefinition packetDefinition: UNREGISTERED_PACKET_SET) {
-            OdysseyNetwork.CHANNEL.registerMessage(id, packetDefinition.clazz, packetDefinition.encode, packetDefinition.decode, packetDefinition.handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-            id++;
-        }
-        UNREGISTERED_PACKET_SET.clear();
-    }
 }

@@ -8,9 +8,9 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import java.util.Optional;
 
 public interface SubEntity<T extends BossMaster> extends IEntityAdditionalSpawnData {
-    Optional<T> getMasterEntity();
+    Optional<T> getMaster();
 
-    void setMasterEntity(T master);
+    void setMasterId(int masterId);
 
     boolean hurtDirectly(DamageSource damageSource, float amount);
 
@@ -19,15 +19,17 @@ public interface SubEntity<T extends BossMaster> extends IEntityAdditionalSpawnD
     }
 
     default void writeSpawnData(FriendlyByteBuf buffer) {
-        int masterId = this.getMasterEntity().isPresent() ? this.getMasterEntity().get().getId() : -1;
+        int masterId = this.getMaster().isPresent() ? this.getMaster().get().getId() : -1;
         buffer.writeVarInt(masterId);
     }
 
     default void readSpawnData(FriendlyByteBuf buffer) {
         int masterId = buffer.readVarInt();
-        if(masterId > 0) {
+        if(masterId > -1) {
             Entity entity = this.asEntity().level.getEntity(masterId);
-            this.setMasterEntity((T) entity);
+            if(entity != null) {
+                this.setMasterId(entity.getId());
+            }
         }
     }
 

@@ -37,26 +37,22 @@ import java.util.Optional;
 import java.util.Random;
 
 public abstract class MineralLeviathanSegment extends Monster implements SubEntity<MineralLeviathanMaster> {
+    private static final EntityDataAccessor<Integer> MASTER_ID_DATA = SynchedEntityData.defineId(MineralLeviathanSegment.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Float> DATA_SHELL_HEALTH_ID = SynchedEntityData.defineId(MineralLeviathanSegment.class, EntityDataSerializers.FLOAT);
     protected ShellType shellType;
-    protected Optional<MineralLeviathanMaster> master;
 
     public MineralLeviathanSegment(EntityType<? extends MineralLeviathanSegment> entityType, Level level) {
-        this(entityType, level, Optional.empty());
-    }
-
-    public MineralLeviathanSegment(EntityType<? extends MineralLeviathanSegment> entityType, Level level, Optional<MineralLeviathanMaster> master) {
         super(entityType, level);
         this.setHealth(this.getMaxHealth());
         this.noPhysics = true;
         this.setNoGravity(true);
         this.noCulling = true;
         this.lookControl = new SegmentLookController(this);
-        this.master = master;
     }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(MASTER_ID_DATA, -1);
         this.entityData.define(DATA_SHELL_HEALTH_ID, 0.0f);
     }
 
@@ -113,7 +109,7 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
             case NORMAL -> 4;
             default -> 2;
         };
-        return i * this.master.map(Boss::getNearbyPlayerNumber).orElse(0);
+        return i * this.getMaster().map(Boss::getNearbyPlayerNumber).orElse(0);
     }
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
@@ -166,7 +162,7 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
             if(this instanceof MineralLeviathanHead && damageSource.isExplosion()){
                 return false;
             }
-            float newShellHealth = shellHealth - amount * this.master.map(Boss::getDamageReduction).orElse(1.0f);
+            float newShellHealth = shellHealth - amount * this.getMaster().map(Boss::getDamageReduction).orElse(1.0f);
             if(!this.level.isClientSide){
                 this.setShellHealth(newShellHealth);
             }
@@ -193,8 +189,8 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
     }
 
     protected boolean hurtWithoutShell(DamageSource damageSource, float amount){
-        if(this.master.isPresent()) {
-            MineralLeviathanMaster mineralLeviathanMaster = this.master.get();
+        if(this.getMaster().isPresent()) {
+            MineralLeviathanMaster mineralLeviathanMaster = this.getMaster().get();
             return mineralLeviathanMaster.hurt(damageSource, amount);
         }
         return super.hurt(damageSource, amount);
@@ -222,12 +218,18 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
         this.setShellType(ShellType.values()[friendlyByteBuf.readInt()]);
     }
 
-    public Optional<MineralLeviathanMaster> getMasterEntity() {
-        return this.master;
+    public Optional<MineralLeviathanMaster> getMaster() {
+        int headId = this.entityData.get(MASTER_ID_DATA);
+        Entity entity = this.level.getEntity(headId);
+        // instanceof also checks if it is null
+        if(entity instanceof MineralLeviathanMaster mineralLeviathanMaster) {
+            return Optional.of(mineralLeviathanMaster);
+        }
+        return Optional.empty();
     }
 
-    public void setMasterEntity(MineralLeviathanMaster master) {
-        this.master = Optional.of(master);
+    public void setMasterId(int masterId) {
+        this.entityData.set(MASTER_ID_DATA, masterId);
     }
 
     public void kill() {
@@ -235,10 +237,10 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
     }
 
     public void remove(RemovalReason removalReason) {
-        if(removalReason == RemovalReason.DISCARDED || removalReason == RemovalReason.KILLED || this.getMasterEntity().isEmpty()) {
+        if(removalReason == RemovalReason.DISCARDED || removalReason == RemovalReason.KILLED || this.getMaster().isEmpty()) {
             super.remove(removalReason);
         } else {
-            this.getMasterEntity().ifPresent(master -> master.handleSubEntity(this));
+            this.getMaster().ifPresent(master -> master.handleSubEntity(this));
         }
     }
 

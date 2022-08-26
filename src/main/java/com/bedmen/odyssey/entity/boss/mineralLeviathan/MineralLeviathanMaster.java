@@ -3,17 +3,17 @@ package com.bedmen.odyssey.entity.boss.mineralLeviathan;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.boss.SubEntity;
 import com.bedmen.odyssey.entity.boss.BossMaster;
-import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.util.NonNullListCollector;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -24,15 +24,13 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MineralLeviathanMaster extends BossMaster {
+    private static final EntityDataAccessor<Integer> HEAD_ID_DATA = SynchedEntityData.defineId(MineralLeviathanMaster.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<IntList> BODY_IDS_DATA = SynchedEntityData.defineId(MineralLeviathanMaster.class, OdysseyDataSerializers.INT_LIST);
     public static final int NUM_SEGMENTS = 20;
     public static final double MAX_HEALTH = 150.0d;
     public static final double DAMAGE = 8.0d;
@@ -41,12 +39,69 @@ public class MineralLeviathanMaster extends BossMaster {
     private static final String HEAD_TAG = "HeadSubEntity";
     private static final String BODY_TAG = "BodySubEntities";
 
+    // These sub entities may only be referenced directly in a server side method
+    // Otherwise use the 'get' method
     public MineralLeviathanHead head;
     public final List<MineralLeviathanBody> bodyParts = new ArrayList<>();
 
     public MineralLeviathanMaster(EntityType<? extends MineralLeviathanMaster> entityType, Level level) {
         super(entityType, level);
         this.xpReward = 100;
+    }
+
+    public int getHeadId() {
+        return this.entityData.get(HEAD_ID_DATA);
+    }
+
+    public void setHeadId(int headId) {
+        this.entityData.set(HEAD_ID_DATA, headId);
+    }
+
+    public Optional<MineralLeviathanHead> getHead() {
+        if(this.level.isClientSide) {
+            int headId = this.entityData.get(HEAD_ID_DATA);
+            Entity entity = this.level.getEntity(headId);
+            // instanceof also checks if it is null
+            if(entity instanceof MineralLeviathanHead mineralLeviathanHead) {
+                return Optional.of(mineralLeviathanHead);
+            }
+            return Optional.empty();
+        } else if (this.head != null) {
+            return Optional.of(this.head);
+        }
+        return Optional.empty();
+    }
+
+    public IntList getBodyIds() {
+        return this.entityData.get(BODY_IDS_DATA);
+    }
+
+    public List<MineralLeviathanBody> getBodyParts() {
+        if(this.level.isClientSide) {
+            List<MineralLeviathanBody> bodyParts = new ArrayList<>();
+            for(Integer bodyId: this.entityData.get(BODY_IDS_DATA)) {
+                Entity entity = this.level.getEntity(bodyId);
+                // instanceof also checks if it is null
+                if(entity instanceof MineralLeviathanBody mineralLeviathanBody) {
+                    bodyParts.add(mineralLeviathanBody);
+                }
+            }
+            return bodyParts;
+        } else {
+            return this.bodyParts;
+        }
+    }
+
+    private void addBodyId(int id) {
+        IntList bodyIds = this.entityData.get(BODY_IDS_DATA);
+        bodyIds.add(id);
+        this.entityData.set(BODY_IDS_DATA, bodyIds);
+    }
+
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(HEAD_ID_DATA, -1);
+        this.entityData.define(BODY_IDS_DATA, new IntArrayList());
     }
 
     public void clientTick() {
@@ -59,13 +114,13 @@ public class MineralLeviathanMaster extends BossMaster {
 
     public Collection<Entity> getSubEntities() {
         List<Entity> entities = new ArrayList<>();
-        entities.add(this.head);
-        entities.addAll(this.bodyParts);
+        this.getHead().ifPresent(entities::add);
+        entities.addAll(this.getBodyParts());
         return entities;
     }
 
     public void performMasterMovement() {
-        this.moveTo(this.head.position());
+        this.getHead().ifPresent(head -> this.moveTo(head.position()));
     }
 
     protected BossEvent.BossBarColor getBossBarColor() {
@@ -73,33 +128,37 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     public void spawnSubEntities() {
-        if(this.head == null) {
-            spawnInitialHead();
+        if(this.getHead().isEmpty()) {
+            intializeHead();
         }
-        if(this.bodyParts.isEmpty()) {
-            spawnInitialBodyParts();
+        if(this.getBodyParts().isEmpty()) {
+            initializeBodyParts();
         }
         for(Entity entity: getSubEntities()) {
             this.level.addFreshEntity(entity);
         }
     }
 
-    public void spawnInitialHead() {
+    // Server Side
+    public void intializeHead() {
         MineralLeviathanHead mineralLeviathanHead = EntityTypeRegistry.MINERAL_LEVIATHAN_HEAD.get().create(this.level);
         if(mineralLeviathanHead != null) {
             this.head = mineralLeviathanHead;
-            this.head.moveTo(this.position());
-            this.finishInitializingSegment(this.head);
+            this.setHeadId(mineralLeviathanHead.getId());
+            mineralLeviathanHead.moveTo(this.position());
+            this.finishInitializingSegment(mineralLeviathanHead);
         } else {
             Odyssey.LOGGER.error("Mineral Leviathan failed to spawn head in spawnInitialHead");
         }
     }
 
-    public void spawnInitialBodyParts() {
-        while(this.bodyParts.size() < NUM_SEGMENTS - 1) {
+    // Server Side
+    public void initializeBodyParts() {
+        while(this.getBodyIds().size() < NUM_SEGMENTS - 1) {
             MineralLeviathanBody mineralLeviathanBody = EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get().create(this.level);
             if(mineralLeviathanBody != null) {
                 this.bodyParts.add(mineralLeviathanBody);
+                this.addBodyId(mineralLeviathanBody.getId());
                 mineralLeviathanBody.moveTo(this.position());
                 finishInitializingSegment(mineralLeviathanBody);
             } else {
@@ -111,12 +170,12 @@ public class MineralLeviathanMaster extends BossMaster {
 
     public void finishInitializingSegment(MineralLeviathanSegment segment2) {
         segment2.setXRot(90.0f);
-        segment2.setMasterEntity(this);
+        segment2.setMasterId(this.getId());
     }
 
     public void handleSubEntity(SubEntity<?> subEntity) {
         Entity entity = subEntity.asEntity();
-        if(entity == this.head) {
+        if(entity.getId() == this.getHeadId()) {
             AABB aabb = entity.getBoundingBox();
             double x = aabb.getXsize() + 0.5d;
             double z = aabb.getZsize() + 0.5d;
@@ -133,11 +192,12 @@ public class MineralLeviathanMaster extends BossMaster {
             MineralLeviathanSegment segment = (MineralLeviathanSegment) entity;
             do {
                 segment = this.getAdjacentHeadwiseSegment((MineralLeviathanBody) segment);
-            } while (segment.touchingUnloadedChunk() && segment != this.head);
+            } while (segment.touchingUnloadedChunk() && segment.getId() != this.getHeadId());
             entity.moveTo(segment.position());
         }
     }
 
+    // Server Side
     public void saveSubEntities(CompoundTag compoundTag) {
         CompoundTag headCompoundTag = new CompoundTag();
         this.head.saveAsPassenger(headCompoundTag);
@@ -152,13 +212,15 @@ public class MineralLeviathanMaster extends BossMaster {
         compoundTag.put(BODY_TAG, bodyPartsTag);
     }
 
+    // Server Side
     public void loadSubEntities(CompoundTag compoundTag) {
         if(compoundTag.contains(HEAD_TAG)) {
             CompoundTag headCompoundTag = compoundTag.getCompound(HEAD_TAG);
             Entity entity = EntityType.loadEntityRecursive(headCompoundTag, this.level, entity1 -> entity1);
             if(entity instanceof MineralLeviathanHead mineralLeviathanHead) {
-                mineralLeviathanHead.setMasterEntity(this);
+                mineralLeviathanHead.setMasterId(this.getId());
                 this.head = mineralLeviathanHead;
+                this.setHeadId(mineralLeviathanHead.getId());
             } else {
                 Odyssey.LOGGER.error("Mineral Leviathan failed to spawn head in loadSubEntities");
             }
@@ -166,10 +228,9 @@ public class MineralLeviathanMaster extends BossMaster {
         if(compoundTag.contains(BODY_TAG)) {
             List<Tag> listOfTags = compoundTag.getList(BODY_TAG, 10).stream().toList();
             Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
-            this.bodyParts.clear();
             this.bodyParts.addAll(entitySteam.map(entity -> {
                 if(entity instanceof MineralLeviathanBody mineralLeviathanBody) {
-                    mineralLeviathanBody.setMasterEntity(this);
+                    mineralLeviathanBody.setMasterId(this.getId());
                     return mineralLeviathanBody;
                 }
                 return null;
@@ -180,18 +241,13 @@ public class MineralLeviathanMaster extends BossMaster {
                 }
                 return !isNull;
             }).collect(new NonNullListCollector<>()));
+            for(MineralLeviathanBody mineralLeviathanBody: this.bodyParts) {
+                this.addBodyId(mineralLeviathanBody.getId());
+            }
         }
     }
 
-    @Override
-    public void updateClientSubEntities() {
-        PacketDistributor.PacketTarget packetTarget = PacketDistributor.TRACKING_ENTITY.with(() -> this);
-        OdysseyNetwork.CHANNEL.send(packetTarget, new SubEntityUpdatePacket(
-                this.getId(),
-                this.head.getId(),
-                new IntArrayList(this.bodyParts.stream().map(Entity::getId).collect(Collectors.toList()))));
-    }
-
+    // Server Side
     public MineralLeviathanSegment getAdjacentHeadwiseSegment(MineralLeviathanBody mineralLeviathanBody) {
         int index = this.bodyParts.indexOf(mineralLeviathanBody);
         if(index >= 1) {
@@ -202,51 +258,5 @@ public class MineralLeviathanMaster extends BossMaster {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE).add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
-    }
-
-    static {
-        PacketDefinition<SubEntityUpdatePacket> packetDefinition = new PacketDefinition<>(
-                SubEntityUpdatePacket.class,
-                SubEntityUpdatePacket::encode,
-                SubEntityUpdatePacket::decode,
-                SubEntityUpdatePacket::handle);
-        BossMaster.UNREGISTERED_PACKET_SET.add(packetDefinition);
-    }
-
-    public record SubEntityUpdatePacket(int masterId, int headId, IntList bodyIds) {
-
-        public static void encode(SubEntityUpdatePacket packet, FriendlyByteBuf buf) {
-            buf.writeVarInt(packet.masterId);
-            buf.writeVarInt(packet.headId);
-            buf.writeIntIdList(packet.bodyIds);
-        }
-
-        public static SubEntityUpdatePacket decode(FriendlyByteBuf buf) {
-            int masterId = buf.readVarInt();
-            int headId = buf.readVarInt();
-            IntList bodyIds = buf.readIntIdList();
-            return new SubEntityUpdatePacket(masterId, headId, bodyIds);
-        }
-
-        public static void handle(SubEntityUpdatePacket packet, Supplier<NetworkEvent.Context> supplier) {
-            NetworkEvent.Context context = supplier.get();
-            context.enqueueWork(() -> {
-                ClientLevel clientLevel = Minecraft.getInstance().level;
-                if (clientLevel != null) {
-                    if (clientLevel.getEntity(packet.masterId) instanceof MineralLeviathanMaster master) {
-                        if (clientLevel.getEntity(packet.headId) instanceof MineralLeviathanHead head) {
-                            master.head = head;
-                        }
-                        master.bodyParts.clear();
-                        for (int bodyId : packet.bodyIds) {
-                            if (clientLevel.getEntity(bodyId) instanceof MineralLeviathanBody body) {
-                                master.bodyParts.add(body);
-                            }
-                        }
-                    }
-                }
-            });
-            context.setPacketHandled(true);
-        }
     }
 }
