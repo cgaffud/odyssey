@@ -12,12 +12,12 @@ import net.minecraft.world.level.Level;
 public class DungeonZombie extends Zombie implements DungeonMonster {
     protected BlockPos dungeonPos = null;
 
-    public DungeonZombie(EntityType<? extends Zombie> entityType, Level level, BlockPos dungeonPos) {
+    public DungeonZombie(EntityType<? extends DungeonZombie> entityType, Level level, BlockPos dungeonPos) {
         super(entityType, level);
         this.dungeonPos = dungeonPos;
     }
 
-    public DungeonZombie(EntityType<? extends Zombie> entityType, Level level) {
+    public DungeonZombie(EntityType<? extends DungeonZombie> entityType, Level level) {
         super(entityType, level);
     }
 

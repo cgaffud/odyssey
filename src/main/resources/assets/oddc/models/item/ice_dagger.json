@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "oddc:item/cryosliver"
+    "layer0": "oddc:item/ice_dagger"
   }
 }

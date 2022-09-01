@@ -56,7 +56,7 @@ public class BarnPiece extends TemplateStructurePiece {
             accessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
             BlockEntity blockentity = accessor.getBlockEntity(blockPos.below());
             if (blockentity instanceof ChestBlockEntity) {
-                ((ChestBlockEntity)blockentity).setLootTable(OdysseyLootTables.BARN_TREASURE_CHSET, random.nextLong());
+                ((ChestBlockEntity)blockentity).setLootTable(OdysseyLootTables.BARN_CHEST, random.nextLong());
             }
         }
     }

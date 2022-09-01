@@ -140,10 +140,12 @@ public class ClientEvents {
             EntityRenderers.register(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBruteRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpiderRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WRAITH.get(), WraithRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.BANDIT.get(), BanditRenderer::new);
 
             //Boss Renderings
             EntityRenderers.register(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
-            EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_MASTER.get(), MineralLeviathanMasterRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_HEAD.get(), MineralLeviathanHeadRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
 
@@ -231,7 +233,7 @@ public class ClientEvents {
         }, ItemRegistry.RAIN_SWORD.get(), ItemRegistry.ARID_MACE.get());
         event.getItemColors().register((itemStack, i) -> {
             return ConditionalAmpUtil.getColorTag(itemStack);
-        }, ItemRegistry.CRYOSLIVER.get());
+        }, ItemRegistry.ICE_DAGGER.get());
         for(TomeItem tomeItem : TomeItem.TOMES){
             event.getItemColors().register((itemStack, i) -> {
                 return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();

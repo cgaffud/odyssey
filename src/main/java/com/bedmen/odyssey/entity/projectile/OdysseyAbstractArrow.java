@@ -27,6 +27,7 @@ import java.util.Arrays;
 
 public abstract class OdysseyAbstractArrow extends AbstractArrow {
     private static final EntityDataAccessor<Byte> LOOTING_LEVEL = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> LARCENY_LEVEL = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BYTE);
 
     protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, Level world) {
         super(type, world);
@@ -43,14 +44,23 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(LOOTING_LEVEL, (byte)0);
+        this.entityData.define(LARCENY_LEVEL, (byte)0);
     }
 
     public void setLootingLevel(byte b) {
         this.entityData.set(LOOTING_LEVEL, b);
     }
 
+    public void setLarcenyLevel(byte b) {
+        this.entityData.set(LARCENY_LEVEL, b);
+    }
+
     public byte getLootingLevel() {
         return this.entityData.get(LOOTING_LEVEL);
+    }
+
+    public byte getLarcenyLevel() {
+        return this.entityData.get(LARCENY_LEVEL);
     }
 
     protected void onHitEntity(EntityHitResult p_213868_1_) {
@@ -74,14 +84,14 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
             this.piercingIgnoreEntityIds.add(entity.getId());
         }
 
-        Entity entity1 = this.getOwner();
+        Entity owner = this.getOwner();
         DamageSource damagesource;
-        if (entity1 == null) {
+        if (owner == null) {
             damagesource = DamageSource.arrow(this, this);
         } else {
-            damagesource = DamageSource.arrow(this, entity1);
-            if (entity1 instanceof LivingEntity) {
-                ((LivingEntity)entity1).setLastHurtMob(entity);
+            damagesource = DamageSource.arrow(this, owner);
+            if (owner instanceof LivingEntity) {
+                ((LivingEntity)owner).setLastHurtMob(entity);
             }
         }
 
@@ -109,23 +119,22 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                     }
                 }
 
-                if (!this.level.isClientSide && entity1 instanceof LivingEntity) {
-                    EnchantmentHelper.doPostHurtEffects(livingentity, entity1);
-                    EnchantmentHelper.doPostDamageEffects((LivingEntity)entity1, livingentity);
+                if (!this.level.isClientSide && owner instanceof LivingEntity) {
+                    EnchantmentHelper.doPostHurtEffects(livingentity, owner);
+                    EnchantmentHelper.doPostDamageEffects((LivingEntity)owner, livingentity);
                 }
 
                 this.doPostHurtEffects(livingentity);
-                if (entity1 != null && livingentity != entity1 && livingentity instanceof Player && entity1 instanceof ServerPlayer && !this.isSilent()) {
-                    ((ServerPlayer)entity1).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+                if (owner != null && livingentity != owner && livingentity instanceof Player && owner instanceof ServerPlayer && !this.isSilent()) {
+                    ((ServerPlayer)owner).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
                 }
 
                 if (!entity.isAlive() && this.piercedAndKilledEntities != null) {
                     this.piercedAndKilledEntities.add(livingentity);
-
                 }
 
-                if (!this.level.isClientSide && entity1 instanceof ServerPlayer) {
-                    ServerPlayer serverplayerentity = (ServerPlayer)entity1;
+                if (!this.level.isClientSide && owner instanceof ServerPlayer) {
+                    ServerPlayer serverplayerentity = (ServerPlayer)owner;
                     if (this.piercedAndKilledEntities != null && this.shotFromCrossbow()) {
                         CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(serverplayerentity, this.piercedAndKilledEntities);
                     } else if (!entity.isAlive() && this.shotFromCrossbow()) {

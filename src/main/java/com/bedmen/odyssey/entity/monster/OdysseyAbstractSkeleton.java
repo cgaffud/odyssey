@@ -268,8 +268,8 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     }
 
     @Override
-    public void setChargingCrossbow(boolean b) {
-        this.entityData.set(IS_CHARGING_CROSSBOW, b);
+    public void setChargingCrossbow(boolean isChargingCrossbow) {
+        this.entityData.set(IS_CHARGING_CROSSBOW, isChargingCrossbow);
     }
 
     @Override

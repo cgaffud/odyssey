@@ -1,0 +1,715 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "conditions": [],
+      "functions": [
+        {
+          "function": "oddc:enchant_with_tier",
+          "tier": 1
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 0,
+        "max": 2
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:sterling_silver_shovel"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:sterling_silver_pickaxe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:sterling_silver_axe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:sterling_silver_hoe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:clover_stone_shovel"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:clover_stone_pickaxe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:clover_stone_axe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:clover_stone_hoe"
+        }
+      ]
+    },
+    {
+      "conditions": [],
+      "functions": [
+        {
+          "function": "oddc:enchant_with_tier",
+          "tier": 1
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1,
+        "max": 4
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 42,
+          "quality": 0,
+          "name": "oddc:sterling_silver_boots"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 42,
+          "quality": 0,
+          "name": "oddc:sterling_silver_leggings"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 42,
+          "quality": 0,
+          "name": "oddc:sterling_silver_chestplate"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 42,
+          "quality": 0,
+          "name": "oddc:sterling_silver_helmet"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 67,
+          "quality": 0,
+          "name": "oddc:rusty_shield"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 67,
+          "quality": 0,
+          "name": "oddc:golden_shield"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 33,
+          "quality": 0,
+          "name": "oddc:reinforced_shield"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 24,
+                "max": 48
+              },
+              "add": false
+            }
+          ],
+          "weight": 24,
+          "quality": 0,
+          "name": "oddc:amethyst_arrow"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 24,
+                "max": 48
+              },
+              "add": false
+            }
+          ],
+          "weight": 24,
+          "quality": 0,
+          "name": "oddc:clover_stone_arrow"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 24,
+          "quality": 0,
+          "name": "oddc:bone_long_bow"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 24,
+          "quality": 0,
+          "name": "oddc:bone_slug_bow"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 24,
+          "quality": 0,
+          "name": "oddc:bone_repeater"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 48,
+          "quality": 0,
+          "name": "oddc:bown"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:clover_stone_boomerang"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:sharp_bone_boomerang"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:heavy_bone_boomerang"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:speedy_bone_boomerang"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 56,
+          "quality": 0,
+          "name": "oddc:bonerang"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:smackin_shovel"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:sledgeaxe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:blunt_sabre"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:amethyst_sabre"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:amethyst_hatchet"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:obsidian_hammer"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:obsidian_battle_axe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:obsidian_bat"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:sterling_silver_sword"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:sterling_silver_mace"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:clover_stone_sword"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:clover_stone_mace"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:clover_stone_hammer"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:clover_stone_battle_axe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:clover_stone_bat"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:clover_stone_sabre"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:clover_stone_hatchet"
+        }
+      ]
+    },
+    {
+      "conditions": [],
+      "functions": [],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 4,
+        "max": 6
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 4
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "oddc:silver_ingot"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 4
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:gold_ingot"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 4
+              },
+              "add": false
+            }
+          ],
+          "weight": 3,
+          "quality": 0,
+          "name": "oddc:sterling_silver_ingot"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:electrum_ingot"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 4
+              },
+              "add": false
+            }
+          ],
+          "weight": 4,
+          "quality": 0,
+          "name": "minecraft:emerald"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 3,
+                "max": 6
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:amethyst_shard"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 3,
+                "max": 6
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:obsidian"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 1
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:diamond"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 8,
+                "max": 16
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:lapis_lazuli"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 8,
+                "max": 16
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:redstone"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:feather_bundle"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:phantom_membrane"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:leather_bundle"
+        }
+      ]
+    },
+    {
+      "conditions": [],
+      "functions": [],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 0,
+        "max": 2
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:mushroom_stew"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:beetroot_soup"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:rabbit_stew"
+        }
+      ]
+    }
+  ]
+}
