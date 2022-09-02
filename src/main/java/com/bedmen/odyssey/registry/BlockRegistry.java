@@ -59,6 +59,8 @@ public class BlockRegistry {
     public static final RegistryObject<Block> MOONROCK_SLAB = BLOCKS.register("moonrock_slab", () -> new LightEmitterSlabBlock(BlockBehaviour.Properties.copy(MOONROCK.get()), BlockRegistry::atNightSkyEmission));
     public static final RegistryObject<Block> POLISHED_MOONROCK_SLAB = BLOCKS.register("polished_moonrock_slab", () -> new LightEmitterSlabBlock(BlockBehaviour.Properties.copy(POLISHED_MOONROCK.get()), BlockRegistry::atNightSkyEmission));
     public static final RegistryObject<Block> MOONROCK_WALL = BLOCKS.register("moonrock_wall", () -> new LightEmitterWallBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(10.0F).randomTicks().lightLevel(litBlockEmission(moonrockLightAmount)), BlockRegistry::atNightSkyEmission));
+    public static final RegistryObject<Block> TRANSCENDENTAL_OBSIDIAN = BLOCKS.register("transcendental_obsidian", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
+    public static final RegistryObject<Block> TRANSCENDENTAL_TRANSMUTER = BLOCKS.register("transcendental_transmuter", () -> new WallBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
 
     public static final RegistryObject<Block> PRAIRIE_GRASS = BLOCKS.register("prairie_grass", () -> new TriplePlantBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
 
