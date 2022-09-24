@@ -18,6 +18,7 @@ import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.ShieldType;
 import com.bedmen.odyssey.items.TomeItem;
+import com.bedmen.odyssey.items.TomeItem2;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
@@ -237,6 +238,11 @@ public class ClientEvents {
         for(TomeItem tomeItem : TomeItem.TOMES){
             event.getItemColors().register((itemStack, i) -> {
                 return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();
+            }, tomeItem);
+        }
+        for(TomeItem2 tomeItem : TomeItem2.TOMES){
+            event.getItemColors().register((itemStack, i) -> {
+                return i < 1 ? -1 : ((TomeItem2)itemStack.getItem()).color;
             }, tomeItem);
         }
     }

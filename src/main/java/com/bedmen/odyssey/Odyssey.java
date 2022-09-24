@@ -7,6 +7,7 @@ import com.bedmen.odyssey.entity.boss.mineralLeviathan.*;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.TomeItem;
+import com.bedmen.odyssey.items.TomeItem2;
 import com.bedmen.odyssey.items.equipment.base.*;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
@@ -95,6 +96,7 @@ public class Odyssey
             EquipmentCrossbowItem.initEquipment();
             TomeItem.initTomes();
             EnchantmentUtil.init();
+            TomeItem2.initTomes();
 
             //Generation
             BiomeUtil.init();
