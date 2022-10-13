@@ -3,47 +3,27 @@ package com.bedmen.odyssey.items;
 import java.util.*;
 import javax.annotation.Nullable;
 
-import com.bedmen.odyssey.network.OdysseyNetwork;
-import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.client.gui.screens.TomeViewScreen;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.BookEditScreen;
-import net.minecraft.client.gui.screens.inventory.BookViewScreen;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.network.protocol.game.ClientboundOpenBookPacket;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.StringUtil;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LecternBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class TomeItem2 extends Item {
+    // The map holds the enchantments for the tomes as keys
+    // The index for the first list is the enchantment level
+    // The List<TomeResearchRequirement> is the list of requirements for research
     public static final Map<Enchantment, List<List<TomeResearchRequirement>>> ARTHROPOD_RESEARCH_REQUIREMENTS = new HashMap<>();
     public static final List<TomeItem2> TOMES = new ArrayList<>();
 
@@ -52,24 +32,40 @@ public class TomeItem2 extends Item {
             new TomeResearchRequirement(1, List.of(ItemRegistry.COPPER_HAMMER.get(), ItemRegistry.MINI_HAMMER.get())),
             new TomeResearchRequirement(1, List.of(ItemRegistry.OBSIDIAN_HAMMER.get(), ItemRegistry.BLUNT_SABRE.get()))
         );
+        List<TomeResearchRequirement> baneOfArthropods2 = List.of(
+                new TomeResearchRequirement(2, List.of(ItemRegistry.ICE_DAGGER.get(), ItemRegistry.IRON_FIBER.get()))
+        );
+        List<TomeResearchRequirement> baneOfArthropods3 = List.of(
+                new TomeResearchRequirement(1, List.of(ItemRegistry.RAIN_SWORD.get(), ItemRegistry.DIAMOND_AXE.get()))
+        );
 
-        ARTHROPOD_RESEARCH_REQUIREMENTS.put(Enchantments.BANE_OF_ARTHROPODS, List.of(baneOfArthropods1));
+        ARTHROPOD_RESEARCH_REQUIREMENTS.put(Enchantments.BANE_OF_ARTHROPODS, List.of(baneOfArthropods1, baneOfArthropods2, baneOfArthropods3));
     }
 
     public static final String TOME_ENCHANTMENTS_TAG = "TomeEnchantments";
     public static final String TOME_ITEMS_TAG = "ResearchedItems";
 
+    public final Map<Enchantment, List<List<TomeResearchRequirement>>> tomeRequirements;
     public final int color;
-    public TomeItem2(Item.Properties properties, int color) {
+    public TomeItem2(Item.Properties properties, Map<Enchantment, List<List<TomeResearchRequirement>>> tomeRequirements, int color) {
         super(properties);
         this.color = color;
+        this.tomeRequirements = tomeRequirements;
         TOMES.add(this);
+    }
+
+    public static ListTag getResearchedItemsListTag(ItemStack tome) {
+        CompoundTag compoundTag = tome.getOrCreateTag();
+        if(!compoundTag.contains(TOME_ITEMS_TAG)){
+            compoundTag.put(TOME_ITEMS_TAG, new ListTag());
+        }
+        return compoundTag.getList(TOME_ITEMS_TAG, 10);
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemstack = player.getItemInHand(interactionHand);
         if(level.isClientSide) {
-            Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(itemstack)));
+            Minecraft.getInstance().setScreen(new TomeViewScreen(new TomeViewScreen.TomeAccess(itemstack)));
         }
         player.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
@@ -104,11 +100,13 @@ public class TomeItem2 extends Item {
         return map;
     }
 
-    public void addResearchedItem(ItemStack itemStack, Item item) {
-        CompoundTag compoundTag = itemStack.getOrCreateTag();
-        ListTag researchedItems = compoundTag.contains(TOME_ITEMS_TAG) ? compoundTag.getList(TOME_ITEMS_TAG, 10) : new ListTag();
-        researchedItems.add(StringTag.valueOf(Registry.ITEM.getKey(item).toString()));
-        compoundTag.put(TOME_ITEMS_TAG, researchedItems);
+    public void addResearchedItem(ItemStack tome, ItemStack researchStack) {
+        CompoundTag tomeCompoundTag = tome.getOrCreateTag();
+        ListTag researchedItemsListTag = getResearchedItemsListTag(tome);
+        CompoundTag researchStackTag = new CompoundTag();
+        researchStack.getItem().getDefaultInstance().save(researchStackTag);
+        researchedItemsListTag.add(researchStackTag);
+        //tomeCompoundTag.put(TOME_ITEMS_TAG, researchedItemsListTag);
     }
 
 //    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
@@ -119,4 +117,6 @@ public class TomeItem2 extends Item {
 //    }
 
     public record TomeResearchRequirement(int countNeeded, List<Item> items) { }
+
+
 }

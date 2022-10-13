@@ -190,7 +190,7 @@ public class ItemRegistry {
 
     // # Magic
     public static final RegistryObject<Item> HEAVY_TOME = ITEMS.register("heavy_tome", () -> new TomeItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC), 0x6C3423, BANE_OF_ARTHROPODS[1], SHATTERING[1], KNOCKBACK[1], PUNCH[1], BLAST_PROTECTION[1]));
-    public static final RegistryObject<Item> ARTHROPOD_TOME = ITEMS.register("arthropod_tome", () -> new TomeItem2((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC), 803406));
+    public static final RegistryObject<Item> ARTHROPOD_TOME = ITEMS.register("arthropod_tome", () -> new TomeItem2((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC), TomeItem2.ARTHROPOD_RESEARCH_REQUIREMENTS, 803406));
 
     // # Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestMaterial.COPPER));
