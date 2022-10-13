@@ -1,14 +1,9 @@
 package com.bedmen.odyssey.client.gui.screens;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.items.TomeItem2;
+import com.bedmen.odyssey.items.TomeItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.components.Button;
@@ -26,6 +21,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class TomeViewScreen extends Screen {
@@ -162,12 +161,12 @@ public class TomeViewScreen extends Screen {
         int headerWidth = this.font.width(enchantmentHeader);
         this.font.draw(poseStack, enchantmentHeader, (float)(imageLeftX + (IMAGE_WIDTH - headerWidth)/2), 18.0F, 0);
         // Research completion text
-        TextComponent textComponent = new TextComponent(tomePage.numRequirementsCompleted + "/" + tomePage.tomeRequirementStatusList.size() + " Requirements Completed").withStyle()
+        //TextComponent textComponent = new TextComponent(tomePage.numRequirementsCompleted + "/" + tomePage.tomeRequirementStatusList.size() + " Requirements Completed").withStyle();
 
         for(int i = 0; i < tomePage.tomeRequirementStatusList.size(); i++) {
             int rowDistance = ITEMSTACK_ROW_COLUMN_SPACING * i;
             TomeRequirementStatus tomeRequirementStatus = tomePage.tomeRequirementStatusList.get(i);
-            TomeItem2.TomeResearchRequirement tomeResearchRequirement = tomeRequirementStatus.tomeResearchRequirement;
+            TomeItem.TomeResearchRequirement tomeResearchRequirement = tomeRequirementStatus.tomeResearchRequirement;
             // Do green checkmark instead of x/y text if the requirement is satisfied
             if(tomeRequirementStatus.requirementSatisfied) {
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -290,14 +289,14 @@ public class TomeViewScreen extends Screen {
         }
 
         private static List<TomePage> readPages(ItemStack itemStack) {
-            TomeItem2 tomeItem2 = (TomeItem2) itemStack.getItem();
-            ListTag researchedItemsListTag = TomeItem2.getResearchedItemsListTag(itemStack);
+            TomeItem tomeItem = (TomeItem) itemStack.getItem();
+            ListTag researchedItemsListTag = TomeItem.getResearchedItemsListTag(itemStack);
             List<Item> researchedItemList = researchedItemsListTag.stream().map(tag -> ItemStack.of((CompoundTag) tag).getItem()).toList();
             List<TomePage> tomePageList = new ArrayList<>();
-            Map<Enchantment, Integer> tomeEnchantments = TomeItem2.getEnchantments(itemStack);
-            for(Map.Entry<Enchantment, List<List<TomeItem2.TomeResearchRequirement>>> entry: tomeItem2.tomeRequirements.entrySet()){
+            Map<Enchantment, Integer> tomeEnchantments = TomeItem.getEnchantments(itemStack);
+            for(Map.Entry<Enchantment, List<List<TomeItem.TomeResearchRequirement>>> entry: tomeItem.tomeRequirements.entrySet()){
                 Enchantment enchantment = entry.getKey();
-                List<List<TomeItem2.TomeResearchRequirement>> pageRequirementList = entry.getValue();
+                List<List<TomeItem.TomeResearchRequirement>> pageRequirementList = entry.getValue();
                 int minLevel = enchantment.getMinLevel();
                 int maxLevel = Integer.min(enchantment.getMaxLevel(), pageRequirementList.size() + minLevel - 1);
                 int currentLevel = tomeEnchantments.get(enchantment) == null ? 0 : tomeEnchantments.get(enchantment);
@@ -306,8 +305,8 @@ public class TomeViewScreen extends Screen {
                     int i = lvl - minLevel;
                     Component enchantmentComponent = enchantment.getFullname(lvl);
                     List<TomeRequirementStatus> tomeRequirementStatusList = new ArrayList<>();
-                    List<TomeItem2.TomeResearchRequirement> pageRequirements = pageRequirementList.get(i);
-                    for(TomeItem2.TomeResearchRequirement tomeResearchRequirement: pageRequirements){
+                    List<TomeItem.TomeResearchRequirement> pageRequirements = pageRequirementList.get(i);
+                    for(TomeItem.TomeResearchRequirement tomeResearchRequirement: pageRequirements){
                         List<Boolean> itemsAreResearched = tomeResearchRequirement.items().stream().map(researchedItemList::contains).toList();
                         int numItemsResearchedForRequirement = itemsAreResearched.stream().reduce(0,
                                 (acc, isResearched) -> acc + (isResearched ? 1 : 0), Integer::sum);
@@ -331,7 +330,7 @@ public class TomeViewScreen extends Screen {
                            boolean enchantmentFullyResearched,
                            List<TomeRequirementStatus> tomeRequirementStatusList){}
 
-    public record TomeRequirementStatus(TomeItem2.TomeResearchRequirement tomeResearchRequirement,
+    public record TomeRequirementStatus(TomeItem.TomeResearchRequirement tomeResearchRequirement,
                                         int numItemsResearched,
                                         boolean requirementSatisfied,
                                         List<Boolean> itemsAreResearched){}

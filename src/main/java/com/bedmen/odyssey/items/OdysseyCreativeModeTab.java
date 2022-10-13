@@ -17,7 +17,7 @@ public class OdysseyCreativeModeTab extends CreativeModeTab {
     public static final CreativeModeTab MELEE = new OdysseyCreativeModeTab("oddc_melee", ItemRegistry.COPPER_BATTLE_AXE::get);
     public static final CreativeModeTab RANGED = new OdysseyCreativeModeTab("oddc_ranged", ItemRegistry.BONE_LONG_BOW::get);
     public static final CreativeModeTab ARMOR = new OdysseyCreativeModeTab("oddc_armor", ItemRegistry.TURTLE_CHESTPLATE::get);
-    public static final CreativeModeTab MAGIC = new OdysseyCreativeModeTab("oddc_magic", ItemRegistry.HEAVY_TOME::get);
+    public static final CreativeModeTab MAGIC = new OdysseyCreativeModeTab("oddc_magic", ItemRegistry.ARTHROPOD_TOME::get);
     public static final CreativeModeTab SPAWNING = new OdysseyCreativeModeTab("oddc_spawning", ItemRegistry.CAMO_CREEPER_SPAWN_EGG::get);
     public static final CreativeModeTab MISC = new OdysseyCreativeModeTab("oddc_misc", ItemRegistry.GREATWOOD_FERTILIZER::get);
 
