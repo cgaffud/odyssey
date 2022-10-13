@@ -1,10 +1,10 @@
 package com.bedmen.odyssey.network;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.network.packet.ShootSwungProjectilePacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
+import com.bedmen.odyssey.network.packet.TomeSavePagePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
@@ -24,6 +24,7 @@ public class OdysseyNetwork {
         CHANNEL.registerMessage(0, JumpKeyPressedPacket.class, JumpKeyPressedPacket::encode, JumpKeyPressedPacket::decode, JumpKeyPressedPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
         CHANNEL.registerMessage(1, SwungWithVolatilePacket.class, SwungWithVolatilePacket::encode, SwungWithVolatilePacket::decode, SwungWithVolatilePacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
         CHANNEL.registerMessage(2, ShootSwungProjectilePacket.class, ShootSwungProjectilePacket::encode, ShootSwungProjectilePacket::decode, ShootSwungProjectilePacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(3, TomeSavePagePacket.class, TomeSavePagePacket::encode, TomeSavePagePacket::decode, TomeSavePagePacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
 //        CHANNEL.registerMessage(2, UpdateEnchantPacket.class, UpdateEnchantPacket::encode, UpdateEnchantPacket::decode, UpdateEnchantPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
 //        CHANNEL.registerMessage(3, RenameItemPacket.class, RenameItemPacket::encode, RenameItemPacket::decode, RenameItemPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
         //Server to Client

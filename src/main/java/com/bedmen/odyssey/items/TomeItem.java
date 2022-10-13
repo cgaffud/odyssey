@@ -50,7 +50,7 @@ public class TomeItem extends Item {
     public final Map<Enchantment, List<List<TomeResearchRequirement>>> tomeRequirements;
     public final int color;
     public TomeItem(Item.Properties properties, Map<Enchantment, List<List<TomeResearchRequirement>>> tomeRequirements, int color) {
-        super(properties);
+        super(properties.stacksTo(1));
         this.color = color;
         this.tomeRequirements = tomeRequirements;
         TOMES.add(this);
@@ -67,7 +67,7 @@ public class TomeItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemstack = player.getItemInHand(interactionHand);
         if(level.isClientSide) {
-            Minecraft.getInstance().setScreen(new TomeViewScreen(new TomeViewScreen.TomeAccess(itemstack)));
+            Minecraft.getInstance().setScreen(new TomeViewScreen(new TomeViewScreen.TomeAccess(interactionHand, itemstack)));
         }
         player.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());

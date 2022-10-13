@@ -2,6 +2,8 @@ package com.bedmen.odyssey.client.gui.screens;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.TomeItem;
+import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.TomeSavePagePacket;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -16,11 +18,14 @@ import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +33,8 @@ import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class TomeViewScreen extends Screen {
-    public static final int PAGE_INDICATOR_TEXT_Y_OFFSET = 18;
-    public static final int PAGE_TEXT_X_OFFSET = 36;
-    public static final int PAGE_TEXT_Y_OFFSET = 30;
     public static final ResourceLocation TOME_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/tome.png");
-    protected static final int TEXT_WIDTH = 114;
-    protected static final int TEXT_HEIGHT = 128;
+    protected static final int ENCHANTMENT_NAME_TOP_Y = 18;
     protected static final int IMAGE_WIDTH = 192;
     protected static final int IMAGE_HEIGHT = 192;
     protected static final int IMAGE_TOP_Y = 2;
@@ -46,12 +47,11 @@ public class TomeViewScreen extends Screen {
     protected static final int CHECK_MARK_X_POSITION = 0;
     protected static final int CHECK_MARK_Y_POSITION = 218;
     protected static final int CHECK_MARK_DIAMETER = 16;
-//    protected static final int CIRCLE_X_POSITION = 16;
-//    protected static final int CIRCLE_Y_POSITION = 218;
     protected static final int BOX_DIAMETER = 20;
     protected static final int BOX_X_POSITION = 46;
     protected static final int BOX_Y_POSITION = 219;
-    protected static final int ITEMSTACK_ROW_COLUMN_SPACING = BOX_DIAMETER +2;
+    protected static final int ITEMSTACK_ROW_COLUMN_SPACING = BOX_DIAMETER + 2;
+    protected static final String TOME_SAVED_PAGE_TAG = "SavedPage";
     private final TomeViewScreen.TomeAccess tomeAccess;
     private int currentPage;
     private PageButton forwardButton;
@@ -66,6 +66,7 @@ public class TomeViewScreen extends Screen {
         super(NarratorChatListener.NO_TITLE);
         this.tomeAccess = tomeAccess;
         this.playTurnSound = playTurnSound;
+        this.currentPage = tomeAccess.startingPage;
     }
 
     public int getImageLeftX(){
@@ -92,9 +93,25 @@ public class TomeViewScreen extends Screen {
         this.createPageControlButtons();
     }
 
+    public void onClose() {
+        this.savePage();
+        super.onClose();
+    }
+
+    public void savePage() {
+        CompoundTag compoundTag = this.tomeAccess.itemStack.getOrCreateTag();
+        TomePage tomePage = this.tomeAccess.pages.get(this.currentPage);
+        CompoundTag savedPageTag = new CompoundTag();
+        savedPageTag.putString("id", ForgeRegistries.ENCHANTMENTS.getKey(tomePage.enchantment()).toString());
+        savedPageTag.putInt("lvl", tomePage.lvl());
+        compoundTag.put(TOME_SAVED_PAGE_TAG, savedPageTag);
+        OdysseyNetwork.CHANNEL.sendToServer(new TomeSavePagePacket(tomeAccess.hand, tomeAccess.itemStack));
+    }
+
     protected void createMenuControls() {
-        this.addRenderableWidget(new Button(this.width / 2 - 100, 196, 200, 20, CommonComponents.GUI_DONE, (p_98299_) -> {
-            this.minecraft.setScreen((Screen)null);
+        this.addRenderableWidget(new Button(this.width / 2 - 100, 196, 200, 20, CommonComponents.GUI_DONE, (button) -> {
+            this.minecraft.setScreen(null);
+            this.savePage();
         }));
     }
 
@@ -157,11 +174,10 @@ public class TomeViewScreen extends Screen {
 
         TomePage tomePage = this.tomeAccess.pages.get(this.currentPage);
         // Enchantment name and level header text
-        MutableComponent enchantmentHeader = ((MutableComponent) tomePage.enchantmentComponent).withStyle(ChatFormatting.BLACK);
+        Component enchantmentComponent = tomePage.enchantment.getFullname(tomePage.lvl);
+        MutableComponent enchantmentHeader = ((MutableComponent) enchantmentComponent).withStyle(ChatFormatting.BLACK);
         int headerWidth = this.font.width(enchantmentHeader);
-        this.font.draw(poseStack, enchantmentHeader, (float)(imageLeftX + (IMAGE_WIDTH - headerWidth)/2), 18.0F, 0);
-        // Research completion text
-        //TextComponent textComponent = new TextComponent(tomePage.numRequirementsCompleted + "/" + tomePage.tomeRequirementStatusList.size() + " Requirements Completed").withStyle();
+        this.font.draw(poseStack, enchantmentHeader, (float)(imageLeftX + (IMAGE_WIDTH - headerWidth)/2), ENCHANTMENT_NAME_TOP_Y, 0);
 
         for(int i = 0; i < tomePage.tomeRequirementStatusList.size(); i++) {
             int rowDistance = ITEMSTACK_ROW_COLUMN_SPACING * i;
@@ -189,10 +205,7 @@ public class TomeViewScreen extends Screen {
                 int itemOffset = (BOX_DIAMETER - 16)/2;
                 int itemLeftX = circleLeftX + itemOffset;
                 int itemTopY = circleTopY + itemOffset;
-                this.renderItemStack(poseStack, itemLeftX, itemTopY, itemStack);
-//                if(isResearched){
-//
-//                }
+                this.renderItemStack(itemLeftX, itemTopY, itemStack);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 RenderSystem.setShaderTexture(0, TOME_LOCATION);
@@ -208,30 +221,6 @@ public class TomeViewScreen extends Screen {
                 }
             }
         }
-
-//        for(int k = 0; k < this.menu.slots.size(); ++k) {
-//            Slot slot = this.menu.slots.get(k);
-//            if (slot.isActive()) {
-//                RenderSystem.setShader(GameRenderer::getPositionTexShader);
-//                this.renderSlot(poseStack, slot);
-//            }
-//
-//            if (this.isHovering(slot, (double)p_97796_, (double)p_97797_) && slot.isActive()) {
-//                this.hoveredSlot = slot;
-//                int l = slot.x;
-//                int i1 = slot.y;
-//                renderSlotHighlight(p_97795_, l, i1, this.getBlitOffset(), this.getSlotColor(k));
-//            }
-//        }
-
-
-//        int k = Math.min(128 / 9, this.cachedPageComponents.size());
-//
-//        for(int l = 0; l < k; ++l) {
-//            FormattedCharSequence formattedcharsequence = this.cachedPageComponents.get(l);
-//            this.font.draw(poseStack, formattedcharsequence, (float)(i + 36), (float)(32 + l * 9), 0);
-//        }
-
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
@@ -239,13 +228,7 @@ public class TomeViewScreen extends Screen {
         return mouseX >= (double)(itemStackLeftX - 1) && mouseX < (double)(itemStackLeftX + 16 + 1) && mouseY >= (double)(itemStackTopY - 1) && mouseY < (double)(itemStackTopY + 16 + 1);
     }
 
-//    protected void renderTooltip(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY) {
-//        tooltipStack = itemStack;
-//        this.renderTooltip(poseStack, this.getTooltipFromItem(itemStack), itemStack.getTooltipImage(), mouseX, mouseY);
-//        tooltipStack = ItemStack.EMPTY;
-//    }
-
-    private void renderItemStack(PoseStack poseStack, int slotLeftX, int slotTopY, ItemStack itemStack) {
+    private void renderItemStack(int slotLeftX, int slotTopY, ItemStack itemStack) {
         String s = null;
 
         this.setBlitOffset(100);
@@ -278,22 +261,35 @@ public class TomeViewScreen extends Screen {
 
     public static class TomeAccess {
 
+        public final InteractionHand hand;
+        public final ItemStack itemStack;
         private final List<TomePage> pages;
+        private int startingPage;
 
-        public TomeAccess(ItemStack itemStack) {
-            this.pages = readPages(itemStack);
+        public TomeAccess(InteractionHand hand, ItemStack itemStack) {
+            this.hand = hand;
+            this.itemStack = itemStack;
+            this.pages = this.readPages(itemStack);
         }
 
         public int getPageCount() {
             return this.pages.size();
         }
 
-        private static List<TomePage> readPages(ItemStack itemStack) {
+        private List<TomePage> readPages(ItemStack itemStack) {
             TomeItem tomeItem = (TomeItem) itemStack.getItem();
+            CompoundTag compoundTag = itemStack.getOrCreateTag();
             ListTag researchedItemsListTag = TomeItem.getResearchedItemsListTag(itemStack);
             List<Item> researchedItemList = researchedItemsListTag.stream().map(tag -> ItemStack.of((CompoundTag) tag).getItem()).toList();
             List<TomePage> tomePageList = new ArrayList<>();
             Map<Enchantment, Integer> tomeEnchantments = TomeItem.getEnchantments(itemStack);
+            Enchantment savedEnchantment = null;
+            int savedLvl = -1;
+            if(compoundTag.contains(TOME_SAVED_PAGE_TAG)){
+                CompoundTag savedPageTag = compoundTag.getCompound(TOME_SAVED_PAGE_TAG);
+                savedEnchantment = ForgeRegistries.ENCHANTMENTS.getValue(EnchantmentHelper.getEnchantmentId(savedPageTag));
+                savedLvl = EnchantmentHelper.getEnchantmentLevel(savedPageTag);
+            }
             for(Map.Entry<Enchantment, List<List<TomeItem.TomeResearchRequirement>>> entry: tomeItem.tomeRequirements.entrySet()){
                 Enchantment enchantment = entry.getKey();
                 List<List<TomeItem.TomeResearchRequirement>> pageRequirementList = entry.getValue();
@@ -302,8 +298,10 @@ public class TomeViewScreen extends Screen {
                 int currentLevel = tomeEnchantments.get(enchantment) == null ? 0 : tomeEnchantments.get(enchantment);
                 int numPagesForEnchantment = Mth.clamp(currentLevel - minLevel + 2, 1, maxLevel - minLevel + 1) ;
                 for(int lvl = minLevel; lvl < minLevel + numPagesForEnchantment; lvl++){
+                    if(enchantment == savedEnchantment && lvl == savedLvl) {
+                        this.startingPage = tomePageList.size();
+                    }
                     int i = lvl - minLevel;
-                    Component enchantmentComponent = enchantment.getFullname(lvl);
                     List<TomeRequirementStatus> tomeRequirementStatusList = new ArrayList<>();
                     List<TomeItem.TomeResearchRequirement> pageRequirements = pageRequirementList.get(i);
                     for(TomeItem.TomeResearchRequirement tomeResearchRequirement: pageRequirements){
@@ -317,7 +315,7 @@ public class TomeViewScreen extends Screen {
                     int numRequirementsCompleted = tomeRequirementStatusList.stream().reduce(0,
                             (acc, tomeRequirementStatus) -> acc + (tomeRequirementStatus.requirementSatisfied ? 1 : 0), Integer::sum);
                     boolean enchantmentFullyResearched = numRequirementsCompleted >= pageRequirementList.size();
-                    TomePage tomePage = new TomePage(enchantmentComponent, numRequirementsCompleted, enchantmentFullyResearched, tomeRequirementStatusList);
+                    TomePage tomePage = new TomePage(enchantment, lvl, numRequirementsCompleted, enchantmentFullyResearched, tomeRequirementStatusList);
                     tomePageList.add(tomePage);
                 }
             }
@@ -325,7 +323,8 @@ public class TomeViewScreen extends Screen {
         }
     }
 
-    public record TomePage(Component enchantmentComponent,
+    public record TomePage(Enchantment enchantment,
+                           int lvl,
                            int numRequirementsCompleted,
                            boolean enchantmentFullyResearched,
                            List<TomeRequirementStatus> tomeRequirementStatusList){}
