@@ -4,6 +4,8 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.animal.OdysseyPolarBear;
 import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
+import com.bedmen.odyssey.entity.boss.coven.CovenMaster;
+import com.bedmen.odyssey.entity.boss.coven.EnderWitch;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.*;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.entity.projectile.Boomerang;
@@ -67,6 +69,10 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<MineralLeviathanMaster>> MINERAL_LEVIATHAN_MASTER = ENTITY_TYPE.register("mineral_leviathan_master", () -> EntityType.Builder.<MineralLeviathanMaster>of(MineralLeviathanMaster::new, MobCategory.MONSTER).sized(0.0F, 0.0F).fireImmune().clientTrackingRange(32).build(new ResourceLocation(Odyssey.MOD_ID, "mineral_leviathan_master").toString()));
     public static final RegistryObject<EntityType<MineralLeviathanHead>> MINERAL_LEVIATHAN_HEAD = ENTITY_TYPE.register("mineral_leviathan_head", () -> EntityType.Builder.<MineralLeviathanHead>of(MineralLeviathanHead::new, MobCategory.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(32).build(new ResourceLocation(Odyssey.MOD_ID, "mineral_leviathan_head").toString()));
     public static final RegistryObject<EntityType<MineralLeviathanBody>> MINERAL_LEVIATHAN_BODY = ENTITY_TYPE.register("mineral_leviathan_body", () -> EntityType.Builder.<MineralLeviathanBody>of(MineralLeviathanBody::new, MobCategory.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(32).build(new ResourceLocation(Odyssey.MOD_ID, "mineral_leviathan_body").toString()));
+
+    // ## Coven Witch
+    public static final RegistryObject<EntityType<CovenMaster>> COVEN_MASTER = ENTITY_TYPE.register("coven_master", () -> EntityType.Builder.<CovenMaster>of(CovenMaster::new, MobCategory.MONSTER).sized(0.0F, 0.0F).fireImmune().clientTrackingRange(32).build(new ResourceLocation(Odyssey.MOD_ID, "coven_master").toString()));
+    public static final RegistryObject<EntityType<EnderWitch>> ENDER_WITCH = ENTITY_TYPE.register("ender_witch", () -> EntityType.Builder.<EnderWitch>of(EnderWitch::new, MobCategory.MONSTER).sized(0.6F, 1.95F).fireImmune().clientTrackingRange(32).build(new ResourceLocation(Odyssey.MOD_ID, "ender_witch").toString()));
 
     //    public static final RegistryObject<EntityType<Permafrost>> PERMAFROST = ENTITY_TYPE.register("permafrost", () -> EntityType.Builder.<Permafrost>of(Permafrost::new, MobCategory.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(20).build(new ResourceLocation("permafrost").toString()));
 
