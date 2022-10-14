@@ -64,6 +64,11 @@ public class TomeItem extends Item {
         return compoundTag.getList(TOME_ITEMS_TAG, 10);
     }
 
+    public static List<Item> getResearchedItemsList(ItemStack tome) {
+        ListTag researchedItemsListTag = TomeItem.getResearchedItemsListTag(tome);
+        return researchedItemsListTag.stream().map(tag -> ItemStack.of((CompoundTag) tag).getItem()).toList();
+    }
+
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemstack = player.getItemInHand(interactionHand);
         if(level.isClientSide) {
@@ -102,23 +107,34 @@ public class TomeItem extends Item {
         return map;
     }
 
-    public void addResearchedItem(ItemStack tome, ItemStack researchStack) {
-        CompoundTag tomeCompoundTag = tome.getOrCreateTag();
+    public boolean canBeResearched(ItemStack researchStack, ItemStack quill, ItemStack tome) {
+        List<Item> researchedItemsList = getResearchedItemsList(tome);
+        Item researchItem = researchStack.getItem();
+        QuillItem quillItem = (QuillItem) quill.getItem();
+        return this.getRequiredItems(quillItem.isCursed).contains(researchItem) && !researchedItemsList.contains(researchItem);
+    }
+
+    public void addResearchedItem(ItemStack researchStack, ItemStack tome) {
         ListTag researchedItemsListTag = getResearchedItemsListTag(tome);
         CompoundTag researchStackTag = new CompoundTag();
         researchStack.getItem().getDefaultInstance().save(researchStackTag);
         researchedItemsListTag.add(researchStackTag);
-        //tomeCompoundTag.put(TOME_ITEMS_TAG, researchedItemsListTag);
     }
 
-//    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
-//        ItemStack itemstack = player.getItemInHand(interactionHand);
-//        player.openItemGui(itemstack, interactionHand);
-//        player.awardStat(Stats.ITEM_USED.get(this));
-//        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
-//    }
+    public Set<Item> getRequiredItems(boolean isCurse){
+        Set<Item> itemSet = new HashSet<>();
+        for(Map.Entry<Enchantment, List<List<TomeResearchRequirement>>> entry: this.tomeRequirements.entrySet()){
+            Enchantment enchantment = entry.getKey();
+            if(enchantment.isCurse() == isCurse) {
+                for(List<TomeResearchRequirement> tomeResearchRequirementList: entry.getValue()){
+                    for(TomeResearchRequirement tomeResearchRequirement: tomeResearchRequirementList){
+                        itemSet.addAll(tomeResearchRequirement.items());
+                    }
+                }
+            }
+        }
+        return itemSet;
+    }
 
     public record TomeResearchRequirement(int countNeeded, List<Item> items) { }
-
-
 }

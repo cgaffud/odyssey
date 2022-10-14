@@ -5,7 +5,6 @@ import com.bedmen.odyssey.recipes.AlloyRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -93,7 +92,6 @@ public class AlloyFurnaceBlockEntity extends OdysseyFurnaceBlockEntity {
         if (flag1) {
             setChanged(level, blockPos, blockState);
         }
-
     }
 
     private boolean canBurn(@Nullable Recipe<?> recipe, NonNullList<ItemStack> itemStacks, int maxStackSize) {
@@ -169,15 +167,7 @@ public class AlloyFurnaceBlockEntity extends OdysseyFurnaceBlockEntity {
 
     @Override
     protected int[] getSlotsForDown() {
-        return SLOTS_FOR_SIDES;
-    }
-
-    public int[] getSlotsForFace(Direction direction) {
-        if (direction == Direction.DOWN) {
-            return SLOTS_FOR_DOWN;
-        } else {
-            return direction == Direction.UP ? SLOTS_FOR_UP : SLOTS_FOR_SIDES;
-        }
+        return SLOTS_FOR_DOWN;
     }
 
     protected Component getDefaultName() {

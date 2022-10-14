@@ -13,7 +13,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -276,13 +275,12 @@ public class TomeViewScreen extends Screen {
             return this.pages.size();
         }
 
-        private List<TomePage> readPages(ItemStack itemStack) {
-            TomeItem tomeItem = (TomeItem) itemStack.getItem();
-            CompoundTag compoundTag = itemStack.getOrCreateTag();
-            ListTag researchedItemsListTag = TomeItem.getResearchedItemsListTag(itemStack);
-            List<Item> researchedItemList = researchedItemsListTag.stream().map(tag -> ItemStack.of((CompoundTag) tag).getItem()).toList();
+        private List<TomePage> readPages(ItemStack tome) {
+            TomeItem tomeItem = (TomeItem) tome.getItem();
+            CompoundTag compoundTag = tome.getOrCreateTag();
+            List<Item> researchedItemList = TomeItem.getResearchedItemsList(tome);
             List<TomePage> tomePageList = new ArrayList<>();
-            Map<Enchantment, Integer> tomeEnchantments = TomeItem.getEnchantments(itemStack);
+            Map<Enchantment, Integer> tomeEnchantments = TomeItem.getEnchantments(tome);
             Enchantment savedEnchantment = null;
             int savedLvl = -1;
             if(compoundTag.contains(TOME_SAVED_PAGE_TAG)){
