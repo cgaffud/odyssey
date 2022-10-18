@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 public class CovenMaster extends BossMaster {
     // END, NETHER, OVR
     private static final EntityDataAccessor<IntList> WITCH_IDS_DATA = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.INT_LIST);
-    private static final int NUM_WITCHES = 3;
+    public static final int NUM_WITCHES = 3;
     public static final double MAX_HEALTH = 150.0d;
     public static final double DAMAGE = 8.0d;
     public static final double FOLLOW_RANGE = 75d;

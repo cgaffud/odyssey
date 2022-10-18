@@ -12,10 +12,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
@@ -35,10 +32,12 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     public CovenWitch(EntityType<? extends CovenWitch> entityType, Level level) {
         super(entityType, level);
         this.setHealth(this.getMaxHealth());
+        this.setWitchHealth(this.getMaxHealth());
         this.noCulling = true;
         // TODO: look controller?
         this.enraged = false;
         this.lookControl = new LookControl(this);
+
     }
 
     protected void defineSynchedData() {
@@ -82,8 +81,9 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     public float getWitchHealth() {
         return this.entityData.get(DATA_WITCH_HEALTH_ID);
     }
+
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D);
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.MAX_HEALTH, CovenMaster.MAX_HEALTH / CovenMaster.NUM_WITCHES).add(Attributes.ATTACK_DAMAGE, CovenMaster.DAMAGE * 0.5d);
     }
 
 
@@ -109,11 +109,13 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
             float newWitchHealth = witchHealth - amount * this.getMaster().map(Boss::getDamageReduction).orElse(1.0f);
             if (newWitchHealth <= 0.0f) {
                 this.enraged = true;
-                if(!this.level.isClientSide){
-                    this.setWitchHealth(newWitchHealth);
-                }
+                newWitchHealth = 0;
             }
+            if(!this.level.isClientSide)
+                this.setWitchHealth(newWitchHealth);
         }
+
+        System.out.print(this.getWitchHealth());
         if(this.getMaster().isPresent()) {
             CovenMaster covenMaster = this.getMaster().get();
             return covenMaster.hurt(damageSource, (amount > witchHealth) ? witchHealth : amount);
@@ -164,4 +166,5 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     public boolean save(CompoundTag compoundTag) {
         return false;
     }
+
 }
