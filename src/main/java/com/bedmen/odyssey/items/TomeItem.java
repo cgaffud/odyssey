@@ -7,6 +7,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +20,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.checkerframework.checker.units.qual.C;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -32,7 +35,7 @@ public class TomeItem extends Item {
     public static void initTomes() {
         List<TomeResearchRequirement> baneOfArthropods1 = List.of(
             new TomeResearchRequirement(1, List.of(ItemRegistry.COPPER_HAMMER.get(), ItemRegistry.MINI_HAMMER.get())),
-            new TomeResearchRequirement(1, List.of(ItemRegistry.OBSIDIAN_HAMMER.get(), ItemRegistry.BLUNT_SABRE.get()))
+            new TomeResearchRequirement(2, List.of(ItemRegistry.CLOVER_STONE_HAMMER.get(), ItemRegistry.OBSIDIAN_HAMMER.get(), ItemRegistry.BLUNT_SABRE.get()))
         );
         List<TomeResearchRequirement> baneOfArthropods2 = List.of(
                 new TomeResearchRequirement(2, List.of(ItemRegistry.ICE_DAGGER.get(), ItemRegistry.IRON_FIBER.get()))
@@ -46,6 +49,7 @@ public class TomeItem extends Item {
 
     public static final String TOME_ENCHANTMENTS_TAG = "TomeEnchantments";
     public static final String TOME_ITEMS_TAG = "ResearchedItems";
+    public static final String TOME_SAVED_PAGE_TAG = "SavedPage";
 
     public final Map<Enchantment, List<List<TomeResearchRequirement>>> tomeRequirements;
     public final int color;
@@ -89,9 +93,9 @@ public class TomeItem extends Item {
         }
     }
 
-    public static Map<Enchantment, Integer> getEnchantments(ItemStack itemStack) {
+    public static Map<Enchantment, Integer> getEnchantments(ItemStack tome) {
         Map<Enchantment, Integer> map = new LinkedHashMap<>();
-        CompoundTag compoundTag = itemStack.getTag();
+        CompoundTag compoundTag = tome.getTag();
         if(compoundTag == null || !compoundTag.contains(TOME_ENCHANTMENTS_TAG)) {
             return map;
         }
@@ -107,6 +111,22 @@ public class TomeItem extends Item {
         return map;
     }
 
+    @Nullable
+    public static Tuple<Enchantment, Integer> getSavedPage(ItemStack tome) {
+        CompoundTag compoundTag = tome.getOrCreateTag();
+        Enchantment savedEnchantment = null;
+        int savedLvl = -1;
+        if(compoundTag.contains(TOME_SAVED_PAGE_TAG)){
+            CompoundTag savedPageTag = compoundTag.getCompound(TOME_SAVED_PAGE_TAG);
+            savedEnchantment = ForgeRegistries.ENCHANTMENTS.getValue(EnchantmentHelper.getEnchantmentId(savedPageTag));
+            savedLvl = EnchantmentHelper.getEnchantmentLevel(savedPageTag);
+        }
+        if(savedEnchantment == null) {
+            return null;
+        }
+        return new Tuple<>(savedEnchantment, savedLvl);
+    }
+
     public boolean canBeResearched(ItemStack researchStack, ItemStack quill, ItemStack tome) {
         List<Item> researchedItemsList = getResearchedItemsList(tome);
         Item researchItem = researchStack.getItem();
@@ -119,6 +139,33 @@ public class TomeItem extends Item {
         CompoundTag researchStackTag = new CompoundTag();
         researchStack.getItem().getDefaultInstance().save(researchStackTag);
         researchedItemsListTag.add(researchStackTag);
+        updateEnchantments(tome);
+    }
+
+    private void updateEnchantments(ItemStack tome){
+        ListTag enchantmentsTag = new ListTag();
+        List<TomePage> tomePages = this.getTomePages(tome);
+        Map<Enchantment, Integer> enchantmentLevels = new LinkedHashMap<>();
+        for(TomePage tomePage: tomePages){
+            if(tomePage.enchantmentFullyResearched) {
+                if(enchantmentLevels.containsKey(tomePage.enchantment)){
+                    int currentLvl = enchantmentLevels.get(tomePage.enchantment);
+                    if(tomePage.lvl > currentLvl) {
+                        enchantmentLevels.put(tomePage.enchantment, tomePage.lvl);
+                    }
+                } else {
+                    enchantmentLevels.put(tomePage.enchantment, tomePage.lvl);
+                }
+            }
+        }
+        for(Map.Entry<Enchantment, Integer> entry: enchantmentLevels.entrySet()){
+            CompoundTag enchantmentTag = new CompoundTag();
+            enchantmentTag.putString("id", ForgeRegistries.ENCHANTMENTS.getKey(entry.getKey()).toString());
+            enchantmentTag.putInt("lvl", entry.getValue());
+            enchantmentsTag.add(enchantmentTag);
+        }
+        CompoundTag compoundTag = tome.getOrCreateTag();
+        compoundTag.put(TOME_ENCHANTMENTS_TAG, enchantmentsTag);
     }
 
     public Set<Item> getRequiredItems(boolean isCurse){
@@ -136,5 +183,49 @@ public class TomeItem extends Item {
         return itemSet;
     }
 
+    public List<TomePage> getTomePages(ItemStack tome) {
+        List<Item> researchedItemList = TomeItem.getResearchedItemsList(tome);
+        List<TomePage> tomePageList = new ArrayList<>();
+        Map<Enchantment, Integer> tomeEnchantments = TomeItem.getEnchantments(tome);
+        for(Map.Entry<Enchantment, List<List<TomeItem.TomeResearchRequirement>>> entry: this.tomeRequirements.entrySet()){
+            Enchantment enchantment = entry.getKey();
+            List<List<TomeItem.TomeResearchRequirement>> pageRequirementList = entry.getValue();
+            int minLevel = enchantment.getMinLevel();
+            int maxLevel = Integer.min(enchantment.getMaxLevel(), pageRequirementList.size() + minLevel - 1);
+            int currentLevel = tomeEnchantments.get(enchantment) == null ? 0 : tomeEnchantments.get(enchantment);
+            int numPagesForEnchantment = Mth.clamp(currentLevel - minLevel + 2, 1, maxLevel - minLevel + 1) ;
+            for(int lvl = minLevel; lvl < minLevel + numPagesForEnchantment; lvl++){
+                int i = lvl - minLevel;
+                List<TomeRequirementStatus> tomeRequirementStatusList = new ArrayList<>();
+                List<TomeItem.TomeResearchRequirement> pageRequirements = pageRequirementList.get(i);
+                for(TomeItem.TomeResearchRequirement tomeResearchRequirement: pageRequirements){
+                    List<Boolean> itemsAreResearched = tomeResearchRequirement.items().stream().map(researchedItemList::contains).toList();
+                    int numItemsResearchedForRequirement = itemsAreResearched.stream().reduce(0,
+                            (acc, isResearched) -> acc + (isResearched ? 1 : 0), Integer::sum);
+                    boolean requirementSatisfied = numItemsResearchedForRequirement >= tomeResearchRequirement.countNeeded();
+                    TomeRequirementStatus tomeRequirementStatus = new TomeRequirementStatus(tomeResearchRequirement, numItemsResearchedForRequirement, requirementSatisfied, itemsAreResearched);
+                    tomeRequirementStatusList.add(tomeRequirementStatus);
+                }
+                int numRequirementsCompleted = tomeRequirementStatusList.stream().reduce(0,
+                        (acc, tomeRequirementStatus) -> acc + (tomeRequirementStatus.requirementSatisfied ? 1 : 0), Integer::sum);
+                boolean enchantmentFullyResearched = numRequirementsCompleted >= pageRequirements.size();
+                TomePage tomePage = new TomePage(enchantment, lvl, numRequirementsCompleted, enchantmentFullyResearched, tomeRequirementStatusList);
+                tomePageList.add(tomePage);
+            }
+        }
+        return tomePageList;
+    }
+
     public record TomeResearchRequirement(int countNeeded, List<Item> items) { }
+
+    public record TomePage(Enchantment enchantment,
+                           int lvl,
+                           int numRequirementsCompleted,
+                           boolean enchantmentFullyResearched,
+                           List<TomeRequirementStatus> tomeRequirementStatusList){}
+
+    public record TomeRequirementStatus(TomeItem.TomeResearchRequirement tomeResearchRequirement,
+                                        int numItemsResearched,
+                                        boolean requirementSatisfied,
+                                        List<Boolean> itemsAreResearched){}
 }

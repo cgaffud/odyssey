@@ -17,6 +17,7 @@ import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,9 +27,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.print.attribute.IntegerSyntax;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public class TomeViewScreen extends Screen {
@@ -50,7 +53,6 @@ public class TomeViewScreen extends Screen {
     protected static final int BOX_X_POSITION = 46;
     protected static final int BOX_Y_POSITION = 219;
     protected static final int ITEMSTACK_ROW_COLUMN_SPACING = BOX_DIAMETER + 2;
-    protected static final String TOME_SAVED_PAGE_TAG = "SavedPage";
     private final TomeViewScreen.TomeAccess tomeAccess;
     private int currentPage;
     private PageButton forwardButton;
@@ -99,11 +101,11 @@ public class TomeViewScreen extends Screen {
 
     public void savePage() {
         CompoundTag compoundTag = this.tomeAccess.itemStack.getOrCreateTag();
-        TomePage tomePage = this.tomeAccess.pages.get(this.currentPage);
+        TomeItem.TomePage tomePage = this.tomeAccess.pages.get(this.currentPage);
         CompoundTag savedPageTag = new CompoundTag();
         savedPageTag.putString("id", ForgeRegistries.ENCHANTMENTS.getKey(tomePage.enchantment()).toString());
         savedPageTag.putInt("lvl", tomePage.lvl());
-        compoundTag.put(TOME_SAVED_PAGE_TAG, savedPageTag);
+        compoundTag.put(TomeItem.TOME_SAVED_PAGE_TAG, savedPageTag);
         OdysseyNetwork.CHANNEL.sendToServer(new TomeSavePagePacket(tomeAccess.hand, tomeAccess.itemStack));
     }
 
@@ -171,25 +173,25 @@ public class TomeViewScreen extends Screen {
         int imageLeftX = getImageLeftX();
         this.blit(poseStack, imageLeftX, IMAGE_TOP_Y, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 
-        TomePage tomePage = this.tomeAccess.pages.get(this.currentPage);
+        TomeItem.TomePage tomePage = this.tomeAccess.pages.get(this.currentPage);
         // Enchantment name and level header text
-        Component enchantmentComponent = tomePage.enchantment.getFullname(tomePage.lvl);
+        Component enchantmentComponent = tomePage.enchantment().getFullname(tomePage.lvl());
         MutableComponent enchantmentHeader = ((MutableComponent) enchantmentComponent).withStyle(ChatFormatting.BLACK);
         int headerWidth = this.font.width(enchantmentHeader);
         this.font.draw(poseStack, enchantmentHeader, (float)(imageLeftX + (IMAGE_WIDTH - headerWidth)/2), ENCHANTMENT_NAME_TOP_Y, 0);
 
-        for(int i = 0; i < tomePage.tomeRequirementStatusList.size(); i++) {
+        for(int i = 0; i < tomePage.tomeRequirementStatusList().size(); i++) {
             int rowDistance = ITEMSTACK_ROW_COLUMN_SPACING * i;
-            TomeRequirementStatus tomeRequirementStatus = tomePage.tomeRequirementStatusList.get(i);
-            TomeItem.TomeResearchRequirement tomeResearchRequirement = tomeRequirementStatus.tomeResearchRequirement;
+            TomeItem.TomeRequirementStatus tomeRequirementStatus = tomePage.tomeRequirementStatusList().get(i);
+            TomeItem.TomeResearchRequirement tomeResearchRequirement = tomeRequirementStatus.tomeResearchRequirement();
             // Do green checkmark instead of x/y text if the requirement is satisfied
-            if(tomeRequirementStatus.requirementSatisfied) {
+            if(tomeRequirementStatus.requirementSatisfied()) {
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 RenderSystem.setShaderTexture(0, TOME_LOCATION);
                 this.blit(poseStack, imageLeftX + (ITEM_GRID_X_OFFSET + REQUIREMENT_TEXT_LEFT_X_SIDE - CHECK_MARK_DIAMETER)/2, IMAGE_TOP_Y + ITEM_GRID_Y_OFFSET + rowDistance + (BOX_DIAMETER - CHECK_MARK_DIAMETER)/2, CHECK_MARK_X_POSITION, CHECK_MARK_Y_POSITION, CHECK_MARK_DIAMETER, CHECK_MARK_DIAMETER);
             } else {
-                FormattedText formattedText = FormattedText.of(tomeRequirementStatus.numItemsResearched+"/"+tomeResearchRequirement.countNeeded());
+                FormattedText formattedText = FormattedText.of(tomeRequirementStatus.numItemsResearched()+"/"+tomeResearchRequirement.countNeeded());
                 for(FormattedCharSequence formattedcharsequence: this.font.split(formattedText, Integer.MAX_VALUE)){
                     this.font.draw(poseStack, formattedcharsequence, (float)(imageLeftX + (ITEM_GRID_X_OFFSET + REQUIREMENT_TEXT_LEFT_X_SIDE - CHECK_MARK_DIAMETER)/2), (float)(IMAGE_TOP_Y + ITEM_GRID_Y_OFFSET + rowDistance + (BOX_DIAMETER - this.font.lineHeight)/2), 0);
                 }
@@ -197,7 +199,7 @@ public class TomeViewScreen extends Screen {
             List<ItemStack> itemStackList = tomeResearchRequirement.items().stream().map(Item::getDefaultInstance).toList();
             for(int j = 0; j < itemStackList.size(); j++) {
                 ItemStack itemStack = itemStackList.get(j);
-                boolean isResearched = tomeRequirementStatus.itemsAreResearched.get(j);
+                boolean isResearched = tomeRequirementStatus.itemsAreResearched().get(j);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 int circleLeftX = imageLeftX + ITEM_GRID_X_OFFSET + j * ITEMSTACK_ROW_COLUMN_SPACING;
                 int circleTopY = IMAGE_TOP_Y + ITEM_GRID_Y_OFFSET + rowDistance;
@@ -262,7 +264,7 @@ public class TomeViewScreen extends Screen {
 
         public final InteractionHand hand;
         public final ItemStack itemStack;
-        private final List<TomePage> pages;
+        private final List<TomeItem.TomePage> pages;
         private int startingPage;
 
         public TomeAccess(InteractionHand hand, ItemStack itemStack) {
@@ -275,60 +277,19 @@ public class TomeViewScreen extends Screen {
             return this.pages.size();
         }
 
-        private List<TomePage> readPages(ItemStack tome) {
-            TomeItem tomeItem = (TomeItem) tome.getItem();
-            CompoundTag compoundTag = tome.getOrCreateTag();
-            List<Item> researchedItemList = TomeItem.getResearchedItemsList(tome);
-            List<TomePage> tomePageList = new ArrayList<>();
-            Map<Enchantment, Integer> tomeEnchantments = TomeItem.getEnchantments(tome);
-            Enchantment savedEnchantment = null;
-            int savedLvl = -1;
-            if(compoundTag.contains(TOME_SAVED_PAGE_TAG)){
-                CompoundTag savedPageTag = compoundTag.getCompound(TOME_SAVED_PAGE_TAG);
-                savedEnchantment = ForgeRegistries.ENCHANTMENTS.getValue(EnchantmentHelper.getEnchantmentId(savedPageTag));
-                savedLvl = EnchantmentHelper.getEnchantmentLevel(savedPageTag);
+        private List<TomeItem.TomePage> readPages(ItemStack tome) {
+            Tuple<Enchantment, Integer> savedPage = TomeItem.getSavedPage(tome);
+            TomeItem tomeItem = (TomeItem)tome.getItem();
+            List<TomeItem.TomePage> tomePages = tomeItem.getTomePages(tome);
+            if(savedPage != null) {
+                Enchantment savedEnchantment = savedPage.getA();
+                int savedLvl = savedPage.getB();
+                tomePages.stream()
+                        .filter(tomePage -> tomePage.enchantment() == savedEnchantment && tomePage.lvl() == savedLvl)
+                        .findFirst()
+                        .ifPresent(tomePage -> this.startingPage = tomePages.indexOf(tomePage));
             }
-            for(Map.Entry<Enchantment, List<List<TomeItem.TomeResearchRequirement>>> entry: tomeItem.tomeRequirements.entrySet()){
-                Enchantment enchantment = entry.getKey();
-                List<List<TomeItem.TomeResearchRequirement>> pageRequirementList = entry.getValue();
-                int minLevel = enchantment.getMinLevel();
-                int maxLevel = Integer.min(enchantment.getMaxLevel(), pageRequirementList.size() + minLevel - 1);
-                int currentLevel = tomeEnchantments.get(enchantment) == null ? 0 : tomeEnchantments.get(enchantment);
-                int numPagesForEnchantment = Mth.clamp(currentLevel - minLevel + 2, 1, maxLevel - minLevel + 1) ;
-                for(int lvl = minLevel; lvl < minLevel + numPagesForEnchantment; lvl++){
-                    if(enchantment == savedEnchantment && lvl == savedLvl) {
-                        this.startingPage = tomePageList.size();
-                    }
-                    int i = lvl - minLevel;
-                    List<TomeRequirementStatus> tomeRequirementStatusList = new ArrayList<>();
-                    List<TomeItem.TomeResearchRequirement> pageRequirements = pageRequirementList.get(i);
-                    for(TomeItem.TomeResearchRequirement tomeResearchRequirement: pageRequirements){
-                        List<Boolean> itemsAreResearched = tomeResearchRequirement.items().stream().map(researchedItemList::contains).toList();
-                        int numItemsResearchedForRequirement = itemsAreResearched.stream().reduce(0,
-                                (acc, isResearched) -> acc + (isResearched ? 1 : 0), Integer::sum);
-                        boolean requirementSatisfied = numItemsResearchedForRequirement >= tomeResearchRequirement.countNeeded();
-                        TomeRequirementStatus tomeRequirementStatus = new TomeRequirementStatus(tomeResearchRequirement, numItemsResearchedForRequirement, requirementSatisfied, itemsAreResearched);
-                        tomeRequirementStatusList.add(tomeRequirementStatus);
-                    }
-                    int numRequirementsCompleted = tomeRequirementStatusList.stream().reduce(0,
-                            (acc, tomeRequirementStatus) -> acc + (tomeRequirementStatus.requirementSatisfied ? 1 : 0), Integer::sum);
-                    boolean enchantmentFullyResearched = numRequirementsCompleted >= pageRequirementList.size();
-                    TomePage tomePage = new TomePage(enchantment, lvl, numRequirementsCompleted, enchantmentFullyResearched, tomeRequirementStatusList);
-                    tomePageList.add(tomePage);
-                }
-            }
-            return tomePageList;
+            return tomePages;
         }
     }
-
-    public record TomePage(Enchantment enchantment,
-                           int lvl,
-                           int numRequirementsCompleted,
-                           boolean enchantmentFullyResearched,
-                           List<TomeRequirementStatus> tomeRequirementStatusList){}
-
-    public record TomeRequirementStatus(TomeItem.TomeResearchRequirement tomeResearchRequirement,
-                                        int numItemsResearched,
-                                        boolean requirementSatisfied,
-                                        List<Boolean> itemsAreResearched){}
 }

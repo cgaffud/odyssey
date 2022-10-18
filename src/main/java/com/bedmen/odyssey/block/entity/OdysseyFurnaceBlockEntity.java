@@ -120,7 +120,6 @@ public abstract class OdysseyFurnaceBlockEntity extends BaseContainerBlockEntity
         for(String s : compoundTag1.getAllKeys()) {
             this.recipesUsed.put(new ResourceLocation(s), compoundTag1.getInt(s));
         }
-
     }
 
     protected void saveAdditional(CompoundTag compoundTag) {

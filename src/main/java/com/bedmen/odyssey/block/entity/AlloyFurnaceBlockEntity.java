@@ -45,7 +45,7 @@ public class AlloyFurnaceBlockEntity extends OdysseyFurnaceBlockEntity {
         }
 
         ItemStack fuelStack = alloyFurnaceBlockEntity.items.get(SLOT_FUEL);
-        if (alloyFurnaceBlockEntity.isLit() || !fuelStack.isEmpty() && !alloyFurnaceBlockEntity.items.get(0).isEmpty()) {
+        if (alloyFurnaceBlockEntity.isLit() || !fuelStack.isEmpty() && !alloyFurnaceBlockEntity.items.get(SLOT_INPUT_0).isEmpty() && !alloyFurnaceBlockEntity.items.get(SLOT_INPUT_1).isEmpty()) {
             Recipe<?> recipe = level.getRecipeManager().getRecipeFor((RecipeType<AlloyRecipe>)alloyFurnaceBlockEntity.recipeType, alloyFurnaceBlockEntity, level).orElse(null);
             int maxStackSize = alloyFurnaceBlockEntity.getMaxStackSize();
             if (!alloyFurnaceBlockEntity.isLit() && alloyFurnaceBlockEntity.canBurn(recipe, alloyFurnaceBlockEntity.items, maxStackSize)) {

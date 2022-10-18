@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.block;
 
+import com.bedmen.odyssey.block.entity.AlloyFurnaceBlockEntity;
 import com.bedmen.odyssey.block.entity.ResearchTableBlockEntity;
+import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.util.OdysseyStats;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -18,6 +20,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -35,8 +39,8 @@ public class ResearchTableBlock extends BaseEntityBlock implements INeedsToRegis
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     protected static final VoxelShape SHAPE = Shapes.join(box(0,10,0,16,12,16),box(1,0,1,15,12,15), BooleanOp.OR);
 
-    public ResearchTableBlock() {
-        super(BlockBehaviour.Properties.of(Material.WOOD).strength(2.5F));
+    public ResearchTableBlock(BlockBehaviour.Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
@@ -107,9 +111,21 @@ public class ResearchTableBlock extends BaseEntityBlock implements INeedsToRegis
         return RenderType.cutout();
     }
 
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return null;
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new ResearchTableBlockEntity(blockPos, blockState);
+    }
+
+    @javax.annotation.Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        return createResearchTableTicker(level, blockEntityType, BlockEntityTypeRegistry.RESEARCH_TABLE.get());
+    }
+
+    @javax.annotation.Nullable
+    protected static <T extends BlockEntity> BlockEntityTicker<T> createResearchTableTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<? extends ResearchTableBlockEntity> blockEntityType2) {
+        return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntityType2, ResearchTableBlockEntity::serverTick);
+    }
+
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> blockEntityType, BlockEntityType<E> blockEntityType2, BlockEntityTicker<? super E> blockEntityTicker) {
+        return blockEntityType == blockEntityType2 ? (BlockEntityTicker<A>)blockEntityTicker : null;
     }
 }

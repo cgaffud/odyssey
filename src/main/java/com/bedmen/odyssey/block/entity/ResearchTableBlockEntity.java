@@ -1,13 +1,18 @@
 package com.bedmen.odyssey.block.entity;
 
+import com.bedmen.odyssey.inventory.ResearchTableMenu;
 import com.bedmen.odyssey.items.QuillItem;
 import com.bedmen.odyssey.items.TomeItem;
 import com.bedmen.odyssey.recipes.AlloyRecipe;
+import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
+import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
@@ -36,6 +41,7 @@ public class ResearchTableBlockEntity extends BaseContainerBlockEntity implement
     public static final int SLOT_COUNT = 4;
     private static final int[] SLOTS_FOR_UP_AND_DOWN = new int[]{SLOT_INPUT};
     private static final int[] SLOTS_FOR_SIDES = new int[]{SLOT_INK};
+    public static final int DATA_COUNT = 2;
     protected final ContainerData dataAccess = new ContainerData() {
         public int get(int index) {
             switch(index) {
@@ -60,83 +66,103 @@ public class ResearchTableBlockEntity extends BaseContainerBlockEntity implement
         }
 
         public int getCount() {
-            return 2;
+            return DATA_COUNT;
         }
     };
     private NonNullList<ItemStack> items = NonNullList.withSize(SLOT_COUNT, ItemStack.EMPTY);
     private int researchTime;
     private int ink;
+    private static final String RESEARCH_TIME_TAG = "ResearchTime";
+    private static final String INK_TAG = "Ink";
+    private static final int SAC_TO_INK_FACTOR = 5;
+    public static final int TOTAL_RESEARCH_TIME = 100;
 
-    protected ResearchTableBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
-        super(blockEntityType, blockPos, blockState);
+    public ResearchTableBlockEntity(BlockPos blockPos, BlockState blockState) {
+        super(BlockEntityTypeRegistry.RESEARCH_TABLE.get(), blockPos, blockState);
+    }
+
+    public void load(CompoundTag compoundTag) {
+        super.load(compoundTag);
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(compoundTag, this.items);
+        this.researchTime = compoundTag.getInt(RESEARCH_TIME_TAG);
+        this.ink = compoundTag.getInt(INK_TAG);
+    }
+
+    protected void saveAdditional(CompoundTag compoundTag) {
+        super.saveAdditional(compoundTag);
+        compoundTag.putInt(RESEARCH_TIME_TAG, this.researchTime);
+        compoundTag.putInt(INK_TAG, this.ink);
+        ContainerHelper.saveAllItems(compoundTag, this.items);
+    }
+
+    protected boolean isResearching() {
+        return this.researchTime > -1;
+    }
+
+    protected ItemStack getInputItemStack(){
+        return this.items.get(SLOT_INPUT);
+    }
+
+    protected ItemStack getQuillItemStack(){
+        return this.items.get(SLOT_QUILL);
+    }
+
+    protected ItemStack getInkItemStack(){
+        return this.items.get(SLOT_INK);
+    }
+
+    protected ItemStack getTomeItemStack(){
+        return this.items.get(SLOT_TOME);
+    }
+
+    protected void stopResearch(){
+        this.researchTime = -1;
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, ResearchTableBlockEntity researchTableBlockEntity) {
-        boolean flag = researchTableBlockEntity.isLit();
-        boolean flag1 = false;
-        if (researchTableBlockEntity.isLit()) {
-            --researchTableBlockEntity.litTime;
+        boolean isDirty = false;
+
+        // Ink
+        ItemStack inkStack = researchTableBlockEntity.getInkItemStack();
+        if(researchTableBlockEntity.ink <= 0 && inkStack.getCount() > 0) {
+            researchTableBlockEntity.ink = SAC_TO_INK_FACTOR;
+            inkStack.shrink(1);
         }
 
-        ItemStack inkStack = researchTableBlockEntity.items.get(SLOT_INK);
-        if (researchTableBlockEntity.isLit() || !inkStack.isEmpty() && !researchTableBlockEntity.items.get(SLOT_INPUT).isEmpty()) {
-            Recipe<?> recipe = level.getRecipeManager().getRecipeFor((RecipeType<AlloyRecipe>)alloyFurnaceBlockEntity.recipeType, alloyFurnaceBlockEntity, level).orElse(null);
-            int maxStackSize = alloyFurnaceBlockEntity.getMaxStackSize();
-            if (!alloyFurnaceBlockEntity.isLit() && alloyFurnaceBlockEntity.canBurn(recipe, alloyFurnaceBlockEntity.items, maxStackSize)) {
-                alloyFurnaceBlockEntity.litTime = alloyFurnaceBlockEntity.getBurnDuration(inkStack);
-                alloyFurnaceBlockEntity.litDuration = alloyFurnaceBlockEntity.litTime;
-                if (alloyFurnaceBlockEntity.isLit()) {
-                    flag1 = true;
-                    if (inkStack.hasContainerItem())
-                        alloyFurnaceBlockEntity.items.set(SLOT_FUEL, inkStack.getContainerItem());
-                    else
-                    if (!inkStack.isEmpty()) {
-                        inkStack.shrink(1);
-                        if (inkStack.isEmpty()) {
-                            alloyFurnaceBlockEntity.items.set(SLOT_FUEL, inkStack.getContainerItem());
-                        }
-                    }
-                }
-            }
+        // Start research if possible
+        if(!researchTableBlockEntity.isResearching() && researchTableBlockEntity.canResearch() && researchTableBlockEntity.ink > 0){
+            researchTableBlockEntity.researchTime = 0;
+            isDirty = true;
+            researchTableBlockEntity.ink--;
+        }
 
-            if (alloyFurnaceBlockEntity.isLit() && alloyFurnaceBlockEntity.canBurn(recipe, alloyFurnaceBlockEntity.items, maxStackSize)) {
-                ++alloyFurnaceBlockEntity.cookingProgress;
-                if (alloyFurnaceBlockEntity.cookingProgress == alloyFurnaceBlockEntity.cookingTotalTime) {
-                    alloyFurnaceBlockEntity.cookingProgress = 0;
-                    alloyFurnaceBlockEntity.cookingTotalTime = getTotalCookTime(level, alloyFurnaceBlockEntity.recipeType, alloyFurnaceBlockEntity);
-                    if (alloyFurnaceBlockEntity.burn(recipe, alloyFurnaceBlockEntity.items, maxStackSize)) {
-                        alloyFurnaceBlockEntity.setRecipeUsed(recipe);
-                    }
-
-                    flag1 = true;
-                }
+        // Research
+        if(researchTableBlockEntity.isResearching() && researchTableBlockEntity.canResearch()) {
+            if(researchTableBlockEntity.researchTime == TOTAL_RESEARCH_TIME) {
+                researchTableBlockEntity.doResearch();
+                researchTableBlockEntity.stopResearch();
             } else {
-                alloyFurnaceBlockEntity.cookingProgress = 0;
+                researchTableBlockEntity.researchTime++;
             }
-        } else if (!alloyFurnaceBlockEntity.isLit() && alloyFurnaceBlockEntity.cookingProgress > 0) {
-            alloyFurnaceBlockEntity.cookingProgress = Mth.clamp(alloyFurnaceBlockEntity.cookingProgress - BURN_COOL_SPEED, 0, alloyFurnaceBlockEntity.cookingTotalTime);
+        } else {
+            researchTableBlockEntity.stopResearch();
         }
 
-        if (flag != alloyFurnaceBlockEntity.isLit()) {
-            flag1 = true;
-            blockState = blockState.setValue(AbstractFurnaceBlock.LIT, alloyFurnaceBlockEntity.isLit());
-            level.setBlock(blockPos, blockState, 3);
-        }
-
-        if (flag1) {
+        if (isDirty) {
             setChanged(level, blockPos, blockState);
         }
     }
 
     private boolean canResearch() {
-        ItemStack inputStack = this.items.get(SLOT_INPUT);
-        ItemStack tome = this.items.get(SLOT_TOME);
-        Item tomeItem = tome.getItem();
-        ItemStack quill = this.items.get(SLOT_QUILL);
-        if (!this.items.get(SLOT_INPUT).isEmpty() &&
+        ItemStack inputStack = this.getInputItemStack();
+        ItemStack tomeStack = this.getTomeItemStack();
+        Item tomeItem = tomeStack.getItem();
+        ItemStack quillStack = this.getQuillItemStack();
+        if (!inputStack.isEmpty() &&
                 tomeItem instanceof TomeItem tomeItem1 &&
-                quill.getItem() instanceof QuillItem) {
-            return tomeItem1.canBeResearched(inputStack, quill, tome);
+                quillStack.getItem() instanceof QuillItem) {
+            return tomeItem1.canBeResearched(inputStack, quillStack, tomeStack);
         } else {
             return false;
         }
@@ -144,8 +170,8 @@ public class ResearchTableBlockEntity extends BaseContainerBlockEntity implement
 
     private boolean doResearch() {
         if (this.canResearch()) {
-            ItemStack inputStack = this.items.get(SLOT_INPUT);
-            ItemStack tomeStack = this.items.get(SLOT_TOME);
+            ItemStack inputStack = this.getInputItemStack();
+            ItemStack tomeStack = this.getTomeItemStack();
             TomeItem tomeItem = (TomeItem) tomeStack.getItem();
             tomeItem.addResearchedItem(inputStack, tomeStack);
             return true;
