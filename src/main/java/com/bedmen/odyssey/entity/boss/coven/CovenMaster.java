@@ -16,6 +16,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -41,7 +42,7 @@ public class CovenMaster extends BossMaster {
     public static final double MAX_HEALTH = 150.0d;
     public static final double DAMAGE = 8.0d;
     public static final double FOLLOW_RANGE = 75d;
-    public static final double CENTER_RANGE = 45d;
+    public static final double CENTER_RANGE = 64d;
     private static final String WITCHES_TAG = "CovenWitches";
 
     // These sub entities may only be referenced directly in a server side method
@@ -236,5 +237,17 @@ public class CovenMaster extends BossMaster {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE).add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
+    }
+
+    public void bringWitchesToMe(){
+        if(!this.level.isClientSide) {
+            for (int i = 0; i < NUM_WITCHES; i++) {
+                CovenWitch witch = this.witches.get(i);
+                float xOffset = Mth.cos(Mth.PI*2/NUM_WITCHES * i);
+                float zOffset = Mth.sin(Mth.PI*2/NUM_WITCHES * i);
+                witch.teleport(this.getX() + xOffset, this.getY(), this.getZ()+zOffset);
+                witch.doWhenReturnToMaster();
+            }
+        }
     }
 }

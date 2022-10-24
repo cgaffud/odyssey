@@ -4,12 +4,16 @@ import com.bedmen.odyssey.entity.boss.Boss;
 import com.bedmen.odyssey.entity.boss.SubEntity;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanSegment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -17,7 +21,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
 import java.util.ArrayList;
@@ -104,6 +111,10 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     }
 
     public boolean hurt(DamageSource damageSource, float amount) {
+        // Ignore magic damage. They are witches
+        if (this.isInvulnerableTo(damageSource) || damageSource.isMagic())
+            return false;
+
         float witchHealth = this.getWitchHealth();
         if (witchHealth > 0.0f) {
             float newWitchHealth = witchHealth - amount * this.getMaster().map(Boss::getDamageReduction).orElse(1.0f);
@@ -122,7 +133,6 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         }
         return false;
     }
-
 
     @Override
     public Packet<?> getAddEntityPacket() {
@@ -162,6 +172,43 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
             this.getMaster().ifPresent(master -> master.handleSubEntity(this));
         }
     }
+
+    protected boolean teleportTowards(Entity entity) {
+        Vec3 distToMe = new Vec3(this.getX() - entity.getX(), this.getY(0.5D) - entity.getEyeY(), this.getZ() - entity.getZ());
+        distToMe = distToMe.normalize();
+        double d1 = this.getX() + (this.random.nextDouble() - 0.5D) * 8.0D - distToMe.x * 16.0D;
+        // The y variance has been removed
+        double d2 = this.getY() - distToMe.y * 16.0D;
+        double d3 = this.getZ() + (this.random.nextDouble() - 0.5D) * 8.0D - distToMe.z * 16.0D;
+        return this.teleport(d1, d2, d3);
+    }
+
+    protected boolean teleport(double randX, double randY, double randZ) {
+        BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(randX, randY, randZ);
+
+        while(blockpos$mutableblockpos.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(blockpos$mutableblockpos).getMaterial().blocksMotion()) {
+            blockpos$mutableblockpos.move(Direction.DOWN);
+        }
+
+        BlockState blockstate = this.level.getBlockState(blockpos$mutableblockpos);
+        boolean flag = blockstate.getMaterial().blocksMotion();
+        boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
+        if (flag && !flag1) {
+            net.minecraftforge.event.entity.EntityTeleportEvent.EnderEntity event = net.minecraftforge.event.ForgeEventFactory.onEnderTeleport(this, randX, randY, randZ);
+            if (event.isCanceled()) return false;
+            boolean flag2 = this.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
+            if (flag2 && !this.isSilent()) {
+                this.level.playSound((Player)null, this.xo, this.yo, this.zo, SoundEvents.ENDERMAN_TELEPORT, this.getSoundSource(), 1.0F, 1.0F);
+                this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+            }
+
+            return flag2;
+        } else {
+            return false;
+        }
+    }
+
+    void doWhenReturnToMaster() {}
 
     public boolean save(CompoundTag compoundTag) {
         return false;

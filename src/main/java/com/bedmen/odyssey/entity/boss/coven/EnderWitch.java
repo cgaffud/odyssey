@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
+import com.bedmen.odyssey.entity.ai.CovenReturnToMasterGoal;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
 import com.bedmen.odyssey.util.GeneralUtil;
@@ -11,16 +12,17 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
@@ -37,10 +39,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EnderWitch extends CovenWitch implements RangedAttackMob {
@@ -48,6 +48,7 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
     private static final AttributeModifier SPEED_MODIFIER_DRINKING = new AttributeModifier(SPEED_MODIFIER_DRINKING_UUID, "Drinking speed penalty", -0.25D, AttributeModifier.Operation.ADDITION);
     private static final EntityDataAccessor<Boolean> DATA_USING_ITEM = SynchedEntityData.defineId(Witch.class, EntityDataSerializers.BOOLEAN);
     private int usingTime;
+    private Phase phase = Phase.IDLE;
 
     public EnderWitch(EntityType<? extends CovenWitch> entityType, Level level) {
         super(entityType, level);
@@ -56,8 +57,9 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
     @Override
     protected void registerGoals() {
         super.registerGoals();
+        this.goalSelector.addGoal(0, new CovenReturnToMasterGoal(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new RangedAttackGoal(this, 1.0D, 60, 10.0F));
+        this.goalSelector.addGoal(2, new EnderWitchRangedAttackGoal(this));
         this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
@@ -74,42 +76,41 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
         return this.getEntityData().get(DATA_USING_ITEM);
     }
 
+    private boolean isValidTarget(LivingEntity target, CovenMaster covenMaster) { return ((target != null) && (covenMaster.validTargetPredicate((ServerPlayer) target))); }
+
     public void aiStep() {
+
         Optional<CovenMaster> master = this.getMaster();
         if(!this.isNoAi() && master.isPresent()) {
             CovenMaster covenMaster = master.get();
+
+
             if (!this.level.isClientSide) {
-
-                if(GeneralUtil.isHashTick(this, this.level, 50)) {
-                    System.out.print(covenMaster.getMyWitchID(this));
-                    System.out.print(": ");
-                    LivingEntity targetForPrinting = this.getTarget();
-                    if (targetForPrinting != null)
-                        System.out.println(targetForPrinting.position());
-                    List<LivingEntity> otherTargets = covenMaster.getOtherTargets(this).stream().filter(livingEntity -> livingEntity != null).collect(Collectors.toList());
-                    if (otherTargets.isEmpty()) {
-                        System.out.println("NO OTHER TARGETS");
-                        Collection<ServerPlayer> serverPlayerEntities = covenMaster.bossEvent.getPlayers();
-                        List<ServerPlayer> serverPlayerEntityList = serverPlayerEntities.stream().filter(covenMaster::validTargetPredicate).collect(Collectors.toList());
-                        // Set Phase based on Target
-                        if (serverPlayerEntityList.isEmpty()) {
-                            System.out.println("NO BOSS TARGETS");
-                            this.setTarget(null);
-                        } else {
-                            System.out.println("FOUND BOSS TARGET");
-                            System.out.println(serverPlayerEntityList);
-                            this.setTarget(serverPlayerEntityList.get(this.random.nextInt(serverPlayerEntityList.size())));
-                            System.out.println(this.getTarget());
+                // Target
+                switch (this.phase) {
+                    case CHASING:
+                        if (!this.isValidTarget(this.getTarget(), covenMaster))
+                            this.phase = Phase.IDLE;
+                    case IDLE:
+                        if (GeneralUtil.isHashTick(this, this.level, 50)) {
+                            List<LivingEntity> otherTargets = covenMaster.getOtherTargets(this).stream().filter(livingEntity -> this.isValidTarget(livingEntity, covenMaster)).collect(Collectors.toList());
+                            if (otherTargets.isEmpty()) {
+                                Collection<ServerPlayer> serverPlayerEntities = covenMaster.bossEvent.getPlayers();
+                                List<ServerPlayer> serverPlayerEntityList = serverPlayerEntities.stream().filter(covenMaster::validTargetPredicate).collect(Collectors.toList());
+                                // Set Phase based on Target
+                                if (serverPlayerEntityList.isEmpty()) {
+                                    this.setTarget(null);
+                                } else {
+                                    this.phase = Phase.CHASING;
+                                    this.setTarget(serverPlayerEntityList.get(this.random.nextInt(serverPlayerEntityList.size())));
+                                }
+                            } else {
+                                this.phase = Phase.CHASING;
+                                this.setTarget(otherTargets.get(this.random.nextInt(otherTargets.size())));
+                            }
                         }
-                    } else {
-                        System.out.println("CHOOSE OTHER TARGET");
-                        this.setTarget(otherTargets.get(this.random.nextInt(otherTargets.size())));
-                    }
-                    LivingEntity target = this.getTarget();
-                    if (target != null)
-                        System.out.println(target.position());
                 }
-
+                // Handle Potions
                 // If she's drinking a potion let her finish
                 if (this.isDrinkingPotion()) {
                     if (this.usingTime-- <= 0) {
@@ -163,6 +164,24 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
         super.aiStep();
     }
 
+    @Override
+    public boolean hurt(DamageSource damageSource, float amount) {
+        if (damageSource instanceof IndirectEntityDamageSource) {
+            for(int i = 0; i < 64; ++i) {
+                if (this.teleport()) {
+                    return true;
+                }
+            }
+
+            return false;
+        } else {
+            boolean flag = super.hurt(damageSource, amount);
+            if (!this.level.isClientSide() && !(damageSource.getEntity() instanceof LivingEntity) && this.random.nextInt(10) != 0)
+                this.teleport();
+
+            return flag;
+        }
+    }
 
     public void performRangedAttack(LivingEntity target, float p_34144_) {
         if (!this.isDrinkingPotion()) {
@@ -204,42 +223,100 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
         }
     }
 
-    boolean teleportTowards(Entity entity) {
-        Vec3 distToMe = new Vec3(this.getX() - entity.getX(), this.getY(0.5D) - entity.getEyeY(), this.getZ() - entity.getZ());
-        distToMe = distToMe.normalize();
-        double d0 = 16.0D;
-        double d1 = this.getX() + (this.random.nextDouble() - 0.5D) * 8.0D - distToMe.x * 16.0D;
-        double d2 = this.getY() + (double)(this.random.nextInt(16)) - distToMe.y * 16.0D;
-        double d3 = this.getZ() + (this.random.nextDouble() - 0.5D) * 8.0D - distToMe.z * 16.0D;
-        return this.teleport(d1, d2, d3);
+    @Override
+    void doWhenReturnToMaster() {
+        this.phase = Phase.IDLE;
     }
 
-    private boolean teleport(double randX, double randY, double randZ) {
-        BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(randX, randY, randZ);
+    enum Phase {
+        IDLE,
+        CHASING;
+    }
 
-        while(blockpos$mutableblockpos.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(blockpos$mutableblockpos).getMaterial().blocksMotion()) {
-            blockpos$mutableblockpos.move(Direction.DOWN);
+    static class EnderWitchRangedAttackGoal extends Goal {
+        private final Mob mob;
+        private final EnderWitch enderWitch;
+        @Nullable
+        private LivingEntity target;
+        private int attackTime = -1;
+        private final double speedModifier;
+        private int seeTime;
+        private final int attackIntervalMin;
+        private final int attackIntervalMax;
+        private final float attackRadius;
+        private final float tpRadiusSqr;
+        private final float attackRadiusSqr;
+
+
+
+        public EnderWitchRangedAttackGoal(EnderWitch enderWitch) {
+            this.enderWitch = enderWitch;
+            this.mob = (Mob)enderWitch;
+            this.speedModifier = 1.5D;
+            this.attackIntervalMin = 40;
+            this.attackIntervalMax = 60;
+            this.attackRadius = 25.0F;
+            this.tpRadiusSqr = 15.0F * 15.0F;
+            this.attackRadiusSqr = 25.0F * 25.0F;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }
 
-        BlockState blockstate = this.level.getBlockState(blockpos$mutableblockpos);
-        boolean flag = blockstate.getMaterial().blocksMotion();
-        boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
-        if (flag && !flag1) {
-            net.minecraftforge.event.entity.EntityTeleportEvent.EnderEntity event = net.minecraftforge.event.ForgeEventFactory.onEnderTeleport(this, randX, randY, randZ);
-            if (event.isCanceled()) return false;
-            boolean flag2 = this.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
-            if (flag2 && !this.isSilent()) {
-                this.level.playSound((Player)null, this.xo, this.yo, this.zo, SoundEvents.ENDERMAN_TELEPORT, this.getSoundSource(), 1.0F, 1.0F);
-                this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+        public boolean canUse() {
+            LivingEntity livingentity = this.mob.getTarget();
+            if (livingentity != null && livingentity.isAlive()) {
+                this.target = livingentity;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public boolean canContinueToUse() {
+            return this.canUse() || !this.mob.getNavigation().isDone();
+        }
+
+        public void stop() {
+            this.target = null;
+            this.seeTime = 0;
+            this.attackTime = -1;
+        }
+
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        public void tick() {
+            double d0 = this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ());
+            boolean flag = this.mob.getSensing().hasLineOfSight(this.target);
+            if (flag) {
+                ++this.seeTime;
+            } else {
+                this.seeTime = 0;
             }
 
-            return flag2;
-        } else {
-            return false;
+            if (!(d0 > (double) this.attackRadiusSqr) && this.seeTime >= 5) {
+                this.mob.getNavigation().stop();
+            } else if (d0 > (double) this.tpRadiusSqr) {
+                enderWitch.teleportTowards(this.target);
+            } else {
+                this.mob.getNavigation().moveTo(this.target, this.speedModifier);
+            }
+
+            this.mob.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
+            if (--this.attackTime == 0) {
+                if (!flag) {
+                    return;
+                }
+
+                float f = (float)Math.sqrt(d0) / this.attackRadius;
+                float f1 = Mth.clamp(f, 0.1F, 1.0F);
+                this.enderWitch.performRangedAttack(this.target, f1);
+                this.attackTime = Mth.floor(f * (float)(this.attackIntervalMax - this.attackIntervalMin) + (float)this.attackIntervalMin);
+            } else if (this.attackTime < 0) {
+                this.attackTime = Mth.floor(Mth.lerp(Math.sqrt(d0) / (double)this.attackRadius, (double)this.attackIntervalMin, (double)this.attackIntervalMax));
+            }
+
         }
     }
-
-
-
 
 }
