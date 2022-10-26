@@ -42,7 +42,7 @@ public class CovenMaster extends BossMaster {
     public static final double MAX_HEALTH = 150.0d;
     public static final double DAMAGE = 8.0d;
     public static final double FOLLOW_RANGE = 75d;
-    public static final double CENTER_RANGE = 64d;
+    public static final double CENTER_RANGE = 40d;
     private static final String WITCHES_TAG = "CovenWitches";
 
     // These sub entities may only be referenced directly in a server side method
@@ -165,6 +165,9 @@ public class CovenMaster extends BossMaster {
             if (witchNum >= this.getWitches().size()) {
                 CovenWitch witch;
                 switch (witchNum) {
+                    case 1:
+                        witch = EntityTypeRegistry.NETHER_WITCH.get().create(this.level);
+                        break;
                     default:
                     case 0:
                         witch = EntityTypeRegistry.ENDER_WITCH.get().create(this.level);
