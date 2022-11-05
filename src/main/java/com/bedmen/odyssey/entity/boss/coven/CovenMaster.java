@@ -10,6 +10,8 @@ import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.util.NonNullListCollector;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -175,7 +177,16 @@ public class CovenMaster extends BossMaster {
                 if (witch != null) {
                     this.witches.add(witch);
                     this.addWitchId(witch.getId());
-                    witch.moveTo(this.position());
+
+                    float phi = Mth.PI * 2/NUM_WITCHES * witchNum;
+                    BlockPos.MutableBlockPos blockpos$mutableblockpos = (this.blockPosition().offset(Mth.cos(phi), 60, Mth.sin(phi))).mutable();
+
+                    while(blockpos$mutableblockpos.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(blockpos$mutableblockpos).getMaterial().blocksMotion()) {
+                        blockpos$mutableblockpos.move(Direction.DOWN);
+                    }
+                    BlockPos blockPos = blockpos$mutableblockpos.above().immutable();
+
+                    witch.moveTo(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
                     witch.setMasterId(this.getId());
                 } else {
                     Odyssey.LOGGER.error("Witch #" + witchNum + " failed to spawn in initializeWitches");
