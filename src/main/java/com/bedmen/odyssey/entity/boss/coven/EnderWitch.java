@@ -194,7 +194,7 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
             if (d3 >= 8.0D && !target.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) {
                 potion = Potions.STRONG_SLOWNESS;
             } else if (target.getHealth() >= 8.0F && !target.hasEffect(MobEffects.POISON)) {
-                potion = Potions.STRONG_POISON;
+                potion = Potions.LONG_POISON;
             } else if (d3 <= 3.0D && !target.hasEffect(MobEffects.WEAKNESS) && this.random.nextFloat() < 0.25F) {
                 potion = Potions.LONG_WEAKNESS;
             }
