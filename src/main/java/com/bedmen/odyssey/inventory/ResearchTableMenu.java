@@ -35,10 +35,22 @@ public class ResearchTableMenu extends AbstractContainerMenu {
         this.data = data;
         checkContainerSize(container, SLOT_COUNT);
         checkContainerDataCount(data, DATA_COUNT);
-        this.addSlot(new Slot(container, SLOT_INPUT, 80, 17));
-        this.addSlot(new Slot(container, SLOT_QUILL, 53, 50));
-        this.addSlot(new Slot(container, SLOT_INK, 17, 50));
-        this.addSlot(new Slot(container, SLOT_TOME, 143, 50));
+        this.addSlot(new Slot(container, SLOT_INPUT, 80, 20));
+        this.addSlot(new Slot(container, SLOT_QUILL, 53, 50) {
+            public boolean mayPlace(ItemStack itemStack) {
+                return itemStack.getItem() instanceof QuillItem;
+            }
+        });
+        this.addSlot(new Slot(container, SLOT_INK, 17, 50) {
+            public boolean mayPlace(ItemStack itemStack) {
+                return ResearchTableBlockEntity.isGlowInk(itemStack);
+            }
+        });
+        this.addSlot(new Slot(container, SLOT_TOME, 143, 50) {
+            public boolean mayPlace(ItemStack itemStack) {
+                return itemStack.getItem() instanceof TomeItem;
+            }
+        });
 
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {

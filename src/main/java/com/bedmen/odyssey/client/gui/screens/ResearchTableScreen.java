@@ -45,7 +45,7 @@ public class ResearchTableScreen extends AbstractContainerScreen<ResearchTableMe
 
         int researchTicks = this.menu.getResearchTicks();
         if (researchTicks > 0) {
-            int j1 = (int)(86.0F * (float)researchTicks / (float) ResearchTableBlockEntity.TOTAL_RESEARCH_TIME);
+            int j1 = 17 + (int)(69.0F * (float)researchTicks / (float) ResearchTableBlockEntity.TOTAL_RESEARCH_TIME);
             if (j1 > 0) {
                 this.blit(poseStack, i + 53, j + 50, 0, 166, j1, 16);
             }

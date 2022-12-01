@@ -22,6 +22,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -75,7 +76,7 @@ public class ResearchTableBlockEntity extends BaseContainerBlockEntity implement
     private static final String RESEARCH_TIME_TAG = "ResearchTime";
     private static final String INK_TAG = "Ink";
     private static final int SAC_TO_INK_FACTOR = 5;
-    public static final int TOTAL_RESEARCH_TIME = 100;
+    public static final int TOTAL_RESEARCH_TIME = 12000;
 
     public ResearchTableBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityTypeRegistry.RESEARCH_TABLE.get(), blockPos, blockState);
@@ -244,12 +245,21 @@ public class ResearchTableBlockEntity extends BaseContainerBlockEntity implement
         return SLOTS_FOR_SIDES;
     }
 
-    public boolean canPlaceItemThroughFace(int id, ItemStack itemStack, @Nullable Direction direction) {
-        return this.canPlaceItem(id, itemStack);
+    public boolean canPlaceItemThroughFace(int slot, ItemStack itemStack, @Nullable Direction direction) {
+        if (direction == Direction.UP) {
+            return true;
+        } else if (direction.getAxis().isHorizontal()) {
+            return isGlowInk(itemStack);
+        }
+        return false;
+    }
+
+    public static boolean isGlowInk(ItemStack itemStack) {
+        return itemStack.getItem() == Items.GLOW_INK_SAC;
     }
 
     @Override
-    public boolean canTakeItemThroughFace(int p_19239_, ItemStack p_19240_, Direction p_19241_) {
+    public boolean canTakeItemThroughFace(int slot, ItemStack itemStack, Direction direction) {
         return false;
     }
 }
