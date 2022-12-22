@@ -18,11 +18,14 @@ import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.monster.SpellcasterIllager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -48,7 +51,7 @@ public class OverworldWitch extends CovenWitch {
         this.goalSelector.addGoal(0, new CovenReturnToMasterGoal(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 0.6D, 1.0D));
-        this.goalSelector.addGoal(3, new OverworldWitchRootGoal(this));
+        this.goalSelector.addGoal(3, new OverworldWitchSpikeGoal(this));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
@@ -166,9 +169,7 @@ public class OverworldWitch extends CovenWitch {
         public boolean canContinueToUse() {
             LivingEntity livingentity = overworldWitch.getTarget();
             Optional<CovenMaster> master = overworldWitch.getMaster();
-            if (master.isPresent())
-                return isValidTarget(livingentity, master.get()) && this.attackWarmupDelay > 0;
-            return false;
+            return (master.isPresent()) && isValidTarget(livingentity, master.get()) && this.attackWarmupDelay > 0;
         }
 
         public void start() {
@@ -267,5 +268,105 @@ public class OverworldWitch extends CovenWitch {
         protected SoundEvent getSpellPrepareSound() {
             return SoundEvents.EVOKER_PREPARE_ATTACK;
         }
+    }
+
+    private class OverworldWitchSpikeGoal extends Goal {
+        private final OverworldWitch overworldWitch;
+
+        private int attackWarmupDelay;
+        private int nextAttackTickCount;
+
+        private final int castWarmupTime = 20;
+        private final int castingTime = 20;
+        private final int castingInterval = 150;
+
+        public OverworldWitchSpikeGoal(OverworldWitch witch) {
+            this.overworldWitch = witch;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        public boolean canUse() {
+            Optional<CovenMaster> master = overworldWitch.getMaster();
+            if (master.isPresent()) {
+                int playerNumber = master.get().getNearbyPlayerNumber();
+                if (playerNumber > 0) {
+                    if (overworldWitch.isCastingSpell()) {
+                        return false;
+                    } else {
+                        return overworldWitch.tickCount >= this.nextAttackTickCount;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public boolean canContinueToUse() {
+            Optional<CovenMaster> master = overworldWitch.getMaster();
+            return (master.isPresent()) && (master.get().getNearbyPlayerNumber() > 0) && this.attackWarmupDelay > 0;
+        }
+
+        public void start() {
+            this.attackWarmupDelay = this.adjustedTickDelay(this.castWarmupTime);
+            overworldWitch.spellCastingTickCount = this.castingTime;
+            overworldWitch.phase = Phase.CASTING;
+
+            float adjCastingInterval = this.castingInterval;
+            Optional<CovenMaster> master = overworldWitch.getMaster();
+            if (master.isPresent()) {
+                int playerNumber = master.get().getNearbyPlayerNumber();
+                adjCastingInterval *= overworldWitch.attackTimeMultiplier(playerNumber);
+            }
+
+            this.nextAttackTickCount = overworldWitch.tickCount + Mth.floor(adjCastingInterval);
+            SoundEvent soundevent = this.getSpellPrepareSound();
+            if (soundevent != null) {
+                overworldWitch.playSound(soundevent, 1.0F, 1.0F);
+            }
+        }
+
+        public void tick() {
+            Optional<CovenMaster> master = overworldWitch.getMaster();
+            if (master.isPresent()) {
+                CovenMaster covenMaster = master.get();
+                --this.attackWarmupDelay;
+                if (this.attackWarmupDelay == 0) {
+                    Collection<ServerPlayer> serverPlayerEntities = covenMaster.bossEvent.getPlayers();
+                    List<ServerPlayer> serverPlayerEntityList = serverPlayerEntities.stream().filter(covenMaster::validTargetPredicate).collect(Collectors.toList());
+
+                    this.performSpellCasting(serverPlayerEntityList);
+                    overworldWitch.playSound(overworldWitch.getCastingSoundEvent(), 1.0F, 1.0F);
+                }
+            }
+        }
+
+        protected void performSpellCasting(List<ServerPlayer> serverPlayerEntityList) {
+            for (ServerPlayer player : serverPlayerEntityList) {
+                createSpellEntity(player.blockPosition());
+            }
+        }
+
+        private void createSpellEntity(BlockPos playerPos) {
+            BlockPos.MutableBlockPos mutableBlockPos = playerPos.mutable();
+            double y = playerPos.getY();
+            BlockState blockstate;
+
+            do {
+                mutableBlockPos.move(Direction.UP);
+                blockstate = overworldWitch.level.getBlockState(mutableBlockPos);
+            } while (blockstate.isAir() && (mutableBlockPos.getY() < y+10));
+
+            if (mutableBlockPos.getY() != y) {
+                FallingBlockEntity dripstone = new FallingBlockEntity(overworldWitch.level, playerPos.getX(), mutableBlockPos.getY(), playerPos.getZ(), Blocks.POINTED_DRIPSTONE.defaultBlockState());
+                //int i = Math.max(1 + p_154100_.getY() - blockpos$mutableblockpos.getY(), 6);
+                dripstone.setHurtsEntities(6, 40);
+                overworldWitch.level.addFreshEntity(dripstone);
+
+            }
+        }
+
+        protected SoundEvent getSpellPrepareSound() {
+            return SoundEvents.ILLUSIONER_PREPARE_MIRROR;
+        }
+
     }
 }
