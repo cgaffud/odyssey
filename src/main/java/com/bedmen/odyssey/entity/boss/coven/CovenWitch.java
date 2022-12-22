@@ -12,8 +12,11 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -45,6 +48,10 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         this.enraged = false;
         this.lookControl = new LookControl(this);
 
+    }
+
+    protected SoundEvent getCastingSoundEvent() {
+        return SoundEvents.EVOKER_CAST_SPELL;
     }
 
     protected void defineSynchedData() {
@@ -208,7 +215,18 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         }
     }
 
-    void doWhenReturnToMaster() {}
+    protected void doWhenReturnToMaster() {}
+
+    protected boolean isValidTarget(LivingEntity target, CovenMaster covenMaster) { return ((target != null) && (covenMaster != null) && (covenMaster.validTargetPredicate((ServerPlayer) target))); }
+
+    protected float attackTimeMultiplier(int playerNumber) {
+        if (playerNumber < 3)
+            return 1.75f - 0.25f*(playerNumber);
+        else if (playerNumber > 3)
+            return Mth.fastInvSqrt(Mth.sqrt(((float )playerNumber)/3));
+        else
+            return 1.0f;
+    }
 
     public boolean save(CompoundTag compoundTag) {
         return false;

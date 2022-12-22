@@ -151,6 +151,8 @@ public class ClientEvents {
             EntityRenderers.register(EntityTypeRegistry.COVEN_MASTER.get(), CovenMasterRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.ENDER_WITCH.get(), EnderWitchRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.NETHER_WITCH.get(), NetherWitchRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.OVERWORLD_WITCH.get(), OverworldWitchRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.COVEN_ROOT_ENTITY.get(), CovenRootEntityRenderer::new);
 
             //Projectile Renderings
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);

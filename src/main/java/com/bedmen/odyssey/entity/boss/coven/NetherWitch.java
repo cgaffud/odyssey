@@ -55,8 +55,6 @@ public class NetherWitch extends CovenWitch {
         super.defineSynchedData();
     }
 
-    private boolean isValidTarget(LivingEntity target, CovenMaster covenMaster) { return ((target != null) && (covenMaster.validTargetPredicate((ServerPlayer) target))); }
-
     public void aiStep() {
 
         Optional<CovenMaster> master = this.getMaster();
@@ -90,13 +88,13 @@ public class NetherWitch extends CovenWitch {
     }
 
     @Override
-    void doWhenReturnToMaster() {
+    protected void doWhenReturnToMaster() {
         this.phase = Phase.IDLE;
     }
 
     enum Phase {
         IDLE,
-        CHASING;
+        CHASING
     }
 
     static class NetherWitchAttackGoal extends Goal {
@@ -105,6 +103,7 @@ public class NetherWitch extends CovenWitch {
         private int attackTime;
         private int lastSeen;
 
+        // Static Vars
         private final float attackRadius = 45.0F;
         private final float rangedRadius = 25.0F;
         private final float evadeRadius = 10.0F;
@@ -136,14 +135,17 @@ public class NetherWitch extends CovenWitch {
             return true;
         }
 
-        private void handleAttackCounter() {
+        private void handleAttackCounter(float attackTimeMultiplier) {
             ++this.attackStep;
+            // Light?
             if (this.attackStep == 1) {
                 this.attackTime = 30;
+            // Release fireballs
             } else if (this.attackStep <= 6) {
                 this.attackTime = 10;
+            // Recharge
             } else {
-                this.attackTime = 50;
+                this.attackTime = Mth.floor(50 * attackTimeMultiplier);
                 this.attackStep = 0;
             }
         }
@@ -183,7 +185,8 @@ public class NetherWitch extends CovenWitch {
                         double d2 = target.getY(0.5D) - this.netherWitch.getY(0.5D);
                         double d3 = target.getZ() - this.netherWitch.getZ();
                         if (this.attackTime <= 0) {
-                            handleAttackCounter();
+
+                            handleAttackCounter(this.netherWitch.attackTimeMultiplier(covenMaster.getNearbyPlayerNumber()));
 
                             if (this.attackStep > 1) {
                                 double d4 = Math.sqrt(Math.sqrt(d0)) * 0.5D;

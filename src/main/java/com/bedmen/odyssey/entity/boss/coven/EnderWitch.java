@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 public class EnderWitch extends CovenWitch implements RangedAttackMob {
     private static final UUID SPEED_MODIFIER_DRINKING_UUID = UUID.fromString("5CD17E52-A79A-43D3-A529-90FDE04B181E");
     private static final AttributeModifier SPEED_MODIFIER_DRINKING = new AttributeModifier(SPEED_MODIFIER_DRINKING_UUID, "Drinking speed penalty", -0.25D, AttributeModifier.Operation.ADDITION);
-    private static final EntityDataAccessor<Boolean> DATA_USING_ITEM = SynchedEntityData.defineId(Witch.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_USING_ITEM = SynchedEntityData.defineId(EnderWitch.class, EntityDataSerializers.BOOLEAN);
     private int usingTime;
     private Phase phase = Phase.IDLE;
 
@@ -75,8 +75,6 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
     public boolean isDrinkingPotion() {
         return this.getEntityData().get(DATA_USING_ITEM);
     }
-
-    private boolean isValidTarget(LivingEntity target, CovenMaster covenMaster) { return ((target != null) && (covenMaster.validTargetPredicate((ServerPlayer) target))); }
 
     public void aiStep() {
 
@@ -201,7 +199,7 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
 
             ThrownPotion thrownpotion = new ThrownPotion(this.level, this);
             thrownpotion.setItem(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), potion));
-            thrownpotion.setXRot(thrownpotion.getXRot() - -20.0F);
+            thrownpotion.setXRot(thrownpotion.getXRot() - 20.0F);
             thrownpotion.shoot(d0, d1 + d3 * 0.2D, d2, 0.75F, 8.0F);
             if (!this.isSilent()) {
                 this.level.playSound((Player)null, this.getX(), this.getY(), this.getZ(), SoundEvents.WITCH_THROW, this.getSoundSource(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
@@ -224,45 +222,41 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
     }
 
     @Override
-    void doWhenReturnToMaster() {
+    protected void doWhenReturnToMaster() {
         this.phase = Phase.IDLE;
     }
 
     enum Phase {
         IDLE,
-        CHASING;
+        CHASING
     }
 
     static class EnderWitchRangedAttackGoal extends Goal {
-        private final Mob mob;
         private final EnderWitch enderWitch;
         @Nullable
         private LivingEntity target;
         private int attackTime = -1;
-        private final double speedModifier;
         private int seeTime;
-        private final int attackIntervalMin;
-        private final int attackIntervalMax;
-        private final float attackRadius;
-        private final float tpRadiusSqr;
-        private final float attackRadiusSqr;
+
+        // Static vars
+        private final double speedModifier = 1.5D;
+        private final int attackIntervalMin = 40;
+        private final int attackIntervalMax = 60;
+        private final float attackRadius = 45.0F;
+
+        private final float tpRadiusSqr = 20.0F * 20.0F;
+        private final float rangedRadiusSqr = 10.0F * 10.0F;
+        private final float attackRadiusSqr = attackRadius * attackRadius;
 
 
 
         public EnderWitchRangedAttackGoal(EnderWitch enderWitch) {
             this.enderWitch = enderWitch;
-            this.mob = (Mob)enderWitch;
-            this.speedModifier = 1.5D;
-            this.attackIntervalMin = 40;
-            this.attackIntervalMax = 60;
-            this.attackRadius = 25.0F;
-            this.tpRadiusSqr = 15.0F * 15.0F;
-            this.attackRadiusSqr = 25.0F * 25.0F;
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }
 
         public boolean canUse() {
-            LivingEntity livingentity = this.mob.getTarget();
+            LivingEntity livingentity = this.enderWitch.getTarget();
             if (livingentity != null && livingentity.isAlive()) {
                 this.target = livingentity;
                 return true;
@@ -272,7 +266,7 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
         }
 
         public boolean canContinueToUse() {
-            return this.canUse() || !this.mob.getNavigation().isDone();
+            return this.canUse() || !this.enderWitch.getNavigation().isDone();
         }
 
         public void stop() {
@@ -286,32 +280,32 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
         }
 
         public void tick() {
-            double d0 = this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ());
-            boolean flag = this.mob.getSensing().hasLineOfSight(this.target);
-            if (flag) {
-                ++this.seeTime;
-            } else {
-                this.seeTime = 0;
-            }
+            double d0 = this.enderWitch.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ());
+            boolean flag = this.enderWitch.getSensing().hasLineOfSight(this.target);
 
-            if (!(d0 > (double) this.attackRadiusSqr) && this.seeTime >= 5) {
-                this.mob.getNavigation().stop();
-            } else if (d0 > (double) this.tpRadiusSqr) {
+            if ((d0 > (double) this.tpRadiusSqr) && (d0 <= this.attackRadiusSqr)){
                 enderWitch.teleportTowards(this.target);
-            } else {
-                this.mob.getNavigation().moveTo(this.target, this.speedModifier);
+            } else if ((d0 <= this.tpRadiusSqr ) && (d0 > this.rangedRadiusSqr)){
+                this.enderWitch.getNavigation().moveTo(this.target, this.speedModifier);
+            } else if (d0 <= this.rangedRadiusSqr) {
+                this.enderWitch.getNavigation().stop();
             }
 
-            this.mob.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
+            this.enderWitch.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
             if (--this.attackTime == 0) {
                 if (!flag) {
                     return;
                 }
 
                 float f = (float)Math.sqrt(d0) / this.attackRadius;
+                float g = 1.0f;
+                Optional<CovenMaster> master = this.enderWitch.getMaster();
+                if (master.isPresent())
+                    g = this.enderWitch.attackTimeMultiplier(master.get().getNearbyPlayerNumber());
+
                 float f1 = Mth.clamp(f, 0.1F, 1.0F);
                 this.enderWitch.performRangedAttack(this.target, f1);
-                this.attackTime = Mth.floor(f * (float)(this.attackIntervalMax - this.attackIntervalMin) + (float)this.attackIntervalMin);
+                this.attackTime = Mth.floor(g * (f * (float)(this.attackIntervalMax - this.attackIntervalMin) + (float)this.attackIntervalMin));
             } else if (this.attackTime < 0) {
                 this.attackTime = Mth.floor(Mth.lerp(Math.sqrt(d0) / (double)this.attackRadius, (double)this.attackIntervalMin, (double)this.attackIntervalMax));
             }

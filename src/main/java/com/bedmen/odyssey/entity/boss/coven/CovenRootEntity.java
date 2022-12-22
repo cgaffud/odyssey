@@ -125,7 +125,7 @@ public class CovenRootEntity extends Entity {
             } else {
                 livingEntity.hurt(DamageSource.indirectMagic(this, owner), 3.0F);
             }
-            level.setBlock(livingEntity.blockPosition(), Blocks.COBWEB.defaultBlockState(), 0);
+            level.setBlock(livingEntity.blockPosition(), Blocks.COBWEB.defaultBlockState(),  3);
         }
     }
 

@@ -167,6 +167,9 @@ public class CovenMaster extends BossMaster {
             if (witchNum >= this.getWitches().size()) {
                 CovenWitch witch;
                 switch (witchNum) {
+                    case 2:
+                        witch = EntityTypeRegistry.OVERWORLD_WITCH.get().create(this.level);
+                        break;
                     case 1:
                         witch = EntityTypeRegistry.NETHER_WITCH.get().create(this.level);
                         break;
