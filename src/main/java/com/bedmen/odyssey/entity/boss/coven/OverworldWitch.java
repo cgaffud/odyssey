@@ -1,7 +1,10 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
 import com.bedmen.odyssey.entity.ai.CovenReturnToMasterGoal;
+import com.bedmen.odyssey.items.OdysseyBowItem;
+import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.util.GeneralUtil;
+import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
@@ -23,6 +27,10 @@ import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.monster.SpellcasterIllager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EvokerFangs;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
@@ -41,8 +49,13 @@ public class OverworldWitch extends CovenWitch {
     private Phase phase = Phase.IDLE;
     private int spellCastingTickCount;
 
+    private final OverworldWitchSpikeGoal spikeGoal;
+    private final OverworldWitchRootGoal rootGoal;
+
     public OverworldWitch(EntityType<? extends CovenWitch> entityType, Level level) {
         super(entityType, level);
+        this.spikeGoal = new OverworldWitchSpikeGoal(this);
+        this.rootGoal = new OverworldWitchRootGoal(this);
     }
 
     @Override
@@ -50,8 +63,7 @@ public class OverworldWitch extends CovenWitch {
         super.registerGoals();
         this.goalSelector.addGoal(0, new CovenReturnToMasterGoal(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 0.6D, 1.0D));
-        this.goalSelector.addGoal(3, new OverworldWitchSpikeGoal(this));
+//        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 0.6D, 1.0D));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
@@ -84,6 +96,11 @@ public class OverworldWitch extends CovenWitch {
                             this.phase = Phase.IDLE;
                     case IDLE:
                         if (GeneralUtil.isHashTick(this, this.level, 50)) {
+                            if (this.goalSelector.getAvailableGoals().stream()
+                                    .noneMatch(wrappedGoal -> (wrappedGoal.getGoal() == this.rootGoal) || (wrappedGoal.getGoal() == this.spikeGoal))) {
+                                this.goalSelector.addGoal(3, this.rootGoal);
+                            }
+
                             Collection<ServerPlayer> serverPlayerEntities = covenMaster.bossEvent.getPlayers();
                             List<ServerPlayer> serverPlayerEntityList = serverPlayerEntities.stream().filter(covenMaster::validTargetPredicate).collect(Collectors.toList());
 
@@ -117,6 +134,18 @@ public class OverworldWitch extends CovenWitch {
         } else {
             return this.phase == Phase.CASTING;
         }
+    }
+
+    public void setSpikeGoal() {
+        System.out.println("spike goal.");
+        this.goalSelector.removeGoal(this.rootGoal);
+        this.goalSelector.addGoal(3, this.spikeGoal);
+    }
+
+    public void setRootGoal() {
+        System.out.println("root goal.");
+        this.goalSelector.removeGoal(this.spikeGoal);
+        this.goalSelector.addGoal(3, this.rootGoal);
     }
 
 //    public void setIsCastingSpell(SpellcasterIllager.IllagerSpell p_33728_) {
@@ -335,6 +364,7 @@ public class OverworldWitch extends CovenWitch {
 
                     this.performSpellCasting(serverPlayerEntityList);
                     overworldWitch.playSound(overworldWitch.getCastingSoundEvent(), 1.0F, 1.0F);
+                    overworldWitch.setRootGoal();
                 }
             }
         }

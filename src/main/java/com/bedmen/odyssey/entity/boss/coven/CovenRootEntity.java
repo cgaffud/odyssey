@@ -126,6 +126,9 @@ public class CovenRootEntity extends Entity {
                 livingEntity.hurt(DamageSource.indirectMagic(this, owner), 3.0F);
             }
             level.setBlock(livingEntity.blockPosition(), Blocks.COBWEB.defaultBlockState(),  3);
+            if (this.owner instanceof OverworldWitch overworldWitch) {
+                overworldWitch.setSpikeGoal();
+            }
         }
     }
 
