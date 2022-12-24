@@ -48,7 +48,6 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
     private static final AttributeModifier SPEED_MODIFIER_DRINKING = new AttributeModifier(SPEED_MODIFIER_DRINKING_UUID, "Drinking speed penalty", -0.25D, AttributeModifier.Operation.ADDITION);
     private static final EntityDataAccessor<Boolean> DATA_USING_ITEM = SynchedEntityData.defineId(EnderWitch.class, EntityDataSerializers.BOOLEAN);
     private int usingTime;
-    private Phase phase = Phase.IDLE;
 
     public EnderWitch(EntityType<? extends CovenWitch> entityType, Level level) {
         super(entityType, level);
@@ -89,6 +88,7 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
                     case CHASING:
                         if (!this.isValidTarget(this.getTarget(), covenMaster))
                             this.phase = Phase.IDLE;
+                    default:
                     case IDLE:
                         if (GeneralUtil.isHashTick(this, this.level, 50)) {
                             List<LivingEntity> otherTargets = covenMaster.getOtherTargets(this).stream().filter(livingEntity -> this.isValidTarget(livingEntity, covenMaster)).collect(Collectors.toList());
@@ -221,16 +221,6 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
         }
     }
 
-    @Override
-    protected void doWhenReturnToMaster() {
-        this.phase = Phase.IDLE;
-    }
-
-    enum Phase {
-        IDLE,
-        CHASING
-    }
-
     static class EnderWitchRangedAttackGoal extends Goal {
         private final EnderWitch enderWitch;
         @Nullable
@@ -247,8 +237,6 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
         private final float tpRadiusSqr = 20.0F * 20.0F;
         private final float rangedRadiusSqr = 10.0F * 10.0F;
         private final float attackRadiusSqr = attackRadius * attackRadius;
-
-
 
         public EnderWitchRangedAttackGoal(EnderWitch enderWitch) {
             this.enderWitch = enderWitch;

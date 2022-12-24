@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.boss.coven.EnderWitch;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.WitchModel;
@@ -7,13 +8,11 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.WitchRenderer;
 import net.minecraft.client.renderer.entity.layers.WitchItemLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.monster.Witch;
 
 public class EnderWitchRenderer extends MobRenderer<EnderWitch, WitchModel<EnderWitch>> {
-    private static final ResourceLocation WITCH_LOCATION = new ResourceLocation("textures/entity/witch.png");
+    private static final ResourceLocation WITCH_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/coven/ender_witch.png");
 
     public EnderWitchRenderer(EntityRendererProvider.Context p_174443_) {
         super(p_174443_, new WitchModel<>(p_174443_.bakeLayer(ModelLayers.WITCH)), 0.5F);

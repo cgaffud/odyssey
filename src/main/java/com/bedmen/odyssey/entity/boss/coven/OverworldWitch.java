@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
 
 public class OverworldWitch extends CovenWitch {
     private static final EntityDataAccessor<Byte> DATA_SPELL_CASTING_ID = SynchedEntityData.defineId(OverworldWitch.class, EntityDataSerializers.BYTE);
-    private Phase phase = Phase.IDLE;
     private int spellCastingTickCount;
 
     private final OverworldWitchSpikeGoal spikeGoal;
@@ -154,15 +153,9 @@ public class OverworldWitch extends CovenWitch {
 //    }
 //
 
-    @Override
     protected void doWhenReturnToMaster() {
-        this.phase = Phase.IDLE;
-    }
-
-    enum Phase {
-        IDLE,
-        CHASING,
-        CASTING
+        super.doWhenReturnToMaster();
+        setRootGoal();
     }
 
     private class OverworldWitchRootGoal extends Goal {

@@ -36,7 +36,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class NetherWitch extends CovenWitch {
-    private Phase phase = Phase.IDLE;
 
     public NetherWitch(EntityType<? extends CovenWitch> entityType, Level level) {
         super(entityType, level);
@@ -61,13 +60,17 @@ public class NetherWitch extends CovenWitch {
         if(!this.isNoAi() && master.isPresent()) {
             CovenMaster covenMaster = master.get();
 
+            System.out.println(this.getArmPose().toString());
 
             if (!this.level.isClientSide) {
                 // Target
                 switch (this.phase) {
                     case CHASING:
-                        if (!this.isValidTarget(this.getTarget(), covenMaster))
+                        if (!this.isValidTarget(this.getTarget(), covenMaster)) {
+                            System.out.println("Target Reset.");
                             this.phase = Phase.IDLE;
+                        }
+                    default:
                     case IDLE:
                         if (GeneralUtil.isHashTick(this, this.level, 50)) {
                             Collection<ServerPlayer> serverPlayerEntities = covenMaster.bossEvent.getPlayers();
@@ -85,16 +88,6 @@ public class NetherWitch extends CovenWitch {
         }
 
         super.aiStep();
-    }
-
-    @Override
-    protected void doWhenReturnToMaster() {
-        this.phase = Phase.IDLE;
-    }
-
-    enum Phase {
-        IDLE,
-        CHASING
     }
 
     static class NetherWitchAttackGoal extends Goal {
@@ -139,12 +132,14 @@ public class NetherWitch extends CovenWitch {
             ++this.attackStep;
             // Light?
             if (this.attackStep == 1) {
+                this.netherWitch.setArmPose(ArmPose.CASTING);
                 this.attackTime = 30;
             // Release fireballs
             } else if (this.attackStep <= 6) {
                 this.attackTime = 10;
             // Recharge
             } else {
+                this.netherWitch.setArmPose(ArmPose.CROSSED);
                 this.attackTime = Mth.floor(50 * attackTimeMultiplier);
                 this.attackStep = 0;
             }

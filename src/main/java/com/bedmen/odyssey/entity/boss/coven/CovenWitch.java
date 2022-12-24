@@ -23,6 +23,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
+import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -37,7 +38,21 @@ import java.util.Optional;
 public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     private static final EntityDataAccessor<Integer> MASTER_ID_DATA = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Float> DATA_WITCH_HEALTH_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> DATA_ARM_POSE_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
+
     protected boolean enraged;
+    protected Phase phase = Phase.IDLE;
+
+    public enum Phase {
+        IDLE,
+        CHASING,
+        CASTING
+    }
+
+    public enum ArmPose {
+        CROSSED,
+        CASTING
+    }
 
     public CovenWitch(EntityType<? extends CovenWitch> entityType, Level level) {
         super(entityType, level);
@@ -58,6 +73,7 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         super.defineSynchedData();
         this.entityData.define(MASTER_ID_DATA, -1);
         this.entityData.define(DATA_WITCH_HEALTH_ID, 0.0f);
+        this.entityData.define(DATA_ARM_POSE_ID, 0);
     }
 
     public void tick() {
@@ -95,6 +111,11 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     public float getWitchHealth() {
         return this.entityData.get(DATA_WITCH_HEALTH_ID);
     }
+
+    public void setArmPose(ArmPose armPose) {
+        this.entityData.set(DATA_ARM_POSE_ID, armPose.ordinal());
+    }
+    public ArmPose getArmPose() {return ArmPose.values()[(this.entityData.get(DATA_ARM_POSE_ID) % ArmPose.values().length)];}
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.MAX_HEALTH, CovenMaster.MAX_HEALTH / CovenMaster.NUM_WITCHES).add(Attributes.ATTACK_DAMAGE, CovenMaster.DAMAGE * 0.5d);
@@ -215,7 +236,9 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         }
     }
 
-    protected void doWhenReturnToMaster() {}
+    protected void doWhenReturnToMaster() {
+        this.phase = Phase.IDLE;
+    }
 
     protected boolean isValidTarget(LivingEntity target, CovenMaster covenMaster) { return ((target != null) && (covenMaster != null) && (covenMaster.validTargetPredicate((ServerPlayer) target))); }
 

@@ -204,6 +204,7 @@ public class ClientEvents {
         event.registerLayerDefinition(WraithModel.LAYER_LOCATION, WraithModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanHeadModel.LAYER_LOCATION, MineralLeviathanHeadModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanBodyModel.LAYER_LOCATION, MineralLeviathanBodyModel::createBodyLayer);
+        event.registerLayerDefinition(ArmedCovenWitchModel.LAYER_LOCATION, ArmedCovenWitchModel::createBodyLayer);
     }
 
     @SubscribeEvent
