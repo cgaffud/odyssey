@@ -95,7 +95,7 @@ public class ArmedCovenWitchModel<T extends CovenWitch> extends HierarchicalMode
         this.leftLeg.yRot = 0.0F;
         this.leftLeg.zRot = 0.0F;
 
-        if (covenWitch.getArmPose() == CovenWitch.ArmPose.CASTING) {
+        if (covenWitch.getPhase() == CovenWitch.Phase.CASTING) {
             this.arms.visible = false;
             this.leftArm.visible = true;
             this.rightArm.visible = true;

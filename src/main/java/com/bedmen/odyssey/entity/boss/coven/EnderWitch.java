@@ -84,10 +84,10 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
 
             if (!this.level.isClientSide) {
                 // Target
-                switch (this.phase) {
+                switch (this.getPhase()) {
                     case CHASING:
                         if (!this.isValidTarget(this.getTarget(), covenMaster))
-                            this.phase = Phase.IDLE;
+                            this.setPhase(Phase.IDLE);
                     default:
                     case IDLE:
                         if (GeneralUtil.isHashTick(this, this.level, 50)) {
@@ -99,11 +99,11 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
                                 if (serverPlayerEntityList.isEmpty()) {
                                     this.setTarget(null);
                                 } else {
-                                    this.phase = Phase.CHASING;
+                                    this.setPhase(Phase.CHASING);
                                     this.setTarget(serverPlayerEntityList.get(this.random.nextInt(serverPlayerEntityList.size())));
                                 }
                             } else {
-                                this.phase = Phase.CHASING;
+                                this.setPhase(Phase.CHASING);
                                 this.setTarget(otherTargets.get(this.random.nextInt(otherTargets.size())));
                             }
                         }

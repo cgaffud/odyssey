@@ -18,16 +18,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.entity.projectile.SmallFireball;
-import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -60,17 +52,14 @@ public class NetherWitch extends CovenWitch {
         if(!this.isNoAi() && master.isPresent()) {
             CovenMaster covenMaster = master.get();
 
-            System.out.println(this.getArmPose().toString());
-
             if (!this.level.isClientSide) {
                 // Target
-                switch (this.phase) {
-                    case CHASING:
+                switch (this.getPhase()){
+                    case CHASING, CASTING:
                         if (!this.isValidTarget(this.getTarget(), covenMaster)) {
                             System.out.println("Target Reset.");
-                            this.phase = Phase.IDLE;
+                            this.setPhase(Phase.IDLE);
                         }
-                    default:
                     case IDLE:
                         if (GeneralUtil.isHashTick(this, this.level, 50)) {
                             Collection<ServerPlayer> serverPlayerEntities = covenMaster.bossEvent.getPlayers();
@@ -79,7 +68,7 @@ public class NetherWitch extends CovenWitch {
                             if (serverPlayerEntityList.isEmpty()) {
                                 this.setTarget(null);
                             } else {
-                                this.phase = Phase.CHASING;
+                                this.setPhase(Phase.CHASING);
                                 this.setTarget(serverPlayerEntityList.get(this.random.nextInt(serverPlayerEntityList.size())));
                             }
                         }
@@ -132,14 +121,14 @@ public class NetherWitch extends CovenWitch {
             ++this.attackStep;
             // Light?
             if (this.attackStep == 1) {
-                this.netherWitch.setArmPose(ArmPose.CASTING);
+                this.netherWitch.setPhase(Phase.CASTING);
                 this.attackTime = 30;
             // Release fireballs
             } else if (this.attackStep <= 6) {
                 this.attackTime = 10;
             // Recharge
             } else {
-                this.netherWitch.setArmPose(ArmPose.CROSSED);
+                this.netherWitch.setPhase(Phase.CHASING);
                 this.attackTime = Mth.floor(50 * attackTimeMultiplier);
                 this.attackStep = 0;
             }

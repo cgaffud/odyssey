@@ -89,10 +89,10 @@ public class OverworldWitch extends CovenWitch {
 
             if (!this.level.isClientSide) {
                 // Target
-                switch (this.phase) {
-                    case CHASING:
+                switch (this.getPhase()) {
+                    case CHASING, CASTING:
                         if (!this.isValidTarget(this.getTarget(), covenMaster))
-                            this.phase = Phase.IDLE;
+                            this.setPhase(Phase.IDLE);
                     case IDLE:
                         if (GeneralUtil.isHashTick(this, this.level, 50)) {
                             if (this.goalSelector.getAvailableGoals().stream()
@@ -106,7 +106,7 @@ public class OverworldWitch extends CovenWitch {
                             if (serverPlayerEntityList.isEmpty()) {
                                 this.setTarget(null);
                             } else {
-                                this.phase = Phase.CHASING;
+                                this.setPhase(Phase.CHASING);
                                 this.setTarget(serverPlayerEntityList.get(this.random.nextInt(serverPlayerEntityList.size())));
                             }
                         }
@@ -122,8 +122,8 @@ public class OverworldWitch extends CovenWitch {
         if (this.spellCastingTickCount > 0) {
             --this.spellCastingTickCount;
         } else {
-            if (this.phase == Phase.CASTING)
-                this.phase = Phase.CHASING;
+            if (this.getPhase() == Phase.CASTING)
+                this.setPhase(Phase.CHASING);
         }
     }
 
@@ -131,7 +131,7 @@ public class OverworldWitch extends CovenWitch {
         if (this.level.isClientSide) {
             return this.entityData.get(DATA_SPELL_CASTING_ID) > 0;
         } else {
-            return this.phase == Phase.CASTING;
+            return this.getPhase() == Phase.CASTING;
         }
     }
 
@@ -197,7 +197,7 @@ public class OverworldWitch extends CovenWitch {
         public void start() {
             this.attackWarmupDelay = this.adjustedTickDelay(this.castWarmupTime);
             overworldWitch.spellCastingTickCount = this.castingTime;
-            overworldWitch.phase = Phase.CASTING;
+            overworldWitch.setPhase(Phase.CHASING);
 
             float adjCastingInterval = this.castingInterval;
             Optional<CovenMaster> master = overworldWitch.getMaster();
@@ -214,6 +214,10 @@ public class OverworldWitch extends CovenWitch {
 //            OverworldWitch.this.setIsCastingSpell(this.getSpell());
         }
 
+        public void stop() {
+            overworldWitch.setPhase(Phase.CHASING);
+        }
+
         public void tick() {
             Optional<CovenMaster> master = overworldWitch.getMaster();
             if (master.isPresent()) {
@@ -222,12 +226,14 @@ public class OverworldWitch extends CovenWitch {
                 if (overworldWitch.isValidTarget(target, covenMaster)) {
                     double d0 = this.overworldWitch.distanceToSqr(target);
                     if (d0 < this.rangedRadius * this.rangedRadius) {
+                        overworldWitch.setPhase(Phase.CASTING);
                         --this.attackWarmupDelay;
                         if (this.attackWarmupDelay == 0) {
                             this.performSpellCasting();
                             overworldWitch.playSound(overworldWitch.getCastingSoundEvent(), 1.0F, 1.0F);
                         }
                     } else if (d0 < this.attackRadius * this.attackRadius) {
+                        overworldWitch.setPhase(Phase.CHASING);
                         overworldWitch.getNavigation().moveTo(target, 1.5D);
                     }
                 }
@@ -330,7 +336,7 @@ public class OverworldWitch extends CovenWitch {
         public void start() {
             this.attackWarmupDelay = this.adjustedTickDelay(this.castWarmupTime);
             overworldWitch.spellCastingTickCount = this.castingTime;
-            overworldWitch.phase = Phase.CASTING;
+            overworldWitch.setPhase(Phase.CHASING);
 
             float adjCastingInterval = this.castingInterval;
             Optional<CovenMaster> master = overworldWitch.getMaster();
@@ -346,11 +352,16 @@ public class OverworldWitch extends CovenWitch {
             }
         }
 
+        public void stop() {
+            overworldWitch.setPhase(Phase.CHASING);
+        }
+
         public void tick() {
             Optional<CovenMaster> master = overworldWitch.getMaster();
             if (master.isPresent()) {
                 CovenMaster covenMaster = master.get();
                 --this.attackWarmupDelay;
+                overworldWitch.setPhase(Phase.CASTING);
                 if (this.attackWarmupDelay == 0) {
                     Collection<ServerPlayer> serverPlayerEntities = covenMaster.bossEvent.getPlayers();
                     List<ServerPlayer> serverPlayerEntityList = serverPlayerEntities.stream().filter(covenMaster::validTargetPredicate).collect(Collectors.toList());
