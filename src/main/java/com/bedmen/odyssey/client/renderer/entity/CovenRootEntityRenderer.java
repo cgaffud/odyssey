@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
+import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.client.model.CovenRootModel;
 import com.bedmen.odyssey.entity.boss.coven.CovenRootEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -17,12 +19,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class CovenRootEntityRenderer extends EntityRenderer<CovenRootEntity> {
-    private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/entity/illager/evoker_fangs.png");
-    private final EvokerFangsModel<CovenRootEntity> model;
+    private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/coven/coven_root.png");
+    private final CovenRootModel<CovenRootEntity> model;
 
     public CovenRootEntityRenderer(EntityRendererProvider.Context p_174100_) {
         super(p_174100_);
-        this.model = new EvokerFangsModel<>(p_174100_.bakeLayer(ModelLayers.EVOKER_FANGS));
+        this.model = new CovenRootModel<>(p_174100_.bakeLayer(CovenRootModel.LAYER_LOCATION));
     }
 
     public void render(CovenRootEntity p_114528_, float p_114529_, float p_114530_, PoseStack p_114531_, MultiBufferSource p_114532_, int p_114533_) {
@@ -37,7 +39,7 @@ public class CovenRootEntityRenderer extends EntityRenderer<CovenRootEntity> {
             p_114531_.mulPose(Vector3f.YP.rotationDegrees(90.0F - p_114528_.getYRot()));
             p_114531_.scale(-f1, -f1, f1);
             float f2 = 0.03125F;
-            p_114531_.translate(0.0D, -0.626D, 0.0D);
+            p_114531_.translate(0.0D, -0.276D, 0.0D);
             p_114531_.scale(0.5F, 0.5F, 0.5F);
             this.model.setupAnim(p_114528_, f, 0.0F, 0.0F, p_114528_.getYRot(), p_114528_.getXRot());
             VertexConsumer vertexconsumer = p_114532_.getBuffer(this.model.renderType(TEXTURE_LOCATION));
@@ -49,10 +51,6 @@ public class CovenRootEntityRenderer extends EntityRenderer<CovenRootEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(CovenRootEntity p_114482_) {
-        return TEXTURE_LOCATION;
-    }
-
-    public ResourceLocation getTextureLocation(EvokerFangs p_114526_) {
         return TEXTURE_LOCATION;
     }
 }
