@@ -121,9 +121,9 @@ public class CovenRootEntity extends Entity {
         LivingEntity owner = this.getOwner();
         if (livingEntity.isAlive() && !livingEntity.isInvulnerable() && livingEntity != owner) {
             if (owner == null) {
-                livingEntity.hurt(DamageSource.MAGIC, 3.0F);
+                livingEntity.hurt(DamageSource.MAGIC, 1.5F);
             } else {
-                livingEntity.hurt(DamageSource.indirectMagic(this, owner), 3.0F);
+                livingEntity.hurt(DamageSource.indirectMagic(this, owner), 1.5F);
             }
             level.setBlock(livingEntity.blockPosition(), Blocks.COBWEB.defaultBlockState(),  3);
             if (this.owner instanceof OverworldWitch overworldWitch) {

@@ -198,6 +198,9 @@ public class OverworldWitch extends CovenWitch {
             overworldWitch.setPhase(Phase.CHASING);
 
             float adjCastingInterval = this.castingInterval;
+            if (overworldWitch.isEnraged())
+                adjCastingInterval *= 0.5;
+
             Optional<CovenMaster> master = overworldWitch.getMaster();
             if (master.isPresent()) {
                 int playerNumber = master.get().getNearbyPlayerNumber();
@@ -338,6 +341,8 @@ public class OverworldWitch extends CovenWitch {
             overworldWitch.setPhase(Phase.CHASING);
 
             float adjCastingInterval = this.castingInterval;
+            if (overworldWitch.isEnraged())
+                adjCastingInterval *= 0.25;
             Optional<CovenMaster> master = overworldWitch.getMaster();
             if (master.isPresent()) {
                 int playerNumber = master.get().getNearbyPlayerNumber();

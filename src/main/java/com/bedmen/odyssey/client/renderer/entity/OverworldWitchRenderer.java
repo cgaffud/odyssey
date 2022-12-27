@@ -14,12 +14,15 @@ import net.minecraft.resources.ResourceLocation;
 
 public class OverworldWitchRenderer extends MobRenderer<OverworldWitch, ArmedCovenWitchModel<OverworldWitch>> {
     private static final ResourceLocation WITCH_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/coven/overworld_witch.png");
+    private static final ResourceLocation ENRAGED_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/coven/enraged_overworld_witch.png");
 
     public OverworldWitchRenderer(EntityRendererProvider.Context p_174443_) {
         super(p_174443_, new ArmedCovenWitchModel<>(p_174443_.bakeLayer(ArmedCovenWitchModel.LAYER_LOCATION)), 0.5F);
     }
 
-    public ResourceLocation getTextureLocation(OverworldWitch p_114482_) {
+    public ResourceLocation getTextureLocation(OverworldWitch overworldWitch) {
+        if (overworldWitch.isEnraged())
+            return ENRAGED_LOCATION;
         return WITCH_LOCATION;
     }
 
