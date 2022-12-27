@@ -39,8 +39,7 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     private static final EntityDataAccessor<Integer> MASTER_ID_DATA = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Float> DATA_WITCH_HEALTH_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_PHASE_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
-
-    protected boolean enraged;
+    private static final EntityDataAccessor<Boolean> DATA_ENRAGED = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.BOOLEAN);
 
     public enum Phase {
         IDLE,
@@ -54,7 +53,6 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         this.setWitchHealth(this.getMaxHealth());
         this.noCulling = true;
         // TODO: look controller?
-        this.enraged = false;
         this.lookControl = new LookControl(this);
 
     }
@@ -68,6 +66,7 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         this.entityData.define(MASTER_ID_DATA, -1);
         this.entityData.define(DATA_WITCH_HEALTH_ID, 0.0f);
         this.entityData.define(DATA_PHASE_ID, 0);
+        this.entityData.define(DATA_ENRAGED, false);
     }
 
     public void tick() {
@@ -109,11 +108,12 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     public void setPhase(Phase phase) {
         this.entityData.set(DATA_PHASE_ID, phase.ordinal());
     }
-
     public Phase getPhase() {
         return Phase.values()[(this.entityData.get(DATA_PHASE_ID))];
     }
 
+    public void setEnraged(boolean enraged) { this.entityData.set(DATA_ENRAGED, enraged);}
+    public boolean isEnraged() { return this.entityData.get(DATA_ENRAGED); }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.MAX_HEALTH, CovenMaster.MAX_HEALTH / CovenMaster.NUM_WITCHES).add(Attributes.ATTACK_DAMAGE, CovenMaster.DAMAGE * 0.5d);
@@ -145,7 +145,13 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         if (witchHealth > 0.0f) {
             float newWitchHealth = witchHealth - amount * this.getMaster().map(Boss::getDamageReduction).orElse(1.0f);
             if (newWitchHealth <= 0.0f) {
-                this.enraged = true;
+                Optional<CovenMaster> master = this.getMaster();
+                if (!this.isEnraged() && !this.level.isClientSide() && master.isPresent() && !master.get().isLastAlive(this) && this.level.canSeeSky(this.eyeBlockPosition())) {
+                    LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(this.level);
+                    lightningBolt.moveTo(this.position());
+                    this.level.addFreshEntity(lightningBolt);
+                }
+                this.setEnraged(true);
                 newWitchHealth = 0;
             }
             if(!this.level.isClientSide)

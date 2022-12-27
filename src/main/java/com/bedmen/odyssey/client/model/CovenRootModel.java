@@ -57,7 +57,6 @@ public class CovenRootModel<T extends Entity> extends HierarchicalModel<T> {
 		float f1 = (limbSwing + Mth.sin(limbSwing * 2.7F)) * 0.6F * 2.5F;
 
 		this.root.y = 5.0F - f1;
-		System.out.println(branch1.y);
 	}
 
 	@Override

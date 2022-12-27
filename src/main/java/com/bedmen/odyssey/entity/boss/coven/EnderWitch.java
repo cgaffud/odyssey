@@ -174,7 +174,7 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
             return false;
         } else {
             boolean flag = super.hurt(damageSource, amount);
-            if (!this.level.isClientSide() && !(damageSource.getEntity() instanceof LivingEntity) && this.random.nextInt(10) != 0)
+            if (!this.level.isClientSide() && (this.random.nextFloat() > 0.75f))
                 this.teleport();
 
             return flag;
@@ -230,8 +230,8 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
 
         // Static vars
         private final double speedModifier = 1.5D;
-        private final int attackIntervalMin = 40;
-        private final int attackIntervalMax = 60;
+        private final int attackIntervalMin = 80;
+        private final int attackIntervalMax = 100;
         private final float attackRadius = 45.0F;
 
         private final float tpRadiusSqr = 20.0F * 20.0F;
@@ -290,6 +290,8 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
                 Optional<CovenMaster> master = this.enderWitch.getMaster();
                 if (master.isPresent())
                     g = this.enderWitch.attackTimeMultiplier(master.get().getNearbyPlayerNumber());
+                if (this.enderWitch.isEnraged())
+                    g *= 0.5;
 
                 float f1 = Mth.clamp(f, 0.1F, 1.0F);
                 this.enderWitch.performRangedAttack(this.target, f1);

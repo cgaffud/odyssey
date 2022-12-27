@@ -13,13 +13,17 @@ import net.minecraft.resources.ResourceLocation;
 
 public class EnderWitchRenderer extends MobRenderer<EnderWitch, WitchModel<EnderWitch>> {
     private static final ResourceLocation WITCH_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/coven/ender_witch.png");
+    private static final ResourceLocation ENRAGED_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/coven/enraged_ender_witch.png");
+
 
     public EnderWitchRenderer(EntityRendererProvider.Context p_174443_) {
         super(p_174443_, new WitchModel<>(p_174443_.bakeLayer(ModelLayers.WITCH)), 0.5F);
         this.addLayer(new WitchItemLayer<>(this));
     }
 
-    public ResourceLocation getTextureLocation(EnderWitch p_114482_) {
+    public ResourceLocation getTextureLocation(EnderWitch enderWitch) {
+        if (enderWitch.isEnraged())
+            return ENRAGED_LOCATION;
         return WITCH_LOCATION;
     }
 

@@ -15,12 +15,16 @@ import net.minecraft.resources.ResourceLocation;
 
 public class NetherWitchRenderer extends MobRenderer<NetherWitch, ArmedCovenWitchModel<NetherWitch>> {
     private static final ResourceLocation WITCH_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/coven/nether_witch.png");
+    private static final ResourceLocation ENRAGED_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/coven/enraged_nether_witch.png");
+
 
     public NetherWitchRenderer(EntityRendererProvider.Context p_174443_) {
         super(p_174443_, new ArmedCovenWitchModel<>(p_174443_.bakeLayer(ArmedCovenWitchModel.LAYER_LOCATION)), 0.5F);
     }
 
-    public ResourceLocation getTextureLocation(NetherWitch p_114482_) {
+    public ResourceLocation getTextureLocation(NetherWitch netherWitch) {
+        if (netherWitch.isEnraged())
+            return ENRAGED_LOCATION;
         return WITCH_LOCATION;
     }
 

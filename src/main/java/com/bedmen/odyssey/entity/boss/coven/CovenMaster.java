@@ -136,6 +136,17 @@ public class CovenMaster extends BossMaster {
         return targets;
     }
 
+    public boolean isLastAlive(CovenWitch covenWitch) {
+        for (int i = 0 ; i < NUM_WITCHES; i++) {
+            if (i == getMyWitchID(covenWitch))
+                continue;
+            Optional<CovenWitch> otherWitchOptional = this.getWitch(i);
+            if (otherWitchOptional.isPresent() && !otherWitchOptional.get().isEnraged())
+                return false;
+        }
+        return true;
+    }
+
     public void performMasterMovement() {
         Vec3 center = new Vec3(0,0,0);
         int count = 0;

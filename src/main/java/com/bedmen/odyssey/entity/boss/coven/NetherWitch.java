@@ -3,23 +3,18 @@ package com.bedmen.odyssey.entity.boss.coven;
 import com.bedmen.odyssey.entity.ai.CovenReturnToMasterGoal;
 import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
-import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -57,7 +52,6 @@ public class NetherWitch extends CovenWitch {
                 switch (this.getPhase()){
                     case CHASING, CASTING:
                         if (!this.isValidTarget(this.getTarget(), covenMaster)) {
-                            System.out.println("Target Reset.");
                             this.setPhase(Phase.IDLE);
                         }
                     case IDLE:
@@ -117,14 +111,17 @@ public class NetherWitch extends CovenWitch {
             return true;
         }
 
-        private void handleAttackCounter(float attackTimeMultiplier) {
+        private void handleAttackCounter(float attackTimeMultiplier, boolean fireLargeFireballs) {
             ++this.attackStep;
             // Light?
             if (this.attackStep == 1) {
                 this.netherWitch.setPhase(Phase.CASTING);
                 this.attackTime = 30;
-            // Release fireballs
-            } else if (this.attackStep <= 6) {
+            // Release small fireballs
+            } else if (this.attackStep <= 6 && !fireLargeFireballs) {
+                this.attackTime = 10;
+            // Release big fireballs
+            } else if (this.attackStep <= 3 && fireLargeFireballs) {
                 this.attackTime = 10;
             // Recharge
             } else {
@@ -158,11 +155,9 @@ public class NetherWitch extends CovenWitch {
                         // Change this to be lava attack.
                         if (this.attackTime <= 0) {
                             this.attackTime = 20;
-                            this.netherWitch.doHurtTarget(target);
+                            if (!target.isInLava() && !(this.netherWitch.level.getBlockState(target.blockPosition()) == Blocks.BEDROCK.defaultBlockState()))
+                                this.netherWitch.level.setBlock(target.blockPosition().below(), Blocks.LAVA.defaultBlockState(), 3);
                         }
-
-                        this.netherWitch.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 1.0D);
-
                     } else if (d0 < this.rangedRadius * this.rangedRadius && canSee) {
                         // Fire off fireballs
                         double d1 = target.getX() - this.netherWitch.getX();
@@ -170,7 +165,11 @@ public class NetherWitch extends CovenWitch {
                         double d3 = target.getZ() - this.netherWitch.getZ();
                         if (this.attackTime <= 0) {
 
-                            handleAttackCounter(this.netherWitch.attackTimeMultiplier(covenMaster.getNearbyPlayerNumber()));
+                            int playerNumber = covenMaster.getNearbyPlayerNumber();
+                            float largeFireProbLim = (playerNumber < 3) ? (covenMaster.getNearbyPlayerNumber() * 0.25f) : 0.75f;
+                            boolean fireLargeFireballs = (this.netherWitch.isEnraged() && (this.netherWitch.level.random.nextFloat() < largeFireProbLim));
+
+                            handleAttackCounter(this.netherWitch.attackTimeMultiplier(covenMaster.getNearbyPlayerNumber()), fireLargeFireballs);
 
                             if (this.attackStep > 1) {
                                 double d4 = Math.sqrt(Math.sqrt(d0)) * 0.5D;
@@ -178,15 +177,22 @@ public class NetherWitch extends CovenWitch {
                                     this.netherWitch.level.levelEvent((Player) null, 1018, this.netherWitch.blockPosition(), 0);
                                 }
 
-                                int fireballNum = (d0 < this.evadeRadius * this.evadeRadius) ? 8 : 1;
+                                int fireballNum = ((d0 < this.evadeRadius * this.evadeRadius) && !fireLargeFireballs) ? 8 : 1;
 
                                 for (int i = 0; i < fireballNum; ++i) {
                                     double dx = d1 + this.netherWitch.getRandom().nextGaussian() * d4;
                                     double dz = d3 + this.netherWitch.getRandom().nextGaussian() * d4;
                                     float theta = Mth.PI/4 * i;
-                                    SmallFireball smallfireball = new SmallFireball(this.netherWitch.level, this.netherWitch,  Mth.cos(theta)*dx - Mth.sin(theta)*dz, d2, Mth.sin(theta)*dx + Mth.cos(theta)*dz);
-                                    smallfireball.setPos(smallfireball.getX(), this.netherWitch.getY(0.5D) + 0.5D, smallfireball.getZ());
-                                    this.netherWitch.level.addFreshEntity(smallfireball);
+
+                                     if (fireLargeFireballs) {
+                                        LargeFireball largeFireball = new LargeFireball(this.netherWitch.level, this.netherWitch, Mth.cos(theta) * dx - Mth.sin(theta) * dz, d2, Mth.sin(theta) * dx + Mth.cos(theta) * dz, 1);
+                                        largeFireball.setPos(largeFireball.getX(), this.netherWitch.getY(0.5D) + 0.5D, largeFireball.getZ());
+                                        this.netherWitch.level.addFreshEntity(largeFireball);
+                                    } else {
+                                        SmallFireball smallfireball = new SmallFireball(this.netherWitch.level, this.netherWitch, Mth.cos(theta) * dx - Mth.sin(theta) * dz, d2, Mth.sin(theta) * dx + Mth.cos(theta) * dz);
+                                        smallfireball.setPos(smallfireball.getX(), this.netherWitch.getY(0.5D) + 0.5D, smallfireball.getZ());
+                                        this.netherWitch.level.addFreshEntity(smallfireball);
+                                    }
                                 }
                             }
                         }

@@ -18,12 +18,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.monster.Evoker;
+import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.SpellcasterIllager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EvokerFangs;
@@ -236,6 +234,7 @@ public class OverworldWitch extends CovenWitch {
                         overworldWitch.setPhase(Phase.CHASING);
                         overworldWitch.getNavigation().moveTo(target, 1.5D);
                     }
+                    overworldWitch.getLookControl().setLookAt(target, 30.0F, 30.0F);
                 }
             }
 
