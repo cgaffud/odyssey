@@ -123,13 +123,18 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
         compoundNBT.putFloat("WitchHealth", this.getWitchHealth());
+        compoundNBT.putInt("WitchPhase", this.getPhase().ordinal());
+        compoundNBT.putBoolean("WitchEnraged", this.isEnraged());
     }
 
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
-        if(compoundNBT.contains("WitchHealth")){
+        if(compoundNBT.contains("WitchHealth"))
             this.setWitchHealth(compoundNBT.getFloat("WitchHealth"));
-        }
+        if(compoundNBT.contains("WitchPhase"))
+            this.setPhase(Phase.values()[compoundNBT.getInt("WitchPhase")]);
+        if(compoundNBT.contains("WitchEnraged"))
+            this.setEnraged(compoundNBT.getBoolean("WitchEnraged"));
     }
 
     public boolean hurtDirectly(DamageSource damageSource, float amount) {
