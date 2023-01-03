@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -125,7 +126,7 @@ public class CovenRootEntity extends Entity {
             } else {
                 livingEntity.hurt(DamageSource.indirectMagic(this, owner), 1.5F);
             }
-            level.setBlock(livingEntity.blockPosition(), Blocks.COBWEB.defaultBlockState(),  3);
+            level.setBlock(livingEntity.blockPosition(), BlockRegistry.COVEN_ROOTS.get().defaultBlockState(),  3);
             if (this.owner instanceof OverworldWitch overworldWitch) {
                 overworldWitch.setSpikeGoal();
             }
