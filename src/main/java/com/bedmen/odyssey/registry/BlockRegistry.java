@@ -86,7 +86,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> COCONUT = BLOCKS.register("coconut", () -> new CoconutBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistryObject<Block> HOLLOW_COCONUT = BLOCKS.register("hollow_coconut", () -> new HollowCoconutBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
 
-    public static final RegistryObject<Block> COVEN_ROOTS = BLOCKS.register("coven_roots", () -> new StuckInsideBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN).strength(3.0F, 6.0F).sound(SoundType.WOOD).noCollission()));
+    public static final RegistryObject<Block> COVEN_ROOTS = BLOCKS.register("coven_roots", () -> new CovenRootsBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN).strength(4.0F, 6.0F).sound(SoundType.WOOD).noCollission()));
 
     public static final RegistryObject<Block> STRIPPED_GREATWOOD_LOG = BLOCKS.register("stripped_greatwood_log", () -> new FlammableLogBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).strength(2.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> STRIPPED_GREATWOOD_WOOD = BLOCKS.register("stripped_greatwood_wood", () -> new FlammableLogBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).strength(2.0F).sound(SoundType.WOOD)));
