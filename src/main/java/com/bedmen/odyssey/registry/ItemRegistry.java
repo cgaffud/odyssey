@@ -2,6 +2,8 @@ package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.armor.OdysseyArmorMaterials;
+import com.bedmen.odyssey.aspect.Aspect;
+import com.bedmen.odyssey.aspect.AspectInstance;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.projectile.Boomerang;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
@@ -10,6 +12,7 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.items.equipment.base.*;
+import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.BiomeUtil;
@@ -29,6 +32,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -213,6 +217,8 @@ public class ItemRegistry {
     // ## Tier 1
     public static final RegistryObject<Item> WOODEN_MACE = ITEMS.register("wooden_mace", () -> new EquipmentMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.WOOD, MeleeWeaponClass.MACE, 5f));
     public static final RegistryObject<Item> STONE_MACE = ITEMS.register("stone_mace", () -> new EquipmentMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.STONE, MeleeWeaponClass.MACE, 6f));
+
+    public static final RegistryObject<Item> COPPER_HAMMER_2 = ITEMS.register("copper_hammer_2", () -> new InnateAspectMeleeItem(new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.COPPER, MeleeWeaponClass.HAMMER, 7f, List.of(new AspectInstance(Aspect.DAMAGE_AGAINST_ARTHROPOD, 2.0f))));
 
     public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new EquipmentMeleeItem(new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.COPPER, MeleeWeaponClass.HAMMER, 7f, BANE_OF_ARTHROPODS[1]));
     public static final RegistryObject<Item> COPPER_BATTLE_AXE = ITEMS.register("copper_battle_axe", () -> new EquipmentMeleeItem(new Item.Properties().rarity(OdysseyRarity.CRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.COPPER, MeleeWeaponClass.BATTLE_AXE, 7f, SHATTERING[1]));
