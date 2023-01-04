@@ -84,7 +84,7 @@ public class OdysseyMeleeItem extends TieredItem implements Vanishable, IEquipme
     }
 
     public boolean isCorrectToolForDrops(BlockState blockState) {
-        return blockState.is(Blocks.COBWEB) && this.meleeWeaponClass.canSweep;
+        return blockState.is(Blocks.COBWEB) && this.meleeWeaponClass.canBreakCobwebs;
     }
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {

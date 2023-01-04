@@ -2,7 +2,7 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
-import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
+import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -144,7 +144,7 @@ public class WeaponUtil {
     }
 
     public static boolean isDualWieldItem(ItemStack itemStack){
-        return itemStack.getItem() instanceof EquipmentMeleeItem equipmentMeleeItem && equipmentMeleeItem.meleeWeaponClass.isDualWield;
+        return itemStack.getItem() instanceof InnateAspectMeleeItem innateAspectMeleeItem && innateAspectMeleeItem.meleeWeaponClass.isDualWield;
     }
 
     public static class AmmoStack{

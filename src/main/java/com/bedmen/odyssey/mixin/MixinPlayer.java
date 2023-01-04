@@ -101,7 +101,7 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
     protected void blockUsingShield(LivingEntity livingEntity) {
         super.blockUsingShield(livingEntity);
         if (livingEntity.getMainHandItem().getItem() instanceof EquipmentMeleeItem equipmentMeleeItem
-        && equipmentMeleeItem.meleeWeaponClass.canBreakShield) {
+        && equipmentMeleeItem.meleeWeaponClass.canShieldBash) {
             this.disableShield(true);
         }
     }

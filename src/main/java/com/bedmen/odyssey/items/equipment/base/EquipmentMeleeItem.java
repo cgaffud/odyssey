@@ -96,7 +96,7 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
     }
 
     public boolean isCorrectToolForDrops(BlockState blockIn) {
-        return blockIn.is(Blocks.COBWEB) && this.meleeWeaponClass.canSweep;
+        return blockIn.is(Blocks.COBWEB) && this.meleeWeaponClass.canBreakCobwebs;
     }
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
