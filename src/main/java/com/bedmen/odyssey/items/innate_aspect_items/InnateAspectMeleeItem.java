@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class InnateAspectMeleeItem extends OdysseyMeleeItem {
+public class InnateAspectMeleeItem extends OdysseyMeleeItem implements InnateAspectItem{
     protected final List<AspectInstance> innateAspectList;
 
     public InnateAspectMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> innateAspectList) {
@@ -27,5 +27,9 @@ public class InnateAspectMeleeItem extends OdysseyMeleeItem {
         tooltip.add(new TranslatableComponent("item.oddc.innate_aspect").withStyle(OdysseyChatFormatting.LAVENDER));
         tooltip.addAll(this.innateAspectList.stream().map(AspectInstance::getInnateComponent).collect(Collectors.toList()));
         super.appendHoverText(itemStack, level, tooltip, advancedTooltipsOn);
+    }
+
+    public List<AspectInstance> getInnateAspectInstanceList() {
+        return this.innateAspectList;
     }
 }

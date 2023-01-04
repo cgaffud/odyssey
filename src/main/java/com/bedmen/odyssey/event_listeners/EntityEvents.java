@@ -1,9 +1,11 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AdditiveConditionalMeleeAspect;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.registry.BiomeRegistry;
@@ -93,27 +95,41 @@ public class EntityEvents {
     @SubscribeEvent
     public static void onLivingHurtEvent(final LivingHurtEvent event){
         float amount = event.getAmount();
-        LivingEntity livingEntity = event.getEntityLiving();
+        LivingEntity hurtLivingEntity = event.getEntityLiving();
         DamageSource damageSource = event.getSource();
 
         if (damageSource.getEntity() instanceof LivingEntity ) {
             LivingEntity attackingEntity = (LivingEntity) damageSource.getEntity();
+            ItemStack mainHandItemStack = attackingEntity.getMainHandItem();
+            Item mainHandItem = mainHandItemStack.getItem();
+
+            // Innate Aspect Damage
+            if(mainHandItem instanceof InnateAspectItem innateAspectItem){
+                amount += innateAspectItem.getInnateAspectInstanceList().stream()
+                        .filter(aspectInstance ->
+                                aspectInstance.aspect instanceof AdditiveConditionalMeleeAspect additiveConditionalMeleeAspect
+                                        && additiveConditionalMeleeAspect.livingEntityPredicate.test(hurtLivingEntity))
+                        .map(aspectInstance -> aspectInstance.strength)
+                        .reduce(Float::sum)
+                        .orElse(0.0f);
+            }
+
             // downpour damage booster
             int downpourLevel = EnchantmentUtil.getDownpour(attackingEntity);
-            if (downpourLevel > 0 && livingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
+            if (downpourLevel > 0 && hurtLivingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
                 amount += (float)downpourLevel * 3f;
         }
 
-        if(amount >= 10.0f && livingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
+        if(amount >= 10.0f && hurtLivingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
             Consumer<LivingEntity> consumer = (p_233653_0_) -> {
                 p_233653_0_.broadcastBreakEvent(EquipmentSlot.HEAD);
             };
-            ItemStack itemStack = livingEntity.getItemBySlot(EquipmentSlot.HEAD);
+            ItemStack itemStack = hurtLivingEntity.getItemBySlot(EquipmentSlot.HEAD);
             Item item = itemStack.getItem();
-            item.damageItem(itemStack, 100, livingEntity, consumer);
-            consumer.accept(livingEntity);
+            item.damageItem(itemStack, 100, hurtLivingEntity, consumer);
+            consumer.accept(hurtLivingEntity);
             itemStack.shrink(1);
-            if(livingEntity instanceof Player player){
+            if(hurtLivingEntity instanceof Player player){
                 player.awardStat(Stats.ITEM_BROKEN.get(item));
             }
         }
