@@ -7,7 +7,13 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import java.util.Optional;
 
+/**
+ * A interface for Entities that are puppets for a BossMaster. Make sure to
+ * override checkDespawn() with the proper removal condition to prevent SubEntities
+ * despawning before master does.
+ */
 public interface SubEntity<T extends BossMaster> extends IEntityAdditionalSpawnData {
+
     Optional<T> getMaster();
 
     void setMasterId(int masterId);

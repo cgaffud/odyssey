@@ -210,6 +210,12 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         }
     }
 
+    @Override
+    public void checkDespawn() {
+        if (!this.getMaster().isPresent())
+            this.discard();
+    }
+
     protected boolean teleportTowards(Entity entity) {
         Vec3 distToMe = new Vec3(this.getX() - entity.getX(), this.getY(0.5D) - entity.getEyeY(), this.getZ() - entity.getZ());
         distToMe = distToMe.normalize();
