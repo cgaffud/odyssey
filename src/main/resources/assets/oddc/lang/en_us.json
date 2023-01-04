@@ -472,5 +472,6 @@
   "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
   "item.oddc.innate_aspect": "Innate:",
   "aspect.oddc.damage_against_arthropod": "Damage Against Athropods",
-  "aspect.oddc.damage_against_undead": "Damage Against Undead"
+  "aspect.oddc.damage_against_undead": "Damage Against Undead",
+  "aspect.oddc.knockback": "Knockback"
 }

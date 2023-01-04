@@ -6,6 +6,7 @@ import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
+import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.registry.BiomeRegistry;
@@ -14,6 +15,7 @@ import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
@@ -104,6 +106,7 @@ public class EntityEvents {
             Item mainHandItem = mainHandItemStack.getItem();
 
             // Innate Aspect Damage
+            // TODO: anvil aspects
             if(mainHandItem instanceof InnateAspectItem innateAspectItem){
                 amount += innateAspectItem.getInnateAspectInstanceList().stream()
                         .filter(aspectInstance ->
@@ -289,6 +292,21 @@ public class EntityEvents {
         if(shield.getItem() instanceof OdysseyShieldItem odysseyShieldItem){
             DamageSource damageSource = event.getDamageSource();
             event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty(), damageSource));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingKnockBackEvent(final LivingKnockBackEvent event){
+        System.out.println(event.getStrength());
+        Entity knockbackSourceEntity = event.getEntityLiving().getLastHurtByMob();
+        if(knockbackSourceEntity instanceof LivingEntity knockbackSourceLivingEntity){
+            // TODO: anvil aspects
+            ItemStack itemStack = knockbackSourceLivingEntity.getMainHandItem();
+            Item item = itemStack.getItem();
+            if(item instanceof InnateAspectMeleeItem innateAspectMeleeItem) {
+                float knockback = WeaponUtil.getTotalKnockbackAspect(innateAspectMeleeItem);
+                event.setStrength(event.getStrength() * knockback);
+            }
         }
     }
 }

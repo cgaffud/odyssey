@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class InnateAspectMeleeItem extends OdysseyMeleeItem implements InnateAspectItem{
-    protected final List<AspectInstance> innateAspectList;
+    public final List<AspectInstance> innateAspectList;
 
     public InnateAspectMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> innateAspectList) {
         super(properties, tier, meleeWeaponClass, damage);

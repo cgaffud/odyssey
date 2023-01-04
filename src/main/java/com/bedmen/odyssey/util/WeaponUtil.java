@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.util;
 
+import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
@@ -145,6 +146,11 @@ public class WeaponUtil {
 
     public static boolean isDualWieldItem(ItemStack itemStack){
         return itemStack.getItem() instanceof InnateAspectMeleeItem innateAspectMeleeItem && innateAspectMeleeItem.meleeWeaponClass.isDualWield;
+    }
+
+    //TODO: anvil aspects
+    public static float getTotalKnockbackAspect(InnateAspectMeleeItem innateAspectMeleeItem){
+        return innateAspectMeleeItem.innateAspectList.stream().filter(aspectInstance -> aspectInstance.aspect == Aspects.KNOCKBACK).map(aspectInstance -> aspectInstance.strength).reduce(Float::sum).orElse(0.0f);
     }
 
     public static class AmmoStack{

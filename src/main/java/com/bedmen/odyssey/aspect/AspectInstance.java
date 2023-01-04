@@ -15,7 +15,7 @@ public class AspectInstance {
     public AspectInstance(Aspect aspect, float strength){
         this.aspect = aspect;
         this.strength = strength;
-        this.mutableComponent = new TextComponent("+"+ StringUtil.floatFormat(this.strength)+" ").append(new TranslatableComponent("aspect.oddc."+aspect.name));
+        this.mutableComponent = new TextComponent("+"+ StringUtil.floatFormat(this.strength)+" ").append(new TranslatableComponent("aspect.oddc."+aspect.id));
     }
 
     public Component getInnateComponent(){
