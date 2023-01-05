@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
 import com.bedmen.odyssey.entity.ai.CovenReturnToMasterGoal;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -147,12 +148,12 @@ public class NetherWitch extends CovenWitch {
                     }
 
                     double d0 = this.netherWitch.distanceToSqr(target);
-                    if (d0 < 4.0D) {
+                    if ((d0 < 4.0D) && !(this.netherWitch.level.getBlockState(target.blockPosition()) == BlockRegistry.COVEN_ROOTS.get().defaultBlockState())) {
                         if (!canSee) {
                             return;
                         }
 
-                        // Change this to be lava attack.
+                        // Lava Attack
                         if (this.attackTime <= 0) {
                             this.attackTime = 20;
                             if (!target.isInLava() && !(this.netherWitch.level.getBlockState(target.blockPosition()) == Blocks.BEDROCK.defaultBlockState()))

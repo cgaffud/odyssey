@@ -69,9 +69,6 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         this.entityData.define(DATA_ENRAGED, false);
     }
 
-    public void tick() {
-        super.tick();
-    }
 
     public void aiStep() {
         if(!this.isNoAi()){
@@ -147,13 +144,16 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
             return false;
 
         float witchHealth = this.getWitchHealth();
+        float adjAmount = amount * this.getMaster().map(Boss::getDamageReduction).orElse(1.0f);
+
         if (witchHealth > 0.0f) {
-            float newWitchHealth = witchHealth - amount * this.getMaster().map(Boss::getDamageReduction).orElse(1.0f);
+            float newWitchHealth = witchHealth - adjAmount;
             if (newWitchHealth <= 0.0f) {
                 Optional<CovenMaster> master = this.getMaster();
                 if (!this.isEnraged() && !this.level.isClientSide() && master.isPresent() && !master.get().isLastAlive(this) && this.level.canSeeSky(this.eyeBlockPosition())) {
                     LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(this.level);
                     lightningBolt.moveTo(this.position());
+                    lightningBolt.setVisualOnly(true);
                     this.level.addFreshEntity(lightningBolt);
                 }
                 this.setEnraged(true);
@@ -162,13 +162,7 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
             if(!this.level.isClientSide)
                 this.setWitchHealth(newWitchHealth);
         }
-
-        System.out.print(this.getWitchHealth());
-        if(this.getMaster().isPresent()) {
-            CovenMaster covenMaster = this.getMaster().get();
-            return covenMaster.hurt(damageSource, (amount > witchHealth) ? witchHealth : amount);
-        }
-        return false;
+        return true;
     }
 
     @Override

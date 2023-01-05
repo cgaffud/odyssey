@@ -7,6 +7,7 @@ import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanSegment;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.util.NonNullListCollector;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -20,6 +21,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -73,6 +75,17 @@ public class CovenMaster extends BossMaster {
     return this.entityData.get(WITCH_IDS_DATA);
 }
 
+    public void kill() {
+        for (CovenWitch covenWitch : this.getWitches())
+            covenWitch.kill();
+    }
+
+    public void remove(RemovalReason removalReason) {
+        super.remove(removalReason);
+        for (CovenWitch covenWitch : this.getWitches())
+            covenWitch.remove(removalReason);
+    }
+
     private void addWitchId(int id) {
         IntList witchIDs = this.entityData.get(WITCH_IDS_DATA);
         witchIDs.add(id);
@@ -113,6 +126,20 @@ public class CovenMaster extends BossMaster {
                 livingEntity.hurtTime = this.hurtTime;
             }
         }
+    }
+
+    @Override
+    public void serverTick() {
+        super.serverTick();
+        float totalHealth = 0;
+        for (CovenWitch covenWitch : this.getWitches()) {
+            totalHealth += covenWitch.getWitchHealth();
+        }
+        if (GeneralUtil.isHashTick(this, this.level, 50)) {
+            System.out.print("Total Health: ");
+            System.out.println(totalHealth);
+        }
+        this.setHealth(totalHealth);
     }
 
     public Collection<Entity> getSubEntities() {
@@ -242,7 +269,7 @@ public class CovenMaster extends BossMaster {
     // Server Side
     public void loadSubEntities(CompoundTag compoundTag) {
         if(compoundTag.contains(WITCHES_TAG)) {
-            List<Tag> listOfTags = compoundTag.getList(WITCHES_TAG, NUM_WITCHES).stream().toList();
+            List<Tag> listOfTags = compoundTag.getList(WITCHES_TAG, 10).stream().toList();
             Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
             this.witches.addAll(entitySteam.map(entity -> {
                 if(entity instanceof CovenWitch covenWitch) {

@@ -20,7 +20,11 @@ public class CovenRootsBlock extends Block {
     }
 
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if ((pos.distSqr(entity.blockPosition()) <= 0.2f) && (entity instanceof Player)) {
+        if ((pos.distToCenterSqr(entity.position()) <= 0.5f) && (entity instanceof Player)) {
+
+            if (entity.position().y > pos.getY())
+                entity.makeStuckInBlock(state, new Vec3(2E-4D, 1.0, 2E-4D));
+            else
                 entity.makeStuckInBlock(state, new Vec3(2E-4D, 2E-4D, 2E-4D));
         }
     }
