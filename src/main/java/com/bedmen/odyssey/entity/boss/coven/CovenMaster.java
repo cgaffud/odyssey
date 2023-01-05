@@ -3,8 +3,6 @@ package com.bedmen.odyssey.entity.boss.coven;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.entity.boss.SubEntity;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanSegment;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
@@ -18,10 +16,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,12 +32,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 public class CovenMaster extends BossMaster {
     // END, NETHER, OVR
-    private static final EntityDataAccessor<IntList> WITCH_IDS_DATA = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.INT_LIST);
+    private static final EntityDataAccessor<IntList> DATA_WITCH_ID_LIST = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.INT_LIST);
     public static final int NUM_WITCHES = 3;
     public static final double MAX_HEALTH = 150.0d;
     public static final double DAMAGE = 8.0d;
@@ -72,7 +67,7 @@ public class CovenMaster extends BossMaster {
 //    }
 
     public IntList getBodyIds() {
-    return this.entityData.get(WITCH_IDS_DATA);
+    return this.entityData.get(DATA_WITCH_ID_LIST);
 }
 
     public void kill() {
@@ -87,9 +82,9 @@ public class CovenMaster extends BossMaster {
     }
 
     private void addWitchId(int id) {
-        IntList witchIDs = this.entityData.get(WITCH_IDS_DATA);
+        IntList witchIDs = this.entityData.get(DATA_WITCH_ID_LIST);
         witchIDs.add(id);
-        this.entityData.set(WITCH_IDS_DATA, witchIDs);
+        this.entityData.set(DATA_WITCH_ID_LIST, witchIDs);
     }
 
     public Optional<CovenWitch> getWitch(int witchNum) {
@@ -102,7 +97,7 @@ public class CovenMaster extends BossMaster {
     public List<CovenWitch> getWitches() {
         if(this.level.isClientSide) {
             List<CovenWitch> witches = new ArrayList<>();
-            for(Integer bodyId: this.entityData.get(WITCH_IDS_DATA)) {
+            for(Integer bodyId: this.entityData.get(DATA_WITCH_ID_LIST)) {
                 Entity entity = this.level.getEntity(bodyId);
                 // instanceof also checks if it is null
                 if(entity instanceof CovenWitch covenWitch) {
@@ -117,7 +112,7 @@ public class CovenMaster extends BossMaster {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(WITCH_IDS_DATA, new IntArrayList());
+        this.entityData.define(DATA_WITCH_ID_LIST, new IntArrayList());
     }
 
     public void clientTick() {

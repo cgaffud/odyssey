@@ -29,8 +29,8 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class MineralLeviathanMaster extends BossMaster {
-    private static final EntityDataAccessor<Integer> HEAD_ID_DATA = SynchedEntityData.defineId(MineralLeviathanMaster.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<IntList> BODY_IDS_DATA = SynchedEntityData.defineId(MineralLeviathanMaster.class, OdysseyDataSerializers.INT_LIST);
+    private static final EntityDataAccessor<Integer> DATA_HEAD_ID = SynchedEntityData.defineId(MineralLeviathanMaster.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<IntList> DATA_BODY_ID_LIST = SynchedEntityData.defineId(MineralLeviathanMaster.class, OdysseyDataSerializers.INT_LIST);
     public static final int NUM_SEGMENTS = 20;
     public static final double MAX_HEALTH = 150.0d;
     public static final double DAMAGE = 8.0d;
@@ -50,16 +50,16 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     public int getHeadId() {
-        return this.entityData.get(HEAD_ID_DATA);
+        return this.entityData.get(DATA_HEAD_ID);
     }
 
     public void setHeadId(int headId) {
-        this.entityData.set(HEAD_ID_DATA, headId);
+        this.entityData.set(DATA_HEAD_ID, headId);
     }
 
     public Optional<MineralLeviathanHead> getHead() {
         if(this.level.isClientSide) {
-            int headId = this.entityData.get(HEAD_ID_DATA);
+            int headId = this.entityData.get(DATA_HEAD_ID);
             Entity entity = this.level.getEntity(headId);
             // instanceof also checks if it is null
             if(entity instanceof MineralLeviathanHead mineralLeviathanHead) {
@@ -73,13 +73,13 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     public IntList getBodyIds() {
-        return this.entityData.get(BODY_IDS_DATA);
+        return this.entityData.get(DATA_BODY_ID_LIST);
     }
 
     public List<MineralLeviathanBody> getBodyParts() {
         if(this.level.isClientSide) {
             List<MineralLeviathanBody> bodyParts = new ArrayList<>();
-            for(Integer bodyId: this.entityData.get(BODY_IDS_DATA)) {
+            for(Integer bodyId: this.entityData.get(DATA_BODY_ID_LIST)) {
                 Entity entity = this.level.getEntity(bodyId);
                 // instanceof also checks if it is null
                 if(entity instanceof MineralLeviathanBody mineralLeviathanBody) {
@@ -93,15 +93,15 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     private void addBodyId(int id) {
-        IntList bodyIds = this.entityData.get(BODY_IDS_DATA);
+        IntList bodyIds = this.entityData.get(DATA_BODY_ID_LIST);
         bodyIds.add(id);
-        this.entityData.set(BODY_IDS_DATA, bodyIds);
+        this.entityData.set(DATA_BODY_ID_LIST, bodyIds);
     }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(HEAD_ID_DATA, -1);
-        this.entityData.define(BODY_IDS_DATA, new IntArrayList());
+        this.entityData.define(DATA_HEAD_ID, -1);
+        this.entityData.define(DATA_BODY_ID_LIST, new IntArrayList());
     }
 
     public void clientTick() {

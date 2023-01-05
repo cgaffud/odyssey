@@ -33,7 +33,7 @@ import net.minecraftforge.network.NetworkHooks;
 import java.util.Optional;
 
 public abstract class CovenWitch extends Monster implements SubEntity<CovenMaster> {
-    private static final EntityDataAccessor<Integer> MASTER_ID_DATA = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_MASTER_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Float> DATA_WITCH_HEALTH_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_PHASE_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_ENRAGED = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.BOOLEAN);
@@ -60,7 +60,7 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(MASTER_ID_DATA, -1);
+        this.entityData.define(DATA_MASTER_ID, -1);
         this.entityData.define(DATA_WITCH_HEALTH_ID, 0.0f);
         this.entityData.define(DATA_PHASE_ID, 0);
         this.entityData.define(DATA_ENRAGED, false);
@@ -176,7 +176,7 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
     }
 
     public Optional<CovenMaster> getMaster() {
-        int headId = this.entityData.get(MASTER_ID_DATA);
+        int headId = this.entityData.get(DATA_MASTER_ID);
         Entity entity = this.level.getEntity(headId);
         // instanceof also checks if it is null
         if(entity instanceof CovenMaster covenMaster) {
@@ -186,7 +186,7 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
     }
 
     public void setMasterId(int masterId) {
-        this.entityData.set(MASTER_ID_DATA, masterId);
+        this.entityData.set(DATA_MASTER_ID, masterId);
     }
 
     public void kill() {

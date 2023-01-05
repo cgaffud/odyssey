@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MineralLeviathanHead extends MineralLeviathanSegment {
-    protected static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(MineralLeviathanHead.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(MineralLeviathanHead.class, EntityDataSerializers.INT);
     private int passingTimer;
     private Vec3 randomTargetVelocity = getRandomDownwardVector();
     private int mouthAngleTimer;
@@ -46,15 +46,15 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(PHASE, 0);
+        this.entityData.define(DATA_PHASE, 0);
     }
 
     public void setPhase(Phase phase){
-        this.entityData.set(PHASE, phase.ordinal());
+        this.entityData.set(DATA_PHASE, phase.ordinal());
     }
 
     public Phase getPhase(){
-        return Phase.values()[this.entityData.get(PHASE)];
+        return Phase.values()[this.entityData.get(DATA_PHASE)];
     }
 
     public void adjustMouthAngle(float f){

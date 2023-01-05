@@ -37,8 +37,8 @@ import java.util.Optional;
 import java.util.Random;
 
 public abstract class MineralLeviathanSegment extends Monster implements SubEntity<MineralLeviathanMaster> {
-    private static final EntityDataAccessor<Integer> MASTER_ID_DATA = SynchedEntityData.defineId(MineralLeviathanSegment.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<Float> DATA_SHELL_HEALTH_ID = SynchedEntityData.defineId(MineralLeviathanSegment.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> DATA_MASTER_ID = SynchedEntityData.defineId(MineralLeviathanSegment.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Float> DATA_SHELL_HEALTH = SynchedEntityData.defineId(MineralLeviathanSegment.class, EntityDataSerializers.FLOAT);
     protected ShellType shellType;
 
     public MineralLeviathanSegment(EntityType<? extends MineralLeviathanSegment> entityType, Level level) {
@@ -52,8 +52,8 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(MASTER_ID_DATA, -1);
-        this.entityData.define(DATA_SHELL_HEALTH_ID, 0.0f);
+        this.entityData.define(DATA_MASTER_ID, -1);
+        this.entityData.define(DATA_SHELL_HEALTH, 0.0f);
     }
 
     public void tick() {
@@ -92,11 +92,11 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
     }
 
     public void setShellHealth(float f) {
-        this.entityData.set(DATA_SHELL_HEALTH_ID, f);
+        this.entityData.set(DATA_SHELL_HEALTH, f);
     }
 
     public float getShellHealth() {
-        return this.entityData.get(DATA_SHELL_HEALTH_ID);
+        return this.entityData.get(DATA_SHELL_HEALTH);
     }
 
     public boolean hasShell(){
@@ -219,7 +219,7 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
     }
 
     public Optional<MineralLeviathanMaster> getMaster() {
-        int headId = this.entityData.get(MASTER_ID_DATA);
+        int headId = this.entityData.get(DATA_MASTER_ID);
         Entity entity = this.level.getEntity(headId);
         // instanceof also checks if it is null
         if(entity instanceof MineralLeviathanMaster mineralLeviathanMaster) {
@@ -229,7 +229,7 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
     }
 
     public void setMasterId(int masterId) {
-        this.entityData.set(MASTER_ID_DATA, masterId);
+        this.entityData.set(DATA_MASTER_ID, masterId);
     }
 
     public void kill() {
