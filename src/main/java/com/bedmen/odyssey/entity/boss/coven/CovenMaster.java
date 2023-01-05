@@ -75,17 +75,6 @@ public class CovenMaster extends BossMaster {
     return this.entityData.get(WITCH_IDS_DATA);
 }
 
-    public void kill() {
-        for (CovenWitch covenWitch : this.getWitches())
-            covenWitch.kill();
-    }
-
-    public void remove(RemovalReason removalReason) {
-        super.remove(removalReason);
-        for (CovenWitch covenWitch : this.getWitches())
-            covenWitch.remove(removalReason);
-    }
-
     private void addWitchId(int id) {
         IntList witchIDs = this.entityData.get(WITCH_IDS_DATA);
         witchIDs.add(id);
@@ -133,11 +122,8 @@ public class CovenMaster extends BossMaster {
         super.serverTick();
         float totalHealth = 0;
         for (CovenWitch covenWitch : this.getWitches()) {
-            totalHealth += covenWitch.getWitchHealth();
-        }
-        if (GeneralUtil.isHashTick(this, this.level, 50)) {
-            System.out.print("Total Health: ");
-            System.out.println(totalHealth);
+            if (covenWitch.isAlive())
+                totalHealth += covenWitch.getWitchHealth();
         }
         this.setHealth(totalHealth);
     }
