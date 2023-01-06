@@ -32,10 +32,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CovenMaster extends BossMaster {
@@ -60,37 +58,27 @@ public class CovenMaster extends BossMaster {
         this.xpReward = 100;
     }
 
-
-//    public int getWitchId(int witchNum) {
-//        return this.entityData.get(WITCH_IDS_DATA).getInt(witchNum);
-//    }
-//
-//    public void setWitchId(int witchNum, int id) {
-//        IntList witchIDs = this.entityData.get(WITCH_IDS_DATA);
-//        if (witchIDs.size() != NUM_WITCHES)
-//            throw new IllegalStateException("Cannot set Witch IDs prior to instantiation");
-//        witchIDs.set(witchNum, id);
-//        this.entityData.set(WITCH_IDS_DATA, witchIDs);
-//    }
-
-    // Adds both the witch id and health to synched data
+    // Adds the witch id to synched data
     private void addWitchToSychedData(int id) {
         IntList witchIDs = this.entityData.get(DATA_WITCH_ID_LIST);
         witchIDs.add(id);
         this.entityData.set(DATA_WITCH_ID_LIST, witchIDs);
-        FloatList witchHealths = this.entityData.get(DATA_WITCH_HEALTH_LIST);
-        witchHealths.add(HEALTH_PER_WITCH);
-        this.entityData.set(DATA_WITCH_HEALTH_LIST, witchHealths);
+    }
+
+    private void addBaseWitchHealthToSynchedData(){
+        FloatList healthList = this.entityData.get(DATA_WITCH_HEALTH_LIST);
+        healthList.add(HEALTH_PER_WITCH);
+        this.setWitchHealthList(healthList);
     }
 
     public Optional<CovenWitch> getWitch(int witchIndex) {
-        List<CovenWitch> witches = this.getWitches();
+        List<CovenWitch> witches = this.getWitchList();
         if (witches.size() != NUM_WITCHES)
             return Optional.empty();
         return Optional.of(witches.get(witchIndex));
     }
 
-    public List<CovenWitch> getWitches() {
+    public List<CovenWitch> getWitchList() {
         if(this.level.isClientSide) {
             List<CovenWitch> witches = new ArrayList<>();
             for(Integer bodyId: this.entityData.get(DATA_WITCH_ID_LIST)) {
@@ -110,8 +98,22 @@ public class CovenMaster extends BossMaster {
         return this.entityData.get(DATA_WITCH_HEALTH_LIST);
     }
 
+    public void setWitchHealthList(FloatList healthList) {
+        this.entityData.set(DATA_WITCH_HEALTH_LIST, healthList);
+    }
+
+    public void printData(){
+        FloatList floatList = this.getWitchHealthList();
+        String s = "Client: "+this.level.isClientSide+"\n";
+        for(float f: floatList){
+            s += f;
+            s += "\n";
+        }
+        System.out.println(s);
+    }
+
     public float getWitchHealth(CovenWitch covenWitch){
-        int id = this.getMyWitchID(covenWitch);
+        int id = this.getMyWitchIndex(covenWitch);
         FloatList healthList = this.getWitchHealthList();
         if(healthList.size() <= id){
             // Just in case something messes up
@@ -121,10 +123,11 @@ public class CovenMaster extends BossMaster {
     }
 
     public void setWitchHealth(CovenWitch covenWitch, float newHealth){
-        int id = this.getMyWitchID(covenWitch);
+        int index = this.getMyWitchIndex(covenWitch);
         FloatList healthList = this.getWitchHealthList();
-        if(healthList.size() > id){
-            healthList.set(id, newHealth);
+        if(healthList.size() > index){
+            healthList.set(index, newHealth);
+            this.setWitchHealthList(healthList);
         }
     }
 
@@ -151,28 +154,25 @@ public class CovenMaster extends BossMaster {
 
     public Collection<Entity> getSubEntities() {
         List<Entity> entities = new ArrayList<>();
-        entities.addAll(this.getWitches());
+        entities.addAll(this.getWitchList());
         return entities;
     }
 
-    public int getMyWitchID(CovenWitch covenWitch) {
-        return this.witches.indexOf(covenWitch);
+    // Server-side only
+    public int getMyWitchIndex(CovenWitch covenWitch) {
+        return this.getWitchList().indexOf(covenWitch);
     }
 
-    // TODO: I'm not convinced this is like the fastest way of doing this.
-    public List<LivingEntity> getOtherTargets(CovenWitch covenWitch) {
-        List<LivingEntity> targets = new ArrayList<>();
-        for (int i = 0 ; i < NUM_WITCHES; i++) {
-            if (i == getMyWitchID(covenWitch))
-                continue;
-            targets.add(this.witches.get(i).getTarget());
-        }
+    // Server-side only
+    public Set<LivingEntity> getOtherTargets(CovenWitch covenWitch) {
+        Set<LivingEntity> targets = this.witches.stream().map(Mob::getTarget).collect(Collectors.toSet());
+        targets.remove(covenWitch.getTarget());
         return targets;
     }
 
     public boolean isLastAlive(CovenWitch covenWitch) {
         for (int i = 0 ; i < NUM_WITCHES; i++) {
-            if (i == getMyWitchID(covenWitch))
+            if (i == getMyWitchIndex(covenWitch))
                 continue;
             Optional<CovenWitch> otherWitchOptional = this.getWitch(i);
             if (otherWitchOptional.isPresent() && !otherWitchOptional.get().isEnraged())
@@ -198,7 +198,7 @@ public class CovenMaster extends BossMaster {
     }
 
     public void spawnSubEntities() {
-        if(this.getWitches().isEmpty()) {
+        if(this.getWitchList().isEmpty()) {
             initializeWitches();
         }
         for(Entity entity: getSubEntities()) {
@@ -209,7 +209,7 @@ public class CovenMaster extends BossMaster {
     // Server Side
     public void initializeWitches() {
         for (int witchNum = 0; witchNum < NUM_WITCHES; witchNum++) {
-            if (witchNum >= this.getWitches().size()) {
+            if (witchNum >= this.getWitchList().size()) {
                 CovenWitch witch;
                 switch (witchNum) {
                     case 2:
@@ -225,6 +225,7 @@ public class CovenMaster extends BossMaster {
                 if (witch != null) {
                     this.witches.add(witch);
                     this.addWitchToSychedData(witch.getId());
+                    this.addBaseWitchHealthToSynchedData();
 
                     float phi = Mth.PI * 2/NUM_WITCHES * witchNum;
                     BlockPos.MutableBlockPos blockpos$mutableblockpos = (this.blockPosition().offset(Mth.cos(phi), 60, Mth.sin(phi))).mutable();
@@ -301,6 +302,7 @@ public class CovenMaster extends BossMaster {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH);
     }
 
+    // Server Side
     public void bringWitchesToMe(){
         if(!this.level.isClientSide) {
             for (int i = 0; i < NUM_WITCHES; i++) {
@@ -349,8 +351,14 @@ public class CovenMaster extends BossMaster {
 
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        if(compoundTag.contains(WITCH_HEALTH_LIST_TAG, Tag.TAG_LIST))
-        ListTag healthListTag = compoundTag.getList(WITCH_HEALTH_LIST_TAG, Tag.TAG_FLOAT);
-        this.loadSubEntities(compoundTag);
+        if(compoundTag.contains(WITCH_HEALTH_LIST_TAG, Tag.TAG_LIST)){
+            ListTag healthListTag = compoundTag.getList(WITCH_HEALTH_LIST_TAG, Tag.TAG_FLOAT);
+            FloatList healthList = new FloatArrayList();
+            for(Tag tag: healthListTag){
+                healthList.add(((FloatTag)tag).getAsFloat());
+            }
+            this.setWitchHealthList(healthList);
+            printData();
+        }
     }
 }

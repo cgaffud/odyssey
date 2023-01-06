@@ -1,11 +1,9 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
-import com.bedmen.odyssey.entity.boss.Boss;
 import com.bedmen.odyssey.entity.boss.SubEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -67,7 +65,7 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
     public void aiStep() {
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
-                //Damage todo: remove this?
+                //Damage
                 this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())
                         .stream().filter(livingEntity -> !(livingEntity instanceof CovenWitch || livingEntity instanceof CovenMaster))
                         .forEach(livingEntity -> livingEntity.hurt(DamageSource.mobAttack(this).setScalesWithDifficulty(), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE)));
@@ -126,8 +124,6 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
 
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
-        if(compoundNBT.contains("WitchHealth"))
-            this.setWitchHealth(compoundNBT.getFloat("WitchHealth"));
         if(compoundNBT.contains("WitchPhase"))
             this.setPhase(Phase.values()[compoundNBT.getInt("WitchPhase")]);
         if(compoundNBT.contains("WitchEnraged"))
@@ -138,33 +134,12 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
         return super.hurt(damageSource, amount);
     }
 
-
-
     public boolean hurt(DamageSource damageSource, float amount) {
-        // Ignore magic damage. They are witches
-        if (this.isInvulnerableTo(damageSource) || damageSource.isMagic())
-            return false;
-
-        float witchHealth = this.getWitchHealth();
-        float adjAmount = amount * this.getMaster().map(Boss::getDamageReduction).orElse(1.0f);
-
-        if (witchHealth > 0.0f) {
-            float newWitchHealth = witchHealth - adjAmount;
-            if (newWitchHealth <= 0.0f) {
-                Optional<CovenMaster> master = this.getMaster();
-                if (!this.isEnraged() && !this.level.isClientSide() && master.isPresent() && !master.get().isLastAlive(this) && this.level.canSeeSky(this.eyeBlockPosition())) {
-                    LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(this.level);
-                    lightningBolt.moveTo(this.position());
-                    lightningBolt.setVisualOnly(true);
-                    this.level.addFreshEntity(lightningBolt);
-                }
-                this.setEnraged(true);
-                newWitchHealth = 0;
-            }
-            if(!this.level.isClientSide)
-                this.setWitchHealth(newWitchHealth);
-        }
-        return true;
+        return this.getMaster().map(covenMaster ->
+                covenMaster.hurtWitch(damageSource, amount, this)
+        ).orElseGet(() ->
+                super.hurt(damageSource, amount)
+        );
     }
 
     @Override
@@ -172,17 +147,9 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public void writeSpawnData(FriendlyByteBuf friendlyByteBuf) {
-        SubEntity.super.writeSpawnData(friendlyByteBuf);
-    }
-
-    public void readSpawnData(FriendlyByteBuf friendlyByteBuf) {
-        SubEntity.super.readSpawnData(friendlyByteBuf);
-    }
-
     public Optional<CovenMaster> getMaster() {
-        int headId = this.entityData.get(DATA_MASTER_ID);
-        Entity entity = this.level.getEntity(headId);
+        int masterId = this.entityData.get(DATA_MASTER_ID);
+        Entity entity = this.level.getEntity(masterId);
         // instanceof also checks if it is null
         if(entity instanceof CovenMaster covenMaster) {
             return Optional.of(covenMaster);
