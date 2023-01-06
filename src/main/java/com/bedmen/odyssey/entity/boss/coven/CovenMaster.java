@@ -103,11 +103,17 @@ public class CovenMaster extends BossMaster {
     }
 
     public void printData(){
-        FloatList floatList = this.getWitchHealthList();
+        IntList integers = this.entityData.get(DATA_WITCH_ID_LIST);
         String s = "Client: "+this.level.isClientSide+"\n";
+        for(int i: integers){
+            s += i;
+            s += " ";
+        }
+        s += "\n";
+        FloatList floatList = this.entityData.get(DATA_WITCH_HEALTH_LIST);
         for(float f: floatList){
             s += f;
-            s += "\n";
+            s += " ";
         }
         System.out.println(s);
     }
@@ -138,6 +144,7 @@ public class CovenMaster extends BossMaster {
     }
 
     public void clientTick() {
+        printData();
         for(Entity entity : this.getSubEntities()){
             if(entity instanceof LivingEntity livingEntity) {
                 livingEntity.hurtTime = this.hurtTime;
@@ -147,6 +154,7 @@ public class CovenMaster extends BossMaster {
 
     @Override
     public void serverTick() {
+        printData();
         super.serverTick();
         float totalHealth = this.getWitchHealthList().stream().reduce(Float::sum).orElse(0.0f);
         this.setHealth(totalHealth);
