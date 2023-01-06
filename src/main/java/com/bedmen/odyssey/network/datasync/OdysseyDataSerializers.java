@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.network.datasync;
 
+import it.unimi.dsi.fastutil.floats.FloatArrayList;
+import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -20,6 +22,22 @@ public class OdysseyDataSerializers {
             IntList intList1 = new IntArrayList();
             intList1.addAll(intList);
             return intList1;
+        }
+    };
+
+    public static final EntityDataSerializer<FloatList> FLOAT_LIST = new EntityDataSerializer<>() {
+        public void write(FriendlyByteBuf buffer, @NotNull FloatList floatList) {
+            buffer.writeCollection(floatList, FriendlyByteBuf::writeFloat);
+        }
+
+        public FloatList read(FriendlyByteBuf buffer) {
+            return new FloatArrayList(buffer.readList(FriendlyByteBuf::readFloat));
+        }
+
+        public FloatList copy(@NotNull FloatList floatList) {
+            FloatList floatList1 = new FloatArrayList();
+            floatList1.addAll(floatList);
+            return floatList1;
         }
     };
 }

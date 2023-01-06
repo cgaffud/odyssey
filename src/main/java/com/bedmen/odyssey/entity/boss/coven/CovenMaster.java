@@ -5,19 +5,22 @@ import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.entity.boss.SubEntity;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.util.NonNullListCollector;
+import it.unimi.dsi.fastutil.floats.FloatArrayList;
+import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,6 +30,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,12 +41,15 @@ import java.util.stream.Stream;
 public class CovenMaster extends BossMaster {
     // END, NETHER, OVR
     private static final EntityDataAccessor<IntList> DATA_WITCH_ID_LIST = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.INT_LIST);
+    private static final EntityDataAccessor<FloatList> DATA_WITCH_HEALTH_LIST = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.FLOAT_LIST);
     public static final int NUM_WITCHES = 3;
-    public static final double MAX_HEALTH = 150.0d;
+    public static final float HEALTH_PER_WITCH = 50.0f;
+    public static final double MAX_HEALTH = HEALTH_PER_WITCH * NUM_WITCHES;
     public static final double DAMAGE = 8.0d;
     public static final double FOLLOW_RANGE = 75d;
     public static final double CENTER_RANGE = 40d;
     private static final String WITCHES_TAG = "CovenWitches";
+    private static final String WITCH_HEALTH_LIST_TAG = "WitchHealthList";
 
     // These sub entities may only be referenced directly in a server side method
     // Otherwise use the 'get' method
@@ -66,32 +73,21 @@ public class CovenMaster extends BossMaster {
 //        this.entityData.set(WITCH_IDS_DATA, witchIDs);
 //    }
 
-    public IntList getBodyIds() {
-    return this.entityData.get(DATA_WITCH_ID_LIST);
-}
-
-    public void kill() {
-        for (CovenWitch covenWitch : this.getWitches())
-            covenWitch.kill();
-    }
-
-    public void remove(RemovalReason removalReason) {
-        super.remove(removalReason);
-        for (CovenWitch covenWitch : this.getWitches())
-            covenWitch.remove(removalReason);
-    }
-
-    private void addWitchId(int id) {
+    // Adds both the witch id and health to synched data
+    private void addWitchToSychedData(int id) {
         IntList witchIDs = this.entityData.get(DATA_WITCH_ID_LIST);
         witchIDs.add(id);
         this.entityData.set(DATA_WITCH_ID_LIST, witchIDs);
+        FloatList witchHealths = this.entityData.get(DATA_WITCH_HEALTH_LIST);
+        witchHealths.add(HEALTH_PER_WITCH);
+        this.entityData.set(DATA_WITCH_HEALTH_LIST, witchHealths);
     }
 
-    public Optional<CovenWitch> getWitch(int witchNum) {
+    public Optional<CovenWitch> getWitch(int witchIndex) {
         List<CovenWitch> witches = this.getWitches();
         if (witches.size() != NUM_WITCHES)
             return Optional.empty();
-        return Optional.of(witches.get(witchNum));
+        return Optional.of(witches.get(witchIndex));
     }
 
     public List<CovenWitch> getWitches() {
@@ -110,9 +106,32 @@ public class CovenMaster extends BossMaster {
         }
     }
 
+    public FloatList getWitchHealthList() {
+        return this.entityData.get(DATA_WITCH_HEALTH_LIST);
+    }
+
+    public float getWitchHealth(CovenWitch covenWitch){
+        int id = this.getMyWitchID(covenWitch);
+        FloatList healthList = this.getWitchHealthList();
+        if(healthList.size() <= id){
+            // Just in case something messes up
+            return HEALTH_PER_WITCH;
+        }
+        return healthList.get(id);
+    }
+
+    public void setWitchHealth(CovenWitch covenWitch, float newHealth){
+        int id = this.getMyWitchID(covenWitch);
+        FloatList healthList = this.getWitchHealthList();
+        if(healthList.size() > id){
+            healthList.set(id, newHealth);
+        }
+    }
+
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_WITCH_ID_LIST, new IntArrayList());
+        this.entityData.define(DATA_WITCH_HEALTH_LIST, new FloatArrayList());
     }
 
     public void clientTick() {
@@ -126,14 +145,7 @@ public class CovenMaster extends BossMaster {
     @Override
     public void serverTick() {
         super.serverTick();
-        float totalHealth = 0;
-        for (CovenWitch covenWitch : this.getWitches()) {
-            totalHealth += covenWitch.getWitchHealth();
-        }
-        if (GeneralUtil.isHashTick(this, this.level, 50)) {
-            System.out.print("Total Health: ");
-            System.out.println(totalHealth);
-        }
+        float totalHealth = this.getWitchHealthList().stream().reduce(Float::sum).orElse(0.0f);
         this.setHealth(totalHealth);
     }
 
@@ -212,7 +224,7 @@ public class CovenMaster extends BossMaster {
                 }
                 if (witch != null) {
                     this.witches.add(witch);
-                    this.addWitchId(witch.getId());
+                    this.addWitchToSychedData(witch.getId());
 
                     float phi = Mth.PI * 2/NUM_WITCHES * witchNum;
                     BlockPos.MutableBlockPos blockpos$mutableblockpos = (this.blockPosition().offset(Mth.cos(phi), 60, Mth.sin(phi))).mutable();
@@ -264,7 +276,7 @@ public class CovenMaster extends BossMaster {
     // Server Side
     public void loadSubEntities(CompoundTag compoundTag) {
         if(compoundTag.contains(WITCHES_TAG)) {
-            List<Tag> listOfTags = compoundTag.getList(WITCHES_TAG, 10).stream().toList();
+            List<Tag> listOfTags = compoundTag.getList(WITCHES_TAG, Tag.TAG_COMPOUND).stream().toList();
             Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
             this.witches.addAll(entitySteam.map(entity -> {
                 if(entity instanceof CovenWitch covenWitch) {
@@ -280,13 +292,13 @@ public class CovenMaster extends BossMaster {
                 return !isNull;
             }).collect(new NonNullListCollector<>()));
             for(CovenWitch covenWitch: this.witches) {
-                this.addWitchId(covenWitch.getId());
+                this.addWitchToSychedData(covenWitch.getId());
             }
         }
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE).add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH);
     }
 
     public void bringWitchesToMe(){
@@ -299,5 +311,46 @@ public class CovenMaster extends BossMaster {
                 witch.doWhenReturnToMaster();
             }
         }
+    }
+
+    public boolean hurtWitch(DamageSource damageSource, float amount, CovenWitch covenWitch){
+        // Ignore magic damage. They are witches
+        if (covenWitch.isInvulnerableTo(damageSource) || damageSource.isMagic())
+            return false;
+
+        float originalWitchHealth = this.getWitchHealth(covenWitch);
+        float bossReducedAmount = amount * this.getDamageReduction();
+
+        if (originalWitchHealth > 0.0f) {
+            float newWitchHealth = Float.max(originalWitchHealth - bossReducedAmount, 0.0f);
+            if(!this.level.isClientSide){
+                if (newWitchHealth <= 0.0f) {
+                    if(!this.isLastAlive(covenWitch)) {
+                        covenWitch.becomeEnraged();
+                    } else {
+                        //Trigger boss death?
+                    }
+                }
+                this.setWitchHealth(covenWitch, newWitchHealth);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        ListTag healthListTag = new ListTag();
+        for(float witchHealth: this.getWitchHealthList()){
+            healthListTag.add(FloatTag.valueOf(witchHealth));
+        }
+        compoundTag.put(WITCH_HEALTH_LIST_TAG, healthListTag);
+    }
+
+    public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        if(compoundTag.contains(WITCH_HEALTH_LIST_TAG, Tag.TAG_LIST))
+        ListTag healthListTag = compoundTag.getList(WITCH_HEALTH_LIST_TAG, Tag.TAG_FLOAT);
+        this.loadSubEntities(compoundTag);
     }
 }

@@ -17,5 +17,6 @@ public class DataSerializerRegistry {
     }
 
     public static final RegistryObject<DataSerializerEntry> INT_LIST = DATA_SERIALIZERS.register("int_list", () -> new DataSerializerEntry(OdysseyDataSerializers.INT_LIST));
+    public static final RegistryObject<DataSerializerEntry> FLOAT_LIST = DATA_SERIALIZERS.register("float_list", () -> new DataSerializerEntry(OdysseyDataSerializers.FLOAT_LIST));
 
 }

@@ -226,7 +226,7 @@ public class MineralLeviathanMaster extends BossMaster {
             }
         }
         if(compoundTag.contains(BODY_TAG)) {
-            List<Tag> listOfTags = compoundTag.getList(BODY_TAG, 10).stream().toList();
+            List<Tag> listOfTags = compoundTag.getList(BODY_TAG, Tag.TAG_COMPOUND).stream().toList();
             Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
             this.bodyParts.addAll(entitySteam.map(entity -> {
                 if(entity instanceof MineralLeviathanBody mineralLeviathanBody) {
@@ -257,6 +257,6 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE).add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH);
     }
 }

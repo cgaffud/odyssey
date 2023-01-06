@@ -34,8 +34,7 @@ import java.util.Optional;
 
 public abstract class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     private static final EntityDataAccessor<Integer> DATA_MASTER_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<Float> DATA_WITCH_HEALTH_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Integer> DATA_PHASE_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_ENRAGED = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.BOOLEAN);
 
     public enum Phase {
@@ -47,7 +46,6 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
     public CovenWitch(EntityType<? extends CovenWitch> entityType, Level level) {
         super(entityType, level);
         this.setHealth(this.getMaxHealth());
-        this.setWitchHealth(this.getMaxHealth());
         this.noCulling = true;
         // TODO: look controller?
         this.lookControl = new LookControl(this);
@@ -61,8 +59,7 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_MASTER_ID, -1);
-        this.entityData.define(DATA_WITCH_HEALTH_ID, 0.0f);
-        this.entityData.define(DATA_PHASE_ID, 0);
+        this.entityData.define(DATA_PHASE, 0);
         this.entityData.define(DATA_ENRAGED, false);
     }
 
@@ -70,7 +67,7 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
     public void aiStep() {
         if(!this.isNoAi()){
             if(!this.level.isClientSide){
-                //Damage
+                //Damage todo: remove this?
                 this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())
                         .stream().filter(livingEntity -> !(livingEntity instanceof CovenWitch || livingEntity instanceof CovenMaster))
                         .forEach(livingEntity -> livingEntity.hurt(DamageSource.mobAttack(this).setScalesWithDifficulty(), (float)this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE)));
@@ -92,31 +89,37 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
         return p_34150_;
     }
 
-    public void setWitchHealth(float f) {
-        this.entityData.set(DATA_WITCH_HEALTH_ID, f);
-    }
-    public float getWitchHealth() {
-        return this.entityData.get(DATA_WITCH_HEALTH_ID);
-    }
-
     public void setPhase(Phase phase) {
-        this.entityData.set(DATA_PHASE_ID, phase.ordinal());
+        this.entityData.set(DATA_PHASE, phase.ordinal());
     }
     public Phase getPhase() {
-        return Phase.values()[(this.entityData.get(DATA_PHASE_ID))];
+        return Phase.values()[(this.entityData.get(DATA_PHASE))];
     }
 
     public void setEnraged(boolean enraged) { this.entityData.set(DATA_ENRAGED, enraged);}
     public boolean isEnraged() { return this.entityData.get(DATA_ENRAGED); }
 
+    // Triggered by CovenMaster when this witch reaches 0 health
+    // Server-side
+    public void becomeEnraged() {
+        if(!this.isEnraged()){
+            if(this.level.canSeeSky(this.eyeBlockPosition())){
+                LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(this.level);
+                lightningBolt.moveTo(this.position());
+                lightningBolt.setVisualOnly(true);
+                this.level.addFreshEntity(lightningBolt);
+            }
+            this.setEnraged(true);
+        }
+    }
+
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.MAX_HEALTH, CovenMaster.MAX_HEALTH / CovenMaster.NUM_WITCHES).add(Attributes.ATTACK_DAMAGE, CovenMaster.DAMAGE * 0.5d);
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.MAX_HEALTH, 1.0d).add(Attributes.ATTACK_DAMAGE, CovenMaster.DAMAGE * 0.5d);
     }
 
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.putFloat("WitchHealth", this.getWitchHealth());
         compoundNBT.putInt("WitchPhase", this.getPhase().ordinal());
         compoundNBT.putBoolean("WitchEnraged", this.isEnraged());
     }
@@ -134,6 +137,8 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
     public boolean hurtDirectly(DamageSource damageSource, float amount) {
         return super.hurt(damageSource, amount);
     }
+
+
 
     public boolean hurt(DamageSource damageSource, float amount) {
         // Ignore magic damage. They are witches
