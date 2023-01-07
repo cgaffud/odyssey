@@ -100,7 +100,7 @@ public class CovenHutPiece extends TemplateStructurePiece {
             }
         }
         BlockPos.MutableBlockPos mutable = BlockPos.ZERO.mutable();
-        System.out.println("ROTATION, height: " + getRotation().toString() + "," + (height-2));
+        //System.out.println("ROTATION, height: " + getRotation().toString() + "," + (height-2));
         for(Pair<Integer,Integer> pair : RELATIVE_POSTS) {
             // RELATIVE_POSTS (x,z) pairs were measured from the lowest x-z of the bounding box, where pos is the center.
             BlockPos post = (new BlockPos(pair.getFirst(), 0, pair.getSecond()).rotate(getRotation()));

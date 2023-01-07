@@ -24,13 +24,14 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.*;
 import java.util.stream.Stream;
 
 public class MineralLeviathanMaster extends BossMaster {
-    private static final EntityDataAccessor<Integer> HEAD_ID_DATA = SynchedEntityData.defineId(MineralLeviathanMaster.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<IntList> BODY_IDS_DATA = SynchedEntityData.defineId(MineralLeviathanMaster.class, OdysseyDataSerializers.INT_LIST);
+    private static final EntityDataAccessor<Integer> DATA_HEAD_ID = SynchedEntityData.defineId(MineralLeviathanMaster.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<IntList> DATA_BODY_ID_LIST = SynchedEntityData.defineId(MineralLeviathanMaster.class, OdysseyDataSerializers.INT_LIST);
     public static final int NUM_SEGMENTS = 20;
     public static final double MAX_HEALTH = 150.0d;
     public static final double DAMAGE = 8.0d;
@@ -46,20 +47,19 @@ public class MineralLeviathanMaster extends BossMaster {
 
     public MineralLeviathanMaster(EntityType<? extends MineralLeviathanMaster> entityType, Level level) {
         super(entityType, level);
-        this.xpReward = 100;
     }
 
     public int getHeadId() {
-        return this.entityData.get(HEAD_ID_DATA);
+        return this.entityData.get(DATA_HEAD_ID);
     }
 
     public void setHeadId(int headId) {
-        this.entityData.set(HEAD_ID_DATA, headId);
+        this.entityData.set(DATA_HEAD_ID, headId);
     }
 
     public Optional<MineralLeviathanHead> getHead() {
         if(this.level.isClientSide) {
-            int headId = this.entityData.get(HEAD_ID_DATA);
+            int headId = this.entityData.get(DATA_HEAD_ID);
             Entity entity = this.level.getEntity(headId);
             // instanceof also checks if it is null
             if(entity instanceof MineralLeviathanHead mineralLeviathanHead) {
@@ -72,14 +72,15 @@ public class MineralLeviathanMaster extends BossMaster {
         return Optional.empty();
     }
 
+    // Must use this method to access the body id synched entity data because it copies the list
     public IntList getBodyIds() {
-        return this.entityData.get(BODY_IDS_DATA);
+        return new IntArrayList(this.entityData.get(DATA_BODY_ID_LIST));
     }
 
     public List<MineralLeviathanBody> getBodyParts() {
         if(this.level.isClientSide) {
             List<MineralLeviathanBody> bodyParts = new ArrayList<>();
-            for(Integer bodyId: this.entityData.get(BODY_IDS_DATA)) {
+            for(Integer bodyId: this.getBodyIds()) {
                 Entity entity = this.level.getEntity(bodyId);
                 // instanceof also checks if it is null
                 if(entity instanceof MineralLeviathanBody mineralLeviathanBody) {
@@ -93,15 +94,15 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     private void addBodyId(int id) {
-        IntList bodyIds = this.entityData.get(BODY_IDS_DATA);
+        IntList bodyIds = this.getBodyIds();
         bodyIds.add(id);
-        this.entityData.set(BODY_IDS_DATA, bodyIds);
+        this.entityData.set(DATA_BODY_ID_LIST, bodyIds);
     }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(HEAD_ID_DATA, -1);
-        this.entityData.define(BODY_IDS_DATA, new IntArrayList());
+        this.entityData.define(DATA_HEAD_ID, -1);
+        this.entityData.define(DATA_BODY_ID_LIST, new IntArrayList());
     }
 
     public void clientTick() {
@@ -198,10 +199,11 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     // Server Side
-    public void saveSubEntities(CompoundTag compoundTag) {
+    public CompoundTag saveSubEntities() {
+        CompoundTag subEntitiesTag = new CompoundTag();
         CompoundTag headCompoundTag = new CompoundTag();
         this.head.saveAsPassenger(headCompoundTag);
-        compoundTag.put(HEAD_TAG, headCompoundTag);
+        subEntitiesTag.put(HEAD_TAG, headCompoundTag);
         ListTag bodyPartsTag = new ListTag();
         for(MineralLeviathanBody mineralLeviathanBody : this.bodyParts) {
             CompoundTag bodyCompoundTag = new CompoundTag();
@@ -209,13 +211,14 @@ public class MineralLeviathanMaster extends BossMaster {
                 bodyPartsTag.add(bodyCompoundTag);
             }
         }
-        compoundTag.put(BODY_TAG, bodyPartsTag);
+        subEntitiesTag.put(BODY_TAG, bodyPartsTag);
+        return subEntitiesTag;
     }
 
     // Server Side
-    public void loadSubEntities(CompoundTag compoundTag) {
-        if(compoundTag.contains(HEAD_TAG)) {
-            CompoundTag headCompoundTag = compoundTag.getCompound(HEAD_TAG);
+    public void loadSubEntities(CompoundTag subEntitiesTag) {
+        if(subEntitiesTag.contains(HEAD_TAG)) {
+            CompoundTag headCompoundTag = subEntitiesTag.getCompound(HEAD_TAG);
             Entity entity = EntityType.loadEntityRecursive(headCompoundTag, this.level, entity1 -> entity1);
             if(entity instanceof MineralLeviathanHead mineralLeviathanHead) {
                 mineralLeviathanHead.setMasterId(this.getId());
@@ -225,8 +228,8 @@ public class MineralLeviathanMaster extends BossMaster {
                 Odyssey.LOGGER.error("Mineral Leviathan failed to spawn head in loadSubEntities");
             }
         }
-        if(compoundTag.contains(BODY_TAG)) {
-            List<Tag> listOfTags = compoundTag.getList(BODY_TAG, 10).stream().toList();
+        if(subEntitiesTag.contains(BODY_TAG)) {
+            List<Tag> listOfTags = subEntitiesTag.getList(BODY_TAG, Tag.TAG_COMPOUND).stream().toList();
             Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
             this.bodyParts.addAll(entitySteam.map(entity -> {
                 if(entity instanceof MineralLeviathanBody mineralLeviathanBody) {
@@ -257,6 +260,6 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE).add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH);
     }
 }

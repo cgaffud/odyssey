@@ -50,7 +50,7 @@ public class AbandonedIronGolem extends Boss {
     private static final int TICKS_UNTIL_CLAP = KEY_CLAP_TICKS[0] - KEY_CLAP_TICKS[2];
     private static final int CLAP_DURATION = KEY_CLAP_TICKS[0];
     private static final double SONIC_BOOM_RANGE = 20d;
-    protected static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(AbandonedIronGolem.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(AbandonedIronGolem.class, EntityDataSerializers.INT);
 
     public AbandonedIronGolem(EntityType<? extends Boss> entityType, Level level) {
         super(entityType, level);
@@ -69,15 +69,15 @@ public class AbandonedIronGolem extends Boss {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(PHASE, 0);
+        this.entityData.define(DATA_PHASE, 0);
     }
 
     public void setPhase(AbandonedIronGolem.Phase phase){
-        this.entityData.set(PHASE, phase.ordinal());
+        this.entityData.set(DATA_PHASE, phase.ordinal());
     }
 
     public AbandonedIronGolem.Phase getPhase(){
-        return AbandonedIronGolem.Phase.values()[this.entityData.get(PHASE)];
+        return AbandonedIronGolem.Phase.values()[this.entityData.get(DATA_PHASE)];
     }
 
     public static AttributeSupplier.Builder createAttributes() {

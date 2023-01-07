@@ -37,7 +37,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import javax.annotation.Nullable;
 
 public class Bandit extends AbstractIllager implements CrossbowAttackMob {
-    private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(Bandit.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(Bandit.class, EntityDataSerializers.BOOLEAN);
     public final RangedCrossbowAttackGoal<Bandit> crossBowGoal = new RangedCrossbowAttackGoal<>(this, 1.0D, 8.0F);
     public final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.0D, false);
     public Bandit(EntityType<? extends Bandit> entityType, Level level) {
@@ -47,7 +47,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(IS_CHARGING_CROSSBOW, false);
+        this.entityData.define(DATA_IS_CHARGING_CROSSBOW, false);
     }
 
     protected void registerGoals() {
@@ -119,12 +119,12 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
         return SoundEvents.VINDICATOR_CELEBRATE;
     }
     public boolean isChargingCrossbow() {
-        return this.entityData.get(IS_CHARGING_CROSSBOW);
+        return this.entityData.get(DATA_IS_CHARGING_CROSSBOW);
     }
 
     @Override
     public void setChargingCrossbow(boolean isChargingCrossbow) {
-        this.entityData.set(IS_CHARGING_CROSSBOW, isChargingCrossbow);
+        this.entityData.set(DATA_IS_CHARGING_CROSSBOW, isChargingCrossbow);
     }
 
     @Override

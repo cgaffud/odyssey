@@ -75,7 +75,6 @@ public class ItemRegistry {
     public static final RegistryObject<Item> TRANSCENDENTAL_OBSIDIAN = ITEMS.register("transcendental_obsidian", () -> new BlockItem(BlockRegistry.TRANSCENDENTAL_OBSIDIAN.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> TRANSCENDENTAL_TRANSMUTER = ITEMS.register("transcendental_transmuter", () -> new BlockItem(BlockRegistry.TRANSCENDENTAL_TRANSMUTER.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
 
-
     // # Wood and Plants
     public static final RegistryObject<Item> PRAIRIE_GRASS = ITEMS.register("prairie_grass", () -> new TripleHighBlockItem(BlockRegistry.PRAIRIE_GRASS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
 
@@ -97,6 +96,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> PALM_FENCE_GATE = ITEMS.register("palm_fence_gate", () -> new BurnableFenceItem(BlockRegistry.PALM_FENCE_GATE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_BOAT = ITEMS.register("palm_boat", () -> new OdysseyBoatItem(OdysseyBoat.Type.PALM, (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_SIGN = ITEMS.register("palm_sign", () -> new SignItem((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD), BlockRegistry.PALM_SIGN.get(), BlockRegistry.PALM_WALL_SIGN.get()));
+
+    public static final RegistryObject<Item> COVEN_ROOTS = ITEMS.register("coven_roots", () -> new BlockItem(BlockRegistry.COVEN_ROOTS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
 
     public static final RegistryObject<Item> GREATWOOD_PLANKS = ITEMS.register("greatwood_planks", () -> new BlockItem(BlockRegistry.GREATWOOD_PLANKS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_SAPLING = ITEMS.register("greatwood_sapling", () -> new BlockItem(BlockRegistry.GREATWOOD_SAPLING.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
@@ -147,7 +148,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_NUGGET = ITEMS.register("netherite_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> SUNSTONE = ITEMS.register("sunstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> MOONSTONE = ITEMS.register("moonstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
-    public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new BurnToSummonItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), () -> EntityTypeRegistry.WRAITH.get()));
+    public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new BurnToSummonItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), () -> EntityTypeRegistry.COVEN_MASTER.get()));
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
 
