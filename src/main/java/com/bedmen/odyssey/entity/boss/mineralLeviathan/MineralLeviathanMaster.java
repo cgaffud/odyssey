@@ -72,14 +72,15 @@ public class MineralLeviathanMaster extends BossMaster {
         return Optional.empty();
     }
 
+    // Must use this method to access the body id synched entity data because it copies the list
     public IntList getBodyIds() {
-        return this.entityData.get(DATA_BODY_ID_LIST);
+        return new IntArrayList(this.entityData.get(DATA_BODY_ID_LIST));
     }
 
     public List<MineralLeviathanBody> getBodyParts() {
         if(this.level.isClientSide) {
             List<MineralLeviathanBody> bodyParts = new ArrayList<>();
-            for(Integer bodyId: this.entityData.get(DATA_BODY_ID_LIST)) {
+            for(Integer bodyId: this.getBodyIds()) {
                 Entity entity = this.level.getEntity(bodyId);
                 // instanceof also checks if it is null
                 if(entity instanceof MineralLeviathanBody mineralLeviathanBody) {
@@ -93,7 +94,7 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     private void addBodyId(int id) {
-        IntList bodyIds = this.entityData.get(DATA_BODY_ID_LIST);
+        IntList bodyIds = this.getBodyIds();
         bodyIds.add(id);
         this.entityData.set(DATA_BODY_ID_LIST, bodyIds);
     }
