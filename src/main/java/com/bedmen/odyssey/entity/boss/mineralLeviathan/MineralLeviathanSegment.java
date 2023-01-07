@@ -249,6 +249,11 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
         return false;
     }
 
+    public void checkDespawn() {
+        if (this.getMaster().isEmpty())
+            this.discard();
+    }
+
     public enum ShellType{
         RUBY(BlockRegistry.DEEPSLATE_RUBY_ORE::get, 0.25f),
         COAL(() -> Blocks.DEEPSLATE_COAL_ORE, 0.1f),
