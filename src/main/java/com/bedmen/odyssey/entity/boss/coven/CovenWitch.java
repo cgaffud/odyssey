@@ -1,13 +1,9 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
-import com.bedmen.odyssey.entity.boss.Boss;
 import com.bedmen.odyssey.entity.boss.SubEntity;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanSegment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -17,13 +13,14 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
-import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -31,14 +28,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
-    private static final EntityDataAccessor<Integer> MASTER_ID_DATA = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<Float> DATA_WITCH_HEALTH_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Integer> DATA_PHASE_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
+public abstract class CovenWitch extends Monster implements SubEntity<CovenMaster> {
+    private static final EntityDataAccessor<Integer> DATA_MASTER_ID = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_ENRAGED = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.BOOLEAN);
 
     public enum Phase {
@@ -50,12 +44,13 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     public CovenWitch(EntityType<? extends CovenWitch> entityType, Level level) {
         super(entityType, level);
         this.setHealth(this.getMaxHealth());
-        this.setWitchHealth(this.getMaxHealth());
         this.noCulling = true;
         // TODO: look controller?
         this.lookControl = new LookControl(this);
-
+        this.xpReward = 50;
     }
+
+    public abstract CovenType getCovenType();
 
     protected SoundEvent getCastingSoundEvent() {
         return SoundEvents.EVOKER_CAST_SPELL;
@@ -63,9 +58,8 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(MASTER_ID_DATA, -1);
-        this.entityData.define(DATA_WITCH_HEALTH_ID, 0.0f);
-        this.entityData.define(DATA_PHASE_ID, 0);
+        this.entityData.define(DATA_MASTER_ID, -1);
+        this.entityData.define(DATA_PHASE, 0);
         this.entityData.define(DATA_ENRAGED, false);
     }
 
@@ -95,39 +89,43 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         return p_34150_;
     }
 
-    public void setWitchHealth(float f) {
-        this.entityData.set(DATA_WITCH_HEALTH_ID, f);
-    }
-    public float getWitchHealth() {
-        return this.entityData.get(DATA_WITCH_HEALTH_ID);
-    }
-
     public void setPhase(Phase phase) {
-        this.entityData.set(DATA_PHASE_ID, phase.ordinal());
+        this.entityData.set(DATA_PHASE, phase.ordinal());
     }
     public Phase getPhase() {
-        return Phase.values()[(this.entityData.get(DATA_PHASE_ID))];
+        return Phase.values()[(this.entityData.get(DATA_PHASE))];
     }
 
     public void setEnraged(boolean enraged) { this.entityData.set(DATA_ENRAGED, enraged);}
     public boolean isEnraged() { return this.entityData.get(DATA_ENRAGED); }
 
+    // Triggered by CovenMaster when this witch reaches 0 health
+    // Server-side
+    public void becomeEnraged() {
+        if(!this.isEnraged()){
+            if(this.level.canSeeSky(this.eyeBlockPosition())){
+                LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(this.level);
+                lightningBolt.moveTo(this.position());
+                lightningBolt.setVisualOnly(true);
+                this.level.addFreshEntity(lightningBolt);
+            }
+            this.setEnraged(true);
+        }
+    }
+
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.MAX_HEALTH, CovenMaster.MAX_HEALTH / CovenMaster.NUM_WITCHES).add(Attributes.ATTACK_DAMAGE, CovenMaster.DAMAGE * 0.5d);
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.MAX_HEALTH, 1.0d).add(Attributes.ATTACK_DAMAGE, CovenMaster.DAMAGE * 0.5d);
     }
 
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.putFloat("WitchHealth", this.getWitchHealth());
         compoundNBT.putInt("WitchPhase", this.getPhase().ordinal());
         compoundNBT.putBoolean("WitchEnraged", this.isEnraged());
     }
 
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
-        if(compoundNBT.contains("WitchHealth"))
-            this.setWitchHealth(compoundNBT.getFloat("WitchHealth"));
         if(compoundNBT.contains("WitchPhase"))
             this.setPhase(Phase.values()[compoundNBT.getInt("WitchPhase")]);
         if(compoundNBT.contains("WitchEnraged"))
@@ -139,30 +137,11 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     }
 
     public boolean hurt(DamageSource damageSource, float amount) {
-        // Ignore magic damage. They are witches
-        if (this.isInvulnerableTo(damageSource) || damageSource.isMagic())
-            return false;
-
-        float witchHealth = this.getWitchHealth();
-        float adjAmount = amount * this.getMaster().map(Boss::getDamageReduction).orElse(1.0f);
-
-        if (witchHealth > 0.0f) {
-            float newWitchHealth = witchHealth - adjAmount;
-            if (newWitchHealth <= 0.0f) {
-                Optional<CovenMaster> master = this.getMaster();
-                if (!this.isEnraged() && !this.level.isClientSide() && master.isPresent() && !master.get().isLastAlive(this) && this.level.canSeeSky(this.eyeBlockPosition())) {
-                    LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(this.level);
-                    lightningBolt.moveTo(this.position());
-                    lightningBolt.setVisualOnly(true);
-                    this.level.addFreshEntity(lightningBolt);
-                }
-                this.setEnraged(true);
-                newWitchHealth = 0;
-            }
-            if(!this.level.isClientSide)
-                this.setWitchHealth(newWitchHealth);
-        }
-        return true;
+        return this.getMaster().map(covenMaster ->
+                covenMaster.hurtWitch(damageSource, amount, this)
+        ).orElseGet(() ->
+                super.hurt(damageSource, amount)
+        );
     }
 
     @Override
@@ -170,17 +149,9 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public void writeSpawnData(FriendlyByteBuf friendlyByteBuf) {
-        SubEntity.super.writeSpawnData(friendlyByteBuf);
-    }
-
-    public void readSpawnData(FriendlyByteBuf friendlyByteBuf) {
-        SubEntity.super.readSpawnData(friendlyByteBuf);
-    }
-
     public Optional<CovenMaster> getMaster() {
-        int headId = this.entityData.get(MASTER_ID_DATA);
-        Entity entity = this.level.getEntity(headId);
+        int masterId = this.entityData.get(DATA_MASTER_ID);
+        Entity entity = this.level.getEntity(masterId);
         // instanceof also checks if it is null
         if(entity instanceof CovenMaster covenMaster) {
             return Optional.of(covenMaster);
@@ -189,7 +160,7 @@ public class CovenWitch extends Monster implements SubEntity<CovenMaster> {
     }
 
     public void setMasterId(int masterId) {
-        this.entityData.set(MASTER_ID_DATA, masterId);
+        this.entityData.set(DATA_MASTER_ID, masterId);
     }
 
     public void kill() {

@@ -53,6 +53,10 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
         super(entityType, level);
     }
 
+    public CovenType getCovenType(){
+        return CovenType.ENDER;
+    }
+
     @Override
     protected void registerGoals() {
         super.registerGoals();

@@ -3,22 +3,16 @@ package com.bedmen.odyssey.entity.boss.coven;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.entity.boss.SubEntity;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanSegment;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import com.bedmen.odyssey.util.GeneralUtil;
-import com.bedmen.odyssey.util.NonNullListCollector;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.floats.FloatList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,131 +25,134 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CovenMaster extends BossMaster {
-    // END, NETHER, OVR
-    private static final EntityDataAccessor<IntList> WITCH_IDS_DATA = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.INT_LIST);
+    private static final EntityDataAccessor<Map<CovenType, Integer>> DATA_WITCH_ID_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_INT_MAP_SERIALIZER);
+    private static final EntityDataAccessor<Map<CovenType, Float>> DATA_WITCH_HEALTH_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_FLOAT_MAP_SERIALIZER);
     public static final int NUM_WITCHES = 3;
-    public static final double MAX_HEALTH = 150.0d;
+    public static final float HEALTH_PER_WITCH = 50.0f;
+    public static final double MAX_HEALTH = HEALTH_PER_WITCH * NUM_WITCHES;
     public static final double DAMAGE = 8.0d;
     public static final double FOLLOW_RANGE = 75d;
     public static final double CENTER_RANGE = 40d;
-    private static final String WITCHES_TAG = "CovenWitches";
+    private static final String WITCH_TAG = "CovenWitch";
+    private static final String WITCH_HEALTH_TAG = WITCH_TAG+"Health";
 
     // These sub entities may only be referenced directly in a server side method
     // Otherwise use the 'get' method
-    public final List<CovenWitch> witches = new ArrayList<>();
+    public final Map<CovenType, CovenWitch> witchMap = new HashMap<>();
 
     public CovenMaster(EntityType<? extends CovenMaster> entityType, Level level) {
         super(entityType, level);
-        this.xpReward = 100;
     }
 
-
-//    public int getWitchId(int witchNum) {
-//        return this.entityData.get(WITCH_IDS_DATA).getInt(witchNum);
-//    }
-//
-//    public void setWitchId(int witchNum, int id) {
-//        IntList witchIDs = this.entityData.get(WITCH_IDS_DATA);
-//        if (witchIDs.size() != NUM_WITCHES)
-//            throw new IllegalStateException("Cannot set Witch IDs prior to instantiation");
-//        witchIDs.set(witchNum, id);
-//        this.entityData.set(WITCH_IDS_DATA, witchIDs);
-//    }
-
-    public IntList getBodyIds() {
-    return this.entityData.get(WITCH_IDS_DATA);
-}
-
-    private void addWitchId(int id) {
-        IntList witchIDs = this.entityData.get(WITCH_IDS_DATA);
-        witchIDs.add(id);
-        this.entityData.set(WITCH_IDS_DATA, witchIDs);
+    // Must use this method to access coven synched data because it makes a copy and protects the synched data object from outside changes
+    private Map<CovenType, Integer> getTypeToIDMap(){
+        return new HashMap<>(this.entityData.get(DATA_WITCH_ID_MAP));
     }
 
-    public Optional<CovenWitch> getWitch(int witchNum) {
-        List<CovenWitch> witches = this.getWitches();
-        if (witches.size() != NUM_WITCHES)
-            return Optional.empty();
-        return Optional.of(witches.get(witchNum));
+    // Adds the witch id to synched data
+    private void addIdToMap(CovenType covenType, int id) {
+        Map<CovenType, Integer> idMap = this.getTypeToIDMap();
+        idMap.put(covenType, id);
+        this.entityData.set(DATA_WITCH_ID_MAP, idMap);
     }
 
-    public List<CovenWitch> getWitches() {
+    private Map<CovenType, CovenWitch> getTypeToWitchMap() {
         if(this.level.isClientSide) {
-            List<CovenWitch> witches = new ArrayList<>();
-            for(Integer bodyId: this.entityData.get(WITCH_IDS_DATA)) {
-                Entity entity = this.level.getEntity(bodyId);
+            Map<CovenType, CovenWitch> witches = new HashMap<>();
+            for(Map.Entry<CovenType, Integer> entry: this.getTypeToIDMap().entrySet()) {
+                Entity entity = this.level.getEntity(entry.getValue());
                 // instanceof also checks if it is null
                 if(entity instanceof CovenWitch covenWitch) {
-                    witches.add(covenWitch);
+                    witches.put(entry.getKey(), covenWitch);
                 }
             }
             return witches;
         } else {
-            return this.witches;
+            return this.witchMap;
         }
+    }
+
+    private Collection<CovenWitch> getWitchCollection(){
+        return this.getTypeToWitchMap().values();
+    }
+
+    private Optional<CovenWitch> getWitchFromType(CovenType covenType) {
+       CovenWitch covenWitch = this.getTypeToWitchMap().get(covenType);
+       return covenWitch == null ? Optional.empty() : Optional.of(covenWitch);
+    }
+
+    private void addBaseHealthToHealthMap(CovenType covenType){
+        Map<CovenType, Float> healthMap = this.getTypeToHealthMap();
+        healthMap.put(covenType, HEALTH_PER_WITCH);
+        this.entityData.set(DATA_WITCH_HEALTH_MAP, healthMap);
+    }
+
+    // Must use this method to access coven synched data because it makes a copy and protects the synched data object from outside changes
+    private Map<CovenType, Float> getTypeToHealthMap() {
+        return new HashMap<>(this.entityData.get(DATA_WITCH_HEALTH_MAP));
+    }
+
+    private float healthWithDefault(Float f){
+        return f == null ? HEALTH_PER_WITCH : f;
+    }
+
+    private float getHealthFromType(CovenType covenType){
+        Float f = this.getTypeToHealthMap().get(covenType);
+        return healthWithDefault(f);
+    }
+
+    private float getWitchHealth(CovenWitch covenWitch){
+        Map<CovenType, Float> healthMap = this.getTypeToHealthMap();
+        Float f = healthMap.get(covenWitch.getCovenType());
+        return healthWithDefault(f);
+    }
+
+    private void setWitchHealth(CovenType covenType, float newHealth){
+        Map<CovenType, Float> healthMap = this.getTypeToHealthMap();
+        healthMap.put(covenType, newHealth);
+        this.entityData.set(DATA_WITCH_HEALTH_MAP, healthMap);
     }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(WITCH_IDS_DATA, new IntArrayList());
+        this.entityData.define(DATA_WITCH_ID_MAP, new HashMap<>());
+        this.entityData.define(DATA_WITCH_HEALTH_MAP, new HashMap<>());
     }
 
-    public void clientTick() {
-        for(Entity entity : this.getSubEntities()){
-            if(entity instanceof LivingEntity livingEntity) {
-                livingEntity.hurtTime = this.hurtTime;
-            }
+    private void updateMasterHealth(){
+        if(this.getHealth() > 0.0f) {
+            float totalHealth = this.getTypeToHealthMap().entrySet().stream()
+                    .reduce(0.0f, (aFloat, covenTypeFloatEntry) -> aFloat + covenTypeFloatEntry.getValue(), Float::sum);
+            this.setHealth(totalHealth);
         }
-    }
-
-    @Override
-    public void serverTick() {
-        super.serverTick();
-        float totalHealth = 0;
-        for (CovenWitch covenWitch : this.getWitches()) {
-            if (covenWitch.isAlive())
-                totalHealth += covenWitch.getWitchHealth();
-        }
-        this.setHealth(totalHealth);
     }
 
     public Collection<Entity> getSubEntities() {
-        List<Entity> entities = new ArrayList<>();
-        entities.addAll(this.getWitches());
-        return entities;
+        return new HashSet<>(this.getTypeToWitchMap().values());
     }
 
-    public int getMyWitchID(CovenWitch covenWitch) {
-        return this.witches.indexOf(covenWitch);
-    }
-
-    // TODO: I'm not convinced this is like the fastest way of doing this.
-    public List<LivingEntity> getOtherTargets(CovenWitch covenWitch) {
-        List<LivingEntity> targets = new ArrayList<>();
-        for (int i = 0 ; i < NUM_WITCHES; i++) {
-            if (i == getMyWitchID(covenWitch))
-                continue;
-            targets.add(this.witches.get(i).getTarget());
-        }
+    // Server-side only
+    public Set<LivingEntity> getOtherTargets(CovenWitch covenWitch) {
+        Set<LivingEntity> targets = this.getWitchCollection().stream().map(Mob::getTarget).collect(Collectors.toSet());
+        targets.remove(covenWitch.getTarget());
         return targets;
     }
 
     public boolean isLastAlive(CovenWitch covenWitch) {
-        for (int i = 0 ; i < NUM_WITCHES; i++) {
-            if (i == getMyWitchID(covenWitch))
+        for(CovenType covenType: CovenType.values()){
+            if(covenWitch.getCovenType() == covenType){
                 continue;
-            Optional<CovenWitch> otherWitchOptional = this.getWitch(i);
-            if (otherWitchOptional.isPresent() && !otherWitchOptional.get().isEnraged())
+            }
+            Optional<CovenWitch> optionalCovenWitch = this.getWitchFromType(covenType);
+            if(optionalCovenWitch.isPresent() && optionalCovenWitch.get().isAlive() && this.getHealthFromType(covenType) > 0.0f){
                 return false;
+            }
         }
         return true;
     }
@@ -176,8 +173,9 @@ public class CovenMaster extends BossMaster {
         return BossEvent.BossBarColor.RED;
     }
 
+    //Server side
     public void spawnSubEntities() {
-        if(this.getWitches().isEmpty()) {
+        if(this.witchMap.isEmpty()) {
             initializeWitches();
         }
         for(Entity entity: getSubEntities()) {
@@ -187,38 +185,36 @@ public class CovenMaster extends BossMaster {
 
     // Server Side
     public void initializeWitches() {
-        for (int witchNum = 0; witchNum < NUM_WITCHES; witchNum++) {
-            if (witchNum >= this.getWitches().size()) {
-                CovenWitch witch;
-                switch (witchNum) {
-                    case 2:
-                        witch = EntityTypeRegistry.OVERWORLD_WITCH.get().create(this.level);
-                        break;
-                    case 1:
-                        witch = EntityTypeRegistry.NETHER_WITCH.get().create(this.level);
-                        break;
-                    default:
-                    case 0:
-                        witch = EntityTypeRegistry.ENDER_WITCH.get().create(this.level);
-                }
-                if (witch != null) {
-                    this.witches.add(witch);
-                    this.addWitchId(witch.getId());
-
-                    float phi = Mth.PI * 2/NUM_WITCHES * witchNum;
-                    BlockPos.MutableBlockPos blockpos$mutableblockpos = (this.blockPosition().offset(Mth.cos(phi), 60, Mth.sin(phi))).mutable();
-
-                    while(blockpos$mutableblockpos.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(blockpos$mutableblockpos).getMaterial().blocksMotion()) {
-                        blockpos$mutableblockpos.move(Direction.DOWN);
-                    }
-                    BlockPos blockPos = blockpos$mutableblockpos.above().immutable();
-
-                    witch.moveTo(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                    witch.setMasterId(this.getId());
-                } else {
-                    Odyssey.LOGGER.error("Witch #" + witchNum + " failed to spawn in initializeWitches");
+        for(CovenType covenType: CovenType.values()){
+            CovenWitch witch;
+            switch (covenType) {
+                case OVERWORLD:
+                    witch = EntityTypeRegistry.OVERWORLD_WITCH.get().create(this.level);
                     break;
+                case NETHER:
+                    witch = EntityTypeRegistry.NETHER_WITCH.get().create(this.level);
+                    break;
+                default:
+                    witch = EntityTypeRegistry.ENDER_WITCH.get().create(this.level);
+            }
+            if (witch != null) {
+                this.witchMap.put(covenType, witch);
+                this.addIdToMap(covenType, witch.getId());
+                this.addBaseHealthToHealthMap(covenType);
+
+                float phi = Mth.PI * 2/NUM_WITCHES * covenType.ordinal();
+                BlockPos.MutableBlockPos blockpos$mutableblockpos = (this.blockPosition().offset(Mth.cos(phi), 60, Mth.sin(phi))).mutable();
+
+                while(blockpos$mutableblockpos.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(blockpos$mutableblockpos).getMaterial().blocksMotion()) {
+                    blockpos$mutableblockpos.move(Direction.DOWN);
                 }
+                BlockPos blockPos = blockpos$mutableblockpos.above().immutable();
+
+                witch.moveTo(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+                witch.setMasterId(this.getId());
+            } else {
+                Odyssey.LOGGER.error("Witch type " + covenType.name() + " failed to spawn in initializeWitches");
+                break;
             }
         }
     }
@@ -240,54 +236,112 @@ public class CovenMaster extends BossMaster {
         }
     }
 
-    // Server Side
-    public void saveSubEntities(CompoundTag compoundTag) {
-        ListTag witchesTag = new ListTag();
-        for(CovenWitch covenWitch : this.witches) {
-            CompoundTag witchCompoundTag = new CompoundTag();
-            if (covenWitch.saveAsPassenger(witchCompoundTag)) {
-                witchesTag.add(witchCompoundTag);
-            }
-        }
-        compoundTag.put(WITCHES_TAG, witchesTag);
+    private static String getCovenTypeTagString(CovenType covenType){
+        return WITCH_TAG + covenType.name();
     }
 
     // Server Side
-    public void loadSubEntities(CompoundTag compoundTag) {
-        if(compoundTag.contains(WITCHES_TAG)) {
-            List<Tag> listOfTags = compoundTag.getList(WITCHES_TAG, 10).stream().toList();
-            Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
-            this.witches.addAll(entitySteam.map(entity -> {
+    public CompoundTag saveSubEntities() {
+        CompoundTag subEntitiesTag = new CompoundTag();
+        for(CovenType covenType: CovenType.values()){
+            CovenWitch covenWitch = this.witchMap.get(covenType);
+            CompoundTag witchCompoundTag = new CompoundTag();
+            if (covenWitch != null && covenWitch.saveAsPassenger(witchCompoundTag)) {
+                subEntitiesTag.put(getCovenTypeTagString(covenType), witchCompoundTag);
+            }
+        }
+        return subEntitiesTag;
+    }
+
+    // Server Side
+    public void loadSubEntities(CompoundTag subEntitiesTag) {
+        for(CovenType covenType: CovenType.values()){
+            String witchTagString = getCovenTypeTagString(covenType);
+            if(subEntitiesTag.contains(witchTagString)) {
+                CompoundTag witchCompoundTag = subEntitiesTag.getCompound(witchTagString);
+                Entity entity = EntityType.loadEntityRecursive(witchCompoundTag, this.level, entity1 -> entity1);
                 if(entity instanceof CovenWitch covenWitch) {
                     covenWitch.setMasterId(this.getId());
-                    return covenWitch;
+                    this.witchMap.put(covenType, covenWitch);
+                    this.addIdToMap(covenType, covenWitch.getId());
+                } else {
+                    Odyssey.LOGGER.error("Witch type " + covenType.name() + " failed to spawn in loadSubEntities");
+                    break;
                 }
-                return null;
-            }).filter(covenWitch -> {
-                boolean isNull = covenWitch == null;
-                if(isNull) {
-                    Odyssey.LOGGER.error("Coven Witch failed to spawn body part in loadSubEntities");
-                }
-                return !isNull;
-            }).collect(new NonNullListCollector<>()));
-            for(CovenWitch covenWitch: this.witches) {
-                this.addWitchId(covenWitch.getId());
             }
         }
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH).add(Attributes.ATTACK_DAMAGE, DAMAGE).add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH);
     }
 
+    // Server Side
     public void bringWitchesToMe(){
         if(!this.level.isClientSide) {
             for (int i = 0; i < NUM_WITCHES; i++) {
-                CovenWitch witch = this.witches.get(i);
+                CovenWitch witch = this.witchMap.get(i);
                 float xOffset = Mth.cos(Mth.PI*2/NUM_WITCHES * i);
                 float zOffset = Mth.sin(Mth.PI*2/NUM_WITCHES * i);
                 witch.teleport(this.getX() + xOffset, this.getY(), this.getZ()+zOffset);
                 witch.doWhenReturnToMaster();
+            }
+        }
+    }
+
+    public boolean hurtWitch(DamageSource damageSource, float amount, CovenWitch covenWitch){
+        // Ignore magic damage. They are witches
+        if (covenWitch.isInvulnerableTo(damageSource) || damageSource.isMagic())
+            return false;
+
+        float originalWitchHealth = this.getWitchHealth(covenWitch);
+        float bossReducedAmount = amount * this.getDamageReduction();
+
+        if (originalWitchHealth > 0.0f) {
+            float newWitchHealth = Float.max(originalWitchHealth - bossReducedAmount, 0.0f);
+            if(!this.level.isClientSide){
+                if (newWitchHealth <= 0.0f) {
+                    if(!this.isLastAlive(covenWitch)) {
+                        covenWitch.becomeEnraged();
+                    } else {
+                        this.die(damageSource);
+                    }
+                }
+                this.setWitchHealth(covenWitch.getCovenType(), newWitchHealth);
+                this.updateMasterHealth();
+            } else {
+                covenWitch.animateHurt();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private static String getCovenTypeHealthTagString(CovenType covenType){
+        return WITCH_HEALTH_TAG + covenType.name();
+    }
+
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        CompoundTag healthTag = new CompoundTag();
+        for(CovenType covenType: CovenType.values()){
+            float f = this.getHealthFromType(covenType);
+            healthTag.put(getCovenTypeHealthTagString(covenType), FloatTag.valueOf(f));
+        }
+        compoundTag.put(WITCH_HEALTH_TAG, healthTag);
+    }
+
+    public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        if(compoundTag.contains(WITCH_HEALTH_TAG, Tag.TAG_COMPOUND)){
+            CompoundTag healthTag = compoundTag.getCompound(WITCH_HEALTH_TAG);
+            for(CovenType covenType: CovenType.values()){
+                String witchHealthTagString = getCovenTypeHealthTagString(covenType);
+                if(healthTag.contains(witchHealthTagString)){
+                    this.setWitchHealth(covenType, healthTag.getFloat(witchHealthTagString));
+                } else {
+                    this.setWitchHealth(covenType, HEALTH_PER_WITCH);
+                }
             }
         }
     }
