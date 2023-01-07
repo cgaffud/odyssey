@@ -60,5 +60,10 @@ public interface SubEntity<T extends BossMaster> extends IEntityAdditionalSpawnD
     public void kill() {
         this.hurtDirectly(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
     }
+
+    public void checkDespawn() {
+        if (this.getMaster().isEmpty())
+            this.discard();
+    }
     */
 }
