@@ -52,7 +52,7 @@ public class BarnPiece extends TemplateStructurePiece {
 
     @Override
     protected void handleDataMarker(String dataMarker, BlockPos blockPos, ServerLevelAccessor accessor, Random random, BoundingBox boundingBox) {
-        if ("copper_chest".equals(dataMarker)) {
+        if ("sterling_silver_chest".equals(dataMarker)) {
             accessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
             BlockEntity blockentity = accessor.getBlockEntity(blockPos.below());
             if (blockentity instanceof ChestBlockEntity) {
