@@ -167,7 +167,7 @@ public class Weaver extends Monster {
         if(this.isQueen()){
             this.spawnAtLocation(ItemRegistry.WEAVER_EGG.get());
             for(int i = 0; i < 2 + looting; i++) {
-                if(this.random.nextFloat() < 0.5f) {
+                if(this.random.nextFloat() < 0.3f) {
                     this.spawnAtLocation(ItemRegistry.WEAVER_FANG.get());
                 }
             }

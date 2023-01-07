@@ -7,6 +7,7 @@ import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -220,7 +221,7 @@ public class PassiveWeaver extends Animal {
 
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        this.inventory.fromTag(compoundTag.getList("Inventory", 10));
+        this.inventory.fromTag(compoundTag.getList("Inventory", Tag.TAG_COMPOUND));
         this.stringTimer = compoundTag.getInt("stringTimer");
     }
 

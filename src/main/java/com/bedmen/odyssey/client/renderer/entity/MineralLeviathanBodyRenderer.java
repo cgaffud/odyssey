@@ -3,7 +3,7 @@ package com.bedmen.odyssey.client.renderer.entity;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.model.MineralLeviathanBodyModel;
 import com.bedmen.odyssey.client.renderer.entity.layer.MineralLeviathanBodyShellLayer;
-import com.bedmen.odyssey.entity.boss.MineralLeviathanBody;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;

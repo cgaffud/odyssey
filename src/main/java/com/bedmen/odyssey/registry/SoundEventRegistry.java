@@ -18,16 +18,19 @@ public class SoundEventRegistry {
         SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
+    // Locked Chests
     public static final RegistryObject<SoundEvent> KEY_UNLOCK = SOUND_EVENTS.register("key_unlock", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "block.key_unlock")));
     public static final RegistryObject<SoundEvent> LOCKED_CHEST = SOUND_EVENTS.register("locked_chest", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "block.locked_chest")));
 
-    //Mineral Leviathan
+    // Mineral Leviathan
     public static final RegistryObject<SoundEvent> MINERAL_LEVIATHAN_ROAR = SOUND_EVENTS.register("mineral_leviathan_roar", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.mineral_leviathan.roar")));
     public static final RegistryObject<SoundEvent> MINERAL_LEVIATHAN_HURT = SOUND_EVENTS.register("mineral_leviathan_hurt", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.mineral_leviathan.hurt")));
     public static final RegistryObject<SoundEvent> MINERAL_LEVIATHAN_DEATH = SOUND_EVENTS.register("mineral_leviathan_death", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.mineral_leviathan.death")));
 
-    //Wraith
+    // Wraith
     public static final RegistryObject<SoundEvent> WRAITH_HURT = SOUND_EVENTS.register("wraith_hurt", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.wraith.hurt")));
     public static final RegistryObject<SoundEvent> WRAITH_DEATH = SOUND_EVENTS.register("wraith_death", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.wraith.death")));
 
+    // Music Discs
+    public static final RegistryObject<SoundEvent> MUSIC_DISC_MESA = SOUND_EVENTS.register("music_disc_mesa", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "music_disc.mesa")));
 }

@@ -14,6 +14,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -145,8 +146,8 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     public static void addChargedProjectile(ItemStack crossbow, ItemStack ammoStack) {
         CompoundTag compoundtag = crossbow.getOrCreateTag();
         ListTag listtag;
-        if (compoundtag.contains("ChargedProjectiles", 9)) {
-            listtag = compoundtag.getList("ChargedProjectiles", 10);
+        if (compoundtag.contains("ChargedProjectiles", Tag.TAG_LIST)) {
+            listtag = compoundtag.getList("ChargedProjectiles", Tag.TAG_COMPOUND);
         } else {
             listtag = new ListTag();
         }
@@ -160,8 +161,8 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     private static List<ItemStack> getChargedProjectiles(ItemStack crossbow) {
         List<ItemStack> list = Lists.newArrayList();
         CompoundTag compoundtag = crossbow.getTag();
-        if (compoundtag != null && compoundtag.contains("ChargedProjectiles", 9)) {
-            ListTag listtag = compoundtag.getList("ChargedProjectiles", 10);
+        if (compoundtag != null && compoundtag.contains("ChargedProjectiles", Tag.TAG_LIST)) {
+            ListTag listtag = compoundtag.getList("ChargedProjectiles", Tag.TAG_COMPOUND);
             if (listtag != null) {
                 for(int i = 0; i < listtag.size(); ++i) {
                     CompoundTag compoundtag1 = listtag.getCompound(i);

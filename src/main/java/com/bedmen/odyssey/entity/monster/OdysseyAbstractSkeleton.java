@@ -41,7 +41,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     private static final UUID SPEED_MODIFIER_BABY_UUID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
     private static final AttributeModifier SPEED_MODIFIER_BABY = new AttributeModifier(SPEED_MODIFIER_BABY_UUID, "Baby speed boost", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
     private static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(OdysseyAbstractSkeleton.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(OdysseyAbstractSkeleton.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(OdysseyAbstractSkeleton.class, EntityDataSerializers.BOOLEAN);
     public final OdysseyRangedBowAttackGoal<OdysseyAbstractSkeleton> odysseyBowGoal = new OdysseyRangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
     public final RangedCrossbowAttackGoal<OdysseyAbstractSkeleton> crossBowGoal = new RangedCrossbowAttackGoal<>(this, 1.0D, 8.0F);
     public final BoomerangAttackGoal<OdysseyAbstractSkeleton> boomerangGoal = new BoomerangAttackGoal<>(this, 0.0D, 50, 15.0F);
@@ -55,7 +55,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.getEntityData().define(DATA_BABY_ID, false);
-        this.entityData.define(IS_CHARGING_CROSSBOW, false);
+        this.entityData.define(DATA_IS_CHARGING_CROSSBOW, false);
     }
 
     public void tick(){
@@ -250,7 +250,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     }
 
     public boolean isChargingCrossbow() {
-        return this.entityData.get(IS_CHARGING_CROSSBOW);
+        return this.entityData.get(DATA_IS_CHARGING_CROSSBOW);
     }
 
     public HumanoidModel.ArmPose getArmPose() {
@@ -268,8 +268,8 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     }
 
     @Override
-    public void setChargingCrossbow(boolean b) {
-        this.entityData.set(IS_CHARGING_CROSSBOW, b);
+    public void setChargingCrossbow(boolean isChargingCrossbow) {
+        this.entityData.set(DATA_IS_CHARGING_CROSSBOW, isChargingCrossbow);
     }
 
     @Override

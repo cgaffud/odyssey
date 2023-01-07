@@ -140,12 +140,19 @@ public class ClientEvents {
             EntityRenderers.register(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBruteRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpiderRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WRAITH.get(), WraithRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.BANDIT.get(), BanditRenderer::new);
 
             //Boss Renderings
             EntityRenderers.register(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolemRenderer::new);
-            EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHeadRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_MASTER.get(), MineralLeviathanMasterRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_HEAD.get(), MineralLeviathanHeadRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBodyRenderer::new);
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.COVEN_MASTER.get(), CovenMasterRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.ENDER_WITCH.get(), EnderWitchRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.NETHER_WITCH.get(), NetherWitchRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.OVERWORLD_WITCH.get(), OverworldWitchRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.COVEN_ROOT_ENTITY.get(), CovenRootEntityRenderer::new);
 
             //Projectile Renderings
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
@@ -197,6 +204,8 @@ public class ClientEvents {
         event.registerLayerDefinition(WraithModel.LAYER_LOCATION, WraithModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanHeadModel.LAYER_LOCATION, MineralLeviathanHeadModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanBodyModel.LAYER_LOCATION, MineralLeviathanBodyModel::createBodyLayer);
+        event.registerLayerDefinition(ArmedCovenWitchModel.LAYER_LOCATION, ArmedCovenWitchModel::createBodyLayer);
+        event.registerLayerDefinition(CovenRootModel.LAYER_LOCATION, CovenRootModel::createBodyLayer);
     }
 
     @SubscribeEvent
@@ -231,7 +240,7 @@ public class ClientEvents {
         }, ItemRegistry.RAIN_SWORD.get(), ItemRegistry.ARID_MACE.get());
         event.getItemColors().register((itemStack, i) -> {
             return ConditionalAmpUtil.getColorTag(itemStack);
-        }, ItemRegistry.CRYOSLIVER.get());
+        }, ItemRegistry.ICE_DAGGER.get());
         for(TomeItem tomeItem : TomeItem.TOMES){
             event.getItemColors().register((itemStack, i) -> {
                 return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();

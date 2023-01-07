@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:stitching_table"
+  },
+  "metalCounts": [
+    {
+      "metal": "sterling_silver",
+      "count": 1
+    }
+  ]
+}

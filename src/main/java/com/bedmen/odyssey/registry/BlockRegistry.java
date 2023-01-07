@@ -36,7 +36,7 @@ public class BlockRegistry {
         BLOCKS_VANILLA.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<Block> LEATHER_PILE = BLOCKS.register("leather_pile", () -> new Block(BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.COLOR_BROWN).strength(1.0F, 1.0F).sound(SoundType.WOOL)));
+    public static final RegistryObject<Block> LEATHER_BUNDLE = BLOCKS.register("leather_bundle", () -> new Block(BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.COLOR_BROWN).strength(1.0F, 1.0F).sound(SoundType.WOOL)));
     public static final RegistryObject<Block> COPPER_CHEST = BLOCKS.register("copper_chest", () -> new TreasureChestBlock(TreasureChestMaterial.COPPER, BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_ORANGE).strength(3.0F, 6.0F).requiresCorrectToolForDrops().sound(SoundType.COPPER)));
     public static final RegistryObject<Block> RECYCLING_FURNACE = BLOCKS.register("recycling_furnace", () -> new RecyclingFurnaceBlock(BlockBehaviour.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(3.5F).lightLevel((state) -> {return state.getValue(BlockStateProperties.LIT) ? 13 : 0;})));
     public static final RegistryObject<Block> STITCHING_TABLE = BLOCKS.register("stitching_table", () -> new StitchingTableBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
@@ -59,6 +59,8 @@ public class BlockRegistry {
     public static final RegistryObject<Block> MOONROCK_SLAB = BLOCKS.register("moonrock_slab", () -> new LightEmitterSlabBlock(BlockBehaviour.Properties.copy(MOONROCK.get()), BlockRegistry::atNightSkyEmission));
     public static final RegistryObject<Block> POLISHED_MOONROCK_SLAB = BLOCKS.register("polished_moonrock_slab", () -> new LightEmitterSlabBlock(BlockBehaviour.Properties.copy(POLISHED_MOONROCK.get()), BlockRegistry::atNightSkyEmission));
     public static final RegistryObject<Block> MOONROCK_WALL = BLOCKS.register("moonrock_wall", () -> new LightEmitterWallBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(10.0F).randomTicks().lightLevel(litBlockEmission(moonrockLightAmount)), BlockRegistry::atNightSkyEmission));
+    public static final RegistryObject<Block> TRANSCENDENTAL_OBSIDIAN = BLOCKS.register("transcendental_obsidian", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
+    public static final RegistryObject<Block> TRANSCENDENTAL_TRANSMUTER = BLOCKS.register("transcendental_transmuter", () -> new WallBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
 
     public static final RegistryObject<Block> PRAIRIE_GRASS = BLOCKS.register("prairie_grass", () -> new TriplePlantBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
 
@@ -83,6 +85,8 @@ public class BlockRegistry {
     public static final RegistryObject<Block> POTTED_PALM_SAPLING = BLOCKS.register("potted_palm_sapling", () -> new OdysseyFlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, PALM_SAPLING, BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
     public static final RegistryObject<Block> COCONUT = BLOCKS.register("coconut", () -> new CoconutBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistryObject<Block> HOLLOW_COCONUT = BLOCKS.register("hollow_coconut", () -> new HollowCoconutBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
+
+    public static final RegistryObject<Block> COVEN_ROOTS = BLOCKS.register("coven_roots", () -> new CovenRootsBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN).strength(4.0F, 6.0F).sound(SoundType.WOOD).noCollission()));
 
     public static final RegistryObject<Block> STRIPPED_GREATWOOD_LOG = BLOCKS.register("stripped_greatwood_log", () -> new FlammableLogBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).strength(2.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> STRIPPED_GREATWOOD_WOOD = BLOCKS.register("stripped_greatwood_wood", () -> new FlammableLogBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).strength(2.0F).sound(SoundType.WOOD)));

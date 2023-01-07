@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.monster;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.Level;
 
 public class OdysseySkeleton extends OdysseyAbstractSkeleton {
     private static final EntityDataAccessor<Boolean> DATA_STRAY_CONVERSION_ID = SynchedEntityData.defineId(OdysseySkeleton.class, EntityDataSerializers.BOOLEAN);
-    public static final String CONVERSION_TAG = "StrayConversionTime";
     private int inPowderSnowTime;
     private int conversionTime;
 
@@ -68,7 +68,7 @@ public class OdysseySkeleton extends OdysseyAbstractSkeleton {
 
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        if (compoundTag.contains("StrayConversionTime", 99) && compoundTag.getInt("StrayConversionTime") > -1) {
+        if (compoundTag.contains("StrayConversionTime", Tag.TAG_ANY_NUMERIC) && compoundTag.getInt("StrayConversionTime") > -1) {
             this.startFreezeConversion(compoundTag.getInt("StrayConversionTime"));
         }
 

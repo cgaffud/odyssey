@@ -3,6 +3,7 @@ package com.bedmen.odyssey.items;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -54,7 +55,7 @@ public class TomeItem extends Item {
 
     public static ListTag getEnchantmentsListTag(ItemStack itemStack) {
         CompoundTag compoundtag = itemStack.getTag();
-        return compoundtag != null ? compoundtag.getList(TAG_LEARNED_ENCHANTMENTS, 10) : new ListTag();
+        return compoundtag != null ? compoundtag.getList(TAG_LEARNED_ENCHANTMENTS, Tag.TAG_COMPOUND) : new ListTag();
     }
 
     public static Map<Enchantment, Integer> getEnchantmentsMap(ItemStack itemStack) {

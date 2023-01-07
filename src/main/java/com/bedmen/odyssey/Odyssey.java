@@ -3,8 +3,8 @@ package com.bedmen.odyssey;
 import com.bedmen.odyssey.block.wood.OdysseyFlowerPotBlock;
 import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
-import com.bedmen.odyssey.entity.boss.MineralLeviathanBody;
-import com.bedmen.odyssey.entity.boss.MineralLeviathanHead;
+import com.bedmen.odyssey.entity.boss.coven.*;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.*;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.TomeItem;
@@ -141,11 +141,18 @@ public class Odyssey
         event.put(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBrute.createAttributes().build());
         event.put(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpider.createAttributes().build());
         event.put(EntityTypeRegistry.WRAITH.get(), Wraith.createAttributes().build());
+        event.put(EntityTypeRegistry.BANDIT.get(), Bandit.createAttributes().build());
 //
 //        //Bosses
         event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolem.createAttributes().build());
-        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN.get(), MineralLeviathanHead.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_MASTER.get(), MineralLeviathanMaster.createAttributes().build());
+        event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_HEAD.get(), MineralLeviathanHead.createAttributes().build());
         event.put(EntityTypeRegistry.MINERAL_LEVIATHAN_BODY.get(), MineralLeviathanBody.createAttributes().build());
+        event.put(EntityTypeRegistry.COVEN_MASTER.get(), CovenMaster.createAttributes().build());
+        event.put(EntityTypeRegistry.ENDER_WITCH.get(), EnderWitch.createAttributes().build());
+        event.put(EntityTypeRegistry.NETHER_WITCH.get(), NetherWitch.createAttributes().build());
+        event.put(EntityTypeRegistry.OVERWORLD_WITCH.get(), OverworldWitch.createAttributes().build());
+//        event.put(EntityTypeRegistry.COVEN_ROOT_ENTITY.get(), CovenRootEntity.);
 //        event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
     }
 }
