@@ -55,6 +55,10 @@ public class OverworldWitch extends CovenWitch {
         this.rootGoal = new OverworldWitchRootGoal(this);
     }
 
+    public CovenType getCovenType(){
+        return CovenType.OVERWORLD;
+    }
+
     @Override
     protected void registerGoals() {
         super.registerGoals();
@@ -134,13 +138,11 @@ public class OverworldWitch extends CovenWitch {
     }
 
     public void setSpikeGoal() {
-        System.out.println("spike goal.");
         this.goalSelector.removeGoal(this.rootGoal);
         this.goalSelector.addGoal(3, this.spikeGoal);
     }
 
     public void setRootGoal() {
-        System.out.println("root goal.");
         this.goalSelector.removeGoal(this.spikeGoal);
         this.goalSelector.addGoal(3, this.rootGoal);
     }

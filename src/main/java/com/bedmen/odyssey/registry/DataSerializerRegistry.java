@@ -17,6 +17,7 @@ public class DataSerializerRegistry {
     }
 
     public static final RegistryObject<DataSerializerEntry> INT_LIST = DATA_SERIALIZERS.register("int_list", () -> new DataSerializerEntry(OdysseyDataSerializers.INT_LIST));
-    public static final RegistryObject<DataSerializerEntry> FLOAT_LIST = DATA_SERIALIZERS.register("float_list", () -> new DataSerializerEntry(OdysseyDataSerializers.FLOAT_LIST));
+    public static final RegistryObject<DataSerializerEntry> COVENTYPE_INT_MAP_SERIALIZER = DATA_SERIALIZERS.register("coventype_int_map_serializer", () -> new DataSerializerEntry(OdysseyDataSerializers.COVENTYPE_INT_MAP_SERIALIZER));
+    public static final RegistryObject<DataSerializerEntry> COVENTYPE_FLOAT_MAP_SERIALIZER = DATA_SERIALIZERS.register("coventype_float_map_serializer", () -> new DataSerializerEntry(OdysseyDataSerializers.COVENTYPE_FLOAT_MAP_SERIALIZER));
 
 }

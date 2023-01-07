@@ -29,6 +29,10 @@ public class NetherWitch extends CovenWitch {
         super(entityType, level);
     }
 
+    public CovenType getCovenType(){
+        return CovenType.NETHER;
+    }
+
     @Override
     protected void registerGoals() {
         super.registerGoals();

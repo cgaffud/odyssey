@@ -48,6 +48,7 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
         this.setNoGravity(true);
         this.noCulling = true;
         this.lookControl = new SegmentLookController(this);
+        this.xpReward = 5;
     }
 
     protected void defineSynchedData() {

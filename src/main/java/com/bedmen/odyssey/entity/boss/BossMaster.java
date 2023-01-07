@@ -21,6 +21,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class BossMaster extends Boss {
+    public static final String SUB_ENTITIES_TAG = "SubEntities";
 
     protected BossMaster(EntityType<? extends BossMaster> entityType, Level level) {
         super(entityType, level);
@@ -47,29 +48,25 @@ public abstract class BossMaster extends Boss {
 
     public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        this.saveSubEntities(compoundTag);
+        compoundTag.put(SUB_ENTITIES_TAG, this.saveSubEntities());
     }
 
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        this.loadSubEntities(compoundTag);
+        // subEntitiesTag could be empty (but not null) if there was no CompoundTag found for SUB_ENTITIES_TAG
+        CompoundTag subEntitiesTag = compoundTag.getCompound(SUB_ENTITIES_TAG);
+        this.loadSubEntities(subEntitiesTag);
     }
 
     public void remove(@NotNull RemovalReason removalReason) {
-        if(removalReason == RemovalReason.KILLED) {
-            this.getSubEntities().forEach(Entity::kill);
-        } else {
-            this.getSubEntities().forEach(Entity::discard);
-        }
+        this.getSubEntities().forEach(Entity::discard);
         super.remove(removalReason);
     }
 
-    public void die(DamageSource damageSource) {
+    public void die(@NotNull DamageSource damageSource) {
         this.getSubEntities().forEach(entity -> {
-            if(entity instanceof LivingEntity livingEntity) {
-                livingEntity.die(damageSource);
-            } else {
-                entity.kill();
+            if(entity instanceof SubEntity subEntity) {
+                subEntity.hurtDirectly(damageSource, Float.MAX_VALUE);
             }
         });
         super.die(damageSource);
@@ -83,7 +80,7 @@ public abstract class BossMaster extends Boss {
 
     public abstract void handleSubEntity(SubEntity<?> subEntity);
 
-    public abstract void saveSubEntities(CompoundTag compoundTag);
+    public abstract CompoundTag saveSubEntities();
 
     public abstract void loadSubEntities(CompoundTag compoundTag);
 }

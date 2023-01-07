@@ -24,6 +24,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -46,7 +47,6 @@ public class MineralLeviathanMaster extends BossMaster {
 
     public MineralLeviathanMaster(EntityType<? extends MineralLeviathanMaster> entityType, Level level) {
         super(entityType, level);
-        this.xpReward = 100;
     }
 
     public int getHeadId() {
@@ -199,10 +199,11 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     // Server Side
-    public void saveSubEntities(CompoundTag compoundTag) {
+    public CompoundTag saveSubEntities() {
+        CompoundTag subEntitiesTag = new CompoundTag();
         CompoundTag headCompoundTag = new CompoundTag();
         this.head.saveAsPassenger(headCompoundTag);
-        compoundTag.put(HEAD_TAG, headCompoundTag);
+        subEntitiesTag.put(HEAD_TAG, headCompoundTag);
         ListTag bodyPartsTag = new ListTag();
         for(MineralLeviathanBody mineralLeviathanBody : this.bodyParts) {
             CompoundTag bodyCompoundTag = new CompoundTag();
@@ -210,13 +211,14 @@ public class MineralLeviathanMaster extends BossMaster {
                 bodyPartsTag.add(bodyCompoundTag);
             }
         }
-        compoundTag.put(BODY_TAG, bodyPartsTag);
+        subEntitiesTag.put(BODY_TAG, bodyPartsTag);
+        return subEntitiesTag;
     }
 
     // Server Side
-    public void loadSubEntities(CompoundTag compoundTag) {
-        if(compoundTag.contains(HEAD_TAG)) {
-            CompoundTag headCompoundTag = compoundTag.getCompound(HEAD_TAG);
+    public void loadSubEntities(CompoundTag subEntitiesTag) {
+        if(subEntitiesTag.contains(HEAD_TAG)) {
+            CompoundTag headCompoundTag = subEntitiesTag.getCompound(HEAD_TAG);
             Entity entity = EntityType.loadEntityRecursive(headCompoundTag, this.level, entity1 -> entity1);
             if(entity instanceof MineralLeviathanHead mineralLeviathanHead) {
                 mineralLeviathanHead.setMasterId(this.getId());
@@ -226,8 +228,8 @@ public class MineralLeviathanMaster extends BossMaster {
                 Odyssey.LOGGER.error("Mineral Leviathan failed to spawn head in loadSubEntities");
             }
         }
-        if(compoundTag.contains(BODY_TAG)) {
-            List<Tag> listOfTags = compoundTag.getList(BODY_TAG, Tag.TAG_COMPOUND).stream().toList();
+        if(subEntitiesTag.contains(BODY_TAG)) {
+            List<Tag> listOfTags = subEntitiesTag.getList(BODY_TAG, Tag.TAG_COMPOUND).stream().toList();
             Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
             this.bodyParts.addAll(entitySteam.map(entity -> {
                 if(entity instanceof MineralLeviathanBody mineralLeviathanBody) {

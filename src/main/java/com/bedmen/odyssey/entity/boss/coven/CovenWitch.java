@@ -47,8 +47,10 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
         this.noCulling = true;
         // TODO: look controller?
         this.lookControl = new LookControl(this);
-
+        this.xpReward = 50;
     }
+
+    public abstract CovenType getCovenType();
 
     protected SoundEvent getCastingSoundEvent() {
         return SoundEvents.EVOKER_CAST_SPELL;
