@@ -496,11 +496,11 @@
   "abilities.oddc.cobweb_break": "Cobweb Break",
   "abilities.oddc.smack": "Smack",
   "item.oddc.innate_aspect": "Innate:",
-  "aspect.oddc.damage_against_arthropod": "Damage Against Athropods",
-  "aspect.oddc.damage_against_undead": "Damage Against Undead",
-  "aspect.oddc.knockback": "Knockback",
-  "aspect.oddc.fatal_hit": "Fatal Blow Threshold",
-  "aspect.oddc.sweep_damage": "Sweep Damage",
-  "aspect.oddc.poison_damage": "Poison Damage",
-  "aspect.oddc.cobweb_chance": "Cobweb Chance"
+  "aspect.oddc.damage_against_arthropod": "+%s Damage Against Athropods",
+  "aspect.oddc.damage_against_undead": "+%s Damage Against Undead",
+  "aspect.oddc.knockback": "x%s Knockback",
+  "aspect.oddc.fatal_hit": "%sHP Fatal Blow Threshold",
+  "aspect.oddc.sweep_damage": "%s Sweep Damage",
+  "aspect.oddc.poison_damage": "%s Poison Damage",
+  "aspect.oddc.cobweb_chance": "%s Cobweb Chance"
 }

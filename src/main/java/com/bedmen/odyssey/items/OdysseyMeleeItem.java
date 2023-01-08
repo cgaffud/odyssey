@@ -103,9 +103,9 @@ public class OdysseyMeleeItem extends TieredItem implements Vanishable {
 
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
         if(tooltipFlag.isAdvanced()){
-            tooltip.addAll(this.meleeWeaponClass.advancedTooltipAbilityList);
+            tooltip.addAll(1, this.meleeWeaponClass.advancedTooltipAbilityList);
         } else {
-            tooltip.addAll(this.meleeWeaponClass.tooltipAbilityList);
+            tooltip.addAll(1, this.meleeWeaponClass.tooltipAbilityList);
         }
         super.appendHoverText(itemStack, level, tooltip, tooltipFlag);
     }

@@ -8,8 +8,8 @@ import java.util.function.Predicate;
 
 public class ConditionalMeleeAspect extends Aspect {
     public final Predicate<LivingEntity> livingEntityPredicate;
-    protected ConditionalMeleeAspect(String id, Function<AspectInstance, MutableComponent> mutableComponentFunction, Predicate<LivingEntity> livingEntityPredicate){
-        super(id, mutableComponentFunction);
+    protected ConditionalMeleeAspect(String id, Predicate<LivingEntity> livingEntityPredicate){
+        super(id);
         this.livingEntityPredicate = livingEntityPredicate;
     }
 }
