@@ -1,8 +1,11 @@
 package com.bedmen.odyssey.util;
 
+import com.bedmen.odyssey.aspect.AdditiveConditionalMeleeAspect;
+import com.bedmen.odyssey.aspect.Aspect;
 import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -149,8 +152,16 @@ public class WeaponUtil {
     }
 
     //TODO: anvil aspects
-    public static float getTotalKnockbackAspect(InnateAspectMeleeItem innateAspectMeleeItem){
-        return innateAspectMeleeItem.innateAspectList.stream().filter(aspectInstance -> aspectInstance.aspect == Aspects.KNOCKBACK).map(aspectInstance -> aspectInstance.strength).reduce(Float::sum).orElse(0.0f);
+    public static float getTotalAspectStrength(InnateAspectItem innateAspectItem, Aspect aspect){
+        return getTotalAspectStrength(innateAspectItem, aspect1 -> aspect1 == aspect);
+    }
+
+    public static float getTotalAspectStrength(InnateAspectItem innateAspectItem, Predicate<Aspect> aspectPredicate){
+        return innateAspectItem.getInnateAspectInstanceList().stream()
+                .filter(aspectInstance -> aspectPredicate.test(aspectInstance.aspect))
+                .map(aspectInstance -> aspectInstance.strength)
+                .reduce(Float::sum)
+                .orElse(0.0f);
     }
 
     public static class AmmoStack{

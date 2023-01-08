@@ -8,14 +8,10 @@ import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.Predicate;
 
-public class AdditiveConditionalMeleeAspect extends Aspect {
+public class AdditiveConditionalMeleeAspect extends AdditiveMeleeAspect {
     public final Predicate<LivingEntity> livingEntityPredicate;
     protected AdditiveConditionalMeleeAspect(String id, Predicate<LivingEntity> livingEntityPredicate){
         super(id);
         this.livingEntityPredicate = livingEntityPredicate;
-    }
-
-    public MutableComponent getMutableComponent(Object... args){
-        return new TextComponent("+"+ StringUtil.floatFormat((Float) args[0])+" ").append(new TranslatableComponent("aspect.oddc."+this.id));
     }
 }

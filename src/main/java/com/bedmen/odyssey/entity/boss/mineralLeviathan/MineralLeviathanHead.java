@@ -72,9 +72,7 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
                 //Choose Target
                 if(GeneralUtil.isHashTick(this, this.level, 10)){
                     Collection<ServerPlayer> serverPlayerEntities = mineralLeviathanMaster.bossEvent.getPlayers();
-                    System.out.println("Size1: "+serverPlayerEntities.size());
                     List<ServerPlayer> serverPlayerEntityList = serverPlayerEntities.stream().filter(mineralLeviathanMaster::validTargetPredicate).collect(Collectors.toList());
-                    System.out.println("Size2: "+serverPlayerEntityList.size());
                     // Set Phase based on Target
                     if(serverPlayerEntityList.isEmpty()){
                         this.setTarget(null);

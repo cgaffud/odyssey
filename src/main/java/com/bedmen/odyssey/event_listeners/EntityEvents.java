@@ -2,12 +2,14 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AdditiveConditionalMeleeAspect;
+import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
@@ -34,6 +36,7 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Map;
 import java.util.Optional;
@@ -99,28 +102,24 @@ public class EntityEvents {
         float amount = event.getAmount();
         LivingEntity hurtLivingEntity = event.getEntityLiving();
         DamageSource damageSource = event.getSource();
+        Entity damageSourceEntity = damageSource.getEntity();
 
-        if (damageSource.getEntity() instanceof LivingEntity ) {
-            LivingEntity attackingEntity = (LivingEntity) damageSource.getEntity();
-            ItemStack mainHandItemStack = attackingEntity.getMainHandItem();
+        if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
+            ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
             Item mainHandItem = mainHandItemStack.getItem();
+
+            // downpour damage booster
+            int downpourLevel = EnchantmentUtil.getDownpour(damageSourceLivingEntity);
+            if (downpourLevel > 0 && hurtLivingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
+            amount += (float)downpourLevel * 3f;
 
             // Innate Aspect Damage
             // TODO: anvil aspects
             if(mainHandItem instanceof InnateAspectItem innateAspectItem){
-                amount += innateAspectItem.getInnateAspectInstanceList().stream()
-                        .filter(aspectInstance ->
-                                aspectInstance.aspect instanceof AdditiveConditionalMeleeAspect additiveConditionalMeleeAspect
-                                        && additiveConditionalMeleeAspect.livingEntityPredicate.test(hurtLivingEntity))
-                        .map(aspectInstance -> aspectInstance.strength)
-                        .reduce(Float::sum)
-                        .orElse(0.0f);
+                amount += WeaponUtil.getTotalAspectStrength(innateAspectItem, aspect ->
+                        aspect instanceof AdditiveConditionalMeleeAspect additiveConditionalMeleeAspect
+                                && additiveConditionalMeleeAspect.livingEntityPredicate.test(hurtLivingEntity));
             }
-
-            // downpour damage booster
-            int downpourLevel = EnchantmentUtil.getDownpour(attackingEntity);
-            if (downpourLevel > 0 && hurtLivingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
-                amount += (float)downpourLevel * 3f;
         }
 
         if(amount >= 10.0f && hurtLivingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
@@ -137,6 +136,31 @@ public class EntityEvents {
             }
         }
         event.setAmount(amount);
+    }
+
+    @SubscribeEvent
+    public static void onLivingDamageEvent(final LivingDamageEvent event){
+        float amount = event.getAmount();
+        LivingEntity hurtLivingEntity = event.getEntityLiving();
+        DamageSource damageSource = event.getSource();
+        Entity damageSourceEntity = damageSource.getEntity();
+        // TODO: anvil aspects
+        if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
+            ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
+            Item mainHandItem = mainHandItemStack.getItem();
+            if(mainHandItem instanceof InnateAspectItem innateAspectItem){
+                float fatalDamage = WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.FATAL_HIT);
+                float currentHealth = hurtLivingEntity.getHealth();
+                float newHealth = currentHealth - amount;
+                if(newHealth > 0.0f && newHealth < fatalDamage){
+                    float deathChance = (fatalDamage - newHealth) / fatalDamage;
+                    if(deathChance > hurtLivingEntity.getRandom().nextFloat()) {
+                        event.setAmount(currentHealth);
+                        OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> hurtLivingEntity), new FatalHitAnimatePacket(hurtLivingEntity));
+                    }
+                }
+            }
+        }
     }
 
     public static final Set<Integer> IDS = ConcurrentHashMap.newKeySet();
@@ -297,14 +321,13 @@ public class EntityEvents {
 
     @SubscribeEvent
     public static void onLivingKnockBackEvent(final LivingKnockBackEvent event){
-        System.out.println(event.getStrength());
         Entity knockbackSourceEntity = event.getEntityLiving().getLastHurtByMob();
         if(knockbackSourceEntity instanceof LivingEntity knockbackSourceLivingEntity){
             // TODO: anvil aspects
             ItemStack itemStack = knockbackSourceLivingEntity.getMainHandItem();
             Item item = itemStack.getItem();
             if(item instanceof InnateAspectMeleeItem innateAspectMeleeItem) {
-                float knockback = WeaponUtil.getTotalKnockbackAspect(innateAspectMeleeItem);
+                float knockback = Float.max(WeaponUtil.getTotalAspectStrength(innateAspectMeleeItem, Aspects.KNOCKBACK), 1.0f);
                 event.setStrength(event.getStrength() * knockback);
             }
         }

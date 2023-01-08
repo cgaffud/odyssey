@@ -62,6 +62,7 @@ public class Odyssey
         FeatureRegistry.init();
         FoliagePlacerTypeRegistry.init();
         LootModifierRegistry.init();
+        ParticleTypeRegistry.init();
 //        PotionRegistry.init();
         RecipeSerializerRegistry.init();
         RecipeTypeRegistry.init();
