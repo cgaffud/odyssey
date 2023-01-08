@@ -2,6 +2,7 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AdditiveConditionalMeleeAspect;
+import com.bedmen.odyssey.aspect.Aspect;
 import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
@@ -119,6 +120,10 @@ public class EntityEvents {
                 amount += WeaponUtil.getTotalAspectStrength(innateAspectItem, aspect ->
                         aspect instanceof AdditiveConditionalMeleeAspect additiveConditionalMeleeAspect
                                 && additiveConditionalMeleeAspect.livingEntityPredicate.test(hurtLivingEntity));
+                float poisonStrength = WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.POISON_DAMAGE);
+                if(poisonStrength > 0.0f){
+                    hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (int)(12 * poisonStrength), 1));
+                }
             }
         }
 

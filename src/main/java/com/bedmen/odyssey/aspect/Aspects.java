@@ -8,4 +8,5 @@ public class Aspects {
     public static final Aspect KNOCKBACK = new MultiplicativeAspect("knockback");
     public static final Aspect FATAL_HIT = new AssertAspect("fatal_hit");
     public static final Aspect SWEEP_DAMAGE = new AssertAspect("sweep_damage");
+    public static final Aspect POISON_DAMAGE = new AssertAspect("poison_damage");
 }

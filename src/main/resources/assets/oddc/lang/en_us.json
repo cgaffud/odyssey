@@ -410,7 +410,6 @@
   "item.oddc.speedy_bone_boomerang": "Speedy Bone Boomerang",
   "item.oddc.speedy_greatroot_boomerang": "Speedy Greatroot Boomerang",
   "item.oddc.spider_fang": "Spider Fang",
-  "item.oddc.spider_fang.poison_damage": "+%s Poison Damage",
   "item.oddc.spider_fang_arrow": "Spider Fang Arrow",
   "item.oddc.spider_fang_dagger": "Spider Fang Dagger",
   "item.oddc.sterling_silver_axe": "Sterling Silver Axe",
@@ -496,5 +495,6 @@
   "aspect.oddc.damage_against_undead": "Damage Against Undead",
   "aspect.oddc.knockback": "Knockback",
   "aspect.oddc.fatal_hit": "Fatal Blow Threshold",
-  "aspect.oddc.sweep_damage": "Sweep Damage"
+  "aspect.oddc.sweep_damage": "Sweep Damage",
+  "aspect.oddc.poison_damage": "Poison Damage"
 }
