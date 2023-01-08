@@ -1,9 +1,8 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.AdditiveConditionalMeleeAspect;
-import com.bedmen.odyssey.aspect.Aspect;
 import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.aspect.ConditionalMeleeAspect;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
@@ -31,6 +30,7 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -117,12 +117,24 @@ public class EntityEvents {
             // Innate Aspect Damage
             // TODO: anvil aspects
             if(mainHandItem instanceof InnateAspectItem innateAspectItem){
+                // Smite, Bane of Arthropods
                 amount += WeaponUtil.getTotalAspectStrength(innateAspectItem, aspect ->
-                        aspect instanceof AdditiveConditionalMeleeAspect additiveConditionalMeleeAspect
-                                && additiveConditionalMeleeAspect.livingEntityPredicate.test(hurtLivingEntity));
+                        aspect instanceof ConditionalMeleeAspect conditionalMeleeAspect
+                                && conditionalMeleeAspect.livingEntityPredicate.test(hurtLivingEntity));
+
+                // Poison Damage
                 float poisonStrength = WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.POISON_DAMAGE);
                 if(poisonStrength > 0.0f){
                     hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (int)(12 * poisonStrength), 1));
+                }
+
+                // Cobweb Chance
+                float cobwebChance = WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.COBWEB_CHANCE);
+                if(cobwebChance > damageSourceLivingEntity.getRandom().nextFloat()){
+                    BlockPos blockPos = new BlockPos(hurtLivingEntity.getPosition(1f));
+                    if (hurtLivingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
+                        hurtLivingEntity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
+                    }
                 }
             }
         }

@@ -1,8 +1,6 @@
 package com.bedmen.odyssey.util;
 
-import com.bedmen.odyssey.aspect.AdditiveConditionalMeleeAspect;
 import com.bedmen.odyssey.aspect.Aspect;
-import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;

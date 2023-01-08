@@ -25,7 +25,7 @@ public class InnateAspectMeleeItem extends OdysseyMeleeItem implements InnateAsp
     }
 
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        List<Component> innateAspectComponentList = this.innateAspectList.stream().map(AspectInstance::getInnateComponent).collect(Collectors.toList());
+        List<Component> innateAspectComponentList = this.innateAspectList.stream().map(aspectInstance -> aspectInstance.innateComponenet).collect(Collectors.toList());
         if(tooltipFlag.isAdvanced()){
             tooltip.add(new TranslatableComponent("item.oddc.abilities").withStyle(OdysseyChatFormatting.COPPER));
             tooltip.addAll(this.meleeWeaponClass.abilityTooltipList);

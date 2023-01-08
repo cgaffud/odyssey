@@ -497,7 +497,8 @@
   "aspect.oddc.damage_against_arthropod": "Damage Against Athropods",
   "aspect.oddc.damage_against_undead": "Damage Against Undead",
   "aspect.oddc.knockback": "Knockback",
-  "aspect.oddc.fatal_hit": "HP Fatal Blow Threshold",
+  "aspect.oddc.fatal_hit": "Fatal Blow Threshold",
   "aspect.oddc.sweep_damage": "Sweep Damage",
-  "aspect.oddc.poison_damage": "Poison Damage"
+  "aspect.oddc.poison_damage": "Poison Damage",
+  "aspect.oddc.cobweb_chance": "Cobweb Chance"
 }

@@ -2,12 +2,14 @@ package com.bedmen.odyssey.aspect;
 
 import net.minecraft.network.chat.MutableComponent;
 
-public abstract class Aspect {
+import java.util.function.Function;
+
+public class Aspect {
     public final String id;
+    public final Function<AspectInstance, MutableComponent> mutableComponentFunction;
 
-    protected Aspect(String id){
+    protected Aspect(String id, Function<AspectInstance, MutableComponent> mutableComponentFunction){
         this.id = id;
+        this.mutableComponentFunction = mutableComponentFunction;
     }
-
-    public abstract MutableComponent getMutableComponent(Object... args);
 }
