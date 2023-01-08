@@ -503,5 +503,7 @@
   "aspect.oddc.sweep_damage": "%s Sweep Damage",
   "aspect.oddc.poison_damage": "%s Poison Damage",
   "aspect.oddc.cobweb_chance": "%s Cobweb Chance",
-  "aspect.oddc.hydro_damage": "+%s Hydro Damage"
+  "aspect.oddc.hydro_damage": "+%s Hydro Damage",
+  "aspect.oddc.solar_strength": "+%s Solar Strength",
+  "aspect.oddc.lunar_strength": "+%s Lunar Strength"
 }

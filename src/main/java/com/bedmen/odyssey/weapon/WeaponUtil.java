@@ -1,12 +1,14 @@
 package com.bedmen.odyssey.weapon;
 
 import com.bedmen.odyssey.aspect.Aspect;
+import com.bedmen.odyssey.aspect.EnvironmentConditionalMeleeAspect;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -19,7 +21,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.level.Level;
 
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class WeaponUtil {
@@ -161,7 +165,21 @@ public class WeaponUtil {
     public static float getTotalAspectStrength(InnateAspectItem innateAspectItem, Predicate<Aspect> aspectPredicate){
         return innateAspectItem.getInnateAspectInstanceList().stream()
                 .filter(aspectInstance -> aspectPredicate.test(aspectInstance.aspect))
-                .reduce(0.0f, (aFloat, aspectInstance) -> aspectInstance.strength + aFloat, Float::sum);
+                .reduce(0.0f,
+                        (aFloat, aspectInstance) ->
+                        aspectInstance.strength + aFloat,
+                        Float::sum);
+    }
+
+    public static float getEnvironmentalAspectStrength(InnateAspectItem innateAspectItem, BlockPos blockPos, Level level){
+        return innateAspectItem.getInnateAspectInstanceList().stream()
+                .filter(aspectInstance -> aspectInstance.aspect instanceof EnvironmentConditionalMeleeAspect)
+                .reduce(0.0f,
+                        (aFloat, aspectInstance) ->
+                                aspectInstance.strength
+                                        * ((EnvironmentConditionalMeleeAspect)aspectInstance.aspect).attackBoostFactorFunction.getBoostFactor(blockPos, level)
+                                        + aFloat,
+                        Float::sum);
     }
 
     public static void smackTarget(LivingEntity thrower, Entity target, float attackStrengthScale) {

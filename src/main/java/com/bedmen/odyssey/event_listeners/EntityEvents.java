@@ -2,10 +2,9 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.Aspects;
-import com.bedmen.odyssey.aspect.ConditionalMeleeAspect;
+import com.bedmen.odyssey.aspect.TargetConditionalMeleeAspect;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
-import com.bedmen.odyssey.items.OdysseyMeleeItem;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
@@ -16,9 +15,7 @@ import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -114,10 +111,12 @@ public class EntityEvents {
             // Innate Aspect Damage
             // TODO: anvil aspects
             if(mainHandItem instanceof InnateAspectItem innateAspectItem){
-                // Smite, Bane of Arthropods
-                amount += WeaponUtil.getTotalAspectStrength(innateAspectItem, aspect ->
-                        aspect instanceof ConditionalMeleeAspect conditionalMeleeAspect
-                                && conditionalMeleeAspect.livingEntityPredicate.test(hurtLivingEntity));
+                // Smite, Bane of Arthropods,
+                amount += WeaponUtil.getTotalAspectStrength(innateAspectItem,
+                        aspect ->
+                        aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect
+                        && targetConditionalMeleeAspect.livingEntityPredicate.test(hurtLivingEntity)
+                );
 
                 // Poison Damage
                 float poisonStrength = WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.POISON_DAMAGE);
