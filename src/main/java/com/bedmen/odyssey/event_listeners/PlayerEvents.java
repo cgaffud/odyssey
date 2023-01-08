@@ -1,21 +1,39 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.Aspect;
+import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
+import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
+import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.util.WeaponUtil;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
@@ -82,6 +100,52 @@ public class PlayerEvents {
         Item item = event.getPlayer().getMainHandItem().getItem();
         if(block instanceof WebBlock && item instanceof SwordItem || item == Items.SHEARS){
             event.setCanHarvest(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAttackEntityEvent(final AttackEntityEvent event){
+        Player player = event.getPlayer();
+        // todo anvil aspects
+        ItemStack itemStack = player.getMainHandItem();
+        Item item = itemStack.getItem();
+        if(item instanceof InnateAspectMeleeItem innateAspectMeleeItem){
+            Entity target = event.getTarget();
+            boolean isFullyCharged = player.getAttackStrengthScale(0.5F) > 0.9F;
+            boolean hasExtraKnockbackFromSprinting = player.isSprinting() && isFullyCharged;
+            boolean isCrit = isFullyCharged
+                    && player.fallDistance > 0.0F
+                    && !player.isOnGround()
+                    && !player.onClimbable()
+                    && !player.isInWater()
+                    && !player.hasEffect(MobEffects.BLINDNESS)
+                    && !player.isPassenger()
+                    && target instanceof LivingEntity
+                    && !player.isSprinting();
+            boolean canSweep = isFullyCharged
+                    && !isCrit
+                    && !hasExtraKnockbackFromSprinting
+                    && player.isOnGround()
+                    && (player.walkDist - player.walkDistO) < (double)player.getSpeed()
+                    && innateAspectMeleeItem.meleeWeaponClass.canSweep;
+            if(canSweep){
+                float sweepDamage = Float.max(WeaponUtil.getTotalAspectStrength(innateAspectMeleeItem, Aspects.SWEEP_DAMAGE), 1.0f);
+                float knockback = Float.max(WeaponUtil.getTotalAspectStrength(innateAspectMeleeItem, Aspects.KNOCKBACK), 1.0f);
+                player.level.getEntitiesOfClass(LivingEntity.class, itemStack.getSweepHitBox(player, target)).stream()
+                        .filter(livingEntity ->
+                                livingEntity != player
+                                && livingEntity != target
+                                && !player.isAlliedTo(livingEntity)
+                                && (!(livingEntity instanceof ArmorStand) || !((ArmorStand)livingEntity).isMarker())
+                                && player.distanceToSqr(livingEntity) < 9.0D)
+                        .forEach(livingEntity -> {
+                            livingEntity.knockback(0.4F * knockback, Mth.sin(player.getYRot() * ((float)Math.PI / 180F)), -Mth.cos(player.getYRot() * ((float)Math.PI / 180F)));
+                            livingEntity.hurt(DamageSource.playerAttack(player), sweepDamage);
+                            });
+
+                player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.0F);
+                player.sweepAttack();
+            }
         }
     }
 }

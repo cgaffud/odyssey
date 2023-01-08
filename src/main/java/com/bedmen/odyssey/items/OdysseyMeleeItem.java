@@ -50,14 +50,6 @@ public class OdysseyMeleeItem extends TieredItem implements Vanishable, IEquipme
         return !player.isCreative();
     }
 
-    public boolean canPerformAction(ItemStack stack, ToolAction toolAction)
-    {
-        if(toolAction == ToolActions.SWORD_SWEEP){
-            return this.meleeWeaponClass.canSweep;
-        }
-        return super.canPerformAction(stack, toolAction);
-    }
-
     public float getDestroySpeed(ItemStack itemStack, BlockState blockState) {
         if (this.isCorrectToolForDrops(blockState)) {
             return 15.0F;
