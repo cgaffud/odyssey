@@ -1,11 +1,12 @@
 package com.bedmen.odyssey.items.equipment.base;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
-import com.bedmen.odyssey.items.MeleeWeaponClass;
+import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
+import com.bedmen.odyssey.weapon.MeleeWeaponClass;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.OdysseyChatFormatting;
-import com.bedmen.odyssey.util.WeaponUtil;
+import com.bedmen.odyssey.weapon.WeaponUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
@@ -64,7 +65,7 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
     public boolean canPerformAction(ItemStack stack, ToolAction toolAction)
     {
         if(toolAction == ToolActions.SWORD_SWEEP){
-            return this.meleeWeaponClass.canSweep;
+            return this.meleeWeaponClass.hasAbility(MeleeWeaponAbility.SWEEP);
         }
         return super.canPerformAction(stack, toolAction);
     }
@@ -96,7 +97,7 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
     }
 
     public boolean isCorrectToolForDrops(BlockState blockIn) {
-        return blockIn.is(Blocks.COBWEB) && this.meleeWeaponClass.canBreakCobwebs;
+        return blockIn.is(Blocks.COBWEB) && this.meleeWeaponClass.hasAbility(MeleeWeaponAbility.COBWEB_BREAK);
     }
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {

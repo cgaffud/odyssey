@@ -4,7 +4,7 @@ import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.SoundEventRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.util.WeaponUtil;
+import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;

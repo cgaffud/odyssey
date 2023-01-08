@@ -8,4 +8,6 @@ public interface IOdysseyLivingEntity {
     void decrementFlightTicks();
     int getFlightTicks();
     int getMaxFlightTicks();
+    boolean getShouldCancelNextKnockback();
+    void setShouldCancelNextKnockback(boolean value);
 }

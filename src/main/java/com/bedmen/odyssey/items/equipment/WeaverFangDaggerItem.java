@@ -2,7 +2,7 @@ package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.monster.Weaver;
-import com.bedmen.odyssey.items.MeleeWeaponClass;
+import com.bedmen.odyssey.weapon.MeleeWeaponClass;
 import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.StringUtil;

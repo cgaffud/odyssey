@@ -5,6 +5,7 @@ import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.aspect.ConditionalMeleeAspect;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.items.OdysseyMeleeItem;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
@@ -17,7 +18,8 @@ import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.util.WeaponUtil;
+import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
+import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
@@ -338,7 +340,13 @@ public class EntityEvents {
 
     @SubscribeEvent
     public static void onLivingKnockBackEvent(final LivingKnockBackEvent event){
-        Entity knockbackSourceEntity = event.getEntityLiving().getLastHurtByMob();
+        LivingEntity target = event.getEntityLiving();
+        if(target instanceof IOdysseyLivingEntity odysseyLivingEntity && odysseyLivingEntity.getShouldCancelNextKnockback()){
+            event.setCanceled(true);
+            odysseyLivingEntity.setShouldCancelNextKnockback(false);
+            return;
+        }
+        Entity knockbackSourceEntity = target.getLastHurtByMob();
         if(knockbackSourceEntity instanceof LivingEntity knockbackSourceLivingEntity){
             // TODO: anvil aspects
             ItemStack itemStack = knockbackSourceLivingEntity.getMainHandItem();
@@ -347,6 +355,7 @@ public class EntityEvents {
                 float knockback = Float.max(WeaponUtil.getTotalAspectStrength(innateAspectMeleeItem, Aspects.KNOCKBACK), 1.0f);
                 event.setStrength(event.getStrength() * knockback);
             }
+
         }
     }
 }

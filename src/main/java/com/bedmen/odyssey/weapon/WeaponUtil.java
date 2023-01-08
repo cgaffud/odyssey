@@ -1,16 +1,20 @@
-package com.bedmen.odyssey.util;
+package com.bedmen.odyssey.weapon;
 
 import com.bedmen.odyssey.aspect.Aspect;
+import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.items.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
+import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -146,7 +150,7 @@ public class WeaponUtil {
     }
 
     public static boolean isDualWieldItem(ItemStack itemStack){
-        return itemStack.getItem() instanceof InnateAspectMeleeItem innateAspectMeleeItem && innateAspectMeleeItem.meleeWeaponClass.isDualWield;
+        return itemStack.getItem() instanceof InnateAspectMeleeItem innateAspectMeleeItem && innateAspectMeleeItem.meleeWeaponClass.hasAbility(MeleeWeaponAbility.DUAL_WIELD);
     }
 
     //TODO: anvil aspects
@@ -157,9 +161,20 @@ public class WeaponUtil {
     public static float getTotalAspectStrength(InnateAspectItem innateAspectItem, Predicate<Aspect> aspectPredicate){
         return innateAspectItem.getInnateAspectInstanceList().stream()
                 .filter(aspectInstance -> aspectPredicate.test(aspectInstance.aspect))
-                .map(aspectInstance -> aspectInstance.strength)
-                .reduce(Float::sum)
-                .orElse(0.0f);
+                .reduce(0.0f, (aFloat, aspectInstance) -> aspectInstance.strength + aFloat, Float::sum);
+    }
+
+    public static void smackTarget(LivingEntity thrower, Entity target, float attackStrengthScale) {
+        double knockback = 1.0d + thrower.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+        double knockback_resistance = target instanceof LivingEntity livingTarget ? livingTarget.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE) : 0.0f;
+        double netKnockback = knockback * (1.0d - knockback_resistance);
+        if (netKnockback > 0.0D) {
+            float strength = (float) (attackStrengthScale * netKnockback);
+            target.push(0d, Math.sqrt(strength), 0d);
+            if(target instanceof IOdysseyLivingEntity odysseyLivingEntity){
+                odysseyLivingEntity.setShouldCancelNextKnockback(true);
+            }
+        }
     }
 
     public static class AmmoStack{

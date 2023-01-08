@@ -5,7 +5,7 @@ import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
-import com.bedmen.odyssey.util.WeaponUtil;
+import com.bedmen.odyssey.weapon.WeaponUtil;
 import com.google.common.collect.Lists;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;

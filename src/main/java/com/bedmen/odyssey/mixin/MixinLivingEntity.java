@@ -24,6 +24,7 @@ public abstract class MixinLivingEntity extends Entity implements IOdysseyLiving
     private int glidingLevel = 0;
     private boolean hasSlowFalling = false;
     private int flightTicks = 0;
+    private boolean shouldCancelNextKnockback = false;
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -88,6 +89,14 @@ public abstract class MixinLivingEntity extends Entity implements IOdysseyLiving
             return 100;
         }
         return this.glidingLevel * 20;
+    }
+
+    public boolean getShouldCancelNextKnockback(){
+        return this.shouldCancelNextKnockback;
+    }
+
+    public void setShouldCancelNextKnockback(boolean value){
+        this.shouldCancelNextKnockback = value;
     }
 
     private LivingEntity getLivingEntity(){

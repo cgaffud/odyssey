@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.util.WeaponUtil;
+import com.bedmen.odyssey.weapon.WeaponUtil;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;

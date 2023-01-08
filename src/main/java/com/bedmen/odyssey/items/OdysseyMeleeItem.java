@@ -2,13 +2,13 @@ package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.items.equipment.base.IEquipment;
 import com.bedmen.odyssey.tools.OdysseyTiers;
-import com.bedmen.odyssey.util.OdysseyChatFormatting;
-import com.bedmen.odyssey.util.WeaponUtil;
+import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
+import com.bedmen.odyssey.weapon.MeleeWeaponClass;
+import com.bedmen.odyssey.weapon.WeaponUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,14 +23,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class OdysseyMeleeItem extends TieredItem implements Vanishable, IEquipment {
+public class OdysseyMeleeItem extends TieredItem implements Vanishable {
     /** Modifiers applied when the item is in the mainhand of a user. */
     protected final Multimap<Attribute, AttributeModifier> attributeModifiers;
     public final MeleeWeaponClass meleeWeaponClass;
@@ -76,7 +74,7 @@ public class OdysseyMeleeItem extends TieredItem implements Vanishable, IEquipme
     }
 
     public boolean isCorrectToolForDrops(BlockState blockState) {
-        return blockState.is(Blocks.COBWEB) && this.meleeWeaponClass.canBreakCobwebs;
+        return blockState.is(Blocks.COBWEB) && this.meleeWeaponClass.hasAbility(MeleeWeaponAbility.COBWEB_BREAK);
     }
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
@@ -103,7 +101,12 @@ public class OdysseyMeleeItem extends TieredItem implements Vanishable, IEquipme
         return super.damageItem(stack, amount, entity, onBroken);
     }
 
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        this.appendInnateEnchantments(tooltip, flagIn);
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
+        if(tooltipFlag.isAdvanced()){
+            tooltip.addAll(this.meleeWeaponClass.advancedTooltipAbilityList);
+        } else {
+            tooltip.addAll(this.meleeWeaponClass.tooltipAbilityList);
+        }
+        super.appendHoverText(itemStack, level, tooltip, tooltipFlag);
     }
 }
