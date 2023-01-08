@@ -118,8 +118,11 @@ public class BlockRegistry {
     public static final RegistryObject<Block> STERLING_SILVER_COBWEB = BLOCKS.register("sterling_silver_cobweb", () ->  new OdysseyWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().color(MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(4.0F)));
     public static final RegistryObject<Block> ELECTRUM_COBWEB = BLOCKS.register("electrum_cobweb", () ->  new OdysseyWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().color(MaterialColor.SNOW).requiresCorrectToolForDrops().strength(4.0F)));
     public static final RegistryObject<Block> DIAMOND_COBWEB = BLOCKS.register("diamond_cobweb", () ->  new OdysseyWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().color(MaterialColor.SNOW).requiresCorrectToolForDrops().strength(4.0F)));
-
     public static final RegistryObject<Block> ABANDONED_IRON_GOLEM = BLOCKS.register("abandoned_iron_golem", () -> new AbandonedIronGolemBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.COLOR_GRAY).strength(1.0f, 3600000.0F).sound(SoundType.GRAVEL)));
+
+//    public static final RegistryObject<Block> HEX_FIRE = BLOCKS.register("hex_fire", () -> new Block(BlockBehaviour.Properties.of(Material.FIRE, MaterialColor.COLOR_PURPLE).noCollission().instabreak().lightLevel((p_152605_) -> {
+//        return 15;
+//    }).sound(SoundType.WOOL)));
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
