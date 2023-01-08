@@ -111,11 +111,6 @@ public class EntityEvents {
             ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
             Item mainHandItem = mainHandItemStack.getItem();
 
-            // downpour damage booster
-            int downpourLevel = EnchantmentUtil.getDownpour(damageSourceLivingEntity);
-            if (downpourLevel > 0 && hurtLivingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
-            amount += (float)downpourLevel * 3f;
-
             // Innate Aspect Damage
             // TODO: anvil aspects
             if(mainHandItem instanceof InnateAspectItem innateAspectItem){

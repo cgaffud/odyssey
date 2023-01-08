@@ -497,10 +497,11 @@
   "abilities.oddc.smack": "Smack",
   "item.oddc.innate_aspect": "Innate:",
   "aspect.oddc.damage_against_arthropod": "+%s Damage Against Athropods",
-  "aspect.oddc.damage_against_undead": "+%s Damage Against Undead",
+  "aspect.oddc.smite_damage": "+%s Smite Damage",
   "aspect.oddc.knockback": "x%s Knockback",
   "aspect.oddc.fatal_hit": "%sHP Fatal Blow Threshold",
   "aspect.oddc.sweep_damage": "%s Sweep Damage",
   "aspect.oddc.poison_damage": "%s Poison Damage",
-  "aspect.oddc.cobweb_chance": "%s Cobweb Chance"
+  "aspect.oddc.cobweb_chance": "%s Cobweb Chance",
+  "aspect.oddc.hydro_damage": "+%s Hydro Damage"
 }
