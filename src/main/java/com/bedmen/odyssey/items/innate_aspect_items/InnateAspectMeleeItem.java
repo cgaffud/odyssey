@@ -5,6 +5,7 @@ import com.bedmen.odyssey.items.MeleeWeaponClass;
 import com.bedmen.odyssey.items.OdysseyMeleeItem;
 import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
@@ -23,10 +24,18 @@ public class InnateAspectMeleeItem extends OdysseyMeleeItem implements InnateAsp
         this.innateAspectList = innateAspectList;
     }
 
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag advancedTooltipsOn) {
-        tooltip.add(new TranslatableComponent("item.oddc.innate_aspect").withStyle(OdysseyChatFormatting.LAVENDER));
-        tooltip.addAll(this.innateAspectList.stream().map(AspectInstance::getInnateComponent).collect(Collectors.toList()));
-        super.appendHoverText(itemStack, level, tooltip, advancedTooltipsOn);
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
+        List<Component> innateAspectComponentList = this.innateAspectList.stream().map(AspectInstance::getInnateComponent).collect(Collectors.toList());
+        if(tooltipFlag.isAdvanced()){
+            tooltip.add(new TranslatableComponent("item.oddc.abilities").withStyle(OdysseyChatFormatting.COPPER));
+            tooltip.addAll(this.meleeWeaponClass.abilityTooltipList);
+            tooltip.add(new TranslatableComponent("item.oddc.innate_aspect").withStyle(OdysseyChatFormatting.LAVENDER));
+            innateAspectComponentList = innateAspectComponentList.stream()
+                    .map(component -> new TextComponent(" ").append(component).withStyle(OdysseyChatFormatting.LAVENDER))
+                    .collect(Collectors.toList());
+        }
+        tooltip.addAll(innateAspectComponentList);
+        super.appendHoverText(itemStack, level, tooltip, tooltipFlag);
     }
 
     public List<AspectInstance> getInnateAspectInstanceList() {

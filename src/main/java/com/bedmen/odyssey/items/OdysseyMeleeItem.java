@@ -104,9 +104,6 @@ public class OdysseyMeleeItem extends TieredItem implements Vanishable, IEquipme
     }
 
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        if (WeaponUtil.isDualWieldItem(itemStack)) {
-            tooltip.add(new TranslatableComponent("item.oddc.dualwield").withStyle(OdysseyChatFormatting.LAVENDER));
-        }
         this.appendInnateEnchantments(tooltip, flagIn);
     }
 }
