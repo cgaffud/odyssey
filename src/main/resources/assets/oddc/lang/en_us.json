@@ -505,5 +505,8 @@
   "aspect.oddc.cobweb_chance": "%s Cobweb Chance",
   "aspect.oddc.hydro_damage": "+%s Hydro Damage",
   "aspect.oddc.solar_strength": "+%s Solar Strength",
-  "aspect.oddc.lunar_strength": "+%s Lunar Strength"
+  "aspect.oddc.lunar_strength": "+%s Lunar Strength",
+  "aspect.oddc.botanical_strength": "+%s Botanical Strength",
+  "aspect.oddc.scorched_strength": "+%s Scorched Strength",
+  "aspect.oddc.wintery_strength": "+%s Wintery Strength"
 }
