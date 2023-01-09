@@ -43,7 +43,7 @@ public class OdysseyTiers {
     public static final Tier TIER_1_UNCRAFTABLE = new ForgeTier(2, 350, 7.0F, -1.0f, 0, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.EMPTY);
     public static final Tier TIER_2_UNCRAFTABLE = new ForgeTier(2, 700, 9.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.EMPTY);
     public static final Tier CLOVER_STONE = new ForgeTier(2, 131,9.0F, -1.0f, 0, OdysseyBlockTags.STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.CLOVER_STONE.get()));
-    public static final Tier MARINE = new ForgeTier(2, 1000,10.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(ItemRegistry.PEARL.get()));
+    public static final Tier MARINE = new ForgeTier(3, 1000,10.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(ItemRegistry.PEARL.get()));
 
     public static void init(){
         TierSortingRegistry.registerTier(STERLING_SILVER, new ResourceLocation(Odyssey.MOD_ID,"sterling_silver"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));

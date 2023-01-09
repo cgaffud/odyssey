@@ -140,15 +140,6 @@ public abstract class MixinEnchantmentHelper {
 
     /**
      * @author JemBren
-     * @reason To adjust ratio for Odyssey
-     */
-    @Overwrite
-    public static float getSweepingDamageRatio(LivingEntity livingEntity) {
-        return EnchantmentHelper.getEnchantmentLevel(Enchantments.SWEEPING_EDGE, livingEntity) * 0.2f;
-    }
-
-    /**
-     * @author JemBren
      * @reason Vanilla method is bugged, allows for offhand enchantment application and double method call
      */
     @Overwrite
@@ -161,5 +152,21 @@ public abstract class MixinEnchantmentHelper {
             runIterationOnItem(enchantmenthelper$enchantmentvisitor, livingEntity.getMainHandItem());
         }
 
+    }
+
+    /**
+     * @author JemBren
+     * @reason Aqua Affinity Aspect
+     */
+    @Overwrite
+    public static boolean hasAquaAffinity(LivingEntity livingEntity) {
+        //todo anvil aspect
+        if(getEnchantmentLevel(Enchantments.AQUA_AFFINITY, livingEntity) > 0){
+            return true;
+        }
+        ItemStack itemStack = livingEntity.getMainHandItem();
+        Item item = itemStack.getItem();
+        return item instanceof InnateAspectItem innateAspectItem
+                && AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.AQUA_AFFINITY) > 0.0f;
     }
 }
