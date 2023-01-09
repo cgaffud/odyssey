@@ -27,6 +27,8 @@ public class Aspects {
     public static final Aspect SCORCHED_STRENGTH = new EnvironmentConditionalMeleeAspect("scorched_strength", Aspects::getHotHumidBoost);
     public static final Aspect WINTERY_STRENGTH = new EnvironmentConditionalMeleeAspect("wintery_strength", Aspects::getHotHumidBoost);
     public static final Aspect LOOTING_LUCK = new Aspect("looting_luck");
+    public static final Aspect FORTUNE = new Aspect("fortune");
+    public static final Aspect AQUA_AFFINITY = new Aspect("aqua_affinity");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

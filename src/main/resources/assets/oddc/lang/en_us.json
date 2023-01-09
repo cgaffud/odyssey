@@ -509,5 +509,7 @@
   "aspect.oddc.botanical_strength": "+%s Botanical Strength",
   "aspect.oddc.scorched_strength": "+%s Scorched Strength",
   "aspect.oddc.wintery_strength": "+%s Wintery Strength",
-  "aspect.oddc.looting_luck": "+%s Looting Luck"
+  "aspect.oddc.looting_luck": "+%s Looting Luck",
+  "aspect.oddc.fortune": "+%s Fortune",
+  "aspect.oddc.aqua_affinity": "Aqua Affinity"
 }

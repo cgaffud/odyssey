@@ -25,9 +25,9 @@ public class OdysseyTiers {
     public static final Tier WOOD = new ForgeTier(0, 59,2.0F, -1.0f, 0, Tags.Blocks.NEEDS_WOOD_TOOL, () -> Ingredient.of(ItemTags.PLANKS));
     public static final Tier STONE = new ForgeTier(1, 131,4.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(ItemTags.STONE_TOOL_MATERIALS));
     public static final Tier IRON = new ForgeTier(2, 250,6.0F, -1.0f, 0, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.of(Items.IRON_INGOT));
-    public static final Tier GOLD = new ForgeTier(2, 32,12.0F, -1.0f, 7, Tags.Blocks.NEEDS_GOLD_TOOL, () -> Ingredient.of(Items.GOLD_INGOT));
+    public static final Tier GOLD = new ForgeTier(2, 32,12.0F, -1.0f, 0, Tags.Blocks.NEEDS_GOLD_TOOL, () -> Ingredient.of(Items.GOLD_INGOT));
     public static final Tier DIAMOND = new ForgeTier(3, 1561,8.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(Items.DIAMOND));
-    public static final Tier NETHERITE = new ForgeTier(4, 2031,9.0F, -1.0f, 3, Tags.Blocks.NEEDS_NETHERITE_TOOL, () -> Ingredient.of(Items.NETHERITE_INGOT));
+    public static final Tier NETHERITE = new ForgeTier(4, 2031,9.0F, -1.0f, 0, Tags.Blocks.NEEDS_NETHERITE_TOOL, () -> Ingredient.of(Items.NETHERITE_INGOT));
 
     //Equipment, No Diggers
     public static final Tier FLINT = new ForgeTier(0, 150,2.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(Items.FLINT));
