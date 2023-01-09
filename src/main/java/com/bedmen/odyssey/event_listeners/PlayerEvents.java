@@ -2,11 +2,13 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
 import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
+import com.bedmen.odyssey.weapon.SmackPush;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -29,6 +31,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.system.CallbackI;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
@@ -151,8 +154,8 @@ public class PlayerEvents {
                 player.sweepAttack();
             }
             // Smack
-            if(isFullyCharged && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.SMACK)){
-                WeaponUtil.smackTarget(player, target, attackStrengthScale);
+            if(isFullyCharged && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
+                odysseyLivingEntity.setSmackPush(new SmackPush(attackStrengthScale, player, target));
             }
         }
     }

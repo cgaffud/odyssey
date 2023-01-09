@@ -1,7 +1,8 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.weapon.SmackPush;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
@@ -20,11 +21,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity extends Entity implements IOdysseyLivingEntity {
+public abstract class MixinLivingEntity extends Entity implements OdysseyLivingEntity {
     private int glidingLevel = 0;
     private boolean hasSlowFalling = false;
     private int flightTicks = 0;
-    private boolean shouldCancelNextKnockback = false;
+    private SmackPush smackPush = new SmackPush();
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -91,12 +92,12 @@ public abstract class MixinLivingEntity extends Entity implements IOdysseyLiving
         return this.glidingLevel * 20;
     }
 
-    public boolean getShouldCancelNextKnockback(){
-        return this.shouldCancelNextKnockback;
+    public SmackPush getSmackPush(){
+        return this.smackPush;
     }
 
-    public void setShouldCancelNextKnockback(boolean value){
-        this.shouldCancelNextKnockback = value;
+    public void setSmackPush(SmackPush smackPush){
+        this.smackPush = smackPush;
     }
 
     private LivingEntity getLivingEntity(){

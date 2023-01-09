@@ -3,7 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.aspect.TargetConditionalMeleeAspect;
-import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
@@ -16,6 +16,7 @@ import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.weapon.SmackPush;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -37,6 +38,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import org.lwjgl.system.CallbackI;
 
 import java.util.Map;
 import java.util.Optional;
@@ -52,13 +54,19 @@ public class EntityEvents {
     public static void onLivingUpdateEvent(final LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
         //For Gliding Armor
-        if(livingEntity instanceof IOdysseyLivingEntity odysseyLivingEntity){
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             odysseyLivingEntity.setFlightLevels(EnchantmentUtil.hasSlowFalling(livingEntity), EnchantmentUtil.getGliding(livingEntity));
             if(livingEntity.level.isClientSide && livingEntity.jumping && odysseyLivingEntity.hasSlowFalling() && livingEntity.getDeltaMovement().y < -0.1d && odysseyLivingEntity.getFlightTicks() <= odysseyLivingEntity.getMaxFlightTicks()){
                 odysseyLivingEntity.incrementFlightTicks(20);
                 OdysseyNetwork.CHANNEL.sendToServer(new JumpKeyPressedPacket());
             } else if(livingEntity.isOnGround()) {
                 odysseyLivingEntity.decrementFlightTicks();
+            }
+
+            // Perform Smack
+            if(odysseyLivingEntity.getSmackPush().shouldPush){
+                WeaponUtil.smackTarget(odysseyLivingEntity.getSmackPush());
+                odysseyLivingEntity.setSmackPush(new SmackPush());
             }
         }
 
@@ -345,18 +353,13 @@ public class EntityEvents {
     @SubscribeEvent
     public static void onLivingKnockBackEvent(final LivingKnockBackEvent event){
         LivingEntity target = event.getEntityLiving();
-        if(target instanceof IOdysseyLivingEntity odysseyLivingEntity && odysseyLivingEntity.getShouldCancelNextKnockback()){
-            event.setCanceled(true);
-            odysseyLivingEntity.setShouldCancelNextKnockback(false);
-            return;
-        }
         Entity knockbackSourceEntity = target.getLastHurtByMob();
         if(knockbackSourceEntity instanceof LivingEntity knockbackSourceLivingEntity){
             // TODO: anvil aspects
             ItemStack itemStack = knockbackSourceLivingEntity.getMainHandItem();
             Item item = itemStack.getItem();
-            if(item instanceof InnateAspectMeleeItem innateAspectMeleeItem) {
-                float knockback = Float.max(WeaponUtil.getTotalAspectStrength(innateAspectMeleeItem, Aspects.KNOCKBACK), 1.0f);
+            if(item instanceof InnateAspectItem innateAspectItem) {
+                float knockback = Float.max(WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.KNOCKBACK), 1.0f);
                 event.setStrength(event.getStrength() * knockback);
             }
 

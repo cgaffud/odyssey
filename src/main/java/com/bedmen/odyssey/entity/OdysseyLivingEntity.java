@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.entity;
 
-public interface IOdysseyLivingEntity {
+import com.bedmen.odyssey.weapon.SmackPush;
+
+public interface OdysseyLivingEntity {
     void setFlightLevels(boolean hasSlowFalling, int glidingLevel);
     boolean hasSlowFalling();
     int getGlidingLevel();
@@ -8,6 +10,6 @@ public interface IOdysseyLivingEntity {
     void decrementFlightTicks();
     int getFlightTicks();
     int getMaxFlightTicks();
-    boolean getShouldCancelNextKnockback();
-    void setShouldCancelNextKnockback(boolean value);
+    SmackPush getSmackPush();
+    void setSmackPush(SmackPush smackPush);
 }

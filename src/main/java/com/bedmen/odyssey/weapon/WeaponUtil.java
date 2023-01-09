@@ -2,7 +2,7 @@ package com.bedmen.odyssey.weapon;
 
 import com.bedmen.odyssey.aspect.Aspect;
 import com.bedmen.odyssey.aspect.EnvironmentConditionalMeleeAspect;
-import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
@@ -180,16 +180,13 @@ public class WeaponUtil {
                         Float::sum);
     }
 
-    public static void smackTarget(LivingEntity thrower, Entity target, float attackStrengthScale) {
-        double knockback = 1.0d + thrower.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
-        double knockback_resistance = target instanceof LivingEntity livingTarget ? livingTarget.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE) : 0.0f;
+    public static void smackTarget(SmackPush smackPush) {
+        double knockback = 1.0d + smackPush.smacker.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+        double knockback_resistance = smackPush.target instanceof LivingEntity livingTarget ? livingTarget.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE) : 0.0f;
         double netKnockback = knockback * (1.0d - knockback_resistance);
         if (netKnockback > 0.0D) {
-            float strength = (float) (attackStrengthScale * netKnockback);
-            target.push(0d, Math.sqrt(strength), 0d);
-            if(target instanceof IOdysseyLivingEntity odysseyLivingEntity){
-                odysseyLivingEntity.setShouldCancelNextKnockback(true);
-            }
+            float strength = (float) (smackPush.attackStrengthScale * netKnockback);
+            smackPush.target.push(0d, Math.sqrt(strength * 0.4d), 0d);
         }
     }
 

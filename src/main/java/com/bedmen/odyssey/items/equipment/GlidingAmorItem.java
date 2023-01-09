@@ -2,7 +2,7 @@ package com.bedmen.odyssey.items.equipment;
 
 import com.bedmen.odyssey.armor.OdysseyArmorMaterials;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
-import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.equipment.base.EquipmentArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +15,7 @@ public class GlidingAmorItem extends EquipmentArmorItem {
 
     @Override
     public boolean canElytraFly(ItemStack stack, LivingEntity livingEntity) {
-        if(livingEntity instanceof IOdysseyLivingEntity odysseyLivingEntity){
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             return odysseyLivingEntity.getMaxFlightTicks() > odysseyLivingEntity.getFlightTicks();
         } else {
             return false;
@@ -24,7 +24,7 @@ public class GlidingAmorItem extends EquipmentArmorItem {
 
     @Override
     public boolean elytraFlightTick(ItemStack stack, LivingEntity livingEntity, int flightTicks) {
-        if(livingEntity instanceof IOdysseyLivingEntity odysseyLivingEntity){
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             odysseyLivingEntity.incrementFlightTicks(1);
         }
         return true;
