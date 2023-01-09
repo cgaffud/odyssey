@@ -318,6 +318,16 @@ public class EntityEvents {
             Entity directEntity = damageSource.getDirectEntity();
             if(directEntity instanceof OdysseyAbstractArrow){
                 event.setLootingLevel(((OdysseyAbstractArrow) directEntity).getLootingLevel());
+            } else if (directEntity instanceof LivingEntity livingEntity) {
+                ItemStack itemStack = livingEntity.getMainHandItem();
+                // todo anvil aspect
+                Item item = itemStack.getItem();
+                if(item instanceof InnateAspectItem innateAspectItem){
+                    int looting = (int)(WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.LOOTING_LUCK));
+                    if(looting > 0){
+                        event.setLootingLevel(looting);
+                    }
+                }
             }
         }
     }

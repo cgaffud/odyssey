@@ -251,7 +251,7 @@ public class ItemRegistry {
     // ## Tier 2
     public static final RegistryObject<Item> BANDIT_DAGGER = ITEMS.register("bandit_dagger", () -> new EquipmentMeleeItem(new Item.Properties().rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.IRON, MeleeWeaponClass.DAGGER, 6.5f, LARCENY));
 
-    public static final RegistryObject<Item> CLOVER_STONE_SWORD = ITEMS.register("clover_stone_sword", () -> new EquipmentMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.SWORD, 7f, LOOTING[1]));
+    public static final RegistryObject<Item> CLOVER_STONE_SWORD = ITEMS.register("clover_stone_sword", () -> new InnateAspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.SWORD, 7f, List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1.0f))));
     public static final RegistryObject<Item> CLOVER_STONE_MACE = ITEMS.register("clover_stone_mace", () -> new EquipmentMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.MACE, 9f, FORTUNE[1]));
     public static final RegistryObject<Item> CLOVER_STONE_HATCHET = ITEMS.register("clover_stone_hatchet", () -> new EquipmentMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.HATCHET, 5f, SMITE[1], LOOTING[1]));
     public static final RegistryObject<Item> CLOVER_STONE_SABRE = ITEMS.register("clover_stone_sabre", () -> new EquipmentMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.SABRE, 6f, SWEEPING_EDGE[1], LOOTING[1]));
