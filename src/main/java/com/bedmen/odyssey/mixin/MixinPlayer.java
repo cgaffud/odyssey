@@ -1,12 +1,12 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
-import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
 import com.bedmen.odyssey.items.equipment.SniperBowItem;
-import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
+import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -101,8 +101,8 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     protected void blockUsingShield(LivingEntity livingEntity) {
         super.blockUsingShield(livingEntity);
-        if (livingEntity.getMainHandItem().getItem() instanceof EquipmentMeleeItem equipmentMeleeItem
-        && equipmentMeleeItem.meleeWeaponClass.hasAbility(MeleeWeaponAbility.SHIELD_BASH)) {
+        if (livingEntity.getMainHandItem().getItem() instanceof OdysseyMeleeWeapon odysseyMeleeWeapon
+        && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.SHIELD_BASH)) {
             this.disableShield(true);
         }
     }

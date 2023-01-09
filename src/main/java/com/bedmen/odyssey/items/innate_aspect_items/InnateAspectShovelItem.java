@@ -1,9 +1,10 @@
 package com.bedmen.odyssey.items.innate_aspect_items;
 
 import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyShovelItem;
+import com.bedmen.odyssey.weapon.MeleeWeaponClass;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -11,11 +12,11 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class InnateAspectShovelItem extends ShovelItem implements InnateAspectItem {
+public class InnateAspectShovelItem extends OdysseyShovelItem implements InnateAspectItem {
     public final InnateAspectHolder innateAspectHolder;
 
-    public InnateAspectShovelItem(Properties properties, Tier tier, float attackSpeed, float damage, List<AspectInstance> innateAspectList) {
-        super(tier, (int) damage, attackSpeed - 4.0f, properties);
+    public InnateAspectShovelItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> innateAspectList) {
+        super(properties, tier, meleeWeaponClass, damage);
         this.innateAspectHolder = new InnateAspectHolder(innateAspectList);
     }
 

@@ -1,9 +1,9 @@
 package com.bedmen.odyssey.entity.monster;
 
-import com.bedmen.odyssey.items.OdysseyCrossbowItem;
-import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyCrossbowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
+import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -79,7 +79,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
             case 3,4 -> Items.GOLDEN_SWORD;
         };
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
-        if (item instanceof EquipmentMeleeItem equipmentMeleeItem && equipmentMeleeItem.meleeWeaponClass.hasAbility(MeleeWeaponAbility.DUAL_WIELD)) {
+        if (item instanceof OdysseyMeleeWeapon odysseyMeleeWeapon && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.DUAL_WIELD)) {
             this.setItemSlot(EquipmentSlot.OFFHAND, item.getDefaultInstance());
         }
         this.reassessWeaponGoal();

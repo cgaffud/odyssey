@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.items.equipment.base;
 
 import com.bedmen.odyssey.enchantment.LevEnchSup;
-import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
 import com.bedmen.odyssey.items.ShieldType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

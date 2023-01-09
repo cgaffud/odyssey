@@ -3,10 +3,10 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
-import com.bedmen.odyssey.items.OdysseyMeleeItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
+import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -104,7 +104,7 @@ public class PlayerEvents {
         // todo anvil aspects
         ItemStack itemStack = player.getMainHandItem();
         Item item = itemStack.getItem();
-        if(item instanceof OdysseyMeleeItem odysseyMeleeItem){
+        if(item instanceof OdysseyMeleeWeapon odysseyMeleeWeapon){
             Entity target = event.getTarget();
             float attackStrengthScale = player.getAttackStrengthScale(0.5F);
             boolean isFullyCharged = attackStrengthScale > 0.9F;
@@ -123,7 +123,7 @@ public class PlayerEvents {
                     && !hasExtraKnockbackFromSprinting
                     && player.isOnGround()
                     && (player.walkDist - player.walkDistO) < (double)player.getSpeed()
-                    && odysseyMeleeItem.meleeWeaponClass.hasAbility(MeleeWeaponAbility.SWEEP);
+                    && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.SWEEP);
             float sweepDamage = 1.0f;
             float knockback = 1.0f;
             if(item instanceof InnateAspectMeleeItem innateAspectMeleeItem){
@@ -150,8 +150,8 @@ public class PlayerEvents {
                 player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.0F);
                 player.sweepAttack();
             }
-            // Fling
-            if(isFullyCharged && odysseyMeleeItem.meleeWeaponClass.hasAbility(MeleeWeaponAbility.SMACK)){
+            // Smack
+            if(isFullyCharged && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.SMACK)){
                 WeaponUtil.smackTarget(player, target, attackStrengthScale);
             }
         }

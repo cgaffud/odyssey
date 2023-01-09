@@ -3,7 +3,7 @@ package com.bedmen.odyssey.client.renderer.blockentity;
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.items.BEWLRBlockItem;
-import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

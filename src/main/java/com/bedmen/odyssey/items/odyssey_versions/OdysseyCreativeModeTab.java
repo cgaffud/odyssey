@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.items;
+package com.bedmen.odyssey.items.odyssey_versions;
 
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.world.item.CreativeModeTab;

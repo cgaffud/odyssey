@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.items;
+package com.bedmen.odyssey.items.odyssey_versions;
 
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import net.minecraft.core.BlockPos;

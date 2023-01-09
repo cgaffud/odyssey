@@ -3,10 +3,9 @@ package com.bedmen.odyssey.weapon;
 import com.bedmen.odyssey.aspect.Aspect;
 import com.bedmen.odyssey.aspect.EnvironmentConditionalMeleeAspect;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
-import com.bedmen.odyssey.items.OdysseyBowItem;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
-import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -23,7 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
 
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class WeaponUtil {
@@ -154,7 +152,7 @@ public class WeaponUtil {
     }
 
     public static boolean isDualWieldItem(ItemStack itemStack){
-        return itemStack.getItem() instanceof InnateAspectMeleeItem innateAspectMeleeItem && innateAspectMeleeItem.meleeWeaponClass.hasAbility(MeleeWeaponAbility.DUAL_WIELD);
+        return itemStack.getItem() instanceof OdysseyMeleeWeapon odysseyMeleeWeapon && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.DUAL_WIELD);
     }
 
     //TODO: anvil aspects

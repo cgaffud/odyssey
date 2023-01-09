@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.entity.monster;
 
-import com.bedmen.odyssey.items.OdysseyBowItem;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.SoundEventRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;

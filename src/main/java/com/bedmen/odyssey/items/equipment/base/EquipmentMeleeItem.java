@@ -6,6 +6,7 @@ import com.bedmen.odyssey.weapon.MeleeWeaponClass;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.OdysseyChatFormatting;
+import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -35,7 +36,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquipment {
+public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquipment, OdysseyMeleeWeapon {
     /** Modifiers applied when the item is in the mainhand of a user. */
     protected final Multimap<Attribute, AttributeModifier> attributeModifiers;
     public final MeleeWeaponClass meleeWeaponClass;
@@ -56,6 +57,10 @@ public class EquipmentMeleeItem extends TieredItem implements Vanishable, IEquip
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);
+    }
+
+    public MeleeWeaponClass getMeleeWeaponClass() {
+        return this.meleeWeaponClass;
     }
 
     public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {

@@ -1,10 +1,10 @@
-package com.bedmen.odyssey.items;
+package com.bedmen.odyssey.items.odyssey_versions;
 
-import com.bedmen.odyssey.items.equipment.base.IEquipment;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
 import com.bedmen.odyssey.weapon.MeleeWeaponClass;
+import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class OdysseyMeleeItem extends TieredItem implements Vanishable {
+public class OdysseyMeleeItem extends TieredItem implements Vanishable, OdysseyMeleeWeapon {
     /** Modifiers applied when the item is in the mainhand of a user. */
     protected final Multimap<Attribute, AttributeModifier> attributeModifiers;
     public final MeleeWeaponClass meleeWeaponClass;
@@ -47,6 +47,10 @@ public class OdysseyMeleeItem extends TieredItem implements Vanishable {
         attributeModifiers.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", attackDamage, AttributeModifier.Operation.ADDITION));
         attributeModifiers.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)meleeWeaponClass.attackRate - 4.0d, AttributeModifier.Operation.ADDITION));
         this.attributeModifiers = attributeModifiers;
+    }
+
+    public MeleeWeaponClass getMeleeWeaponClass() {
+        return this.meleeWeaponClass;
     }
 
     public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
@@ -107,11 +111,7 @@ public class OdysseyMeleeItem extends TieredItem implements Vanishable {
     }
 
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        if(tooltipFlag.isAdvanced()){
-            tooltip.addAll(1, this.meleeWeaponClass.advancedTooltipAbilityList);
-        } else {
-            tooltip.addAll(1, this.meleeWeaponClass.tooltipAbilityList);
-        }
+        this.meleeWeaponClass.addTooltip(tooltip, tooltipFlag);
         super.appendHoverText(itemStack, level, tooltip, tooltipFlag);
     }
 

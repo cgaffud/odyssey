@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.items;
+package com.bedmen.odyssey.items.odyssey_versions;
 
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;

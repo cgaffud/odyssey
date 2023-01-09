@@ -13,10 +13,12 @@ import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.equipment.*;
 import com.bedmen.odyssey.items.equipment.base.*;
 import com.bedmen.odyssey.items.innate_aspect_items.*;
+import com.bedmen.odyssey.items.odyssey_versions.*;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
+import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
 import com.bedmen.odyssey.weapon.MeleeWeaponClass;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -200,21 +202,21 @@ public class ItemRegistry {
     // # Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestMaterial.COPPER));
 
-    public static final RegistryObject<Item> CLOVER_STONE_SHOVEL = ITEMS.register("clover_stone_shovel", () -> new InnateAspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, 1.4f, 4.5f, List.of(new AspectInstance(Aspects.FORTUNE, 1.0f))));
-    public static final RegistryObject<Item> CLOVER_STONE_PICKAXE = ITEMS.register("clover_stone_pickaxe", () -> new InnateAspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, 1.2f, 5.0f, List.of(new AspectInstance(Aspects.FORTUNE, 1.0f))));
-    public static final RegistryObject<Item> CLOVER_STONE_AXE = ITEMS.register("clover_stone_axe", () -> new InnateAspectAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, 1.0f, 6.0f, List.of(new AspectInstance(Aspects.FORTUNE, 1.0f))));
-    public static final RegistryObject<Item> CLOVER_STONE_HOE = ITEMS.register("clover_stone_hoe", () -> new InnateAspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, 2.0f, 3.0f, List.of(new AspectInstance(Aspects.FORTUNE, 1.0f))));
+    public static final RegistryObject<Item> CLOVER_STONE_SHOVEL = ITEMS.register("clover_stone_shovel", () -> new InnateAspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.SHOVEL, 4.5f, List.of(new AspectInstance(Aspects.FORTUNE, 1.0f))));
+    public static final RegistryObject<Item> CLOVER_STONE_PICKAXE = ITEMS.register("clover_stone_pickaxe", () -> new InnateAspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.PICKAXE, 5.0f, List.of(new AspectInstance(Aspects.FORTUNE, 1.0f))));
+    public static final RegistryObject<Item> CLOVER_STONE_AXE = ITEMS.register("clover_stone_axe", () -> new InnateAspectAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.AXE, 6.0f, List.of(new AspectInstance(Aspects.FORTUNE, 1.0f))));
+    public static final RegistryObject<Item> CLOVER_STONE_HOE = ITEMS.register("clover_stone_hoe", () -> new InnateAspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.HOE, 3.0f, List.of(new AspectInstance(Aspects.FORTUNE, 1.0f))));
 
-    public static final RegistryObject<Item> STERLING_SILVER_SHOVEL = ITEMS.register("sterling_silver_shovel", () -> new ShovelItem(OdysseyTiers.STERLING_SILVER, 4.5f, -2.6f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS)));
-    public static final RegistryObject<Item> STERLING_SILVER_PICKAXE = ITEMS.register("sterling_silver_pickaxe", () -> new PickaxeItem(OdysseyTiers.STERLING_SILVER, 5, -2.8f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS)));
-    public static final RegistryObject<Item> STERLING_SILVER_AXE = ITEMS.register("sterling_silver_axe", () -> new AxeItem(OdysseyTiers.STERLING_SILVER, 6.0f, -3.0f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS)));
-    public static final RegistryObject<Item> STERLING_SILVER_HOE = ITEMS.register("sterling_silver_hoe", () -> new HoeItem(OdysseyTiers.STERLING_SILVER, 4, -2f, new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS)));
+    public static final RegistryObject<Item> STERLING_SILVER_SHOVEL = ITEMS.register("sterling_silver_shovel", () -> new OdysseyShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.SHOVEL, 4.5f));
+    public static final RegistryObject<Item> STERLING_SILVER_PICKAXE = ITEMS.register("sterling_silver_pickaxe", () -> new OdysseyPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.PICKAXE, 5.0f));
+    public static final RegistryObject<Item> STERLING_SILVER_AXE = ITEMS.register("sterling_silver_axe", () -> new OdysseyAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.AXE, 6.0f));
+    public static final RegistryObject<Item> STERLING_SILVER_HOE = ITEMS.register("sterling_silver_hoe", () -> new OdysseyHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.HOE, 4.0f));
     public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestMaterial.STERLING_SILVER));
 
-    public static final RegistryObject<Item> MARINE_SHOVEL = ITEMS.register("marine_shovel", () -> new InnateAspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, 2.1f, 3.5f, List.of(new AspectInstance(Aspects.AQUA_AFFINITY, 1.0f))));
-    public static final RegistryObject<Item> MARINE_PICKAXE = ITEMS.register("marine_pickaxe", () -> new InnateAspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, 1.8f, 4.0f, List.of(new AspectInstance(Aspects.AQUA_AFFINITY, 1.0f))));
-    public static final RegistryObject<Item> MARINE_AXE = ITEMS.register("marine_axe", () -> new InnateAspectAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, 1.5f, 5.0f, List.of(new AspectInstance(Aspects.AQUA_AFFINITY, 1.0f))));
-    public static final RegistryObject<Item> MARINE_HOE = ITEMS.register("marine_hoe", () -> new InnateAspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, 3.0f, 2.0f, List.of(new AspectInstance(Aspects.AQUA_AFFINITY, 1.0f))));
+    public static final RegistryObject<Item> MARINE_SHOVEL = ITEMS.register("marine_shovel", () -> new InnateAspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.SHOVEL.withBetterAttackSpeed(), 3.5f, List.of(new AspectInstance(Aspects.AQUA_AFFINITY, 1.0f))));
+    public static final RegistryObject<Item> MARINE_PICKAXE = ITEMS.register("marine_pickaxe", () -> new InnateAspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.PICKAXE.withBetterAttackSpeed(), 4.0f, List.of(new AspectInstance(Aspects.AQUA_AFFINITY, 1.0f))));
+    public static final RegistryObject<Item> MARINE_AXE = ITEMS.register("marine_axe", () -> new InnateAspectAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.AXE.withBetterAttackSpeed(), 5.0f, List.of(new AspectInstance(Aspects.AQUA_AFFINITY, 1.0f))));
+    public static final RegistryObject<Item> MARINE_HOE = ITEMS.register("marine_hoe", () -> new InnateAspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.HOE.withBetterAttackSpeed(), 2.0f, List.of(new AspectInstance(Aspects.AQUA_AFFINITY, 1.0f))));
 
     // # Miscellaneous
     public static final RegistryObject<Item> GREATWOOD_MINERAL_WATER_BOTTLE = ITEMS.register("greatwood_mineral_water_bottle", () -> new GreatSaplingHelperItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC), BlockRegistry.GREATWOOD_SAPLING::get, true));
@@ -240,7 +242,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GOLDEN_MACE = ITEMS.register("golden_mace", () -> new OdysseyMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.GOLD, MeleeWeaponClass.MACE.withAttackSpeedMultiplier(1.5f), 6f));
 
     public static final RegistryObject<Item> RUSTY_PADDLE = ITEMS.register("rusty_paddle", () -> new OdysseyMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.RUSTY_IRON, MeleeWeaponClass.PADDLE, 6f));
-    public static final RegistryObject<Item> BATTLE_PICKAXE = ITEMS.register("battle_pickaxe", () -> new InnateAspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, 1.0f,8f, List.of(new AspectInstance(Aspects.FATAL_HIT, 8.0f))));
+    public static final RegistryObject<Item> BATTLE_PICKAXE = ITEMS.register("battle_pickaxe", () -> new InnateAspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.BATTLE_AXE,8f, List.of(new AspectInstance(Aspects.FATAL_HIT, 8.0f))));
     public static final RegistryObject<Item> SLIME_BAT = ITEMS.register("slime_bat", () -> new InnateAspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.BAT, 2f, List.of(new AspectInstance(Aspects.KNOCKBACK, 3.0f))));
     public static final RegistryObject<Item> MINI_HAMMER = ITEMS.register("mini_hammer", () -> new InnateAspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.HATCHET, 5f, List.of(new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 1.5f))));
     public static final RegistryObject<Item> SLEDGEHAMMER = ITEMS.register("sledgehammer", () -> new InnateAspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.HAMMER, 8f, List.of(new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 2.0f))));
@@ -269,7 +271,7 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> DIAMOND_MACE = ITEMS.register("diamond_mace", () -> new OdysseyMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.DIAMOND, MeleeWeaponClass.MACE, 10f));
 
-    public static final RegistryObject<Item> SMACKIN_SHOVEL = ITEMS.register("smackin_shovel", () -> new EquipmentShovelItem(OdysseyTiers.TIER_2_UNCRAFTABLE, 7f, -2.6f, new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), KNOCKBACK[2], FLING));
+    public static final RegistryObject<Item> SMACKIN_SHOVEL = ITEMS.register("smackin_shovel", () -> new InnateAspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_2_UNCRAFTABLE, MeleeWeaponClass.SHOVEL.withAbility(MeleeWeaponAbility.SMACK), 7f, List.of(new AspectInstance(Aspects.KNOCKBACK, 2.0f))));
     public static final RegistryObject<Item> SLEDGEAXE = ITEMS.register("sledgeaxe", () -> new InnateAspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_2_UNCRAFTABLE, MeleeWeaponClass.BATTLE_AXE,  9.5f, List.of(new AspectInstance(Aspects.FATAL_HIT, 8.0f), new AspectInstance(Aspects.SMITE_DAMAGE, 2.5f))));
     public static final RegistryObject<Item> BLUNT_SABRE = ITEMS.register("blunt_sabre", () -> new InnateAspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_2_UNCRAFTABLE, MeleeWeaponClass.SABRE, 8f, List.of(new AspectInstance(Aspects.SWEEP_DAMAGE, 2.5f), new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 2.0f))));
     public static final RegistryObject<Item> MOON_SWORD = ITEMS.register("moon_sword", () -> new InnateConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.SWORD, 7f, List.of(new AspectInstance(Aspects.LUNAR_STRENGTH, 2.0f)), 2));
@@ -419,40 +421,40 @@ public class ItemRegistry {
 
     //Vanilla Overrides
     
-    public static final RegistryObject<Item> WOODEN_SWORD = ITEMS_VANILLA.register("wooden_sword", () -> new EquipmentMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.WOOD, MeleeWeaponClass.SWORD, 4f));
-    public static final RegistryObject<Item> STONE_SWORD = ITEMS_VANILLA.register("stone_sword", () -> new EquipmentMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.STONE, MeleeWeaponClass.SWORD, 5f));
-    public static final RegistryObject<Item> IRON_SWORD = ITEMS_VANILLA.register("iron_sword", () -> new EquipmentMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.IRON, MeleeWeaponClass.SWORD, 6f));
-    public static final RegistryObject<Item> GOLDEN_SWORD = ITEMS_VANILLA.register("golden_sword", () -> new EquipmentMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.GOLD, MeleeWeaponClass.SWORD.withAttackSpeedMultiplier(1.5f), 5f));
-    public static final RegistryObject<Item> DIAMOND_SWORD = ITEMS_VANILLA.register("diamond_sword", () -> new EquipmentMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.DIAMOND, MeleeWeaponClass.SWORD, 8f));
-    public static final RegistryObject<Item> NETHERITE_SWORD = ITEMS_VANILLA.register("netherite_sword", () -> new EquipmentMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.NETHERITE, MeleeWeaponClass.SWORD, 9f));
+    public static final RegistryObject<Item> WOODEN_SWORD = ITEMS_VANILLA.register("wooden_sword", () -> new OdysseyMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.WOOD, MeleeWeaponClass.SWORD, 4f));
+    public static final RegistryObject<Item> STONE_SWORD = ITEMS_VANILLA.register("stone_sword", () -> new OdysseyMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.STONE, MeleeWeaponClass.SWORD, 5f));
+    public static final RegistryObject<Item> IRON_SWORD = ITEMS_VANILLA.register("iron_sword", () -> new OdysseyMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.IRON, MeleeWeaponClass.SWORD, 6f));
+    public static final RegistryObject<Item> GOLDEN_SWORD = ITEMS_VANILLA.register("golden_sword", () -> new OdysseyMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.GOLD, MeleeWeaponClass.SWORD.withBetterAttackSpeed(), 5f));
+    public static final RegistryObject<Item> DIAMOND_SWORD = ITEMS_VANILLA.register("diamond_sword", () -> new OdysseyMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.DIAMOND, MeleeWeaponClass.SWORD, 8f));
+    public static final RegistryObject<Item> NETHERITE_SWORD = ITEMS_VANILLA.register("netherite_sword", () -> new OdysseyMeleeItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyTiers.NETHERITE, MeleeWeaponClass.SWORD, 9f));
 
-    public static final RegistryObject<Item> WOODEN_AXE = ITEMS_VANILLA.register("wooden_axe", () -> new AxeItem(OdysseyTiers.WOOD, 3.0f, -3.0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> STONE_AXE = ITEMS_VANILLA.register("stone_axe", () -> new AxeItem(OdysseyTiers.STONE, 4.0f, -3.0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> IRON_AXE = ITEMS_VANILLA.register("iron_axe", () -> new AxeItem(OdysseyTiers.IRON, 5.0f, -3.0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> GOLDEN_AXE = ITEMS_VANILLA.register("golden_axe", () -> new AxeItem(OdysseyTiers.GOLD, 4.0f, -2.5f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> DIAMOND_AXE = ITEMS_VANILLA.register("diamond_axe", () -> new AxeItem(OdysseyTiers.DIAMOND, 7.0f, -3.0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> NETHERITE_AXE = ITEMS_VANILLA.register("netherite_axe", () -> new AxeItem(OdysseyTiers.NETHERITE, 8.0f, -3.0f, new Item.Properties().fireResistant().tab(CreativeModeTab.TAB_TOOLS)));
+    public static final RegistryObject<Item> WOODEN_AXE = ITEMS.register("wooden_axe", () -> new OdysseyAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.WOOD, MeleeWeaponClass.AXE, 3.0f));
+    public static final RegistryObject<Item> STONE_AXE = ITEMS.register("stone_axe", () -> new OdysseyAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STONE, MeleeWeaponClass.AXE, 4.0f));
+    public static final RegistryObject<Item> IRON_AXE = ITEMS.register("iron_axe", () -> new OdysseyAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.IRON, MeleeWeaponClass.AXE, 5.0f));
+    public static final RegistryObject<Item> GOLDEN_AXE = ITEMS.register("golden_axe", () -> new OdysseyAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.GOLD, MeleeWeaponClass.AXE.withBetterAttackSpeed(), 4.0f));
+    public static final RegistryObject<Item> DIAMOND_AXE = ITEMS.register("diamond_axe", () -> new OdysseyAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.DIAMOND, MeleeWeaponClass.AXE, 7.0f));
+    public static final RegistryObject<Item> NETHERITE_AXE = ITEMS.register("netherite_axe", () -> new OdysseyAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.NETHERITE, MeleeWeaponClass.AXE, 8.0f));
 
-    public static final RegistryObject<Item> WOODEN_PICKAXE = ITEMS_VANILLA.register("wooden_pickaxe", () -> new PickaxeItem(OdysseyTiers.WOOD, 2, -2.8f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> STONE_PICKAXE = ITEMS_VANILLA.register("stone_pickaxe", () -> new PickaxeItem(OdysseyTiers.STONE, 3, -2.8f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> IRON_PICKAXE = ITEMS_VANILLA.register("iron_pickaxe", () -> new PickaxeItem(OdysseyTiers.IRON, 4, -2.8f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> GOLDEN_PICKAXE = ITEMS_VANILLA.register("golden_pickaxe", () -> new PickaxeItem(OdysseyTiers.GOLD, 3, -2.2f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> DIAMOND_PICKAXE = ITEMS_VANILLA.register("diamond_pickaxe", () -> new PickaxeItem(OdysseyTiers.DIAMOND, 6, -2.8f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> NETHERITE_PICKAXE = ITEMS_VANILLA.register("netherite_pickaxe", () -> new PickaxeItem(OdysseyTiers.NETHERITE, 7, -2.8f, new Item.Properties().fireResistant().tab(CreativeModeTab.TAB_TOOLS)));
+    public static final RegistryObject<Item> WOODEN_PICKAXE = ITEMS.register("wooden_pickaxe", () -> new OdysseyPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.WOOD, MeleeWeaponClass.PICKAXE, 2.0f));
+    public static final RegistryObject<Item> STONE_PICKAXE = ITEMS.register("stone_pickaxe", () -> new OdysseyPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STONE, MeleeWeaponClass.PICKAXE, 3.0f));
+    public static final RegistryObject<Item> IRON_PICKAXE = ITEMS.register("iron_pickaxe", () -> new OdysseyPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.IRON, MeleeWeaponClass.PICKAXE, 4.0f));
+    public static final RegistryObject<Item> GOLDEN_PICKAXE = ITEMS.register("golden_pickaxe", () -> new OdysseyPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.GOLD, MeleeWeaponClass.PICKAXE.withBetterAttackSpeed(), 3.0f));
+    public static final RegistryObject<Item> DIAMOND_PICKAXE = ITEMS.register("diamond_pickaxe", () -> new OdysseyPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.DIAMOND, MeleeWeaponClass.PICKAXE, 6.0f));
+    public static final RegistryObject<Item> NETHERITE_PICKAXE = ITEMS.register("netherite_pickaxe", () -> new OdysseyPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.NETHERITE, MeleeWeaponClass.PICKAXE, 7.0f));
 
-    public static final RegistryObject<Item> WOODEN_SHOVEL = ITEMS_VANILLA.register("wooden_shovel", () -> new ShovelItem(OdysseyTiers.WOOD, 1.5f, -2.6f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> STONE_SHOVEL = ITEMS_VANILLA.register("stone_shovel", () -> new ShovelItem(OdysseyTiers.STONE, 2.5f, -2.6f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> IRON_SHOVEL = ITEMS_VANILLA.register("iron_shovel", () -> new ShovelItem(OdysseyTiers.IRON, 3.5f, -2.6f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> GOLDEN_SHOVEL = ITEMS_VANILLA.register("golden_shovel", () -> new ShovelItem(OdysseyTiers.GOLD, 2.5f, -1.9f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> DIAMOND_SHOVEL = ITEMS_VANILLA.register("diamond_shovel", () -> new ShovelItem(OdysseyTiers.DIAMOND, 5.5f, -2.6f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> NETHERITE_SHOVEL = ITEMS_VANILLA.register("netherite_shovel", () -> new ShovelItem(OdysseyTiers.NETHERITE, 6.5f, -2.6f, new Item.Properties().fireResistant().tab(CreativeModeTab.TAB_TOOLS)));
+    public static final RegistryObject<Item> WOODEN_SHOVEL = ITEMS.register("wooden_shovel", () -> new OdysseyShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.WOOD, MeleeWeaponClass.SHOVEL, 1.5f));
+    public static final RegistryObject<Item> STONE_SHOVEL = ITEMS.register("stone_shovel", () -> new OdysseyShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STONE, MeleeWeaponClass.SHOVEL, 2.5f));
+    public static final RegistryObject<Item> IRON_SHOVEL = ITEMS.register("iron_shovel", () -> new OdysseyShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.IRON, MeleeWeaponClass.SHOVEL, 3.5f));
+    public static final RegistryObject<Item> GOLDEN_SHOVEL = ITEMS.register("golden_shovel", () -> new OdysseyShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.GOLD, MeleeWeaponClass.SHOVEL.withBetterAttackSpeed(), 2.5f));
+    public static final RegistryObject<Item> DIAMOND_SHOVEL = ITEMS.register("diamond_shovel", () -> new OdysseyShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.DIAMOND, MeleeWeaponClass.SHOVEL, 5.5f));
+    public static final RegistryObject<Item> NETHERITE_SHOVEL = ITEMS.register("netherite_shovel", () -> new OdysseyShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.NETHERITE, MeleeWeaponClass.SHOVEL, 6.5f));
 
-    public static final RegistryObject<Item> WOODEN_HOE = ITEMS_VANILLA.register("wooden_hoe", () -> new HoeItem(OdysseyTiers.WOOD, 1, -2.0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> STONE_HOE = ITEMS_VANILLA.register("stone_hoe", () -> new HoeItem(OdysseyTiers.STONE, 2, -2.0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> IRON_HOE = ITEMS_VANILLA.register("iron_hoe", () -> new HoeItem(OdysseyTiers.IRON, 3, -2.0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> GOLDEN_HOE = ITEMS_VANILLA.register("golden_hoe", () -> new HoeItem(OdysseyTiers.GOLD, 2, -1.0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> DIAMOND_HOE = ITEMS_VANILLA.register("diamond_hoe", () -> new HoeItem(OdysseyTiers.DIAMOND, 5, -2.0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> NETHERITE_HOE = ITEMS_VANILLA.register("netherite_hoe", () -> new HoeItem(OdysseyTiers.NETHERITE, 6, -2.0f, new Item.Properties().fireResistant().tab(CreativeModeTab.TAB_TOOLS)));
+    public static final RegistryObject<Item> WOODEN_HOE = ITEMS.register("wooden_hoe", () -> new OdysseyHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.WOOD, MeleeWeaponClass.HOE, 1.0f));
+    public static final RegistryObject<Item> STONE_HOE = ITEMS.register("stone_hoe", () -> new OdysseyHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STONE, MeleeWeaponClass.HOE, 2.0f));
+    public static final RegistryObject<Item> IRON_HOE = ITEMS.register("iron_hoe", () -> new OdysseyHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.IRON, MeleeWeaponClass.HOE, 3.0f));
+    public static final RegistryObject<Item> GOLDEN_HOE = ITEMS.register("golden_hoe", () -> new OdysseyHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.GOLD, MeleeWeaponClass.HOE.withBetterAttackSpeed(), 2.0f));
+    public static final RegistryObject<Item> DIAMOND_HOE = ITEMS.register("diamond_hoe", () -> new OdysseyHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.DIAMOND, MeleeWeaponClass.HOE, 5.0f));
+    public static final RegistryObject<Item> NETHERITE_HOE = ITEMS.register("netherite_hoe", () -> new OdysseyHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.NETHERITE, MeleeWeaponClass.HOE, 6.0f));
 
     public static final RegistryObject<Item> LEATHER_HELMET = ITEMS_VANILLA.register("leather_helmet", () -> new DyeableArmorItem(OdysseyArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
     public static final RegistryObject<Item> LEATHER_CHESTPLATE = ITEMS_VANILLA.register("leather_chestplate", () -> new DyeableArmorItem(OdysseyArmorMaterials.LEATHER, EquipmentSlot.CHEST, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
