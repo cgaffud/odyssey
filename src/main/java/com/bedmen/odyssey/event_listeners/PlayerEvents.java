@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
@@ -130,8 +131,8 @@ public class PlayerEvents {
             float sweepDamage = 1.0f;
             float knockback = 1.0f;
             if(item instanceof InnateAspectMeleeItem innateAspectMeleeItem){
-                sweepDamage = Float.max(WeaponUtil.getTotalAspectStrength(innateAspectMeleeItem, Aspects.SWEEP_DAMAGE), sweepDamage);
-                knockback = Float.max(WeaponUtil.getTotalAspectStrength(innateAspectMeleeItem, Aspects.KNOCKBACK), knockback);
+                sweepDamage = Float.max(AspectUtil.getTotalAspectStrength(innateAspectMeleeItem, Aspects.SWEEP_DAMAGE), sweepDamage);
+                knockback = Float.max(AspectUtil.getTotalAspectStrength(innateAspectMeleeItem, Aspects.KNOCKBACK), knockback);
             }
             // Sweep
             if(canSweep){

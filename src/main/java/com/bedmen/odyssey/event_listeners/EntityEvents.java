@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.aspect.TargetConditionalMeleeAspect;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
@@ -120,20 +121,20 @@ public class EntityEvents {
             // TODO: anvil aspects
             if(mainHandItem instanceof InnateAspectItem innateAspectItem){
                 // Smite, Bane of Arthropods,
-                amount += WeaponUtil.getTotalAspectStrength(innateAspectItem,
+                amount += AspectUtil.getTotalAspectStrength(innateAspectItem,
                         aspect ->
                         aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect
                         && targetConditionalMeleeAspect.livingEntityPredicate.test(hurtLivingEntity)
                 );
 
                 // Poison Damage
-                float poisonStrength = WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.POISON_DAMAGE);
+                float poisonStrength = AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.POISON_DAMAGE);
                 if(poisonStrength > 0.0f){
                     hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (int)(12 * poisonStrength), 1));
                 }
 
                 // Cobweb Chance
-                float cobwebChance = WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.COBWEB_CHANCE);
+                float cobwebChance = AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.COBWEB_CHANCE);
                 if(cobwebChance > damageSourceLivingEntity.getRandom().nextFloat()){
                     BlockPos blockPos = new BlockPos(hurtLivingEntity.getPosition(1f));
                     if (hurtLivingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
@@ -170,7 +171,7 @@ public class EntityEvents {
             ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
             Item mainHandItem = mainHandItemStack.getItem();
             if(mainHandItem instanceof InnateAspectItem innateAspectItem){
-                float fatalDamage = WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.FATAL_HIT);
+                float fatalDamage = AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.FATAL_HIT);
                 float currentHealth = hurtLivingEntity.getHealth();
                 float newHealth = currentHealth - amount;
                 if(newHealth > 0.0f && newHealth < fatalDamage){
@@ -331,7 +332,7 @@ public class EntityEvents {
                 // todo anvil aspect
                 Item item = itemStack.getItem();
                 if(item instanceof InnateAspectItem innateAspectItem){
-                    int looting = (int)(WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.LOOTING_LUCK));
+                    int looting = (int)(AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.LOOTING_LUCK));
                     if(looting > 0){
                         event.setLootingLevel(looting);
                     }
@@ -359,7 +360,7 @@ public class EntityEvents {
             ItemStack itemStack = knockbackSourceLivingEntity.getMainHandItem();
             Item item = itemStack.getItem();
             if(item instanceof InnateAspectItem innateAspectItem) {
-                float knockback = Float.max(WeaponUtil.getTotalAspectStrength(innateAspectItem, Aspects.KNOCKBACK), 1.0f);
+                float knockback = Float.max(AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.KNOCKBACK), 1.0f);
                 event.setStrength(event.getStrength() * knockback);
             }
 

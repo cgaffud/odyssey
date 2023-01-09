@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.EnvironmentConditionalMeleeAspect;
 import com.bedmen.odyssey.enchantment.odyssey.ConditionalAmpEnchantment;
 import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
@@ -47,7 +48,7 @@ public class ConditionalAmpUtil {
         float enchantmentBonus = EnchantmentUtil.getConditionalAmpBonus(itemStack, entity, isMelee);
         // todo anvil aspect
         Item item = itemStack.getItem();
-        float aspectBonus = item instanceof InnateAspectItem innateAspectItem ? WeaponUtil.getEnvironmentalAspectStrength(innateAspectItem, entity.eyeBlockPosition(), entity.level) : 0.0f;
+        float aspectBonus = item instanceof InnateAspectItem innateAspectItem ? AspectUtil.getEnvironmentalAspectStrength(innateAspectItem, entity.eyeBlockPosition(), entity.level) : 0.0f;
         itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, enchantmentBonus + aspectBonus);
     }
 

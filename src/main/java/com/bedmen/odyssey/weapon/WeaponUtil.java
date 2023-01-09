@@ -155,31 +155,6 @@ public class WeaponUtil {
         return itemStack.getItem() instanceof OdysseyMeleeWeapon odysseyMeleeWeapon && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.DUAL_WIELD);
     }
 
-    //TODO: anvil aspects
-    public static float getTotalAspectStrength(InnateAspectItem innateAspectItem, Aspect aspect){
-        return getTotalAspectStrength(innateAspectItem, aspect1 -> aspect1 == aspect);
-    }
-
-    public static float getTotalAspectStrength(InnateAspectItem innateAspectItem, Predicate<Aspect> aspectPredicate){
-        return innateAspectItem.getInnateAspectInstanceList().stream()
-                .filter(aspectInstance -> aspectPredicate.test(aspectInstance.aspect))
-                .reduce(0.0f,
-                        (aFloat, aspectInstance) ->
-                        aspectInstance.strength + aFloat,
-                        Float::sum);
-    }
-
-    public static float getEnvironmentalAspectStrength(InnateAspectItem innateAspectItem, BlockPos blockPos, Level level){
-        return innateAspectItem.getInnateAspectInstanceList().stream()
-                .filter(aspectInstance -> aspectInstance.aspect instanceof EnvironmentConditionalMeleeAspect)
-                .reduce(0.0f,
-                        (aFloat, aspectInstance) ->
-                                aspectInstance.strength
-                                        * ((EnvironmentConditionalMeleeAspect)aspectInstance.aspect).attackBoostFactorFunction.getBoostFactor(blockPos, level)
-                                        + aFloat,
-                        Float::sum);
-    }
-
     public static void smackTarget(SmackPush smackPush) {
         double knockback = 1.0d + smackPush.smacker.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
         double knockback_resistance = smackPush.target instanceof LivingEntity livingTarget ? livingTarget.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE) : 0.0f;

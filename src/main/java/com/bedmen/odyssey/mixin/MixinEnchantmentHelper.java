@@ -1,8 +1,12 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.enchantment.TieredEnchantment;
 import com.bedmen.odyssey.items.equipment.base.IEquipment;
+import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -93,6 +97,8 @@ public abstract class MixinEnchantmentHelper {
     public static int getItemEnchantmentLevel(Enchantment enchantment, ItemStack itemStack) {
         if (itemStack.isEmpty()) {
             return 0;
+        } else if(itemStack.getItem() instanceof InnateAspectItem innateAspectItem && enchantment == Enchantments.BLOCK_FORTUNE) {
+            return (int)(AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.FORTUNE));
         } else {
             int j = 0;
             ResourceLocation resourcelocation = Registry.ENCHANTMENT.getKey(enchantment);
