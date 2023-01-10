@@ -26,6 +26,7 @@ public class Aspects {
     public static final Aspect BOTANICAL_STRENGTH = new EnvironmentConditionalMeleeAspect("botanical_strength", Aspects::getHotHumidBoost);
     public static final Aspect SCORCHED_STRENGTH = new EnvironmentConditionalMeleeAspect("scorched_strength", Aspects::getHotDryBoost);
     public static final Aspect WINTERY_STRENGTH = new EnvironmentConditionalMeleeAspect("wintery_strength", Aspects::getColdBoost);
+    public static final Aspect VOID_STRENGTH = new EnvironmentConditionalMeleeAspect("void_strength", Aspects::getBoostFromVoid);
     public static final Aspect LOOTING_LUCK = new Aspect("looting_luck");
     public static final Aspect FORTUNE = new Aspect("fortune");
     public static final Aspect AQUA_AFFINITY = new Aspect("aqua_affinity");
@@ -68,6 +69,31 @@ public class Aspects {
 
     public static float getDryBoost(BlockPos pos, Level level) {
         return 1f - getHumidBoost(pos, level);
+    }
+
+    /**
+     * Gives a 0 if y is at or beyond badY, a 1 if y is at or beyond goodY, quadratic scale in between
+     */
+    private static float quadraticDistanceFactorToVoid(float y, float badY, float goodY) {
+        float f = Mth.clamp((y - badY) / (goodY - badY), 0.0f, 1.0f);
+        return f * f;
+    }
+
+    private static float getBoostFromVoid(BlockPos pos, Level level) {
+        int y = pos.getY();
+        if (level.dimension() == Level.END) {
+            // Usually these boost numbers are only from 0 to 1 but this is an exception
+            return 2.0f;
+        }
+        if (level.dimension() == Level.NETHER) {
+            if (y > 64) {
+                return quadraticDistanceFactorToVoid(y, 96, 128);
+            } else {
+                return quadraticDistanceFactorToVoid(y, 32, 0);
+            }
+        }
+        // Gonna assume any other custom dimensions are similar to the overworld
+        return quadraticDistanceFactorToVoid(y, 64, -64);
     }
 
     public static Aspect percentageAspect(String id){
