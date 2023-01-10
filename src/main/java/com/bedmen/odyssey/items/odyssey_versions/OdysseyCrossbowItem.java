@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items.odyssey_versions;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
+import com.bedmen.odyssey.items.innate_modifier.InnateModifierArrowItem;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -350,17 +351,13 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     }
 
     public static AbstractArrow getArrow(Level level, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
-        ArrowItem arrowItem = (ArrowItem)(ammo.getItem() instanceof ArrowItem ? ammo.getItem() : Items.ARROW);
-        AbstractArrow abstractArrow = arrowItem.createArrow(level, ammo, shooter);
+        InnateModifierArrowItem arrowItem = (InnateModifierArrowItem)(ammo.getItem() instanceof InnateModifierArrowItem ? ammo.getItem() : Items.ARROW);
+        AbstractArrow abstractArrow = arrowItem.createAbstractOdysseyArrow(level, crossbow, ammo, shooter);
         abstractArrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractArrow.setShotFromCrossbow(true);
         int k = EnchantmentUtil.getPower(crossbow);
         if (k > 0) {
             abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() + (double)k * 0.5D + 0.5D);
-        }
-        k = EnchantmentUtil.getPunch(crossbow);
-        if (k > 0) {
-            abstractArrow.setKnockback(k);
         }
         k = EnchantmentUtil.getFlame(crossbow);
         if (k > 0) {
@@ -369,10 +366,6 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         k = EnchantmentUtil.getPiercing(crossbow);
         if (k > 0) {
             abstractArrow.setPierceLevel((byte)k);
-        }
-        k = EnchantmentUtil.getMobLooting(crossbow);
-        if(k > 0 && abstractArrow instanceof OdysseyAbstractArrow){
-            ((OdysseyAbstractArrow) abstractArrow).setLootingLevel((byte)k);
         }
         return abstractArrow;
     }

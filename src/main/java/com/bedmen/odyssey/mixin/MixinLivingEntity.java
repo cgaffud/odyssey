@@ -26,6 +26,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private boolean hasSlowFalling = false;
     private int flightTicks = 0;
     private SmackPush smackPush = new SmackPush();
+    private float knockbackAmplifier = 1.0f;
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -98,6 +99,14 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
 
     public void setSmackPush(SmackPush smackPush){
         this.smackPush = smackPush;
+    }
+
+    public float getKnockbackAmplifier(){
+        return this.knockbackAmplifier;
+    }
+
+    public void setKnockbackAmplifier(float knockbackAmplifier){
+        this.knockbackAmplifier = knockbackAmplifier;
     }
 
     private LivingEntity getLivingEntity(){

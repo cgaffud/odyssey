@@ -1,7 +1,11 @@
 package com.bedmen.odyssey.items.odyssey_versions;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
+import com.bedmen.odyssey.items.innate_modifier.InnateModifierArrowItem;
+import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
@@ -62,47 +66,38 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                 if (!((double)charge < 0.1D)) {
                     boolean flag1 = player.getAbilities().instabuild || (ammo.getItem() instanceof ArrowItem && ((ArrowItem)ammo.getItem()).isInfinite(ammo, bow, player));
                     if (!level.isClientSide) {
-                        ArrowItem arrowitem = (ArrowItem)(ammo.getItem() instanceof ArrowItem ? ammo.getItem() : Items.ARROW);
-                        AbstractArrow abstractArrow = arrowitem.createArrow(level, ammo, player);
+                        InnateModifierArrowItem arrowItem = (InnateModifierArrowItem)(ammo.getItem() instanceof InnateModifierArrowItem ? ammo.getItem() : Items.ARROW);
+                        OdysseyAbstractArrow odysseyAbstractArrow = arrowItem.createAbstractOdysseyArrow(level, bow, ammo, player);
 
                         float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(livingEntity);
                         if(superChargeMultiplier > 1.0f && getMaxCharge(bow) == charge){
-                            abstractArrow.setCritArrow(true);
+                            odysseyAbstractArrow.setCritArrow(true);
                             inaccuracy /= superChargeMultiplier;
                         }
 
-                        abstractArrow = customArrow(abstractArrow);
-                        abstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, velocityFactor * WeaponUtil.BASE_ARROW_VELOCITY, inaccuracy);
+                        odysseyAbstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, velocityFactor * WeaponUtil.BASE_ARROW_VELOCITY, inaccuracy);
 
                         int j = EnchantmentUtil.getPower(bow);
                         if (j > 0) {
-                            abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
-                        }
-                        j = EnchantmentUtil.getPunch(bow);
-                        if (j > 0) {
-                            abstractArrow.setKnockback(j);
+                            odysseyAbstractArrow.setBaseDamage(odysseyAbstractArrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
                         }
                         j = EnchantmentUtil.getFlame(bow);
                         if (j > 0) {
-                            abstractArrow.setSecondsOnFire(100*j);
+                            odysseyAbstractArrow.setSecondsOnFire(100*j);
                         }
                         j = EnchantmentUtil.getPiercing(bow);
                         if (j > 0) {
-                            abstractArrow.setPierceLevel((byte)j);
-                        }
-                        j = EnchantmentUtil.getMobLooting(bow);
-                        if(j > 0 && abstractArrow instanceof OdysseyAbstractArrow){
-                            ((OdysseyAbstractArrow) abstractArrow).setLootingLevel((byte)j);
+                            odysseyAbstractArrow.setPierceLevel((byte)j);
                         }
 
                         bow.hurtAndBreak(1, player, (player1) -> {
                             player1.broadcastBreakEvent(player.getUsedItemHand());
                         });
                         if (!ammoStack.canPickUp || flag1 || player.getAbilities().instabuild && (ammo.is(Items.SPECTRAL_ARROW) || ammo.is(Items.TIPPED_ARROW))) {
-                            abstractArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                            odysseyAbstractArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
 
-                        level.addFreshEntity(abstractArrow);
+                        level.addFreshEntity(odysseyAbstractArrow);
                     }
 
                     level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.4F + 1.2F) + velocityFactor * 0.5F);

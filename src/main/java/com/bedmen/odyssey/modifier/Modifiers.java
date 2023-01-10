@@ -33,6 +33,7 @@ public class Modifiers {
     public static final IntegerModifier FORTUNE = new IntegerModifier("fortune");
     public static final BooleanModifier AQUA_AFFINITY = new BooleanModifier("aqua_affinity");
     public static final PercentageModifier LARCENY_CHANCE = new PercentageModifier("larceny_chance");
+    public static final FloatModifier ARROW_KNOCKBACK = new FloatModifier("arrow_knockback");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

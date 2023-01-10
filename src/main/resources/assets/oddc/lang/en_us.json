@@ -513,5 +513,6 @@
   "modifier.oddc.looting_luck": "+%s Looting Luck",
   "modifier.oddc.fortune": "+%s Fortune",
   "modifier.oddc.aqua_affinity": "Aqua Affinity",
-  "modifier.oddc.larceny_chance": "%s Larceny Chance"
+  "modifier.oddc.larceny_chance": "%s Larceny Chance",
+  "modifier.oddc.arrow_knockback": "x%s Arrow Knockback"
 }

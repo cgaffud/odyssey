@@ -12,4 +12,6 @@ public interface OdysseyLivingEntity {
     int getMaxFlightTicks();
     SmackPush getSmackPush();
     void setSmackPush(SmackPush smackPush);
+    float getKnockbackAmplifier();
+    void setKnockbackAmplifier(float knockbackAmplifier);
 }

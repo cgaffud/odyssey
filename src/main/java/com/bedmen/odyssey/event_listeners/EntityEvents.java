@@ -107,7 +107,7 @@ public class EntityEvents {
         float amount = event.getAmount();
         LivingEntity hurtLivingEntity = event.getEntityLiving();
         DamageSource damageSource = event.getSource();
-        Entity damageSourceEntity = damageSource.getEntity();
+        Entity damageSourceEntity = damageSource.getDirectEntity();
 
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
             ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
@@ -145,6 +145,14 @@ public class EntityEvents {
                     WeaponUtil.tryStealItem(Items.EMERALD.getDefaultInstance(), damageSourceLivingEntity, hurtLivingEntity, null, larcenyChance);
                 }
             }
+            // Melee Knockback
+            if(hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
+                float knockback = Float.max(ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.KNOCKBACK), 1.0f);
+                odysseyLivingEntity.setKnockbackAmplifier(knockback);
+            }
+        } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
+            // Ranged Knockback
+            odysseyLivingEntity.setKnockbackAmplifier(odysseyAbstractArrow.knockbackModifier);
         }
 
         if(amount >= 10.0f && hurtLivingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
@@ -349,11 +357,10 @@ public class EntityEvents {
     @SubscribeEvent
     public static void onLivingKnockBackEvent(final LivingKnockBackEvent event){
         LivingEntity target = event.getEntityLiving();
-        Entity knockbackSourceEntity = target.getLastHurtByMob();
-        if(knockbackSourceEntity instanceof LivingEntity knockbackSourceLivingEntity){
-            ItemStack itemStack = knockbackSourceLivingEntity.getMainHandItem();
-            float knockback = Float.max(ModifierUtil.getFloatModifierValue(itemStack, Modifiers.KNOCKBACK), 1.0f);
-            event.setStrength(event.getStrength() * knockback);
+        if(target instanceof OdysseyLivingEntity odysseyLivingEntity){
+            event.setStrength(event.getOriginalStrength() * odysseyLivingEntity.getKnockbackAmplifier());
+            System.out.println(odysseyLivingEntity.getKnockbackAmplifier());
+            odysseyLivingEntity.setKnockbackAmplifier(1.0f);
         }
     }
 }

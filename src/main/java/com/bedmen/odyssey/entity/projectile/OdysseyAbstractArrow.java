@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -28,17 +29,18 @@ import java.util.Arrays;
 public abstract class OdysseyAbstractArrow extends AbstractArrow {
     private static final EntityDataAccessor<Byte> LOOTING_LEVEL = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> LARCENY_LEVEL = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BYTE);
+    public float knockbackModifier = 1.0f;
 
-    protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, Level world) {
-        super(type, world);
+    protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, Level level) {
+        super(type, level);
     }
 
-    protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, double x, double y, double z, Level world) {
-        super(type, x, y, z, world);
+    protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, double x, double y, double z, Level level) {
+        super(type, x, y, z, level);
     }
 
-    protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, LivingEntity livingEntity, Level world) {
-        super(type, livingEntity, world);
+    protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, LivingEntity livingEntity, Level level) {
+        super(type, livingEntity, level);
     }
 
     protected void defineSynchedData() {
@@ -47,20 +49,20 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         this.entityData.define(LARCENY_LEVEL, (byte)0);
     }
 
-    public void setLootingLevel(byte b) {
-        this.entityData.set(LOOTING_LEVEL, b);
-    }
-
-    public void setLarcenyLevel(byte b) {
-        this.entityData.set(LARCENY_LEVEL, b);
-    }
-
     public byte getLootingLevel() {
         return this.entityData.get(LOOTING_LEVEL);
     }
 
+    public void setLootingLevel(byte b) {
+        this.entityData.set(LOOTING_LEVEL, b);
+    }
+
     public byte getLarcenyLevel() {
         return this.entityData.get(LARCENY_LEVEL);
+    }
+
+    public void setLarcenyLevel(byte b) {
+        this.entityData.set(LARCENY_LEVEL, b);
     }
 
     protected void onHitEntity(EntityHitResult p_213868_1_) {
@@ -110,13 +112,6 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 LivingEntity livingentity = (LivingEntity)entity;
                 if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
                     livingentity.setArrowCount(livingentity.getArrowCount() + 1);
-                }
-
-                if (this.knockback > 0) {
-                    Vec3 vector3d = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double)this.knockback * 0.6D);
-                    if (vector3d.lengthSqr() > 0.0D) {
-                        livingentity.push(vector3d.x, 0.1D, vector3d.z);
-                    }
                 }
 
                 if (!this.level.isClientSide && owner instanceof LivingEntity) {

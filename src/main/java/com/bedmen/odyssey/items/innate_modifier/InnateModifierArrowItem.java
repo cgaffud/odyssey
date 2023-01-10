@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.items.innate_modifier;
 
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.modifier.Modifier;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
@@ -39,8 +40,11 @@ public class InnateModifierArrowItem extends ArrowItem implements InnateModifier
         });
     }
 
-    public AbstractArrow createArrow(Level world, ItemStack ammo, LivingEntity livingEntity) {
+    public OdysseyAbstractArrow createAbstractOdysseyArrow(Level world, ItemStack bow, ItemStack ammo, LivingEntity livingEntity) {
         OdysseyArrow odysseyArrow = new OdysseyArrow(world, livingEntity, arrowType);
+        // Knockback
+        odysseyArrow.knockbackModifier = ModifierUtil.getFloatModifierValue(bow, Modifiers.ARROW_KNOCKBACK);;
+        // Looting
         odysseyArrow.setLootingLevel((byte)(ModifierUtil.getIntegerModifierValue(ammo, Modifiers.LOOTING_LUCK)));
         return odysseyArrow;
     }
