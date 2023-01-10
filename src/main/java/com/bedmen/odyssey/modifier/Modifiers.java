@@ -1,36 +1,38 @@
-package com.bedmen.odyssey.aspect;
+package com.bedmen.odyssey.modifier;
 
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import com.bedmen.odyssey.util.BiomeUtil;
-import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 
-public class Aspects {
-    public static final Aspect DAMAGE_AGAINST_ARTHROPOD = new TargetConditionalMeleeAspect("damage_against_arthropod", livingEntity -> livingEntity.getMobType() == MobType.ARTHROPOD);
-    public static final Aspect SMITE_DAMAGE = new TargetConditionalMeleeAspect("smite_damage", livingEntity -> livingEntity.getMobType() == MobType.UNDEAD);
-    public static final Aspect HYDRO_DAMAGE = new TargetConditionalMeleeAspect("hydro_damage", livingEntity -> livingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
-    public static final Aspect KNOCKBACK = new Aspect("knockback");
-    public static final Aspect FATAL_HIT = new Aspect("fatal_hit");
-    public static final Aspect SWEEP_DAMAGE = new Aspect("sweep_damage");
-    public static final Aspect POISON_DAMAGE = new Aspect("poison_damage");
-    public static final Aspect COBWEB_CHANCE = percentageAspect("cobweb_chance");
-    public static final Aspect SOLAR_STRENGTH = new EnvironmentConditionalMeleeAspect("solar_strength", Aspects::getSunBoost);
-    public static final Aspect LUNAR_STRENGTH = new EnvironmentConditionalMeleeAspect("lunar_strength", Aspects::getMoonBoost);
-    public static final Aspect BOTANICAL_STRENGTH = new EnvironmentConditionalMeleeAspect("botanical_strength", Aspects::getHotHumidBoost);
-    public static final Aspect SCORCHED_STRENGTH = new EnvironmentConditionalMeleeAspect("scorched_strength", Aspects::getHotDryBoost);
-    public static final Aspect WINTERY_STRENGTH = new EnvironmentConditionalMeleeAspect("wintery_strength", Aspects::getColdBoost);
-    public static final Aspect VOID_STRENGTH = new EnvironmentConditionalMeleeAspect("void_strength", Aspects::getBoostFromVoid);
-    public static final Aspect LOOTING_LUCK = new Aspect("looting_luck");
-    public static final Aspect FORTUNE = new Aspect("fortune");
-    public static final Aspect AQUA_AFFINITY = new Aspect("aqua_affinity");
-    public static final Aspect LARCENY_CHANCE = percentageAspect("larceny_chance");
+import java.util.HashMap;
+import java.util.Map;
+
+public class Modifiers {
+    public static final Map<String, Modifier> modifierRegister = new HashMap<>();
+
+    public static final TargetConditionalMeleeModifier DAMAGE_AGAINST_ARTHROPOD = new TargetConditionalMeleeModifier("damage_against_arthropod", livingEntity -> livingEntity.getMobType() == MobType.ARTHROPOD);
+    public static final TargetConditionalMeleeModifier SMITE_DAMAGE = new TargetConditionalMeleeModifier("smite_damage", livingEntity -> livingEntity.getMobType() == MobType.UNDEAD);
+    public static final TargetConditionalMeleeModifier HYDRO_DAMAGE = new TargetConditionalMeleeModifier("hydro_damage", livingEntity -> livingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
+    public static final FloatModifier KNOCKBACK = new FloatModifier("knockback");
+    public static final FloatModifier FATAL_HIT = new FloatModifier("fatal_hit");
+    public static final FloatModifier SWEEP_DAMAGE = new FloatModifier("sweep_damage");
+    public static final IntegerModifier POISON_DAMAGE = new IntegerModifier("poison_damage");
+    public static final PercentageModifier COBWEB_CHANCE = new PercentageModifier("cobweb_chance");
+    public static final EnvironmentConditionalMeleeModifier SOLAR_STRENGTH = new EnvironmentConditionalMeleeModifier("solar_strength", Modifiers::getSunBoost);
+    public static final EnvironmentConditionalMeleeModifier LUNAR_STRENGTH = new EnvironmentConditionalMeleeModifier("lunar_strength", Modifiers::getMoonBoost);
+    public static final EnvironmentConditionalMeleeModifier BOTANICAL_STRENGTH = new EnvironmentConditionalMeleeModifier("botanical_strength", Modifiers::getHotHumidBoost);
+    public static final EnvironmentConditionalMeleeModifier SCORCHED_STRENGTH = new EnvironmentConditionalMeleeModifier("scorched_strength", Modifiers::getHotDryBoost);
+    public static final EnvironmentConditionalMeleeModifier WINTERY_STRENGTH = new EnvironmentConditionalMeleeModifier("wintery_strength", Modifiers::getColdBoost);
+    public static final EnvironmentConditionalMeleeModifier VOID_STRENGTH = new EnvironmentConditionalMeleeModifier("void_strength", Modifiers::getBoostFromVoid);
+    public static final IntegerModifier LOOTING_LUCK = new IntegerModifier("looting_luck");
+    public static final IntegerModifier FORTUNE = new IntegerModifier("fortune");
+    public static final BooleanModifier AQUA_AFFINITY = new BooleanModifier("aqua_affinity");
+    public static final PercentageModifier LARCENY_CHANCE = new PercentageModifier("larceny_chance");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
@@ -94,9 +96,5 @@ public class Aspects {
         }
         // Gonna assume any other custom dimensions are similar to the overworld
         return quadraticDistanceFactorToVoid(y, 64, -64);
-    }
-
-    public static Aspect percentageAspect(String id){
-        return new Aspect(id, aspectInstance -> new TranslatableComponent("aspect.oddc."+aspectInstance.aspect.id, StringUtil.percentFormat(aspectInstance.strength)));
     }
 }

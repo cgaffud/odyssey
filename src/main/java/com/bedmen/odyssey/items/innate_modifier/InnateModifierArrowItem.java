@@ -1,8 +1,11 @@
-package com.bedmen.odyssey.items.odyssey_versions;
+package com.bedmen.odyssey.items.innate_modifier;
 
-import com.bedmen.odyssey.entity.monster.Weaver;
+import com.bedmen.odyssey.modifier.Modifier;
+import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import com.bedmen.odyssey.util.StringUtil;
+import com.bedmen.odyssey.weapon.ArrowType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
@@ -15,17 +18,17 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
-public class OdysseyArrowItem extends ArrowItem {
-    private final OdysseyArrow.ArrowType arrowType;
-    public OdysseyArrowItem(Item.Properties p_i48464_1_, OdysseyArrow.ArrowType arrowType) {
-        super(p_i48464_1_);
+public class InnateModifierArrowItem extends ArrowItem implements InnateModifierItem {
+    private final ArrowType arrowType;
+    public InnateModifierArrowItem(Item.Properties properties, ArrowType arrowType) {
+        super(properties);
         this.arrowType = arrowType;
         DispenserBlock.registerBehavior(this, new AbstractProjectileDispenseBehavior() {
             protected Projectile getProjectile(Level level, Position position, ItemStack itemStack) {
@@ -38,21 +41,16 @@ public class OdysseyArrowItem extends ArrowItem {
 
     public AbstractArrow createArrow(Level world, ItemStack ammo, LivingEntity livingEntity) {
         OdysseyArrow odysseyArrow = new OdysseyArrow(world, livingEntity, arrowType);
-        odysseyArrow.setLootingLevel((byte)this.arrowType.getLooting());
+        odysseyArrow.setLootingLevel((byte)(ModifierUtil.getIntegerModifierValue(ammo, Modifiers.LOOTING_LUCK)));
         return odysseyArrow;
     }
 
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
+        this.arrowType.innateModifierHolder.addTooltip(tooltip, tooltipFlag);
         tooltip.add(new TranslatableComponent("item.oddc.arrow.damage").append(StringUtil.doubleFormat(this.arrowType.damage)).withStyle(ChatFormatting.BLUE));
-        int looting = this.arrowType.getLooting();
-        if(looting > 0){
-            tooltip.add(Enchantments.MOB_LOOTING.getFullname(looting));
-        }
-        if(this.arrowType == OdysseyArrow.ArrowType.WEAVER_FANG){
-            tooltip.add(new TranslatableComponent("item.oddc.weaver_fang.web_chance").append(StringUtil.percentFormat(Weaver.WEB_ATTACK_CHANCE * OdysseyArrow.WEAVER_FANG_ARROW_WEB_AMPLIFY)).withStyle(ChatFormatting.BLUE));
-        }
-        if(this.arrowType == OdysseyArrow.ArrowType.SPIDER_FANG){
-            tooltip.add(new TranslatableComponent("item.oddc.spider_fang.poison_damage", StringUtil.floatFormat(1f)).withStyle(ChatFormatting.BLUE));
-        }
+    }
+
+    public Map<Modifier, Float> getInnateModifierMap() {
+        return this.arrowType.innateModifierHolder.modifierMap;
     }
 }

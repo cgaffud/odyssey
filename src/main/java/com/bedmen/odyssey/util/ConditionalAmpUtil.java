@@ -1,18 +1,14 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.EnvironmentConditionalMeleeAspect;
+import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.EnvironmentConditionalMeleeModifier;
 import com.bedmen.odyssey.enchantment.odyssey.ConditionalAmpEnchantment;
-import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
-import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
-import com.bedmen.odyssey.items.innate_aspect_items.InnateConditionalAmpMeleeItem;
-import com.bedmen.odyssey.weapon.WeaponUtil;
+import com.bedmen.odyssey.items.innate_modifier.InnateConditionalAmpMeleeItem;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
@@ -32,8 +28,8 @@ public class ConditionalAmpUtil {
         }
 
         if (itemStack.getItem() instanceof InnateConditionalAmpMeleeItem innateConditionalAmpMeleeItem
-                && innateConditionalAmpMeleeItem.aspect instanceof EnvironmentConditionalMeleeAspect environmentConditionalMeleeAspect){
-            return environmentConditionalMeleeAspect.attackBoostFactorFunction.getBoostFactor(livingEntity.eyeBlockPosition(), livingEntity.level);
+                && innateConditionalAmpMeleeItem.modifier instanceof EnvironmentConditionalMeleeModifier environmentConditionalMeleeModifier){
+            return environmentConditionalMeleeModifier.attackBoostFactorFunction.getBoostFactor(livingEntity.eyeBlockPosition(), livingEntity.level);
         }
 
         return 0.0f;
@@ -46,10 +42,8 @@ public class ConditionalAmpUtil {
     public static void setDamageTag(ItemStack itemStack, Entity entity, boolean isMelee) {
         // todo remove enchantment
         float enchantmentBonus = EnchantmentUtil.getConditionalAmpBonus(itemStack, entity, isMelee);
-        // todo anvil aspect
-        Item item = itemStack.getItem();
-        float aspectBonus = item instanceof InnateAspectItem innateAspectItem ? AspectUtil.getEnvironmentalAspectStrength(innateAspectItem, entity.eyeBlockPosition(), entity.level) : 0.0f;
-        itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, enchantmentBonus + aspectBonus);
+        float modifierBonus = ModifierUtil.getEnvironmentalModifierStrength(itemStack, entity.eyeBlockPosition(), entity.level);
+        itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, enchantmentBonus + modifierBonus);
     }
 
     public interface NumericalItem {

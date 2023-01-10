@@ -1,14 +1,11 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.Aspects;
-import com.bedmen.odyssey.aspect.TargetConditionalMeleeAspect;
+import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
-import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
-import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
@@ -42,7 +39,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
-import org.lwjgl.system.CallbackI;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -115,51 +111,38 @@ public class EntityEvents {
 
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
             ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
-            Item mainHandItem = mainHandItemStack.getItem();
-
-            // Innate Aspect Damage
-            // TODO: anvil aspects
-            if(mainHandItem instanceof InnateAspectItem innateAspectItem){
-                // Smite, Bane of Arthropods,
-                amount += AspectUtil.getTotalAspectStrength(innateAspectItem,
-                        aspect ->
-                        aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect
-                        && targetConditionalMeleeAspect.livingEntityPredicate.test(hurtLivingEntity)
-                );
-
-                // Poison Damage
-                float poisonStrength = AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.POISON_DAMAGE);
-                if(poisonStrength > 0.0f){
-                    hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (int)(12 * poisonStrength), 1));
+            // Smite, Bane of Arthropods, Hydro Damage
+            amount += ModifierUtil.getTargetConditionalModifierStrength(mainHandItemStack, hurtLivingEntity);
+            // Poison Damage
+            int poisonStrength = ModifierUtil.getIntegerModifierValue(mainHandItemStack, Modifiers.POISON_DAMAGE);
+            if(poisonStrength > 0){
+                hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (int)(12 * poisonStrength), 1));
+            }
+            // Cobweb Chance
+            float cobwebChance = ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.COBWEB_CHANCE);
+            if(cobwebChance > damageSourceLivingEntity.getRandom().nextFloat()){
+                BlockPos blockPos = new BlockPos(hurtLivingEntity.getPosition(1f));
+                if (hurtLivingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
+                    hurtLivingEntity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
                 }
-
-                // Cobweb Chance
-                float cobwebChance = AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.COBWEB_CHANCE);
-                if(cobwebChance > damageSourceLivingEntity.getRandom().nextFloat()){
-                    BlockPos blockPos = new BlockPos(hurtLivingEntity.getPosition(1f));
-                    if (hurtLivingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
-                        hurtLivingEntity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
-                    }
+            }
+            // Larceny Chance
+            float larcenyChance = ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.LARCENY_CHANCE);
+            if(larcenyChance > 0.0f && !hurtLivingEntity.level.isClientSide){
+                boolean mainHandFull = !hurtLivingEntity.getMainHandItem().isEmpty();
+                boolean offHandFull = !hurtLivingEntity.getOffhandItem().isEmpty();
+                EquipmentSlot equipmentSlot = null;
+                if(mainHandFull && offHandFull){
+                    equipmentSlot = hurtLivingEntity.getRandom().nextBoolean() ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+                } else if(mainHandFull || offHandFull) {
+                    equipmentSlot = mainHandFull ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
                 }
-
-                // Larceny Chance
-                float larcenyChance = AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.LARCENY_CHANCE);
-                if(larcenyChance > 0.0f && !hurtLivingEntity.level.isClientSide){
-                    boolean mainHandFull = !hurtLivingEntity.getMainHandItem().isEmpty();
-                    boolean offHandFull = !hurtLivingEntity.getOffhandItem().isEmpty();
-                    EquipmentSlot equipmentSlot = null;
-                    if(mainHandFull && offHandFull){
-                        equipmentSlot = hurtLivingEntity.getRandom().nextBoolean() ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
-                    } else if(mainHandFull || offHandFull) {
-                        equipmentSlot = mainHandFull ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
-                    }
-                    if(equipmentSlot != null) {
-                        ItemStack itemStack = hurtLivingEntity.getItemBySlot(equipmentSlot);
-                        WeaponUtil.tryStealItem(itemStack, damageSourceLivingEntity, hurtLivingEntity, equipmentSlot, larcenyChance);
-                    }
-                    if(hurtLivingEntity instanceof AbstractIllager || hurtLivingEntity instanceof AbstractVillager) {
-                        WeaponUtil.tryStealItem(Items.EMERALD.getDefaultInstance(), damageSourceLivingEntity, hurtLivingEntity, null, larcenyChance);
-                    }
+                if(equipmentSlot != null) {
+                    ItemStack itemStack = hurtLivingEntity.getItemBySlot(equipmentSlot);
+                    WeaponUtil.tryStealItem(itemStack, damageSourceLivingEntity, hurtLivingEntity, equipmentSlot, larcenyChance);
+                }
+                if(hurtLivingEntity instanceof AbstractIllager || hurtLivingEntity instanceof AbstractVillager) {
+                    WeaponUtil.tryStealItem(Items.EMERALD.getDefaultInstance(), damageSourceLivingEntity, hurtLivingEntity, null, larcenyChance);
                 }
             }
         }
@@ -186,20 +169,16 @@ public class EntityEvents {
         LivingEntity hurtLivingEntity = event.getEntityLiving();
         DamageSource damageSource = event.getSource();
         Entity damageSourceEntity = damageSource.getEntity();
-        // TODO: anvil aspects
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
             ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
-            Item mainHandItem = mainHandItemStack.getItem();
-            if(mainHandItem instanceof InnateAspectItem innateAspectItem){
-                float fatalDamage = AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.FATAL_HIT);
-                float currentHealth = hurtLivingEntity.getHealth();
-                float newHealth = currentHealth - amount;
-                if(newHealth > 0.0f && newHealth < fatalDamage){
-                    float deathChance = (fatalDamage - newHealth) / fatalDamage;
-                    if(deathChance > hurtLivingEntity.getRandom().nextFloat()) {
-                        event.setAmount(currentHealth);
-                        OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> hurtLivingEntity), new FatalHitAnimatePacket(hurtLivingEntity));
-                    }
+            float fatalDamage = ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.FATAL_HIT);
+            float currentHealth = hurtLivingEntity.getHealth();
+            float newHealth = currentHealth - amount;
+            if(newHealth > 0.0f && newHealth < fatalDamage){
+                float deathChance = (fatalDamage - newHealth) / fatalDamage;
+                if(deathChance > hurtLivingEntity.getRandom().nextFloat()) {
+                    event.setAmount(currentHealth);
+                    OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> hurtLivingEntity), new FatalHitAnimatePacket(hurtLivingEntity));
                 }
             }
         }
@@ -349,13 +328,9 @@ public class EntityEvents {
                 event.setLootingLevel(((OdysseyAbstractArrow) directEntity).getLootingLevel());
             } else if (directEntity instanceof LivingEntity livingEntity) {
                 ItemStack itemStack = livingEntity.getMainHandItem();
-                // todo anvil aspect
-                Item item = itemStack.getItem();
-                if(item instanceof InnateAspectItem innateAspectItem){
-                    int looting = (int)(AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.LOOTING_LUCK));
-                    if(looting > 0){
-                        event.setLootingLevel(looting);
-                    }
+                int looting = ModifierUtil.getIntegerModifierValue(itemStack, Modifiers.LOOTING_LUCK);
+                if(looting > 0){
+                    event.setLootingLevel(looting);
                 }
             }
         }
@@ -376,14 +351,9 @@ public class EntityEvents {
         LivingEntity target = event.getEntityLiving();
         Entity knockbackSourceEntity = target.getLastHurtByMob();
         if(knockbackSourceEntity instanceof LivingEntity knockbackSourceLivingEntity){
-            // TODO: anvil aspects
             ItemStack itemStack = knockbackSourceLivingEntity.getMainHandItem();
-            Item item = itemStack.getItem();
-            if(item instanceof InnateAspectItem innateAspectItem) {
-                float knockback = Float.max(AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.KNOCKBACK), 1.0f);
-                event.setStrength(event.getStrength() * knockback);
-            }
-
+            float knockback = Float.max(ModifierUtil.getFloatModifierValue(itemStack, Modifiers.KNOCKBACK), 1.0f);
+            event.setStrength(event.getStrength() * knockback);
         }
     }
 }

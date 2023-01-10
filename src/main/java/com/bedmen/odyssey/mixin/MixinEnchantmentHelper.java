@@ -1,12 +1,10 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.enchantment.TieredEnchantment;
 import com.bedmen.odyssey.items.equipment.base.IEquipment;
-import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -97,9 +95,7 @@ public abstract class MixinEnchantmentHelper {
     public static int getItemEnchantmentLevel(Enchantment enchantment, ItemStack itemStack) {
         if (itemStack.isEmpty()) {
             return 0;
-        } else if(itemStack.getItem() instanceof InnateAspectItem innateAspectItem && enchantment == Enchantments.BLOCK_FORTUNE) {
-            return (int)(AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.FORTUNE));
-        } else {
+        }  else {
             int j = 0;
             ResourceLocation resourcelocation = Registry.ENCHANTMENT.getKey(enchantment);
             ListTag listnbt = itemStack.getEnchantmentTags();
@@ -113,9 +109,8 @@ public abstract class MixinEnchantmentHelper {
                 }
             }
 
-            Item item = itemStack.getItem();
-            if(item instanceof IEquipment){
-                j += ((IEquipment)(itemStack.getItem())).getInnateEnchantmentLevel(enchantment);
+            if(enchantment == Enchantments.BLOCK_FORTUNE) {
+                j += ModifierUtil.getIntegerModifierValue(itemStack, Modifiers.FORTUNE);
             }
 
             return j;
@@ -156,17 +151,11 @@ public abstract class MixinEnchantmentHelper {
 
     /**
      * @author JemBren
-     * @reason Aqua Affinity Aspect
+     * @reason Aqua Affinity Modifier
      */
     @Overwrite
     public static boolean hasAquaAffinity(LivingEntity livingEntity) {
-        //todo anvil aspect
-        if(getEnchantmentLevel(Enchantments.AQUA_AFFINITY, livingEntity) > 0){
-            return true;
-        }
-        ItemStack itemStack = livingEntity.getMainHandItem();
-        Item item = itemStack.getItem();
-        return item instanceof InnateAspectItem innateAspectItem
-                && AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.AQUA_AFFINITY) > 0.0f;
+        return getEnchantmentLevel(Enchantments.AQUA_AFFINITY, livingEntity) > 0
+                || ModifierUtil.hasBooleanModifier(livingEntity.getMainHandItem(), Modifiers.AQUA_AFFINITY);
     }
 }

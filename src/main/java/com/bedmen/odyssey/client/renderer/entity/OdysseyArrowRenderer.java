@@ -11,7 +11,7 @@ public class OdysseyArrowRenderer extends ArrowRenderer<OdysseyArrow> {
         super(p_174422_);
     }
 
-    public ResourceLocation getTextureLocation(OdysseyArrow odysseyArrowEntity) {
-        return odysseyArrowEntity.getArrowType().getResourceLocation();
+    public ResourceLocation getTextureLocation(OdysseyArrow odysseyArrow) {
+        return odysseyArrow.getArrowType().resourceLocation;
     }
 }

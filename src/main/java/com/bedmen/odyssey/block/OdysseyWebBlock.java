@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.block;
 
-import com.bedmen.odyssey.items.innate_aspect_items.InnateAspectMeleeItem;
 import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
 import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
 import net.minecraft.client.renderer.RenderType;

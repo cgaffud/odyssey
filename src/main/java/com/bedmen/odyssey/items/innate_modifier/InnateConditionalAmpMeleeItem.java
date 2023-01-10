@@ -1,7 +1,7 @@
-package com.bedmen.odyssey.items.innate_aspect_items;
+package com.bedmen.odyssey.items.innate_modifier;
 
-import com.bedmen.odyssey.aspect.Aspect;
-import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.modifier.Modifier;
+import com.bedmen.odyssey.modifier.ModifierInstance;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.weapon.MeleeWeaponClass;
@@ -14,20 +14,20 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class InnateConditionalAmpMeleeItem extends InnateAspectMeleeItem {
+public class InnateConditionalAmpMeleeItem extends InnateModifierMeleeItem {
 
-    public final Aspect aspect;
+    public final Modifier modifier;
 
-    public InnateConditionalAmpMeleeItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> innateAspectList) {
-        super(builderIn, tier, meleeWeaponClass, damage, innateAspectList);
-        this.aspect = innateAspectList.get(0).aspect;
+    public InnateConditionalAmpMeleeItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<ModifierInstance> innateModifierList) {
+        super(builderIn, tier, meleeWeaponClass, damage, innateModifierList);
+        this.modifier = innateModifierList.get(0).modifier;
     }
 
     public static class NumericalItem extends InnateConditionalAmpMeleeItem implements INeedsToRegisterItemModelProperty, ConditionalAmpUtil.NumericalItem {
 
         private final int intervalCount;
-        public NumericalItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> innateAspectList, int numTextures){
-            super(builderIn, tier, meleeWeaponClass, damage, innateAspectList);
+        public NumericalItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<ModifierInstance> innateModifierList, int numTextures){
+            super(builderIn, tier, meleeWeaponClass, damage, innateModifierList);
             this.intervalCount = numTextures-1;
         }
 
@@ -44,8 +44,8 @@ public class InnateConditionalAmpMeleeItem extends InnateAspectMeleeItem {
         private final ConditionalAmpUtil.ColorProvider colorProvider;
         private final int defaultColor;
 
-        public GradientItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> innateAspectList, ConditionalAmpUtil.ColorProvider colorProvider, int defaultColor) {
-            super(builderIn, tier, meleeWeaponClass, damage, innateAspectList);
+        public GradientItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<ModifierInstance> innateModifierList, ConditionalAmpUtil.ColorProvider colorProvider, int defaultColor) {
+            super(builderIn, tier, meleeWeaponClass, damage, innateModifierList);
             this.colorProvider = colorProvider;
             this.defaultColor = defaultColor;
         }

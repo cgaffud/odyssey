@@ -5,6 +5,7 @@ import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.weapon.ArrowType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -81,7 +82,7 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
     }
 
     protected void onHitEntity(EntityHitResult entityHitResult) {
-        this.arrowType.onEntityHit(entityHitResult);
+        this.arrowType.onEntityHit(entityHitResult, this.getPickupItem());
         super.onHitEntity(entityHitResult);
     }
 
@@ -109,69 +110,5 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         }
     }
 
-    public enum ArrowType{
-        FLINT(ItemRegistry.ARROW::get, 5.0d, new ResourceLocation("textures/entity/projectiles/arrow.png")),
-        SPIDER_FANG(ItemRegistry.SPIDER_FANG_ARROW::get, 5d, (entityHitResult) -> {
-            Entity entity = entityHitResult.getEntity();
-            if(!entity.level.isClientSide && entity instanceof LivingEntity livingTarget) {
-                livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + 25, 0));
-            }
-        }),
-        WEAVER_FANG(ItemRegistry.WEAVER_FANG_ARROW::get, 5.5, (entityHitResult) -> {
-            Entity entity = entityHitResult.getEntity();
-            if(entity.level.random.nextFloat() < Weaver.WEB_ATTACK_CHANCE * WEAVER_FANG_ARROW_WEB_AMPLIFY){
-                BlockPos blockPos = new BlockPos(entity.getPosition(1f));
-                if (entity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
-                    entity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
-                }
-            }
-        }),
-        CLOVER_STONE(ItemRegistry.CLOVER_STONE_ARROW::get, 6d, 1),
-        AMETHYST(ItemRegistry.AMETHYST_ARROW::get, 6.0d);
 
-        private final Lazy<Item> lazyItem;
-        public final double damage;
-        private int looting;
-        private Consumer<EntityHitResult> onEntityHit;
-        private ResourceLocation resourceLocation;
-
-        ArrowType(Lazy<Item> lazyItem, double damage, ResourceLocation resourceLocation){
-            this(lazyItem, damage);
-            this.resourceLocation = resourceLocation;
-        }
-
-        ArrowType(Lazy<Item> lazyItem, double damage, int looting){
-            this(lazyItem, damage);
-            this.looting = looting;
-        }
-
-        ArrowType(Lazy<Item> lazyItem, double damage, Consumer<EntityHitResult> onEntityHit){
-            this(lazyItem, damage);
-            this.onEntityHit = onEntityHit;
-        }
-
-        ArrowType(Lazy<Item> lazyItem, double damage){
-            this.lazyItem = lazyItem;
-            this.damage = damage;
-            this.looting = 0;
-            this.onEntityHit = (entityHitResult) -> {};
-            this.resourceLocation = new ResourceLocation(Odyssey.MOD_ID, String.format("textures/entity/projectiles/%s_arrow.png", this.name().toLowerCase(Locale.ROOT)));
-        }
-
-        public Item getItem(){
-            return this.lazyItem.get();
-        }
-
-        public int getLooting(){
-            return this.looting;
-        }
-
-        public void onEntityHit(EntityHitResult entityHitResult) {
-            this.onEntityHit.accept(entityHitResult);
-        }
-
-        public ResourceLocation getResourceLocation(){
-            return this.resourceLocation;
-        }
-    }
 }
