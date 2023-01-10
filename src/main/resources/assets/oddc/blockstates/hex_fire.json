@@ -52,16 +52,6 @@
           "y": 270
         }
       ]
-    },
-    {
-      "apply": [
-        {
-          "model": "oddc:block/hex_fire_up0"
-        },
-        {
-          "model": "oddc:block/hex_fire_up_alt0"
-        }
-      ]
     }
   ]
 }

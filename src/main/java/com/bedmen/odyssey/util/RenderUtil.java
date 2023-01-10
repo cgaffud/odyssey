@@ -14,11 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class RenderUtil {
-
-    public static final ResourceLocation MODDED_BLOCK_ATLAS = new ResourceLocation(Odyssey.MOD_ID, "textures/atlas/blocks.png");
-
     public static final Material SOUL_FIRE = new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation("block/soul_fire_1"));
-    public static final Material HEX_FIRE = new Material(MODDED_BLOCK_ATLAS, new ResourceLocation("block/hex_fire_0"));
+    public static final Material HEX_FIRE = new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID,"block/hex_fire_0"));
 
     public static void renderModdedFire(Minecraft minecraft, PoseStack poseStack, Material fire) {
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();

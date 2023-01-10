@@ -21,6 +21,7 @@ import com.bedmen.odyssey.items.TomeItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
+import com.bedmen.odyssey.util.RenderUtil;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
@@ -185,6 +186,8 @@ public class ClientEvents {
             event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestMaterial, false).texture());
             event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestMaterial, true).texture());
         }
+        // Modded fire variants
+        event.addSprite(RenderUtil.HEX_FIRE.texture());
 //        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
 //        event.addSprite(PermafrostRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
 //        event.addSprite(PermafrostRenderer.WIND_RESOURCE_LOCATION);
