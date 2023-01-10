@@ -20,15 +20,16 @@ public class Aspects {
     public static final Aspect FATAL_HIT = new Aspect("fatal_hit");
     public static final Aspect SWEEP_DAMAGE = new Aspect("sweep_damage");
     public static final Aspect POISON_DAMAGE = new Aspect("poison_damage");
-    public static final Aspect COBWEB_CHANCE = new Aspect("cobweb_chance", aspectInstance -> new TranslatableComponent("aspect.oddc."+aspectInstance.aspect.id, StringUtil.percentFormat(aspectInstance.strength)));
+    public static final Aspect COBWEB_CHANCE = percentageAspect("cobweb_chance");
     public static final Aspect SOLAR_STRENGTH = new EnvironmentConditionalMeleeAspect("solar_strength", Aspects::getSunBoost);
     public static final Aspect LUNAR_STRENGTH = new EnvironmentConditionalMeleeAspect("lunar_strength", Aspects::getMoonBoost);
     public static final Aspect BOTANICAL_STRENGTH = new EnvironmentConditionalMeleeAspect("botanical_strength", Aspects::getHotHumidBoost);
-    public static final Aspect SCORCHED_STRENGTH = new EnvironmentConditionalMeleeAspect("scorched_strength", Aspects::getHotHumidBoost);
-    public static final Aspect WINTERY_STRENGTH = new EnvironmentConditionalMeleeAspect("wintery_strength", Aspects::getHotHumidBoost);
+    public static final Aspect SCORCHED_STRENGTH = new EnvironmentConditionalMeleeAspect("scorched_strength", Aspects::getHotDryBoost);
+    public static final Aspect WINTERY_STRENGTH = new EnvironmentConditionalMeleeAspect("wintery_strength", Aspects::getColdBoost);
     public static final Aspect LOOTING_LUCK = new Aspect("looting_luck");
     public static final Aspect FORTUNE = new Aspect("fortune");
     public static final Aspect AQUA_AFFINITY = new Aspect("aqua_affinity");
+    public static final Aspect LARCENY_CHANCE = percentageAspect("larceny_chance");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
@@ -67,5 +68,9 @@ public class Aspects {
 
     public static float getDryBoost(BlockPos pos, Level level) {
         return 1f - getHumidBoost(pos, level);
+    }
+
+    public static Aspect percentageAspect(String id){
+        return new Aspect(id, aspectInstance -> new TranslatableComponent("aspect.oddc."+aspectInstance.aspect.id, StringUtil.percentFormat(aspectInstance.strength)));
     }
 }

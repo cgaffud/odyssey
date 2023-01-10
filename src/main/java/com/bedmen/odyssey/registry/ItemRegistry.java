@@ -169,29 +169,17 @@ public class ItemRegistry {
     public static final LevEnchSup[] DEPTH_STRIDER = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.DEPTH_STRIDER, 2);
     public static final LevEnchSup[] BLAST_PROTECTION = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.BLAST_PROTECTION, 1);
     public static final LevEnchSup[] FIRE_PROTECTION = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.FIRE_PROTECTION, 2);
-    public static final LevEnchSup AQUA_AFFINITY = new LevEnchSup(EnchantmentRegistry.AQUA_AFFINITY);
     public static final LevEnchSup BINDING = new LevEnchSup(() -> Enchantments.BINDING_CURSE);
-    public static final LevEnchSup[] FORTUNE = LevEnchSup.getLevEnchantSupArray(() -> Enchantments.BLOCK_FORTUNE, 1);
     public static final LevEnchSup[] LOOTING = LevEnchSup.getLevEnchantSupArray(() -> Enchantments.MOB_LOOTING, 1);
     public static final LevEnchSup[] KNOCKBACK = LevEnchSup.getLevEnchantSupArray(() -> Enchantments.KNOCKBACK, 3);
-    public static final LevEnchSup FLING = new LevEnchSup(EnchantmentRegistry.FLING, 1);
     public static final LevEnchSup[] BANE_OF_ARTHROPODS = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.BANE_OF_ARTHROPODS, 2);
     public static final LevEnchSup[] SHATTERING = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.SHATTERING, 2);
-    public static final LevEnchSup[] SWEEPING_EDGE = LevEnchSup.getLevEnchantSupArray(() -> Enchantments.SWEEPING_EDGE, 2);
-    public static final LevEnchSup[] SMITE = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.SMITE, 2);
-    public static final LevEnchSup[] DOWNPOUR = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.DOWNPOUR, 1);
     public static final LevEnchSup[] PIERCING = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.PIERCING, 2);
     public static final LevEnchSup[] QUICK_CHARGE = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.QUICK_CHARGE, 2);
     public static final LevEnchSup[] PUNCH = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.PUNCH_ARROWS, 2);
     public static final LevEnchSup[] MULTISHOT = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.MULTISHOT, 1);
     public static final LevEnchSup[] SUPER_CHARGE = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.SUPER_CHARGE, 1);
     public static final LevEnchSup[] LOYALTY = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.LOYALTY, 3);
-    public static final LevEnchSup SUN_BLESSING = new LevEnchSup(EnchantmentRegistry.SUN_BLESSING);
-    public static final LevEnchSup MOON_BLESSING = new LevEnchSup(EnchantmentRegistry.MOON_BLESSING);
-    public static final LevEnchSup SKY_BLESSING = new LevEnchSup(EnchantmentRegistry.SKY_BLESSING);
-    public static final LevEnchSup BOTANICAL = new LevEnchSup(EnchantmentRegistry.BOTANICAL);
-    public static final LevEnchSup XEROPHILIC = new LevEnchSup(EnchantmentRegistry.XEROPHILIC);
-    public static final LevEnchSup CRYOPHILIC = new LevEnchSup(EnchantmentRegistry.CRYOPHILIC);
     public static final LevEnchSup VOID_AMPLIFICATION = new LevEnchSup(EnchantmentRegistry.VOID_AMPLIFICATION);
     public static final LevEnchSup[] IMPENETRABLE = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.IMPENETRABLE, 1);
     public static final LevEnchSup LARCENY = new LevEnchSup(EnchantmentRegistry.LARCENY);
@@ -250,7 +238,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new InnateConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.SWORD,  5f, List.of(new AspectInstance(Aspects.SOLAR_STRENGTH, 2.0f)), 2));
 
     // ## Tier 2
-    public static final RegistryObject<Item> BANDIT_DAGGER = ITEMS.register("bandit_dagger", () -> new EquipmentMeleeItem(new Item.Properties().rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.IRON, MeleeWeaponClass.DAGGER, 6.5f, LARCENY));
+    public static final RegistryObject<Item> BANDIT_DAGGER = ITEMS.register("bandit_dagger", () -> new InnateAspectMeleeItem(new Item.Properties().rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.IRON, MeleeWeaponClass.DAGGER, 6.5f, List.of(new AspectInstance(Aspects.LARCENY_CHANCE, 0.1f))));
 
     public static final RegistryObject<Item> CLOVER_STONE_SWORD = ITEMS.register("clover_stone_sword", () -> new InnateAspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.SWORD, 7f, List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1.0f))));
     public static final RegistryObject<Item> CLOVER_STONE_MACE = ITEMS.register("clover_stone_mace", () -> new InnateAspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.MACE, 9f, List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1.0f))));

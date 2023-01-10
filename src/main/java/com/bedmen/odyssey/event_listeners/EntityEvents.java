@@ -27,10 +27,13 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -41,10 +44,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import org.lwjgl.system.CallbackI;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -139,6 +139,26 @@ public class EntityEvents {
                     BlockPos blockPos = new BlockPos(hurtLivingEntity.getPosition(1f));
                     if (hurtLivingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
                         hurtLivingEntity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
+                    }
+                }
+
+                // Larceny Chance
+                float larcenyChance = AspectUtil.getTotalAspectStrength(innateAspectItem, Aspects.LARCENY_CHANCE);
+                if(larcenyChance > 0.0f && !hurtLivingEntity.level.isClientSide){
+                    boolean mainHandFull = !hurtLivingEntity.getMainHandItem().isEmpty();
+                    boolean offHandFull = !hurtLivingEntity.getOffhandItem().isEmpty();
+                    EquipmentSlot equipmentSlot = null;
+                    if(mainHandFull && offHandFull){
+                        equipmentSlot = hurtLivingEntity.getRandom().nextBoolean() ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+                    } else if(mainHandFull || offHandFull) {
+                        equipmentSlot = mainHandFull ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+                    }
+                    if(equipmentSlot != null) {
+                        ItemStack itemStack = hurtLivingEntity.getItemBySlot(equipmentSlot);
+                        WeaponUtil.tryStealItem(itemStack, damageSourceLivingEntity, hurtLivingEntity, equipmentSlot, larcenyChance);
+                    }
+                    if(hurtLivingEntity instanceof AbstractIllager || hurtLivingEntity instanceof AbstractVillager) {
+                        WeaponUtil.tryStealItem(Items.EMERALD.getDefaultInstance(), damageSourceLivingEntity, hurtLivingEntity, null, larcenyChance);
                     }
                 }
             }

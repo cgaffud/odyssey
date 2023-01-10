@@ -511,5 +511,6 @@
   "aspect.oddc.wintery_strength": "+%s Wintery Strength",
   "aspect.oddc.looting_luck": "+%s Looting Luck",
   "aspect.oddc.fortune": "+%s Fortune",
-  "aspect.oddc.aqua_affinity": "Aqua Affinity"
+  "aspect.oddc.aqua_affinity": "Aqua Affinity",
+  "aspect.oddc.larceny_chance": "%s Larceny Chance"
 }
