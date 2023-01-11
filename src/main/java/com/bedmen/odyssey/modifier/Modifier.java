@@ -8,13 +8,13 @@ import java.util.function.Function;
 
 public class Modifier {
     public final String id;
-    public final Function<ModifierInstance, MutableComponent> mutableComponentFunction;
+    public final Function<Float, MutableComponent> mutableComponentFunction;
 
     protected Modifier(String id) {
-        this(id, modifierInstance -> new TranslatableComponent("modifier.oddc."+id, StringUtil.floatFormat(modifierInstance.strength)));
+        this(id, f -> new TranslatableComponent("modifier.oddc."+id, StringUtil.floatFormat(f)));
     }
 
-    protected Modifier(String id, Function<ModifierInstance, MutableComponent> mutableComponentFunction){
+    protected Modifier(String id, Function<Float, MutableComponent> mutableComponentFunction){
         this.id = id;
         this.mutableComponentFunction = mutableComponentFunction;
         Modifiers.modifierRegister.put(id, this);

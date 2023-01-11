@@ -8,10 +8,10 @@ import java.util.function.Function;
 
 public class FloatModifier extends Modifier {
     protected FloatModifier(String id) {
-        super(id, modifierInstance -> new TranslatableComponent("modifier.oddc."+id, StringUtil.floatFormat(modifierInstance.strength)));
+        super(id, f -> new TranslatableComponent("modifier.oddc."+id, StringUtil.floatFormat(f)));
     }
 
-    protected FloatModifier(String id, Function<ModifierInstance, MutableComponent> mutableComponentFunction){
+    protected FloatModifier(String id, Function<Float, MutableComponent> mutableComponentFunction){
         super(id, mutableComponentFunction);
     }
 }

@@ -110,11 +110,6 @@ public class OdysseyMeleeItem extends TieredItem implements Vanishable, OdysseyM
         return super.damageItem(stack, amount, entity, onBroken);
     }
 
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        this.meleeWeaponClass.addTooltip(tooltip, tooltipFlag);
-        super.appendHoverText(itemStack, level, tooltip, tooltipFlag);
-    }
-
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack)
     {
         if (equipmentSlot == EquipmentSlot.MAINHAND) {

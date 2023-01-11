@@ -8,6 +8,6 @@ import java.util.function.Function;
 
 public class UnitModifier extends FloatModifier {
     protected UnitModifier(String id) {
-        super(id, modifierInstance -> new TranslatableComponent("modifier.oddc."+id, StringUtil.floatFormat(1.0f+modifierInstance.strength)));
+        super(id, f -> new TranslatableComponent("modifier.oddc."+id, StringUtil.floatFormat(1.0f+f)));
     }
 }

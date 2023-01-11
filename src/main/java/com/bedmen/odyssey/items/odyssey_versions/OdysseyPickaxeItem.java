@@ -22,9 +22,4 @@ public class OdysseyPickaxeItem extends PickaxeItem implements OdysseyMeleeWeapo
     public MeleeWeaponClass getMeleeWeaponClass() {
         return this.meleeWeaponClass;
     }
-
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        this.meleeWeaponClass.addTooltip(tooltip, tooltipFlag);
-        super.appendHoverText(itemStack, level, tooltip, tooltipFlag);
-    }
 }

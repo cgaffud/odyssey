@@ -22,12 +22,7 @@ public class InnateModifierCrossbow extends OdysseyCrossbowItem implements Innat
         this.innateModifierHolder = new InnateModifierHolder(innateModifierList);
     }
 
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        this.innateModifierHolder.addTooltip(tooltip, tooltipFlag);
-        super.appendHoverText(itemStack, level, tooltip, tooltipFlag);
-    }
-
-    public Map<Modifier, Float> getInnateModifierMap() {
-        return this.innateModifierHolder.modifierMap;
+    public InnateModifierHolder getInnateModifierHolder() {
+        return this.innateModifierHolder;
     }
 }

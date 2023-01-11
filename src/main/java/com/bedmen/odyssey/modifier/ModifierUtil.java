@@ -2,18 +2,26 @@ package com.bedmen.odyssey.modifier;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.items.innate_modifier.InnateModifierItem;
+import com.bedmen.odyssey.util.OdysseyChatFormatting;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ModifierUtil {
 
@@ -32,10 +40,18 @@ public class ModifierUtil {
             if(tag instanceof CompoundTag modifierTag){
                 String id = modifierTag.getString(ID_TAG);
                 Modifier modifier = Modifiers.modifierRegister.get(id);
-                map.put(modifier, modifierTag.getFloat(STRENGTH_TAG));
+                if(modifier == null) {
+                    Odyssey.LOGGER.error("Unkown modifier: "+id);
+                } else {
+                    map.put(modifier, modifierTag.getFloat(STRENGTH_TAG));
+                }
             }
         }
         return map;
+    }
+
+    private static Map<Modifier, Float> getModifierMap(ItemStack itemStack){
+        return tagToMap(getModifierListTag(itemStack));
     }
 
     private static float getItemStackModifierStrengthFromTag(ItemStack itemStack, Modifier modifier){
@@ -54,7 +70,7 @@ public class ModifierUtil {
     private static float getItemStackModifierStrengthFromInnate(ItemStack itemStack, Modifier modifier){
         Item item = itemStack.getItem();
         if(item instanceof InnateModifierItem innateModifierItem){
-            Float f = innateModifierItem.getInnateModifierMap().get(modifier);
+            Float f = innateModifierItem.getInnateModifierHolder().modifierMap.get(modifier);
             return f == null ? 0.0f : f;
         }
         return 0.0f;
@@ -67,15 +83,13 @@ public class ModifierUtil {
     }
 
     private static float getTotalStrengthForFunctionFromTag(ItemStack itemStack, Function<Modifier, Float> strengthFunction){
-        ListTag listTag = getModifierListTag(itemStack);
-        Map<Modifier, Float> map = tagToMap(listTag);
-        return getTotalStrengthForFunctionFromMap(map, strengthFunction);
+        return getTotalStrengthForFunctionFromMap(getModifierMap(itemStack), strengthFunction);
     }
 
     private static float getTotalStrengthForFunctionFromInnate(ItemStack itemStack, Function<Modifier, Float> strengthFunction){
         Item item = itemStack.getItem();
         if(item instanceof InnateModifierItem innateModifierItem){
-            return getTotalStrengthForFunctionFromMap(innateModifierItem.getInnateModifierMap(), strengthFunction);
+            return getTotalStrengthForFunctionFromMap(innateModifierItem.getInnateModifierHolder().modifierMap, strengthFunction);
         }
         return 0.0f;
     }
@@ -92,6 +106,25 @@ public class ModifierUtil {
             return 0.0f;
         }
         return getTotalStrengthForFunctionFromTag(itemStack, strengthFunction) + getTotalStrengthForFunctionFromInnate(itemStack, strengthFunction);
+    }
+
+    private static List<Component> createModifierTooltipList(Map<Modifier, Float> map){
+        return map.entrySet().stream().map(entry ->
+                entry.getKey().mutableComponentFunction.apply(entry.getValue()).withStyle(ChatFormatting.GRAY)
+        ).collect(Collectors.toList());
+    }
+
+    private static List<Component> createModifierAdvancedTooltipList(Map<Modifier, Float> map){
+        List<Component> componentList = createModifierTooltipList(map);
+        if(componentList.isEmpty()){
+            return List.of();
+        } else {
+            List<Component> advancedTooltipinnateModifierList = componentList.stream()
+                    .map(component -> new TextComponent(" ").append(component))
+                    .collect(Collectors.toList());
+            advancedTooltipinnateModifierList.add(0, new TranslatableComponent("item.oddc.added_modifier").withStyle(ChatFormatting.GRAY));
+            return advancedTooltipinnateModifierList;
+        }
     }
 
     // Public endpoints
@@ -124,5 +157,18 @@ public class ModifierUtil {
             }
             return 0.0f;
         });
+    }
+
+    public static void addModifierTooltip(ItemStack itemStack, List<Component> tooltip, TooltipFlag tooltipFlag){
+        Item item = itemStack.getItem();
+        if(item instanceof InnateModifierItem innateModifierItem){
+            innateModifierItem.getInnateModifierHolder().addTooltip(tooltip, tooltipFlag);
+        }
+        Map<Modifier, Float> map = getModifierMap(itemStack);
+        if(tooltipFlag.isAdvanced()){
+            tooltip.addAll(createModifierAdvancedTooltipList(map));
+        } else {
+            tooltip.addAll(createModifierTooltipList(map));
+        }
     }
 }

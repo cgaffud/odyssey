@@ -5,6 +5,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 public class PercentageModifier extends FloatModifier {
     protected PercentageModifier(String id) {
-        super(id, modifierInstance -> new TranslatableComponent("modifier.oddc."+modifierInstance.modifier.id, StringUtil.percentFormat(modifierInstance.strength)));
+        super(id, f -> new TranslatableComponent("modifier.oddc."+id, StringUtil.percentFormat(f)));
     }
 }

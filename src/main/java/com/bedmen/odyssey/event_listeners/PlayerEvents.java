@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.items.innate_modifier.InnateModifierItem;
+import com.bedmen.odyssey.modifier.Modifier;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
@@ -9,6 +11,7 @@ import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
 import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
 import com.bedmen.odyssey.weapon.SmackPush;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,18 +21,20 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
@@ -145,5 +150,20 @@ public class PlayerEvents {
                 odysseyLivingEntity.setSmackPush(new SmackPush(attackStrengthScale, player, target));
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onItemTooltipEvent(final ItemTooltipEvent event){
+        ItemStack itemStack = event.getItemStack();
+        Item item = itemStack.getItem();
+        TooltipFlag tooltipFlag = event.getFlags();
+        List<Component> componentList = new ArrayList<>();
+        if(item instanceof OdysseyMeleeWeapon odysseyMeleeWeapon){
+            odysseyMeleeWeapon.getMeleeWeaponClass().addTooltip(componentList, tooltipFlag);
+        }
+        ModifierUtil.addModifierTooltip(itemStack, componentList, tooltipFlag);
+
+        List<Component> tooltip = event.getToolTip();
+        tooltip.addAll(1, componentList);
     }
 }

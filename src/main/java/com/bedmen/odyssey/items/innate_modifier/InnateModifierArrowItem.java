@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.items.innate_modifier;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.modifier.InnateModifierHolder;
 import com.bedmen.odyssey.modifier.Modifier;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
@@ -53,11 +54,10 @@ public class InnateModifierArrowItem extends ArrowItem implements InnateModifier
     }
 
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        this.arrowType.innateModifierHolder.addTooltip(tooltip, tooltipFlag);
         tooltip.add(new TranslatableComponent("item.oddc.arrow.damage").append(StringUtil.doubleFormat(this.arrowType.damage)).withStyle(ChatFormatting.BLUE));
     }
 
-    public Map<Modifier, Float> getInnateModifierMap() {
-        return this.arrowType.innateModifierHolder.modifierMap;
+    public InnateModifierHolder getInnateModifierHolder() {
+        return this.arrowType.innateModifierHolder;
     }
 }

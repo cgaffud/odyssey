@@ -73,12 +73,11 @@ public class MeleeWeaponClass {
         return new MeleeWeaponClass(attackRate, meleeWeaponAbilityList);
     }
 
-
     public void addTooltip(List<Component> tooltip, TooltipFlag tooltipFlag){
         if(tooltipFlag.isAdvanced()){
-            tooltip.addAll(1, this.advancedTooltipAbilityList);
+            tooltip.addAll(this.advancedTooltipAbilityList);
         } else {
-            tooltip.addAll(1, this.tooltipAbilityList);
+            tooltip.addAll(this.tooltipAbilityList);
         }
     }
 }

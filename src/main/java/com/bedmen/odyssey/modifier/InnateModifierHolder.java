@@ -33,7 +33,7 @@ public class InnateModifierHolder {
 
     public List<Component> createTooltipinnateModifierList(List<ModifierInstance> modifierInstanceList){
         return modifierInstanceList.stream().map(modifierInstance ->
-                modifierInstance.modifier.mutableComponentFunction.apply(modifierInstance).withStyle(OdysseyChatFormatting.LAVENDER)
+                modifierInstance.modifier.mutableComponentFunction.apply(modifierInstance.strength).withStyle(OdysseyChatFormatting.LAVENDER)
         ).collect(Collectors.toList());
     }
 
