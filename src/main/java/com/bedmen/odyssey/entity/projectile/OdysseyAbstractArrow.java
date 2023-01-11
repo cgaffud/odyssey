@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -21,7 +22,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
 import java.util.Arrays;
@@ -29,7 +29,9 @@ import java.util.Arrays;
 public abstract class OdysseyAbstractArrow extends AbstractArrow {
     private static final EntityDataAccessor<Byte> LOOTING_LEVEL = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> LARCENY_LEVEL = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BYTE);
-    public float knockbackModifier = 1.0f;
+    public float knockbackModifier = 0.0f;
+    // Decreases damage of arrow on last piercing
+    public float piercingDamagePenalty = 1.0f;
 
     protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, Level level) {
         super(type, level);
@@ -65,6 +67,12 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         this.entityData.set(LARCENY_LEVEL, b);
     }
 
+    public void setPiercingModifier(float piercingModifier){
+        int ceil = Mth.ceil(piercingModifier);
+        this.piercingDamagePenalty = 1.0f - ((float)ceil) + piercingModifier;
+        this.setPierceLevel((byte)ceil);
+    }
+
     protected void onHitEntity(EntityHitResult p_213868_1_) {
         Entity entity = p_213868_1_.getEntity();
         double velocity = this.getDeltaMovement().length();
@@ -76,6 +84,10 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
             if (this.piercedAndKilledEntities == null) {
                 this.piercedAndKilledEntities = Lists.newArrayListWithCapacity(5);
+            }
+
+            if(this.piercingIgnoreEntityIds.size() >= this.getPierceLevel()){
+                damage *= this.piercingDamagePenalty;
             }
 
             if (this.piercingIgnoreEntityIds.size() >= this.getPierceLevel() + 1) {

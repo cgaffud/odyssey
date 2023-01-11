@@ -18,9 +18,9 @@ public class Modifiers {
     public static final TargetConditionalMeleeModifier DAMAGE_AGAINST_ARTHROPOD = new TargetConditionalMeleeModifier("damage_against_arthropod", livingEntity -> livingEntity.getMobType() == MobType.ARTHROPOD);
     public static final TargetConditionalMeleeModifier SMITE_DAMAGE = new TargetConditionalMeleeModifier("smite_damage", livingEntity -> livingEntity.getMobType() == MobType.UNDEAD);
     public static final TargetConditionalMeleeModifier HYDRO_DAMAGE = new TargetConditionalMeleeModifier("hydro_damage", livingEntity -> livingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
-    public static final FloatModifier KNOCKBACK = new FloatModifier("knockback");
+    public static final FloatModifier KNOCKBACK = new UnitModifier("knockback");
     public static final FloatModifier FATAL_HIT = new FloatModifier("fatal_hit");
-    public static final FloatModifier SWEEP_DAMAGE = new FloatModifier("sweep_damage");
+    public static final FloatModifier ADDITIONAL_SWEEP_DAMAGE = new UnitModifier("additional_sweep_damage");
     public static final IntegerModifier POISON_DAMAGE = new IntegerModifier("poison_damage");
     public static final PercentageModifier COBWEB_CHANCE = new PercentageModifier("cobweb_chance");
     public static final EnvironmentConditionalMeleeModifier SOLAR_STRENGTH = new EnvironmentConditionalMeleeModifier("solar_strength", Modifiers::getSunBoost);
@@ -33,7 +33,8 @@ public class Modifiers {
     public static final IntegerModifier FORTUNE = new IntegerModifier("fortune");
     public static final BooleanModifier AQUA_AFFINITY = new BooleanModifier("aqua_affinity");
     public static final PercentageModifier LARCENY_CHANCE = new PercentageModifier("larceny_chance");
-    public static final FloatModifier ARROW_KNOCKBACK = new FloatModifier("arrow_knockback");
+    public static final FloatModifier PROJECTILE_KNOCKBACK = new UnitModifier("projectile_knockback");
+    public static final FloatModifier PIERCING = new FloatModifier("piercing");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

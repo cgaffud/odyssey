@@ -1,40 +1,23 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyCrossbowItem;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.weapon.ArrowType;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import org.checkerframework.checker.units.qual.C;
-
-import java.util.Locale;
-import java.util.function.Consumer;
 
 public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
     public static final String ARROW_TYPE_TAG = "ArrowType";
@@ -102,15 +85,12 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
             this.setBaseDamage(this.getBaseDamage() + (double)i * 0.5D + 0.5D);
         }
         // Knockback
-        this.knockbackModifier = ModifierUtil.getFloatModifierValue(bow, Modifiers.ARROW_KNOCKBACK);
+        this.knockbackModifier = ModifierUtil.getFloatModifierValue(bow, Modifiers.PROJECTILE_KNOCKBACK);
         i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), shooter);
         if (i > 0) {
             this.setSecondsOnFire(100*i);
         }
-        i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), shooter);
-        if (i > 0) {
-            this.setPierceLevel((byte) i);
-        }
+        this.setPiercingModifier(ModifierUtil.getFloatModifierValue(bow, Modifiers.PIERCING));
         i = EnchantmentHelper.getEnchantmentLevel(Enchantments.MOB_LOOTING, shooter);
         if (i > 0) {
             this.setLootingLevel((byte) i);

@@ -500,7 +500,7 @@
   "modifier.oddc.smite_damage": "+%s Smite Damage",
   "modifier.oddc.knockback": "x%s Knockback",
   "modifier.oddc.fatal_hit": "%sHP Fatal Blow Threshold",
-  "modifier.oddc.sweep_damage": "%s Sweep Damage",
+  "modifier.oddc.additional_sweep_damage": "%s Sweep Damage",
   "modifier.oddc.poison_damage": "%s Poison Damage",
   "modifier.oddc.cobweb_chance": "%s Cobweb Chance",
   "modifier.oddc.hydro_damage": "+%s Hydro Damage",
@@ -514,5 +514,6 @@
   "modifier.oddc.fortune": "+%s Fortune",
   "modifier.oddc.aqua_affinity": "Aqua Affinity",
   "modifier.oddc.larceny_chance": "%s Larceny Chance",
-  "modifier.oddc.arrow_knockback": "x%s Arrow Knockback"
+  "modifier.oddc.projectile_knockback": "x%s Projectile Knockback",
+  "modifier.oddc.piercing": "+%s Piercing"
 }

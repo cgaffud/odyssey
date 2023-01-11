@@ -147,12 +147,12 @@ public class EntityEvents {
             }
             // Melee Knockback
             if(hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-                float knockback = Float.max(ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.KNOCKBACK), 1.0f);
-                odysseyLivingEntity.setKnockbackAmplifier(knockback);
+                float knockback = ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.KNOCKBACK);
+                odysseyLivingEntity.setNextKnockbackModifier(knockback);
             }
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
-            odysseyLivingEntity.setKnockbackAmplifier(odysseyAbstractArrow.knockbackModifier);
+            odysseyLivingEntity.setNextKnockbackModifier(odysseyAbstractArrow.knockbackModifier);
         }
 
         if(amount >= 10.0f && hurtLivingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
@@ -358,9 +358,10 @@ public class EntityEvents {
     public static void onLivingKnockBackEvent(final LivingKnockBackEvent event){
         LivingEntity target = event.getEntityLiving();
         if(target instanceof OdysseyLivingEntity odysseyLivingEntity){
-            event.setStrength(event.getOriginalStrength() * odysseyLivingEntity.getKnockbackAmplifier());
-            System.out.println(odysseyLivingEntity.getKnockbackAmplifier());
-            odysseyLivingEntity.setKnockbackAmplifier(1.0f);
+            event.setStrength(event.getOriginalStrength() * (1.0f + odysseyLivingEntity.getNextKnockbackModifier()));
+            System.out.println(target);
+            System.out.println(1.0f + odysseyLivingEntity.getNextKnockbackModifier());
+            odysseyLivingEntity.setNextKnockbackModifier(0.0f);
         }
     }
 }

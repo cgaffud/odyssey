@@ -124,15 +124,10 @@ public class PlayerEvents {
                     && player.isOnGround()
                     && (player.walkDist - player.walkDistO) < (double)player.getSpeed()
                     && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.SWEEP);
-            float sweepDamage = 1.0f;
-            float knockback = 1.0f;
-            sweepDamage = Float.max(ModifierUtil.getFloatModifierValue(itemStack, Modifiers.SWEEP_DAMAGE), sweepDamage);
-            knockback = Float.max(ModifierUtil.getFloatModifierValue(itemStack, Modifiers.KNOCKBACK), knockback);
+            float sweepDamage = 1.0f + ModifierUtil.getFloatModifierValue(itemStack, Modifiers.ADDITIONAL_SWEEP_DAMAGE);
             // Sweep
             if(canSweep){
                 // Unchanging variables are needed to use in the below lambda expressions
-                final float finalKnockback = knockback;
-                final float finalSweepDamage = sweepDamage;
                 player.level.getEntitiesOfClass(LivingEntity.class, itemStack.getSweepHitBox(player, target)).stream()
                         .filter(livingEntity ->
                                 livingEntity != player
@@ -140,10 +135,7 @@ public class PlayerEvents {
                                         && !player.isAlliedTo(livingEntity)
                                         && (!(livingEntity instanceof ArmorStand) || !((ArmorStand)livingEntity).isMarker())
                                         && player.distanceToSqr(livingEntity) < 9.0D)
-                        .forEach(livingEntity -> {
-                            livingEntity.knockback(0.4F * finalKnockback, Mth.sin(player.getYRot() * ((float)Math.PI / 180F)), -Mth.cos(player.getYRot() * ((float)Math.PI / 180F)));
-                            livingEntity.hurt(DamageSource.playerAttack(player), finalSweepDamage);
-                        });
+                        .forEach(livingEntity -> livingEntity.hurt(DamageSource.playerAttack(player), sweepDamage));
 
                 player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.0F);
                 player.sweepAttack();

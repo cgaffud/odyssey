@@ -12,6 +12,7 @@ import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -43,7 +44,9 @@ public class InnateModifierArrowItem extends ArrowItem implements InnateModifier
     public OdysseyAbstractArrow createAbstractOdysseyArrow(Level world, ItemStack bow, ItemStack ammo, LivingEntity livingEntity) {
         OdysseyArrow odysseyArrow = new OdysseyArrow(world, livingEntity, arrowType);
         // Knockback
-        odysseyArrow.knockbackModifier = ModifierUtil.getFloatModifierValue(bow, Modifiers.ARROW_KNOCKBACK);;
+        odysseyArrow.knockbackModifier = ModifierUtil.getFloatModifierValue(bow, Modifiers.PROJECTILE_KNOCKBACK);
+        //Piercing
+        odysseyArrow.setPiercingModifier(ModifierUtil.getFloatModifierValue(bow, Modifiers.PIERCING));
         // Looting
         odysseyArrow.setLootingLevel((byte)(ModifierUtil.getIntegerModifierValue(ammo, Modifiers.LOOTING_LUCK)));
         return odysseyArrow;
