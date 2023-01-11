@@ -10,10 +10,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -173,7 +176,27 @@ public class WeaponUtil {
         }
     }
 
-    public static void tryStealItem(ItemStack itemStack, LivingEntity user, LivingEntity target, EquipmentSlot equipmentSlot, float chance) {
+    public static void tryLarceny(float larcenyChance, Entity user, LivingEntity target){
+        if(larcenyChance > 0.0f && !target.level.isClientSide){
+            boolean mainHandFull = !target.getMainHandItem().isEmpty();
+            boolean offHandFull = !target.getOffhandItem().isEmpty();
+            EquipmentSlot equipmentSlot = null;
+            if(mainHandFull && offHandFull){
+                equipmentSlot = target.getRandom().nextBoolean() ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+            } else if(mainHandFull || offHandFull) {
+                equipmentSlot = mainHandFull ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+            }
+            if(equipmentSlot != null) {
+                ItemStack itemStack = target.getItemBySlot(equipmentSlot);
+                WeaponUtil.tryStealItem(itemStack, user, target, equipmentSlot, larcenyChance);
+            }
+            if(target instanceof AbstractIllager || target instanceof AbstractVillager) {
+                WeaponUtil.tryStealItem(Items.EMERALD.getDefaultInstance(), user, target, null, larcenyChance);
+            }
+        }
+    }
+
+    public static void tryStealItem(ItemStack itemStack, Entity user, LivingEntity target, EquipmentSlot equipmentSlot, float chance) {
         if(target.getRandom().nextFloat() < chance) {
             ItemEntity itemEntity = target.spawnAtLocation(itemStack);
             if(itemEntity != null) {

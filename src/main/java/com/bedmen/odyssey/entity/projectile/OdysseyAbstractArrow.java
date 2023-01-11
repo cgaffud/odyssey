@@ -1,16 +1,12 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.modifier.ModifierUtil;
-import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -27,11 +23,15 @@ import net.minecraftforge.network.NetworkHooks;
 import java.util.Arrays;
 
 public abstract class OdysseyAbstractArrow extends AbstractArrow {
-    private static final EntityDataAccessor<Byte> LOOTING_LEVEL = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BYTE);
-    private static final EntityDataAccessor<Byte> LARCENY_LEVEL = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BYTE);
+    public static final String KNOCKBACK_MODIFIER_TAG = "KnockbackModifier";
+    public static final String PIERCING_DAMAGE_PENALTY_TAG = "PiercingDamagePenalty";
+    public static final String LOOTING_MODIFIER_TAG = "LootingModifier";
+    public static final String LARCENY_MODIFIER_TAG = "LarcenyModifier";
     public float knockbackModifier = 1.0f;
     // Decreases damage of arrow on last piercing
     public float piercingDamagePenalty = 1.0f;
+    public int lootingModifier = 0;
+    public float larcenyModifier = 0.0f;
 
     protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, Level level) {
         super(type, level);
@@ -47,24 +47,6 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(LOOTING_LEVEL, (byte)0);
-        this.entityData.define(LARCENY_LEVEL, (byte)0);
-    }
-
-    public byte getLootingLevel() {
-        return this.entityData.get(LOOTING_LEVEL);
-    }
-
-    public void setLootingLevel(byte b) {
-        this.entityData.set(LOOTING_LEVEL, b);
-    }
-
-    public byte getLarcenyLevel() {
-        return this.entityData.get(LARCENY_LEVEL);
-    }
-
-    public void setLarcenyLevel(byte b) {
-        this.entityData.set(LARCENY_LEVEL, b);
     }
 
     public void setPiercingModifier(float piercingModifier){
@@ -173,5 +155,21 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putFloat(KNOCKBACK_MODIFIER_TAG, this.knockbackModifier);
+        compoundTag.putFloat(PIERCING_DAMAGE_PENALTY_TAG, this.piercingDamagePenalty);
+        compoundTag.putInt(LOOTING_MODIFIER_TAG, this.lootingModifier);
+        compoundTag.putFloat(LARCENY_MODIFIER_TAG, this.larcenyModifier);
+    }
+
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.knockbackModifier = compoundTag.contains(KNOCKBACK_MODIFIER_TAG) ? compoundTag.getFloat(KNOCKBACK_MODIFIER_TAG) : 1.0f;
+        this.piercingDamagePenalty = compoundTag.contains(PIERCING_DAMAGE_PENALTY_TAG) ? compoundTag.getFloat(PIERCING_DAMAGE_PENALTY_TAG) : 1.0f;
+        this.lootingModifier = compoundTag.getInt(LOOTING_MODIFIER_TAG);
+        this.larcenyModifier = compoundTag.getFloat(LARCENY_MODIFIER_TAG);
     }
 }

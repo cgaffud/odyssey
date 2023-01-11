@@ -198,17 +198,18 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
     private static void shootProjectile(Level level, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, ItemStack ammo, float pitch, boolean creativeModeFlag, float power, float inaccuracy, float angle) {
         if (!level.isClientSide) {
-            boolean flag = ammo.is(Items.FIREWORK_ROCKET);
+            boolean rocketFlag = ammo.is(Items.FIREWORK_ROCKET);
+            boolean isMultishotArrow = angle != 0.0f;
             Projectile projectile;
-            if (flag) {
+            if (rocketFlag) {
                 projectile = new FireworkRocketEntity(level, ammo, livingEntity, livingEntity.getX(), livingEntity.getEyeY() - (double)0.15F, livingEntity.getZ(), true);
             } else {
                 projectile = getArrow(level, livingEntity, crossbow, ammo);
-                if (creativeModeFlag || angle != 0.0F || (crossbow.getOrCreateTag().contains("QuiverFreeAmmo") && crossbow.getOrCreateTag().getBoolean("QuiverFreeAmmo"))) {
+                if (creativeModeFlag || isMultishotArrow || (crossbow.getOrCreateTag().contains("QuiverFreeAmmo") && crossbow.getOrCreateTag().getBoolean("QuiverFreeAmmo"))) {
                     ((AbstractArrow)projectile).pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
             }
-            if(projectile instanceof AbstractArrow abstractArrow && creativeModeFlag){
+            if(projectile instanceof AbstractArrow abstractArrow && isMultishotArrow){
                 abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() * MultishotModifier.strengthToDamagePenalty(ModifierUtil.getFloatModifierValue(crossbow, Modifiers.MULTISHOT)));
             }
 
@@ -224,7 +225,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
                 projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), power, inaccuracy);
             }
 
-            crossbow.hurtAndBreak(flag ? 3 : 1, livingEntity, (livingEntity1) -> {
+            crossbow.hurtAndBreak(rocketFlag ? 3 : 1, livingEntity, (livingEntity1) -> {
                 livingEntity1.broadcastBreakEvent(interactionHand);
             });
             level.addFreshEntity(projectile);
@@ -239,7 +240,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
         for(int i = 0; i < size; ++i) {
             ItemStack itemstack = list.get(i);
-            float angle = i / ((float)(size - 1)) * 20.0f - 10.0f;
+            float angle = size > 1 ? i / ((float)(size - 1)) * 20.0f - 10.0f : 0.0f;
             boolean creativeModeFlag = livingEntity instanceof Player && ((Player)livingEntity).getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
                 shootProjectile(level, livingEntity, interactionHand, crossbow, itemstack, shotPitches.get(i), creativeModeFlag, power, inaccuracy, angle);

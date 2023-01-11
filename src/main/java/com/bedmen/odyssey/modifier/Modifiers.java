@@ -33,11 +33,15 @@ public class Modifiers {
     public static final IntegerModifier FORTUNE = new IntegerModifier("fortune");
     public static final BooleanModifier AQUA_AFFINITY = new BooleanModifier("aqua_affinity");
     public static final PercentageModifier LARCENY_CHANCE = new PercentageModifier("larceny_chance");
-    public static final UnitModifier PROJECTILE_KNOCKBACK = new UnitModifier("projectile_knockback");
     public static final FloatModifier PIERCING = new FloatModifier("piercing");
     public static final MultishotModifier MULTISHOT = new MultishotModifier("multishot");
     public static final UnitModifier ACCURACY = new UnitModifier("accuracy");
     public static final UnitModifier MAX_CHARGE_TIME = new UnitModifier("max_charge_time");
+    public static final UnitModifier PROJECTILE_KNOCKBACK = new UnitModifier("projectile_knockback");
+    public static final IntegerModifier PROJECTILE_LOOTING_LUCK = new IntegerModifier("projectile_looting_luck");
+    public static final IntegerModifier PROJECTILE_POISON_DAMAGE = new IntegerModifier("projectile_poison_damage");
+    public static final PercentageModifier PROJECTILE_COBWEB_CHANCE = new PercentageModifier("projectile_cobweb_chance");
+    public static final PercentageModifier PROJECTILE_LARCENY_CHANCE = new PercentageModifier("projectile_larceny_chance");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

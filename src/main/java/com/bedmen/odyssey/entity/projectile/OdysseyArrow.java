@@ -86,14 +86,9 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         }
         // Knockback
         this.knockbackModifier = ModifierUtil.getUnitModifierValue(bow, Modifiers.PROJECTILE_KNOCKBACK);
-        i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), shooter);
-        if (i > 0) {
-            this.setSecondsOnFire(100*i);
-        }
+        // Piercing
         this.setPiercingModifier(ModifierUtil.getFloatModifierValue(bow, Modifiers.PIERCING));
-        i = EnchantmentHelper.getEnchantmentLevel(Enchantments.MOB_LOOTING, shooter);
-        if (i > 0) {
-            this.setLootingLevel((byte) i);
-        }
+        // Larceny
+        this.larcenyModifier = ModifierUtil.getFloatModifierValue(bow, Modifiers.PROJECTILE_LARCENY_CHANCE);
     }
 }

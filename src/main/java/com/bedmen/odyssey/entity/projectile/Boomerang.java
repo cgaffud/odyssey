@@ -210,24 +210,24 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         return super.tryPickup(player) || flag && player.getInventory().add(this.getPickupItem());
     }
 
-    public void readAdditionalSaveData(CompoundTag compoundNBT) {
-        super.readAdditionalSaveData(compoundNBT);
-        if (compoundNBT.contains("Boomerang", 10)) {
-            this.thrownStack = ItemStack.of(compoundNBT.getCompound("Boomerang"));
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        if (compoundTag.contains("Boomerang", 10)) {
+            this.thrownStack = ItemStack.of(compoundTag.getCompound("Boomerang"));
         }
-        this.dealtDamage = compoundNBT.getBoolean("DealtDamage");
-        if (compoundNBT.contains("BoomerangType")) {
-            this.boomerangType = BoomerangType.valueOf(compoundNBT.getString("BoomerangType"));
+        this.dealtDamage = compoundTag.getBoolean("DealtDamage");
+        if (compoundTag.contains("BoomerangType")) {
+            this.boomerangType = BoomerangType.valueOf(compoundTag.getString("BoomerangType"));
         }
-        this.isMultishotClone = compoundNBT.getBoolean("IsMultishot");
+        this.isMultishotClone = compoundTag.getBoolean("IsMultishot");
     }
 
-    public void addAdditionalSaveData(CompoundTag compoundNBT) {
-        super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.put("Boomerang", this.thrownStack.save(new CompoundTag()));
-        compoundNBT.putBoolean("DealtDamage", this.dealtDamage);
-        compoundNBT.putString("BoomerangType", this.boomerangType.name());
-        compoundNBT.putBoolean("IsMultishot", this.isMultishotClone);
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.put("Boomerang", this.thrownStack.save(new CompoundTag()));
+        compoundTag.putBoolean("DealtDamage", this.dealtDamage);
+        compoundTag.putString("BoomerangType", this.boomerangType.name());
+        compoundTag.putBoolean("IsMultishot", this.isMultishotClone);
     }
 
 

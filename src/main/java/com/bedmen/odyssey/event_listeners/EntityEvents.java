@@ -126,25 +126,10 @@ public class EntityEvents {
                     hurtLivingEntity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
                 }
             }
-            // Larceny Chance
+            // Melee Larceny
             float larcenyChance = ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.LARCENY_CHANCE);
-            if(larcenyChance > 0.0f && !hurtLivingEntity.level.isClientSide){
-                boolean mainHandFull = !hurtLivingEntity.getMainHandItem().isEmpty();
-                boolean offHandFull = !hurtLivingEntity.getOffhandItem().isEmpty();
-                EquipmentSlot equipmentSlot = null;
-                if(mainHandFull && offHandFull){
-                    equipmentSlot = hurtLivingEntity.getRandom().nextBoolean() ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
-                } else if(mainHandFull || offHandFull) {
-                    equipmentSlot = mainHandFull ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
-                }
-                if(equipmentSlot != null) {
-                    ItemStack itemStack = hurtLivingEntity.getItemBySlot(equipmentSlot);
-                    WeaponUtil.tryStealItem(itemStack, damageSourceLivingEntity, hurtLivingEntity, equipmentSlot, larcenyChance);
-                }
-                if(hurtLivingEntity instanceof AbstractIllager || hurtLivingEntity instanceof AbstractVillager) {
-                    WeaponUtil.tryStealItem(Items.EMERALD.getDefaultInstance(), damageSourceLivingEntity, hurtLivingEntity, null, larcenyChance);
-                }
-            }
+            WeaponUtil.tryLarceny(larcenyChance, damageSourceLivingEntity, hurtLivingEntity);
+
             // Melee Knockback
             if(hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
                 odysseyLivingEntity.setNextKnockbackModifier(ModifierUtil.getUnitModifierValue(mainHandItemStack, Modifiers.KNOCKBACK));
@@ -152,6 +137,8 @@ public class EntityEvents {
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
             odysseyLivingEntity.setNextKnockbackModifier(odysseyAbstractArrow.knockbackModifier);
+            // Ranged Larceny
+            WeaponUtil.tryLarceny(odysseyAbstractArrow.larcenyModifier, odysseyAbstractArrow.getOwner(), hurtLivingEntity);
         }
 
         if(amount >= 10.0f && hurtLivingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
@@ -332,7 +319,7 @@ public class EntityEvents {
         if(damageSource != null){
             Entity directEntity = damageSource.getDirectEntity();
             if(directEntity instanceof OdysseyAbstractArrow){
-                event.setLootingLevel(((OdysseyAbstractArrow) directEntity).getLootingLevel());
+                event.setLootingLevel(((OdysseyAbstractArrow) directEntity).lootingModifier);
             } else if (directEntity instanceof LivingEntity livingEntity) {
                 ItemStack itemStack = livingEntity.getMainHandItem();
                 int looting = ModifierUtil.getIntegerModifierValue(itemStack, Modifiers.LOOTING_LUCK);

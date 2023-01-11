@@ -178,9 +178,7 @@ public class ItemRegistry {
     public static final LevEnchSup[] MULTISHOT = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.MULTISHOT, 1);
     public static final LevEnchSup[] SUPER_CHARGE = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.SUPER_CHARGE, 1);
     public static final LevEnchSup[] LOYALTY = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.LOYALTY, 3);
-    public static final LevEnchSup VOID_AMPLIFICATION = new LevEnchSup(EnchantmentRegistry.VOID_AMPLIFICATION);
     public static final LevEnchSup[] IMPENETRABLE = LevEnchSup.getLevEnchantSupArray(EnchantmentRegistry.IMPENETRABLE, 1);
-    public static final LevEnchSup LARCENY = new LevEnchSup(EnchantmentRegistry.LARCENY);
 
     // # Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestMaterial.COPPER));
@@ -279,13 +277,13 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BONE_LONG_BOW = ITEMS.register("bone_long_bow", () -> new InnateModifierBowItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.2f, 20, List.of(), List.of(new ModifierInstance(Modifiers.PIERCING, 1.0f))));
     public static final RegistryObject<Item> BONE_REPEATER = ITEMS.register("bone_repeater", () -> new OdysseyBowItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.2f, 16, List.of(BowAbility.REPEAT)));
     public static final RegistryObject<Item> BONE_SLUG_BOW = ITEMS.register("bone_slug_bow", () -> new InnateModifierCrossbowItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 25, List.of(new ModifierInstance(Modifiers.PROJECTILE_KNOCKBACK, 0.5f))));
-    public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new RepeaterItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.2f, 20, PIERCING[1], PUNCH[1], QUICK_CHARGE[1]));
-    public static final RegistryObject<Item> VOID_BOW = ITEMS.register("void_bow", () -> new InnateConditionalAmpBowItem.NumericalItem((new Item.Properties()).durability(OdysseyTiers.ULTRA_2.getUses()).tab(OdysseyCreativeModeTab.RANGED), 1.35f, 20, List.of(), List.of(new ModifierInstance(Modifiers.VOID_STRENGTH, 0.4f)), 9));
+    public static final RegistryObject<Item> BOWN = ITEMS.register("bown", () -> new InnateModifierBowItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.2f, 20, List.of(BowAbility.REPEAT), List.of(new ModifierInstance(Modifiers.PIERCING, 1.0f), new ModifierInstance(Modifiers.PROJECTILE_KNOCKBACK, 0.5f))));
+    public static final RegistryObject<Item> VOID_BOW = ITEMS.register("void_bow", () -> new ConditionalAmpBowItem.NumericalItem((new Item.Properties()).durability(OdysseyTiers.ULTRA_2.getUses()).tab(OdysseyCreativeModeTab.RANGED), 1.35f, 20, List.of(), List.of(new ModifierInstance(Modifiers.VOID_STRENGTH, 0.4f)), 9));
 
     public static final RegistryObject<Item> RUSTY_SONIC_FORK = ITEMS.register("rusty_sonic_fork", () -> new ProjectileLaunchItem(new Item.Properties().durability(OdysseyTiers.RUSTY_IRON.getUses()).tab(OdysseyCreativeModeTab.RANGED), 1.2f, SonicBoom::new));
 
     // ## Tier 2
-    public static final RegistryObject<Item> BANDIT_CROSSBOW = ITEMS.register("bandit_crossbow", () -> new EquipmentCrossbowItem(new Item.Properties().durability(OdysseyTiers.IRON.getUses()).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.RANGED), 1.5f, 20, LARCENY));
+    public static final RegistryObject<Item> BANDIT_CROSSBOW = ITEMS.register("bandit_crossbow", () -> new InnateModifierCrossbowItem(new Item.Properties().durability(OdysseyTiers.IRON.getUses()).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.RANGED), 1.5f, 20, List.of(new ModifierInstance(Modifiers.PROJECTILE_LARCENY_CHANCE, 0.1f))));
     public static final RegistryObject<Item> CLOVER_STONE_BOOMERANG = ITEMS.register("clover_stone_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.CLOVER_STONE.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.CLOVER_STONE, LOYALTY[1], LOOTING[1]));
 
     public static final RegistryObject<Item> SHARP_GREATROOT_BOOMERANG = ITEMS.register("sharp_greatroot_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.GREATROOT, LOYALTY[2], PIERCING[2]));
@@ -293,10 +291,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SPEEDY_GREATROOT_BOOMERANG = ITEMS.register("speedy_greatroot_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.SPEEDY_GREATROOT, LOYALTY[2], QUICK_CHARGE[1]));
     public static final RegistryObject<Item> SUPER_GREATROOT_BOOMERANG = ITEMS.register("super_greatroot_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.SUPER_GREATROOT, LOYALTY[2], SUPER_CHARGE[1]));
     public static final RegistryObject<Item> MULTISHOT_GREATROOT_BOOMERANG = ITEMS.register("multishot_greatroot_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED), Boomerang.BoomerangType.GREATROOT, LOYALTY[2], MULTISHOT[1]));
-    public static final RegistryObject<Item> GREATROOT_LONG_BOW = ITEMS.register("greatroot_long_bow", () -> new EquipmentBowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, PIERCING[2]));
-    public static final RegistryObject<Item> GREATROOT_REPEATER = ITEMS.register("greatroot_repeater", () -> new RepeaterItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, QUICK_CHARGE[1]));
+    public static final RegistryObject<Item> GREATROOT_LONG_BOW = ITEMS.register("greatroot_long_bow", () -> new InnateModifierBowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, List.of(), List.of(new ModifierInstance(Modifiers.PIERCING, 2.0f))));
+    public static final RegistryObject<Item> GREATROOT_REPEATER = ITEMS.register("greatroot_repeater", () -> new OdysseyBowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 14, List.of(BowAbility.REPEAT)));
     public static final RegistryObject<Item> GREATROOT_SNIPER_BOW = ITEMS.register("greatroot_sniper_bow", () -> new InnateModifierBowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, List.of(BowAbility.SPYGLASS), List.of(new ModifierInstance(Modifiers.ACCURACY, 1.0f), new ModifierInstance(Modifiers.MAX_CHARGE_TIME, 0.5f))));
-    public static final RegistryObject<Item> GREATROOT_SLUG_BOW = ITEMS.register("greatroot_slug_bow", () -> new EquipmentCrossbowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.8f, 25, PUNCH[2]));
+    public static final RegistryObject<Item> GREATROOT_SLUG_BOW = ITEMS.register("greatroot_slug_bow", () -> new InnateModifierCrossbowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.8f, 25, List.of(new ModifierInstance(Modifiers.PROJECTILE_KNOCKBACK, 1.0f))));
     public static final RegistryObject<Item> GREATROOT_SHOT_BOW = ITEMS.register("greatroot_shot_bow", () -> new InnateModifierCrossbowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.8f, 25, List.of(new ModifierInstance(Modifiers.MULTISHOT, 2.0f))));
 
     // ## Quivers

@@ -2,7 +2,6 @@ package com.bedmen.odyssey.items.innate_modifier;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.modifier.InnateModifierHolder;
-import com.bedmen.odyssey.modifier.Modifier;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
@@ -13,7 +12,6 @@ import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -26,7 +24,6 @@ import net.minecraft.world.level.block.DispenserBlock;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
 
 public class InnateModifierArrowItem extends ArrowItem implements InnateModifierItem {
     private final ArrowType arrowType;
@@ -46,10 +43,12 @@ public class InnateModifierArrowItem extends ArrowItem implements InnateModifier
         OdysseyArrow odysseyArrow = new OdysseyArrow(world, livingEntity, arrowType);
         // Knockback
         odysseyArrow.knockbackModifier = ModifierUtil.getUnitModifierValue(bow, Modifiers.PROJECTILE_KNOCKBACK);
-        //Piercing
+        // Piercing
         odysseyArrow.setPiercingModifier(ModifierUtil.getFloatModifierValue(bow, Modifiers.PIERCING));
         // Looting
-        odysseyArrow.setLootingLevel((byte)(ModifierUtil.getIntegerModifierValue(ammo, Modifiers.LOOTING_LUCK)));
+        odysseyArrow.lootingModifier = ModifierUtil.getIntegerModifierValue(ammo, Modifiers.PROJECTILE_LOOTING_LUCK);
+        // Larceny
+        odysseyArrow.larcenyModifier = ModifierUtil.getFloatModifierValue(bow, Modifiers.PROJECTILE_LARCENY_CHANCE);
         return odysseyArrow;
     }
 
