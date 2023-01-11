@@ -1,7 +1,8 @@
 package com.bedmen.odyssey.weapon;
 
 public enum BowAbility implements Ability {
-    SPYGLASS("spyglass", true);
+    SPYGLASS("spyglass", true),
+    REPEAT("repeat", true);
 
     public final String id;
     public final boolean showOnRegularTooltip;

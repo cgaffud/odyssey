@@ -496,6 +496,7 @@
   "abilities.oddc.cobweb_break": "Cobweb Break",
   "abilities.oddc.smack": "Smack",
   "abilities.oddc.spyglass": "Spyglass [Sneak Key]",
+  "abilities.oddc.repeat": "Repeat",
   "item.oddc.innate_modifier": "Innate Modifiers:",
   "item.oddc.added_modifier": "Added Modifiers:",
   "modifier.oddc.damage_against_arthropod": "+%s Damage Against Athropods",

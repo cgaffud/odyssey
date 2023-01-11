@@ -57,6 +57,13 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         return this.abilityHolder;
     }
 
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int count) {
+        if(this.getUseDuration(itemStack) - count > this.getChargeTime(itemStack) && this.hasAbility(BowAbility.REPEAT)){
+            livingEntity.stopUsingItem();
+            this.releaseUsing(itemStack, level, livingEntity, count);
+        }
+    }
+
     public void releaseUsing(ItemStack bow, Level level, LivingEntity livingEntity, int useItemRemainingTicks) {
         if (livingEntity instanceof Player) {
             Player player = (Player)livingEntity;
