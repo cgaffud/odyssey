@@ -14,16 +14,20 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class InnateConditionalAmpMeleeItem extends InnateModifierMeleeItem {
+public class ConditionalAmpMeleeItem extends InnateModifierMeleeItem implements ConditionalAmpUtil.ConditionalAmpItem {
 
     public final Modifier modifier;
 
-    public InnateConditionalAmpMeleeItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<ModifierInstance> innateModifierList) {
+    public ConditionalAmpMeleeItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<ModifierInstance> innateModifierList) {
         super(builderIn, tier, meleeWeaponClass, damage, innateModifierList);
         this.modifier = innateModifierList.get(0).modifier;
     }
 
-    public static class NumericalItem extends InnateConditionalAmpMeleeItem implements INeedsToRegisterItemModelProperty, ConditionalAmpUtil.NumericalItem {
+    public Modifier getModifier() {
+        return this.modifier;
+    }
+
+    public static class NumericalItem extends ConditionalAmpMeleeItem implements INeedsToRegisterItemModelProperty, ConditionalAmpUtil.NumericalItem {
 
         private final int intervalCount;
         public NumericalItem(Properties builderIn, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<ModifierInstance> innateModifierList, int numTextures){
@@ -40,7 +44,7 @@ public class InnateConditionalAmpMeleeItem extends InnateModifierMeleeItem {
         }
     }
 
-    public static class GradientItem extends InnateConditionalAmpMeleeItem implements ConditionalAmpUtil.GradientItem {
+    public static class GradientItem extends ConditionalAmpMeleeItem implements ConditionalAmpUtil.GradientItem {
         private final ConditionalAmpUtil.ColorProvider colorProvider;
         private final int defaultColor;
 

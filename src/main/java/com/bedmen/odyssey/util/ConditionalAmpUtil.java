@@ -1,34 +1,27 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.modifier.Modifier;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.EnvironmentConditionalMeleeModifier;
-import com.bedmen.odyssey.enchantment.odyssey.ConditionalAmpEnchantment;
-import com.bedmen.odyssey.items.innate_modifier.InnateConditionalAmpMeleeItem;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 
 public class ConditionalAmpUtil {
     public static final String DAMAGE_BOOST_TAG = Odyssey.MOD_ID + ":ConditionalAmpBoost";
     public static final String GRADIENT_COLOR_TAG = Odyssey.MOD_ID + ":GradientColor";
 
-    public interface CondAmpItem {
-        Enchantment getEnchantment();
+    public interface ConditionalAmpItem {
+        Modifier getModifier();
     }
 
     public static float activeFactor(ItemStack itemStack, LivingEntity livingEntity) {
-        //todo remove enchantment
-        if (itemStack.getItem() instanceof CondAmpItem condAmpItem && condAmpItem.getEnchantment() instanceof ConditionalAmpEnchantment conditionalAmpEnchantment){
-            return conditionalAmpEnchantment.getActiveFactor(livingEntity.level, livingEntity);
-        }
-
-        if (itemStack.getItem() instanceof InnateConditionalAmpMeleeItem innateConditionalAmpMeleeItem
-                && innateConditionalAmpMeleeItem.modifier instanceof EnvironmentConditionalMeleeModifier environmentConditionalMeleeModifier){
+        if (itemStack.getItem() instanceof ConditionalAmpItem conditionalAmpItem
+                && conditionalAmpItem.getModifier() instanceof EnvironmentConditionalMeleeModifier environmentConditionalMeleeModifier){
             return environmentConditionalMeleeModifier.attackBoostFactorFunction.getBoostFactor(livingEntity.eyeBlockPosition(), livingEntity.level);
         }
 
