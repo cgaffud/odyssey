@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.Odyssey;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -9,6 +10,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -31,11 +33,11 @@ public class WarpTotem extends Item {
     @Override
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         super.inventoryTick(itemStack, level, entity, p_41407_, p_41408_);
-        /** claim: inventoryTick should be triggered serverside w/ dim changes and experience leveling */
+        // claim: inventoryTick should be triggered serverside w/ dim changes and experience leveling
         if ((entity instanceof ServerPlayer serverPlayer) && (serverPlayer.experienceLevel >= 5)
         && serverPlayer.getRespawnDimension().equals(level.dimension()))
             itemStack.getOrCreateTag().putBoolean(FOIL_TAG, true);
-        /** inventoryTick doesn't get triggered when levels get spent*/
+        // inventoryTick doesn't get triggered when levels get spent
         if ((entity instanceof Player player) && (player.experienceLevel < 5))
             itemStack.getOrCreateTag().putBoolean(FOIL_TAG, false);
     }
@@ -46,9 +48,24 @@ public class WarpTotem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         if ((player instanceof ServerPlayer serverPlayer) && (level.dimension().equals(serverPlayer.getRespawnDimension()))
+                && (serverPlayer.experienceLevel >= 5)) {
+            level.playSound((Player) null, player.blockPosition(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 1.0f, 1.0f);
+            player.startUsingItem(interactionHand);
+            return InteractionResultHolder.consume(player.getItemInHand(interactionHand));
+        }
+        return InteractionResultHolder.pass(player.getItemInHand(interactionHand));
+    }
+
+    @Override
+    public int getUseDuration(ItemStack itemStack) {
+        return 60;
+    }
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {
+        if ((livingEntity instanceof ServerPlayer serverPlayer) && (level.dimension().equals(serverPlayer.getRespawnDimension()))
                 && (serverPlayer.experienceLevel >= 5)) {
 
             // ServerPlayer spawn info
@@ -66,22 +83,24 @@ public class WarpTotem extends Item {
                 Vec3 vec3 = optional.get();
                 serverPlayer.teleportTo(vec3.x, vec3.y, vec3.z);
             } else {
-                serverPlayer.fudgeSpawnLocation((ServerLevel) level);
+                ServerLevel serverLevel = serverPlayer.getLevel();
+                BlockPos.MutableBlockPos worldSpawn = serverLevel.getSharedSpawnPos().mutable();
+                while(!serverLevel.noCollision(serverPlayer) && worldSpawn.getY() < (double)(serverLevel.getMaxBuildHeight() - 1)) {
+                    worldSpawn.move(Direction.UP);
+                }
+                serverPlayer.teleportTo(worldSpawn.getX(), worldSpawn.getY(), worldSpawn.getZ());
+//                serverPlayer.fudgeSpawnLocation((ServerLevel) level);
             }
 
             level.playSound((Player)null, serverPlayer.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0f, 1.0f);
-            level.playSound((Player)null, serverPlayer.blockPosition(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 1.0f, 1.0f);
 
             serverPlayer.giveExperienceLevels(-5);
             if (this.isCracked) {
-                itemStack.hurtAndBreak(1, player, (player1) -> {
-                    player1.broadcastBreakEvent(player.getUsedItemHand());
+                itemStack.hurtAndBreak(1, serverPlayer, (player1) -> {
+                    player1.broadcastBreakEvent(serverPlayer.getUsedItemHand());
                 });
-                return InteractionResultHolder.consume(itemStack);
             }
-
-            return InteractionResultHolder.success(itemStack);
         }
-        return InteractionResultHolder.pass(itemStack);
+        return itemStack;
     }
 }

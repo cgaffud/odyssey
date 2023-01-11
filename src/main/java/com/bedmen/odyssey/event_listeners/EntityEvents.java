@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.WarpTotem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.registry.BiomeRegistry;
@@ -118,6 +119,12 @@ public class EntityEvents {
             }
         }
         event.setAmount(amount);
+
+        if (livingEntity instanceof Player player) {
+            if (player.isUsingItem() && (player.getUseItem().getItem() instanceof WarpTotem))
+                player.stopUsingItem();
+            player.getCooldowns().addCooldown(ItemRegistry.WARP_TOTEM.get(), 30);
+        }
     }
 
     public static final Set<Integer> IDS = ConcurrentHashMap.newKeySet();
