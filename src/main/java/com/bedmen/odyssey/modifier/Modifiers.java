@@ -35,6 +35,7 @@ public class Modifiers {
     public static final PercentageModifier LARCENY_CHANCE = new PercentageModifier("larceny_chance");
     public static final FloatModifier PROJECTILE_KNOCKBACK = new UnitModifier("projectile_knockback");
     public static final FloatModifier PIERCING = new FloatModifier("piercing");
+    public static final FloatModifier MULTISHOT = new MultishotModifier("multishot");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

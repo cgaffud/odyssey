@@ -3,6 +3,9 @@ package com.bedmen.odyssey.items.odyssey_versions;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.innate_modifier.InnateModifierArrowItem;
+import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.Modifiers;
+import com.bedmen.odyssey.modifier.MultishotModifier;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -33,6 +36,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
@@ -42,6 +46,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
@@ -98,8 +103,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     }
 
     public static boolean tryLoadProjectiles(LivingEntity livingEntity, ItemStack crossbow) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MULTISHOT.get(), crossbow);
-        int j = i == 0 ? 1 : 3;
+        int numberOfArrows = MultishotModifier.strengthToNumberOfTotalArrows(ModifierUtil.getFloatModifierValue(crossbow, Modifiers.MULTISHOT));
         boolean isPlayer = livingEntity instanceof Player;
         boolean flag = isPlayer && ((Player)livingEntity).getAbilities().instabuild;
         WeaponUtil.AmmoStack ammoStack;
@@ -117,7 +121,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
         ItemStack itemstack1 = itemstack.copy();
 
-        for(int k = 0; k < j; ++k) {
+        for(int k = 0; k < numberOfArrows; ++k) {
             if (k > 0) {
                 itemstack = itemstack1.copy();
             }
@@ -192,7 +196,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         });
     }
 
-    private static void shootProjectile(Level level, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, ItemStack ammo, float pitch, boolean multishotFlag, float power, float inaccuracy, float angle) {
+    private static void shootProjectile(Level level, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, ItemStack ammo, float pitch, boolean creativeModeFlag, float power, float inaccuracy, float angle) {
         if (!level.isClientSide) {
             boolean flag = ammo.is(Items.FIREWORK_ROCKET);
             Projectile projectile;
@@ -200,9 +204,12 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
                 projectile = new FireworkRocketEntity(level, ammo, livingEntity, livingEntity.getX(), livingEntity.getEyeY() - (double)0.15F, livingEntity.getZ(), true);
             } else {
                 projectile = getArrow(level, livingEntity, crossbow, ammo);
-                if (multishotFlag || angle != 0.0F || (crossbow.getOrCreateTag().contains("QuiverFreeAmmo") && crossbow.getOrCreateTag().getBoolean("QuiverFreeAmmo"))) {
+                if (creativeModeFlag || angle != 0.0F || (crossbow.getOrCreateTag().contains("QuiverFreeAmmo") && crossbow.getOrCreateTag().getBoolean("QuiverFreeAmmo"))) {
                     ((AbstractArrow)projectile).pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
+            }
+            if(projectile instanceof AbstractArrow abstractArrow && creativeModeFlag){
+                abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() * MultishotModifier.strengthToDamagePenalty(ModifierUtil.getFloatModifierValue(crossbow, Modifiers.MULTISHOT)));
             }
 
             if (livingEntity instanceof CrossbowAttackMob) {
@@ -214,7 +221,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
                 Vec3 vec3 = livingEntity.getViewVector(1.0F);
                 Vector3f vector3f = new Vector3f(vec3);
                 vector3f.transform(quaternion);
-                projectile.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), power, inaccuracy);
+                projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), power, inaccuracy);
             }
 
             crossbow.hurtAndBreak(flag ? 3 : 1, livingEntity, (livingEntity1) -> {
@@ -227,28 +234,30 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
     public static void performShooting(Level level, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack crossbow, float power, float inaccuracy) {
         List<ItemStack> list = getChargedProjectiles(crossbow);
-        float[] afloat = getShotPitches(livingEntity.getRandom());
+        int size = list.size();
+        List<Float> shotPitches = getShotPitches(livingEntity.getRandom(), size);
 
-        for(int i = 0; i < list.size(); ++i) {
+        for(int i = 0; i < size; ++i) {
             ItemStack itemstack = list.get(i);
-            boolean flag = livingEntity instanceof Player && ((Player)livingEntity).getAbilities().instabuild;
+            float angle = i / ((float)(size - 1)) * 20.0f - 10.0f;
+            boolean creativeModeFlag = livingEntity instanceof Player && ((Player)livingEntity).getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
-                if (i == 0) {
-                    shootProjectile(level, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, 0.0F);
-                } else if (i == 1) {
-                    shootProjectile(level, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, -10.0F);
-                } else if (i == 2) {
-                    shootProjectile(level, livingEntity, interactionHand, crossbow, itemstack, afloat[i], flag, power, inaccuracy, 10.0F);
-                }
+                shootProjectile(level, livingEntity, interactionHand, crossbow, itemstack, shotPitches.get(i), creativeModeFlag, power, inaccuracy, angle);
             }
         }
 
         onCrossbowShot(level, livingEntity, crossbow);
     }
 
-    private static float[] getShotPitches(Random random) {
+    private static List<Float> getShotPitches(Random random, int size) {
+        List<Float> list = new ArrayList<>();
+        list.add(1.0f);
         boolean randomBool = random.nextBoolean();
-        return new float[]{1.0F, getRandomShotPitch(randomBool, random), getRandomShotPitch(!randomBool, random)};
+        for(int i = 1; i < size; i++){
+            randomBool = !randomBool;
+            list.add(getRandomShotPitch(randomBool, random));
+        }
+        return list;
     }
 
     private static float getRandomShotPitch(boolean randomBool, Random random) {

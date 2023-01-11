@@ -302,7 +302,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATROOT_REPEATER = ITEMS.register("greatroot_repeater", () -> new RepeaterItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, QUICK_CHARGE[1]));
     public static final RegistryObject<Item> GREATROOT_SNIPER_BOW = ITEMS.register("greatroot_sniper_bow", () -> new SniperBowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.5f, 20, SUPER_CHARGE[1]));
     public static final RegistryObject<Item> GREATROOT_SLUG_BOW = ITEMS.register("greatroot_slug_bow", () -> new EquipmentCrossbowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.8f, 25, PUNCH[2]));
-    public static final RegistryObject<Item> GREATROOT_SHOT_BOW = ITEMS.register("greatroot_shot_bow", () -> new EquipmentCrossbowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.8f, 25, MULTISHOT[1]));
+    public static final RegistryObject<Item> GREATROOT_SHOT_BOW = ITEMS.register("greatroot_shot_bow", () -> new InnateModifierCrossbow((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.8f, 25, List.of(new ModifierInstance(Modifiers.MULTISHOT, 2.0f))));
 
     // ## Quivers
     public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.RANGED), QuiverItem.QuiverType.RABBIT_HIDE_QUIVER));

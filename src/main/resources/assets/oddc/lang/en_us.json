@@ -516,5 +516,6 @@
   "modifier.oddc.aqua_affinity": "Aqua Affinity",
   "modifier.oddc.larceny_chance": "%s Larceny Chance",
   "modifier.oddc.projectile_knockback": "x%s Projectile Knockback",
-  "modifier.oddc.piercing": "+%s Piercing"
+  "modifier.oddc.piercing": "+%s Piercing",
+  "modifier.oddc.multishot": "+%s Multishot Arrows (%s Damage)"
 }
