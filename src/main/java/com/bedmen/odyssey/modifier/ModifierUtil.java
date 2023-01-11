@@ -133,6 +133,10 @@ public class ModifierUtil {
         return getItemStackModifierStrength(itemStack, floatModifier);
     }
 
+    public static float getUnitModifierValue(ItemStack itemStack, UnitModifier floatModifier){
+        return 1.0f + getItemStackModifierStrength(itemStack, floatModifier);
+    }
+
     public static int getIntegerModifierValue(ItemStack itemStack, IntegerModifier integerModifier){
         return (int) getItemStackModifierStrength(itemStack, integerModifier);
     }

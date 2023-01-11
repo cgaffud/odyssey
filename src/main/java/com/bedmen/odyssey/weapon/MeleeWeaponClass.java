@@ -29,34 +29,20 @@ public class MeleeWeaponClass {
     public static final MeleeWeaponClass HOE = new MeleeWeaponClass(2.0f, List.of());
 
     public final float attackRate;
-    private final List<MeleeWeaponAbility> meleeWeaponAbilityList;
-    public final List<Component> tooltipAbilityList;
-    public final List<Component> advancedTooltipAbilityList;
+    public final AbilityHolder abilityHolder;
 
     public MeleeWeaponClass(float attackRate, List<MeleeWeaponAbility> meleeWeaponAbilityList) {
         this.attackRate = attackRate;
-        this.meleeWeaponAbilityList = meleeWeaponAbilityList;
-        this.tooltipAbilityList = meleeWeaponAbilityList.stream()
-                .filter(meleeWeaponAbility -> meleeWeaponAbility.showOnRegularTooltip)
-                .map(meleeWeaponAbility ->
-                new TranslatableComponent("abilities.oddc."+meleeWeaponAbility.id).withStyle(OdysseyChatFormatting.COPPER)
-        ).collect(Collectors.toList());
-        if(this.meleeWeaponAbilityList.isEmpty()){
-            this.advancedTooltipAbilityList = List.of();
-        } else {
-            List<Component> advancedTooltipAbilityList = meleeWeaponAbilityList.stream()
-                    .map(meleeWeaponAbility ->
-                            new TextComponent(" ")
-                                    .append(new TranslatableComponent("abilities.oddc."+meleeWeaponAbility.id)
-                                            .withStyle(OdysseyChatFormatting.COPPER))
-                    ).collect(Collectors.toList());
-            advancedTooltipAbilityList.add(0, new TranslatableComponent("item.oddc.abilities").withStyle(OdysseyChatFormatting.COPPER));
-            this.advancedTooltipAbilityList = advancedTooltipAbilityList;
-        }
+        this.abilityHolder = new AbilityHolder(new ArrayList<>(meleeWeaponAbilityList));
+    }
+
+    private MeleeWeaponClass(float attackRate, AbilityHolder abilityHolder) {
+        this.attackRate = attackRate;
+        this.abilityHolder = abilityHolder;
     }
 
     public boolean hasAbility(MeleeWeaponAbility meleeWeaponAbility){
-        return this.meleeWeaponAbilityList.contains(meleeWeaponAbility);
+        return this.abilityHolder.abilityList.contains(meleeWeaponAbility);
     }
 
     public MeleeWeaponClass withBetterAttackSpeed() {
@@ -64,20 +50,12 @@ public class MeleeWeaponClass {
     }
 
     public MeleeWeaponClass withAttackSpeedMultiplier(float attackSpeedMultiplier) {
-        return new MeleeWeaponClass(attackRate * attackSpeedMultiplier, this.meleeWeaponAbilityList);
+        return new MeleeWeaponClass(attackRate * attackSpeedMultiplier, this.abilityHolder);
     }
 
     public MeleeWeaponClass withAbility(MeleeWeaponAbility meleeWeaponAbility) {
-        List<MeleeWeaponAbility> meleeWeaponAbilityList = new ArrayList<>(this.meleeWeaponAbilityList);
-        meleeWeaponAbilityList.add(meleeWeaponAbility);
-        return new MeleeWeaponClass(attackRate, meleeWeaponAbilityList);
-    }
-
-    public void addTooltip(List<Component> tooltip, TooltipFlag tooltipFlag){
-        if(tooltipFlag.isAdvanced()){
-            tooltip.addAll(this.advancedTooltipAbilityList);
-        } else {
-            tooltip.addAll(this.tooltipAbilityList);
-        }
+        List<Ability> abilityList = new ArrayList<>(this.abilityHolder.abilityList);
+        abilityList.add(meleeWeaponAbility);
+        return new MeleeWeaponClass(attackRate, new AbilityHolder(abilityList));
     }
 }

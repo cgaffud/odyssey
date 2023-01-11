@@ -372,10 +372,6 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         if (k > 0) {
             abstractArrow.setRemainingFireTicks(100*k);
         }
-        k = EnchantmentUtil.getPiercing(crossbow);
-        if (k > 0) {
-            abstractArrow.setPierceLevel((byte)k);
-        }
         return abstractArrow;
     }
 

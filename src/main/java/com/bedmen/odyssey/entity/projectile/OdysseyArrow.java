@@ -85,7 +85,7 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
             this.setBaseDamage(this.getBaseDamage() + (double)i * 0.5D + 0.5D);
         }
         // Knockback
-        this.knockbackModifier = ModifierUtil.getFloatModifierValue(bow, Modifiers.PROJECTILE_KNOCKBACK);
+        this.knockbackModifier = ModifierUtil.getUnitModifierValue(bow, Modifiers.PROJECTILE_KNOCKBACK);
         i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), shooter);
         if (i > 0) {
             this.setSecondsOnFire(100*i);

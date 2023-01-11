@@ -495,6 +495,7 @@
   "abilities.oddc.dual_wield": "Dual Wield",
   "abilities.oddc.cobweb_break": "Cobweb Break",
   "abilities.oddc.smack": "Smack",
+  "abilities.oddc.spyglass": "Spyglass [Sneak Key]",
   "item.oddc.innate_modifier": "Innate Modifiers:",
   "item.oddc.added_modifier": "Added Modifiers:",
   "modifier.oddc.damage_against_arthropod": "+%s Damage Against Athropods",
@@ -517,5 +518,7 @@
   "modifier.oddc.larceny_chance": "%s Larceny Chance",
   "modifier.oddc.projectile_knockback": "x%s Projectile Knockback",
   "modifier.oddc.piercing": "+%s Piercing",
-  "modifier.oddc.multishot": "+%s Multishot Arrows (%s Damage)"
+  "modifier.oddc.multishot": "+%s Multishot Arrows (%s Damage)",
+  "modifier.oddc.accuracy": "x%s Accuracy",
+  "modifier.oddc.max_charge_time": "x%s Max Charge Time"
 }

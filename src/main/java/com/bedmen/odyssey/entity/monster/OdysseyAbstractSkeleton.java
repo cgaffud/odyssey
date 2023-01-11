@@ -6,6 +6,8 @@ import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyCrossbowItem;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
+import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.weapon.WeaponUtil;
@@ -155,9 +157,8 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
             double d2 = target.getZ() - this.getZ();
             double d3 = Math.sqrt(d0 * d0 + d2 * d2);
             float velocity = WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * (item instanceof OdysseyBowItem odysseyBowItem ? odysseyBowItem.velocityMultiplier : 1.0f);
-            float accuracyMultiplier = EnchantmentUtil.getAccuracyMultiplier(this);
-            float superCharge = EnchantmentUtil.getSuperChargeMultiplier(itemStack);
-            abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier / superCharge);
+            float accuracyMultiplier = ModifierUtil.getUnitModifierValue(itemStack, Modifiers.ACCURACY);
+            abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier);
             this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
             this.level.addFreshEntity(abstractarrow);
         } else {

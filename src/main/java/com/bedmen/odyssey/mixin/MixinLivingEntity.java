@@ -26,7 +26,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private boolean hasSlowFalling = false;
     private int flightTicks = 0;
     private SmackPush smackPush = new SmackPush();
-    private float nextKnockbackModifier = 0.0f;
+    private float nextKnockbackModifier = 1.0f;
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }

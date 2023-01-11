@@ -1,10 +1,11 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
-import com.bedmen.odyssey.items.equipment.SniperBowItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.bedmen.odyssey.weapon.BowAbility;
 import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
 import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
 import com.bedmen.odyssey.weapon.WeaponUtil;
@@ -87,7 +88,7 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     public void updateSniperScoping() {
         boolean isSniperScopingO = this.isSniperScoping;
-        this.isSniperScoping = this.getMainHandItem().getItem() instanceof SniperBowItem && this.isShiftKeyDown();
+        this.isSniperScoping = this.getMainHandItem().getItem() instanceof OdysseyBowItem odysseyBowItem && odysseyBowItem.hasAbility(BowAbility.SPYGLASS) && this.isShiftKeyDown();
         if(!isSniperScopingO && this.isSniperScoping){
             this.playSound(SoundEvents.SPYGLASS_USE, 1.0F, 1.0F);
         } else if (isSniperScopingO && !this.isSniperScoping){

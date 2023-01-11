@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.items.odyssey_versions;
 
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
-import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.innate_modifier.InnateModifierArrowItem;
 import com.bedmen.odyssey.modifier.ModifierUtil;
@@ -9,6 +8,9 @@ import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
+import com.bedmen.odyssey.weapon.AbilityHolder;
+import com.bedmen.odyssey.weapon.BowAbility;
+import com.bedmen.odyssey.weapon.OdysseyAbilityWeapon;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -29,18 +31,30 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import org.checkerframework.checker.units.qual.A;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModelProperty {
+public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModelProperty, OdysseyAbilityWeapon {
     public final float velocityMultiplier;
     public final int baseMaxChargeTicks;
+    private final AbilityHolder abilityHolder;
 
-    public OdysseyBowItem(Item.Properties builder, float velocityMultiplier, int baseMaxChargeTicks) {
+    public OdysseyBowItem(Item.Properties builder, float velocityMultiplier, int baseMaxChargeTicks, List<BowAbility> bowAbilityList) {
         super(builder);
         this.velocityMultiplier = velocityMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
+        this.abilityHolder = new AbilityHolder(new ArrayList<>(bowAbilityList));
+    }
+
+    public boolean hasAbility(BowAbility bowAbility){
+        return this.abilityHolder.abilityList.contains(bowAbility);
+    }
+
+    public AbilityHolder getAbilityHolder(){
+        return this.abilityHolder;
     }
 
     public void releaseUsing(ItemStack bow, Level level, LivingEntity livingEntity, int useItemRemainingTicks) {
@@ -59,8 +73,8 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                     ammo = new ItemStack(Items.ARROW);
                 }
 
-                float superChargeMultiplier = EnchantmentUtil.getSuperChargeMultiplier(bow);
-                float charge = getChargeForTime(useTicks, bow, superChargeMultiplier);
+                float maxChargeMultiplier = 1.0f + ModifierUtil.getFloatModifierValue(bow, Modifiers.MAX_CHARGE_TIME);
+                float charge = getChargeForTime(useTicks, bow, maxChargeMultiplier);
                 float velocityFactor = charge * this.getEffectiveVelocityMultiplier(bow);
 
                 if (!((double)charge < 0.1D)) {
@@ -69,10 +83,9 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                         InnateModifierArrowItem arrowItem = (InnateModifierArrowItem)(ammo.getItem() instanceof InnateModifierArrowItem ? ammo.getItem() : Items.ARROW);
                         OdysseyAbstractArrow odysseyAbstractArrow = arrowItem.createAbstractOdysseyArrow(level, bow, ammo, player);
 
-                        float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(livingEntity);
-                        if(superChargeMultiplier > 1.0f && getMaxCharge(bow) == charge){
+                        float inaccuracy = 1.0f / ModifierUtil.getUnitModifierValue(bow, Modifiers.ACCURACY);
+                        if(getMaxCharge(bow) == charge){
                             odysseyAbstractArrow.setCritArrow(true);
-                            inaccuracy /= superChargeMultiplier;
                         }
 
                         odysseyAbstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, velocityFactor * WeaponUtil.BASE_ARROW_VELOCITY, inaccuracy);
@@ -84,10 +97,6 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                         j = EnchantmentUtil.getFlame(bow);
                         if (j > 0) {
                             odysseyAbstractArrow.setSecondsOnFire(100*j);
-                        }
-                        j = EnchantmentUtil.getPiercing(bow);
-                        if (j > 0) {
-                            odysseyAbstractArrow.setPierceLevel((byte)j);
                         }
 
                         bow.hurtAndBreak(1, player, (player1) -> {
@@ -118,12 +127,12 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         return getChargeForTime(useTicks, bow, EnchantmentUtil.getSuperChargeMultiplier(bow));
     }
 
-    public float getChargeForTime(int useTicks, ItemStack bow, float superChargeMultiplier) {
-        return chargeCurve(getChargeFactor(useTicks, bow) * superChargeMultiplier);
+    public float getChargeForTime(int useTicks, ItemStack bow, float maxChargeMultiplier) {
+        return chargeCurve(getChargeFactor(useTicks, bow) * maxChargeMultiplier);
     }
 
     public float getMaxCharge(ItemStack bow) {
-        return chargeCurve(EnchantmentUtil.getSuperChargeMultiplier(bow));
+        return chargeCurve(ModifierUtil.getUnitModifierValue(bow, Modifiers.MAX_CHARGE_TIME));
     }
 
     public static float chargeCurve(float f){

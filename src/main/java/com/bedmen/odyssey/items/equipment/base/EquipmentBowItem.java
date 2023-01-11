@@ -18,7 +18,7 @@ public class EquipmentBowItem extends OdysseyBowItem implements IEquipment {
     protected static final List<EquipmentBowItem> UNFINISHED_EQUIPMENT = new ArrayList<>();
 
     public EquipmentBowItem(Item.Properties builder, float velocity, int chargeTime, LevEnchSup... levEnchSups) {
-        super(builder, velocity, chargeTime);
+        super(builder, velocity, chargeTime, List.of());
         this.levEnchSupSet.add(UNENCHANTABLE);
         Collections.addAll(this.levEnchSupSet, levEnchSups);
         UNFINISHED_EQUIPMENT.add(this);

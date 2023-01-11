@@ -9,6 +9,7 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
+import com.bedmen.odyssey.weapon.OdysseyAbilityWeapon;
 import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
 import com.bedmen.odyssey.weapon.SmackPush;
 import net.minecraft.network.chat.Component;
@@ -129,7 +130,7 @@ public class PlayerEvents {
                     && player.isOnGround()
                     && (player.walkDist - player.walkDistO) < (double)player.getSpeed()
                     && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.SWEEP);
-            float sweepDamage = 1.0f + ModifierUtil.getFloatModifierValue(itemStack, Modifiers.ADDITIONAL_SWEEP_DAMAGE);
+            float sweepDamage = ModifierUtil.getUnitModifierValue(itemStack, Modifiers.ADDITIONAL_SWEEP_DAMAGE);
             // Sweep
             if(canSweep){
                 // Unchanging variables are needed to use in the below lambda expressions
@@ -158,8 +159,8 @@ public class PlayerEvents {
         Item item = itemStack.getItem();
         TooltipFlag tooltipFlag = event.getFlags();
         List<Component> componentList = new ArrayList<>();
-        if(item instanceof OdysseyMeleeWeapon odysseyMeleeWeapon){
-            odysseyMeleeWeapon.getMeleeWeaponClass().addTooltip(componentList, tooltipFlag);
+        if(item instanceof OdysseyAbilityWeapon odysseyAbilityWeapon){
+            odysseyAbilityWeapon.getAbilityHolder().addTooltip(componentList, tooltipFlag);
         }
         ModifierUtil.addModifierTooltip(itemStack, componentList, tooltipFlag);
 

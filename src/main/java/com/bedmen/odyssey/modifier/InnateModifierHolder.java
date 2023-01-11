@@ -12,22 +12,22 @@ import java.util.stream.Collectors;
 public class InnateModifierHolder {
 
     public final Map<Modifier, Float> modifierMap = new HashMap<>();
-    public final List<Component> tooltipinnateModifierList;
-    public final List<Component> advancedTooltipinnateModifierList;
+    public final List<Component> tooltipInnateModifierList;
+    public final List<Component> advancedTooltipInnateModifierList;
 
     public InnateModifierHolder(List<ModifierInstance> modifierInstanceList) {
         for(ModifierInstance modifierInstance : modifierInstanceList){
             this.modifierMap.put(modifierInstance.modifier, modifierInstance.strength);
         }
-        this.tooltipinnateModifierList = this.createTooltipinnateModifierList(modifierInstanceList);
-        this.advancedTooltipinnateModifierList = this.createAdvancedTooltipinnateModifierList();
+        this.tooltipInnateModifierList = this.createTooltipinnateModifierList(modifierInstanceList);
+        this.advancedTooltipInnateModifierList = this.createAdvancedTooltipinnateModifierList();
     }
 
     public void addTooltip(List<Component> tooltip, TooltipFlag tooltipFlag){
         if(tooltipFlag.isAdvanced()){
-            tooltip.addAll(this.advancedTooltipinnateModifierList);
+            tooltip.addAll(this.advancedTooltipInnateModifierList);
         } else {
-            tooltip.addAll(this.tooltipinnateModifierList);
+            tooltip.addAll(this.tooltipInnateModifierList);
         }
     }
 
@@ -38,10 +38,10 @@ public class InnateModifierHolder {
     }
 
     public List<Component> createAdvancedTooltipinnateModifierList(){
-        if(this.tooltipinnateModifierList.isEmpty()){
+        if(this.tooltipInnateModifierList.isEmpty()){
             return List.of();
         } else {
-            List<Component> advancedTooltipinnateModifierList = this.tooltipinnateModifierList.stream()
+            List<Component> advancedTooltipinnateModifierList = this.tooltipInnateModifierList.stream()
                     .map(component -> new TextComponent(" ").append(component))
                     .collect(Collectors.toList());
             advancedTooltipinnateModifierList.add(0, new TranslatableComponent("item.oddc.innate_modifier").withStyle(OdysseyChatFormatting.LAVENDER));

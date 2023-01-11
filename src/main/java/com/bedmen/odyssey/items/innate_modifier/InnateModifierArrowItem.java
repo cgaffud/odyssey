@@ -45,7 +45,7 @@ public class InnateModifierArrowItem extends ArrowItem implements InnateModifier
     public OdysseyAbstractArrow createAbstractOdysseyArrow(Level world, ItemStack bow, ItemStack ammo, LivingEntity livingEntity) {
         OdysseyArrow odysseyArrow = new OdysseyArrow(world, livingEntity, arrowType);
         // Knockback
-        odysseyArrow.knockbackModifier = ModifierUtil.getFloatModifierValue(bow, Modifiers.PROJECTILE_KNOCKBACK);
+        odysseyArrow.knockbackModifier = ModifierUtil.getUnitModifierValue(bow, Modifiers.PROJECTILE_KNOCKBACK);
         //Piercing
         odysseyArrow.setPiercingModifier(ModifierUtil.getFloatModifierValue(bow, Modifiers.PIERCING));
         // Looting

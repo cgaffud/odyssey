@@ -29,7 +29,7 @@ import java.util.Arrays;
 public abstract class OdysseyAbstractArrow extends AbstractArrow {
     private static final EntityDataAccessor<Byte> LOOTING_LEVEL = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> LARCENY_LEVEL = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BYTE);
-    public float knockbackModifier = 0.0f;
+    public float knockbackModifier = 1.0f;
     // Decreases damage of arrow on last piercing
     public float piercingDamagePenalty = 1.0f;
 

@@ -2,6 +2,8 @@ package com.bedmen.odyssey.weapon;
 
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -139,7 +141,7 @@ public class WeaponUtil {
     }
 
     public static int getRangedChargeTime(ItemStack itemStack, int baseMaxChargeTicks){
-        return Mth.floor(EnchantmentUtil.getQuickChargeTime(baseMaxChargeTicks, itemStack) * EnchantmentUtil.getSuperChargeMultiplier(itemStack));
+        return Mth.floor(baseMaxChargeTicks * ModifierUtil.getUnitModifierValue(itemStack, Modifiers.MAX_CHARGE_TIME));
     }
 
     public static boolean isDualWielding(Player player){
