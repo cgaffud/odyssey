@@ -6,7 +6,7 @@ import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import com.bedmen.odyssey.util.StringUtil;
-import com.bedmen.odyssey.weapon.ArrowType;
+import com.bedmen.odyssey.combat.ArrowType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;

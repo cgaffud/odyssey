@@ -1,13 +1,14 @@
-package com.bedmen.odyssey.weapon;
+package com.bedmen.odyssey.combat;
 
-public enum BowAbility implements Ability {
-    SPYGLASS("spyglass", true),
-    REPEAT("repeat", true);
+public enum SetBonusAbility implements Ability {
+    SLOW_FALL("slow_fall", true),
+    GLIDE_1("glide_1", true),
+    GLIDE_2("glide_2", true);
 
     public final String id;
     public final boolean showOnRegularTooltip;
 
-    BowAbility(String id, boolean showOnRegularTooltip){
+    SetBonusAbility(String id, boolean showOnRegularTooltip){
         this.id = id;
         this.showOnRegularTooltip = showOnRegularTooltip;
     }

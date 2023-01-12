@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.armor;
+package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.enchantment.SetBonusEnchSup;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;

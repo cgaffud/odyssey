@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.equipment.base;
 
-import com.bedmen.odyssey.armor.OdysseyArmorMaterials;
+import com.bedmen.odyssey.combat.OdysseyArmorMaterials;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.enchantment.SetBonusEnchSup;
 import com.bedmen.odyssey.items.equipment.HollowCoconutItem;

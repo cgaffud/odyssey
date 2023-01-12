@@ -6,9 +6,8 @@ import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.modifier.MultishotModifier;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
-import com.bedmen.odyssey.weapon.*;
+import com.bedmen.odyssey.combat.*;
 import com.google.common.collect.Lists;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -26,7 +25,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -48,7 +46,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegisterItemModelProperty, OdysseyAbilityWeapon, OdysseyRangedAmmoWeapon {
+public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegisterItemModelProperty, OdysseyAbilityItem, OdysseyRangedAmmoWeapon {
     private boolean startSoundPlayed = false;
     private boolean midLoadSoundPlayed = false;
     private final float damageMultiplier;
@@ -59,11 +57,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         super(propertiesIn);
         this.damageMultiplier = damageMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
-        this.abilityHolder = new AbilityHolder(new ArrayList<>(bowAbilityList));
-    }
-
-    public boolean hasAbility(BowAbility bowAbility){
-        return this.abilityHolder.abilityList.contains(bowAbility);
+        this.abilityHolder = new AbilityHolder(bowAbilityList);
     }
 
     public AbilityHolder getAbilityHolder(){
@@ -84,7 +78,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             performShooting(level, player, interactionHand, crossbow, getShootingVelocity(crossbow), 1.0F);
             setCharged(crossbow, false);
             return InteractionResultHolder.consume(crossbow);
-        } else if (WeaponUtil.hasAmmo(player,crossbow)) {
+        } else if (CombatUtil.hasAmmo(player,crossbow)) {
             if (!isCharged(crossbow)) {
                 this.startSoundPlayed = false;
                 this.midLoadSoundPlayed = false;
@@ -99,7 +93,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
     public void releaseUsing(ItemStack crossbow, Level level, LivingEntity livingEntity, int count) {
         int useTicks = this.getUseDuration(crossbow) - count;
-        if (useTicks >= WeaponUtil.getRangedMaxChargeTicks(crossbow) && !isCharged(crossbow) && tryLoadProjectiles(livingEntity, crossbow)) {
+        if (useTicks >= CombatUtil.getRangedMaxChargeTicks(crossbow) && !isCharged(crossbow) && tryLoadProjectiles(livingEntity, crossbow)) {
             setCharged(crossbow, true);
             SoundSource soundsource = livingEntity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
             level.playSound((Player)null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundsource, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
@@ -111,10 +105,10 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
         int numberOfArrows = MultishotModifier.strengthToNumberOfTotalArrows(ModifierUtil.getFloatModifierValue(crossbow, Modifiers.MULTISHOT));
         boolean isPlayer = livingEntity instanceof Player;
         boolean flag = isPlayer && ((Player)livingEntity).getAbilities().instabuild;
-        WeaponUtil.AmmoStack ammoStack;
+        CombatUtil.AmmoStack ammoStack;
         ItemStack itemstack;
         if(isPlayer){
-            ammoStack = WeaponUtil.getAmmo((Player)livingEntity, crossbow, false);
+            ammoStack = CombatUtil.getAmmo((Player)livingEntity, crossbow, false);
             itemstack = ammoStack.ammo;
             CompoundTag compoundTag = crossbow.getOrCreateTag();
             compoundTag.putBoolean("QuiverFreeAmmo", !ammoStack.canPickUp);
@@ -289,7 +283,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, crossbow);
             SoundEvent soundevent = this.getStartSound(i);
             SoundEvent soundevent1 = i == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
-            float f = WeaponUtil.getChargeFactor(livingEntity, crossbow);
+            float f = CombatUtil.getChargeFactor(livingEntity, crossbow);
             if (f < 0.2F) {
                 this.startSoundPlayed = false;
                 this.midLoadSoundPlayed = false;
@@ -305,14 +299,14 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
                 level.playSound((Player)null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), soundevent1, SoundSource.PLAYERS, 0.5F, 1.0F);
             }
         }
-        if(WeaponUtil.getChargeFactor(livingEntity, crossbow) >= 1.0f && this.hasAbility(BowAbility.REPEAT)){
+        if(CombatUtil.getChargeFactor(livingEntity, crossbow) >= 1.0f && this.hasAbility(BowAbility.REPEAT)){
             livingEntity.stopUsingItem();
             this.releaseUsing(crossbow, level, livingEntity, count);
         }
     }
 
     public int getUseDuration(ItemStack crossbow) {
-        return WeaponUtil.getRangedMaxChargeTicks(crossbow) + 3;
+        return CombatUtil.getRangedMaxChargeTicks(crossbow) + 3;
     }
 
     public UseAnim getUseAnimation(ItemStack crossbow) {
@@ -337,7 +331,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
     }
 
     public float getShootingVelocity(ItemStack crossbow) {
-        float velocity = WeaponUtil.getMaxArrowVelocity(crossbow, true);
+        float velocity = CombatUtil.getMaxArrowVelocity(crossbow, true);
         velocity *= containsChargedProjectile(crossbow, Items.FIREWORK_ROCKET) ? 0.5f : 1.0f;
         return velocity;
     }
@@ -351,7 +345,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             if (!flag && !inCreative && !multishotArrow && !crossbow.getOrCreateTag().getBoolean("QuiverFreeAmmo")) {
                 boolean quiverFlag = false;
                 if(livingEntity instanceof Player){
-                    quiverFlag = WeaponUtil.tryToConsumeFromQuiver((Player)livingEntity, ammo);
+                    quiverFlag = CombatUtil.tryToConsumeFromQuiver((Player)livingEntity, ammo);
                 }
                 itemstack = ammo.split(1);
                 if(!quiverFlag) {
@@ -391,7 +385,7 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
             if (livingEntity == null) {
                 return 0.0F;
             } else {
-                return CrossbowItem.isCharged(itemStack) ? 0.0F : WeaponUtil.getChargeFactor(livingEntity, itemStack);
+                return CrossbowItem.isCharged(itemStack) ? 0.0F : CombatUtil.getChargeFactor(livingEntity, itemStack);
             }
         });
         ItemProperties.register(this, new ResourceLocation("pulling"), (itemStack, clientLevel, livingEntity, i) -> {
@@ -407,10 +401,10 @@ public class OdysseyCrossbowItem extends CrossbowItem implements INeedsToRegiste
 
     public void appendHoverText(ItemStack crossbow, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(crossbow, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(WeaponUtil.getMaxDamageMultiplier(crossbow))).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(WeaponUtil.getRangedMaxChargeTicks(crossbow))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(CombatUtil.getMaxDamageMultiplier(crossbow))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(CombatUtil.getRangedMaxChargeTicks(crossbow))).withStyle(ChatFormatting.BLUE));
         if (flagIn.isAdvanced()) {
-            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(WeaponUtil.getMaxArrowVelocity(crossbow, true))).withStyle(ChatFormatting.BLUE));
+            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(CombatUtil.getMaxArrowVelocity(crossbow, true))).withStyle(ChatFormatting.BLUE));
         }
     }
 

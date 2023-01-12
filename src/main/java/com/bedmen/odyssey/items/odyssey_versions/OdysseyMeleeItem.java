@@ -2,14 +2,13 @@ package com.bedmen.odyssey.items.odyssey_versions;
 
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
-import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
-import com.bedmen.odyssey.weapon.MeleeWeaponClass;
-import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
-import com.bedmen.odyssey.weapon.WeaponUtil;
+import com.bedmen.odyssey.combat.MeleeWeaponAbility;
+import com.bedmen.odyssey.combat.MeleeWeaponClass;
+import com.bedmen.odyssey.combat.OdysseyMeleeWeapon;
+import com.bedmen.odyssey.combat.CombatUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -28,7 +27,6 @@ import net.minecraft.world.level.material.Material;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -101,7 +99,7 @@ public class OdysseyMeleeItem extends TieredItem implements Vanishable, OdysseyM
     }
 
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
-        if(entity instanceof Player player && WeaponUtil.isDualWielding(player) && player.getRandom().nextBoolean()){
+        if(entity instanceof Player player && CombatUtil.isDualWielding(player) && player.getRandom().nextBoolean()){
             player.getOffhandItem().hurtAndBreak(amount, entity, (p_41007_) -> {
                 p_41007_.broadcastBreakEvent(EquipmentSlot.OFFHAND);
             });

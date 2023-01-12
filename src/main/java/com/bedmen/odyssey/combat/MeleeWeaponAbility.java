@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.weapon;
+package com.bedmen.odyssey.combat;
 
 public enum MeleeWeaponAbility implements Ability {
     SHIELD_BASH("shield_bash", true),

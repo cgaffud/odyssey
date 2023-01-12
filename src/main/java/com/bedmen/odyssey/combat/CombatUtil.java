@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.weapon;
+package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Predicate;
 
-public class WeaponUtil {
+public class CombatUtil {
     public static final int DEFAULT_RECOVERY_TIME = 100;
     public static final float BASE_ARROW_VELOCITY = 2.5f;
     public static final float BASE_ARROW_VELOCITY_ENEMIES = 1.6f;
@@ -149,7 +149,7 @@ public class WeaponUtil {
     }
 
     public static boolean isDualWieldItem(ItemStack itemStack){
-        return itemStack.getItem() instanceof OdysseyMeleeWeapon odysseyMeleeWeapon && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.DUAL_WIELD);
+        return itemStack.getItem() instanceof OdysseyMeleeWeapon odysseyMeleeWeapon && odysseyMeleeWeapon.hasAbility(MeleeWeaponAbility.DUAL_WIELD);
     }
 
     public static void smackTarget(SmackPush smackPush) {
@@ -184,10 +184,10 @@ public class WeaponUtil {
             }
             if(equipmentSlot != null) {
                 ItemStack itemStack = target.getItemBySlot(equipmentSlot);
-                WeaponUtil.tryStealItem(itemStack, user, target, equipmentSlot, larcenyChance);
+                CombatUtil.tryStealItem(itemStack, user, target, equipmentSlot, larcenyChance);
             }
             if(target instanceof AbstractIllager || target instanceof AbstractVillager) {
-                WeaponUtil.tryStealItem(Items.EMERALD.getDefaultInstance(), user, target, null, larcenyChance);
+                CombatUtil.tryStealItem(Items.EMERALD.getDefaultInstance(), user, target, null, larcenyChance);
             }
         }
     }
@@ -231,7 +231,7 @@ public class WeaponUtil {
     }
 
     public static float getChargeFactor(LivingEntity livingEntity, ItemStack itemStack){
-        return Mth.clamp((float)livingEntity.getTicksUsingItem() / (float)WeaponUtil.getRangedMaxChargeTicks(itemStack), 0.0f, 1.0f);
+        return Mth.clamp((float)livingEntity.getTicksUsingItem() / (float) CombatUtil.getRangedMaxChargeTicks(itemStack), 0.0f, 1.0f);
     }
 
     private static float getCharge(int useTicks, ItemStack bow){
@@ -260,5 +260,25 @@ public class WeaponUtil {
 
     private static float getVelocityFactorFromCharge(float charge){
         return Mth.sqrt((charge * charge + charge * 2.0F) / 3.0F);
+    }
+
+    public static boolean hasSetBonusAbility(LivingEntity livingEntity, SetBonusAbility setBonusAbility){
+        for(ItemStack itemStack: livingEntity.getArmorSlots()){
+            if(!(itemStack.getItem() instanceof OdysseyAbilityItem odysseyAbilityItem && odysseyAbilityItem.hasAbility(setBonusAbility))){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static int getGlidingLevel(LivingEntity livingEntity){
+        if(hasSetBonusAbility(livingEntity, SetBonusAbility.GLIDE_2)){
+            return 2;
+        }
+        if(hasSetBonusAbility(livingEntity, SetBonusAbility.GLIDE_1)){
+            return 1;
+        }
+        return 0;
+
     }
 }

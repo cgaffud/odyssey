@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.block;
 
-import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
-import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
+import com.bedmen.odyssey.combat.MeleeWeaponAbility;
+import com.bedmen.odyssey.combat.OdysseyMeleeWeapon;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +25,7 @@ public class OdysseyWebBlock extends WebBlock implements INeedsToRegisterRenderT
     public float getDestroyProgress(BlockState blockState, Player player, BlockGetter blockGetter, BlockPos blockPos) {
         float f = blockState.getDestroySpeed(blockGetter, blockPos);
         Item item = player.getMainHandItem().getItem();
-        if(item instanceof SwordItem || item == Items.SHEARS || (item instanceof OdysseyMeleeWeapon odysseyMeleeWeapon && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.COBWEB_BREAK))){
+        if(item instanceof SwordItem || item == Items.SHEARS || (item instanceof OdysseyMeleeWeapon odysseyMeleeWeapon && odysseyMeleeWeapon.hasAbility(MeleeWeaponAbility.COBWEB_BREAK))){
             f /= 15f;
         }
         int i = ForgeHooks.isCorrectToolForDrops(blockState, player) ? 30 : 100;

@@ -87,11 +87,11 @@ public class OdysseyIngameGui extends ForgeIngameGui
 
         if (player instanceof OdysseyLivingEntity odysseyLivingEntity)
         {
-            int maxGlidingTicks = odysseyLivingEntity.getMaxFlightTicks();
-            if(maxGlidingTicks > 0){
-                int glidingTicksLeft = maxGlidingTicks - odysseyLivingEntity.getFlightTicks();
-                int full = Mth.ceil((double)(glidingTicksLeft - 1.99f) * 10.0D / maxGlidingTicks);
-                int partial = Mth.ceil((double)glidingTicksLeft * 10.0D / maxGlidingTicks) - full;
+            int maxFlight = odysseyLivingEntity.getMaxFlight();
+            if(maxFlight > 0){
+                double flight = odysseyLivingEntity.getFlightValue();
+                int full = Mth.ceil((flight - 1.99d) * 10.0D / (double)maxFlight);
+                int partial = Mth.ceil(flight * 10.0D / (double)maxFlight) - full;
 
                 for (int i = 0; i < full + partial; ++i)
                 {

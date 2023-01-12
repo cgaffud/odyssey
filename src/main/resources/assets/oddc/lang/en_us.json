@@ -497,6 +497,9 @@
   "abilities.oddc.smack": "Smack",
   "abilities.oddc.spyglass": "Spyglass [Sneak Key]",
   "abilities.oddc.repeat": "Repeat",
+  "abilities.oddc.slow_fall": "Slow Fall [Sneak Key]",
+  "abilities.oddc.glide_1": "Glide (1s) [Jump Key]",
+  "abilities.oddc.glide_2": "Glide (2s) [Jump Key]",
   "item.oddc.innate_modifier": "Innate Modifiers:",
   "item.oddc.added_modifier": "Added Modifiers:",
   "modifier.oddc.damage_against_arthropod": "+%s Damage Against Athropods",
@@ -525,5 +528,6 @@
   "modifier.oddc.projectile_looting_luck": "%s Looting Luck",
   "modifier.oddc.projectile_poison_damage": "%s Poison Damage",
   "modifier.oddc.projectile_cobweb_chance": "%s Cobweb Chance",
-  "modifier.oddc.projectile_larceny_chance": "%s Projectile Larceny Chance"
+  "modifier.oddc.projectile_larceny_chance": "%s Projectile Larceny Chance",
+  "modifier.oddc.feather_falling": "+%s Feather Falling"
 }

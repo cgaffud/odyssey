@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.armor.OdysseyArmorMaterials;
+import com.bedmen.odyssey.combat.*;
 import com.bedmen.odyssey.modifier.ModifierInstance;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
@@ -17,10 +17,6 @@ import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
-import com.bedmen.odyssey.weapon.ArrowType;
-import com.bedmen.odyssey.weapon.BowAbility;
-import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
-import com.bedmen.odyssey.weapon.MeleeWeaponClass;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -317,20 +313,20 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CACTUS_LEGGINGS = ITEMS.register("cactus_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CACTUS, EquipmentSlot.LEGS, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR)));
     public static final RegistryObject<Item> CACTUS_BOOTS = ITEMS.register("cactus_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CACTUS, EquipmentSlot.FEET, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR)));
     
-    public static final RegistryObject<Item> CHICKEN_HELMET = ITEMS.register("chicken_helmet", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CHICKEN, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), FALL_PROTECTION[1]));
-    public static final RegistryObject<Item> CHICKEN_CHESTPLATE = ITEMS.register("chicken_chestplate", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CHICKEN, EquipmentSlot.CHEST, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), FALL_PROTECTION[1]));
-    public static final RegistryObject<Item> CHICKEN_LEGGINGS = ITEMS.register("chicken_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CHICKEN, EquipmentSlot.LEGS, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), FALL_PROTECTION[1]));
-    public static final RegistryObject<Item> CHICKEN_BOOTS = ITEMS.register("chicken_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterials.CHICKEN, EquipmentSlot.FEET, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), FALL_PROTECTION[1]));
+    public static final RegistryObject<Item> CHICKEN_HELMET = ITEMS.register("chicken_helmet", () -> new InnateModifierArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.CHICKEN, EquipmentSlot.HEAD, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 1.0f))));
+    public static final RegistryObject<Item> CHICKEN_CHESTPLATE = ITEMS.register("chicken_chestplate", () -> new InnateModifierArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.CHICKEN, EquipmentSlot.CHEST, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 1.0f))));
+    public static final RegistryObject<Item> CHICKEN_LEGGINGS = ITEMS.register("chicken_leggings", () -> new InnateModifierArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.CHICKEN, EquipmentSlot.LEGS, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 1.0f))));
+    public static final RegistryObject<Item> CHICKEN_BOOTS = ITEMS.register("chicken_boots", () -> new InnateModifierArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.CHICKEN, EquipmentSlot.FEET, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 1.0f))));
 
     public static final RegistryObject<Item> FUR_HELMET = ITEMS.register("fur_helmet", () -> new EquipmentArmorItem(OdysseyArmorMaterials.FUR, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ICE_PROTECTION[1]));
     public static final RegistryObject<Item> FUR_CHESTPLATE = ITEMS.register("fur_chestplate", () -> new EquipmentArmorItem(OdysseyArmorMaterials.FUR, EquipmentSlot.CHEST, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ICE_PROTECTION[1]));
     public static final RegistryObject<Item> FUR_LEGGINGS = ITEMS.register("fur_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterials.FUR, EquipmentSlot.LEGS, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ICE_PROTECTION[1]));
     public static final RegistryObject<Item> FUR_BOOTS = ITEMS.register("fur_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterials.FUR, EquipmentSlot.FEET, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ICE_PROTECTION[1]));
 
-    public static final RegistryObject<Item> GLIDER_HELMET = ITEMS.register("glider_helmet", () -> new EquipmentArmorItem(OdysseyArmorMaterials.GLIDER, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), KINETIC_PROTECTION[1]));
-    public static final RegistryObject<Item> GLIDER_CHESTPLATE = ITEMS.register("glider_chestplate", () -> new GlidingAmorItem(OdysseyArmorMaterials.GLIDER, EquipmentSlot.CHEST, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), KINETIC_PROTECTION[1]));
-    public static final RegistryObject<Item> GLIDER_LEGGINGS = ITEMS.register("glider_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterials.GLIDER, EquipmentSlot.LEGS, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), KINETIC_PROTECTION[1]));
-    public static final RegistryObject<Item> GLIDER_BOOTS = ITEMS.register("glider_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterials.GLIDER, EquipmentSlot.FEET, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), KINETIC_PROTECTION[1]));
+    public static final RegistryObject<Item> GLIDER_HELMET = ITEMS.register("glider_helmet", () -> new GlidingAmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.GLIDER, EquipmentSlot.HEAD, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 1.5f))));
+    public static final RegistryObject<Item> GLIDER_CHESTPLATE = ITEMS.register("glider_chestplate", () -> new GlidingAmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.GLIDER, EquipmentSlot.CHEST, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 1.5f))));
+    public static final RegistryObject<Item> GLIDER_LEGGINGS = ITEMS.register("glider_leggings", () -> new GlidingAmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.GLIDER, EquipmentSlot.LEGS, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 1.5f))));
+    public static final RegistryObject<Item> GLIDER_BOOTS = ITEMS.register("glider_boots", () -> new GlidingAmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.GLIDER, EquipmentSlot.FEET, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 1.5f))));
 
     public static final RegistryObject<Item> TURTLE_HELMET = ITEMS.register("turtle_helmet", () -> new EquipmentArmorItem(OdysseyArmorMaterials.TURTLE, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), RESPIRATION[1]));
     public static final RegistryObject<Item> TURTLE_CHESTPLATE = ITEMS.register("turtle_chestplate", () -> new EquipmentArmorItem(OdysseyArmorMaterials.TURTLE, EquipmentSlot.CHEST, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), RESPIRATION[1]));
@@ -349,11 +345,11 @@ public class ItemRegistry {
     public static final RegistryObject<Item> PARKA_LEGGINGS = ITEMS.register("parka_leggings", () -> new DyeableEquipmentArmorItem(OdysseyArmorMaterials.PARKA, EquipmentSlot.LEGS, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ICE_PROTECTION[2]));
     public static final RegistryObject<Item> PARKA_BOOTS = ITEMS.register("parka_boots", () -> new DyeableEquipmentArmorItem(OdysseyArmorMaterials.PARKA, EquipmentSlot.FEET, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ICE_PROTECTION[2]));
 
-    public static final RegistryObject<Item> ZEPHYR_HELMET = ITEMS.register("zephyr_helmet", () -> new EquipmentArmorItem(OdysseyArmorMaterials.ZEPHYR, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), KINETIC_PROTECTION[2]));
-    public static final RegistryObject<Item> ZEPHYR_CHESTPLATE = ITEMS.register("zephyr_chestplate", () -> new GlidingAmorItem(OdysseyArmorMaterials.ZEPHYR, EquipmentSlot.CHEST, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), KINETIC_PROTECTION[2]));
-    public static final RegistryObject<Item> ZEPHYR_LEGGINGS = ITEMS.register("zephyr_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterials.ZEPHYR, EquipmentSlot.LEGS, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), KINETIC_PROTECTION[2]));
-    public static final RegistryObject<Item> ZEPHYR_BOOTS = ITEMS.register("zephyr_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterials.ZEPHYR, EquipmentSlot.FEET, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), KINETIC_PROTECTION[2]));
-
+    public static final RegistryObject<Item> ZEPHYR_HELMET = ITEMS.register("zephyr_helmet", () -> new GlidingAmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.ZEPHYR, EquipmentSlot.HEAD, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 2.0f))));
+    public static final RegistryObject<Item> ZEPHYR_CHESTPLATE = ITEMS.register("zephyr_chestplate", () -> new GlidingAmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.ZEPHYR, EquipmentSlot.CHEST, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 2.0f))));
+    public static final RegistryObject<Item> ZEPHYR_LEGGINGS = ITEMS.register("zephyr_leggings", () -> new GlidingAmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.ZEPHYR, EquipmentSlot.LEGS, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 2.0f))));
+    public static final RegistryObject<Item> ZEPHYR_BOOTS = ITEMS.register("zephyr_boots", () -> new GlidingAmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.ZEPHYR, EquipmentSlot.FEET, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 2.0f))));
+    
     public static final RegistryObject<Item> STERLING_SILVER_HELMET = ITEMS.register("sterling_silver_helmet", () -> new ArmorItem(OdysseyArmorMaterials.STERLING_SILVER, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR)));
     public static final RegistryObject<Item> STERLING_SILVER_CHESTPLATE = ITEMS.register("sterling_silver_chestplate", () -> new ArmorItem(OdysseyArmorMaterials.STERLING_SILVER, EquipmentSlot.CHEST, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR)));
     public static final RegistryObject<Item> STERLING_SILVER_LEGGINGS = ITEMS.register("sterling_silver_leggings", () -> new ArmorItem(OdysseyArmorMaterials.STERLING_SILVER, EquipmentSlot.LEGS, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR)));

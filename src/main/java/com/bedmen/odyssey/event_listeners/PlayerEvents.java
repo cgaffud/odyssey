@@ -1,20 +1,14 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.items.innate_modifier.InnateModifierItem;
-import com.bedmen.odyssey.modifier.Modifier;
+import com.bedmen.odyssey.combat.*;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
-import com.bedmen.odyssey.weapon.OdysseyAbilityWeapon;
-import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
-import com.bedmen.odyssey.weapon.SmackPush;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -35,7 +29,6 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
@@ -73,13 +66,22 @@ public class PlayerEvents {
 
             }
         } else { //End of Tick
-            //Server Side
-            if(event.side == LogicalSide.SERVER){
-                if (EnchantmentUtil.hasTurtling(player) && player.isShiftKeyDown()) {
-                    player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1, 0, false, false, true));
+            // Gliding
+            if(player instanceof OdysseyLivingEntity odysseyLivingEntity){
+                odysseyLivingEntity.setFlightLevels(CombatUtil.hasSetBonusAbility(player, SetBonusAbility.SLOW_FALL), CombatUtil.getGlidingLevel(player));
+                if(player.isShiftKeyDown() && CombatUtil.hasSetBonusAbility(player, SetBonusAbility.SLOW_FALL) && odysseyLivingEntity.getFlightValue() > 0){
+                    odysseyLivingEntity.decrementFlight();
+                    if(!player.level.isClientSide){
+                        player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 2, 0, false, false, true));
+                    }
+                } else if(player.isOnGround()) {
+                    odysseyLivingEntity.incrementFlight();
                 }
-            } else { //Client Side
+            }
 
+            // Turtling
+            if (EnchantmentUtil.hasTurtling(player) && player.isShiftKeyDown() && !player.level.isClientSide) {
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1, 0, false, false, true));
             }
         }
     }
@@ -129,7 +131,7 @@ public class PlayerEvents {
                     && !hasExtraKnockbackFromSprinting
                     && player.isOnGround()
                     && (player.walkDist - player.walkDistO) < (double)player.getSpeed()
-                    && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.SWEEP);
+                    && odysseyMeleeWeapon.hasAbility(MeleeWeaponAbility.SWEEP);
             float sweepDamage = ModifierUtil.getUnitModifierValue(itemStack, Modifiers.ADDITIONAL_SWEEP_DAMAGE);
             // Sweep
             if(canSweep){
@@ -147,7 +149,7 @@ public class PlayerEvents {
                 player.sweepAttack();
             }
             // Smack
-            if(isFullyCharged && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
+            if(isFullyCharged && odysseyMeleeWeapon.hasAbility(MeleeWeaponAbility.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
                 odysseyLivingEntity.setSmackPush(new SmackPush(attackStrengthScale, player, target));
             }
         }
@@ -159,8 +161,8 @@ public class PlayerEvents {
         Item item = itemStack.getItem();
         TooltipFlag tooltipFlag = event.getFlags();
         List<Component> componentList = new ArrayList<>();
-        if(item instanceof OdysseyAbilityWeapon odysseyAbilityWeapon){
-            odysseyAbilityWeapon.getAbilityHolder().addTooltip(componentList, tooltipFlag);
+        if(item instanceof OdysseyAbilityItem odysseyAbilityItem){
+            odysseyAbilityItem.getAbilityHolder().addTooltip(componentList, tooltipFlag);
         }
         ModifierUtil.addModifierTooltip(itemStack, componentList, tooltipFlag);
 

@@ -2,9 +2,9 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyCrossbowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.weapon.MeleeWeaponAbility;
-import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
-import com.bedmen.odyssey.weapon.WeaponUtil;
+import com.bedmen.odyssey.combat.MeleeWeaponAbility;
+import com.bedmen.odyssey.combat.OdysseyMeleeWeapon;
+import com.bedmen.odyssey.combat.CombatUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -79,7 +79,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
             case 3,4 -> Items.GOLDEN_SWORD;
         };
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
-        if (item instanceof OdysseyMeleeWeapon odysseyMeleeWeapon && odysseyMeleeWeapon.getMeleeWeaponClass().hasAbility(MeleeWeaponAbility.DUAL_WIELD)) {
+        if (item instanceof OdysseyMeleeWeapon odysseyMeleeWeapon && odysseyMeleeWeapon.hasAbility(MeleeWeaponAbility.DUAL_WIELD)) {
             this.setItemSlot(EquipmentSlot.OFFHAND, item.getDefaultInstance());
         }
         this.reassessWeaponGoal();
@@ -130,7 +130,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
 
     @Override
     public void shootCrossbowProjectile(LivingEntity livingEntity, ItemStack crossbow, Projectile projectile, float angle) {
-        float velocity = WeaponUtil.getMaxArrowVelocity(crossbow, false);
+        float velocity = CombatUtil.getMaxArrowVelocity(crossbow, false);
         this.shootCrossbowProjectile(this, livingEntity, projectile, angle, velocity);
     }
 

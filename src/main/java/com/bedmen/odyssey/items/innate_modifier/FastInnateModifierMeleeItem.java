@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.items.innate_modifier;
 
 import com.bedmen.odyssey.modifier.ModifierInstance;
-import com.bedmen.odyssey.weapon.MeleeWeaponClass;
+import com.bedmen.odyssey.combat.MeleeWeaponClass;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Tier;

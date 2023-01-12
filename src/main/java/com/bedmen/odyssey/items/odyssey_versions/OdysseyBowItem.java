@@ -6,9 +6,8 @@ import com.bedmen.odyssey.items.innate_modifier.InnateModifierArrowItem;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
-import com.bedmen.odyssey.weapon.*;
+import com.bedmen.odyssey.combat.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
@@ -17,7 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -33,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModelProperty, OdysseyAbilityWeapon, OdysseyRangedAmmoWeapon {
+public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModelProperty, OdysseyAbilityItem, OdysseyRangedAmmoWeapon {
     public final float damageMultiplier;
     public final int baseMaxChargeTicks;
     private final AbilityHolder abilityHolder;
@@ -42,7 +40,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         super(builder);
         this.damageMultiplier = damageMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
-        this.abilityHolder = new AbilityHolder(new ArrayList<>(bowAbilityList));
+        this.abilityHolder = new AbilityHolder(bowAbilityList);
     }
 
     public int getBaseMaxChargeTicks(){
@@ -53,16 +51,12 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         return this.damageMultiplier + ConditionalAmpUtil.getDamageTag(bow);
     }
 
-    public boolean hasAbility(BowAbility bowAbility){
-        return this.abilityHolder.abilityList.contains(bowAbility);
-    }
-
     public AbilityHolder getAbilityHolder(){
         return this.abilityHolder;
     }
 
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int count) {
-        if(this.getUseDuration(itemStack) - count > WeaponUtil.getRangedMaxChargeTicks(itemStack) && this.hasAbility(BowAbility.REPEAT)){
+        if(this.getUseDuration(itemStack) - count > CombatUtil.getRangedMaxChargeTicks(itemStack) && this.hasAbility(BowAbility.REPEAT)){
             livingEntity.stopUsingItem();
             this.releaseUsing(itemStack, level, livingEntity, count);
         }
@@ -72,7 +66,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
         if (livingEntity instanceof Player) {
             Player player = (Player)livingEntity;
             boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bow) > 0;
-            WeaponUtil.AmmoStack ammoStack = WeaponUtil.getAmmo(player, bow, true);
+            CombatUtil.AmmoStack ammoStack = CombatUtil.getAmmo(player, bow, true);
             ItemStack ammo = ammoStack.ammo;
 
             int useTicks = this.getUseDuration(bow) - useItemRemainingTicks;
@@ -85,14 +79,14 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
                 }
 
                 if (useTicks >= 3) {
-                    float velocity = WeaponUtil.getArrowVelocityForUseTicks(useTicks, bow, true);
+                    float velocity = CombatUtil.getArrowVelocityForUseTicks(useTicks, bow, true);
                     boolean flag1 = player.getAbilities().instabuild || (ammo.getItem() instanceof ArrowItem && ((ArrowItem)ammo.getItem()).isInfinite(ammo, bow, player));
                     if (!level.isClientSide) {
                         InnateModifierArrowItem arrowItem = (InnateModifierArrowItem)(ammo.getItem() instanceof InnateModifierArrowItem ? ammo.getItem() : Items.ARROW);
                         OdysseyAbstractArrow odysseyAbstractArrow = arrowItem.createAbstractOdysseyArrow(level, bow, ammo, player);
 
                         float inaccuracy = 1.0f / ModifierUtil.getUnitModifierValue(bow, Modifiers.ACCURACY);
-                        if(useTicks >= WeaponUtil.getRangedMaxChargeTicks(bow)){
+                        if(useTicks >= CombatUtil.getRangedMaxChargeTicks(bow)){
                             odysseyAbstractArrow.setCritArrow(true);
                         }
 
@@ -124,7 +118,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack bow = player.getItemInHand(interactionHand);
-        boolean flag = WeaponUtil.hasAmmo(player, bow);
+        boolean flag = CombatUtil.hasAmmo(player, bow);
 
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(bow, level, player, interactionHand, flag);
         if (ret != null) return ret;
@@ -147,7 +141,7 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
             if (livingEntity == null) {
                 return 0.0F;
             } else {
-                return livingEntity.getUseItem() != itemStack ? 0.0F : WeaponUtil.getChargeFactor(livingEntity, itemStack);
+                return livingEntity.getUseItem() != itemStack ? 0.0F : CombatUtil.getChargeFactor(livingEntity, itemStack);
             }
         });
         ItemProperties.register(this, new ResourceLocation("pulling"), (itemStack, clientLevel, livingEntity, i) -> {
@@ -157,10 +151,10 @@ public class OdysseyBowItem extends BowItem implements INeedsToRegisterItemModel
 
     public void appendHoverText(ItemStack bow, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(bow, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(WeaponUtil.getMaxDamageMultiplier(bow))).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(WeaponUtil.getRangedMaxChargeTicks(bow))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(CombatUtil.getMaxDamageMultiplier(bow))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(CombatUtil.getRangedMaxChargeTicks(bow))).withStyle(ChatFormatting.BLUE));
         if (flagIn.isAdvanced()) {
-            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(WeaponUtil.getMaxArrowVelocity(bow, true))).withStyle(ChatFormatting.BLUE));
+            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(CombatUtil.getMaxArrowVelocity(bow, true))).withStyle(ChatFormatting.BLUE));
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.loot.modifiers;
 
-import com.bedmen.odyssey.weapon.WeaponUtil;
+import com.bedmen.odyssey.combat.CombatUtil;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +23,7 @@ public class DoubleDualWieldItemModifier extends LootModifier {
     public List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
         List<ItemStack> addList = new ArrayList<>();
         for(ItemStack itemStack : generatedLoot){
-            if(WeaponUtil.isDualWieldItem(itemStack)){
+            if(CombatUtil.isDualWieldItem(itemStack)){
                 addList.add(itemStack.copy());
             }
         }

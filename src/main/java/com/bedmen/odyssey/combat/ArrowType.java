@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.weapon;
+package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.modifier.ModifierInstance;

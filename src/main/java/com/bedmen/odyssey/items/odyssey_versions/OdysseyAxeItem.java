@@ -1,16 +1,9 @@
 package com.bedmen.odyssey.items.odyssey_versions;
 
-import com.bedmen.odyssey.weapon.MeleeWeaponClass;
-import com.bedmen.odyssey.weapon.OdysseyMeleeWeapon;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
+import com.bedmen.odyssey.combat.MeleeWeaponClass;
+import com.bedmen.odyssey.combat.OdysseyMeleeWeapon;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class OdysseyAxeItem extends AxeItem implements OdysseyMeleeWeapon {
     public final MeleeWeaponClass meleeWeaponClass;

@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.entity.ai;
 
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
-import com.bedmen.odyssey.weapon.WeaponUtil;
+import com.bedmen.odyssey.combat.CombatUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
@@ -118,9 +118,9 @@ public class OdysseyRangedBowAttackGoal<T extends net.minecraft.world.entity.Mob
                     this.mob.stopUsingItem();
                 } else if (flag) {
                     int i = this.mob.getTicksUsingItem();
-                    if (i >= WeaponUtil.getRangedMaxChargeTicks(bow)) {
+                    if (i >= CombatUtil.getRangedMaxChargeTicks(bow)) {
                         this.mob.stopUsingItem();
-                        this.mob.performRangedAttack(livingentity, WeaponUtil.getMaxDamageMultiplier(bow));
+                        this.mob.performRangedAttack(livingentity, CombatUtil.getMaxDamageMultiplier(bow));
                         this.attackTime = this.attackIntervalMin;
                     }
                 }

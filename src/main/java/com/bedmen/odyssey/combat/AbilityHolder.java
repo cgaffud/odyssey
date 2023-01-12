@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.weapon;
+package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -11,12 +11,19 @@ import java.util.stream.Collectors;
 
 public class AbilityHolder {
 
-    public final List<Ability> abilityList;
+    private final List<Ability> abilityList;
     public final List<Component> tooltipAbilityList;
     public final List<Component> advancedTooltipAbilityList;
 
-    public AbilityHolder(List<Ability> abilityList) {
-        this.abilityList = abilityList;
+    public <T extends Ability> AbilityHolder(List<T> abilityList) {
+        this.abilityList = new ArrayList<>(abilityList);
+        this.tooltipAbilityList = this.createTooltipAbilityList();
+        this.advancedTooltipAbilityList = this.createAdvancedTooltipAbilityList();
+    }
+
+    public AbilityHolder(AbilityHolder abilityHolder, Ability ability) {
+        this.abilityList = new ArrayList<>(abilityHolder.abilityList);
+        this.abilityList.add(ability);
         this.tooltipAbilityList = this.createTooltipAbilityList();
         this.advancedTooltipAbilityList = this.createAdvancedTooltipAbilityList();
     }
@@ -46,5 +53,9 @@ public class AbilityHolder {
             advancedTooltipinnateModifierList.add(0, new TranslatableComponent("item.oddc.abilities").withStyle(OdysseyChatFormatting.COPPER));
             return advancedTooltipinnateModifierList;
         }
+    }
+
+    public boolean hasAbility(Ability ability){
+        return this.abilityList.contains(ability);
     }
 }

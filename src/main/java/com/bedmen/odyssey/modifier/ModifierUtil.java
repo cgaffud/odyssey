@@ -11,11 +11,13 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.antlr.v4.misc.MutableInt;
 
 import java.util.HashMap;
 import java.util.List;
@@ -161,6 +163,19 @@ public class ModifierUtil {
             }
             return 0.0f;
         });
+    }
+
+    public static float getProtectionModifierStrength(Iterable<ItemStack> armorPieces, DamageSource damageSource){
+        float total = 0.0f;
+        for(ItemStack armorPiece: armorPieces){
+            total += getTotalStrengthForFunction(armorPiece, modifier -> {
+                if(modifier instanceof ProtectionModifier protectionModifier){
+                    return protectionModifier.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
+                }
+                return 0.0f;
+            });
+        }
+        return 5.0f * total;
     }
 
     public static void addModifierTooltip(ItemStack itemStack, List<Component> tooltip, TooltipFlag tooltipFlag){

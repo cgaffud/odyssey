@@ -1,15 +1,7 @@
-package com.bedmen.odyssey.weapon;
-
-import com.bedmen.odyssey.util.OdysseyChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.entity.player.Abilities;
-import net.minecraft.world.item.TooltipFlag;
+package com.bedmen.odyssey.combat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MeleeWeaponClass {
     // Actual Weapons
@@ -33,7 +25,7 @@ public class MeleeWeaponClass {
 
     public MeleeWeaponClass(float attackRate, List<MeleeWeaponAbility> meleeWeaponAbilityList) {
         this.attackRate = attackRate;
-        this.abilityHolder = new AbilityHolder(new ArrayList<>(meleeWeaponAbilityList));
+        this.abilityHolder = new AbilityHolder(meleeWeaponAbilityList);
     }
 
     private MeleeWeaponClass(float attackRate, AbilityHolder abilityHolder) {
@@ -42,8 +34,8 @@ public class MeleeWeaponClass {
     }
 
     public boolean hasAbility(MeleeWeaponAbility meleeWeaponAbility){
-        return this.abilityHolder.abilityList.contains(meleeWeaponAbility);
-    }
+        return this.abilityHolder.hasAbility(meleeWeaponAbility);
+    };
 
     public MeleeWeaponClass withBetterAttackSpeed() {
         return this.withAttackSpeedMultiplier(1.5f);
@@ -54,8 +46,6 @@ public class MeleeWeaponClass {
     }
 
     public MeleeWeaponClass withAbility(MeleeWeaponAbility meleeWeaponAbility) {
-        List<Ability> abilityList = new ArrayList<>(this.abilityHolder.abilityList);
-        abilityList.add(meleeWeaponAbility);
-        return new MeleeWeaponClass(attackRate, new AbilityHolder(abilityList));
+        return new MeleeWeaponClass(attackRate, new AbilityHolder(this.abilityHolder, meleeWeaponAbility));
     }
 }

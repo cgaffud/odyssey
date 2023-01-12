@@ -3,7 +3,6 @@ package com.bedmen.odyssey.entity.monster;
 import com.bedmen.odyssey.entity.ai.BoomerangAttackGoal;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
-import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.innate_modifier.InnateModifierArrowItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
@@ -12,7 +11,7 @@ import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.weapon.WeaponUtil;
+import com.bedmen.odyssey.combat.CombatUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -31,7 +30,6 @@ import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
@@ -166,8 +164,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
             double d1 = target.getY(0.3333333333333333D) - abstractarrow.getY();
             double d2 = target.getZ() - this.getZ();
             double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-            float velocity = WeaponUtil.getMaxArrowVelocity(bow, false);
-            System.out.println("v: "+velocity+" d: "+abstractarrow.getBaseDamage()+" isOdyssey: "+(abstractarrow instanceof OdysseyAbstractArrow));
+            float velocity = CombatUtil.getMaxArrowVelocity(bow, false);
             float accuracyMultiplier = ModifierUtil.getUnitModifierValue(bow, Modifiers.ACCURACY);
             abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier);
             this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
@@ -237,12 +234,12 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
             this.goalSelector.removeGoal(this.odysseyBowGoal);
             this.goalSelector.removeGoal(this.crossBowGoal);
             this.goalSelector.removeGoal(this.boomerangGoal);
-            ItemStack bow = this.getItemInHand(WeaponUtil.getHandHoldingBow(this));
+            ItemStack bow = this.getItemInHand(CombatUtil.getHandHoldingBow(this));
             Item bowItem = bow.getItem();
             ItemStack crossbow = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem));
             Item crossbowItem = crossbow.getItem();
             if (bowItem instanceof OdysseyBowItem) {
-                int i = WeaponUtil.getRangedMaxChargeTicks(bow);
+                int i = CombatUtil.getRangedMaxChargeTicks(bow);
                 if (this.level.getDifficulty() != Difficulty.HARD) {
                     i *= 2;
                 }
@@ -286,7 +283,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
 
     @Override
     public void shootCrossbowProjectile(LivingEntity livingEntity, ItemStack crossbow, Projectile projectile, float angle) {
-        float velocity = WeaponUtil.getMaxArrowVelocity(crossbow, false);
+        float velocity = CombatUtil.getMaxArrowVelocity(crossbow, false);
         this.shootCrossbowProjectile(this, livingEntity, projectile, angle, velocity);
     }
 

@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.combat.SetBonusAbility;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
@@ -8,14 +9,13 @@ import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
-import com.bedmen.odyssey.network.packet.JumpKeyPressedPacket;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.weapon.SmackPush;
-import com.bedmen.odyssey.weapon.WeaponUtil;
+import com.bedmen.odyssey.combat.SmackPush;
+import com.bedmen.odyssey.combat.CombatUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
@@ -24,13 +24,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -50,19 +47,11 @@ public class EntityEvents {
     @SubscribeEvent
     public static void onLivingUpdateEvent(final LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
-        //For Gliding Armor
-        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-            odysseyLivingEntity.setFlightLevels(EnchantmentUtil.hasSlowFalling(livingEntity), EnchantmentUtil.getGliding(livingEntity));
-            if(livingEntity.level.isClientSide && livingEntity.jumping && odysseyLivingEntity.hasSlowFalling() && livingEntity.getDeltaMovement().y < -0.1d && odysseyLivingEntity.getFlightTicks() <= odysseyLivingEntity.getMaxFlightTicks()){
-                odysseyLivingEntity.incrementFlightTicks(20);
-                OdysseyNetwork.CHANNEL.sendToServer(new JumpKeyPressedPacket());
-            } else if(livingEntity.isOnGround()) {
-                odysseyLivingEntity.decrementFlightTicks();
-            }
 
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Perform Smack
             if(odysseyLivingEntity.getSmackPush().shouldPush){
-                WeaponUtil.smackTarget(odysseyLivingEntity.getSmackPush());
+                CombatUtil.smackTarget(odysseyLivingEntity.getSmackPush());
                 odysseyLivingEntity.setSmackPush(new SmackPush());
             }
         }
@@ -128,7 +117,7 @@ public class EntityEvents {
             }
             // Melee Larceny
             float larcenyChance = ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.LARCENY_CHANCE);
-            WeaponUtil.tryLarceny(larcenyChance, damageSourceLivingEntity, hurtLivingEntity);
+            CombatUtil.tryLarceny(larcenyChance, damageSourceLivingEntity, hurtLivingEntity);
 
             // Melee Knockback
             if(hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
@@ -138,7 +127,7 @@ public class EntityEvents {
             // Ranged Knockback
             odysseyLivingEntity.setNextKnockbackModifier(odysseyAbstractArrow.knockbackModifier);
             // Ranged Larceny
-            WeaponUtil.tryLarceny(odysseyAbstractArrow.larcenyModifier, odysseyAbstractArrow.getOwner(), hurtLivingEntity);
+            CombatUtil.tryLarceny(odysseyAbstractArrow.larcenyModifier, odysseyAbstractArrow.getOwner(), hurtLivingEntity);
         }
 
         if(amount >= 10.0f && hurtLivingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){

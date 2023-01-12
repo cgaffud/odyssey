@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.weapon;
+package com.bedmen.odyssey.combat;
 
 import net.minecraft.world.item.ItemStack;
 

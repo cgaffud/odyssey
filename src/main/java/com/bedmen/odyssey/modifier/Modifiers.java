@@ -2,9 +2,11 @@ package com.bedmen.odyssey.modifier;
 
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import com.bedmen.odyssey.util.BiomeUtil;
+import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -42,6 +44,8 @@ public class Modifiers {
     public static final IntegerModifier PROJECTILE_POISON_DAMAGE = new IntegerModifier("projectile_poison_damage");
     public static final PercentageModifier PROJECTILE_COBWEB_CHANCE = new PercentageModifier("projectile_cobweb_chance");
     public static final PercentageModifier PROJECTILE_LARCENY_CHANCE = new PercentageModifier("projectile_larceny_chance");
+
+    public static final ProtectionModifier FEATHER_FALLING = new ProtectionModifier("feather_falling", damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
