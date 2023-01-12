@@ -14,12 +14,20 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public enum InnateModifierArmorMaterial implements ArmorMaterial {
+    LEATHER("leather", 5, new int[]{2,3,4,3}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> Ingredient.of(Items.LEATHER), List.of()),
     CHICKEN("oddc:chicken", 10, new int[]{3,5,5,3}, 0, SoundEvents.CHICKEN_HURT, 0.0f, () -> Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get()), List.of(SetBonusAbility.SLOW_FALL)),
     FUR("oddc:fur", 10, new int[]{3,5,5,3}, 0, SoundEvents.WOOL_FALL, 0.0f, () -> Ingredient.of(ItemRegistry.POLAR_BEAR_FUR.get()), List.of()),
     GLIDER("oddc:glider", 10, new int[]{3,5,5,3}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, () -> Ingredient.of(Items.PHANTOM_MEMBRANE), List.of(SetBonusAbility.GLIDE_1)),
+    CHAIN("chainmail", 15, new int[]{3,5,6, 4}, 0, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, () -> Ingredient.of(Items.IRON_INGOT), List.of()),
+    IRON("iron", 15, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, () -> Ingredient.of(Items.IRON_INGOT), List.of()),
+    GOLD("gold", 7, new int[]{4,7,8,5}, 10, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, () -> Ingredient.of(Items.GOLD_INGOT), List.of()),
     PARKA("oddc:parka", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> Ingredient.EMPTY, List.of()),
     ZEPHYR("oddc:zephyr", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, () -> Ingredient.EMPTY, List.of(SetBonusAbility.GLIDE_2)),
-    ARCTIC("oddc:arctic", 20, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()), List.of(SetBonusAbility.FROST_WALKER));
+    STERLING_SILVER("oddc:sterling_silver", 20, new int[]{5,9,10,6}, 0, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, () -> Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get()), List.of()),
+    REINFORCED("oddc:reinforced", 25, new int[]{6,10,11,7}, 0, SoundEvents.ARMOR_EQUIP_IRON, 0.1F, () -> Ingredient.of(Items.IRON_INGOT), List.of()),
+    DIAMOND("diamond", 33, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(Items.DIAMOND), List.of()),
+    ARCTIC("oddc:arctic", 20, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()), List.of(SetBonusAbility.FROST_WALKER)),
+    NETHERITE("netherite", 37, new int[]{7,13,15,9}, 0, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.1F, () -> Ingredient.of(Items.NETHERITE_INGOT), List.of());
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[] {11, 16, 15, 13};
     private final String name;

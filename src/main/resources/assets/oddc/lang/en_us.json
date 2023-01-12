@@ -533,5 +533,6 @@
   "modifier.oddc.projectile_larceny_chance": "%s Projectile Larceny Chance",
   "modifier.oddc.feather_falling": "+%s Feather Falling",
   "modifier.oddc.ice_protection": "+%s Ice Protection",
-  "modifier.oddc.fire_protection": "+%s Fire Protection"
+  "modifier.oddc.fire_protection": "+%s Fire Protection",
+  "modifier.oddc.blast_protection": "+%s Blast Protection"
 }

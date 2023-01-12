@@ -48,6 +48,7 @@ public class Modifiers {
     public static final ProtectionModifier FEATHER_FALLING = new ProtectionModifier("feather_falling", damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);
     public static final ProtectionModifier ICE_PROTECTION = new ProtectionModifier("ice_protection", damageSource -> damageSource == DamageSource.FREEZE);
     public static final ProtectionModifier FIRE_PROTECTION = new ProtectionModifier("fire_protection", DamageSource::isFire);
+    public static final ProtectionModifier BLAST_PROTECTION = new ProtectionModifier("blast_protection", DamageSource::isExplosion);
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
