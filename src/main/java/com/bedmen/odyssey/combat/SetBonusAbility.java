@@ -3,7 +3,8 @@ package com.bedmen.odyssey.combat;
 public enum SetBonusAbility implements Ability {
     SLOW_FALL("slow_fall", true),
     GLIDE_1("glide_1", true),
-    GLIDE_2("glide_2", true);
+    GLIDE_2("glide_2", true),
+    FROST_WALKER("frost_walker", true);
 
     public final String id;
     public final boolean showOnRegularTooltip;

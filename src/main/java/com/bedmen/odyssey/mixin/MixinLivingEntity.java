@@ -1,9 +1,12 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.combat.CombatUtil;
+import com.bedmen.odyssey.combat.SetBonusAbility;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.combat.SmackPush;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -19,6 +22,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,10 +57,6 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     public MobEffectInstance getEffect(MobEffect mobEffect) {return null;}
 
     @Shadow public abstract Iterable<ItemStack> getArmorSlots();
-
-    @Shadow public abstract CombatTracker getCombatTracker();
-
-    @Shadow public abstract float getMaxHealth();
 
     public void setAirSupply(int amount) {
         super.setAirSupply(Integer.max(-20, amount));

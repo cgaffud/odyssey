@@ -2,6 +2,7 @@ package com.bedmen.odyssey.modifier;
 
 import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 
 public class InnateModifierHolder {
 
+    private static final MutableComponent INNATE_MODIFIER_HEADER = new TranslatableComponent("item.oddc.innate_modifiers").withStyle(OdysseyChatFormatting.LAVENDER);
     public final Map<Modifier, Float> modifierMap = new HashMap<>();
     public final List<Component> tooltipInnateModifierList;
     public final List<Component> advancedTooltipInnateModifierList;
@@ -44,7 +46,7 @@ public class InnateModifierHolder {
             List<Component> advancedTooltipinnateModifierList = this.tooltipInnateModifierList.stream()
                     .map(component -> new TextComponent(" ").append(component))
                     .collect(Collectors.toList());
-            advancedTooltipinnateModifierList.add(0, new TranslatableComponent("item.oddc.innate_modifier").withStyle(OdysseyChatFormatting.LAVENDER));
+            advancedTooltipinnateModifierList.add(0, INNATE_MODIFIER_HEADER);
             return advancedTooltipinnateModifierList;
         }
     }

@@ -2,6 +2,7 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.combat.*;
+import com.bedmen.odyssey.items.innate_modifier.InnateModifierArmorItem;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
@@ -161,6 +162,9 @@ public class PlayerEvents {
         Item item = itemStack.getItem();
         TooltipFlag tooltipFlag = event.getFlags();
         List<Component> componentList = new ArrayList<>();
+        if(item instanceof InnateModifierArmorItem innateModifierArmorItem){
+            innateModifierArmorItem.getSetBonusAbilityHolder().addTooltip(componentList, tooltipFlag);
+        }
         if(item instanceof OdysseyAbilityItem odysseyAbilityItem){
             odysseyAbilityItem.getAbilityHolder().addTooltip(componentList, tooltipFlag);
         }

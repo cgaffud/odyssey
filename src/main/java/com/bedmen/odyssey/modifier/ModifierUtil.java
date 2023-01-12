@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.antlr.v4.misc.MutableInt;
+import org.apache.http.Header;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 
 public class ModifierUtil {
 
+    private static final MutableComponent ADDED_MODIFIER_HEADER = new TranslatableComponent("item.oddc.added_modifiers").withStyle(ChatFormatting.GRAY);
     private static final String MODIFIER_TAG = Odyssey.MOD_ID + ":Modifiers";
     private static final String ID_TAG = "id";
     private static final String STRENGTH_TAG = "strength";
@@ -124,7 +127,7 @@ public class ModifierUtil {
             List<Component> advancedTooltipinnateModifierList = componentList.stream()
                     .map(component -> new TextComponent(" ").append(component))
                     .collect(Collectors.toList());
-            advancedTooltipinnateModifierList.add(0, new TranslatableComponent("item.oddc.added_modifier").withStyle(ChatFormatting.GRAY));
+            advancedTooltipinnateModifierList.add(0, ADDED_MODIFIER_HEADER);
             return advancedTooltipinnateModifierList;
         }
     }

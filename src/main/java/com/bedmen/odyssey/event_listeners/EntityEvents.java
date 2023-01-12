@@ -28,6 +28,7 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -88,6 +89,12 @@ public class EntityEvents {
                 air = livingEntity.decreaseAirSupply(air);
             }
             livingEntity.setAirSupply(air);
+        }
+
+        // Frost Walker
+        BlockPos blockPos = livingEntity.blockPosition();
+        if(CombatUtil.hasSetBonusAbility(livingEntity, SetBonusAbility.FROST_WALKER) && !blockPos.equals(livingEntity.lastPos)){
+            FrostWalkerEnchantment.onEntityMoved(livingEntity, livingEntity.level, blockPos, 1);
         }
     }
 

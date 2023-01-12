@@ -3,6 +3,7 @@ package com.bedmen.odyssey.items.innate_modifier;
 import com.bedmen.odyssey.combat.AbilityHolder;
 import com.bedmen.odyssey.combat.InnateModifierArmorMaterial;
 import com.bedmen.odyssey.combat.OdysseyAbilityItem;
+import com.bedmen.odyssey.combat.SetBonusAbilityHolder;
 import com.bedmen.odyssey.modifier.InnateModifierHolder;
 import com.bedmen.odyssey.modifier.ModifierInstance;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -10,7 +11,7 @@ import net.minecraft.world.item.ArmorItem;
 
 import java.util.List;
 
-public class InnateModifierArmorItem extends ArmorItem implements InnateModifierItem, OdysseyAbilityItem {
+public class InnateModifierArmorItem extends ArmorItem implements InnateModifierItem {
 
     public final InnateModifierHolder innateModifierHolder;
 
@@ -21,6 +22,10 @@ public class InnateModifierArmorItem extends ArmorItem implements InnateModifier
 
     public InnateModifierHolder getInnateModifierHolder() {
         return this.innateModifierHolder;
+    }
+
+    public SetBonusAbilityHolder getSetBonusAbilityHolder() {
+        return ((InnateModifierArmorMaterial)this.material).getSetBonusAbilityHolder();
     }
 
     public AbilityHolder getAbilityHolder() {

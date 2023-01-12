@@ -15,8 +15,10 @@ import java.util.function.Supplier;
 
 public enum InnateModifierArmorMaterial implements ArmorMaterial {
     CHICKEN("oddc:chicken", 10, new int[]{3,5,5,3}, 0, SoundEvents.CHICKEN_HURT, 0.0f, () -> Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get()), List.of(SetBonusAbility.SLOW_FALL)),
+    FUR("oddc:fur", 10, new int[]{3,5,5,3}, 0, SoundEvents.WOOL_FALL, 0.0f, () -> Ingredient.of(ItemRegistry.POLAR_BEAR_FUR.get()), List.of()),
     GLIDER("oddc:glider", 10, new int[]{3,5,5,3}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, () -> Ingredient.of(Items.PHANTOM_MEMBRANE), List.of(SetBonusAbility.GLIDE_1)),
-    ZEPHYR("oddc:zephyr", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, () -> Ingredient.EMPTY, List.of(SetBonusAbility.GLIDE_2));
+    ZEPHYR("oddc:zephyr", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, () -> Ingredient.EMPTY, List.of(SetBonusAbility.GLIDE_2)),
+    ARCTIC("oddc:arctic", 20, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()), List.of(SetBonusAbility.FROST_WALKER));
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[] {11, 16, 15, 13};
     private final String name;
@@ -27,7 +29,7 @@ public enum InnateModifierArmorMaterial implements ArmorMaterial {
     private final float toughness;
     private final float knockbackResistance;
     private final Supplier<Ingredient> repairMaterial;
-    private final AbilityHolder setBonusAbilityHolder;
+    private final SetBonusAbilityHolder setBonusAbilityHolder;
 
     InnateModifierArmorMaterial(String name, int maxDamageFactor, int[] damageReductionArray, int enchantability, SoundEvent soundEvent, float knockbackResistance, Supplier<Ingredient> repairMaterial, List<SetBonusAbility> setBonusAbilityList){
         this.name = name;
@@ -38,7 +40,7 @@ public enum InnateModifierArmorMaterial implements ArmorMaterial {
         this.toughness = 0;
         this.knockbackResistance = knockbackResistance;
         this.repairMaterial = repairMaterial;
-        this.setBonusAbilityHolder = new AbilityHolder(setBonusAbilityList);
+        this.setBonusAbilityHolder = new SetBonusAbilityHolder(setBonusAbilityList);
     }
 
     @Override
@@ -81,7 +83,7 @@ public enum InnateModifierArmorMaterial implements ArmorMaterial {
         return this.knockbackResistance;
     }
 
-    public AbilityHolder getSetBonusAbilityHolder(){
+    public SetBonusAbilityHolder getSetBonusAbilityHolder(){
         return this.setBonusAbilityHolder;
     }
 
