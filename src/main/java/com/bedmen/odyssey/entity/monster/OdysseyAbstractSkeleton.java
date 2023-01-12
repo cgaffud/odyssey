@@ -2,14 +2,16 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.entity.ai.BoomerangAttackGoal;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
+import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
+import com.bedmen.odyssey.items.innate_modifier.InnateModifierArrowItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyCrossbowItem;
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +31,7 @@ import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
@@ -144,20 +147,28 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         return this.isBaby() ? 0.0D : -0.45D;
     }
 
-    public void performRangedAttack(LivingEntity target, float power) {
+    protected AbstractArrow getOdysseyArrow(ItemStack bow, ItemStack ammo, float bowDamageMultiplier) {
+        InnateModifierArrowItem innateModifierArrowItem = (InnateModifierArrowItem)(ammo.getItem() instanceof InnateModifierArrowItem ? ammo.getItem() : Items.ARROW);
+        AbstractArrow abstractarrow = innateModifierArrowItem.createAbstractOdysseyArrow(this.level, bow, ammo, this);
+        abstractarrow.setEnchantmentEffectsFromEntity(this, bowDamageMultiplier);
+        return abstractarrow;
+    }
+
+    public void performRangedAttack(LivingEntity target, float bowDamageMultiplier) {
         if(!this.crossbowMode){
-            ItemStack itemstack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem)));
-            AbstractArrow abstractarrow = this.getArrow(itemstack, power);
-            ItemStack itemStack = this.getMainHandItem();
-            Item item = itemStack.getItem();
+            ItemStack bow = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem));
+            ItemStack ammoStack = this.getProjectile(bow);
+            AbstractArrow abstractarrow = this.getOdysseyArrow(bow, ammoStack, bowDamageMultiplier);
+            Item item = bow.getItem();
             if (item instanceof BowItem  bowItem)
                 abstractarrow = bowItem.customArrow(abstractarrow);
             double d0 = target.getX() - this.getX();
             double d1 = target.getY(0.3333333333333333D) - abstractarrow.getY();
             double d2 = target.getZ() - this.getZ();
             double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-            float velocity = WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * (item instanceof OdysseyBowItem odysseyBowItem ? odysseyBowItem.velocityMultiplier : 1.0f);
-            float accuracyMultiplier = ModifierUtil.getUnitModifierValue(itemStack, Modifiers.ACCURACY);
+            float velocity = WeaponUtil.getMaxArrowVelocity(bow, false);
+            System.out.println("v: "+velocity+" d: "+abstractarrow.getBaseDamage()+" isOdyssey: "+(abstractarrow instanceof OdysseyAbstractArrow));
+            float accuracyMultiplier = ModifierUtil.getUnitModifierValue(bow, Modifiers.ACCURACY);
             abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier);
             this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
             this.level.addFreshEntity(abstractarrow);
@@ -209,7 +220,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
                         .noneMatch(wrappedGoal -> wrappedGoal.getGoal() == this.boomerangGoal)){
                     ItemStack boomerang = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BoomerangItem));
                     if(boomerang.getItem() instanceof BoomerangItem boomerangItem){
-                        int i = boomerangItem.getChargeTime(boomerang);
+                        int i = boomerangItem.getBaseMaxChargeTicks();
                         if (this.level.getDifficulty() == Difficulty.HARD) {
                             i *= 3;
                         } else {
@@ -231,7 +242,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
             ItemStack crossbow = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem));
             Item crossbowItem = crossbow.getItem();
             if (bowItem instanceof OdysseyBowItem) {
-                int i = ((OdysseyBowItem) bowItem).getChargeTime(bow);
+                int i = WeaponUtil.getRangedMaxChargeTicks(bow);
                 if (this.level.getDifficulty() != Difficulty.HARD) {
                     i *= 2;
                 }
@@ -275,8 +286,8 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
 
     @Override
     public void shootCrossbowProjectile(LivingEntity livingEntity, ItemStack crossbow, Projectile projectile, float angle) {
-        float velocity = (crossbow.getItem() instanceof OdysseyCrossbowItem odysseyCrossbowItem ? odysseyCrossbowItem.getEffectiveVelocityMultiplier(crossbow) : 1.25f);
-        this.shootCrossbowProjectile(this, livingEntity, projectile, angle, WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * velocity);
+        float velocity = WeaponUtil.getMaxArrowVelocity(crossbow, false);
+        this.shootCrossbowProjectile(this, livingEntity, projectile, angle, velocity);
     }
 
     @Override

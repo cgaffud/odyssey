@@ -112,7 +112,7 @@ public class BoomerangAttackGoal<T extends net.minecraft.world.entity.Mob & Boom
                     this.mob.stopUsingItem();
                 } else if (hasLineOfSight) {
                     int i = this.mob.getTicksUsingItem();
-                    if (i >= boomerangItem.getChargeTime(boomerangStack)) {
+                    if (i >= boomerangItem.getBaseMaxChargeTicks()) {
                         this.mob.stopUsingItem();
                         this.mob.performBoomerangAttack(livingentity);
                         this.attackTime = this.attackIntervalMin;

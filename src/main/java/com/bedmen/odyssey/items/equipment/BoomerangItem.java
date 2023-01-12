@@ -6,6 +6,7 @@ import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.equipment.base.EquipmentItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
+import com.bedmen.odyssey.weapon.OdysseyRangedWeapon;
 import com.bedmen.odyssey.weapon.WeaponUtil;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -31,9 +32,8 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsToRegisterItemModelProperty {
+public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsToRegisterItemModelProperty, OdysseyRangedWeapon {
     private final Boomerang.BoomerangType boomerangType;
-    private static final int baseMaxChargeTicks = 10;
     public BoomerangItem(Item.Properties builderIn, Boomerang.BoomerangType boomerangType, LevEnchSup... levEnchSups) {
         super(builderIn, levEnchSups);
         this.boomerangType = boomerangType;
@@ -54,7 +54,7 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
     }
 
     public void releaseUsing(ItemStack boomerangStack, Level level, LivingEntity owner, int timeLeft) {
-        if ((this.getUseDuration(boomerangStack) - timeLeft) >= this.getChargeTime(boomerangStack)) {
+        if ((this.getUseDuration(boomerangStack) - timeLeft) >= this.getBaseMaxChargeTicks()) {
             releaseBoomerang(boomerangStack, level, owner, true, null);
         }
     }
@@ -126,12 +126,8 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         return new Vec3(-f2 * f3, -f4, f1 * f3);
     }
 
-    public int getChargeTime(ItemStack boomerangStack){
-        return WeaponUtil.getRangedChargeTime(boomerangStack, baseMaxChargeTicks);
-    }
-
     public int getTurnaroundTime(ItemStack boomerangStack){
-        return getChargeTime(boomerangStack) * 2;
+        return this.getBaseMaxChargeTicks() * 2;
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand handIn) {
@@ -181,10 +177,14 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
     public void appendHoverText(ItemStack boomerangStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(boomerangStack, level, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("item.oddc.boomerang.damage").append(StringUtil.doubleFormat(this.boomerangType.damage)).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(this.getChargeTime(boomerangStack))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(this.getBaseMaxChargeTicks())).withStyle(ChatFormatting.BLUE));
         if (flagIn.isAdvanced()) {
             tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.boomerangType.getVelocity(boomerangStack))).withStyle(ChatFormatting.BLUE));
             tooltip.add(new TranslatableComponent("item.oddc.boomerang.turnaround_time").append(StringUtil.timeFormat(this.getTurnaroundTime(boomerangStack))).withStyle(ChatFormatting.BLUE));
         }
+    }
+
+    public int getBaseMaxChargeTicks() {
+        return 20;
     }
 }

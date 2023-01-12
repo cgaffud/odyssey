@@ -88,8 +88,6 @@ public class Odyssey
             EquipmentArmorItem.initEquipment();
             EquipmentShieldItem.initEquipment();
             EquipmentItem.initEquipment();
-            EquipmentBowItem.initEquipment();
-            EquipmentCrossbowItem.initEquipment();
             TomeItem.initTomes();
             EnchantmentUtil.init();
 

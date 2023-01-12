@@ -55,10 +55,12 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         this.setPierceLevel((byte)ceil);
     }
 
-    protected void onHitEntity(EntityHitResult p_213868_1_) {
-        Entity entity = p_213868_1_.getEntity();
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        Entity entity = entityHitResult.getEntity();
         double velocity = this.getDeltaMovement().length();
-        double damage = Mth.clamp(velocity * this.getBaseDamage() / WeaponUtil.BASE_ARROW_VELOCITY, 0.0D, 2.147483647E9D);
+        double velocityFactor = velocity / WeaponUtil.BASE_ARROW_VELOCITY ;
+        double damage = Mth.clamp(velocityFactor * velocityFactor * this.getBaseDamage(), 0.0D, 2.147483647E9D);
+        System.out.println("damage: "+damage);
         if (this.getPierceLevel() > 0) {
             if (this.piercingIgnoreEntityIds == null) {
                 this.piercingIgnoreEntityIds = new IntOpenHashSet(5);

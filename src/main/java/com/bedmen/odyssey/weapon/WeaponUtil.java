@@ -4,7 +4,6 @@ import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.modifier.ModifierUtil;
 import com.bedmen.odyssey.modifier.Modifiers;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -18,6 +17,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
@@ -143,10 +143,6 @@ public class WeaponUtil {
         return pLiving.getMainHandItem().getItem() instanceof OdysseyBowItem ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
     }
 
-    public static int getRangedChargeTime(ItemStack itemStack, int baseMaxChargeTicks){
-        return Mth.floor(baseMaxChargeTicks * ModifierUtil.getUnitModifierValue(itemStack, Modifiers.MAX_CHARGE_TIME));
-    }
-
     public static boolean isDualWielding(Player player){
         ItemStack mainHandItem = player.getMainHandItem();
         return isDualWieldItem(mainHandItem) && player.getOffhandItem().is(mainHandItem.getItem());
@@ -209,4 +205,60 @@ public class WeaponUtil {
         }
     }
 
+    public static float getMaxDamageMultiplier(ItemStack bow){
+        return getDamageMultiplierForUseTicks(getRangedMaxChargeTicks(bow), bow);
+    }
+
+    public static float getDamageMultiplierForUseTicks(int useTicks, ItemStack bow){
+        float velocityFactor = getVelocityFactorForTime(useTicks, bow);
+        float damageMultiplier = getRangedDamageMultiplier(bow);
+        return velocityFactor * velocityFactor * damageMultiplier;
+    }
+
+    public static float getMaxArrowVelocity(ItemStack bow, boolean isPlayerUsing){
+        return getArrowVelocityForUseTicks(getRangedMaxChargeTicks(bow), bow, isPlayerUsing);
+    }
+
+    public static float getArrowVelocityForUseTicks(int useTicks, ItemStack bow, boolean isPlayerUsing){
+        float baseVelocity = isPlayerUsing ? BASE_ARROW_VELOCITY : BASE_ARROW_VELOCITY_ENEMIES;
+        float velocityFactor = getVelocityFactorForTime(useTicks, bow);
+        float damageMultiplier = getRangedDamageMultiplier(bow);
+        return baseVelocity * velocityFactor * Mth.sqrt(damageMultiplier);
+    }
+
+    private static float getVelocityFactorForTime(int useTicks, ItemStack bow) {
+        return getVelocityFactorFromCharge(getCharge(useTicks, bow));
+    }
+
+    public static float getChargeFactor(LivingEntity livingEntity, ItemStack itemStack){
+        return Mth.clamp((float)livingEntity.getTicksUsingItem() / (float)WeaponUtil.getRangedMaxChargeTicks(itemStack), 0.0f, 1.0f);
+    }
+
+    private static float getCharge(int useTicks, ItemStack bow){
+        int baseMaxChargeTicks = bow.getItem() instanceof OdysseyRangedWeapon odysseyRangedWeapon ? odysseyRangedWeapon.getBaseMaxChargeTicks() : 20;
+        return (float)useTicks / (float)baseMaxChargeTicks;
+    }
+
+    /**
+     * @return The number of ticks needed to fully charge the item
+     */
+    public static int getRangedMaxChargeTicks(ItemStack itemStack){
+        Item item = itemStack.getItem();
+        if(item instanceof OdysseyRangedWeapon odysseyRangedWeapon){
+            return Mth.floor(odysseyRangedWeapon.getBaseMaxChargeTicks() * ModifierUtil.getUnitModifierValue(itemStack, Modifiers.MAX_CHARGE_TIME));
+        }
+        return 20;
+    }
+
+    public static float getRangedDamageMultiplier(ItemStack itemStack){
+        Item item = itemStack.getItem();
+        if(item instanceof OdysseyRangedAmmoWeapon odysseyRangedAmmoWeapon){
+            return odysseyRangedAmmoWeapon.getDamageMultiplier(itemStack);
+        }
+        return 1.0f;
+    }
+
+    private static float getVelocityFactorFromCharge(float charge){
+        return Mth.sqrt((charge * charge + charge * 2.0F) / 3.0F);
+    }
 }

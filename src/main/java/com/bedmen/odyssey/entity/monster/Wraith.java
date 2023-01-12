@@ -148,17 +148,17 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     public void performRangedAttack(LivingEntity target, float power) {
         ItemStack itemstack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem)));
         AbstractArrow abstractarrow = this.getArrow(itemstack, power);
-        ItemStack itemStack = this.getMainHandItem();
-        Item item = itemStack.getItem();
+        ItemStack mainHandItemStack = this.getMainHandItem();
+        Item item = mainHandItemStack.getItem();
         if (item instanceof BowItem bowItem)
             abstractarrow = bowItem.customArrow(abstractarrow);
         double d0 = target.getX() - this.getX();
         double d1 = target.getY(0.3333333333333333D) - abstractarrow.getY();
         double d2 = target.getZ() - this.getZ();
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        float velocity = WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * (item instanceof OdysseyBowItem odysseyBowItem ? odysseyBowItem.velocityMultiplier : 1.0f);
+        float velocity = WeaponUtil.getMaxArrowVelocity(mainHandItemStack, false);
         float accuracyMultiplier = EnchantmentUtil.getAccuracyMultiplier(this);
-        float superCharge = EnchantmentUtil.getSuperChargeMultiplier(itemStack);
+        float superCharge = EnchantmentUtil.getSuperChargeMultiplier(mainHandItemStack);
         abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier / superCharge);
         this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.level.addFreshEntity(abstractarrow);

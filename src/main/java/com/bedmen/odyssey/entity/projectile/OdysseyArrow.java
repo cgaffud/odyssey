@@ -7,6 +7,7 @@ import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.weapon.ArrowType;
+import com.bedmen.odyssey.weapon.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EntityType;
@@ -14,7 +15,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
@@ -77,13 +77,9 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         super.onHitEntity(entityHitResult);
     }
 
-    public void setEnchantmentEffectsFromEntity(LivingEntity shooter, float bowChargePower) {
+    public void setEnchantmentEffectsFromEntity(LivingEntity shooter, float bowDamageMultiplier) {
         ItemStack bow = shooter.getItemInHand(ProjectileUtil.getWeaponHoldingHand(shooter, item -> item instanceof OdysseyBowItem || item instanceof OdysseyCrossbowItem));
-        this.setBaseDamage((bowChargePower + this.random.nextGaussian() * 0.125D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage);
-        int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.POWER_ARROWS.get(), shooter);
-        if (i > 0) {
-            this.setBaseDamage(this.getBaseDamage() + (double)i * 0.5D + 0.5D);
-        }
+        this.setBaseDamage((bowDamageMultiplier + this.random.nextGaussian() * 0.1D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage * (WeaponUtil.BASE_ARROW_VELOCITY * WeaponUtil.BASE_ARROW_VELOCITY) / (WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES));
         // Knockback
         this.knockbackModifier = ModifierUtil.getUnitModifierValue(bow, Modifiers.PROJECTILE_KNOCKBACK);
         // Piercing

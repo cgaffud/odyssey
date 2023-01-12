@@ -362,7 +362,7 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
                             p_109379_.mulPose(Vector3f.YP.rotationDegrees((float)k * 35.3F));
                             p_109379_.mulPose(Vector3f.ZP.rotationDegrees((float)k * -9.785F));
                             float f7 = (float)itemStack.getUseDuration() - ((float)this.minecraft.player.getUseItemRemainingTicks() - p_109373_ + 1.0F);
-                            float f11 = f7 / (float)(itemStack.getItem() instanceof BoomerangItem boomerangItem ? boomerangItem.getChargeTime(itemStack) : 10);
+                            float f11 = f7 / (float)(itemStack.getItem() instanceof BoomerangItem boomerangItem ? boomerangItem.getBaseMaxChargeTicks() : 10);
                             if (f11 > 1.0F) {
                                 f11 = 1.0F;
                             }
