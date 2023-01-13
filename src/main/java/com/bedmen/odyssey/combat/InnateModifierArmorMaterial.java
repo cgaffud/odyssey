@@ -20,6 +20,7 @@ public enum InnateModifierArmorMaterial implements ArmorMaterial {
     GLIDER("oddc:glider", 10, new int[]{3,5,5,3}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, () -> Ingredient.of(Items.PHANTOM_MEMBRANE), List.of(SetBonusAbility.GLIDE_1)),
     CHAIN("chainmail", 15, new int[]{3,5,6, 4}, 0, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, () -> Ingredient.of(Items.IRON_INGOT), List.of()),
     IRON("iron", 15, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, () -> Ingredient.of(Items.IRON_INGOT), List.of()),
+    TURTLE("oddc:turtle", 25, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, () -> Ingredient.of(Items.SCUTE), List.of(SetBonusAbility.TURTLE_MASTERY)),
     GOLD("gold", 7, new int[]{4,7,8,5}, 10, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, () -> Ingredient.of(Items.GOLD_INGOT), List.of()),
     PARKA("oddc:parka", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> Ingredient.EMPTY, List.of()),
     ZEPHYR("oddc:zephyr", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, () -> Ingredient.EMPTY, List.of(SetBonusAbility.GLIDE_2)),

@@ -502,6 +502,7 @@
   "abilities.oddc.glide_1": "Glide (1s) [Jump Key]",
   "abilities.oddc.glide_2": "Glide (2s) [Jump Key]",
   "abilities.oddc.frost_walker": "Frost Walker",
+  "abilities.oddc.turtle_mastery": "Turtle Mastery [Sneak Key]",
   "item.oddc.innate_modifiers": "Innate Modifiers:",
   "item.oddc.added_modifiers": "Added Modifiers:",
   "modifier.oddc.damage_against_arthropod": "+%s Damage Against Athropods",
@@ -534,5 +535,7 @@
   "modifier.oddc.feather_falling": "+%s Feather Falling",
   "modifier.oddc.ice_protection": "+%s Ice Protection",
   "modifier.oddc.fire_protection": "+%s Fire Protection",
-  "modifier.oddc.blast_protection": "+%s Blast Protection"
+  "modifier.oddc.blast_protection": "+%s Blast Protection",
+  "modifier.oddc.respiration": "+%s Respiration",
+  "modifier.oddc.swim_speed": "+%s Swim Speed"
 }

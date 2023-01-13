@@ -328,11 +328,11 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GLIDER_LEGGINGS = ITEMS.register("glider_leggings", () -> new GlidingAmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.GLIDER, EquipmentSlot.LEGS, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 1.5f))));
     public static final RegistryObject<Item> GLIDER_BOOTS = ITEMS.register("glider_boots", () -> new GlidingAmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.GLIDER, EquipmentSlot.FEET, List.of(new ModifierInstance(Modifiers.FEATHER_FALLING, 1.5f))));
 
-    public static final RegistryObject<Item> TURTLE_HELMET = ITEMS.register("turtle_helmet", () -> new EquipmentArmorItem(OdysseyArmorMaterials.TURTLE, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), RESPIRATION[1]));
-    public static final RegistryObject<Item> TURTLE_CHESTPLATE = ITEMS.register("turtle_chestplate", () -> new EquipmentArmorItem(OdysseyArmorMaterials.TURTLE, EquipmentSlot.CHEST, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), RESPIRATION[1]));
-    public static final RegistryObject<Item> TURTLE_LEGGINGS = ITEMS.register("turtle_leggings", () -> new EquipmentArmorItem(OdysseyArmorMaterials.TURTLE, EquipmentSlot.LEGS, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), DEPTH_STRIDER[1]));
-    public static final RegistryObject<Item> TURTLE_BOOTS = ITEMS.register("turtle_boots", () -> new EquipmentArmorItem(OdysseyArmorMaterials.TURTLE, EquipmentSlot.FEET, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), DEPTH_STRIDER[1]));
-
+    public static final RegistryObject<Item> TURTLE_HELMET = ITEMS.register("turtle_helmet", () -> new InnateModifierArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.TURTLE, EquipmentSlot.HEAD, List.of(new ModifierInstance(Modifiers.RESPIRATION, 1.0f))));
+    public static final RegistryObject<Item> TURTLE_CHESTPLATE = ITEMS.register("turtle_chestplate", () -> new InnateModifierArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.TURTLE, EquipmentSlot.CHEST, List.of(new ModifierInstance(Modifiers.RESPIRATION, 1.0f))));
+    public static final RegistryObject<Item> TURTLE_LEGGINGS = ITEMS.register("turtle_leggings", () -> new InnateModifierArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.TURTLE, EquipmentSlot.LEGS, List.of(new ModifierInstance(Modifiers.SWIM_SPEED, 0.5f))));
+    public static final RegistryObject<Item> TURTLE_BOOTS = ITEMS.register("turtle_boots", () -> new InnateModifierArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.TURTLE, EquipmentSlot.FEET, List.of(new ModifierInstance(Modifiers.SWIM_SPEED, 0.5f))));
+    
     // ## Tier 2
     private static final Map<Attribute, Supplier<AttributeModifier>> DAMAGE_BOOST = Map.of(Attributes.ATTACK_DAMAGE, () -> new AttributeModifier("Weapon modifier", 0.25, AttributeModifier.Operation.ADDITION));
     public static final RegistryObject<Item> THORNMAIL_HELMET = ITEMS.register("thornmail_helmet", () -> new AttributeArmorItem(OdysseyArmorMaterials.THORNMAIL, EquipmentSlot.HEAD, DAMAGE_BOOST, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR)));

@@ -4,12 +4,17 @@ import com.bedmen.odyssey.combat.CombatUtil;
 import com.bedmen.odyssey.combat.SetBonusAbility;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.combat.SmackPush;
+import com.bedmen.odyssey.util.EnchantmentUtil;
+import com.google.common.base.Objects;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.CombatRules;
@@ -17,24 +22,32 @@ import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements OdysseyLivingEntity {
@@ -50,26 +63,161 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         super(entityType, level);
     }
 
-    @Shadow
-    public boolean hasEffect(MobEffect mobEffect) {return false;}
-
-    @Shadow
-    public MobEffectInstance getEffect(MobEffect mobEffect) {return null;}
-
+    @Shadow public boolean hasEffect(MobEffect mobEffect) {return false;}
+    @Shadow public MobEffectInstance getEffect(MobEffect mobEffect) {return null;}
     @Shadow public abstract Iterable<ItemStack> getArmorSlots();
+    @Shadow public float oAttackAnim;
+    @Shadow public float attackAnim;
+    @Shadow public Optional<BlockPos> getSleepingPos() {return Optional.empty();}
+    @Shadow private void setPosToBed(BlockPos p_21081_) {}
+    @Shadow public boolean canSpawnSoulSpeedParticle() {return false;}
+    @Shadow protected void spawnSoulSpeedParticle() {}
+    @Shadow public boolean canBreatheUnderwater() {return false;}
+    @Shadow public int decreaseAirSupply(int p_21303_) {return 0;}
+    @Shadow protected int increaseAirSupply(int p_21307_) {return 0;}
+    @Shadow public BlockPos lastPos;
+    @Shadow protected void onChangedBlock(BlockPos p_21175_) {}
+    @Shadow public int hurtTime;
+    @Shadow public boolean isDeadOrDying() {return false;}
+    @Shadow protected void tickDeath() {}
+    @Shadow protected int lastHurtByPlayerTime;
+    @Shadow protected Player lastHurtByPlayer;
+    @Shadow private LivingEntity lastHurtMob;
+    @Shadow private LivingEntity lastHurtByMob;
+    @Shadow public void setLastHurtByMob(@Nullable LivingEntity p_21039_) {}
+    @Shadow private int lastHurtByMobTimestamp;
+    @Shadow protected void tickEffects() {}
+    @Shadow protected float animStep;
+    @Shadow protected float animStepO;
+    @Shadow public float yBodyRot;
+    @Shadow public float yBodyRotO;
+    @Shadow public float yHeadRot;
+    @Shadow public float yHeadRotO;
 
-    public void setAirSupply(int amount) {
-        super.setAirSupply(Integer.max(-20, amount));
-    }
+    public void baseTick() {
+        LivingEntity livingEntity = this.getLivingEntity();
+        this.oAttackAnim = this.attackAnim;
+        if (this.firstTick) {
+            this.getSleepingPos().ifPresent(this::setPosToBed);
+        }
 
-    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
-    public boolean onBaseTick$isEyeInFluid(LivingEntity livingEntity, TagKey<Fluid> tagkey){
-        return livingEntity.isEyeInFluid(tagkey) || this.hasEffect(EffectRegistry.DROWNING.get());
-    }
+        if (this.canSpawnSoulSpeedParticle()) {
+            this.spawnSoulSpeedParticle();
+        }
 
-    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
-    public boolean onBaseTick$is(BlockState blockState, Block block){
-        return blockState.is(block) && !this.hasEffect(EffectRegistry.DROWNING.get());
+        super.baseTick();
+        this.level.getProfiler().push("livingEntityBaseTick");
+        if (this.fireImmune() || this.level.isClientSide) {
+            this.clearFire();
+        }
+
+        if (this.isAlive()) {
+            boolean flag = livingEntity instanceof Player;
+            if (this.isInWall()) {
+                this.hurt(DamageSource.IN_WALL, 1.0F);
+            } else if (flag && !this.level.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
+                double d0 = this.level.getWorldBorder().getDistanceToBorder(this) + this.level.getWorldBorder().getDamageSafeZone();
+                if (d0 < 0.0D) {
+                    double d1 = this.level.getWorldBorder().getDamagePerBlock();
+                    if (d1 > 0.0D) {
+                        this.hurt(DamageSource.IN_WALL, (float)Math.max(1, Mth.floor(-d0 * d1)));
+                    }
+                }
+            }
+
+            int drowningAmount = this.isEyeInFluid(FluidTags.WATER) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN) ? 1 : 0;
+            drowningAmount += livingEntity.hasEffect(EffectRegistry.DROWNING.get()) ? livingEntity.getEffect(EffectRegistry.DROWNING.get()).getAmplifier() + 1 : 0;
+            if (drowningAmount > 0) {
+                boolean cannotBreatheUnderWater = !this.canBreatheUnderwater() && !MobEffectUtil.hasWaterBreathing(livingEntity) && (!flag || !((Player)livingEntity).getAbilities().invulnerable);
+                if (cannotBreatheUnderWater) {
+                    float respirationStrength = 1.0f + ModifierUtil.getFloatModifierValueFromArmor(livingEntity, Modifiers.RESPIRATION);
+                    float airLossChance = 1.0f / respirationStrength;
+                    for(int i = 0; i < drowningAmount; i++){
+                        if(airLossChance >= livingEntity.getRandom().nextFloat()){
+                            this.setAirSupply(this.decreaseAirSupply(this.getAirSupply()));
+                        }
+                    }
+                    if (this.getAirSupply() <= -20) {
+                        this.setAirSupply(0);
+                        Vec3 vec3 = this.getDeltaMovement();
+
+                        for(int i = 0; i < 8; ++i) {
+                            double d2 = this.random.nextDouble() - this.random.nextDouble();
+                            double d3 = this.random.nextDouble() - this.random.nextDouble();
+                            double d4 = this.random.nextDouble() - this.random.nextDouble();
+                            this.level.addParticle(ParticleTypes.BUBBLE, this.getX() + d2, this.getY() + d3, this.getZ() + d4, vec3.x, vec3.y, vec3.z);
+                        }
+
+                        this.hurt(DamageSource.DROWN, 2.0F);
+                        if(drowningAmount > 2){
+                            int invulnerabilityFrames = 20 / drowningAmount;
+                            this.invulnerableTime = 10 + invulnerabilityFrames;
+                            this.hurtTime = invulnerabilityFrames;
+                        }
+                    }
+                }
+
+                if (!this.level.isClientSide && this.isPassenger() && this.getVehicle() != null && !this.getVehicle().canBeRiddenInWater(this)) {
+                    this.stopRiding();
+                }
+            } else if (this.getAirSupply() < this.getMaxAirSupply()) {
+                this.setAirSupply(this.increaseAirSupply(this.getAirSupply()));
+            }
+
+            if (!this.level.isClientSide) {
+                BlockPos blockpos = this.blockPosition();
+                if (!Objects.equal(this.lastPos, blockpos)) {
+                    this.lastPos = blockpos;
+                    this.onChangedBlock(blockpos);
+                }
+            }
+        }
+
+        if (this.isAlive() && (this.isInWaterRainOrBubble() || this.isInPowderSnow)) {
+            if (!this.level.isClientSide && this.wasOnFire) {
+                this.playEntityOnFireExtinguishedSound();
+            }
+
+            this.clearFire();
+        }
+
+        if (this.hurtTime > 0) {
+            --this.hurtTime;
+        }
+
+        if (this.invulnerableTime > 0 && !(livingEntity instanceof ServerPlayer)) {
+            --this.invulnerableTime;
+        }
+
+        if (this.isDeadOrDying() && this.level.shouldTickDeath(this)) {
+            this.tickDeath();
+        }
+
+        if (this.lastHurtByPlayerTime > 0) {
+            --this.lastHurtByPlayerTime;
+        } else {
+            this.lastHurtByPlayer = null;
+        }
+
+        if (this.lastHurtMob != null && !this.lastHurtMob.isAlive()) {
+            this.lastHurtMob = null;
+        }
+
+        if (this.lastHurtByMob != null) {
+            if (!this.lastHurtByMob.isAlive()) {
+                this.setLastHurtByMob((LivingEntity)null);
+            } else if (this.tickCount - this.lastHurtByMobTimestamp > 100) {
+                this.setLastHurtByMob((LivingEntity)null);
+            }
+        }
+
+        this.tickEffects();
+        this.animStepO = this.animStep;
+        this.yBodyRotO = this.yBodyRot;
+        this.yHeadRotO = this.yHeadRot;
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
+        this.level.getProfiler().pop();
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At(value = "RETURN"))
@@ -148,7 +296,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             if (amount <= 0.0F) {
                 return 0.0F;
             } else {
-                float protectionArmor = ModifierUtil.getProtectionModifierStrength(this.getArmorSlots(), damageSource);
+                float protectionArmor = 5.0f * ModifierUtil.getProtectionModifierStrength(this.getLivingEntity(), damageSource);
                 if (protectionArmor > 0.0f) {
                     amount = CombatRules.getDamageAfterAbsorb(amount, protectionArmor, 0.0f);
                 }

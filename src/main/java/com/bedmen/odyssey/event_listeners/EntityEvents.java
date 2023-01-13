@@ -17,11 +17,14 @@ import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.CombatUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Zombie;
@@ -30,6 +33,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -71,24 +75,6 @@ public class EntityEvents {
             if (drowningLvl > 0)
                 livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 2, drowningLvl-1
                         ,false,false,false));
-        }
-
-        //For Drowning
-        if(!livingEntity.level.isClientSide && livingEntity.hasEffect(EffectRegistry.DROWNING.get())){
-            MobEffectInstance mobEffectInstance = livingEntity.getEffect(EffectRegistry.DROWNING.get());
-            int air = livingEntity.getAirSupply();
-            int reduction = mobEffectInstance.getAmplifier();
-            //If the entity is taking drown damage, if can only take damage once per half second anyways.
-            //Odd multiples of drown amounts actually cause drown damage less frequently than even, which hit every half second
-            //Therefore if the entity is drowning we just max the drown amount at 2
-            //Note that the 1st drown amount is dealt through the LivingEntity baseTick code, so we max reduction here at 1.
-            if(air <= 0){
-                reduction = Integer.min(reduction, 1);
-            }
-            for(int i = 0; i < reduction; i++){
-                air = livingEntity.decreaseAirSupply(air);
-            }
-            livingEntity.setAirSupply(air);
         }
 
         // Frost Walker

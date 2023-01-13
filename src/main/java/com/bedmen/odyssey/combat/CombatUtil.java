@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.combat;
 
+import com.bedmen.odyssey.items.innate_modifier.InnateModifierArmorItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import com.bedmen.odyssey.modifier.ModifierUtil;
@@ -264,7 +265,7 @@ public class CombatUtil {
 
     public static boolean hasSetBonusAbility(LivingEntity livingEntity, SetBonusAbility setBonusAbility){
         for(ItemStack itemStack: livingEntity.getArmorSlots()){
-            if(!(itemStack.getItem() instanceof OdysseyAbilityItem odysseyAbilityItem && odysseyAbilityItem.hasAbility(setBonusAbility))){
+            if(!(itemStack.getItem() instanceof InnateModifierArmorItem innateModifierArmorItem && innateModifierArmorItem.getSetBonusAbilityHolder().hasAbility(setBonusAbility))){
                 return false;
             }
         }

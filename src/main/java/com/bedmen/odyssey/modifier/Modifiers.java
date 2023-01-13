@@ -49,6 +49,8 @@ public class Modifiers {
     public static final ProtectionModifier ICE_PROTECTION = new ProtectionModifier("ice_protection", damageSource -> damageSource == DamageSource.FREEZE);
     public static final ProtectionModifier FIRE_PROTECTION = new ProtectionModifier("fire_protection", DamageSource::isFire);
     public static final ProtectionModifier BLAST_PROTECTION = new ProtectionModifier("blast_protection", DamageSource::isExplosion);
+    public static final FloatModifier SWIM_SPEED = new FloatModifier("swim_speed");
+    public static final FloatModifier RESPIRATION = new FloatModifier("respiration");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

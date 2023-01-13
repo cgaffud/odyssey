@@ -138,8 +138,16 @@ public class ModifierUtil {
         return getItemStackModifierStrength(itemStack, floatModifier);
     }
 
-    public static float getUnitModifierValue(ItemStack itemStack, UnitModifier floatModifier){
-        return 1.0f + getItemStackModifierStrength(itemStack, floatModifier);
+    public static float getFloatModifierValueFromArmor(LivingEntity livingEntity, FloatModifier floatModifier){
+        float total = 0.0f;
+        for(ItemStack armorPiece: livingEntity.getArmorSlots()){
+            total += getFloatModifierValue(armorPiece, floatModifier);
+        }
+        return total;
+    }
+
+    public static float getUnitModifierValue(ItemStack itemStack, UnitModifier unitModifier){
+        return 1.0f + getItemStackModifierStrength(itemStack, unitModifier);
     }
 
     public static int getIntegerModifierValue(ItemStack itemStack, IntegerModifier integerModifier){
@@ -168,9 +176,9 @@ public class ModifierUtil {
         });
     }
 
-    public static float getProtectionModifierStrength(Iterable<ItemStack> armorPieces, DamageSource damageSource){
+    public static float getProtectionModifierStrength(LivingEntity livingEntity, DamageSource damageSource){
         float total = 0.0f;
-        for(ItemStack armorPiece: armorPieces){
+        for(ItemStack armorPiece: livingEntity.getArmorSlots()){
             total += getTotalStrengthForFunction(armorPiece, modifier -> {
                 if(modifier instanceof ProtectionModifier protectionModifier){
                     return protectionModifier.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
@@ -178,7 +186,7 @@ public class ModifierUtil {
                 return 0.0f;
             });
         }
-        return 5.0f * total;
+        return total;
     }
 
     public static void addModifierTooltip(ItemStack itemStack, List<Component> tooltip, TooltipFlag tooltipFlag){

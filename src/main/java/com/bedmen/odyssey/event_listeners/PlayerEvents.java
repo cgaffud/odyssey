@@ -9,6 +9,7 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -30,6 +32,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
@@ -80,9 +83,9 @@ public class PlayerEvents {
                 }
             }
 
-            // Turtling
-            if (EnchantmentUtil.hasTurtling(player) && player.isShiftKeyDown() && !player.level.isClientSide) {
-                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1, 0, false, false, true));
+            // Turtle Mastery
+            if (CombatUtil.hasSetBonusAbility(player, SetBonusAbility.TURTLE_MASTERY) && player.isShiftKeyDown() && !player.level.isClientSide) {
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, 0, false, false, true));
             }
         }
     }
@@ -171,6 +174,16 @@ public class PlayerEvents {
         ModifierUtil.addModifierTooltip(itemStack, componentList, tooltipFlag);
 
         List<Component> tooltip = event.getToolTip();
+        // Remove swim speed attributes
+        List<Component> swimSpeedAttributeList = tooltip.stream().filter(component ->
+                component instanceof TranslatableComponent translatableComponent
+                        && translatableComponent.getArgs().length == 2
+                        && translatableComponent.getArgs()[1] instanceof TranslatableComponent translatableComponent1
+                        && translatableComponent1.getKey().equals(ForgeMod.SWIM_SPEED.get().getDescriptionId())).collect(Collectors.toList());
+        for(Component component: swimSpeedAttributeList){
+            tooltip.remove(component);
+        }
+
         tooltip.addAll(1, componentList);
     }
 }
