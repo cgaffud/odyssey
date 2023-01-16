@@ -1,18 +1,17 @@
 package com.bedmen.odyssey.combat;
 
 public enum SetBonusAbility implements Ability {
-    SLOW_FALL("slow_fall", true),
-    GLIDE_1("glide_1", true),
-    GLIDE_2("glide_2", true),
-    FROST_WALKER("frost_walker", true),
-    TURTLE_MASTERY("turtle_mastery", true);
+    SLOW_FALL("slow_fall"),
+    GLIDE_1("glide_1"),
+    GLIDE_2("glide_2"),
+    FROST_WALKER("frost_walker"),
+    TURTLE_MASTERY("turtle_mastery"),
+    THORNMAIL_ATTACK_DAMAGE("thornmail_attack_damage");
 
     public final String id;
-    public final boolean showOnRegularTooltip;
 
-    SetBonusAbility(String id, boolean showOnRegularTooltip){
+    SetBonusAbility(String id){
         this.id = id;
-        this.showOnRegularTooltip = showOnRegularTooltip;
     }
 
     public String getId() {
@@ -20,6 +19,6 @@ public enum SetBonusAbility implements Ability {
     }
 
     public boolean showOnRegularTooltip() {
-        return this.showOnRegularTooltip;
+        return true;
     }
 }

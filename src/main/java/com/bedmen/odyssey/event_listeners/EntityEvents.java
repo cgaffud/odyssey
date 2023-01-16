@@ -21,6 +21,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -116,6 +117,17 @@ public class EntityEvents {
             if(hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
                 odysseyLivingEntity.setNextKnockbackModifier(ModifierUtil.getUnitModifierValue(mainHandItemStack, Modifiers.KNOCKBACK));
             }
+
+            // Thorns
+            float thornsStrength = ModifierUtil.getFloatModifierValueFromArmor(hurtLivingEntity, Modifiers.THORNS);
+            if(thornsStrength > 0.0f && 0.25f >= hurtLivingEntity.getRandom().nextFloat()){
+                damageSourceLivingEntity.hurt(DamageSource.thorns(hurtLivingEntity), thornsStrength);
+            }
+
+            // Attack Damage Set Bonus
+            if(CombatUtil.hasSetBonusAbility(damageSourceLivingEntity, SetBonusAbility.THORNMAIL_ATTACK_DAMAGE)){
+                amount += 1;
+            }
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
             odysseyLivingEntity.setNextKnockbackModifier(odysseyAbstractArrow.knockbackModifier);
@@ -123,6 +135,7 @@ public class EntityEvents {
             CombatUtil.tryLarceny(odysseyAbstractArrow.larcenyModifier, odysseyAbstractArrow.getOwner(), hurtLivingEntity);
         }
 
+        // Break Coconut
         if(amount >= 10.0f && hurtLivingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
             Consumer<LivingEntity> consumer = (p_233653_0_) -> {
                 p_233653_0_.broadcastBreakEvent(EquipmentSlot.HEAD);

@@ -504,6 +504,7 @@
   "abilities.oddc.frost_walker": "Frost Walker",
   "abilities.oddc.turtle_mastery": "Turtle Mastery [Sneak Key]",
   "abilities.oddc.piglin_neutral": "Makes Piglins Neutral",
+  "abilities.oddc.thornmail_attack_damage": "+1 Attack Damage",
   "item.oddc.innate_modifiers": "Innate Modifiers:",
   "item.oddc.added_modifiers": "Added Modifiers:",
   "modifier.oddc.damage_against_arthropod": "+%s Damage Against Athropods",
@@ -540,5 +541,6 @@
   "modifier.oddc.respiration": "+%s Respiration",
   "modifier.oddc.swim_speed": "+%s Swim Speed",
   "modifier.oddc.snowshoe": "Snowshoe",
-  "modifier.oddc.freeze_immunity": "+%s Freeze Immunity"
+  "modifier.oddc.freeze_immunity": "+%s Freeze Immunity",
+  "modifier.oddc.thorns": "+%s Thorns"
 }

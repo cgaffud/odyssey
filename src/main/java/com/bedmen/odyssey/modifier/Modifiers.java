@@ -44,7 +44,6 @@ public class Modifiers {
     public static final IntegerModifier PROJECTILE_POISON_DAMAGE = new IntegerModifier("projectile_poison_damage");
     public static final PercentageModifier PROJECTILE_COBWEB_CHANCE = new PercentageModifier("projectile_cobweb_chance");
     public static final PercentageModifier PROJECTILE_LARCENY_CHANCE = new PercentageModifier("projectile_larceny_chance");
-
     public static final ProtectionModifier FEATHER_FALLING = new ProtectionModifier("feather_falling", damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);
     public static final ProtectionModifier ICE_PROTECTION = new ProtectionModifier("ice_protection", damageSource -> damageSource == DamageSource.FREEZE);
     public static final ProtectionModifier FIRE_PROTECTION = new ProtectionModifier("fire_protection", DamageSource::isFire);
@@ -53,6 +52,7 @@ public class Modifiers {
     public static final FloatModifier RESPIRATION = new FloatModifier("respiration");
     public static final BooleanModifier SNOWSHOE = new BooleanModifier("snowshoe");
     public static final IntegerModifier FREEZE_IMMUNITY = new IntegerModifier("freeze_immunity");
+    public static final FloatModifier THORNS = new FloatModifier("thorns");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

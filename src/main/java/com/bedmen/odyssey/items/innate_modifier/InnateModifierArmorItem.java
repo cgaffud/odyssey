@@ -53,8 +53,4 @@ public class InnateModifierArmorItem extends OdysseyArmorItem implements InnateM
     public SetBonusAbilityHolder getSetBonusAbilityHolder() {
         return ((InnateModifierArmorMaterial)this.material).getSetBonusAbilityHolder();
     }
-
-    public AbilityHolder getAbilityHolder() {
-        return ((InnateModifierArmorMaterial)this.material).getSetBonusAbilityHolder();
-    }
 }
