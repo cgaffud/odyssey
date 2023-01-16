@@ -113,6 +113,18 @@ public class ModifierUtil {
         return getTotalStrengthForFunctionFromTag(itemStack, strengthFunction) + getTotalStrengthForFunctionFromInnate(itemStack, strengthFunction);
     }
 
+    private static float getTotalArmorStrengthForFunction(LivingEntity livingEntity, Function<Modifier, Float> strengthFunction){
+        float total = 0.0f;
+        for(ItemStack armorPiece: livingEntity.getArmorSlots()){
+            total += getTotalStrengthForFunction(armorPiece, strengthFunction);
+        }
+        return total;
+    }
+
+    private static float getTotalArmorStrengthForModifier(LivingEntity livingEntity, Modifier modifier){
+        return getTotalArmorStrengthForFunction(livingEntity, modifier1 -> modifier1 == modifier ? 1.0f : 0.0f);
+    }
+
     private static List<Component> createModifierTooltipList(Map<Modifier, Float> map){
         return map.entrySet().stream().map(entry ->
                 entry.getKey().mutableComponentFunction.apply(entry.getValue()).withStyle(ChatFormatting.GRAY)
@@ -139,11 +151,7 @@ public class ModifierUtil {
     }
 
     public static float getFloatModifierValueFromArmor(LivingEntity livingEntity, FloatModifier floatModifier){
-        float total = 0.0f;
-        for(ItemStack armorPiece: livingEntity.getArmorSlots()){
-            total += getFloatModifierValue(armorPiece, floatModifier);
-        }
-        return total;
+        return getTotalArmorStrengthForModifier(livingEntity, floatModifier);
     }
 
     public static float getUnitModifierValue(ItemStack itemStack, UnitModifier unitModifier){
@@ -154,8 +162,16 @@ public class ModifierUtil {
         return (int) getItemStackModifierStrength(itemStack, integerModifier);
     }
 
+    public static int getIntegerModifierValueFromArmor(LivingEntity livingEntity, IntegerModifier integerModifier){
+        return (int) getTotalArmorStrengthForModifier(livingEntity, integerModifier);
+    }
+
     public static boolean hasBooleanModifier(ItemStack itemStack, BooleanModifier booleanModifier){
         return getItemStackModifierStrength(itemStack, booleanModifier) > 0.0f;
+    }
+
+    public static boolean hasBooleanModifierOnArmor(LivingEntity livingEntity, BooleanModifier booleanModifier){
+        return getTotalArmorStrengthForModifier(livingEntity, booleanModifier) > 0.0f;
     }
 
     public static float getTargetConditionalModifierStrength(ItemStack itemStack, LivingEntity target){
@@ -177,16 +193,12 @@ public class ModifierUtil {
     }
 
     public static float getProtectionModifierStrength(LivingEntity livingEntity, DamageSource damageSource){
-        float total = 0.0f;
-        for(ItemStack armorPiece: livingEntity.getArmorSlots()){
-            total += getTotalStrengthForFunction(armorPiece, modifier -> {
-                if(modifier instanceof ProtectionModifier protectionModifier){
-                    return protectionModifier.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
-                }
-                return 0.0f;
-            });
-        }
-        return total;
+        return getTotalArmorStrengthForFunction(livingEntity, modifier -> {
+            if(modifier instanceof ProtectionModifier protectionModifier){
+                return protectionModifier.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
+            }
+            return 0.0f;
+        });
     }
 
     public static void addModifierTooltip(ItemStack itemStack, List<Component> tooltip, TooltipFlag tooltipFlag){

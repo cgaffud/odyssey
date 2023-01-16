@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.modifier.ModifierUtil;
+import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -21,7 +23,7 @@ public abstract class MixinPowderSnowBlock extends Block implements BucketPickup
 
     @Inject(method = "canEntityWalkOnPowderSnow", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private static void onCanEntityWalkOnPowderSnow(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(entity instanceof LivingEntity && ((LivingEntity) entity).getItemBySlot(EquipmentSlot.FEET).is(OdysseyItemTags.POWDER_SNOW_WALKABLES));
+        cir.setReturnValue(entity instanceof LivingEntity livingEntity && ModifierUtil.hasBooleanModifierOnArmor(livingEntity, Modifiers.SNOWSHOE));
         cir.cancel();
     }
 }

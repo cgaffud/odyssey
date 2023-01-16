@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.CombatRules;
@@ -26,6 +27,7 @@ import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.player.Player;
@@ -93,6 +95,8 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     @Shadow public float yBodyRotO;
     @Shadow public float yHeadRot;
     @Shadow public float yHeadRotO;
+
+    @Shadow @Nullable public abstract LivingEntity getKillCredit();
 
     public void baseTick() {
         LivingEntity livingEntity = this.getLivingEntity();
@@ -303,6 +307,20 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
 
                 return amount;
             }
+        }
+    }
+
+    public boolean canFreeze() {
+        if (this.isSpectator()) {
+            return false;
+        } else {
+            LivingEntity livingEntity = this.getLivingEntity();
+            boolean itemTagNotFreezeImmune = !livingEntity.getItemBySlot(EquipmentSlot.HEAD).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
+                    && !livingEntity.getItemBySlot(EquipmentSlot.CHEST).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
+                    && !livingEntity.getItemBySlot(EquipmentSlot.LEGS).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
+                    && !livingEntity.getItemBySlot(EquipmentSlot.FEET).is(ItemTags.FREEZE_IMMUNE_WEARABLES);
+            boolean modifierNotFreezeImmune = ModifierUtil.getIntegerModifierValueFromArmor(livingEntity, Modifiers.FREEZE_IMMUNITY) <= 0;
+            return itemTagNotFreezeImmune && modifierNotFreezeImmune && super.canFreeze();
         }
     }
 
