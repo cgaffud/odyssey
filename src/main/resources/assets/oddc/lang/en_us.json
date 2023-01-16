@@ -542,5 +542,6 @@
   "modifier.oddc.swim_speed": "+%s Swim Speed",
   "modifier.oddc.snowshoe": "Snowshoe",
   "modifier.oddc.freeze_immunity": "+%s Freeze Immunity",
-  "modifier.oddc.thorns": "+%s Thorns"
+  "modifier.oddc.thorns": "+%s Thorns",
+  "modifier.oddc.binding": "Binding"
 }

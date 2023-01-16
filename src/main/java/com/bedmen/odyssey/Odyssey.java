@@ -86,7 +86,6 @@ public class Odyssey
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
 
             //Equipment / Enchantments
-            EquipmentArmorItem.initEquipment();
             EquipmentShieldItem.initEquipment();
             EquipmentItem.initEquipment();
             TomeItem.initTomes();

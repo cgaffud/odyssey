@@ -39,16 +39,6 @@ public abstract class MixinEnchantmentHelper {
     private static void runIterationOnItem(EnchantmentHelper.EnchantmentVisitor p_44851_, ItemStack p_44852_) {}
 
     /**
-     * Includes set bonus levels
-     */
-    @Inject(method = "runIterationOnInventory", at = @At("TAIL"))
-    private static void onRunIterationOnInventory(EnchantmentHelper.EnchantmentVisitor enchantmentVisitor, Iterable<ItemStack> itemStacks, CallbackInfo ci) {
-        for(Map.Entry<Enchantment, Integer> entry : EnchantmentUtil.getSetBonusLevels(itemStacks).entrySet()){
-            enchantmentVisitor.accept(entry.getKey(), entry.getValue());
-        }
-    }
-
-    /**
      * Includes innate levels
      */
     @Inject(method = "runIterationOnItem", at = @At("TAIL"))
@@ -81,7 +71,6 @@ public abstract class MixinEnchantmentHelper {
         for(ItemStack itemstack : iterable) {
             i += getItemEnchantmentLevel(enchantment, itemstack);
         }
-        i += EnchantmentUtil.getSetBonusLevel(armor, enchantment);
         //TODO amulet
 //        if(livingEntity instanceof IOdysseyPlayer){
 //            i += getItemEnchantmentLevel(enchantment, ((IOdysseyPlayer) livingEntity).getTrinketSlot());
@@ -159,5 +148,15 @@ public abstract class MixinEnchantmentHelper {
     public static boolean hasAquaAffinity(LivingEntity livingEntity) {
         return getEnchantmentLevel(Enchantments.AQUA_AFFINITY, livingEntity) > 0
                 || ModifierUtil.hasBooleanModifier(livingEntity.getMainHandItem(), Modifiers.AQUA_AFFINITY);
+    }
+
+    /**
+     * @author JemBren
+     * @reason Binding Modifier
+     */
+    @Overwrite
+    public static boolean hasBindingCurse(ItemStack itemStack) {
+        return getItemEnchantmentLevel(Enchantments.BINDING_CURSE, itemStack) > 0
+                || ModifierUtil.hasBooleanModifier(itemStack, Modifiers.BINDING);
     }
 }

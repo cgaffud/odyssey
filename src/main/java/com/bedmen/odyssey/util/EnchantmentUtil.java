@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.enchantment.odyssey.ConditionalAmpEnchantment;
-import com.bedmen.odyssey.items.equipment.base.EquipmentArmorItem;
 import com.bedmen.odyssey.registry.EnchantmentRegistry;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
@@ -37,7 +36,6 @@ public class EnchantmentUtil {
                 Pair.of(EnchantmentRegistry.FALL_PROTECTION.get(), 1),
                 Pair.of(EnchantmentRegistry.ICE_PROTECTION.get(), 1),
                 Pair.of(EnchantmentRegistry.RESPIRATION.get(), 1),
-                Pair.of(EnchantmentRegistry.THORNS.get(), 1),
                 Pair.of(EnchantmentRegistry.DEPTH_STRIDER.get(), 1),
                 Pair.of(EnchantmentRegistry.SHARPNESS.get(), 1),
                 Pair.of(EnchantmentRegistry.BANE_OF_ARTHROPODS.get(), 1),
@@ -218,36 +216,6 @@ public class EnchantmentUtil {
 //        buffer.writeVarInt(enchantmentToInt(e));
 //    }
 
-    public static int getSetBonusLevel(Iterable<ItemStack> armor, Enchantment enchantment){
-        Integer i = getSetBonusLevels(armor).get(enchantment);
-        if(i == null){
-            return 0;
-        }
-        return i;
-    }
-
-    public static Map<Enchantment, Integer> getSetBonusLevels(Iterable<ItemStack> armor){
-        Item setBonusItem = null;
-        ArmorMaterial material1 = null;
-        int setBonusCounter = 1;
-        for (ItemStack itemstack : armor) {
-            Item item = itemstack.getItem();
-            if (item instanceof ArmorItem) {
-                ArmorMaterial material2 = ((ArmorItem) item).getMaterial();
-                if (material1 == null){
-                    material1 = material2;
-                    setBonusItem = item;
-                }
-                else if (material1 == material2)
-                    setBonusCounter++;
-            }
-        }
-        if(setBonusCounter >= 4 && setBonusItem instanceof EquipmentArmorItem equipmentArmorItem) {
-            return equipmentArmorItem.getSetBonusMap();
-        }
-        return new HashMap<>();
-    }
-
     public static Integer getSumEnchantmentLevels(Enchantment enchantment, LivingEntity entity){
         Iterable<ItemStack> itemSlots = enchantment.getSlotItems(entity).values();
         int sum = 0;
@@ -356,23 +324,6 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.VOLATILE.get(), itemStack) > 0;
     }
 
-    public static int getShattering(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SHATTERING.get(), entity);
-    }
-
-    public static int getDownpour(LivingEntity entity){
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DOWNPOUR.get(),entity);
-    }
-
-    public static int getThorns(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.THORNS.get(), itemStack);
-    }
-
-    public static int getQuickChargeTime(int chargeTime, ItemStack itemStack) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.QUICK_CHARGE.get(), itemStack);
-        return chargeTime - (chargeTime / 5) * i;
-    }
-
     public static int getPiercing(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), itemStack);
     }
@@ -381,16 +332,8 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MULTISHOT.get(), itemStack);
     }
 
-    public static int getPower(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.POWER_ARROWS.get(), itemStack);
-    }
-
     public static int getPunch(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get(), itemStack);
-    }
-
-    public static int getFlame(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), itemStack);
     }
 
     public static float getSuperChargeMultiplier(ItemStack itemStack) {

@@ -53,6 +53,7 @@ public class Modifiers {
     public static final BooleanModifier SNOWSHOE = new BooleanModifier("snowshoe");
     public static final IntegerModifier FREEZE_IMMUNITY = new IntegerModifier("freeze_immunity");
     public static final FloatModifier THORNS = new FloatModifier("thorns");
+    public static final BooleanModifier BINDING = new BooleanModifier("binding");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

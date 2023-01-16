@@ -19,9 +19,6 @@ import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -33,8 +30,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class ItemRegistry {
 
@@ -306,7 +301,7 @@ public class ItemRegistry {
     // # Armors
 
     // ## Tier 1
-    public static final RegistryObject<Item> HOLLOW_COCONUT = ITEMS.register("hollow_coconut", () -> new HollowCoconutItem(OdysseyArmorMaterials.COCONUT, EquipmentSlot.HEAD, new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), BINDING));
+    public static final RegistryObject<Item> HOLLOW_COCONUT = ITEMS.register("hollow_coconut", () -> new HollowCoconutItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.COCONUT, EquipmentSlot.HEAD, List.of(), List.of(new ModifierInstance(Modifiers.BINDING))));
 
     public static final RegistryObject<Item> CACTUS_HELMET = ITEMS.register("cactus_helmet", () -> new InnateModifierArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.CACTUS, EquipmentSlot.HEAD, List.of(), List.of(new ModifierInstance(Modifiers.THORNS, 1.0f))));
     public static final RegistryObject<Item> CACTUS_CHESTPLATE = ITEMS.register("cactus_chestplate", () -> new InnateModifierArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), InnateModifierArmorMaterial.CACTUS, EquipmentSlot.CHEST, List.of(), List.of(new ModifierInstance(Modifiers.THORNS, 1.0f))));

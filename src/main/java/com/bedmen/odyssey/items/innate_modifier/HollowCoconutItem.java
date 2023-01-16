@@ -1,8 +1,8 @@
-package com.bedmen.odyssey.items.equipment;
+package com.bedmen.odyssey.items.innate_modifier;
 
-import com.bedmen.odyssey.combat.OdysseyArmorMaterials;
-import com.bedmen.odyssey.enchantment.LevEnchSup;
-import com.bedmen.odyssey.items.equipment.base.EquipmentArmorItem;
+import com.bedmen.odyssey.combat.ArmorAbility;
+import com.bedmen.odyssey.combat.InnateModifierArmorMaterial;
+import com.bedmen.odyssey.modifier.ModifierInstance;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -29,12 +29,13 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
-public class HollowCoconutItem extends EquipmentArmorItem {
+public class HollowCoconutItem extends InnateModifierArmorItem {
     private final Block block = BlockRegistry.HOLLOW_COCONUT.get();
 
-    public HollowCoconutItem(OdysseyArmorMaterials odysseyArmorMaterials, EquipmentSlot slotType, Properties properties, LevEnchSup... levEnchSups) {
-        super(odysseyArmorMaterials, slotType, properties, levEnchSups);
+    public HollowCoconutItem(Properties properties, InnateModifierArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, List<ArmorAbility> armorAbilityList, List<ModifierInstance> innateModifierList) {
+        super(properties, armorMaterial, equipmentSlot, armorAbilityList, innateModifierList);
     }
 
     public InteractionResult useOn(UseOnContext p_195939_1_) {

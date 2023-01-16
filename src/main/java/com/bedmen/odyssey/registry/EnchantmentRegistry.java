@@ -59,9 +59,6 @@ public class EnchantmentRegistry {
     public static final RegistryObject<Enchantment> QUICK_CHARGE = ENCHANTMENTS.register("quick_charge", () -> new OdysseyBowEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> PIERCING = ENCHANTMENTS.register("piercing", () -> new OdysseyBowEnchantment(Enchantment.Rarity.COMMON, EquipmentSlot.MAINHAND));
 
-    //Other
-    public static final RegistryObject<Enchantment> THORNS = ENCHANTMENTS.register("thorns", () -> new OdysseyThornsEnchantment(Enchantment.Rarity.VERY_RARE, ARMOR_SLOTS));
-
     // ------ Odyssey Enchantments ------
     
     // Conditional Enchantments
