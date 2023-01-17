@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.combat.CombatUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ public abstract class MixinLocalPlayer extends Player {
 
     @ModifyVariable(method = "swing", at = @At(value = "HEAD"), argsOnly = true)
     private InteractionHand onSwing(InteractionHand interactionHand) {
-        if(CombatUtil.isDualWielding(this)){
+        if(WeaponUtil.isDualWielding(this)){
             this.alternateHands ^= true;
             return this.alternateHands ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         }

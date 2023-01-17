@@ -3,7 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
+import com.bedmen.odyssey.items.odyssey_versions.AspectBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -82,7 +82,7 @@ public class RenderEvents {
         }
         else if (player.isUsingItem()) {
             ItemStack itemstack = player.getUseItem();
-            if (itemstack.getItem() instanceof OdysseyBowItem && !itemstack.is(Items.BOW)) {
+            if (itemstack.getItem() instanceof AspectBowItem && !itemstack.is(Items.BOW)) {
                 int i = player.getTicksUsingItem();
                 float f1 = (float)i / 20.0F;
                 if (f1 > 1.0F) {

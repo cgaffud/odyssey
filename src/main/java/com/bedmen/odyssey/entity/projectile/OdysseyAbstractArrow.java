@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.combat.CombatUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -27,11 +27,11 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     public static final String PIERCING_DAMAGE_PENALTY_TAG = "PiercingDamagePenalty";
     public static final String LOOTING_MODIFIER_TAG = "LootingModifier";
     public static final String LARCENY_MODIFIER_TAG = "LarcenyModifier";
-    public float knockbackModifier = 1.0f;
+    public float knockbackAspect = 1.0f;
     // Decreases damage of arrow on last piercing
     public float piercingDamagePenalty = 1.0f;
-    public int lootingModifier = 0;
-    public float larcenyModifier = 0.0f;
+    public int lootingAspect = 0;
+    public float larcenyAspect = 0.0f;
 
     protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, Level level) {
         super(type, level);
@@ -49,7 +49,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         super.defineSynchedData();
     }
 
-    public void setPiercingModifier(float piercingModifier){
+    public void setPiercingAspect(float piercingModifier){
         int ceil = Mth.ceil(piercingModifier);
         this.piercingDamagePenalty = 1.0f - ((float)ceil) + piercingModifier;
         this.setPierceLevel((byte)ceil);
@@ -58,7 +58,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
         double velocity = this.getDeltaMovement().length();
-        double velocityFactor = velocity / CombatUtil.BASE_ARROW_VELOCITY ;
+        double velocityFactor = velocity / WeaponUtil.BASE_ARROW_VELOCITY ;
         double damage = Mth.clamp(velocityFactor * velocityFactor * this.getBaseDamage(), 0.0D, 2.147483647E9D);
         if (this.getPierceLevel() > 0) {
             if (this.piercingIgnoreEntityIds == null) {
@@ -160,17 +160,17 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        compoundTag.putFloat(KNOCKBACK_MODIFIER_TAG, this.knockbackModifier);
+        compoundTag.putFloat(KNOCKBACK_MODIFIER_TAG, this.knockbackAspect);
         compoundTag.putFloat(PIERCING_DAMAGE_PENALTY_TAG, this.piercingDamagePenalty);
-        compoundTag.putInt(LOOTING_MODIFIER_TAG, this.lootingModifier);
-        compoundTag.putFloat(LARCENY_MODIFIER_TAG, this.larcenyModifier);
+        compoundTag.putInt(LOOTING_MODIFIER_TAG, this.lootingAspect);
+        compoundTag.putFloat(LARCENY_MODIFIER_TAG, this.larcenyAspect);
     }
 
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        this.knockbackModifier = compoundTag.contains(KNOCKBACK_MODIFIER_TAG) ? compoundTag.getFloat(KNOCKBACK_MODIFIER_TAG) : 1.0f;
+        this.knockbackAspect = compoundTag.contains(KNOCKBACK_MODIFIER_TAG) ? compoundTag.getFloat(KNOCKBACK_MODIFIER_TAG) : 1.0f;
         this.piercingDamagePenalty = compoundTag.contains(PIERCING_DAMAGE_PENALTY_TAG) ? compoundTag.getFloat(PIERCING_DAMAGE_PENALTY_TAG) : 1.0f;
-        this.lootingModifier = compoundTag.getInt(LOOTING_MODIFIER_TAG);
-        this.larcenyModifier = compoundTag.getFloat(LARCENY_MODIFIER_TAG);
+        this.lootingAspect = compoundTag.getInt(LOOTING_MODIFIER_TAG);
+        this.larcenyAspect = compoundTag.getFloat(LARCENY_MODIFIER_TAG);
     }
 }

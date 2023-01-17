@@ -1,13 +1,10 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.combat.CombatUtil;
-import com.bedmen.odyssey.combat.SetBonusAbility;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.modifier.ModifierUtil;
-import com.bedmen.odyssey.modifier.Modifiers;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.combat.SmackPush;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.common.base.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -16,10 +13,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.CombatRules;
-import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -29,23 +24,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
@@ -60,7 +47,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private boolean hasSlowFall = false;
     private int flightValue = 0;
     private SmackPush smackPush = new SmackPush();
-    private float nextKnockbackModifier = 1.0f;
+    private float nextKnockbackAspect = 1.0f;
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -134,7 +121,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             if (drowningAmount > 0) {
                 boolean cannotBreatheUnderWater = !this.canBreatheUnderwater() && !MobEffectUtil.hasWaterBreathing(livingEntity) && (!flag || !((Player)livingEntity).getAbilities().invulnerable);
                 if (cannotBreatheUnderWater) {
-                    float respirationStrength = 1.0f + ModifierUtil.getFloatModifierValueFromArmor(livingEntity, Modifiers.RESPIRATION);
+                    float respirationStrength = 1.0f + AspectUtil.getFloatAspectValueFromArmor(livingEntity, Aspects.RESPIRATION);
                     float airLossChance = 1.0f / respirationStrength;
                     for(int i = 0; i < drowningAmount; i++){
                         if(airLossChance >= livingEntity.getRandom().nextFloat()){
@@ -244,7 +231,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     }
 
     public void incrementFlight(){
-        int amount = this.hasSlowFall ? 1 : this.glidingLevel;
+        int amount = this.hasSlowFall ? 1 : this.getMaxFlight() / 20;
         this.flightValue = Mth.clamp(this.flightValue + amount, 0, this.getMaxFlight());
     }
 
@@ -258,7 +245,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     }
 
     public int getMaxFlight(){
-        return this.hasSlowFall ? 100 : this.glidingLevel * 20;
+        return this.hasSlowFall ? 100 : this.glidingLevel;
     }
 
     public SmackPush getSmackPush(){
@@ -269,12 +256,12 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         this.smackPush = smackPush;
     }
 
-    public float getNextKnockbackModifier(){
-        return this.nextKnockbackModifier;
+    public float getNextKnockbackAspect(){
+        return this.nextKnockbackAspect;
     }
 
-    public void setNextKnockbackModifier(float nextKnockbackModifier){
-        this.nextKnockbackModifier = nextKnockbackModifier;
+    public void setNextKnockbackAspect(float nextKnockbackAspect){
+        this.nextKnockbackAspect = nextKnockbackAspect;
     }
 
     protected float getDamageAfterMagicAbsorb(DamageSource damageSource, float amount) {
@@ -300,7 +287,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             if (amount <= 0.0F) {
                 return 0.0F;
             } else {
-                float protectionArmor = 5.0f * ModifierUtil.getProtectionModifierStrength(this.getLivingEntity(), damageSource);
+                float protectionArmor = 5.0f * AspectUtil.getProtectionAspectStrength(this.getLivingEntity(), damageSource);
                 if (protectionArmor > 0.0f) {
                     amount = CombatRules.getDamageAfterAbsorb(amount, protectionArmor, 0.0f);
                 }
@@ -319,7 +306,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
                     && !livingEntity.getItemBySlot(EquipmentSlot.CHEST).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
                     && !livingEntity.getItemBySlot(EquipmentSlot.LEGS).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
                     && !livingEntity.getItemBySlot(EquipmentSlot.FEET).is(ItemTags.FREEZE_IMMUNE_WEARABLES);
-            boolean modifierNotFreezeImmune = ModifierUtil.getIntegerModifierValueFromArmor(livingEntity, Modifiers.FREEZE_IMMUNITY) <= 0;
+            boolean modifierNotFreezeImmune = AspectUtil.getIntegerAspectValueFromArmor(livingEntity, Aspects.FREEZE_IMMUNITY) <= 0;
             return itemTagNotFreezeImmune && modifierNotFreezeImmune && super.canFreeze();
         }
     }

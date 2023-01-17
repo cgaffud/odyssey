@@ -1,16 +1,14 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.modifier.ModifierUtil;
-import com.bedmen.odyssey.modifier.Modifiers;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.enchantment.TieredEnchantment;
 import com.bedmen.odyssey.items.equipment.base.IEquipment;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -20,7 +18,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import org.apache.commons.lang3.mutable.MutableInt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -101,7 +98,7 @@ public abstract class MixinEnchantmentHelper {
             }
 
             if(enchantment == Enchantments.BLOCK_FORTUNE) {
-                j += ModifierUtil.getIntegerModifierValue(itemStack, Modifiers.FORTUNE);
+                j += AspectUtil.getIntegerAspectValue(itemStack, Aspects.FORTUNE);
             }
 
             return j;
@@ -142,21 +139,21 @@ public abstract class MixinEnchantmentHelper {
 
     /**
      * @author JemBren
-     * @reason Aqua Affinity Modifier
+     * @reason Aqua Affinity Aspect
      */
     @Overwrite
     public static boolean hasAquaAffinity(LivingEntity livingEntity) {
         return getEnchantmentLevel(Enchantments.AQUA_AFFINITY, livingEntity) > 0
-                || ModifierUtil.hasBooleanModifier(livingEntity.getMainHandItem(), Modifiers.AQUA_AFFINITY);
+                || AspectUtil.hasBooleanAspect(livingEntity.getMainHandItem(), Aspects.AQUA_AFFINITY);
     }
 
     /**
      * @author JemBren
-     * @reason Binding Modifier
+     * @reason Binding Aspect
      */
     @Overwrite
     public static boolean hasBindingCurse(ItemStack itemStack) {
         return getItemEnchantmentLevel(Enchantments.BINDING_CURSE, itemStack) > 0
-                || ModifierUtil.hasBooleanModifier(itemStack, Modifiers.BINDING);
+                || AspectUtil.hasBooleanAspect(itemStack, Aspects.BINDING);
     }
 }

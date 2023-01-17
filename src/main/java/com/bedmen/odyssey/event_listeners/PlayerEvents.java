@@ -1,10 +1,11 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.combat.*;
-import com.bedmen.odyssey.items.innate_modifier.InnateModifierArmorItem;
-import com.bedmen.odyssey.modifier.ModifierUtil;
-import com.bedmen.odyssey.modifier.Modifiers;
+import com.bedmen.odyssey.items.odyssey_versions.AspectArmorItem;
+import com.bedmen.odyssey.items.odyssey_versions.AspectItem;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -72,8 +73,8 @@ public class PlayerEvents {
         } else { //End of Tick
             // Gliding
             if(player instanceof OdysseyLivingEntity odysseyLivingEntity){
-                odysseyLivingEntity.setFlightLevels(CombatUtil.hasSetBonusAbility(player, SetBonusAbility.SLOW_FALL), CombatUtil.getGlidingLevel(player));
-                if(player.isShiftKeyDown() && CombatUtil.hasSetBonusAbility(player, SetBonusAbility.SLOW_FALL) && odysseyLivingEntity.getFlightValue() > 0){
+                odysseyLivingEntity.setFlightLevels(AspectUtil.hasBooleanAspectOnArmor(player, Aspects.SLOW_FALL), AspectUtil.getIntegerAspectValueFromArmor(player, Aspects.GLIDE));
+                if(player.isShiftKeyDown() && AspectUtil.hasBooleanAspectOnArmor(player, Aspects.SLOW_FALL) && odysseyLivingEntity.getFlightValue() > 0){
                     odysseyLivingEntity.decrementFlight();
                     if(!player.level.isClientSide){
                         player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 2, 0, false, false, true));
@@ -84,7 +85,7 @@ public class PlayerEvents {
             }
 
             // Turtle Mastery
-            if (CombatUtil.hasSetBonusAbility(player, SetBonusAbility.TURTLE_MASTERY) && player.isShiftKeyDown() && !player.level.isClientSide) {
+            if (AspectUtil.hasBooleanAspectOnArmor(player, Aspects.TURTLE_MASTERY) && player.isShiftKeyDown() && !player.level.isClientSide) {
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, 0, false, false, true));
             }
         }
@@ -116,7 +117,7 @@ public class PlayerEvents {
         Player player = event.getPlayer();
         ItemStack itemStack = player.getMainHandItem();
         Item item = itemStack.getItem();
-        if(item instanceof OdysseyMeleeWeapon odysseyMeleeWeapon){
+        if(item instanceof AspectItem aspectItem){
             Entity target = event.getTarget();
             float attackStrengthScale = player.getAttackStrengthScale(0.5F);
             boolean isFullyCharged = attackStrengthScale > 0.9F;
@@ -135,8 +136,8 @@ public class PlayerEvents {
                     && !hasExtraKnockbackFromSprinting
                     && player.isOnGround()
                     && (player.walkDist - player.walkDistO) < (double)player.getSpeed()
-                    && odysseyMeleeWeapon.hasAbility(MeleeWeaponAbility.SWEEP);
-            float sweepDamage = ModifierUtil.getUnitModifierValue(itemStack, Modifiers.ADDITIONAL_SWEEP_DAMAGE);
+                    && AspectUtil.hasBooleanAspect(itemStack, Aspects.SWEEP);
+            float sweepDamage = AspectUtil.getUnitAspectValue(itemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
             // Sweep
             if(canSweep){
                 // Unchanging variables are needed to use in the below lambda expressions
@@ -153,7 +154,7 @@ public class PlayerEvents {
                 player.sweepAttack();
             }
             // Smack
-            if(isFullyCharged && odysseyMeleeWeapon.hasAbility(MeleeWeaponAbility.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
+            if(isFullyCharged && AspectUtil.hasBooleanAspect(itemStack, Aspects.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
                 odysseyLivingEntity.setSmackPush(new SmackPush(attackStrengthScale, player, target));
             }
         }
@@ -165,13 +166,13 @@ public class PlayerEvents {
         Item item = itemStack.getItem();
         TooltipFlag tooltipFlag = event.getFlags();
         List<Component> componentList = new ArrayList<>();
-        if(item instanceof InnateModifierArmorItem innateModifierArmorItem){
-            innateModifierArmorItem.getSetBonusAbilityHolder().addTooltip(componentList, tooltipFlag);
+        if(item instanceof AspectArmorItem aspectArmorItem){
+            aspectArmorItem.getSetBonusAbilityHolder().addTooltip(componentList, tooltipFlag);
         }
-        if(item instanceof OdysseyAbilityItem odysseyAbilityItem){
-            odysseyAbilityItem.getAbilityHolder().addTooltip(componentList, tooltipFlag);
+        if(item instanceof AspectItem aspectItem){
+            aspectItem.getAspectHolder().addTooltip(componentList, tooltipFlag);
         }
-        ModifierUtil.addModifierTooltip(itemStack, componentList, tooltipFlag);
+        AspectUtil.addAddedModifierTooltip(itemStack, componentList, tooltipFlag);
 
         List<Component> tooltip = event.getToolTip();
         // Remove swim speed attributes

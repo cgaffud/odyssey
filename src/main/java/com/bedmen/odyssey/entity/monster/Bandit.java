@@ -1,10 +1,10 @@
 package com.bedmen.odyssey.entity.monster;
 
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyCrossbowItem;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.items.odyssey_versions.AspectCrossbowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.combat.MeleeWeaponAbility;
-import com.bedmen.odyssey.combat.OdysseyMeleeWeapon;
-import com.bedmen.odyssey.combat.CombatUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -79,7 +79,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
             case 3,4 -> Items.GOLDEN_SWORD;
         };
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
-        if (item instanceof OdysseyMeleeWeapon odysseyMeleeWeapon && odysseyMeleeWeapon.hasAbility(MeleeWeaponAbility.DUAL_WIELD)) {
+        if(AspectUtil.hasBooleanAspect(item.getDefaultInstance(), Aspects.DUAL_WIELD)){
             this.setItemSlot(EquipmentSlot.OFFHAND, item.getDefaultInstance());
         }
         this.reassessWeaponGoal();
@@ -130,7 +130,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
 
     @Override
     public void shootCrossbowProjectile(LivingEntity livingEntity, ItemStack crossbow, Projectile projectile, float angle) {
-        float velocity = CombatUtil.getMaxArrowVelocity(crossbow, false);
+        float velocity = WeaponUtil.getMaxArrowVelocity(crossbow, false);
         this.shootCrossbowProjectile(this, livingEntity, projectile, angle, velocity);
     }
 
@@ -142,8 +142,8 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
     public void performRangedAttack(LivingEntity target, float power) {
         InteractionHand interactionhand = ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem);
         ItemStack crossbow = this.getItemInHand(interactionhand);
-        if (this.isHolding(is -> is.getItem() instanceof OdysseyCrossbowItem)) {
-            OdysseyCrossbowItem.performShooting(this.level, this, interactionhand, crossbow, 0.0f, (float)(14 - this.level.getDifficulty().getId() * 4));
+        if (this.isHolding(is -> is.getItem() instanceof AspectCrossbowItem)) {
+            AspectCrossbowItem.performShooting(this.level, this, interactionhand, crossbow, 0.0f, (float)(14 - this.level.getDifficulty().getId() * 4));
         }
         this.onCrossbowAttackPerformed();
     }

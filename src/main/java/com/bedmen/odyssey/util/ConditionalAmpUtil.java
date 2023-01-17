@@ -1,9 +1,9 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.modifier.Modifier;
-import com.bedmen.odyssey.modifier.ModifierUtil;
-import com.bedmen.odyssey.modifier.EnvironmentConditionalMeleeModifier;
+import com.bedmen.odyssey.aspect.Aspect;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.EnvironmentConditionalAspect;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -16,13 +16,13 @@ public class ConditionalAmpUtil {
     public static final String GRADIENT_COLOR_TAG = Odyssey.MOD_ID + ":GradientColor";
 
     public interface ConditionalAmpItem {
-        Modifier getModifier();
+        Aspect getAspect();
     }
 
     public static float activeFactor(ItemStack itemStack, LivingEntity livingEntity) {
         if (itemStack.getItem() instanceof ConditionalAmpItem conditionalAmpItem
-                && conditionalAmpItem.getModifier() instanceof EnvironmentConditionalMeleeModifier environmentConditionalMeleeModifier){
-            return environmentConditionalMeleeModifier.attackBoostFactorFunction.getBoostFactor(livingEntity.eyeBlockPosition(), livingEntity.level);
+                && conditionalAmpItem.getAspect() instanceof EnvironmentConditionalAspect environmentConditionalAspect){
+            return environmentConditionalAspect.attackBoostFactorFunction.getBoostFactor(livingEntity.eyeBlockPosition(), livingEntity.level);
         }
 
         return 0.0f;
@@ -35,7 +35,7 @@ public class ConditionalAmpUtil {
     public static void setDamageTag(ItemStack itemStack, Entity entity, boolean isMelee) {
         // todo remove enchantment
         float enchantmentBonus = EnchantmentUtil.getConditionalAmpBonus(itemStack, entity, isMelee);
-        float modifierBonus = ModifierUtil.getEnvironmentalModifierStrength(itemStack, entity.eyeBlockPosition(), entity.level);
+        float modifierBonus = AspectUtil.getEnvironmentalAspectStrength(itemStack, entity.eyeBlockPosition(), entity.level);
         itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, enchantmentBonus + modifierBonus);
     }
 

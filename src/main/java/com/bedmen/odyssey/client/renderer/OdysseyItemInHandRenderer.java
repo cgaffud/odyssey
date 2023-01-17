@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.client.renderer;
 
 import com.bedmen.odyssey.items.equipment.BoomerangItem;
-import com.bedmen.odyssey.combat.CombatUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.google.common.base.MoreObjects;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -420,7 +420,7 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
             this.offHandHeight = Mth.clamp(this.offHandHeight - 0.4F, 0.0F, 1.0F);
         } else {
             //Makes it so that when dual wielding hatchets the main hand doesn't move when offhand is swung
-            float f = CombatUtil.isDualWielding(localplayer) ? 1.0f : localplayer.getAttackStrengthScale(1.0F);
+            float f = WeaponUtil.isDualWielding(localplayer) ? 1.0f : localplayer.getAttackStrengthScale(1.0F);
             boolean requipM = net.minecraftforge.client.ForgeHooksClient.shouldCauseReequipAnimation(this.mainHandItem, itemstack, localplayer.getInventory().selected);
             boolean requipO = net.minecraftforge.client.ForgeHooksClient.shouldCauseReequipAnimation(this.offHandItem, itemstack1, -1);
 

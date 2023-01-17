@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.enchantment;
 
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyMeleeItem;
+import com.bedmen.odyssey.items.odyssey_versions.AspectMeleeItem;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
@@ -10,7 +10,7 @@ public class OdysseyEnchantmentCategory {
     // Todo remove AXE
     public static final EnchantmentCategory AXE = EnchantmentCategory.create("AXE", (Item item) -> item instanceof AxeItem);
     public static final EnchantmentCategory SHIELD = EnchantmentCategory.create("SHIELD", (Item item) -> item instanceof ShieldItem);
-    public static final EnchantmentCategory MAIN_MELEE = EnchantmentCategory.create("MAIN_MELEE", (Item item) -> item instanceof SwordItem || item instanceof OdysseyMeleeItem);
+    public static final EnchantmentCategory MAIN_MELEE = EnchantmentCategory.create("MAIN_MELEE", (Item item) -> item instanceof SwordItem || item instanceof AspectMeleeItem);
     public static final EnchantmentCategory ALL_MELEE = EnchantmentCategory.create("ALL_MELEE", (Item item) -> MAIN_MELEE.canEnchant(item) || item instanceof DiggerItem);
     //TODO OdysseyTrident
     public static final EnchantmentCategory ODYSSEY_TRIDENT = EnchantmentCategory.create("ODYSSEY_TRIDENT", (Item item) -> item instanceof TridentItem /*|| item instanceof OdysseyTridentItem*/);

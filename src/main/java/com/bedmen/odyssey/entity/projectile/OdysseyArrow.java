@@ -1,12 +1,12 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyCrossbowItem;
-import com.bedmen.odyssey.modifier.ModifierUtil;
-import com.bedmen.odyssey.modifier.Modifiers;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.items.odyssey_versions.AspectBowItem;
+import com.bedmen.odyssey.items.odyssey_versions.AspectCrossbowItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.combat.ArrowType;
-import com.bedmen.odyssey.combat.CombatUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EntityType;
@@ -76,13 +76,13 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
     }
 
     public void setEnchantmentEffectsFromEntity(LivingEntity shooter, float bowDamageMultiplier) {
-        ItemStack bow = shooter.getItemInHand(ProjectileUtil.getWeaponHoldingHand(shooter, item -> item instanceof OdysseyBowItem || item instanceof OdysseyCrossbowItem));
-        this.setBaseDamage((bowDamageMultiplier + this.random.nextGaussian() * 0.1D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage * (CombatUtil.BASE_ARROW_VELOCITY * CombatUtil.BASE_ARROW_VELOCITY) / (CombatUtil.BASE_ARROW_VELOCITY_ENEMIES * CombatUtil.BASE_ARROW_VELOCITY_ENEMIES));
+        ItemStack bow = shooter.getItemInHand(ProjectileUtil.getWeaponHoldingHand(shooter, item -> item instanceof AspectBowItem || item instanceof AspectCrossbowItem));
+        this.setBaseDamage((bowDamageMultiplier + this.random.nextGaussian() * 0.1D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage * (WeaponUtil.BASE_ARROW_VELOCITY * WeaponUtil.BASE_ARROW_VELOCITY) / (WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES));
         // Knockback
-        this.knockbackModifier = ModifierUtil.getUnitModifierValue(bow, Modifiers.PROJECTILE_KNOCKBACK);
+        this.knockbackAspect = AspectUtil.getUnitAspectValue(bow, Aspects.PROJECTILE_KNOCKBACK);
         // Piercing
-        this.setPiercingModifier(ModifierUtil.getFloatModifierValue(bow, Modifiers.PIERCING));
+        this.setPiercingAspect(AspectUtil.getFloatAspectValue(bow, Aspects.PIERCING));
         // Larceny
-        this.larcenyModifier = ModifierUtil.getFloatModifierValue(bow, Modifiers.PROJECTILE_LARCENY_CHANCE);
+        this.larcenyAspect = AspectUtil.getFloatAspectValue(bow, Aspects.PROJECTILE_LARCENY_CHANCE);
     }
 }

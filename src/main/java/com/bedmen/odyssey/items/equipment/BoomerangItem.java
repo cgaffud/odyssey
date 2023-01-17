@@ -95,7 +95,7 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
 
     private Boomerang getBoomerang(Level level, LivingEntity owner, ItemStack boomerangStack, boolean isMultishot) {
         Boomerang boomerang = new Boomerang(level, owner, boomerangStack, isMultishot);
-        boomerang.lootingModifier = EnchantmentUtil.getMobLooting(boomerangStack);
+        boomerang.lootingAspect = EnchantmentUtil.getMobLooting(boomerangStack);
         boomerang.setKnockback(EnchantmentUtil.getPunch(boomerangStack));
         boomerang.setPierceLevel((byte)EnchantmentUtil.getPiercing(boomerangStack));
         return boomerang;

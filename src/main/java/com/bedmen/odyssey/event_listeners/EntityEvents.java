@@ -1,9 +1,8 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.combat.SetBonusAbility;
-import com.bedmen.odyssey.modifier.ModifierUtil;
-import com.bedmen.odyssey.modifier.Modifiers;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
@@ -15,17 +14,13 @@ import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.combat.SmackPush;
-import com.bedmen.odyssey.combat.CombatUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Zombie;
@@ -34,7 +29,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -57,7 +51,7 @@ public class EntityEvents {
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Perform Smack
             if(odysseyLivingEntity.getSmackPush().shouldPush){
-                CombatUtil.smackTarget(odysseyLivingEntity.getSmackPush());
+                WeaponUtil.smackTarget(odysseyLivingEntity.getSmackPush());
                 odysseyLivingEntity.setSmackPush(new SmackPush());
             }
         }
@@ -80,7 +74,7 @@ public class EntityEvents {
 
         // Frost Walker
         BlockPos blockPos = livingEntity.blockPosition();
-        if(CombatUtil.hasSetBonusAbility(livingEntity, SetBonusAbility.FROST_WALKER) && !blockPos.equals(livingEntity.lastPos)){
+        if(AspectUtil.hasBooleanAspectOnArmor(livingEntity, Aspects.FROST_WALKER) && !blockPos.equals(livingEntity.lastPos)){
             FrostWalkerEnchantment.onEntityMoved(livingEntity, livingEntity.level, blockPos, 1);
         }
     }
@@ -95,14 +89,14 @@ public class EntityEvents {
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
             ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
             // Smite, Bane of Arthropods, Hydro Damage
-            amount += ModifierUtil.getTargetConditionalModifierStrength(mainHandItemStack, hurtLivingEntity);
+            amount += AspectUtil.getTargetConditionalAspectStrength(mainHandItemStack, hurtLivingEntity);
             // Poison Damage
-            int poisonStrength = ModifierUtil.getIntegerModifierValue(mainHandItemStack, Modifiers.POISON_DAMAGE);
+            int poisonStrength = AspectUtil.getIntegerAspectValue(mainHandItemStack, Aspects.POISON_DAMAGE);
             if(poisonStrength > 0){
                 hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (int)(12 * poisonStrength), 1));
             }
             // Cobweb Chance
-            float cobwebChance = ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.COBWEB_CHANCE);
+            float cobwebChance = AspectUtil.getFloatAspectValue(mainHandItemStack, Aspects.COBWEB_CHANCE);
             if(cobwebChance > damageSourceLivingEntity.getRandom().nextFloat()){
                 BlockPos blockPos = new BlockPos(hurtLivingEntity.getPosition(1f));
                 if (hurtLivingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
@@ -110,29 +104,27 @@ public class EntityEvents {
                 }
             }
             // Melee Larceny
-            float larcenyChance = ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.LARCENY_CHANCE);
-            CombatUtil.tryLarceny(larcenyChance, damageSourceLivingEntity, hurtLivingEntity);
+            float larcenyChance = AspectUtil.getFloatAspectValue(mainHandItemStack, Aspects.LARCENY_CHANCE);
+            WeaponUtil.tryLarceny(larcenyChance, damageSourceLivingEntity, hurtLivingEntity);
 
             // Melee Knockback
             if(hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-                odysseyLivingEntity.setNextKnockbackModifier(ModifierUtil.getUnitModifierValue(mainHandItemStack, Modifiers.KNOCKBACK));
+                odysseyLivingEntity.setNextKnockbackAspect(AspectUtil.getUnitAspectValue(mainHandItemStack, Aspects.KNOCKBACK));
             }
 
             // Thorns
-            float thornsStrength = ModifierUtil.getFloatModifierValueFromArmor(hurtLivingEntity, Modifiers.THORNS);
+            float thornsStrength = AspectUtil.getFloatAspectValueFromArmor(hurtLivingEntity, Aspects.THORNS);
             if(thornsStrength > 0.0f && 0.25f >= hurtLivingEntity.getRandom().nextFloat()){
                 damageSourceLivingEntity.hurt(DamageSource.thorns(hurtLivingEntity), thornsStrength);
             }
 
             // Attack Damage Set Bonus
-            if(CombatUtil.hasSetBonusAbility(damageSourceLivingEntity, SetBonusAbility.THORNMAIL_ATTACK_DAMAGE)){
-                amount += 1;
-            }
+            amount += AspectUtil.getFloatAspectValueFromArmor(damageSourceLivingEntity, Aspects.ATTACK_DAMAGE);
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
-            odysseyLivingEntity.setNextKnockbackModifier(odysseyAbstractArrow.knockbackModifier);
+            odysseyLivingEntity.setNextKnockbackAspect(odysseyAbstractArrow.knockbackAspect);
             // Ranged Larceny
-            CombatUtil.tryLarceny(odysseyAbstractArrow.larcenyModifier, odysseyAbstractArrow.getOwner(), hurtLivingEntity);
+            WeaponUtil.tryLarceny(odysseyAbstractArrow.larcenyAspect, odysseyAbstractArrow.getOwner(), hurtLivingEntity);
         }
 
         // Break Coconut
@@ -160,7 +152,7 @@ public class EntityEvents {
         Entity damageSourceEntity = damageSource.getEntity();
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
             ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
-            float fatalDamage = ModifierUtil.getFloatModifierValue(mainHandItemStack, Modifiers.FATAL_HIT);
+            float fatalDamage = AspectUtil.getFloatAspectValue(mainHandItemStack, Aspects.FATAL_HIT);
             float currentHealth = hurtLivingEntity.getHealth();
             float newHealth = currentHealth - amount;
             if(newHealth > 0.0f && newHealth < fatalDamage){
@@ -314,10 +306,10 @@ public class EntityEvents {
         if(damageSource != null){
             Entity directEntity = damageSource.getDirectEntity();
             if(directEntity instanceof OdysseyAbstractArrow){
-                event.setLootingLevel(((OdysseyAbstractArrow) directEntity).lootingModifier);
+                event.setLootingLevel(((OdysseyAbstractArrow) directEntity).lootingAspect);
             } else if (directEntity instanceof LivingEntity livingEntity) {
                 ItemStack itemStack = livingEntity.getMainHandItem();
-                int looting = ModifierUtil.getIntegerModifierValue(itemStack, Modifiers.LOOTING_LUCK);
+                int looting = AspectUtil.getIntegerAspectValue(itemStack, Aspects.LOOTING_LUCK);
                 if(looting > 0){
                     event.setLootingLevel(looting);
                 }
@@ -339,8 +331,8 @@ public class EntityEvents {
     public static void onLivingKnockBackEvent(final LivingKnockBackEvent event){
         LivingEntity target = event.getEntityLiving();
         if(target instanceof OdysseyLivingEntity odysseyLivingEntity){
-            event.setStrength(event.getOriginalStrength() * odysseyLivingEntity.getNextKnockbackModifier());
-            odysseyLivingEntity.setNextKnockbackModifier(1.0f);
+            event.setStrength(event.getOriginalStrength() * odysseyLivingEntity.getNextKnockbackAspect());
+            odysseyLivingEntity.setNextKnockbackAspect(1.0f);
         }
     }
 }

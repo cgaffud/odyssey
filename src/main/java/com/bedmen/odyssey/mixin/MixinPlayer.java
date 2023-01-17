@@ -1,14 +1,12 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyBowItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.combat.BowAbility;
-import com.bedmen.odyssey.combat.MeleeWeaponAbility;
-import com.bedmen.odyssey.combat.OdysseyMeleeWeapon;
-import com.bedmen.odyssey.combat.CombatUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
@@ -21,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -65,7 +64,7 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     @Inject(method = "getCurrentItemAttackStrengthDelay", at = @At("HEAD"), cancellable = true)
     private void onGetCurrentItemAttackStrengthDelay(CallbackInfoReturnable<Float> cir) {
-        if(CombatUtil.isDualWielding(getPlayerEntity())){
+        if(WeaponUtil.isDualWielding(getPlayerEntity())){
             cir.setReturnValue((float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 10.0D));
             cir.cancel();
         }
@@ -88,7 +87,8 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     public void updateSniperScoping() {
         boolean isSniperScopingO = this.isSniperScoping;
-        this.isSniperScoping = this.getMainHandItem().getItem() instanceof OdysseyBowItem odysseyBowItem && odysseyBowItem.hasAbility(BowAbility.SPYGLASS) && this.isShiftKeyDown();
+        ItemStack itemStack = this.getMainHandItem();
+        this.isSniperScoping = AspectUtil.hasBooleanAspect(itemStack, Aspects.SPYGLASS) && this.isShiftKeyDown();
         if(!isSniperScopingO && this.isSniperScoping){
             this.playSound(SoundEvents.SPYGLASS_USE, 1.0F, 1.0F);
         } else if (isSniperScopingO && !this.isSniperScoping){
@@ -102,8 +102,8 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     protected void blockUsingShield(LivingEntity livingEntity) {
         super.blockUsingShield(livingEntity);
-        if (livingEntity.getMainHandItem().getItem() instanceof OdysseyMeleeWeapon odysseyMeleeWeapon
-        && odysseyMeleeWeapon.hasAbility(MeleeWeaponAbility.SHIELD_BASH)) {
+        ItemStack itemStack = livingEntity.getMainHandItem();
+        if (AspectUtil.hasBooleanAspect(itemStack, Aspects.SHIELD_BASH)) {
             this.disableShield(true);
         }
     }
