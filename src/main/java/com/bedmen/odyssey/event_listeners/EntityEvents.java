@@ -5,6 +5,7 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.items.odyssey_versions.AspectArmorItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
@@ -348,7 +349,11 @@ public class EntityEvents {
         Multimap<Attribute, AttributeModifier> oldMultimap = HashMultimap.create();
         Multimap<Attribute, AttributeModifier> newMultimap = HashMultimap.create();
         AspectUtil.fillAttributeMultimaps(livingEntity, oldItemStack, newItemStack, equipmentSlot, oldMultimap, newMultimap);
-        livingEntity.getAttributes().removeAttributeModifiers(oldMultimap);
-        livingEntity.getAttributes().addTransientAttributeModifiers(newMultimap);
+        if(!(oldItemStack.getItem() instanceof AspectArmorItem) || equipmentSlot.getType() == EquipmentSlot.Type.ARMOR){
+            livingEntity.getAttributes().removeAttributeModifiers(oldMultimap);
+        }
+        if(!(newItemStack.getItem() instanceof AspectArmorItem) || equipmentSlot.getType() == EquipmentSlot.Type.ARMOR){
+            livingEntity.getAttributes().addTransientAttributeModifiers(newMultimap);
+        }
     }
 }

@@ -7,6 +7,7 @@ public class AspectInstance {
     public final float strength;
     public final AspectTooltipDisplaySetting aspectTooltipDisplaySetting;
 
+
     public AspectInstance(FloatAspect floatAspect, float strength){
         this((Aspect)floatAspect, strength);
     }
