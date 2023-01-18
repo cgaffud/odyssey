@@ -14,26 +14,16 @@ public class AspectHolder {
     private static final MutableComponent ABILITIES_HEADER = new TranslatableComponent("item.oddc.abilities");
     private static final MutableComponent INNATE_MODIFIERS_HEADER = new TranslatableComponent("item.oddc.innate_modifiers");
 
-    public final AspectStrengthMap abilityMap = new AspectStrengthMap();
-    public final AspectStrengthMap innateModifierMap = new AspectStrengthMap();
-    public final AspectStrengthMap allAspectMap = new AspectStrengthMap();
+    public final AspectStrengthMap abilityMap;
+    public final AspectStrengthMap innateModifierMap;
+    public final AspectStrengthMap allAspectMap;
     public final List<Component> nonAdvancedTooltip;
     public final List<Component> advancedTooltip;
 
     public AspectHolder(List<AspectInstance> abilityList, List<AspectInstance> innateModifierList) {
-        for(AspectInstance aspectInstance : abilityList){
-            this.abilityMap.put(aspectInstance.aspect, aspectInstance.strength);
-            this.allAspectMap.put(aspectInstance.aspect, aspectInstance.strength);
-        }
-        for(AspectInstance aspectInstance : innateModifierList){
-            this.innateModifierMap.put(aspectInstance.aspect, aspectInstance.strength);
-            if(this.allAspectMap.containsKey(aspectInstance.aspect)){
-                float strength = this.allAspectMap.getNonNull(aspectInstance.aspect);
-                this.allAspectMap.put(aspectInstance.aspect, strength + aspectInstance.strength);
-            } else {
-                this.allAspectMap.put(aspectInstance.aspect, aspectInstance.strength);
-            }
-        }
+        this.abilityMap = new AspectStrengthMap(abilityList);
+        this.innateModifierMap = new AspectStrengthMap(innateModifierList);
+        this.allAspectMap = this.abilityMap.combine(this.innateModifierMap);
         this.nonAdvancedTooltip = AspectUtil.getTooltip(abilityList, false, Optional.empty(), OdysseyChatFormatting.COPPER);
         nonAdvancedTooltip.addAll(AspectUtil.getTooltip(innateModifierList, false, Optional.empty(), OdysseyChatFormatting.LAVENDER));
         this.advancedTooltip = AspectUtil.getTooltip(abilityList, true, Optional.of(ABILITIES_HEADER), OdysseyChatFormatting.COPPER);

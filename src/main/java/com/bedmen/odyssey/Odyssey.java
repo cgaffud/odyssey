@@ -90,7 +90,6 @@ public class Odyssey
             EquipmentItem.initEquipment();
             TomeItem.initTomes();
             EnchantmentUtil.init();
-            AspectArmorItem.init();
 
             //Generation
             BiomeUtil.init();

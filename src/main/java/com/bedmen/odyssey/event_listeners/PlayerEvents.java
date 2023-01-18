@@ -175,16 +175,6 @@ public class PlayerEvents {
         AspectUtil.addAddedModifierTooltip(itemStack, componentList, tooltipFlag);
 
         List<Component> tooltip = event.getToolTip();
-        // Remove swim speed attributes
-        List<Component> swimSpeedAttributeList = tooltip.stream().filter(component ->
-                component instanceof TranslatableComponent translatableComponent
-                        && translatableComponent.getArgs().length == 2
-                        && translatableComponent.getArgs()[1] instanceof TranslatableComponent translatableComponent1
-                        && translatableComponent1.getKey().equals(ForgeMod.SWIM_SPEED.get().getDescriptionId())).collect(Collectors.toList());
-        for(Component component: swimSpeedAttributeList){
-            tooltip.remove(component);
-        }
-
         tooltip.addAll(1, componentList);
     }
 }

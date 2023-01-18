@@ -542,5 +542,6 @@
   "aspect.oddc.snowshoe": "Snowshoe",
   "aspect.oddc.freeze_immunity": "+%s Freeze Immunity",
   "aspect.oddc.thorns": "+%s Thorns",
-  "aspect.oddc.binding": "Binding"
+  "aspect.oddc.binding": "Binding",
+  "aspect.oddc.movement_speed": "+%s Movement Speed"
 }

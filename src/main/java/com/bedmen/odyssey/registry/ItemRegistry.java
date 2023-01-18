@@ -2,6 +2,7 @@ package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.aspect.Aspects;
 import com.bedmen.odyssey.combat.*;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
@@ -146,7 +147,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_NUGGET = ITEMS.register("netherite_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> SUNSTONE = ITEMS.register("sunstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> MOONSTONE = ITEMS.register("moonstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
-    public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new BurnToSummonItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), () -> EntityTypeRegistry.COVEN_MASTER.get()));
+    public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new BurnToSummonItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), EntityTypeRegistry.COVEN_MASTER::get));
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
 
@@ -210,7 +211,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SLIME_BAT = ITEMS.register("slime_bat", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.BAT, 2f, List.of(), List.of(new AspectInstance(Aspects.KNOCKBACK, 2.0f))));
     public static final RegistryObject<Item> MINI_HAMMER = ITEMS.register("mini_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.HATCHET, 5f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 1.5f))));
     public static final RegistryObject<Item> SLEDGEHAMMER = ITEMS.register("sledgehammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.HAMMER, 8f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 2.0f))));
-    public static final RegistryObject<Item> SWIFT_SABRE = ITEMS.register("swift_sabre", () -> new FastMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.SABRE, 6.0f, List.of(), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 1.0f)), 0.2f));
+    public static final RegistryObject<Item> SWIFT_SABRE = ITEMS.register("swift_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.SABRE, 6.0f, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, 0.2f)), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 1.0f))));
     public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.SWORD,  5f, List.of(), List.of(new AspectInstance(Aspects.SOLAR_STRENGTH, 2.0f)), 2));
 
     // ## Tier 2
@@ -293,7 +294,7 @@ public class ItemRegistry {
     // # Armors
 
     // ## Tier 1
-    public static final RegistryObject<Item> HOLLOW_COCONUT = ITEMS.register("hollow_coconut", () -> new HollowCoconutItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.COCONUT, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.BINDING))));
+    public static final RegistryObject<Item> HOLLOW_COCONUT = ITEMS.register("hollow_coconut", () -> new HollowCoconutItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.COCONUT, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.BINDING).withDisplaySetting(AspectTooltipDisplaySetting.NEVER))));
 
     public static final RegistryObject<Item> CACTUS_HELMET = ITEMS.register("cactus_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CACTUS, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.THORNS, 1.0f))));
     public static final RegistryObject<Item> CACTUS_CHESTPLATE = ITEMS.register("cactus_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CACTUS, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.THORNS, 1.0f))));

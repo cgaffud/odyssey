@@ -15,6 +15,8 @@ import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
@@ -23,6 +25,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -118,8 +123,6 @@ public class EntityEvents {
                 damageSourceLivingEntity.hurt(DamageSource.thorns(hurtLivingEntity), thornsStrength);
             }
 
-            // Attack Damage Set Bonus
-            amount += AspectUtil.getFloatAspectValueFromArmor(damageSourceLivingEntity, Aspects.ATTACK_DAMAGE);
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
             odysseyLivingEntity.setNextKnockbackAspect(odysseyAbstractArrow.knockbackAspect);
@@ -334,5 +337,18 @@ public class EntityEvents {
             event.setStrength(event.getOriginalStrength() * odysseyLivingEntity.getNextKnockbackAspect());
             odysseyLivingEntity.setNextKnockbackAspect(1.0f);
         }
+    }
+
+    @SubscribeEvent
+    public static void onLivingEquipmentChangeEvent(final LivingEquipmentChangeEvent event){
+        LivingEntity livingEntity = event.getEntityLiving();
+        ItemStack oldItemStack = event.getFrom();
+        ItemStack newItemStack = event.getTo();
+        EquipmentSlot equipmentSlot = event.getSlot();
+        Multimap<Attribute, AttributeModifier> oldMultimap = HashMultimap.create();
+        Multimap<Attribute, AttributeModifier> newMultimap = HashMultimap.create();
+        AspectUtil.fillAttributeMultimaps(livingEntity, oldItemStack, newItemStack, equipmentSlot, oldMultimap, newMultimap);
+        livingEntity.getAttributes().removeAttributeModifiers(oldMultimap);
+        livingEntity.getAttributes().addTransientAttributeModifiers(newMultimap);
     }
 }

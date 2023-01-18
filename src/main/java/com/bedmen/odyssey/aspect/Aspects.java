@@ -7,11 +7,16 @@ import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraftforge.common.ForgeMod;
+import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Aspects {
     public static final Map<String, Aspect> ASPECT_REGISTER = new HashMap<>();
@@ -47,12 +52,14 @@ public class Aspects {
     public static final ProtectionAspect ICE_PROTECTION = new ProtectionAspect("ice_protection", damageSource -> damageSource == DamageSource.FREEZE);
     public static final ProtectionAspect FIRE_PROTECTION = new ProtectionAspect("fire_protection", DamageSource::isFire);
     public static final ProtectionAspect BLAST_PROTECTION = new ProtectionAspect("blast_protection", DamageSource::isExplosion);
-    public static final FloatAspect SWIM_SPEED = new FloatAspect("swim_speed");
+    public static final AttributeAspect SWIM_SPEED = new AttributeAspect("swim_speed", ForgeMod.SWIM_SPEED::get, AttributeModifier.Operation.ADDITION);
     public static final FloatAspect RESPIRATION = new FloatAspect("respiration");
     public static final BooleanAspect SNOWSHOE = new BooleanAspect("snowshoe");
     public static final IntegerAspect FREEZE_IMMUNITY = new IntegerAspect("freeze_immunity");
     public static final FloatAspect THORNS = new FloatAspect("thorns");
     public static final BooleanAspect BINDING = new BooleanAspect("binding");
+    public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
+    public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
 
     // Melee Abilities
     public static final BooleanAspect SHIELD_BASH = new BooleanAspect("shield_bash");
@@ -73,7 +80,6 @@ public class Aspects {
     public static final TimeAspect GLIDE = new TimeAspect("glide");
     public static final BooleanAspect FROST_WALKER = new BooleanAspect("frost_walker");
     public static final BooleanAspect TURTLE_MASTERY = new BooleanAspect("turtle_mastery");
-    public static final FloatAspect ATTACK_DAMAGE = new FloatAspect("attack_damage");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
