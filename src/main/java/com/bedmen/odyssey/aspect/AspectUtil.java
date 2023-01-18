@@ -111,7 +111,7 @@ public class AspectUtil {
         for(ItemStack armorPiece: livingEntity.getArmorSlots()){
             total += getTotalStrengthForFunction(armorPiece, strengthFunction);
         }
-        if(hasFullArmorSet(livingEntity) && livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AspectArmorItem aspectArmorItem){
+        if(isFullArmorSet(livingEntity.getArmorSlots()) && livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AspectArmorItem aspectArmorItem){
             total += getTotalStrengthForFunctionFromMap(aspectArmorItem.getSetBonusAbilityHolder().map, strengthFunction);
         }
         return total;
@@ -260,10 +260,5 @@ public class AspectUtil {
                 });
             }
         }
-    }
-
-    // Full Armor Set
-    public static boolean hasFullArmorSet(LivingEntity livingEntity){
-        return isFullArmorSet(livingEntity.getArmorSlots());
     }
 }
