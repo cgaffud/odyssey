@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.aspect;
+package com.bedmen.odyssey.aspect.aspect_objects;
 
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -6,7 +6,7 @@ import net.minecraft.util.Mth;
 
 public class MultishotAspect extends FloatAspect {
     protected MultishotAspect(String id) {
-        super(id, f -> new TranslatableComponent("aspect.oddc."+id, strengthToNumberOfSideArrows(f), StringUtil.percentFormat(strengthToDamagePenalty(f))));
+        super(id, (strength, optionalLevel) -> new TranslatableComponent("aspect.oddc."+id, strengthToNumberOfSideArrows(strength), StringUtil.percentFormat(strengthToDamagePenalty(strength))));
     }
 
     public static int strengthToNumberOfSideArrows(float strength){

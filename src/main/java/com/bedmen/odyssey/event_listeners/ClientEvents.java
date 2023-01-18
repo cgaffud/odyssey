@@ -16,7 +16,7 @@ import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
-import com.bedmen.odyssey.items.ShieldType;
+import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.items.TomeItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.*;

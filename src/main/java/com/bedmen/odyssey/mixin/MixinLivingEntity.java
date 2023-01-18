@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.combat.SmackPush;

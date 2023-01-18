@@ -2,15 +2,14 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.Aspects;
-import com.bedmen.odyssey.combat.*;
-import com.bedmen.odyssey.items.odyssey_versions.AspectArmorItem;
-import com.bedmen.odyssey.items.odyssey_versions.AspectItem;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
+import com.bedmen.odyssey.items.odyssey_versions.AspectArmorItem;
+import com.bedmen.odyssey.items.odyssey_versions.AspectItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -20,9 +19,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -33,7 +32,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
@@ -165,14 +164,16 @@ public class PlayerEvents {
         ItemStack itemStack = event.getItemStack();
         Item item = itemStack.getItem();
         TooltipFlag tooltipFlag = event.getFlags();
+        Player player = event.getPlayer();
+        Optional<Level> optionalLevel = player == null ? Optional.empty() : Optional.of(player.level);
         List<Component> componentList = new ArrayList<>();
         if(item instanceof AspectArmorItem aspectArmorItem){
-            aspectArmorItem.getSetBonusAbilityHolder().addTooltip(componentList, tooltipFlag);
+            aspectArmorItem.getSetBonusAbilityHolder().addTooltip(componentList, tooltipFlag, optionalLevel);
         }
         if(item instanceof AspectItem aspectItem){
-            aspectItem.getAspectHolder().addTooltip(componentList, tooltipFlag);
+            aspectItem.getAspectHolder().addTooltip(componentList, tooltipFlag, optionalLevel);
         }
-        AspectUtil.addAddedModifierTooltip(itemStack, componentList, tooltipFlag);
+        AspectUtil.addAddedModifierTooltip(itemStack, componentList, tooltipFlag, optionalLevel);
 
         List<Component> tooltip = event.getToolTip();
         tooltip.addAll(1, componentList);

@@ -395,8 +395,6 @@
   "item.oddc.sharp_bone_boomerang": "Sharp Bone Boomerang",
   "item.oddc.sharp_greatroot_boomerang": "Sharp Greatroot Boomerang",
   "item.oddc.shield.damage_block": "Damage Block: ",
-  "item.oddc.shield.explosion_damage_block": "Against Explosions: ",
-  "item.oddc.shield.projectile_damage_block": "Against Projectiles: ",
   "item.oddc.shield.recovery_time": "Recovery Time: ",
   "item.oddc.silver_fiber": "Silver Fiber",
   "item.oddc.silver_ingot": "Silver Ingot",
@@ -506,7 +504,7 @@
   "aspect.oddc.turtle_mastery": "Turtle Mastery [Sneak Key]",
   "aspect.oddc.piglin_neutral": "Makes Piglins Neutral",
   "aspect.oddc.attack_damage": "+%s Attack Damage",
-  "aspect.oddc.damage_against_arthropod": "+%s Damage Against Athropods",
+  "aspect.oddc.damage_on_arthropod": "+%s Damage on Athropods",
   "aspect.oddc.smite_damage": "+%s Smite Damage",
   "aspect.oddc.knockback": "x%s Knockback",
   "aspect.oddc.fatal_hit": "%sHP Fatal Blow Threshold",
@@ -543,5 +541,6 @@
   "aspect.oddc.freeze_immunity": "+%s Freeze Immunity",
   "aspect.oddc.thorns": "+%s Thorns",
   "aspect.oddc.binding": "Binding",
-  "aspect.oddc.movement_speed": "+%s Movement Speed"
+  "aspect.oddc.movement_speed": "+%s Movement Speed",
+  "aspect.oddc.explosion_damage_block": "+%s Damage Block on Explosions"
 }

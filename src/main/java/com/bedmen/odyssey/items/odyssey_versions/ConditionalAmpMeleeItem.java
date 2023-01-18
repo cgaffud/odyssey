@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.odyssey_versions;
 
-import com.bedmen.odyssey.aspect.Aspect;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
 import com.bedmen.odyssey.aspect.AspectInstance;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;

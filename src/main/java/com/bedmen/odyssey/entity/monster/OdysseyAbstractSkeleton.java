@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.entity.ai.BoomerangAttackGoal;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.event_listeners.EntityEvents;

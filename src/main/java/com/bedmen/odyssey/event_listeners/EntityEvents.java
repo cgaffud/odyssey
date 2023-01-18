@@ -2,11 +2,11 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.odyssey_versions.AspectArmorItem;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
+import com.bedmen.odyssey.items.odyssey_versions.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
 import com.bedmen.odyssey.registry.BiomeRegistry;
@@ -28,7 +28,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -325,9 +324,9 @@ public class EntityEvents {
     public static void onShieldBlockEvent(final ShieldBlockEvent event){
         LivingEntity livingEntity = event.getEntityLiving();
         ItemStack shield = livingEntity.getUseItem();
-        if(shield.getItem() instanceof OdysseyShieldItem odysseyShieldItem){
+        if(shield.getItem() instanceof AspectShieldItem aspectShieldItem){
             DamageSource damageSource = event.getDamageSource();
-            event.setBlockedDamage(odysseyShieldItem.getDamageBlock(livingEntity.level.getDifficulty(), damageSource));
+            event.setBlockedDamage(aspectShieldItem.getDamageBlock(shield, livingEntity.level.getDifficulty(), damageSource));
         }
     }
 

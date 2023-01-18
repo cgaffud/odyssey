@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.aspect;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.aspect_objects.*;
 import com.bedmen.odyssey.items.odyssey_versions.AspectArmorItem;
 import com.bedmen.odyssey.items.odyssey_versions.AspectItem;
 import com.google.common.collect.Multimap;
@@ -188,6 +189,15 @@ public class AspectUtil {
         });
     }
 
+    public static float getDamageSourcePredicateAspectStrength(ItemStack itemStack, DamageSource damageSource){
+        return getTotalStrengthForFunction(itemStack, aspect -> {
+            if(aspect instanceof DamageSourcePredicateAspect damageSourcePredicateAspect){
+                return damageSourcePredicateAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
+            }
+            return 0.0f;
+        });
+    }
+
     // Get total value from armor
 
     public static float getFloatAspectValueFromArmor(LivingEntity livingEntity, FloatAspect floatAspect){
@@ -206,8 +216,8 @@ public class AspectUtil {
 
     public static float getProtectionAspectStrength(LivingEntity livingEntity, DamageSource damageSource){
         return getTotalArmorStrengthForFunction(livingEntity, aspect -> {
-            if(aspect instanceof ProtectionAspect protectionAspect){
-                return protectionAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
+            if(aspect instanceof DamageSourcePredicateAspect damageSourcePredicateAspect){
+                return damageSourcePredicateAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
             }
             return 0.0f;
         });
@@ -215,19 +225,19 @@ public class AspectUtil {
 
     // Tooltips
 
-    public static void addAddedModifierTooltip(ItemStack itemStack, List<Component> tooltip, TooltipFlag tooltipFlag){
+    public static void addAddedModifierTooltip(ItemStack itemStack, List<Component> tooltip, TooltipFlag tooltipFlag, Optional<Level> optionalLevel){
         List<AspectInstance> aspectInstanceList = getAspectInstanceList(itemStack);
         Optional<MutableComponent> optionalHeader = tooltipFlag.isAdvanced() ? Optional.of(ADDED_MODIFIER_HEADER) : Optional.empty();
         // The isAdvanced flag for getTooltip is for filtering aspectInstances based on their display properties
         // Here we want there to be a header or not based on the isAdvanced flag
-        tooltip.addAll(getTooltip(aspectInstanceList, true, optionalHeader, ChatFormatting.GRAY));
+        tooltip.addAll(getTooltip(aspectInstanceList, true, optionalHeader, ChatFormatting.GRAY, optionalLevel));
     }
 
-    public static List<Component> getTooltip(List<AspectInstance> aspectInstanceList, boolean isAdvanced, Optional<MutableComponent> optionalHeader, ChatFormatting chatFormatting){
+    public static List<Component> getTooltip(List<AspectInstance> aspectInstanceList, boolean isAdvanced, Optional<MutableComponent> optionalHeader, ChatFormatting chatFormatting, Optional<Level> optionalLevel){
         List<Component> componentList = new ArrayList<>();
         componentList.addAll(aspectInstanceList.stream()
                 .filter(aspectInstance -> isAdvanced ? aspectInstance.aspectTooltipDisplaySetting != AspectTooltipDisplaySetting.NEVER : aspectInstance.aspectTooltipDisplaySetting == AspectTooltipDisplaySetting.ALWAYS)
-                .map(aspectInstance -> (optionalHeader.isPresent() ? new TextComponent(" ").append(aspectInstance.getMutableComponent()) : aspectInstance.getMutableComponent()).withStyle(chatFormatting))
+                .map(aspectInstance -> new TextComponent(optionalHeader.isPresent() ? " " : "").append(aspectInstance.getMutableComponent(optionalLevel)).withStyle(chatFormatting))
                 .collect(Collectors.toList()));
         if(componentList.isEmpty()){
             return componentList;

@@ -1,9 +1,9 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
+import com.bedmen.odyssey.items.odyssey_versions.AspectShieldItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.combat.WeaponUtil;
@@ -116,7 +116,7 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
         if (this.random.nextFloat() < f) {
             Item useItem = this.getUseItem().getItem();
-            int recoveryTime = useItem instanceof OdysseyShieldItem odysseyShieldItem ? odysseyShieldItem.getRecoveryTime() : 100;
+            int recoveryTime = useItem instanceof AspectShieldItem odysseyShieldItem ? odysseyShieldItem.getRecoveryTime() : 100;
             ITagManager<Item> itemITagManager = ForgeRegistries.ITEMS.tags();
             if(itemITagManager != null){
                 for(Item item : itemITagManager.getTag(OdysseyItemTags.SHIELDS).stream().toList()){

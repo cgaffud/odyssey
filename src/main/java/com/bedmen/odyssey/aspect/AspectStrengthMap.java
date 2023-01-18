@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.aspect;
 
+import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
+
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AspectStrengthMap extends HashMap<Aspect, Float> {
     public AspectStrengthMap(){
@@ -12,26 +13,21 @@ public class AspectStrengthMap extends HashMap<Aspect, Float> {
     public AspectStrengthMap(List<AspectInstance> aspectInstanceList){
         super();
         for(AspectInstance aspectInstance : aspectInstanceList){
-            this.put(aspectInstance.aspect, aspectInstance.strength);
+            this.put(aspectInstance.aspect, this.getNonNull(aspectInstance.aspect) + aspectInstance.strength);
         }
     }
 
     public float getNonNull(Aspect aspect) {
-        Float f = this.get(aspect);
-        if(f == null){
-            return 0.0f;
+        if(this.containsKey(aspect)){
+            return this.get(aspect);
         }
-        return f;
+        return 0.0f;
     }
 
     public AspectStrengthMap combine(AspectStrengthMap map){
         AspectStrengthMap aspectStrengthMap = new AspectStrengthMap();
         aspectStrengthMap.putAll(this);
-        for(Map.Entry<Aspect, Float> entry: map.entrySet()){
-            Aspect aspect = entry.getKey();
-            float strength = aspectStrengthMap.getNonNull(aspect) + entry.getValue();
-            aspectStrengthMap.put(aspect, strength);
-        }
+        map.forEach((aspect, strength) -> aspectStrengthMap.put(aspect, aspectStrengthMap.getNonNull(aspect) + strength));
         return aspectStrengthMap;
     }
 }

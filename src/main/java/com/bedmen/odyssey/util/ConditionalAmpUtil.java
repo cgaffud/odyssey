@@ -1,9 +1,9 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.Aspect;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.EnvironmentConditionalAspect;
+import com.bedmen.odyssey.aspect.aspect_objects.EnvironmentConditionalAspect;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;

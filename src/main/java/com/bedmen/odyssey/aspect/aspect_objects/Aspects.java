@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.aspect;
+package com.bedmen.odyssey.aspect.aspect_objects;
 
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import com.bedmen.odyssey.util.BiomeUtil;
@@ -12,16 +12,14 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.ForgeMod;
-import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class Aspects {
     public static final Map<String, Aspect> ASPECT_REGISTER = new HashMap<>();
 
-    public static final TargetConditionalAspect DAMAGE_AGAINST_ARTHROPOD = new TargetConditionalAspect("damage_against_arthropod", livingEntity -> livingEntity.getMobType() == MobType.ARTHROPOD);
+    public static final TargetConditionalAspect DAMAGE_ON_ARTHROPOD = new TargetConditionalAspect("damage_on_arthropod", livingEntity -> livingEntity.getMobType() == MobType.ARTHROPOD);
     public static final TargetConditionalAspect SMITE_DAMAGE = new TargetConditionalAspect("smite_damage", livingEntity -> livingEntity.getMobType() == MobType.UNDEAD);
     public static final TargetConditionalAspect HYDRO_DAMAGE = new TargetConditionalAspect("hydro_damage", livingEntity -> livingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
     public static final UnitAspect KNOCKBACK = new UnitAspect("knockback");
@@ -48,10 +46,10 @@ public class Aspects {
     public static final IntegerAspect PROJECTILE_POISON_DAMAGE = new IntegerAspect("projectile_poison_damage");
     public static final PercentageAspect PROJECTILE_COBWEB_CHANCE = new PercentageAspect("projectile_cobweb_chance");
     public static final PercentageAspect PROJECTILE_LARCENY_CHANCE = new PercentageAspect("projectile_larceny_chance");
-    public static final ProtectionAspect FEATHER_FALLING = new ProtectionAspect("feather_falling", damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);
-    public static final ProtectionAspect ICE_PROTECTION = new ProtectionAspect("ice_protection", damageSource -> damageSource == DamageSource.FREEZE);
-    public static final ProtectionAspect FIRE_PROTECTION = new ProtectionAspect("fire_protection", DamageSource::isFire);
-    public static final ProtectionAspect BLAST_PROTECTION = new ProtectionAspect("blast_protection", DamageSource::isExplosion);
+    public static final DamageSourcePredicateAspect FEATHER_FALLING = new DamageSourcePredicateAspect("feather_falling", damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);
+    public static final DamageSourcePredicateAspect ICE_PROTECTION = new DamageSourcePredicateAspect("ice_protection", damageSource -> damageSource == DamageSource.FREEZE);
+    public static final DamageSourcePredicateAspect FIRE_PROTECTION = new DamageSourcePredicateAspect("fire_protection", DamageSource::isFire);
+    public static final DamageSourcePredicateAspect BLAST_PROTECTION = new DamageSourcePredicateAspect("blast_protection", DamageSource::isExplosion);
     public static final AttributeAspect SWIM_SPEED = new AttributeAspect("swim_speed", ForgeMod.SWIM_SPEED::get, AttributeModifier.Operation.ADDITION);
     public static final FloatAspect RESPIRATION = new FloatAspect("respiration");
     public static final BooleanAspect SNOWSHOE = new BooleanAspect("snowshoe");
@@ -80,6 +78,9 @@ public class Aspects {
     public static final TimeAspect GLIDE = new TimeAspect("glide");
     public static final BooleanAspect FROST_WALKER = new BooleanAspect("frost_walker");
     public static final BooleanAspect TURTLE_MASTERY = new BooleanAspect("turtle_mastery");
+
+    // Shields
+    public static final ShieldDamageBlockAspect EXPLOSION_DAMAGE_BLOCK = new ShieldDamageBlockAspect("explosion_damage_block", DamageSource::isExplosion);
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

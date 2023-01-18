@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.aspect;
+package com.bedmen.odyssey.aspect.aspect_objects;
 
 import net.minecraft.world.entity.LivingEntity;
 

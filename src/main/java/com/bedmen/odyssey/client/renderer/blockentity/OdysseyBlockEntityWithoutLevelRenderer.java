@@ -3,7 +3,7 @@ package com.bedmen.odyssey.client.renderer.blockentity;
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.items.BEWLRBlockItem;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyShieldItem;
+import com.bedmen.odyssey.items.odyssey_versions.AspectShieldItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -86,11 +86,11 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
                 this.blockEntityRenderDispatcher.renderItem(blockEntity, poseStack, multiBufferSource, p_108834_, p_108835_);
             }
         } else {
-            if (itemStack.getItem() instanceof OdysseyShieldItem odysseyShieldItem) {
+            if (itemStack.getItem() instanceof AspectShieldItem aspectShieldItem) {
                 boolean pattern = BlockItem.getBlockEntityData(itemStack) != null;
                 poseStack.pushPose();
                 poseStack.scale(1.0F, -1.0F, -1.0F);
-                Material material = odysseyShieldItem.shieldType.getRenderMaterial(pattern);
+                Material material = aspectShieldItem.shieldType.getRenderMaterial(pattern);
                 VertexConsumer vertexconsumer = material.sprite().wrap(ItemRenderer.getFoilBufferDirect(multiBufferSource, this.shieldModel.renderType(material.atlasLocation()), true, itemStack.hasFoil()));
                 this.shieldModel.handle().render(poseStack, vertexconsumer, p_108834_, p_108835_, 1.0F, 1.0F, 1.0F, 1.0F);
                 if (pattern) {

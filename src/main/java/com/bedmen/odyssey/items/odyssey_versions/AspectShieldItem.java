@@ -1,8 +1,10 @@
 package com.bedmen.odyssey.items.odyssey_versions;
 
+import com.bedmen.odyssey.aspect.AspectHolder;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
+import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
-import com.bedmen.odyssey.items.ShieldType;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -21,16 +23,20 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty {
+public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, AspectItem {
     public final ShieldType shieldType;
-    public OdysseyShieldItem(Properties builder, ShieldType shieldType) {
+    public AspectShieldItem(Properties builder, ShieldType shieldType) {
         super(builder.durability(shieldType.durability));
         this.shieldType = shieldType;
         DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
     }
 
+    public AspectHolder getAspectHolder() {
+        return this.shieldType.aspectHolder;
+    }
+
     public boolean isValidRepairItem(ItemStack itemStack, ItemStack repairStack) {
-        return this.shieldType.itemChecker.contains(repairStack.getItem());
+        return this.shieldType.repairItemPredicate.test(repairStack.getItem());
     }
 
     public void registerItemModelProperties(){
@@ -39,24 +45,16 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
         });
     }
 
-    public float getDamageBlock(Difficulty difficulty, DamageSource damageSource){
-        float damageBlock = getBaseDamageBlock(difficulty);
-        if (damageSource != null && this.shieldType.bonusPredicate.test(damageSource)) {
-            damageBlock *= this.shieldType.bonusMultiplier;
-        }
-        return damageBlock;
+    public float getDamageBlock(ItemStack shield, Difficulty difficulty, DamageSource damageSource){
+        float damageBlock = this.shieldType.damageBlock;
+        float additionalDamageBlock = AspectUtil.getDamageSourcePredicateAspectStrength(shield, damageSource);
+        float totalUnadjustedDamageBlock = damageBlock + additionalDamageBlock;
+        float difficultyAdjustedDamageBlock = getDifficultyAdjustedDamageBlock(totalUnadjustedDamageBlock, difficulty);
+        return difficultyAdjustedDamageBlock;
     }
 
-    public float getBaseDamageBlock(Difficulty difficulty) {
-        float damageBlock = this.shieldType.damageBlock;
-        if(difficulty == null){
-            return damageBlock;
-        }
-        return switch(difficulty){
-            default -> damageBlock * 0.5f + 1f;
-            case NORMAL -> damageBlock;
-            case HARD -> damageBlock * 1.5f;
-        };
+    public static float getDifficultyAdjustedDamageBlock(float damageBlock, Difficulty difficulty) {
+        return damageBlock * (difficulty == Difficulty.HARD ? 1.5f : 1.0f);
     }
 
     public int getRecoveryTime(){
@@ -74,13 +72,12 @@ public class OdysseyShieldItem extends ShieldItem implements INeedsToRegisterIte
         });
     }
 
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        Difficulty difficulty = worldIn == null ? null : worldIn.getDifficulty();
-        tooltip.add(new TranslatableComponent("item.oddc.shield.damage_block").append(StringUtil.floatFormat(this.getBaseDamageBlock(difficulty))).withStyle(ChatFormatting.BLUE));
-        if (this.shieldType.bonusMessage != null) {
-            tooltip.add(new TranslatableComponent(this.shieldType.bonusMessage).append(StringUtil.floatFormat(this.getBaseDamageBlock(difficulty) * this.shieldType.bonusMultiplier)).withStyle(ChatFormatting.BLUE));
-        }
+    public void appendHoverText(ItemStack shield, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+        Difficulty difficulty = level == null ? null : level.getDifficulty();
+        AspectShieldItem aspectShieldItem = (AspectShieldItem)(shield.getItem());
+        float damageBlock = aspectShieldItem.shieldType.damageBlock;
+        tooltip.add(new TranslatableComponent("item.oddc.shield.damage_block").append(StringUtil.floatFormat(getDifficultyAdjustedDamageBlock(damageBlock, difficulty))).withStyle(ChatFormatting.BLUE));
         tooltip.add(new TranslatableComponent("item.oddc.shield.recovery_time").append(StringUtil.timeFormat(this.getRecoveryTime())).withStyle(ChatFormatting.BLUE));
-        BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
+        BannerItem.appendHoverTextFromBannerBlockEntityTag(shield, tooltip);
     }
 }

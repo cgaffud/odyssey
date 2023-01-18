@@ -3,15 +3,18 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectTooltipDisplaySetting;
-import com.bedmen.odyssey.aspect.Aspects;
-import com.bedmen.odyssey.combat.*;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.combat.ArrowType;
+import com.bedmen.odyssey.combat.MeleeWeaponClass;
+import com.bedmen.odyssey.combat.OdysseyArmorMaterial;
+import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.enchantment.LevEnchSup;
 import com.bedmen.odyssey.entity.projectile.Boomerang;
 import com.bedmen.odyssey.entity.projectile.SonicBoom;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.items.*;
-import com.bedmen.odyssey.items.equipment.*;
-import com.bedmen.odyssey.items.equipment.base.*;
+import com.bedmen.odyssey.items.equipment.BoomerangItem;
+import com.bedmen.odyssey.items.equipment.ProjectileLaunchItem;
 import com.bedmen.odyssey.items.odyssey_versions.*;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.tools.OdysseyTiers;
@@ -194,7 +197,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> WOODEN_MACE = ITEMS.register("wooden_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.WOOD, MeleeWeaponClass.MACE, 5f, List.of(), List.of()));
     public static final RegistryObject<Item> STONE_MACE = ITEMS.register("stone_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.STONE, MeleeWeaponClass.MACE, 6f, List.of(), List.of()));
 
-    public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.COPPER, MeleeWeaponClass.HAMMER, 7f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 2.0f))));
+    public static final RegistryObject<Item> COPPER_HAMMER = ITEMS.register("copper_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.COPPER, MeleeWeaponClass.HAMMER, 7f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_ON_ARTHROPOD, 2.0f))));
     public static final RegistryObject<Item> COPPER_BATTLE_AXE = ITEMS.register("copper_battle_axe", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.COPPER, MeleeWeaponClass.BATTLE_AXE, 6.5f, List.of(), List.of(new AspectInstance(Aspects.FATAL_HIT, 7.0f))));
     public static final RegistryObject<Item> COPPER_BAT = ITEMS.register("copper_bat", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.COPPER, MeleeWeaponClass.BAT, 5.5f, List.of(), List.of(new AspectInstance(Aspects.KNOCKBACK, 0.5f))));
     public static final RegistryObject<Item> FLINT_SABRE = ITEMS.register("flint_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.FLINT, MeleeWeaponClass.SABRE, 5f, List.of(), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 1.0f))));
@@ -209,8 +212,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> RUSTY_PADDLE = ITEMS.register("rusty_paddle", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.RUSTY_IRON, MeleeWeaponClass.PADDLE, 6f, List.of(), List.of()));
     public static final RegistryObject<Item> BATTLE_PICKAXE = ITEMS.register("battle_pickaxe", () -> new AspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.BATTLE_AXE,8f, List.of(), List.of(new AspectInstance(Aspects.FATAL_HIT, 8.0f))));
     public static final RegistryObject<Item> SLIME_BAT = ITEMS.register("slime_bat", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.BAT, 2f, List.of(), List.of(new AspectInstance(Aspects.KNOCKBACK, 2.0f))));
-    public static final RegistryObject<Item> MINI_HAMMER = ITEMS.register("mini_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.HATCHET, 5f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 1.5f))));
-    public static final RegistryObject<Item> SLEDGEHAMMER = ITEMS.register("sledgehammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.HAMMER, 8f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 2.0f))));
+    public static final RegistryObject<Item> MINI_HAMMER = ITEMS.register("mini_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.HATCHET, 5f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_ON_ARTHROPOD, 1.5f))));
+    public static final RegistryObject<Item> SLEDGEHAMMER = ITEMS.register("sledgehammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.HAMMER, 8f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_ON_ARTHROPOD, 2.0f))));
     public static final RegistryObject<Item> SWIFT_SABRE = ITEMS.register("swift_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_1_UNCRAFTABLE, MeleeWeaponClass.SABRE, 6.0f, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, 0.2f)), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 1.0f))));
     public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.SWORD,  5f, List.of(), List.of(new AspectInstance(Aspects.SOLAR_STRENGTH, 2.0f)), 2));
 
@@ -221,14 +224,14 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CLOVER_STONE_MACE = ITEMS.register("clover_stone_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.MACE, 9f, List.of(), List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1))));
     public static final RegistryObject<Item> CLOVER_STONE_HATCHET = ITEMS.register("clover_stone_hatchet", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.HATCHET, 5f, List.of(), List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1), new AspectInstance(Aspects.SMITE_DAMAGE, 1.5f))));
     public static final RegistryObject<Item> CLOVER_STONE_SABRE = ITEMS.register("clover_stone_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.SABRE, 6f, List.of(), List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1), new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 1.0f))));
-    public static final RegistryObject<Item> CLOVER_STONE_HAMMER = ITEMS.register("clover_stone_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.HAMMER, 8f, List.of(), List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1), new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 2.0f))));
+    public static final RegistryObject<Item> CLOVER_STONE_HAMMER = ITEMS.register("clover_stone_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.HAMMER, 8f, List.of(), List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1), new AspectInstance(Aspects.DAMAGE_ON_ARTHROPOD, 2.0f))));
     public static final RegistryObject<Item> CLOVER_STONE_BAT = ITEMS.register("clover_stone_bat", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.BAT, 6.5f, List.of(), List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1), new AspectInstance(Aspects.KNOCKBACK, 0.5f))));
     public static final RegistryObject<Item> CLOVER_STONE_BATTLE_AXE = ITEMS.register("clover_stone_battle_axe", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.BATTLE_AXE, 7.5f, List.of(), List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1), new AspectInstance(Aspects.FATAL_HIT, 7.0f))));
     
     public static final RegistryObject<Item> STERLING_SILVER_SWORD = ITEMS.register("sterling_silver_sword", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.SWORD, 7f, List.of(), List.of()));
     public static final RegistryObject<Item> STERLING_SILVER_MACE = ITEMS.register("sterling_silver_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.MACE, 9f, List.of(), List.of()));
 
-    public static final RegistryObject<Item> OBSIDIAN_HAMMER = ITEMS.register("obsidian_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.OBSIDIAN, MeleeWeaponClass.HAMMER, 9f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 3.0f))));
+    public static final RegistryObject<Item> OBSIDIAN_HAMMER = ITEMS.register("obsidian_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.OBSIDIAN, MeleeWeaponClass.HAMMER, 9f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_ON_ARTHROPOD, 3.0f))));
     public static final RegistryObject<Item> OBSIDIAN_BATTLE_AXE = ITEMS.register("obsidian_battle_axe", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.OBSIDIAN, MeleeWeaponClass.BATTLE_AXE, 8.5f, List.of(), List.of(new AspectInstance(Aspects.FATAL_HIT, 10.0f))));
     public static final RegistryObject<Item> OBSIDIAN_BAT = ITEMS.register("obsidian_bat", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.OBSIDIAN, MeleeWeaponClass.BAT, 7.5f, List.of(), List.of(new AspectInstance(Aspects.KNOCKBACK, 1.0f))));
     public static final RegistryObject<Item> AMETHYST_SABRE = ITEMS.register("amethyst_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, MeleeWeaponClass.SABRE, 7f, List.of(), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 2.0f))));
@@ -238,7 +241,7 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> SMACKIN_SHOVEL = ITEMS.register("smackin_shovel", () -> new AspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_2_UNCRAFTABLE, MeleeWeaponClass.SHOVEL, 7f, List.of(new AspectInstance(Aspects.SMACK)), List.of(new AspectInstance(Aspects.KNOCKBACK, 2.0f))));
     public static final RegistryObject<Item> SLEDGEAXE = ITEMS.register("sledgeaxe", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_2_UNCRAFTABLE, MeleeWeaponClass.BATTLE_AXE,  9.5f, List.of(), List.of(new AspectInstance(Aspects.FATAL_HIT, 8.0f), new AspectInstance(Aspects.SMITE_DAMAGE, 2.5f))));
-    public static final RegistryObject<Item> BLUNT_SABRE = ITEMS.register("blunt_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_2_UNCRAFTABLE, MeleeWeaponClass.SABRE, 8f, List.of(), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 1.5f), new AspectInstance(Aspects.DAMAGE_AGAINST_ARTHROPOD, 2.0f))));
+    public static final RegistryObject<Item> BLUNT_SABRE = ITEMS.register("blunt_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.TIER_2_UNCRAFTABLE, MeleeWeaponClass.SABRE, 8f, List.of(), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 1.5f), new AspectInstance(Aspects.DAMAGE_ON_ARTHROPOD, 2.0f))));
     public static final RegistryObject<Item> MOON_SWORD = ITEMS.register("moon_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.SWORD, 7f, List.of(), List.of(new AspectInstance(Aspects.LUNAR_STRENGTH, 2.0f)), 2));
     public static final RegistryObject<Item> RAIN_SWORD = ITEMS.register("rain_sword", () -> new ConditionalAmpMeleeItem.GradientItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.SWORD, 7f, List.of(), List.of(new AspectInstance(Aspects.BOTANICAL_STRENGTH, 2.0f)), BiomeUtil::getFoliageColor, 9551193));
     public static final RegistryObject<Item> ARID_MACE = ITEMS.register("arid_mace", () -> new ConditionalAmpMeleeItem.GradientItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.MACE, 9f, List.of(), List.of(new AspectInstance(Aspects.SCORCHED_STRENGTH, 2.5f)), BiomeUtil::getAridColor, 0xFF8B33));
@@ -357,12 +360,12 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_HORSE_ARMOR = ITEMS.register("netherite_horse_armor", () -> new HorseArmorItem(OdysseyArmorMaterial.NETHERITE.getTotalDefense(), new ResourceLocation(Odyssey.MOD_ID, "textures/entity/horse/armor/horse_armor_netherite.png"), (new Item.Properties()).stacksTo(1).fireResistant().tab(OdysseyCreativeModeTab.ARMOR)));
 
     // ## Shields
-    public static final RegistryObject<Item> WOODEN_SHIELD = ITEMS.register("wooden_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.WOODEN));
-    public static final RegistryObject<Item> COPPER_SHIELD = ITEMS.register("copper_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.COPPER));
-    public static final RegistryObject<Item> RUSTY_SHIELD = ITEMS.register("rusty_shield", () -> new EquipmentShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.RUSTY, IMPENETRABLE[1]));
-    public static final RegistryObject<Item> GOLDEN_SHIELD = ITEMS.register("golden_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.GOLDEN));
-    public static final RegistryObject<Item> REINFORCED_SHIELD = ITEMS.register("reinforced_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.REINFORCED));
-    public static final RegistryObject<Item> DIAMOND_SHIELD = ITEMS.register("diamond_shield", () -> new OdysseyShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.DIAMOND));
+    public static final RegistryObject<Item> WOODEN_SHIELD = ITEMS.register("wooden_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.WOODEN));
+    public static final RegistryObject<Item> COPPER_SHIELD = ITEMS.register("copper_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.COPPER));
+    public static final RegistryObject<Item> RUSTY_SHIELD = ITEMS.register("rusty_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.RUSTY));
+    public static final RegistryObject<Item> GOLDEN_SHIELD = ITEMS.register("golden_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.GOLDEN));
+    public static final RegistryObject<Item> REINFORCED_SHIELD = ITEMS.register("reinforced_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.REINFORCED));
+    public static final RegistryObject<Item> DIAMOND_SHIELD = ITEMS.register("diamond_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.DIAMOND));
 
     // # Spawning
     public static final RegistryObject<Item> MOON_TOWER_ZOMBIE_SPAWN_EGG = ITEMS.register("moon_tower_zombie_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.MOON_TOWER_ZOMBIE, 0x4C7289, 0x394140, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));

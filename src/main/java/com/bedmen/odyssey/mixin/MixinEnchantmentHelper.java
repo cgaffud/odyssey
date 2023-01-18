@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.enchantment.TieredEnchantment;
 import com.bedmen.odyssey.items.equipment.base.IEquipment;
 import net.minecraft.core.Registry;

@@ -3,13 +3,17 @@ package com.bedmen.odyssey;
 import com.bedmen.odyssey.block.wood.OdysseyFlowerPotBlock;
 import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
-import com.bedmen.odyssey.entity.boss.coven.*;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.*;
+import com.bedmen.odyssey.entity.boss.coven.CovenMaster;
+import com.bedmen.odyssey.entity.boss.coven.EnderWitch;
+import com.bedmen.odyssey.entity.boss.coven.NetherWitch;
+import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.TomeItem;
-import com.bedmen.odyssey.items.equipment.base.*;
-import com.bedmen.odyssey.items.odyssey_versions.AspectArmorItem;
+import com.bedmen.odyssey.items.equipment.base.EquipmentItem;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
@@ -86,7 +90,6 @@ public class Odyssey
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
 
             //Equipment / Enchantments
-            EquipmentShieldItem.initEquipment();
             EquipmentItem.initEquipment();
             TomeItem.initTomes();
             EnchantmentUtil.init();

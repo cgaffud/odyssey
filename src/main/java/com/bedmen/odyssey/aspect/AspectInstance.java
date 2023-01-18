@@ -1,6 +1,13 @@
 package com.bedmen.odyssey.aspect;
 
+import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
+import com.bedmen.odyssey.aspect.aspect_objects.BooleanAspect;
+import com.bedmen.odyssey.aspect.aspect_objects.FloatAspect;
+import com.bedmen.odyssey.aspect.aspect_objects.IntegerAspect;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.level.Level;
+
+import java.util.Optional;
 
 public class AspectInstance {
     public final Aspect aspect;
@@ -35,8 +42,8 @@ public class AspectInstance {
     }
 
 
-    public MutableComponent getMutableComponent(){
-        return this.aspect.mutableComponentFunction.apply(this.strength);
+    public MutableComponent getMutableComponent(Optional<Level> optionalLevel){
+        return this.aspect.aspectTooltipFunction.apply(this.strength, optionalLevel);
     }
 
 }

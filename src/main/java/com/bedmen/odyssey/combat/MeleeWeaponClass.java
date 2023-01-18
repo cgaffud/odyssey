@@ -2,9 +2,8 @@ package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.aspect.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectTooltipDisplaySetting;
-import com.bedmen.odyssey.aspect.Aspects;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MeleeWeaponClass {
