@@ -98,7 +98,7 @@ public abstract class MixinEnchantmentHelper {
             }
 
             if(enchantment == Enchantments.BLOCK_FORTUNE) {
-                j += AspectUtil.getIntegerAspectValue(itemStack, Aspects.FORTUNE);
+                j += AspectUtil.getIntegerAspectStrength(itemStack, Aspects.FORTUNE);
             }
 
             return j;
@@ -155,5 +155,15 @@ public abstract class MixinEnchantmentHelper {
     public static boolean hasBindingCurse(ItemStack itemStack) {
         return getItemEnchantmentLevel(Enchantments.BINDING_CURSE, itemStack) > 0
                 || AspectUtil.hasBooleanAspect(itemStack, Aspects.BINDING);
+    }
+
+    /**
+     * @author JemBren
+     * @reason Vanishing Aspect
+     */
+    @Overwrite
+    public static boolean hasVanishingCurse(ItemStack itemStack) {
+        return getItemEnchantmentLevel(Enchantments.VANISHING_CURSE, itemStack) > 0
+                || AspectUtil.hasBooleanAspect(itemStack, Aspects.VANISHING);
     }
 }

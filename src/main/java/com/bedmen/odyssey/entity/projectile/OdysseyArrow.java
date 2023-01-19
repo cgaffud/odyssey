@@ -79,10 +79,10 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         ItemStack bow = shooter.getItemInHand(ProjectileUtil.getWeaponHoldingHand(shooter, item -> item instanceof AspectBowItem || item instanceof AspectCrossbowItem));
         this.setBaseDamage((bowDamageMultiplier + this.random.nextGaussian() * 0.1D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage * (WeaponUtil.BASE_ARROW_VELOCITY * WeaponUtil.BASE_ARROW_VELOCITY) / (WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES));
         // Knockback
-        this.knockbackAspect = AspectUtil.getUnitAspectValue(bow, Aspects.PROJECTILE_KNOCKBACK);
+        this.knockbackAspect = AspectUtil.getUnitAspectStrength(bow, Aspects.PROJECTILE_KNOCKBACK);
         // Piercing
-        this.setPiercingAspect(AspectUtil.getFloatAspectValue(bow, Aspects.PIERCING));
+        this.setPiercingAspect(AspectUtil.getFloatAspectStrength(bow, Aspects.PIERCING));
         // Larceny
-        this.larcenyAspect = AspectUtil.getFloatAspectValue(bow, Aspects.PROJECTILE_LARCENY_CHANCE);
+        this.larcenyAspect = AspectUtil.getFloatAspectStrength(bow, Aspects.PROJECTILE_LARCENY_CHANCE);
     }
 }

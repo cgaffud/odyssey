@@ -101,7 +101,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     }
 
     public static boolean tryLoadProjectiles(LivingEntity livingEntity, ItemStack crossbow) {
-        int numberOfArrows = MultishotAspect.strengthToNumberOfTotalArrows(AspectUtil.getFloatAspectValue(crossbow, Aspects.MULTISHOT));
+        int numberOfArrows = MultishotAspect.strengthToNumberOfTotalArrows(AspectUtil.getFloatAspectStrength(crossbow, Aspects.MULTISHOT));
         boolean isPlayer = livingEntity instanceof Player;
         boolean flag = isPlayer && ((Player)livingEntity).getAbilities().instabuild;
         WeaponUtil.AmmoStack ammoStack;
@@ -208,7 +208,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
                 }
             }
             if(projectile instanceof AbstractArrow abstractArrow && isMultishotArrow){
-                abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() * MultishotAspect.strengthToDamagePenalty(AspectUtil.getFloatAspectValue(crossbow, Aspects.MULTISHOT)));
+                abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() * MultishotAspect.strengthToDamagePenalty(AspectUtil.getFloatAspectStrength(crossbow, Aspects.MULTISHOT)));
             }
 
             if (livingEntity instanceof CrossbowAttackMob) {

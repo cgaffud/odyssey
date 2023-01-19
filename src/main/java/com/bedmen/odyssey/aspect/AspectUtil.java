@@ -71,7 +71,9 @@ public class AspectUtil {
                     } else {
                         return new AspectInstance(aspect, aspectTag.getFloat(STRENGTH_TAG));
                     }
-                }).collect(Collectors.toList());
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     private static AspectStrengthMap getAddedModifierMap(ItemStack itemStack){
@@ -150,18 +152,28 @@ public class AspectUtil {
         return count == 4;
     }
 
-    // Public endpoints
+    private static float getTotalAspectStrengthAllSlotsForFunction(LivingEntity livingEntity, Function<Aspect, Float> strengthFunction){
+        return getTotalArmorStrengthForFunction(livingEntity, strengthFunction)
+                + getTotalStrengthForFunction(livingEntity.getMainHandItem(), strengthFunction)
+                + getTotalStrengthForFunction(livingEntity.getOffhandItem(), strengthFunction);
+    }
+
+    private static float getTotalAspectStrengthAllSlotsForAspect(LivingEntity livingEntity, Aspect aspect){
+        return getTotalAspectStrengthAllSlotsForFunction(livingEntity, aspect1 -> aspect1 == aspect ? 1.0f : 0.0f);
+    }
+
+    // -- Public endpoints -----------------------------------------------------
 
     // Get direct value from single itemstack
-    public static float getFloatAspectValue(ItemStack itemStack, FloatAspect floatAspect){
+    public static float getFloatAspectStrength(ItemStack itemStack, FloatAspect floatAspect){
         return getAspectStrength(itemStack, floatAspect);
     }
 
-    public static float getUnitAspectValue(ItemStack itemStack, UnitAspect unitAspect){
+    public static float getUnitAspectStrength(ItemStack itemStack, UnitAspect unitAspect){
         return 1.0f + getAspectStrength(itemStack, unitAspect);
     }
 
-    public static int getIntegerAspectValue(ItemStack itemStack, IntegerAspect integerAspect){
+    public static int getIntegerAspectStrength(ItemStack itemStack, IntegerAspect integerAspect){
         return (int) getAspectStrength(itemStack, integerAspect);
     }
 
@@ -221,6 +233,12 @@ public class AspectUtil {
             }
             return 0.0f;
         });
+    }
+
+    // Aspect total over all EquipmentSlots
+
+    public static int getIntegerAspectStrengthAllSlots(LivingEntity livingEntity, IntegerAspect integerAspect){
+        return (int) getTotalAspectStrengthAllSlotsForAspect(livingEntity, integerAspect);
     }
 
     // Tooltips

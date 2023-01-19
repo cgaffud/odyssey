@@ -85,7 +85,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
                         AspectArrowItem arrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
                         OdysseyAbstractArrow odysseyAbstractArrow = arrowItem.createAbstractOdysseyArrow(level, bow, ammo, player);
 
-                        float inaccuracy = 1.0f / AspectUtil.getUnitAspectValue(bow, Aspects.ACCURACY);
+                        float inaccuracy = 1.0f / AspectUtil.getUnitAspectStrength(bow, Aspects.ACCURACY);
                         if(useTicks >= WeaponUtil.getRangedMaxChargeTicks(bow)){
                             odysseyAbstractArrow.setCritArrow(true);
                         }

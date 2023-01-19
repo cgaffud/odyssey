@@ -42,13 +42,13 @@ public class AspectArrowItem extends ArrowItem implements AspectItem {
     public OdysseyAbstractArrow createAbstractOdysseyArrow(Level world, ItemStack bow, ItemStack ammo, LivingEntity livingEntity) {
         OdysseyArrow odysseyArrow = new OdysseyArrow(world, livingEntity, arrowType);
         // Knockback
-        odysseyArrow.knockbackAspect = AspectUtil.getUnitAspectValue(bow, Aspects.PROJECTILE_KNOCKBACK);
+        odysseyArrow.knockbackAspect = AspectUtil.getUnitAspectStrength(bow, Aspects.PROJECTILE_KNOCKBACK);
         // Piercing
-        odysseyArrow.setPiercingAspect(AspectUtil.getFloatAspectValue(bow, Aspects.PIERCING));
+        odysseyArrow.setPiercingAspect(AspectUtil.getFloatAspectStrength(bow, Aspects.PIERCING));
         // Looting
-        odysseyArrow.lootingAspect = AspectUtil.getIntegerAspectValue(ammo, Aspects.PROJECTILE_LOOTING_LUCK);
+        odysseyArrow.lootingAspect = AspectUtil.getIntegerAspectStrength(ammo, Aspects.PROJECTILE_LOOTING_LUCK);
         // Larceny
-        odysseyArrow.larcenyAspect = AspectUtil.getFloatAspectValue(bow, Aspects.PROJECTILE_LARCENY_CHANCE);
+        odysseyArrow.larcenyAspect = AspectUtil.getFloatAspectStrength(bow, Aspects.PROJECTILE_LARCENY_CHANCE);
         return odysseyArrow;
     }
 

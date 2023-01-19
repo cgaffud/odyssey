@@ -252,78 +252,6 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FIRE_PROTECTION.get(), entity) > 0 || entity.hasEffect(MobEffects.FIRE_RESISTANCE);
     }
 
-    public static boolean hasSlowFalling(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.SLOW_FALLING.get(), entity) > 0;
-    }
-
-    public static boolean hasTurtling(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.TURTLING.get(), entity) > 0;
-    }
-
-    public static int getGliding(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.GLIDING.get(), entity);
-    }
-
-//    public static boolean hasFireproof(LivingEntity entity) {
-//        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FIREPROOF.get(), entity) > 0;
-//    }
-
-    public static boolean hasAquaAffinity(LivingEntity entity) {
-        return hasMoltenAffinity(entity) || EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.AQUA_AFFINITY.get(), entity) > 0;
-    }
-
-    public static boolean hasMoltenAffinity(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MOLTEN_AFFINITY.get(), entity) > 0;
-    }
-
-    public static int getDepthStrider(LivingEntity entity) {
-        return Integer.max(getVulcanStrider(entity), EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.DEPTH_STRIDER.get(), entity));
-    }
-
-    public static int getVulcanStrider(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.VULCAN_STRIDER.get(), entity);
-    }
-
-    public static int getFrostWalker(LivingEntity entity) {
-        return Integer.max(getObsidianWalker(entity), EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FROST_WALKER.get(), entity));
-    }
-
-    public static int getObsidianWalker(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.OBSIDIAN_WALKER.get(), entity);
-    }
-
-    public static int getRespiration(LivingEntity entity) {
-        return Integer.max(getPyropneumatic(entity), EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.RESPIRATION.get(), entity));
-    }
-
-    public static int getPyropneumatic(LivingEntity entity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.PYROPNEUMATIC.get(), entity);
-    }
-
-//    public static int getRiptide(ItemStack itemStack) {
-//        return Integer.max(getEruption(itemStack), EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.RIPTIDE.get(), itemStack));
-//    }
-//
-//    public static int getEruption(ItemStack itemStack) {
-//        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.ERUPTION.get(), itemStack);
-//    }
-
-    public static int getBleeding(LivingEntity entity) {
-        return getSumEnchantmentLevels(EnchantmentRegistry.BLEEDING.get(),entity);
-    }
-
-    public static int getHeavy(LivingEntity entity){
-        return getSumEnchantmentLevels(EnchantmentRegistry.HEAVY.get(),entity);
-    }
-
-    public static int getDrowning(LivingEntity entity){
-        return getSumEnchantmentLevels(EnchantmentRegistry.DROWNING.get(),entity);
-    }
-
-    public static boolean hasVolatile(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.VOLATILE.get(), itemStack) > 0;
-    }
-
     public static int getPiercing(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), itemStack);
     }
@@ -342,9 +270,5 @@ public class EnchantmentUtil {
 
     public static int getMobLooting(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MOB_LOOTING, itemStack);
-    }
-
-    public static int getImpenetrable(LivingEntity livingEntity) {
-        return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.IMPENETRABLE.get(), livingEntity);
     }
 }

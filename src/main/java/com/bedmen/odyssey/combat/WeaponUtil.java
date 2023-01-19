@@ -245,7 +245,7 @@ public class WeaponUtil {
     public static int getRangedMaxChargeTicks(ItemStack itemStack){
         Item item = itemStack.getItem();
         if(item instanceof OdysseyRangedWeapon odysseyRangedWeapon){
-            return Mth.floor(odysseyRangedWeapon.getBaseMaxChargeTicks() * AspectUtil.getUnitAspectValue(itemStack, Aspects.MAX_CHARGE_TIME));
+            return Mth.floor(odysseyRangedWeapon.getBaseMaxChargeTicks() * AspectUtil.getUnitAspectStrength(itemStack, Aspects.MAX_CHARGE_TIME));
         }
         return 20;
     }

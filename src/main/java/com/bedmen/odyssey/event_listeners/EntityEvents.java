@@ -62,18 +62,18 @@ public class EntityEvents {
         }
 
         if (!livingEntity.level.isClientSide && livingEntity.isAlive()) {
-            int bleedLvl = EnchantmentUtil.getBleeding(livingEntity);
-            int heavyLvl = EnchantmentUtil.getHeavy(livingEntity);
-            int drowningLvl = EnchantmentUtil.getDrowning(livingEntity);
+            int bloodLossStrength = AspectUtil.getIntegerAspectStrengthAllSlots(livingEntity, Aspects.BLOOD_LOSS);
+            int weightStrength = AspectUtil.getIntegerAspectStrengthAllSlots(livingEntity, Aspects.WEIGHT);
+            int oxygenDeprivationStrength = AspectUtil.getIntegerAspectStrengthAllSlots(livingEntity, Aspects.OXYGEN_DEPRIVATION);
 
-            if (bleedLvl > 0)
+            if (bloodLossStrength > 0)
                 livingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLEEDING.get(), 2,
-                        bleedLvl-1,false, false, false));
-            if (heavyLvl > 0)
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, heavyLvl-1
+                        bloodLossStrength-1,false, false, false));
+            if (weightStrength > 0)
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, weightStrength-1
                 ,false, false, false));
-            if (drowningLvl > 0)
-                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 2, drowningLvl-1
+            if (oxygenDeprivationStrength > 0)
+                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 2, oxygenDeprivationStrength-1
                         ,false,false,false));
         }
 
@@ -96,12 +96,12 @@ public class EntityEvents {
             // Smite, Bane of Arthropods, Hydro Damage
             amount += AspectUtil.getTargetConditionalAspectStrength(mainHandItemStack, hurtLivingEntity);
             // Poison Damage
-            int poisonStrength = AspectUtil.getIntegerAspectValue(mainHandItemStack, Aspects.POISON_DAMAGE);
+            int poisonStrength = AspectUtil.getIntegerAspectStrength(mainHandItemStack, Aspects.POISON_DAMAGE);
             if(poisonStrength > 0){
                 hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (int)(12 * poisonStrength), 1));
             }
             // Cobweb Chance
-            float cobwebChance = AspectUtil.getFloatAspectValue(mainHandItemStack, Aspects.COBWEB_CHANCE);
+            float cobwebChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.COBWEB_CHANCE);
             if(cobwebChance > damageSourceLivingEntity.getRandom().nextFloat()){
                 BlockPos blockPos = new BlockPos(hurtLivingEntity.getPosition(1f));
                 if (hurtLivingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
@@ -109,12 +109,12 @@ public class EntityEvents {
                 }
             }
             // Melee Larceny
-            float larcenyChance = AspectUtil.getFloatAspectValue(mainHandItemStack, Aspects.LARCENY_CHANCE);
+            float larcenyChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.LARCENY_CHANCE);
             WeaponUtil.tryLarceny(larcenyChance, damageSourceLivingEntity, hurtLivingEntity);
 
             // Melee Knockback
             if(hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-                odysseyLivingEntity.setNextKnockbackAspect(AspectUtil.getUnitAspectValue(mainHandItemStack, Aspects.KNOCKBACK));
+                odysseyLivingEntity.setNextKnockbackAspect(AspectUtil.getUnitAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
             }
 
             // Thorns
@@ -155,7 +155,7 @@ public class EntityEvents {
         Entity damageSourceEntity = damageSource.getEntity();
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
             ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
-            float fatalDamage = AspectUtil.getFloatAspectValue(mainHandItemStack, Aspects.FATAL_HIT);
+            float fatalDamage = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.FATAL_HIT);
             float currentHealth = hurtLivingEntity.getHealth();
             float newHealth = currentHealth - amount;
             if(newHealth > 0.0f && newHealth < fatalDamage){
@@ -312,7 +312,7 @@ public class EntityEvents {
                 event.setLootingLevel(((OdysseyAbstractArrow) directEntity).lootingAspect);
             } else if (directEntity instanceof LivingEntity livingEntity) {
                 ItemStack itemStack = livingEntity.getMainHandItem();
-                int looting = AspectUtil.getIntegerAspectValue(itemStack, Aspects.LOOTING_LUCK);
+                int looting = AspectUtil.getIntegerAspectStrength(itemStack, Aspects.LOOTING_LUCK);
                 if(looting > 0){
                     event.setLootingLevel(looting);
                 }
@@ -331,7 +331,7 @@ public class EntityEvents {
                 Entity damageSourceEntity = damageSource.getDirectEntity();
                 if(damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow){
                     float piercingAspect = odysseyAbstractArrow.piercingAspect;
-                    float impenetrabilityAspect = AspectUtil.getFloatAspectValue(shield, Aspects.IMPENETRABILITY);
+                    float impenetrabilityAspect = AspectUtil.getFloatAspectStrength(shield, Aspects.IMPENETRABILITY);
                     if(piercingAspect > impenetrabilityAspect){
                         damageBlockMultiplier = impenetrabilityAspect / piercingAspect;
                     }

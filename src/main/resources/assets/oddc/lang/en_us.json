@@ -544,5 +544,11 @@
   "aspect.oddc.movement_speed": "+%s Movement Speed",
   "aspect.oddc.explosion_damage_block": "+%s Damage Block on Explosions",
   "aspect.oddc.impenetrability": "+%s Impenetrability",
-  "aspect.oddc.recovery_speed": "x%s Recovery Speed"
+  "aspect.oddc.recovery_speed": "x%s Recovery Speed",
+  "aspect.oddc.vanishing": "Vanishing",
+  "aspect.oddc.blood_loss": "+%s Blood Loss",
+  "aspect.oddc.weight": "+%s Weight",
+  "aspect.oddc.oxygen_deprivation": "+%s Oxygen Deprivation",
+  "aspect.oddc.blank": "Blank",
+  "aspect.oddc.volatility": "+%s Volatility"
 }

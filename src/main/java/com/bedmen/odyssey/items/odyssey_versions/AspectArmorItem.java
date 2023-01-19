@@ -37,7 +37,7 @@ public class AspectArmorItem extends ArmorItem implements AspectItem {
         if(this.slot != EquipmentSlot.CHEST){
             return false;
         }
-        if(!(AspectUtil.getIntegerAspectValueFromArmor(livingEntity, Aspects.GLIDE) > 0 || AspectUtil.getIntegerAspectValue(stack, Aspects.GLIDE) > 0)){
+        if(!(AspectUtil.getIntegerAspectValueFromArmor(livingEntity, Aspects.GLIDE) > 0 || AspectUtil.getIntegerAspectStrength(stack, Aspects.GLIDE) > 0)){
             return false;
         }
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){

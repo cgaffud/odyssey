@@ -136,7 +136,7 @@ public class PlayerEvents {
                     && player.isOnGround()
                     && (player.walkDist - player.walkDistO) < (double)player.getSpeed()
                     && AspectUtil.hasBooleanAspect(itemStack, Aspects.SWEEP);
-            float sweepDamage = AspectUtil.getUnitAspectValue(itemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
+            float sweepDamage = AspectUtil.getUnitAspectStrength(itemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
             // Sweep
             if(canSweep){
                 // Unchanging variables are needed to use in the below lambda expressions
