@@ -34,8 +34,11 @@ public class AspectUtil {
     private static final String ADDED_MODIFIERS_TAG = Odyssey.MOD_ID + ":AddedModifiers";
     private static final String ID_TAG = "id";
     private static final String STRENGTH_TAG = "strength";
+    private static final String DISPLAY_TAG = "display";
+    private static final String OBFUSCATED_TAG = "obfuscated";
     private static final String SET_BONUS_STRING = "SET_BONUS";
     private static final List<EquipmentSlot> ARMOR_EQUIPMENT_SLOT_LIST = Arrays.stream(EquipmentSlot.values()).filter(equipmentSlot -> equipmentSlot.getType() == EquipmentSlot.Type.ARMOR).collect(Collectors.toList());
+    private static final MutableComponent OBFUSCATED_TOOLTIP = new TextComponent("AAAAAAAAAA").withStyle(ChatFormatting.OBFUSCATED).withStyle(ChatFormatting.DARK_RED);
 
     private static ListTag getAspectListTag(ItemStack itemStack) {
         CompoundTag compoundTag = itemStack.getTag();
@@ -49,7 +52,7 @@ public class AspectUtil {
                 String id = aspectTag.getString(ID_TAG);
                 Aspect aspect = Aspects.ASPECT_REGISTER.get(id);
                 if(aspect == null) {
-                    Odyssey.LOGGER.error("Unkown aspect: "+id);
+                    Odyssey.LOGGER.error("Unknown aspect: "+id);
                 } else {
                     map.put(aspect, aspectTag.getFloat(STRENGTH_TAG));
                 }
@@ -66,10 +69,24 @@ public class AspectUtil {
                     String id = aspectTag.getString(ID_TAG);
                     Aspect aspect = Aspects.ASPECT_REGISTER.get(id);
                     if(aspect == null) {
-                        Odyssey.LOGGER.error("Unkown aspect: "+id);
+                        Odyssey.LOGGER.error("Unknown aspect: "+id);
                         return null;
                     } else {
-                        return new AspectInstance(aspect, aspectTag.getFloat(STRENGTH_TAG));
+                        float strength = aspectTag.getFloat(STRENGTH_TAG);
+                        String displaySettingName = aspectTag.getString(DISPLAY_TAG);
+                        AspectTooltipDisplaySetting aspectTooltipDisplaySetting;
+                        if(displaySettingName.isEmpty()){
+                            aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.ALWAYS;
+                        } else {
+                            try{
+                                aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.valueOf(displaySettingName);
+                            } catch (IllegalArgumentException illegalArgumentException){
+                                Odyssey.LOGGER.error("Unknown AspectTooltipDisplaySetting: "+displaySettingName);
+                                aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.ALWAYS;
+                            }
+                        }
+                        boolean obfuscated = aspectTag.getBoolean(OBFUSCATED_TAG);
+                        return new AspectInstance(aspect, strength, aspectTooltipDisplaySetting, obfuscated);
                     }
                 })
                 .filter(Objects::nonNull)
@@ -248,14 +265,16 @@ public class AspectUtil {
         Optional<MutableComponent> optionalHeader = tooltipFlag.isAdvanced() ? Optional.of(ADDED_MODIFIER_HEADER) : Optional.empty();
         // The isAdvanced flag for getTooltip is for filtering aspectInstances based on their display properties
         // Here we want there to be a header or not based on the isAdvanced flag
-        tooltip.addAll(getTooltip(aspectInstanceList, true, optionalHeader, ChatFormatting.GRAY, optionalLevel));
+        tooltip.addAll(getTooltip(aspectInstanceList, tooltipFlag.isAdvanced(), optionalHeader, ChatFormatting.GRAY, optionalLevel));
     }
 
     public static List<Component> getTooltip(List<AspectInstance> aspectInstanceList, boolean isAdvanced, Optional<MutableComponent> optionalHeader, ChatFormatting chatFormatting, Optional<Level> optionalLevel){
         List<Component> componentList = new ArrayList<>();
         componentList.addAll(aspectInstanceList.stream()
                 .filter(aspectInstance -> isAdvanced ? aspectInstance.aspectTooltipDisplaySetting != AspectTooltipDisplaySetting.NEVER : aspectInstance.aspectTooltipDisplaySetting == AspectTooltipDisplaySetting.ALWAYS)
-                .map(aspectInstance -> new TextComponent(optionalHeader.isPresent() ? " " : "").append(aspectInstance.getMutableComponent(optionalLevel)).withStyle(chatFormatting))
+                .map(aspectInstance ->
+                        new TextComponent(optionalHeader.isPresent() ? " " : "")
+                                .append(aspectInstance.obfuscated ? OBFUSCATED_TOOLTIP : aspectInstance.getMutableComponent(optionalLevel)).withStyle(chatFormatting))
                 .collect(Collectors.toList()));
         if(componentList.isEmpty()){
             return componentList;

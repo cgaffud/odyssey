@@ -13,6 +13,7 @@ public class AspectInstance {
     public final Aspect aspect;
     public final float strength;
     public final AspectTooltipDisplaySetting aspectTooltipDisplaySetting;
+    public final boolean obfuscated;
 
 
     public AspectInstance(FloatAspect floatAspect, float strength){
@@ -28,19 +29,23 @@ public class AspectInstance {
     }
 
     protected AspectInstance(Aspect aspect, float strength){
-        this(aspect, strength, AspectTooltipDisplaySetting.ALWAYS);
+        this(aspect, strength, AspectTooltipDisplaySetting.ALWAYS, false);
     }
 
-    private AspectInstance(Aspect aspect, float strength, AspectTooltipDisplaySetting aspectTooltipDisplaySetting){
+    protected AspectInstance(Aspect aspect, float strength, AspectTooltipDisplaySetting aspectTooltipDisplaySetting, boolean obfuscated){
         this.aspect = aspect;
         this.strength = strength;
         this.aspectTooltipDisplaySetting = aspectTooltipDisplaySetting;
+        this.obfuscated = obfuscated;
     }
 
     public AspectInstance withDisplaySetting(AspectTooltipDisplaySetting aspectTooltipDisplaySetting){
-        return new AspectInstance(this.aspect, this.strength, aspectTooltipDisplaySetting);
+        return new AspectInstance(this.aspect, this.strength, aspectTooltipDisplaySetting, this.obfuscated);
     }
 
+    public AspectInstance withObfuscation(boolean obfuscated){
+        return new AspectInstance(this.aspect, this.strength, aspectTooltipDisplaySetting, obfuscated);
+    }
 
     public MutableComponent getMutableComponent(Optional<Level> optionalLevel){
         return this.aspect.aspectTooltipFunction.apply(this.strength, optionalLevel);
