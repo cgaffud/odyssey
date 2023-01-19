@@ -122,10 +122,6 @@ public class AspectUtil {
         return getTotalStrengthForFunctionFromMap(getItemStackAspectMap(itemStack), strengthFunction);
     }
 
-    private static float getAspectStrength(ItemStack itemStack, Aspect aspect){
-        return getTotalStrengthForFunction(itemStack, aspect1 -> aspect1 == aspect ? 1.0f : 0.0f);
-    }
-
     private static float getTotalArmorStrengthForFunction(LivingEntity livingEntity, Function<Aspect, Float> strengthFunction){
         float total = 0.0f;
         for(ItemStack armorPiece: livingEntity.getArmorSlots()){
@@ -181,13 +177,13 @@ public class AspectUtil {
 
     // -- Public endpoints -----------------------------------------------------
 
+    public static float getAspectStrength(ItemStack itemStack, Aspect aspect){
+        return getTotalStrengthForFunction(itemStack, aspect1 -> aspect1 == aspect ? 1.0f : 0.0f);
+    }
+
     // Get direct value from single itemstack
     public static float getFloatAspectStrength(ItemStack itemStack, FloatAspect floatAspect){
         return getAspectStrength(itemStack, floatAspect);
-    }
-
-    public static float getUnitAspectStrength(ItemStack itemStack, UnitAspect unitAspect){
-        return 1.0f + getAspectStrength(itemStack, unitAspect);
     }
 
     public static int getIntegerAspectStrength(ItemStack itemStack, IntegerAspect integerAspect){

@@ -70,19 +70,14 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         this.arrowType = ArrowType.values()[additionalData.readInt()];
     }
 
-    protected void onHitEntity(EntityHitResult entityHitResult) {
-        this.arrowType.onEntityHit(entityHitResult, this.getPickupItem());
-        super.onHitEntity(entityHitResult);
-    }
-
     public void setEnchantmentEffectsFromEntity(LivingEntity shooter, float bowDamageMultiplier) {
         ItemStack bow = shooter.getItemInHand(ProjectileUtil.getWeaponHoldingHand(shooter, item -> item instanceof AspectBowItem || item instanceof AspectCrossbowItem));
         this.setBaseDamage((bowDamageMultiplier + this.random.nextGaussian() * 0.1D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage * (WeaponUtil.BASE_ARROW_VELOCITY * WeaponUtil.BASE_ARROW_VELOCITY) / (WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES));
-        // Knockback
-        this.knockbackAspect = AspectUtil.getUnitAspectStrength(bow, Aspects.PROJECTILE_KNOCKBACK);
-        // Piercing
-        this.setPiercingAspect(AspectUtil.getFloatAspectStrength(bow, Aspects.PIERCING));
-        // Larceny
-        this.larcenyAspect = AspectUtil.getFloatAspectStrength(bow, Aspects.PROJECTILE_LARCENY_CHANCE);
+        // Aspects
+        this.setAspectStrength(Aspects.PROJECTILE_KNOCKBACK, AspectUtil.getFloatAspectStrength(bow, Aspects.PROJECTILE_KNOCKBACK));
+        this.setAspectStrength(Aspects.PIERCING, AspectUtil.getFloatAspectStrength(bow, Aspects.PIERCING));
+        this.setAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE, AspectUtil.getFloatAspectStrength(bow, Aspects.PROJECTILE_LARCENY_CHANCE));
+        this.setAspectStrength(Aspects.PROJECTILE_COBWEB_CHANCE, AspectUtil.getFloatAspectStrength(bow, Aspects.PROJECTILE_COBWEB_CHANCE));
+        this.setAspectStrength(Aspects.PROJECTILE_POISON_DAMAGE, AspectUtil.getIntegerAspectStrength(bow, Aspects.PROJECTILE_POISON_DAMAGE));
     }
 }

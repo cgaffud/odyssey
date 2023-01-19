@@ -38,15 +38,19 @@ public class Aspects {
     public static final PercentageAspect LARCENY_CHANCE = new PercentageAspect("larceny_chance");
 
     // Ranged
-    public static final FloatAspect PIERCING = new FloatAspect("piercing");
+
+    // Shooting
+    public static final UnitAspect ACCURACY = new UnitAspect("accuracy");
+    public static final UnitAspect MAX_CHARGE_TIME = new UnitAspect("max_charge_time");
     public static final MultishotAspect MULTISHOT = new MultishotAspect("multishot");
+
+    // Ammo
+    public static final FloatAspect PIERCING = new FloatAspect("piercing");
     public static final IntegerAspect PROJECTILE_LOOTING_LUCK = new IntegerAspect("projectile_looting_luck");
     public static final IntegerAspect PROJECTILE_POISON_DAMAGE = new IntegerAspect("projectile_poison_damage");
     public static final PercentageAspect PROJECTILE_COBWEB_CHANCE = new PercentageAspect("projectile_cobweb_chance");
     public static final PercentageAspect PROJECTILE_LARCENY_CHANCE = new PercentageAspect("projectile_larceny_chance");
     public static final UnitAspect PROJECTILE_KNOCKBACK = new UnitAspect("projectile_knockback");
-    public static final UnitAspect ACCURACY = new UnitAspect("accuracy");
-    public static final UnitAspect MAX_CHARGE_TIME = new UnitAspect("max_charge_time");
 
     // Armor
     public static final DamageSourcePredicateAspect FEATHER_FALLING = new DamageSourcePredicateAspect("feather_falling", damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);

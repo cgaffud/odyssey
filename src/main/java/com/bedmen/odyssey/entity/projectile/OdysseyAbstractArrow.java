@@ -1,15 +1,22 @@
 package com.bedmen.odyssey.entity.projectile;
 
+import com.bedmen.odyssey.aspect.AspectStrengthMap;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,23 +24,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
 import java.util.Arrays;
 
 public abstract class OdysseyAbstractArrow extends AbstractArrow {
-    public static final String KNOCKBACK_ASPECT_TAG = "KnockbackAspect";
-    public static final String PIERCING_ASPECT_TAG = "PiercingAspect";
+    private AspectStrengthMap aspectStrengthMap = new AspectStrengthMap();
+    public static final String ASPECT_STRENGTH_MAP_TAG = "AspectStrengthMap";
     public static final String PIERCING_DAMAGE_PENALTY_TAG = "PiercingDamagePenalty";
-    public static final String LOOTING_ASPECT_TAG = "LootingAspect";
-    public static final String LARCENY_ASPECT_TAG = "LarcenyAspect";
-    public float knockbackAspect = 1.0f;
-    public float piercingAspect = 0.0f;
     // Decreases damage of arrow on last piercing
     public float piercingDamagePenalty = 1.0f;
-    public int lootingAspect = 0;
-    public float larcenyAspect = 0.0f;
 
     protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, Level level) {
         super(type, level);
@@ -51,11 +53,21 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         super.defineSynchedData();
     }
 
-    public void setPiercingAspect(float piercingAspect){
-        this.piercingAspect = piercingAspect;
-        int ceil = Mth.ceil(piercingAspect);
-        this.piercingDamagePenalty = 1.0f - ((float)ceil) + piercingAspect;
+    public void setPiercingValues(float strength){
+        int ceil = Mth.ceil(strength);
+        this.piercingDamagePenalty = 1.0f - ((float)ceil) + strength;
         this.setPierceLevel((byte)ceil);
+    }
+
+    public void setAspectStrength(Aspect aspect, float strength){
+        this.aspectStrengthMap.put(aspect, strength);
+        if(aspect == Aspects.PIERCING){
+            this.setPiercingValues(strength);
+        }
+    }
+
+    public float getAspectStrength(Aspect aspect){
+        return this.aspectStrengthMap.get(aspect);
     }
 
     protected void onHitEntity(EntityHitResult entityHitResult) {
@@ -106,24 +118,23 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 return;
             }
 
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingentity = (LivingEntity)entity;
+            if (entity instanceof LivingEntity livingEntity) {
                 if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
-                    livingentity.setArrowCount(livingentity.getArrowCount() + 1);
+                    livingEntity.setArrowCount(livingEntity.getArrowCount() + 1);
                 }
 
                 if (!this.level.isClientSide && owner instanceof LivingEntity) {
-                    EnchantmentHelper.doPostHurtEffects(livingentity, owner);
-                    EnchantmentHelper.doPostDamageEffects((LivingEntity)owner, livingentity);
+                    EnchantmentHelper.doPostHurtEffects(livingEntity, owner);
+                    EnchantmentHelper.doPostDamageEffects((LivingEntity)owner, livingEntity);
                 }
 
-                this.doPostHurtEffects(livingentity);
-                if (owner != null && livingentity != owner && livingentity instanceof Player && owner instanceof ServerPlayer && !this.isSilent()) {
+                this.doPostHurtEffects(livingEntity);
+                if (owner != null && livingEntity != owner && livingEntity instanceof Player && owner instanceof ServerPlayer && !this.isSilent()) {
                     ((ServerPlayer)owner).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
                 }
 
                 if (!entity.isAlive() && this.piercedAndKilledEntities != null) {
-                    this.piercedAndKilledEntities.add(livingentity);
+                    this.piercedAndKilledEntities.add(livingEntity);
                 }
 
                 if (!this.level.isClientSide && owner instanceof ServerPlayer) {
@@ -132,6 +143,21 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                         CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(serverplayerentity, this.piercedAndKilledEntities);
                     } else if (!entity.isAlive() && this.shotFromCrossbow()) {
                         CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(serverplayerentity, Arrays.asList(entity));
+                    }
+                }
+
+                // Poison Damage
+                int poisonStrength = (int)this.getAspectStrength(Aspects.PROJECTILE_POISON_DAMAGE);
+                if(!entity.level.isClientSide && poisonStrength > 0) {
+                    livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + 24, 0));
+                    livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (12 * poisonStrength), 1));
+                }
+                // Cobweb Chance
+                float cobwebChance = this.getAspectStrength(Aspects.PROJECTILE_COBWEB_CHANCE);
+                if(cobwebChance > livingEntity.getRandom().nextFloat()){
+                    BlockPos blockPos = new BlockPos(livingEntity.getPosition(1f));
+                    if (livingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
+                        livingEntity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
                     }
                 }
             }
@@ -163,19 +189,16 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        compoundTag.putFloat(KNOCKBACK_ASPECT_TAG, this.knockbackAspect);
-        compoundTag.putFloat(PIERCING_ASPECT_TAG, this.piercingAspect);
+        CompoundTag aspectStrengthMapTag = this.aspectStrengthMap.toCompoundTag();
+        compoundTag.put(ASPECT_STRENGTH_MAP_TAG, aspectStrengthMapTag);
         compoundTag.putFloat(PIERCING_DAMAGE_PENALTY_TAG, this.piercingDamagePenalty);
-        compoundTag.putInt(LOOTING_ASPECT_TAG, this.lootingAspect);
-        compoundTag.putFloat(LARCENY_ASPECT_TAG, this.larcenyAspect);
     }
 
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        this.knockbackAspect = compoundTag.contains(KNOCKBACK_ASPECT_TAG) ? compoundTag.getFloat(KNOCKBACK_ASPECT_TAG) : 1.0f;
-        this.piercingAspect = compoundTag.getFloat(PIERCING_ASPECT_TAG);
+        if(compoundTag.contains(ASPECT_STRENGTH_MAP_TAG)){
+            this.aspectStrengthMap = AspectStrengthMap.fromCompoundTag(compoundTag.getCompound(ASPECT_STRENGTH_MAP_TAG));
+        }
         this.piercingDamagePenalty = compoundTag.contains(PIERCING_DAMAGE_PENALTY_TAG) ? compoundTag.getFloat(PIERCING_DAMAGE_PENALTY_TAG) : 1.0f;
-        this.lootingAspect = compoundTag.getInt(LOOTING_ASPECT_TAG);
-        this.larcenyAspect = compoundTag.getFloat(LARCENY_ASPECT_TAG);
     }
 }

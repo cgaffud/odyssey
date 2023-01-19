@@ -13,7 +13,6 @@ import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.google.common.collect.HashMultimap;
@@ -114,7 +113,7 @@ public class EntityEvents {
 
             // Melee Knockback
             if(hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-                odysseyLivingEntity.setNextKnockbackAspect(AspectUtil.getUnitAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
+                odysseyLivingEntity.setNextKnockbackAspect(AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
             }
 
             // Thorns
@@ -125,9 +124,9 @@ public class EntityEvents {
 
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
-            odysseyLivingEntity.setNextKnockbackAspect(odysseyAbstractArrow.knockbackAspect);
+            odysseyLivingEntity.setNextKnockbackAspect(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_KNOCKBACK));
             // Ranged Larceny
-            WeaponUtil.tryLarceny(odysseyAbstractArrow.larcenyAspect, odysseyAbstractArrow.getOwner(), hurtLivingEntity);
+            WeaponUtil.tryLarceny(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), odysseyAbstractArrow.getOwner(), hurtLivingEntity);
         }
 
         // Break Coconut
@@ -309,7 +308,7 @@ public class EntityEvents {
         if(damageSource != null){
             Entity directEntity = damageSource.getDirectEntity();
             if(directEntity instanceof OdysseyAbstractArrow){
-                event.setLootingLevel(((OdysseyAbstractArrow) directEntity).lootingAspect);
+                event.setLootingLevel((int) ((OdysseyAbstractArrow) directEntity).getAspectStrength(Aspects.PROJECTILE_LOOTING_LUCK));
             } else if (directEntity instanceof LivingEntity livingEntity) {
                 ItemStack itemStack = livingEntity.getMainHandItem();
                 int looting = AspectUtil.getIntegerAspectStrength(itemStack, Aspects.LOOTING_LUCK);
@@ -330,7 +329,7 @@ public class EntityEvents {
             if(damageSource.isProjectile()){
                 Entity damageSourceEntity = damageSource.getDirectEntity();
                 if(damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow){
-                    float piercingAspect = odysseyAbstractArrow.piercingAspect;
+                    float piercingAspect = odysseyAbstractArrow.getAspectStrength(Aspects.PIERCING);
                     float impenetrabilityAspect = AspectUtil.getFloatAspectStrength(shield, Aspects.IMPENETRABILITY);
                     if(piercingAspect > impenetrabilityAspect){
                         damageBlockMultiplier = impenetrabilityAspect / piercingAspect;
@@ -345,8 +344,8 @@ public class EntityEvents {
     public static void onLivingKnockBackEvent(final LivingKnockBackEvent event){
         LivingEntity target = event.getEntityLiving();
         if(target instanceof OdysseyLivingEntity odysseyLivingEntity){
-            event.setStrength(event.getOriginalStrength() * odysseyLivingEntity.getNextKnockbackAspect());
-            odysseyLivingEntity.setNextKnockbackAspect(1.0f);
+            event.setStrength(event.getOriginalStrength() * (1.0f + odysseyLivingEntity.getNextKnockbackAspect()));
+            odysseyLivingEntity.setNextKnockbackAspect(0.0f);
         }
     }
 

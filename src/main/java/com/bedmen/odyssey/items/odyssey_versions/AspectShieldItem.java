@@ -60,8 +60,8 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
     }
 
     public int getRecoveryTime(ItemStack shield){
-        float recoverySpeedAspect = AspectUtil.getUnitAspectStrength(shield, Aspects.RECOVERY_SPEED);
-        return Mth.ceil((float)this.shieldType.recoveryTime / recoverySpeedAspect);
+        float recoverySpeedMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(shield, Aspects.RECOVERY_SPEED);
+        return Mth.ceil((float)this.shieldType.recoveryTime / recoverySpeedMultiplier);
     }
 
     @Override

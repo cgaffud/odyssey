@@ -49,24 +49,4 @@ public enum ArrowType{
     public Item getItem(){
         return this.lazyItem.get();
     }
-
-    public void onEntityHit(EntityHitResult entityHitResult, ItemStack itemStack) {
-        Entity entity = entityHitResult.getEntity();
-        if(entity instanceof LivingEntity livingEntity){
-            // Poison Damage
-            float poisonStrength = AspectUtil.getIntegerAspectStrength(itemStack, Aspects.PROJECTILE_POISON_DAMAGE);
-            if(!entity.level.isClientSide && poisonStrength > 0) {
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + 24, 0));
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (int)(12 * poisonStrength), 1));
-            }
-            // Cobweb Chance
-            float cobwebChance = AspectUtil.getFloatAspectStrength(itemStack, Aspects.PROJECTILE_COBWEB_CHANCE);
-            if(cobwebChance > livingEntity.getRandom().nextFloat()){
-                BlockPos blockPos = new BlockPos(livingEntity.getPosition(1f));
-                if (livingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
-                    livingEntity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
-                }
-            }
-        }
-    }
 }

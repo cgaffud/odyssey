@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items.odyssey_versions;
 
 import com.bedmen.odyssey.aspect.AspectHolder;
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
@@ -39,16 +40,22 @@ public class AspectArrowItem extends ArrowItem implements AspectItem {
         });
     }
 
+    private void setAspectStrengthOnArrow(Aspect aspect, ItemStack bow, ItemStack ammo, OdysseyAbstractArrow odysseyAbstractArrow){
+        float bowStrength = AspectUtil.getAspectStrength(bow, aspect);
+        float ammoStrength = AspectUtil.getAspectStrength(ammo, aspect);
+        odysseyAbstractArrow.setAspectStrength(aspect, bowStrength + ammoStrength);
+    }
+
     public OdysseyAbstractArrow createAbstractOdysseyArrow(Level world, ItemStack bow, ItemStack ammo, LivingEntity livingEntity) {
         OdysseyArrow odysseyArrow = new OdysseyArrow(world, livingEntity, arrowType);
-        // Knockback
-        odysseyArrow.knockbackAspect = AspectUtil.getUnitAspectStrength(bow, Aspects.PROJECTILE_KNOCKBACK);
-        // Piercing
-        odysseyArrow.setPiercingAspect(AspectUtil.getFloatAspectStrength(bow, Aspects.PIERCING));
-        // Looting
-        odysseyArrow.lootingAspect = AspectUtil.getIntegerAspectStrength(ammo, Aspects.PROJECTILE_LOOTING_LUCK);
-        // Larceny
-        odysseyArrow.larcenyAspect = AspectUtil.getFloatAspectStrength(bow, Aspects.PROJECTILE_LARCENY_CHANCE);
+
+        this.setAspectStrengthOnArrow(Aspects.PROJECTILE_KNOCKBACK, bow, ammo, odysseyArrow);
+        this.setAspectStrengthOnArrow(Aspects.PIERCING, bow, ammo, odysseyArrow);
+        this.setAspectStrengthOnArrow(Aspects.PROJECTILE_LARCENY_CHANCE, bow, ammo, odysseyArrow);
+        this.setAspectStrengthOnArrow(Aspects.PROJECTILE_LOOTING_LUCK, bow, ammo, odysseyArrow);
+        this.setAspectStrengthOnArrow(Aspects.PROJECTILE_COBWEB_CHANCE, bow, ammo, odysseyArrow);
+        this.setAspectStrengthOnArrow(Aspects.PROJECTILE_POISON_DAMAGE, bow, ammo, odysseyArrow);
+
         return odysseyArrow;
     }
 
