@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.enchantment.odyssey;
 
 import com.bedmen.odyssey.enchantment.OdysseyEnchantmentCategory;
-import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,7 +33,7 @@ public class FlingEnchantment extends Enchantment {
      */
     public void doPostAttack(LivingEntity user, Entity target, int enchantmentLevel) {
         if (target instanceof LivingEntity) {
-            float f = user instanceof IOdysseyPlayer odysseyPlayer ? odysseyPlayer.getAttackStrengthScaleO() : 1.0f;
+            float f = user instanceof OdysseyPlayer odysseyPlayer ? odysseyPlayer.getAttackStrengthScaleO() : 1.0f;
             target.setDeltaMovement(target.getDeltaMovement().add(0d, Math.sqrt(0.1d * (enchantmentLevel + 1) * f), 0d));
         }
     }

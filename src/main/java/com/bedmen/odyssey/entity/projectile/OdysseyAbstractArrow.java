@@ -5,6 +5,7 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.entity.monster.Weaver;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -154,11 +155,8 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 }
                 // Cobweb Chance
                 float cobwebChance = this.getAspectStrength(Aspects.PROJECTILE_COBWEB_CHANCE);
-                if(cobwebChance > livingEntity.getRandom().nextFloat()){
-                    BlockPos blockPos = new BlockPos(livingEntity.getPosition(1f));
-                    if (livingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
-                        livingEntity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
-                    }
+                if(this.isCritArrow()){
+                    Weaver.tryPlaceCobwebOnTarget(cobwebChance, livingEntity);
                 }
             }
 

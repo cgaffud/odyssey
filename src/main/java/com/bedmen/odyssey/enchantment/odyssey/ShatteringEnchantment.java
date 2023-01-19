@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.enchantment.odyssey;
 
 import com.bedmen.odyssey.enchantment.OdysseyEnchantmentCategory;
-import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +19,7 @@ public class ShatteringEnchantment extends Enchantment{
     }
 
     public void doPostAttack(LivingEntity user, Entity target, int enchantmentLevel) {
-        if(!user.level.isClientSide && (!(user instanceof IOdysseyPlayer odysseyPlayer) || odysseyPlayer.getAttackStrengthScaleO() > 0.9f) && target instanceof LivingEntity livingTarget) {
+        if(!user.level.isClientSide && (!(user instanceof OdysseyPlayer odysseyPlayer) || odysseyPlayer.getAttackStrengthScaleO() > 0.9f) && target instanceof LivingEntity livingTarget) {
             for(int i = 0; i <= enchantmentLevel; i++) {
                 MobEffectInstance effectInstance = new MobEffectInstance(EffectRegistry.SHATTERED.get(), (enchantmentLevel - i + 1) * 40, i, false, true, true);
                 livingTarget.addEffect(effectInstance);

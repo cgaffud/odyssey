@@ -3,7 +3,7 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
-import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.odyssey_versions.AspectShieldItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
-public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer {
+public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer {
 
     @Shadow
     public void awardStat(Stat<?> p_36247_) {}

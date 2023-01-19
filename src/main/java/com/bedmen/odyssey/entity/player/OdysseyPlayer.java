@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.entity.player;
 
-public interface IOdysseyPlayer {
+public interface OdysseyPlayer {
     float getAttackStrengthScaleO();
     void updateSniperScoping();
     boolean isSniperScoping();

@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.monster;
 
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -52,7 +53,7 @@ public class Weaver extends Monster {
         map.put(Attributes.ATTACK_DAMAGE, DAMAGE_MODIFIER_QUEEN);
         return map;
     });
-    public static final float WEB_ATTACK_CHANCE = 0.1f;
+    public static final float WEB_ATTACK_CHANCE = 0.2f;
 
     public Weaver(EntityType<? extends Weaver> entityType, Level level) {
         super(entityType, level);
@@ -186,6 +187,15 @@ public class Weaver extends Monster {
         }
     }
 
+    public static void tryPlaceCobwebOnTarget(float chance, LivingEntity target){
+        if(chance > target.getRandom().nextFloat()){
+            BlockPos blockPos = new BlockPos(target.getPosition(1f));
+            if(target.level.getBlockState(blockPos).getBlock() == Blocks.AIR){
+                target.level.setBlock(blockPos, BlockRegistry.TEMPORARY_COBWEB.get().defaultBlockState(), 3);
+            }
+        }
+    }
+
     static class AttackGoal extends MeleeAttackGoal {
         public AttackGoal(Weaver p_i46676_1_) {
             super(p_i46676_1_, 1.0D, true);
@@ -217,12 +227,7 @@ public class Weaver extends Monster {
                 this.resetAttackCooldown();
                 this.mob.swing(InteractionHand.MAIN_HAND);
                 this.mob.doHurtTarget(pEnemy);
-                if(this.mob.getRandom().nextFloat() < WEB_ATTACK_CHANCE){
-                    BlockPos blockPos = new BlockPos(pEnemy.getPosition(1f));
-                    if(this.mob.level.getBlockState(blockPos).getBlock() == Blocks.AIR){
-                        this.mob.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
-                    }
-                }
+                tryPlaceCobwebOnTarget(WEB_ATTACK_CHANCE, pEnemy);
             }
 
         }

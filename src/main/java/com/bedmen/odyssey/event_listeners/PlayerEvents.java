@@ -5,7 +5,7 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.odyssey_versions.AspectArmorItem;
 import com.bedmen.odyssey.items.odyssey_versions.AspectItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
@@ -47,7 +47,7 @@ public class PlayerEvents {
         //Beginning of Tick
         if(event.phase == TickEvent.Phase.START){
             //Both Sides
-            if(player instanceof IOdysseyPlayer odysseyPlayer) {
+            if(player instanceof OdysseyPlayer odysseyPlayer) {
                 odysseyPlayer.updateSniperScoping();
             }
             //Server Side

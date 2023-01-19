@@ -78,7 +78,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
                     ammo = new ItemStack(Items.ARROW);
                 }
 
-                if (useTicks >= 3) {
+                if (useTicks >= 2) {
                     float velocity = WeaponUtil.getArrowVelocityForUseTicks(useTicks, bow, true);
                     boolean flag1 = player.getAbilities().instabuild || (ammo.getItem() instanceof ArrowItem && ((ArrowItem)ammo.getItem()).isInfinite(ammo, bow, player));
                     if (!level.isClientSide) {

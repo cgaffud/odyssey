@@ -4,6 +4,8 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.entity.monster.Weaver;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.odyssey_versions.AspectArmorItem;
 import com.bedmen.odyssey.items.odyssey_versions.AspectShieldItem;
@@ -101,11 +103,9 @@ public class EntityEvents {
             }
             // Cobweb Chance
             float cobwebChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.COBWEB_CHANCE);
-            if(cobwebChance > damageSourceLivingEntity.getRandom().nextFloat()){
-                BlockPos blockPos = new BlockPos(hurtLivingEntity.getPosition(1f));
-                if (hurtLivingEntity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
-                    hurtLivingEntity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
-                }
+            if(!(damageSourceLivingEntity instanceof OdysseyPlayer odysseyPlayer)
+                    || odysseyPlayer.getAttackStrengthScaleO() > 0.9f){
+                Weaver.tryPlaceCobwebOnTarget(cobwebChance, hurtLivingEntity);
             }
             // Melee Larceny
             float larcenyChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.LARCENY_CHANCE);

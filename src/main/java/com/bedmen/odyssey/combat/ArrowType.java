@@ -23,7 +23,7 @@ import java.util.List;
 public enum ArrowType{
     FLINT(ItemRegistry.ARROW::get, 5.0d, new ResourceLocation("textures/entity/projectiles/arrow.png")),
     SPIDER_FANG("spider_fang", ItemRegistry.SPIDER_FANG_ARROW::get, 5d, List.of(new AspectInstance(Aspects.PROJECTILE_POISON_DAMAGE, 2))),
-    WEAVER_FANG("weaver_fang", ItemRegistry.WEAVER_FANG_ARROW::get, 5.5, List.of(new AspectInstance(Aspects.PROJECTILE_COBWEB_CHANCE, 0.1f))),
+    WEAVER_FANG("weaver_fang", ItemRegistry.WEAVER_FANG_ARROW::get, 5.5, List.of(new AspectInstance(Aspects.PROJECTILE_COBWEB_CHANCE, 0.2f))),
     CLOVER_STONE("clover_stone", ItemRegistry.CLOVER_STONE_ARROW::get, 6d, List.of(new AspectInstance(Aspects.PROJECTILE_LOOTING_LUCK, 1))),
     AMETHYST("amethyst", ItemRegistry.AMETHYST_ARROW::get, 6.0d, List.of());
 

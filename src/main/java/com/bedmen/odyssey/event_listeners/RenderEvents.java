@@ -2,7 +2,7 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
-import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.odyssey_versions.AspectBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import net.minecraft.client.Minecraft;
@@ -77,7 +77,7 @@ public class RenderEvents {
     @SubscribeEvent
     public static void onFOVModifierEvent(final FOVModifierEvent event) {
         Player player = event.getEntity();
-        if(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player instanceof IOdysseyPlayer odysseyPlayer && odysseyPlayer.isSniperScoping()){
+        if(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player instanceof OdysseyPlayer odysseyPlayer && odysseyPlayer.isSniperScoping()){
             event.setNewfov(SpyglassItem.ZOOM_FOV_MODIFIER);
         }
         else if (player.isUsingItem()) {
