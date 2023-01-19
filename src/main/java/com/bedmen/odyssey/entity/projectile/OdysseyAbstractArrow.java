@@ -54,21 +54,22 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         super.defineSynchedData();
     }
 
-    public void setPiercingValues(float strength){
+    public void updatePiercingValues(){
+        float strength = this.aspectStrengthMap.getNonNull(Aspects.PIERCING);
         int ceil = Mth.ceil(strength);
         this.piercingDamagePenalty = 1.0f - ((float)ceil) + strength;
         this.setPierceLevel((byte)ceil);
     }
 
-    public void setAspectStrength(Aspect aspect, float strength){
-        this.aspectStrengthMap.put(aspect, strength);
-        if(aspect == Aspects.PIERCING){
-            this.setPiercingValues(strength);
+    public void addAspectStrengthMap(AspectStrengthMap aspectStrengthMap){
+        this.aspectStrengthMap.putAll(aspectStrengthMap);
+        if(this.aspectStrengthMap.containsKey(Aspects.PIERCING)){
+            this.updatePiercingValues();
         }
     }
 
     public float getAspectStrength(Aspect aspect){
-        return this.aspectStrengthMap.get(aspect);
+        return this.aspectStrengthMap.getNonNull(aspect);
     }
 
     protected void onHitEntity(EntityHitResult entityHitResult) {

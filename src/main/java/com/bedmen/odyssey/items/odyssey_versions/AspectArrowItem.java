@@ -2,8 +2,6 @@ package com.bedmen.odyssey.items.odyssey_versions;
 
 import com.bedmen.odyssey.aspect.AspectHolder;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import com.bedmen.odyssey.util.StringUtil;
@@ -40,21 +38,11 @@ public class AspectArrowItem extends ArrowItem implements AspectItem {
         });
     }
 
-    private void setAspectStrengthOnArrow(Aspect aspect, ItemStack bow, ItemStack ammo, OdysseyAbstractArrow odysseyAbstractArrow){
-        float bowStrength = AspectUtil.getAspectStrength(bow, aspect);
-        float ammoStrength = AspectUtil.getAspectStrength(ammo, aspect);
-        odysseyAbstractArrow.setAspectStrength(aspect, bowStrength + ammoStrength);
-    }
-
     public OdysseyAbstractArrow createAbstractOdysseyArrow(Level world, ItemStack bow, ItemStack ammo, LivingEntity livingEntity) {
         OdysseyArrow odysseyArrow = new OdysseyArrow(world, livingEntity, arrowType);
 
-        this.setAspectStrengthOnArrow(Aspects.PROJECTILE_KNOCKBACK, bow, ammo, odysseyArrow);
-        this.setAspectStrengthOnArrow(Aspects.PIERCING, bow, ammo, odysseyArrow);
-        this.setAspectStrengthOnArrow(Aspects.PROJECTILE_LARCENY_CHANCE, bow, ammo, odysseyArrow);
-        this.setAspectStrengthOnArrow(Aspects.PROJECTILE_LOOTING_LUCK, bow, ammo, odysseyArrow);
-        this.setAspectStrengthOnArrow(Aspects.PROJECTILE_COBWEB_CHANCE, bow, ammo, odysseyArrow);
-        this.setAspectStrengthOnArrow(Aspects.PROJECTILE_POISON_DAMAGE, bow, ammo, odysseyArrow);
+        odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(bow));
+        odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(ammo));
 
         return odysseyArrow;
     }

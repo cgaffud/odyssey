@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.items.odyssey_versions.AspectBowItem;
 import com.bedmen.odyssey.items.odyssey_versions.AspectCrossbowItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -14,7 +13,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
@@ -74,10 +72,6 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         ItemStack bow = shooter.getItemInHand(ProjectileUtil.getWeaponHoldingHand(shooter, item -> item instanceof AspectBowItem || item instanceof AspectCrossbowItem));
         this.setBaseDamage((bowDamageMultiplier + this.random.nextGaussian() * 0.1D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage * (WeaponUtil.BASE_ARROW_VELOCITY * WeaponUtil.BASE_ARROW_VELOCITY) / (WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES));
         // Aspects
-        this.setAspectStrength(Aspects.PROJECTILE_KNOCKBACK, AspectUtil.getFloatAspectStrength(bow, Aspects.PROJECTILE_KNOCKBACK));
-        this.setAspectStrength(Aspects.PIERCING, AspectUtil.getFloatAspectStrength(bow, Aspects.PIERCING));
-        this.setAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE, AspectUtil.getFloatAspectStrength(bow, Aspects.PROJECTILE_LARCENY_CHANCE));
-        this.setAspectStrength(Aspects.PROJECTILE_COBWEB_CHANCE, AspectUtil.getFloatAspectStrength(bow, Aspects.PROJECTILE_COBWEB_CHANCE));
-        this.setAspectStrength(Aspects.PROJECTILE_POISON_DAMAGE, AspectUtil.getIntegerAspectStrength(bow, Aspects.PROJECTILE_POISON_DAMAGE));
+        this.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(bow));
     }
 }

@@ -107,19 +107,11 @@ public class AspectUtil {
                 .reduce(Float::sum).orElse(0.0f);
     }
 
-    private static AspectStrengthMap getItemStackAspectMap(ItemStack itemStack){
-        AspectStrengthMap addedModifierMap = getAddedModifierMap(itemStack);
-        if(itemStack.getItem() instanceof AspectItem aspectItem){
-            return addedModifierMap.combine(aspectItem.getAspectHolder().allAspectMap);
-        }
-        return addedModifierMap;
-    }
-
     private static float getTotalStrengthForFunction(ItemStack itemStack, Function<Aspect, Float> strengthFunction){
         if(itemStack.isEmpty()){
             return 0.0f;
         }
-        return getTotalStrengthForFunctionFromMap(getItemStackAspectMap(itemStack), strengthFunction);
+        return getTotalStrengthForFunctionFromMap(getAspectStrengthMap(itemStack), strengthFunction);
     }
 
     private static float getTotalArmorStrengthForFunction(LivingEntity livingEntity, Function<Aspect, Float> strengthFunction){
@@ -138,7 +130,7 @@ public class AspectUtil {
     }
 
     private static void fillAttributeMultimap(ItemStack itemStack, EquipmentSlot equipmentSlot, Multimap<Attribute, AttributeModifier> multimap){
-        AspectStrengthMap aspectStrengthMap = getItemStackAspectMap(itemStack);
+        AspectStrengthMap aspectStrengthMap = getAspectStrengthMap(itemStack);
         aspectStrengthMap.forEach((key, value) -> {
             if (key instanceof AttributeAspect attributeAspect) {
                 multimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (equipmentSlot.getName().hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, value, attributeAspect.operation));
@@ -177,11 +169,22 @@ public class AspectUtil {
 
     // -- Public endpoints -----------------------------------------------------
 
+    // Get AspectStrengthMap
+
+    public static AspectStrengthMap getAspectStrengthMap(ItemStack itemStack){
+        AspectStrengthMap addedModifierMap = getAddedModifierMap(itemStack);
+        if(itemStack.getItem() instanceof AspectItem aspectItem){
+            return addedModifierMap.combine(aspectItem.getAspectHolder().allAspectMap);
+        }
+        return addedModifierMap;
+    }
+
+    // Get aspect strength from single itemStack
+
     public static float getAspectStrength(ItemStack itemStack, Aspect aspect){
         return getTotalStrengthForFunction(itemStack, aspect1 -> aspect1 == aspect ? 1.0f : 0.0f);
     }
 
-    // Get direct value from single itemstack
     public static float getFloatAspectStrength(ItemStack itemStack, FloatAspect floatAspect){
         return getAspectStrength(itemStack, floatAspect);
     }
