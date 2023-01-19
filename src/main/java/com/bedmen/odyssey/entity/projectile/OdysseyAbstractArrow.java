@@ -23,11 +23,13 @@ import net.minecraftforge.network.NetworkHooks;
 import java.util.Arrays;
 
 public abstract class OdysseyAbstractArrow extends AbstractArrow {
-    public static final String KNOCKBACK_MODIFIER_TAG = "KnockbackModifier";
+    public static final String KNOCKBACK_ASPECT_TAG = "KnockbackAspect";
+    public static final String PIERCING_ASPECT_TAG = "PiercingAspect";
     public static final String PIERCING_DAMAGE_PENALTY_TAG = "PiercingDamagePenalty";
-    public static final String LOOTING_MODIFIER_TAG = "LootingModifier";
-    public static final String LARCENY_MODIFIER_TAG = "LarcenyModifier";
+    public static final String LOOTING_ASPECT_TAG = "LootingAspect";
+    public static final String LARCENY_ASPECT_TAG = "LarcenyAspect";
     public float knockbackAspect = 1.0f;
+    public float piercingAspect = 0.0f;
     // Decreases damage of arrow on last piercing
     public float piercingDamagePenalty = 1.0f;
     public int lootingAspect = 0;
@@ -49,9 +51,10 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         super.defineSynchedData();
     }
 
-    public void setPiercingAspect(float piercingModifier){
-        int ceil = Mth.ceil(piercingModifier);
-        this.piercingDamagePenalty = 1.0f - ((float)ceil) + piercingModifier;
+    public void setPiercingAspect(float piercingAspect){
+        this.piercingAspect = piercingAspect;
+        int ceil = Mth.ceil(piercingAspect);
+        this.piercingDamagePenalty = 1.0f - ((float)ceil) + piercingAspect;
         this.setPierceLevel((byte)ceil);
     }
 
@@ -160,17 +163,19 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        compoundTag.putFloat(KNOCKBACK_MODIFIER_TAG, this.knockbackAspect);
+        compoundTag.putFloat(KNOCKBACK_ASPECT_TAG, this.knockbackAspect);
+        compoundTag.putFloat(PIERCING_ASPECT_TAG, this.piercingAspect);
         compoundTag.putFloat(PIERCING_DAMAGE_PENALTY_TAG, this.piercingDamagePenalty);
-        compoundTag.putInt(LOOTING_MODIFIER_TAG, this.lootingAspect);
-        compoundTag.putFloat(LARCENY_MODIFIER_TAG, this.larcenyAspect);
+        compoundTag.putInt(LOOTING_ASPECT_TAG, this.lootingAspect);
+        compoundTag.putFloat(LARCENY_ASPECT_TAG, this.larcenyAspect);
     }
 
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        this.knockbackAspect = compoundTag.contains(KNOCKBACK_MODIFIER_TAG) ? compoundTag.getFloat(KNOCKBACK_MODIFIER_TAG) : 1.0f;
+        this.knockbackAspect = compoundTag.contains(KNOCKBACK_ASPECT_TAG) ? compoundTag.getFloat(KNOCKBACK_ASPECT_TAG) : 1.0f;
+        this.piercingAspect = compoundTag.getFloat(PIERCING_ASPECT_TAG);
         this.piercingDamagePenalty = compoundTag.contains(PIERCING_DAMAGE_PENALTY_TAG) ? compoundTag.getFloat(PIERCING_DAMAGE_PENALTY_TAG) : 1.0f;
-        this.lootingAspect = compoundTag.getInt(LOOTING_MODIFIER_TAG);
-        this.larcenyAspect = compoundTag.getFloat(LARCENY_MODIFIER_TAG);
+        this.lootingAspect = compoundTag.getInt(LOOTING_ASPECT_TAG);
+        this.larcenyAspect = compoundTag.getFloat(LARCENY_ASPECT_TAG);
     }
 }

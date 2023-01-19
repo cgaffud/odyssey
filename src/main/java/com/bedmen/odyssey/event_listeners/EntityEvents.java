@@ -326,7 +326,18 @@ public class EntityEvents {
         ItemStack shield = livingEntity.getUseItem();
         if(shield.getItem() instanceof AspectShieldItem aspectShieldItem){
             DamageSource damageSource = event.getDamageSource();
-            event.setBlockedDamage(aspectShieldItem.getDamageBlock(shield, livingEntity.level.getDifficulty(), damageSource));
+            float damageBlockMultiplier = 1.0f;
+            if(damageSource.isProjectile()){
+                Entity damageSourceEntity = damageSource.getDirectEntity();
+                if(damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow){
+                    float piercingAspect = odysseyAbstractArrow.piercingAspect;
+                    float impenetrabilityAspect = AspectUtil.getFloatAspectValue(shield, Aspects.IMPENETRABILITY);
+                    if(piercingAspect > impenetrabilityAspect){
+                        damageBlockMultiplier = impenetrabilityAspect / piercingAspect;
+                    }
+                }
+            }
+            event.setBlockedDamage(damageBlockMultiplier * aspectShieldItem.getDamageBlock(shield, livingEntity.level.getDifficulty(), damageSource));
         }
     }
 

@@ -542,5 +542,6 @@
   "aspect.oddc.thorns": "+%s Thorns",
   "aspect.oddc.binding": "Binding",
   "aspect.oddc.movement_speed": "+%s Movement Speed",
-  "aspect.oddc.explosion_damage_block": "+%s Damage Block on Explosions"
+  "aspect.oddc.explosion_damage_block": "+%s Damage Block on Explosions",
+  "aspect.oddc.impenetrability": "+%s Impenetrability"
 }

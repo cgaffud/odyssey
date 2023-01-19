@@ -2,22 +2,19 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
 import com.bedmen.odyssey.items.odyssey_versions.AspectShieldItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
-import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -129,17 +126,7 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
     }
 
     public boolean isDamageSourceBlocked(DamageSource damageSource) {
-        Entity entity = damageSource.getDirectEntity();
-        boolean flag = false;
-        if (entity instanceof AbstractArrow) {
-            AbstractArrow abstractarrow = (AbstractArrow)entity;
-            // Change from > 0 to > EnchantmentUtil.getImpenetrable(this)
-            if (abstractarrow.getPierceLevel() > EnchantmentUtil.getImpenetrable(this)) {
-                flag = true;
-            }
-        }
-
-        if (!damageSource.isBypassArmor() && this.isBlocking() && !flag) {
+        if (!damageSource.isBypassArmor() && this.isBlocking()) {
             Vec3 vec32 = damageSource.getSourcePosition();
             if (vec32 != null) {
                 Vec3 vec3 = this.getViewVector(1.0F);
