@@ -18,7 +18,7 @@ public enum ShieldType {
     WOODEN("wooden", 200, 4.0f, 100, item -> item.builtInRegistryHolder().is(ItemTags.PLANKS), List.of(), List.of()),
     COPPER("copper", 400, 5.0f, 100, item -> item == Items.COPPER_INGOT, List.of(), List.of()),
     RUSTY("rusty", 600, 6.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.IMPENETRABILITY, 1.0f))),
-    GOLDEN("golden", 300, 6.0f, 40, item -> item == Items.GOLD_INGOT, List.of(), List.of()),
+    GOLDEN("golden", 300, 6.0f, 80, item -> item == Items.GOLD_INGOT, List.of(), List.of(new AspectInstance(Aspects.RECOVERY_SPEED, 1.0f))),
     REINFORCED("reinforced", 800, 7.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.EXPLOSION_DAMAGE_BLOCK, 7.0f))),
     DIAMOND("diamond", 1600, 8.0f, 100, item -> item == Items.DIAMOND, List.of(), List.of());
 

@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items.odyssey_versions;
 
 import com.bedmen.odyssey.aspect.AspectHolder;
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.*;
@@ -57,8 +59,9 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         return damageBlock * (difficulty == Difficulty.HARD ? 1.5f : 1.0f);
     }
 
-    public int getRecoveryTime(){
-        return this.shieldType.recoveryTime;
+    public int getRecoveryTime(ItemStack shield){
+        float recoverySpeedAspect = AspectUtil.getUnitAspectValue(shield, Aspects.RECOVERY_SPEED);
+        return Mth.ceil((float)this.shieldType.recoveryTime / recoverySpeedAspect);
     }
 
     @Override
@@ -77,7 +80,7 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         AspectShieldItem aspectShieldItem = (AspectShieldItem)(shield.getItem());
         float damageBlock = aspectShieldItem.shieldType.damageBlock;
         tooltip.add(new TranslatableComponent("item.oddc.shield.damage_block").append(StringUtil.floatFormat(getDifficultyAdjustedDamageBlock(damageBlock, difficulty))).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.shield.recovery_time").append(StringUtil.timeFormat(this.getRecoveryTime())).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.shield.recovery_time").append(StringUtil.timeFormat(this.getRecoveryTime(shield))).withStyle(ChatFormatting.BLUE));
         BannerItem.appendHoverTextFromBannerBlockEntityTag(shield, tooltip);
     }
 }

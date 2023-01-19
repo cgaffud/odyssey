@@ -82,6 +82,7 @@ public class Aspects {
     // Shields
     public static final ShieldDamageBlockAspect EXPLOSION_DAMAGE_BLOCK = new ShieldDamageBlockAspect("explosion_damage_block", DamageSource::isExplosion);
     public static final FloatAspect IMPENETRABILITY = new FloatAspect("impenetrability");
+    public static final UnitAspect RECOVERY_SPEED = new UnitAspect("recovery_speed");
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

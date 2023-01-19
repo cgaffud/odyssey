@@ -543,5 +543,6 @@
   "aspect.oddc.binding": "Binding",
   "aspect.oddc.movement_speed": "+%s Movement Speed",
   "aspect.oddc.explosion_damage_block": "+%s Damage Block on Explosions",
-  "aspect.oddc.impenetrability": "+%s Impenetrability"
+  "aspect.oddc.impenetrability": "+%s Impenetrability",
+  "aspect.oddc.recovery_speed": "x%s Recovery Speed"
 }

@@ -112,8 +112,9 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
         }
 
         if (this.random.nextFloat() < f) {
-            Item useItem = this.getUseItem().getItem();
-            int recoveryTime = useItem instanceof AspectShieldItem odysseyShieldItem ? odysseyShieldItem.getRecoveryTime() : 100;
+            ItemStack shield = this.getUseItem();
+            Item shieldItem = shield.getItem();
+            int recoveryTime = shieldItem instanceof AspectShieldItem aspectShieldItem ? aspectShieldItem.getRecoveryTime(shield) : 100;
             ITagManager<Item> itemITagManager = ForgeRegistries.ITEMS.tags();
             if(itemITagManager != null){
                 for(Item item : itemITagManager.getTag(OdysseyItemTags.SHIELDS).stream().toList()){
