@@ -2,7 +2,7 @@ package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
-import com.bedmen.odyssey.items.odyssey_versions.AspectBowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.QuiverItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

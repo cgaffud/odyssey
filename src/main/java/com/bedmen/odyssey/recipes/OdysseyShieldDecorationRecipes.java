@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.recipes;
 
-import com.bedmen.odyssey.items.odyssey_versions.AspectShieldItem;
+import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;

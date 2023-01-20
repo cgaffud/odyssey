@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.items.odyssey_versions;
+package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
 import com.bedmen.odyssey.aspect.AspectInstance;

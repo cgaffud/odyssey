@@ -3,12 +3,10 @@ package com.bedmen.odyssey.combat;
 import com.bedmen.odyssey.aspect.AspectHolder;
 import com.bedmen.odyssey.aspect.AspectInstance;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
-import com.bedmen.odyssey.util.EnchantmentUtil;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public enum BoomerangType{
+public enum BoomerangType implements ThrowableType {
     WOODEN(4.0d, 0.8f, 200, List.of(), List.of(new AspectInstance(Aspects.LOYALTY, 1.0f))),
     SHARP_BONE(5.0d, 1.0f, 0, List.of(), List.of(new AspectInstance(Aspects.LOYALTY, 1.2f), new AspectInstance(Aspects.PIERCING, 1.0f))),
     HEAVY_BONE(5.0d, 1.0f, 0, List.of(), List.of(new AspectInstance(Aspects.LOYALTY, 1.2f), new AspectInstance(Aspects.PROJECTILE_KNOCKBACK, 1.0f))),
@@ -31,5 +29,13 @@ public enum BoomerangType{
         this.velocity = velocity;
         this.burnTime = burnTime;
         this.aspectHolder = new AspectHolder(abilityList, innateModifierList);
+    }
+
+    public AspectHolder getAspectHolder() {
+        return this.aspectHolder;
+    }
+
+    public float getVelocity() {
+        return this.velocity;
     }
 }

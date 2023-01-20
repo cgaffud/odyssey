@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.entity.ai;
 
 import com.bedmen.odyssey.entity.monster.BoomerangAttackMob;
-import com.bedmen.odyssey.items.BoomerangItem;
+import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.projectile.ProjectileUtil;

@@ -5,10 +5,10 @@ import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.entity.ai.BoomerangAttackGoal;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
-import com.bedmen.odyssey.items.odyssey_versions.AspectArrowItem;
-import com.bedmen.odyssey.items.odyssey_versions.AspectBowItem;
-import com.bedmen.odyssey.items.odyssey_versions.AspectCrossbowItem;
-import com.bedmen.odyssey.items.BoomerangItem;
+import com.bedmen.odyssey.items.aspect_items.AspectArrowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
+import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.client.model.HumanoidModel;
@@ -37,6 +37,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implements CrossbowAttackMob, BoomerangAttackMob {
@@ -310,7 +311,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
             InteractionHand hand = this.getBoomerangHand();
             ItemStack itemstack = new ItemStack(this.getItemInHand(hand).getItem());
             BoomerangItem boomerangItem = (BoomerangItem) itemstack.getItem();
-            boomerangItem.releaseBoomerang(itemstack, this.level, this, false, target);
+            boomerangItem.releaseThrownEntity(itemstack, this.level, this, Optional.of(target));
             this.setItemInHand(hand, ItemStack.EMPTY);
         }
     }

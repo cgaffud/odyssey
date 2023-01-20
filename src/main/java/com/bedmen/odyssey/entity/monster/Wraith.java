@@ -2,10 +2,9 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
-import com.bedmen.odyssey.items.odyssey_versions.AspectArrowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectArrowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.SoundEventRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

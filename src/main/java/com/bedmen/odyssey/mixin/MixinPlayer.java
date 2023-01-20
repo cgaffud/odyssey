@@ -4,7 +4,7 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
-import com.bedmen.odyssey.items.odyssey_versions.AspectShieldItem;
+import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;

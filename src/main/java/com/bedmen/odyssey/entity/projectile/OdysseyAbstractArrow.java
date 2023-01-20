@@ -13,6 +13,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -23,6 +26,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -32,6 +36,7 @@ import net.minecraftforge.network.NetworkHooks;
 import java.util.Arrays;
 
 public abstract class OdysseyAbstractArrow extends AbstractArrow {
+    private static final EntityDataAccessor<Float> DATA_LOYALTY_ASPECT = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.FLOAT);
     private AspectStrengthMap aspectStrengthMap = new AspectStrengthMap();
     public static final String ASPECT_STRENGTH_MAP_TAG = "AspectStrengthMap";
     public static final String PIERCING_DAMAGE_PENALTY_TAG = "PiercingDamagePenalty";
@@ -52,6 +57,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(DATA_LOYALTY_ASPECT, 0.0f);
     }
 
     public void updatePiercingValues(){
@@ -61,41 +67,53 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         this.setPierceLevel((byte)ceil);
     }
 
+    public void updateLoyalty(){
+        this.entityData.set(DATA_LOYALTY_ASPECT, this.aspectStrengthMap.getNonNull(Aspects.LOYALTY));
+    }
+
     public void addAspectStrengthMap(AspectStrengthMap aspectStrengthMap){
         this.aspectStrengthMap.putAll(aspectStrengthMap);
         if(this.aspectStrengthMap.containsKey(Aspects.PIERCING)){
             this.updatePiercingValues();
         }
+        if(this.aspectStrengthMap.containsKey(Aspects.LOYALTY)){
+            this.updateLoyalty();
+        }
     }
 
     public float getAspectStrength(Aspect aspect){
+        if(aspect == Aspects.LOYALTY){
+            return this.entityData.get(DATA_LOYALTY_ASPECT);
+        }
         return this.aspectStrengthMap.getNonNull(aspect);
     }
 
+    protected abstract double getDamage();
+
+    protected abstract void onFinalPierce();
+
+    protected abstract void onSuccessfulHurt(Entity target);
+
+    protected abstract void onFailedHurt(Entity target);
+
     protected void onHitEntity(EntityHitResult entityHitResult) {
-        Entity entity = entityHitResult.getEntity();
-        double velocity = this.getDeltaMovement().length();
-        double velocityFactor = velocity / WeaponUtil.BASE_ARROW_VELOCITY ;
-        double damage = Mth.clamp(velocityFactor * velocityFactor * this.getBaseDamage(), 0.0D, 2.147483647E9D);
-        if (this.getPierceLevel() > 0) {
-            if (this.piercingIgnoreEntityIds == null) {
-                this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
-            }
+        Entity target = entityHitResult.getEntity();
 
-            if (this.piercedAndKilledEntities == null) {
-                this.piercedAndKilledEntities = Lists.newArrayListWithCapacity(5);
-            }
+        if (this.piercingIgnoreEntityIds == null) {
+            this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
+        }
 
-            if(this.piercingIgnoreEntityIds.size() >= this.getPierceLevel()){
-                damage *= this.piercingDamagePenalty;
-            }
+        if (this.piercedAndKilledEntities == null) {
+            this.piercedAndKilledEntities = Lists.newArrayListWithCapacity(5);
+        }
 
-            if (this.piercingIgnoreEntityIds.size() >= this.getPierceLevel() + 1) {
-                this.discard();
-                return;
-            }
+        this.piercingIgnoreEntityIds.add(target.getId());
 
-            this.piercingIgnoreEntityIds.add(entity.getId());
+        boolean finalPierce = this.piercingIgnoreEntityIds.size() >= this.getPierceLevel() + 1;
+
+        double damage = this.getDamage();
+        if(finalPierce){
+            damage *= this.piercingDamagePenalty;
         }
 
         Entity owner = this.getOwner();
@@ -105,25 +123,22 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         } else {
             damagesource = DamageSource.arrow(this, owner);
             if (owner instanceof LivingEntity) {
-                ((LivingEntity)owner).setLastHurtMob(entity);
+                ((LivingEntity)owner).setLastHurtMob(target);
             }
         }
 
-        boolean flag = entity.getType() == EntityType.ENDERMAN;
-        int k = entity.getRemainingFireTicks();
-        if (this.isOnFire() && !flag) {
-            entity.setSecondsOnFire(5);
+        boolean targetIsEnderman = target.getType() == EntityType.ENDERMAN;
+        int k = target.getRemainingFireTicks();
+        if (this.isOnFire() && !targetIsEnderman) {
+            target.setSecondsOnFire(5);
         }
 
-        if (entity.hurt(damagesource, (float)damage)) {
-            if (flag) {
+        if (target.hurt(damagesource, (float)damage)) {
+            if (targetIsEnderman) {
                 return;
             }
 
-            if (entity instanceof LivingEntity livingEntity) {
-                if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
-                    livingEntity.setArrowCount(livingEntity.getArrowCount() + 1);
-                }
+            if (target instanceof LivingEntity livingEntity) {
 
                 if (!this.level.isClientSide && owner instanceof LivingEntity) {
                     EnchantmentHelper.doPostHurtEffects(livingEntity, owner);
@@ -131,11 +146,8 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 }
 
                 this.doPostHurtEffects(livingEntity);
-                if (owner != null && livingEntity != owner && livingEntity instanceof Player && owner instanceof ServerPlayer && !this.isSilent()) {
-                    ((ServerPlayer)owner).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
-                }
 
-                if (!entity.isAlive() && this.piercedAndKilledEntities != null) {
+                if (!target.isAlive() && this.piercedAndKilledEntities != null) {
                     this.piercedAndKilledEntities.add(livingEntity);
                 }
 
@@ -143,14 +155,14 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                     ServerPlayer serverplayerentity = (ServerPlayer)owner;
                     if (this.piercedAndKilledEntities != null && this.shotFromCrossbow()) {
                         CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(serverplayerentity, this.piercedAndKilledEntities);
-                    } else if (!entity.isAlive() && this.shotFromCrossbow()) {
-                        CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(serverplayerentity, Arrays.asList(entity));
+                    } else if (!target.isAlive() && this.shotFromCrossbow()) {
+                        CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(serverplayerentity, Arrays.asList(target));
                     }
                 }
 
                 // Poison Damage
                 int poisonStrength = (int)this.getAspectStrength(Aspects.PROJECTILE_POISON_DAMAGE);
-                if(!entity.level.isClientSide && poisonStrength > 0) {
+                if(!target.level.isClientSide && poisonStrength > 0) {
                     livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + 24, 0));
                     livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (12 * poisonStrength), 1));
                 }
@@ -161,22 +173,15 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 }
             }
 
+            this.onSuccessfulHurt(target);
+
             this.playSound(this.getHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-            if (this.getPierceLevel() <= 0) {
-                this.discard();
+            if (finalPierce) {
+                this.onFinalPierce();
             }
         } else {
-            entity.setRemainingFireTicks(k);
-            this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
-            this.setYRot(this.getYRot() + 180.0F);
-            this.yRotO += 180.0F;
-            if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                if (this.pickup == AbstractArrow.Pickup.ALLOWED) {
-                    this.spawnAtLocation(this.getPickupItem(), 0.1F);
-                }
-
-                this.discard();
-            }
+            target.setRemainingFireTicks(k);
+            this.onFailedHurt(target);
         }
 
     }
@@ -196,7 +201,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         if(compoundTag.contains(ASPECT_STRENGTH_MAP_TAG)){
-            this.aspectStrengthMap = AspectStrengthMap.fromCompoundTag(compoundTag.getCompound(ASPECT_STRENGTH_MAP_TAG));
+            this.addAspectStrengthMap(AspectStrengthMap.fromCompoundTag(compoundTag.getCompound(ASPECT_STRENGTH_MAP_TAG)));
         }
         this.piercingDamagePenalty = compoundTag.contains(PIERCING_DAMAGE_PENALTY_TAG) ? compoundTag.getFloat(PIERCING_DAMAGE_PENALTY_TAG) : 1.0f;
     }

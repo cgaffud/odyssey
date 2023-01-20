@@ -1,15 +1,21 @@
 package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.items.odyssey_versions.AspectBowItem;
-import com.bedmen.odyssey.items.odyssey_versions.AspectCrossbowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.combat.ArrowType;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -73,5 +79,42 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         this.setBaseDamage((bowDamageMultiplier + this.random.nextGaussian() * 0.1D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage * (WeaponUtil.BASE_ARROW_VELOCITY * WeaponUtil.BASE_ARROW_VELOCITY) / (WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES));
         // Aspects
         this.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(bow));
+    }
+
+    protected double getDamage(){
+        double velocity = this.getDeltaMovement().length();
+        double velocityFactor = velocity / WeaponUtil.BASE_ARROW_VELOCITY;
+        return Mth.clamp(velocityFactor * velocityFactor * this.getBaseDamage(), 0.0D, 2.147483647E9D);
+    }
+
+    protected void onFinalPierce(){
+        this.discard();
+    }
+
+    protected void onSuccessfulHurt(Entity target) {
+        if (target instanceof LivingEntity livingEntity) {
+            Entity owner = this.getOwner();
+
+            if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
+                livingEntity.setArrowCount(livingEntity.getArrowCount() + 1);
+            }
+
+            if (livingEntity != owner && livingEntity instanceof Player && owner instanceof ServerPlayer && !this.isSilent()) {
+                ((ServerPlayer)owner).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+            }
+        }
+    }
+
+    @Override
+    protected void onFailedHurt(Entity target) {
+        this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
+        this.setYRot(this.getYRot() + 180.0F);
+        this.yRotO += 180.0F;
+        if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+            if (this.pickup == AbstractArrow.Pickup.ALLOWED) {
+                this.spawnAtLocation(this.getPickupItem(), 0.1F);
+            }
+            this.discard();
+        }
     }
 }

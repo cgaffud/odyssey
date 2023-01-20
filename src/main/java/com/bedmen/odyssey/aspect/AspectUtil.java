@@ -2,8 +2,8 @@ package com.bedmen.odyssey.aspect;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.aspect_objects.*;
-import com.bedmen.odyssey.items.odyssey_versions.AspectArmorItem;
-import com.bedmen.odyssey.items.odyssey_versions.AspectItem;
+import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
+import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -23,7 +23,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
 import java.util.*;

@@ -1,12 +1,11 @@
 package com.bedmen.odyssey.entity.projectile;
 
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.combat.BoomerangType;
-import com.bedmen.odyssey.entity.OdysseyDamageSource;
 import com.bedmen.odyssey.entity.monster.BoomerangAttackMob;
-import com.bedmen.odyssey.items.BoomerangItem;
+import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,14 +13,12 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -57,6 +54,22 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         super.defineSynchedData();
     }
 
+    protected double getDamage() {
+        return this.getBoomerangType().damage * this.getBaseDamage();
+    }
+
+    protected void onFinalPierce() {
+        this.dealtDamage = true;
+        this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
+    }
+
+    protected void onSuccessfulHurt(Entity target) {
+
+    }
+
+    protected void onFailedHurt(Entity target) {
+    }
+
     /**
      * Called to update the entity's position/logic.
      */
@@ -73,8 +86,10 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
             } else {
                 this.setNoPhysics(true);
                 Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
-                double d0 = 0.04D * (double)this.boomerangType.velocity;
-                this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
+                float loyaltyStrength = Float.max(1.0f, this.getAspectStrength(Aspects.LOYALTY));
+                System.out.println(loyaltyStrength);
+                double returnSpeed = 0.04D * (double)this.boomerangType.velocity * loyaltyStrength;
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(returnSpeed)));
 
                 ++this.returningTicks;
             }
@@ -146,49 +161,6 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
             return false;
         }
         return entity instanceof BoomerangAttackMob && entity instanceof LivingEntity && this.ownedBy(entity);
-    }
-
-    protected void onHitEntity(EntityHitResult entityHitResult) {
-        Entity entity = entityHitResult.getEntity();
-        if (this.piercingIgnoreEntityIds == null) {
-            this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
-        }
-        if (this.piercingIgnoreEntityIds.contains(entity.getId())) {
-            return;
-        }
-        this.piercingIgnoreEntityIds.add(entity.getId());
-        float damage = (float) ((float)this.getBoomerangType().damage * this.getBaseDamage());
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingentity = (LivingEntity)entity;
-            damage += EnchantmentHelper.getDamageBonus(this.thrownStack, livingentity.getMobType());
-        }
-        Entity owner = this.getOwner();
-        DamageSource damagesource = OdysseyDamageSource.boomerang(this, owner == null ? this : owner);
-        if (entity.hurt(damagesource, damage)) {
-            if (entity.getType() == EntityType.ENDERMAN) {
-                return;
-            }
-            if (entity instanceof LivingEntity livingEntity) {
-                if (this.knockback > 0) {
-                    Vec3 vec3 = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double)this.knockback * 0.6D);
-                    if (vec3.lengthSqr() > 0.0D) {
-                        livingEntity.push(vec3.x, 0.1D, vec3.z);
-                    }
-                }
-
-                if (owner instanceof LivingEntity) {
-                    EnchantmentHelper.doPostHurtEffects(livingEntity, owner);
-                    EnchantmentHelper.doPostDamageEffects((LivingEntity)owner, livingEntity);
-                }
-
-                this.doPostHurtEffects(livingEntity);
-            }
-        }
-        if (this.piercingIgnoreEntityIds.size() >= this.getPierceLevel() + 1) {
-            this.dealtDamage = true;
-            this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
-        }
-        this.playSound(SoundEvents.ARROW_HIT, 1.0f, 1.0F);
     }
 
     protected SoundEvent getDefaultHitGroundSoundEvent() {
