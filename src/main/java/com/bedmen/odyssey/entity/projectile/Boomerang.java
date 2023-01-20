@@ -28,6 +28,7 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import javax.annotation.Nullable;
 
 public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
+    private static final int BOOMERANG_TURNAROUND_TIME = 10;
     private BoomerangType boomerangType = BoomerangType.WOODEN;
     private ItemStack thrownStack = new ItemStack(ItemRegistry.WOODEN_BOOMERANG.get());
     private boolean isMultishotClone = false;
@@ -55,7 +56,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
     }
 
     protected double getDamage() {
-        return this.getBoomerangType().damage * this.getBaseDamage();
+        return this.boomerangType.damage * this.getBaseDamage();
     }
 
     protected void onFinalPierce() {
@@ -75,7 +76,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
      */
     public void tick() {
         this.setNoGravity(true);
-        if (this.inGroundTime > 0 || this.tickCount > ((BoomerangItem)this.thrownStack.getItem()).getTurnaroundTime(this.thrownStack)) {
+        if (this.inGroundTime > 0 || this.tickCount > BOOMERANG_TURNAROUND_TIME) {
             this.dealtDamage = true;
         }
 

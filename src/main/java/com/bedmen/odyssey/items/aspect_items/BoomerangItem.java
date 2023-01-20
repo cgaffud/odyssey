@@ -15,16 +15,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class BoomerangItem extends ThrowableWeaponItem {
+
     public BoomerangItem(Item.Properties properties, BoomerangType boomerangType) {
         super(properties, boomerangType);
     }
 
     protected Boomerang getThrownWeaponEntity(Level level, LivingEntity owner, ItemStack boomerangStack, boolean isMultishot) {
         return new Boomerang(level, owner, boomerangStack, isMultishot);
-    }
-
-    public int getTurnaroundTime(ItemStack boomerangStack){
-        return this.getBaseMaxChargeTicks();
     }
 
     public BoomerangType getBoomerangType(){
@@ -34,15 +31,5 @@ public class BoomerangItem extends ThrowableWeaponItem {
     public int getBurnTime(ItemStack boomerangStack, @Nullable RecipeType<?> recipeType)
     {
         return this.getBoomerangType().burnTime;
-    }
-
-    public void appendHoverText(ItemStack boomerangStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(boomerangStack, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.boomerang.damage").append(StringUtil.doubleFormat(this.getBoomerangType().damage)).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(this.getBaseMaxChargeTicks())).withStyle(ChatFormatting.BLUE));
-        if (flagIn.isAdvanced()) {
-            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getBoomerangType().velocity)).withStyle(ChatFormatting.BLUE));
-            tooltip.add(new TranslatableComponent("item.oddc.boomerang.turnaround_time").append(StringUtil.timeFormat(this.getTurnaroundTime(boomerangStack))).withStyle(ChatFormatting.BLUE));
-        }
     }
 }

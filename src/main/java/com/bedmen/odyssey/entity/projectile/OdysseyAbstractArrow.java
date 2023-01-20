@@ -132,12 +132,10 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         if (this.isOnFire() && !targetIsEnderman) {
             target.setSecondsOnFire(5);
         }
-
         if (target.hurt(damagesource, (float)damage)) {
             if (targetIsEnderman) {
                 return;
             }
-
             if (target instanceof LivingEntity livingEntity) {
 
                 if (!this.level.isClientSide && owner instanceof LivingEntity) {
@@ -168,7 +166,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 }
                 // Cobweb Chance
                 float cobwebChance = this.getAspectStrength(Aspects.PROJECTILE_COBWEB_CHANCE);
-                if(this.isCritArrow()){
+                if(!(this instanceof OdysseyArrow) || this.isCritArrow()){
                     Weaver.tryPlaceCobwebOnTarget(cobwebChance, livingEntity);
                 }
             }
