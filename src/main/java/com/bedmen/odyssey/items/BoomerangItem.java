@@ -1,9 +1,11 @@
-package com.bedmen.odyssey.items.equipment;
+package com.bedmen.odyssey.items;
 
-import com.bedmen.odyssey.enchantment.LevEnchSup;
+import com.bedmen.odyssey.aspect.AspectHolder;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.combat.BoomerangType;
 import com.bedmen.odyssey.entity.projectile.Boomerang;
-import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
-import com.bedmen.odyssey.items.equipment.base.EquipmentItem;
+import com.bedmen.odyssey.items.odyssey_versions.AspectItem;
 import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.bedmen.odyssey.combat.OdysseyRangedWeapon;
@@ -31,11 +33,15 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsToRegisterItemModelProperty, OdysseyRangedWeapon {
-    private final Boomerang.BoomerangType boomerangType;
-    public BoomerangItem(Item.Properties builderIn, Boomerang.BoomerangType boomerangType, LevEnchSup... levEnchSups) {
-        super(builderIn, levEnchSups);
+public class BoomerangItem extends Item implements Vanishable, INeedsToRegisterItemModelProperty, OdysseyRangedWeapon, AspectItem {
+    private final BoomerangType boomerangType;
+    public BoomerangItem(Item.Properties builderIn, BoomerangType boomerangType) {
+        super(builderIn);
         this.boomerangType = boomerangType;
+    }
+
+    public AspectHolder getAspectHolder() {
+        return this.boomerangType.aspectHolder;
     }
 
     /**
@@ -84,9 +90,8 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
 
     private Boomerang shootAndGetBoomerang(Level level, LivingEntity owner, ItemStack boomerangStack, int multishotNum, Vector3f vector3f) {
         Boomerang boomerang = getBoomerang(level, owner, boomerangStack, multishotNum != 0);
-        float superCharge = EnchantmentUtil.getSuperChargeMultiplier(boomerangStack);
-        float inaccuracy = EnchantmentUtil.getAccuracyMultiplier(owner) / superCharge;
-        boomerang.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.boomerangType.getVelocity(boomerangStack), inaccuracy);
+        float accuracyMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(boomerangStack, Aspects.ACCURACY);
+        boomerang.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.boomerangType.getVelocity(boomerangStack), 1.0f / accuracyMultiplier);
         if(multishotNum != 0){
             boomerang.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         }
@@ -95,9 +100,7 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
 
     private Boomerang getBoomerang(Level level, LivingEntity owner, ItemStack boomerangStack, boolean isMultishot) {
         Boomerang boomerang = new Boomerang(level, owner, boomerangStack, isMultishot);
-        //boomerang.lootingAspect = EnchantmentUtil.getMobLooting(boomerangStack);
-        boomerang.setKnockback(EnchantmentUtil.getPunch(boomerangStack));
-        boomerang.setPierceLevel((byte)EnchantmentUtil.getPiercing(boomerangStack));
+        boomerang.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(boomerangStack));
         return boomerang;
     }
 
@@ -164,7 +167,7 @@ public class BoomerangItem extends EquipmentItem implements Vanishable, INeedsTo
         });
     }
 
-    public Boomerang.BoomerangType getBoomerangType(){
+    public BoomerangType getBoomerangType(){
         return this.boomerangType;
     }
 

@@ -1,19 +1,11 @@
 package com.bedmen.odyssey.network.packet;
 
-import com.bedmen.odyssey.entity.projectile.SwungProjectile;
-import com.bedmen.odyssey.items.equipment.ProjectileLaunchItem;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class FatalHitAnimatePacket {

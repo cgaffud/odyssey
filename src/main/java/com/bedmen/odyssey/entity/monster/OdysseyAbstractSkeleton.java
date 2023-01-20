@@ -8,7 +8,7 @@ import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.odyssey_versions.AspectArrowItem;
 import com.bedmen.odyssey.items.odyssey_versions.AspectBowItem;
 import com.bedmen.odyssey.items.odyssey_versions.AspectCrossbowItem;
-import com.bedmen.odyssey.items.equipment.BoomerangItem;
+import com.bedmen.odyssey.items.BoomerangItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.client.model.HumanoidModel;

@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.items.equipment;
+package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.entity.projectile.SwungProjectile;
 import com.google.common.collect.LinkedHashMultimap;

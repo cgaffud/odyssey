@@ -17,7 +17,6 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.combat.ShieldType;
-import com.bedmen.odyssey.items.TomeItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
@@ -243,11 +242,6 @@ public class ClientEvents {
         event.getItemColors().register((itemStack, i) -> {
             return ConditionalAmpUtil.getColorTag(itemStack);
         }, ItemRegistry.ICE_DAGGER.get());
-        for(TomeItem tomeItem : TomeItem.TOMES){
-            event.getItemColors().register((itemStack, i) -> {
-                return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();
-            }, tomeItem);
-        }
     }
 
     @SubscribeEvent

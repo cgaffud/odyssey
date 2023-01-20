@@ -52,6 +52,9 @@ public class Aspects {
     public static final PercentageAspect PROJECTILE_LARCENY_CHANCE = new PercentageAspect("projectile_larceny_chance");
     public static final UnitAspect PROJECTILE_KNOCKBACK = new UnitAspect("projectile_knockback");
 
+    // Throwing
+    public static final FloatAspect LOYALTY = new FloatAspect("loyalty");
+
     // Armor
     public static final DamageSourcePredicateAspect FEATHER_FALLING = new DamageSourcePredicateAspect("feather_falling", damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);
     public static final DamageSourcePredicateAspect ICE_PROTECTION = new DamageSourcePredicateAspect("ice_protection", damageSource -> damageSource == DamageSource.FREEZE);

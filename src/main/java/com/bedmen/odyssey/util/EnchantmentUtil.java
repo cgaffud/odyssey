@@ -237,10 +237,6 @@ public class EnchantmentUtil {
         return boost;
     }
 
-    public static Component getUnenchantableName(){
-        return new TranslatableComponent("enchantment.oddc.unenchantable").withStyle(ChatFormatting.DARK_RED);
-    }
-
     //TODO add Accuracy Enchantment
     public static float getAccuracyMultiplier(LivingEntity entity){
         return 1.0f;
@@ -252,23 +248,11 @@ public class EnchantmentUtil {
         return EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FIRE_PROTECTION.get(), entity) > 0 || entity.hasEffect(MobEffects.FIRE_RESISTANCE);
     }
 
-    public static int getPiercing(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), itemStack);
-    }
-
     public static int getMultishot(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MULTISHOT.get(), itemStack);
     }
 
-    public static int getPunch(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get(), itemStack);
-    }
-
     public static float getSuperChargeMultiplier(ItemStack itemStack) {
         return EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.SUPER_CHARGE.get(), itemStack) * 0.5f + 1.0f;
-    }
-
-    public static int getMobLooting(ItemStack itemStack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MOB_LOOTING, itemStack);
     }
 }

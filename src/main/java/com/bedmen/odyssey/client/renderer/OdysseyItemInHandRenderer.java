@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.client.renderer;
 
-import com.bedmen.odyssey.items.equipment.BoomerangItem;
+import com.bedmen.odyssey.items.BoomerangItem;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.google.common.base.MoreObjects;
 import com.mojang.blaze3d.systems.RenderSystem;

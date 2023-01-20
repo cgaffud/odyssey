@@ -1,11 +1,11 @@
 package com.bedmen.odyssey.entity.projectile;
 
+import com.bedmen.odyssey.combat.BoomerangType;
 import com.bedmen.odyssey.entity.OdysseyDamageSource;
 import com.bedmen.odyssey.entity.monster.BoomerangAttackMob;
-import com.bedmen.odyssey.items.equipment.BoomerangItem;
+import com.bedmen.odyssey.items.BoomerangItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -267,32 +267,6 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
         Item item = this.thrownStack.getItem();
         if(item instanceof BoomerangItem boomerangItem){
             this.boomerangType = boomerangItem.getBoomerangType();
-        }
-    }
-
-    public enum BoomerangType{
-        WOODEN(4.0d, 0.8f, 200),
-        BONE(5.0d, 1.0f, 0),
-        SPEEDY_BONE(5.0d, 1.2f, 0),
-        BONERANG(5.0d, 1.2f, 0),
-        CLOVER_STONE(6.0d, 1.0f, 0),
-        GREATROOT(8.0d, 1.2f, 0),
-        SPEEDY_GREATROOT(8.0d, 1.5f, 0),
-        SUPER_GREATROOT(12.0d, 1.25f, 0);
-
-
-        public final double damage;
-        private final float velocity;
-        public final int burnTime;
-
-        BoomerangType(double damage, float velocity, int burnTime){
-            this.damage = damage;
-            this.velocity = velocity;
-            this.burnTime = burnTime;
-        }
-
-        public float getVelocity(ItemStack boomerang) {
-            return this.velocity * EnchantmentUtil.getSuperChargeMultiplier(boomerang);
         }
     }
 }
