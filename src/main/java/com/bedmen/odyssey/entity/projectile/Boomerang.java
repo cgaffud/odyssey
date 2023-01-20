@@ -73,7 +73,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
             } else {
                 this.setNoPhysics(true);
                 Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
-                double d0 = 0.04D * (double)this.boomerangType.getVelocity(this.thrownStack);
+                double d0 = 0.04D * (double)this.boomerangType.velocity;
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
 
                 ++this.returningTicks;
@@ -86,7 +86,7 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
             despawn();
         }
 
-        float velocity = ((BoomerangItem)this.thrownStack.getItem()).getBoomerangType().getVelocity(this.thrownStack);
+        float velocity = ((BoomerangItem)this.thrownStack.getItem()).getBoomerangType().velocity;
         int tickFrequency = Integer.max((int)(5f/velocity), 2);
         if (!this.level.isClientSide && this.tickCount % tickFrequency == 1) {
             this.level.playSound(null, this, SoundEvents.PLAYER_ATTACK_SWEEP, owner instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE, 1.0f, velocity);
@@ -157,14 +157,14 @@ public class Boomerang extends OdysseyAbstractArrow implements IEntityAdditional
             return;
         }
         this.piercingIgnoreEntityIds.add(entity.getId());
-        float f = (float)this.getBoomerangType().damage;
+        float damage = (float) ((float)this.getBoomerangType().damage * this.getBaseDamage());
         if (entity instanceof LivingEntity) {
             LivingEntity livingentity = (LivingEntity)entity;
-            f += EnchantmentHelper.getDamageBonus(this.thrownStack, livingentity.getMobType());
+            damage += EnchantmentHelper.getDamageBonus(this.thrownStack, livingentity.getMobType());
         }
         Entity owner = this.getOwner();
         DamageSource damagesource = OdysseyDamageSource.boomerang(this, owner == null ? this : owner);
-        if (entity.hurt(damagesource, f)) {
+        if (entity.hurt(damagesource, damage)) {
             if (entity.getType() == EntityType.ENDERMAN) {
                 return;
             }

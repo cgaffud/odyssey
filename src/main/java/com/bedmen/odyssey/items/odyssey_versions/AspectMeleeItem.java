@@ -140,7 +140,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, AspectIte
     }
 
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
-        ConditionalAmpUtil.setDamageTag(itemStack, entity, true);
+        ConditionalAmpUtil.setDamageTag(itemStack, entity);
         super.inventoryTick(itemStack, level, entity, compartments, selected);
     }
 }

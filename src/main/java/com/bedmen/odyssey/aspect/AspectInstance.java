@@ -43,8 +43,8 @@ public class AspectInstance {
         return new AspectInstance(this.aspect, this.strength, aspectTooltipDisplaySetting, this.obfuscated);
     }
 
-    public AspectInstance withObfuscation(boolean obfuscated){
-        return new AspectInstance(this.aspect, this.strength, aspectTooltipDisplaySetting, obfuscated);
+    public AspectInstance withObfuscation(){
+        return new AspectInstance(this.aspect, this.strength, aspectTooltipDisplaySetting, true);
     }
 
     public MutableComponent getMutableComponent(Optional<Level> optionalLevel){

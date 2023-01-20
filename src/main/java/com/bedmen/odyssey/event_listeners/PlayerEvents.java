@@ -53,7 +53,7 @@ public class PlayerEvents {
             //Server Side
             if(event.side == LogicalSide.SERVER){
                 if(!(player.isCreative() || player.isSpectator()) && player.level.dimensionType().ultraWarm()){
-                    if(!EnchantmentUtil.hasFireProtectionOrResistance(player))
+                    if(!AspectUtil.hasFireProtectionOrResistance(player))
                         player.setSecondsOnFire(1);
                 }
                 //TODO life fruits

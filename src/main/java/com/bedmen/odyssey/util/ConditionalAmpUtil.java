@@ -32,11 +32,9 @@ public class ConditionalAmpUtil {
         return itemStack.getOrCreateTag().getFloat(DAMAGE_BOOST_TAG);
     }
 
-    public static void setDamageTag(ItemStack itemStack, Entity entity, boolean isMelee) {
-        // todo remove enchantment
-        float enchantmentBonus = EnchantmentUtil.getConditionalAmpBonus(itemStack, entity, isMelee);
-        float modifierBonus = AspectUtil.getEnvironmentalAspectStrength(itemStack, entity.eyeBlockPosition(), entity.level);
-        itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, enchantmentBonus + modifierBonus);
+    public static void setDamageTag(ItemStack itemStack, Entity entity) {
+        float aspectBonus = AspectUtil.getEnvironmentalAspectStrength(itemStack, entity.eyeBlockPosition(), entity.level);
+        itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, aspectBonus);
     }
 
     public interface NumericalItem {

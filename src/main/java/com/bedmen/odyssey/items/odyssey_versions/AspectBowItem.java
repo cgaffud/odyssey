@@ -132,7 +132,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
     }
 
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
-        ConditionalAmpUtil.setDamageTag(itemStack, entity, false);
+        ConditionalAmpUtil.setDamageTag(itemStack, entity);
         super.inventoryTick(itemStack, level, entity, compartments, selected);
     }
 

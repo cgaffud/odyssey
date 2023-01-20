@@ -22,7 +22,7 @@ public enum BoomerangType{
     SUPER_GREATROOT(12.0d, 1.25f, 0, List.of(), List.of(new AspectInstance(Aspects.LOYALTY, 1.5f), new AspectInstance(Aspects.MAX_CHARGE_TIME, 0.5f)));
 
     public final double damage;
-    private final float velocity;
+    public final float velocity;
     public final int burnTime;
     public final AspectHolder aspectHolder;
 
@@ -31,9 +31,5 @@ public enum BoomerangType{
         this.velocity = velocity;
         this.burnTime = burnTime;
         this.aspectHolder = new AspectHolder(abilityList, innateModifierList);
-    }
-
-    public float getVelocity(ItemStack boomerang) {
-        return this.velocity * EnchantmentUtil.getSuperChargeMultiplier(boomerang);
     }
 }

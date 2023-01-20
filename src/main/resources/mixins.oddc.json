@@ -8,7 +8,6 @@
     "MixinChatFormatting",
     "MixinClientboundSetEntityMotionPacket",
     "MixinCombatRules",
-    "MixinEnchantment",
     "MixinEnchantmentHelper",
     "MixinExplosion",
     "MixinJunglePyramidPiece",

@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.util;
 
-import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
@@ -59,15 +59,15 @@ public class BiomeUtil {
     }
 
     public static int getFoliageColor(Level level, Entity entity) {
-        double temperatureFactor = EnchantmentRegistry.getHotBoost(entity.eyeBlockPosition(), level);
-        double downfallFactor = EnchantmentRegistry.getHumidBoost(entity.eyeBlockPosition(), level);
+        double temperatureFactor = Aspects.getHotBoost(entity.eyeBlockPosition(), level);
+        double downfallFactor = Aspects.getHumidBoost(entity.eyeBlockPosition(), level);
         return FoliageColor.get(temperatureFactor, downfallFactor);
     }
 
     private static final Map<Double, Integer> ARID_COLOR_MAP = new ConcurrentHashMap<>();
     public static int getAridColor(Level level, Entity entity) {
-        double temperatureFactor = EnchantmentRegistry.getHotBoost(entity.eyeBlockPosition(), level);
-        double downfallFactor = EnchantmentRegistry.getHumidBoost(entity.eyeBlockPosition(), level);
+        double temperatureFactor = Aspects.getHotBoost(entity.eyeBlockPosition(), level);
+        double downfallFactor = Aspects.getHumidBoost(entity.eyeBlockPosition(), level);
         double adjustedDownfallFactor = Mth.clamp(downfallFactor, 0, temperatureFactor);
         double key = 2 * temperatureFactor + adjustedDownfallFactor;
         if(ARID_COLOR_MAP.containsKey(key)){
@@ -80,7 +80,7 @@ public class BiomeUtil {
 
     private static final Map<Double, Integer> COLD_COLOR_MAP = new ConcurrentHashMap<>();
     public static int getColdColor(Level level, Entity entity) {
-        double coldFactor = EnchantmentRegistry.getColdBoost(entity.eyeBlockPosition(), level);
+        double coldFactor = Aspects.getColdBoost(entity.eyeBlockPosition(), level);
         if(COLD_COLOR_MAP.containsKey(coldFactor)){
             return COLD_COLOR_MAP.get(coldFactor);
         }

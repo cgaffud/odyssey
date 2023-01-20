@@ -101,7 +101,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     }
 
     public static boolean tryLoadProjectiles(LivingEntity livingEntity, ItemStack crossbow) {
-        int numberOfArrows = MultishotAspect.strengthToNumberOfTotalArrows(AspectUtil.getFloatAspectStrength(crossbow, Aspects.MULTISHOT));
+        int numberOfArrows = MultishotAspect.strengthToNumberOfTotalProjectiles(AspectUtil.getFloatAspectStrength(crossbow, Aspects.MULTISHOT));
         boolean isPlayer = livingEntity instanceof Player;
         boolean flag = isPlayer && ((Player)livingEntity).getAbilities().instabuild;
         WeaponUtil.AmmoStack ammoStack;
@@ -375,7 +375,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     }
 
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
-        ConditionalAmpUtil.setDamageTag(itemStack, entity, false);
+        ConditionalAmpUtil.setDamageTag(itemStack, entity);
         super.inventoryTick(itemStack, level, entity, compartments, selected);
     }
 

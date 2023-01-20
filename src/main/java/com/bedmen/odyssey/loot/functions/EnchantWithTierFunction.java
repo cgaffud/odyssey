@@ -41,32 +41,33 @@ public class EnchantWithTierFunction extends LootItemConditionalFunction {
 
     public ItemStack run(ItemStack itemStack, LootContext lootContext) {
         Random random = lootContext.getRandom();
+        // todo fix this
         //Enchantments
-        List<Pair<Enchantment, Integer>> enchantmentList = EnchantmentUtil.getEnchantmentsByTier(this.tier.getInt(lootContext));
-        enchantmentList = EnchantmentUtil.filterEnchantments(enchantmentList, itemStack);
-        for(int i = 0; i < ENCHANTMENT_RARITY.length && enchantmentList.size() > 0; i++){
-            if(random.nextInt(ENCHANTMENT_RARITY[i]) == 0){
-                Pair<Enchantment, Integer> enchantmentIntegerPair = enchantmentList.get(random.nextInt(enchantmentList.size()));
-                enchantmentList.remove(enchantmentIntegerPair);
-                itemStack.enchant(enchantmentIntegerPair.getFirst(), enchantmentIntegerPair.getSecond());
-            } else {
-                break;
-            }
-            enchantmentList = EnchantmentUtil.filterEnchantments(enchantmentList, itemStack);
-        }
-        //Curses
-        List<Pair<Enchantment, Integer>> curseList = EnchantmentUtil.getCursesByTier(this.tier.getInt(lootContext));
-        curseList = EnchantmentUtil.filterEnchantments(curseList, itemStack);
-        for(int i = 0; i < CURSE_RARITY.length && curseList.size() > 0; i++){
-            if(random.nextInt(CURSE_RARITY[i]) == 0){
-                Pair<Enchantment, Integer> curseIntegerPair = curseList.get(random.nextInt(curseList.size()));
-                curseList.remove(curseIntegerPair);
-                itemStack.enchant(curseIntegerPair.getFirst(), curseIntegerPair.getSecond());
-            } else {
-                break;
-            }
-            curseList = EnchantmentUtil.filterEnchantments(curseList, itemStack);
-        }
+//        List<Pair<Enchantment, Integer>> enchantmentList = EnchantmentUtil.getEnchantmentsByTier(this.tier.getInt(lootContext));
+//        enchantmentList = EnchantmentUtil.filterEnchantments(enchantmentList, itemStack);
+//        for(int i = 0; i < ENCHANTMENT_RARITY.length && enchantmentList.size() > 0; i++){
+//            if(random.nextInt(ENCHANTMENT_RARITY[i]) == 0){
+//                Pair<Enchantment, Integer> enchantmentIntegerPair = enchantmentList.get(random.nextInt(enchantmentList.size()));
+//                enchantmentList.remove(enchantmentIntegerPair);
+//                itemStack.enchant(enchantmentIntegerPair.getFirst(), enchantmentIntegerPair.getSecond());
+//            } else {
+//                break;
+//            }
+//            enchantmentList = EnchantmentUtil.filterEnchantments(enchantmentList, itemStack);
+//        }
+//        //Curses
+//        List<Pair<Enchantment, Integer>> curseList = EnchantmentUtil.getCursesByTier(this.tier.getInt(lootContext));
+//        curseList = EnchantmentUtil.filterEnchantments(curseList, itemStack);
+//        for(int i = 0; i < CURSE_RARITY.length && curseList.size() > 0; i++){
+//            if(random.nextInt(CURSE_RARITY[i]) == 0){
+//                Pair<Enchantment, Integer> curseIntegerPair = curseList.get(random.nextInt(curseList.size()));
+//                curseList.remove(curseIntegerPair);
+//                itemStack.enchant(curseIntegerPair.getFirst(), curseIntegerPair.getSecond());
+//            } else {
+//                break;
+//            }
+//            curseList = EnchantmentUtil.filterEnchantments(curseList, itemStack);
+//        }
         return itemStack;
     }
 

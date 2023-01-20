@@ -60,7 +60,6 @@ public class Odyssey
         ContainerRegistry.init();
         DataSerializerRegistry.init();
         EffectRegistry.init();
-        EnchantmentRegistry.init();
         EntityTypeRegistry.init();
         FeatureRegistry.init();
         FoliagePlacerTypeRegistry.init();

@@ -3,10 +3,10 @@ package com.bedmen.odyssey.items;
 import com.bedmen.odyssey.aspect.AspectHolder;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.aspect_objects.MultishotAspect;
 import com.bedmen.odyssey.combat.BoomerangType;
 import com.bedmen.odyssey.entity.projectile.Boomerang;
 import com.bedmen.odyssey.items.odyssey_versions.AspectItem;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.bedmen.odyssey.combat.OdysseyRangedWeapon;
 import com.mojang.math.Quaternion;
@@ -72,11 +72,12 @@ public class BoomerangItem extends Item implements Vanishable, INeedsToRegisterI
                     player1.broadcastBreakEvent(owner.getUsedItemHand());
                 });
             }
-            int multishot = EnchantmentUtil.getMultishot(boomerangStack);
-            for(int multishotNum = -multishot; multishotNum <= multishot; multishotNum++){
-                float angle = multishot > 0 ? multishotNum * 10f / (multishot) : 0f;
+            int numberOfBoomerangsOnSides = MultishotAspect.strengthToNumberOfSideProjectiles(AspectUtil.getFloatAspectStrength(boomerangStack, Aspects.MULTISHOT));
+            int numberOfBoomerangsOnOneSide = numberOfBoomerangsOnSides / 2;
+            for(int multishotIndex = -numberOfBoomerangsOnOneSide; multishotIndex <= numberOfBoomerangsOnOneSide; multishotIndex++){
+                float angle = numberOfBoomerangsOnSides == 0 ? 0.0f : multishotIndex * (20.0f / numberOfBoomerangsOnSides);
                 Vector3f vector3f = getThrowVector(owner, angle, fromView, target);
-                Boomerang boomerang = shootAndGetBoomerang(level, owner, boomerangStack, multishotNum, vector3f);
+                Boomerang boomerang = shootAndGetBoomerang(level, owner, boomerangStack, multishotIndex, vector3f);
                 level.addFreshEntity(boomerang);
                 if (player != null && player.isCreative()) {
                     boomerang.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
@@ -88,11 +89,11 @@ public class BoomerangItem extends Item implements Vanishable, INeedsToRegisterI
         }
     }
 
-    private Boomerang shootAndGetBoomerang(Level level, LivingEntity owner, ItemStack boomerangStack, int multishotNum, Vector3f vector3f) {
-        Boomerang boomerang = getBoomerang(level, owner, boomerangStack, multishotNum != 0);
+    private Boomerang shootAndGetBoomerang(Level level, LivingEntity owner, ItemStack boomerangStack, int multishotIndex, Vector3f vector3f) {
+        Boomerang boomerang = getBoomerang(level, owner, boomerangStack, multishotIndex != 0);
         float accuracyMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(boomerangStack, Aspects.ACCURACY);
-        boomerang.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.boomerangType.getVelocity(boomerangStack), 1.0f / accuracyMultiplier);
-        if(multishotNum != 0){
+        boomerang.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.boomerangType.velocity, 1.0f / accuracyMultiplier);
+        if(multishotIndex != 0){
             boomerang.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         }
         return boomerang;
@@ -100,6 +101,7 @@ public class BoomerangItem extends Item implements Vanishable, INeedsToRegisterI
 
     private Boomerang getBoomerang(Level level, LivingEntity owner, ItemStack boomerangStack, boolean isMultishot) {
         Boomerang boomerang = new Boomerang(level, owner, boomerangStack, isMultishot);
+        boomerang.setBaseDamage(isMultishot ? MultishotAspect.strengthToDamagePenalty(AspectUtil.getFloatAspectStrength(boomerangStack, Aspects.MULTISHOT)) : 1.0d);
         boomerang.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(boomerangStack));
         return boomerang;
     }
@@ -181,7 +183,7 @@ public class BoomerangItem extends Item implements Vanishable, INeedsToRegisterI
         tooltip.add(new TranslatableComponent("item.oddc.boomerang.damage").append(StringUtil.doubleFormat(this.boomerangType.damage)).withStyle(ChatFormatting.BLUE));
         tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(this.getBaseMaxChargeTicks())).withStyle(ChatFormatting.BLUE));
         if (flagIn.isAdvanced()) {
-            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.boomerangType.getVelocity(boomerangStack))).withStyle(ChatFormatting.BLUE));
+            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.boomerangType.velocity)).withStyle(ChatFormatting.BLUE));
             tooltip.add(new TranslatableComponent("item.oddc.boomerang.turnaround_time").append(StringUtil.timeFormat(this.getTurnaroundTime(boomerangStack))).withStyle(ChatFormatting.BLUE));
         }
     }
