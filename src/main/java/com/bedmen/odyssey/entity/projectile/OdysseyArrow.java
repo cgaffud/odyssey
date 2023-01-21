@@ -91,30 +91,29 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         this.discard();
     }
 
-    protected void onSuccessfulHurt(Entity target) {
-        if (target instanceof LivingEntity livingEntity) {
-            Entity owner = this.getOwner();
+    protected void onHurt(Entity target, boolean hurtSuccessful) {
+        if(hurtSuccessful){
+            if (target instanceof LivingEntity livingEntity) {
+                Entity owner = this.getOwner();
 
-            if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
-                livingEntity.setArrowCount(livingEntity.getArrowCount() + 1);
-            }
+                if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
+                    livingEntity.setArrowCount(livingEntity.getArrowCount() + 1);
+                }
 
-            if (livingEntity != owner && livingEntity instanceof Player && owner instanceof ServerPlayer && !this.isSilent()) {
-                ((ServerPlayer)owner).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+                if (livingEntity != owner && livingEntity instanceof Player && owner instanceof ServerPlayer && !this.isSilent()) {
+                    ((ServerPlayer)owner).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+                }
             }
-        }
-    }
-
-    @Override
-    protected void onFailedHurt(Entity target) {
-        this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
-        this.setYRot(this.getYRot() + 180.0F);
-        this.yRotO += 180.0F;
-        if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-            if (this.pickup == AbstractArrow.Pickup.ALLOWED) {
-                this.spawnAtLocation(this.getPickupItem(), 0.1F);
+        } else {
+            this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
+            this.setYRot(this.getYRot() + 180.0F);
+            this.yRotO += 180.0F;
+            if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                if (this.pickup == AbstractArrow.Pickup.ALLOWED) {
+                    this.spawnAtLocation(this.getPickupItem(), 0.1F);
+                }
+                this.discard();
             }
-            this.discard();
         }
     }
 }

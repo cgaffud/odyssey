@@ -19,6 +19,7 @@ public enum BoomerangType implements ThrowableType {
     SPEEDY_GREATROOT(8.0d, 1.5f, 0, List.of(), List.of(new AspectInstance(Aspects.LOYALTY, 1.8f))),
     SUPER_GREATROOT(12.0d, 1.25f, 0, List.of(), List.of(new AspectInstance(Aspects.LOYALTY, 1.5f), new AspectInstance(Aspects.MAX_CHARGE_TIME, 0.5f)));
 
+    public static final String BOOMERANG_TYPE_PREFIX_TAG = "BoomerangType:";
     public final double damage;
     public final float velocity;
     public final int burnTime;
@@ -41,5 +42,9 @@ public enum BoomerangType implements ThrowableType {
 
     public double getThrownDamage() {
         return this.damage;
+    }
+
+    public String getName(){
+        return BOOMERANG_TYPE_PREFIX_TAG+this.name();
     }
 }

@@ -32,7 +32,7 @@ import java.util.Optional;
 
 public abstract class ThrowableWeaponItem extends Item implements Vanishable, INeedsToRegisterItemModelProperty, OdysseyRangedWeapon, AspectItem {
     private static final int THROWING_CHARGE_TIME = 10;
-    protected final ThrowableType throwableType;
+    public final ThrowableType throwableType;
     public ThrowableWeaponItem(Item.Properties builderIn, ThrowableType throwableType) {
         super(builderIn);
         this.throwableType = throwableType;

@@ -92,9 +92,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     protected abstract void onFinalPierce();
 
-    protected abstract void onSuccessfulHurt(Entity target);
-
-    protected abstract void onFailedHurt(Entity target);
+    protected abstract void onHurt(Entity target, boolean hurtSuccessful);
 
     protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity target = entityHitResult.getEntity();
@@ -171,7 +169,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 }
             }
 
-            this.onSuccessfulHurt(target);
+            this.onHurt(target, true);
 
             this.playSound(this.getHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
             if (finalPierce) {
@@ -179,7 +177,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
             }
         } else {
             target.setRemainingFireTicks(k);
-            this.onFailedHurt(target);
+            this.onHurt(target, false);
         }
 
     }
