@@ -16,6 +16,9 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -24,6 +27,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -45,6 +49,8 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.SPEAR;
     }
+
+    protected abstract Optional<SoundEvent> getThrowSound();
 
     public int getUseDuration(ItemStack stack) {
         return 72000;
@@ -69,10 +75,12 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
             for(int multishotIndex = -numberOfProjectilesOnOneSide; multishotIndex <= numberOfProjectilesOnOneSide; multishotIndex++){
                 float angle = numberOfSideProjectiles == 0 ? 0.0f : multishotIndex * (20.0f / numberOfSideProjectiles);
                 Vector3f vector3f = getThrowVector(owner, angle, optionalTarget);
-                OdysseyAbstractArrow boomerang = shootAndGetThrownWeaponEntity(level, owner, thrownItemStack, multishotIndex != 0, vector3f);
-                level.addFreshEntity(boomerang);
+                OdysseyAbstractArrow odysseyAbstractArrow = shootAndGetThrownWeaponEntity(level, owner, thrownItemStack, multishotIndex != 0, vector3f);
+                level.addFreshEntity(odysseyAbstractArrow);
+                Optional<SoundEvent> optionalSoundEvent = this.getThrowSound();
+                optionalSoundEvent.ifPresent(soundEvent -> level.playSound((Player)null, odysseyAbstractArrow, soundEvent, SoundSource.PLAYERS, 1.0F, 1.0F));
                 if (player != null && player.isCreative()) {
-                    boomerang.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                    odysseyAbstractArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
             }
             if (player != null && !player.isCreative()) {

@@ -14,10 +14,6 @@ public class ThrownSpear extends ThrownWeapon {
         super(type, level);
     }
 
-    public ThrownSpear(EntityType<? extends ThrownSpear> type, double x, double y, double z, Level level) {
-        super(type, x, y, z, level);
-    }
-
     public ThrownSpear(Level level, LivingEntity thrower, ItemStack thrownStackIn, boolean isMultishotClone) {
         super(EntityTypeRegistry.THROWN_SPEAR.get(), level, thrower, thrownStackIn, isMultishotClone);
     }

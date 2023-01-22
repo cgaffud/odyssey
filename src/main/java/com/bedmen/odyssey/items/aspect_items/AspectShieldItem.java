@@ -64,7 +64,6 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         return Mth.ceil((float)this.shieldType.recoveryTime / recoverySpeedMultiplier);
     }
 
-    @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         consumer.accept(new IItemRenderProperties() {
 

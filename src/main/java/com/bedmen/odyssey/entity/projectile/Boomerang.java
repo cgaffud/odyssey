@@ -23,10 +23,6 @@ public class Boomerang extends ThrownWeapon {
         super(EntityTypeRegistry.BOOMERANG.get(), level, thrower, thrownStackIn, isMultishotClone);
     }
 
-    public Boomerang(Level level, double x, double y, double z) {
-        super(EntityTypeRegistry.BOOMERANG.get(), x, y, z, level);
-    }
-
     protected boolean isDoneDealingDamage(){
         return this.inGroundTime > 0 || this.tickCount > BOOMERANG_TURNAROUND_TIME;
     }

@@ -2,17 +2,14 @@ package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.combat.BoomerangType;
 import com.bedmen.odyssey.entity.projectile.Boomerang;
-import com.bedmen.odyssey.util.StringUtil;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Optional;
 
 public class BoomerangItem extends ThrowableWeaponItem {
 
@@ -31,5 +28,9 @@ public class BoomerangItem extends ThrowableWeaponItem {
     public int getBurnTime(ItemStack boomerangStack, @Nullable RecipeType<?> recipeType)
     {
         return this.getBoomerangType().burnTime;
+    }
+
+    protected Optional<SoundEvent> getThrowSound(){
+        return Optional.empty();
     }
 }
