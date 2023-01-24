@@ -71,10 +71,6 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
         }
     }
 
-    protected float getWaterInertia() {
-        return 0.99F;
-    }
-
     public boolean shouldRender(double x, double y, double z) {
         return true;
     }

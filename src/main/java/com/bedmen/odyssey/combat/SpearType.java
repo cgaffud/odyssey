@@ -3,13 +3,15 @@ package com.bedmen.odyssey.combat;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectHolder;
 import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
 public enum SpearType implements ThrowableType {
-    STONE("stone", 4.0d, 1.0f, List.of(), List.of());
+    FLINT("flint", 4.0d, 1.0f, List.of(), List.of(new AspectInstance(Aspects.VELOCITY, 0.5f))),
+    AMETHYST("amethyst", 6.0d, 1.0f, List.of(), List.of(new AspectInstance(Aspects.VELOCITY, 1.0f)));
 
     public static final String SPEAR_TYPE_TAG_PREFIX = "SpearType:";
     public final double damage;

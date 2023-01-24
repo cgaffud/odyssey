@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/spear_throwing",
+  "textures": {
+    "particle": "oddc:item/flint_spear"
+  }
+}

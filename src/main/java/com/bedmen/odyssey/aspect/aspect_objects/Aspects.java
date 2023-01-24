@@ -54,6 +54,7 @@ public class Aspects {
 
     // Throwing
     public static final FloatAspect LOYALTY = new FloatAspect("loyalty");
+    public static final UnitAspect VELOCITY = new UnitAspect("velocity");
 
     // Armor
     public static final DamageSourcePredicateAspect FEATHER_FALLING = new DamageSourcePredicateAspect("feather_falling", damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);

@@ -25,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.IItemRenderProperties;
@@ -35,8 +36,8 @@ import java.util.function.Consumer;
 public class SpearItem extends ThrowableWeaponItem {
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
-    public SpearItem(Item.Properties properties, SpearType spearType) {
-        super(properties, spearType);
+    public SpearItem(Item.Properties properties, Tier tier, SpearType spearType) {
+        super(properties.durability(tier.getUses()), spearType);
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", spearType.damage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", -2.9F, AttributeModifier.Operation.ADDITION));

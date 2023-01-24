@@ -36,7 +36,7 @@ recipesPath = "%s/recipes" % (dataPath)
 craftingRecipesPath = "%s/crafting" % (recipesPath)
 
 def goAgain():
-    yes(input("Again? (Y/N): "))
+    return yes(input("Again? (Y/N): "))
 
 def yes(s):
     return s.__contains__("Y") or s.__contains__("y")

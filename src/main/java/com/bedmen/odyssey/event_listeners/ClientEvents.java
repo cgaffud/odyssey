@@ -253,7 +253,6 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onModelRegistryEvent(final ModelRegistryEvent event) {
         for(SpearType spearType: SpearType.values()){
-            ForgeModelBakery.addSpecialModel(spearType.itemModelResourceLocation);
             ForgeModelBakery.addSpecialModel(spearType.entityModelResourceLocation);
         }
     }

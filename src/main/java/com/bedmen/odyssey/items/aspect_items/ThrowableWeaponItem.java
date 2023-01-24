@@ -94,7 +94,7 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
         thrownWeaponEntity.setBaseDamage(isMultishot ? MultishotAspect.strengthToDamagePenalty(AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.MULTISHOT)) : 1.0d);
         thrownWeaponEntity.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(thrownWeaponStack));
         float accuracyMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.ACCURACY);
-        thrownWeaponEntity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.throwableType.getVelocity(), 1.0f / accuracyMultiplier);
+        thrownWeaponEntity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.getFinalVelocity(thrownWeaponStack), 1.0f / accuracyMultiplier);
         if(isMultishot){
             thrownWeaponEntity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         }
@@ -143,9 +143,14 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
         return THROWING_CHARGE_TIME;
     }
 
-    public void appendHoverText(ItemStack boomerangStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(boomerangStack, level, tooltip, flagIn);
+    public float getFinalVelocity(ItemStack thrownWeaponStack){
+        return this.throwableType.getVelocity() * (1.0f + AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.VELOCITY));
+    }
+
+
+    public void appendHoverText(ItemStack thrownWeaponStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(thrownWeaponStack, level, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("item.oddc.throwable_weapon.damage").append(StringUtil.doubleFormat(this.throwableType.getThrownDamage())).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.throwableType.getVelocity())).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getFinalVelocity(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
     }
 }
