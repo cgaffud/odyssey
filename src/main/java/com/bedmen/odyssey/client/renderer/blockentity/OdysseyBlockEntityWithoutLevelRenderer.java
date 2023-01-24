@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.client.renderer.blockentity;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.client.model.SpearModel;
@@ -25,6 +26,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.*;
@@ -108,14 +110,10 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
                 boolean useItemModelNotEntityModel = transformType == ItemTransforms.TransformType.GUI || transformType == ItemTransforms.TransformType.GROUND || transformType == ItemTransforms.TransformType.FIXED;
                 if(useItemModelNotEntityModel){
                     ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                    BakedModel bakedModel = itemRenderer.getModel(itemStack, Minecraft.getInstance().level, Minecraft.getInstance().player, 0);
-                    if (bakedModel.isLayered()) { net.minecraftforge.client.ForgeHooksClient.drawItemLayered(itemRenderer, bakedModel, itemStack, poseStack, multiBufferSource, packedLight, packedOverlay, true); }
-                    else {
-                        RenderType rendertype = ItemBlockRenderTypes.getRenderType(itemStack, true);
-                        VertexConsumer vertexconsumer;
-                        vertexconsumer = ItemRenderer.getFoilBufferDirect(multiBufferSource, rendertype, true, itemStack.hasFoil());
-                        itemRenderer.renderModelLists(bakedModel, itemStack, packedLight, packedOverlay, poseStack, vertexconsumer);
-                    }
+                    BakedModel bakedModel = itemRenderer.itemModelShaper.getModelManager().getModel(spearItem.getSpearType().itemModelResourceLocation);
+                    poseStack.popPose();
+                    itemRenderer.render(itemStack, transformType, false, poseStack, multiBufferSource, packedLight, packedOverlay, bakedModel);
+                    poseStack.pushPose();
                 } else {
                     poseStack.pushPose();
                     poseStack.scale(1.0F, -1.0F, -1.0F);

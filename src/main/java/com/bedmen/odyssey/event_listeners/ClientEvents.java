@@ -13,6 +13,7 @@ import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
+import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
@@ -39,12 +40,10 @@ import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -249,5 +248,13 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onParticleFactoryRegisterEvent(ParticleFactoryRegisterEvent event){
         Minecraft.getInstance().particleEngine.register(ParticleTypeRegistry.FATAL_HIT.get(), CritParticle.Provider::new);
+    }
+
+    @SubscribeEvent
+    public static void onModelRegistryEvent(final ModelRegistryEvent event) {
+        for(SpearType spearType: SpearType.values()){
+            ForgeModelBakery.addSpecialModel(spearType.itemModelResourceLocation);
+            ForgeModelBakery.addSpecialModel(spearType.entityModelResourceLocation);
+        }
     }
 }
