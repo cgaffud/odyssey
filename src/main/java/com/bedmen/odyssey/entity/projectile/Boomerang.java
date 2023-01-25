@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
+import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.combat.BoomerangType;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.sounds.SoundEvent;
@@ -28,11 +29,11 @@ public class Boomerang extends ThrownWeapon {
     }
 
     public void tick() {
-        this.setNoGravity(true);
+        this.setNoGravity(this.hasAspect(Aspects.LOYALTY));
         super.tick();
 
         Entity owner = this.getOwner();
-        float velocity = this.throwableType.getVelocity();
+        float velocity = this.throwableType.velocity;
         int tickFrequency = Integer.max((int)(5f/velocity), 2);
         if (!this.level.isClientSide && this.tickCount % tickFrequency == 1) {
             this.level.playSound(null, this, SoundEvents.PLAYER_ATTACK_SWEEP, owner instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE, 1.0f, velocity);

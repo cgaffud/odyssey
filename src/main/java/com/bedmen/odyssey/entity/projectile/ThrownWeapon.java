@@ -3,7 +3,6 @@ package com.bedmen.odyssey.entity.projectile;
 import com.bedmen.odyssey.aspect.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
-import com.bedmen.odyssey.combat.BoomerangType;
 import com.bedmen.odyssey.combat.ThrowableType;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +11,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
@@ -33,12 +35,12 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
 
     private static final String THROWN_WEAPON_ITEMSTACK_TAG = "ThrownWeaponItemStack";
     private static final String DONE_DEALING_DAMAGE_TAG = "DoneDealingDamage";
-    private static final String THROWN_WEAPON_TYPE_TAG = "ThrownWeaponType";
-    private static final String IS_MULTISHOT_CLONE_TAG = "IsMultishotCloneTag";
+    private static final String THROWABLE_TYPE_TAG = "ThrowableType";
+    private static final String IS_MULTISHOT_CLONE_TAG = "IsMultishotClone";
 
     protected ItemStack thrownStack = ItemStack.EMPTY;
     protected boolean isMultishotClone = false;
-    protected ThrowableType throwableType = BoomerangType.WOODEN;
+    protected ThrowableType throwableType = null;
     protected boolean doneDealingDamage;
 
     public ThrownWeapon(EntityType<? extends ThrownWeapon> type, Level level) {
@@ -82,8 +84,12 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
         this.discard();
     }
 
-    protected void onFinalPierce() {
+    protected void markAsDoneDealingDamage(){
         this.doneDealingDamage = true;
+    }
+
+    protected void onFinalPierce() {
+        this.markAsDoneDealingDamage();
         this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
     }
 
@@ -102,10 +108,14 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
     }
 
     protected double getDamage() {
-        return this.throwableType.getThrownDamage() * this.getBaseDamage();
+        return this.throwableType.thrownDamage * this.getBaseDamage();
     }
 
     protected void onHurt(Entity target, boolean hurtSuccessful) {}
+
+    protected SoundEvent getEntityHitSoundEvent(){
+        return this.throwableType.soundProfile.entityHitSound;
+    }
 
     protected ItemStack getPickupItem() {
         return this.isMultishotClone ? ItemStack.EMPTY : this.thrownStack.copy();
@@ -122,7 +132,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
 
     public void tick(){
         if (this.isDoneDealingDamage()) {
-            this.doneDealingDamage = true;
+            this.markAsDoneDealingDamage();
         }
 
         float loyaltyStrength = this.getAspectStrength(Aspects.LOYALTY);
@@ -195,14 +205,19 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
         return super.tryPickup(player) || isInLoyaltyReturnMode && player.getInventory().add(this.getPickupItem());
     }
 
+    protected void onHitBlock(BlockHitResult blockHitResult) {
+        this.setSoundEvent(this.throwableType.soundProfile.groundHitSound);
+        super.onHitBlock(blockHitResult);
+    }
+
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         if (compoundTag.contains(THROWN_WEAPON_ITEMSTACK_TAG, 10)) {
             this.thrownStack = ItemStack.of(compoundTag.getCompound(THROWN_WEAPON_ITEMSTACK_TAG));
         }
         this.doneDealingDamage = compoundTag.getBoolean(DONE_DEALING_DAMAGE_TAG);
-        if (compoundTag.contains(THROWN_WEAPON_TYPE_TAG)) {
-            this.throwableType = BoomerangType.valueOf(compoundTag.getString(THROWN_WEAPON_TYPE_TAG));
+        if (compoundTag.contains(THROWABLE_TYPE_TAG)) {
+            this.throwableType = ThrowableType.fromName(compoundTag.getString(THROWABLE_TYPE_TAG));
         }
         this.isMultishotClone = compoundTag.getBoolean(IS_MULTISHOT_CLONE_TAG);
     }
@@ -211,7 +226,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
         super.addAdditionalSaveData(compoundTag);
         compoundTag.put(THROWN_WEAPON_ITEMSTACK_TAG, this.thrownStack.save(new CompoundTag()));
         compoundTag.putBoolean(DONE_DEALING_DAMAGE_TAG, this.doneDealingDamage);
-        compoundTag.putString(THROWN_WEAPON_TYPE_TAG, this.throwableType.getName());
+        compoundTag.putString(THROWABLE_TYPE_TAG, this.throwableType.getName());
         compoundTag.putBoolean(IS_MULTISHOT_CLONE_TAG, this.isMultishotClone);
     }
 

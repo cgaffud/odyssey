@@ -29,8 +29,4 @@ public class BoomerangItem extends ThrowableWeaponItem {
     {
         return this.getBoomerangType().burnTime;
     }
-
-    protected Optional<SoundEvent> getThrowSound(){
-        return Optional.empty();
-    }
 }

@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.network.datasync;
 
+import com.bedmen.odyssey.combat.ThrowableType;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
@@ -32,8 +33,24 @@ public class OdysseyDataSerializers {
         }
     };
 
+    public static <E extends Enum<E>> EntityDataSerializer<E> getEnumSerializer(Class<E> enumClass){
+        return new EntityDataSerializer<>() {
+            public void write(FriendlyByteBuf buffer, @NotNull E enumerable) {
+                buffer.writeEnum(enumerable);
+            }
+
+            public E read(FriendlyByteBuf buffer) {
+                return buffer.readEnum(enumClass);
+            }
+
+            public E copy(@NotNull E enumerable) {
+                return enumerable;
+            }
+        };
+    }
+
     public static <E extends Enum<E>, V> EntityDataSerializer<Map<E, V>> getEnumMapSerializer(Class<E> enumClass, BiConsumer<FriendlyByteBuf, V> addValueToBufferFunction, Function<FriendlyByteBuf, V> readValueFromBufferFunction){
-        EntityDataSerializer<Map<E, V>> entityDataSerializer = new EntityDataSerializer<>() {
+        return new EntityDataSerializer<>() {
             public void write(FriendlyByteBuf buffer, @NotNull Map<E, V> map) {
                 buffer.writeVarInt(map.size());
                 for (Map.Entry<E, V> entry : map.entrySet()) {
@@ -57,10 +74,8 @@ public class OdysseyDataSerializers {
                 return Map.copyOf(map);
             }
         };
-        //UNREGISTERED_SERIALIZERS.add(entityDataSerializer);
-        return entityDataSerializer;
     }
 
-    public static final EntityDataSerializer<Map<CovenType, Integer>> COVENTYPE_INT_MAP_SERIALIZER = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeVarInt, FriendlyByteBuf::readVarInt);
-    public static final EntityDataSerializer<Map<CovenType, Float>> COVENTYPE_FLOAT_MAP_SERIALIZER = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeFloat, FriendlyByteBuf::readFloat);
+    public static final EntityDataSerializer<Map<CovenType, Integer>> COVENTYPE_INT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeVarInt, FriendlyByteBuf::readVarInt);
+    public static final EntityDataSerializer<Map<CovenType, Float>> COVENTYPE_FLOAT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeFloat, FriendlyByteBuf::readFloat);
 }

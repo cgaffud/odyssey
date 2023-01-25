@@ -10,6 +10,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -62,6 +64,10 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
 
     public ArrowType getArrowType(){
         return this.arrowType;
+    }
+
+    protected SoundEvent getEntityHitSoundEvent(){
+        return SoundEvents.ARROW_HIT;
     }
 
     @Override

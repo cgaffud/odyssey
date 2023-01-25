@@ -16,8 +16,6 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -27,7 +25,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -43,14 +40,12 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
     }
 
     public AspectHolder getAspectHolder() {
-        return this.throwableType.getAspectHolder();
+        return this.throwableType.aspectHolder;
     }
 
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.SPEAR;
     }
-
-    protected abstract Optional<SoundEvent> getThrowSound();
 
     public int getUseDuration(ItemStack stack) {
         return 72000;
@@ -77,8 +72,7 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
                 Vector3f vector3f = getThrowVector(owner, angle, optionalTarget);
                 OdysseyAbstractArrow odysseyAbstractArrow = shootAndGetThrownWeaponEntity(level, owner, thrownItemStack, multishotIndex != 0, vector3f);
                 level.addFreshEntity(odysseyAbstractArrow);
-                Optional<SoundEvent> optionalSoundEvent = this.getThrowSound();
-                optionalSoundEvent.ifPresent(soundEvent -> level.playSound((Player)null, odysseyAbstractArrow, soundEvent, SoundSource.PLAYERS, 1.0F, 1.0F));
+                level.playSound(null, odysseyAbstractArrow, this.throwableType.soundProfile.throwSound, owner instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE, 1.0F, 1.0F);
                 if (player != null && player.isCreative()) {
                     odysseyAbstractArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
@@ -144,13 +138,13 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
     }
 
     public float getFinalVelocity(ItemStack thrownWeaponStack){
-        return this.throwableType.getVelocity() * (1.0f + AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.VELOCITY));
+        return this.throwableType.velocity * (1.0f + AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.VELOCITY));
     }
 
 
     public void appendHoverText(ItemStack thrownWeaponStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(thrownWeaponStack, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.throwable_weapon.damage").append(StringUtil.doubleFormat(this.throwableType.getThrownDamage())).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.throwable_weapon.damage").append(StringUtil.doubleFormat(this.throwableType.thrownDamage)).withStyle(ChatFormatting.BLUE));
         tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getFinalVelocity(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
     }
 }

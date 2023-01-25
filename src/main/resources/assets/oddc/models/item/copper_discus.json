@@ -1,14 +1,14 @@
 {
   "parent": "oddc:item/boomerang",
   "textures": {
-    "layer0": "oddc:item/super_greatroot_boomerang"
+    "layer0": "oddc:item/copper_discus"
   },
   "overrides": [
     {
       "predicate": {
         "throwing": 1
       },
-      "model": "oddc:item/super_greatroot_boomerang_throwing"
+      "model": "oddc:item/copper_discus_throwing"
     }
   ]
 }

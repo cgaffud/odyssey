@@ -17,6 +17,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -84,11 +85,17 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         return this.aspectStrengthMap.getNonNull(aspect);
     }
 
+    public boolean hasAspect(Aspect aspect){
+        return getAspectStrength(aspect) > 0.0f;
+    }
+
     protected abstract double getDamage();
 
     protected abstract void onFinalPierce();
 
     protected abstract void onHurt(Entity target, boolean hurtSuccessful);
+
+    protected abstract SoundEvent getEntityHitSoundEvent();
 
     protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity target = entityHitResult.getEntity();
@@ -167,7 +174,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
             this.onHurt(target, true);
 
-            this.playSound(this.getHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+            this.playSound(this.getEntityHitSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
             if (finalPierce) {
                 this.onFinalPierce();
             }
@@ -179,7 +186,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     }
 
     protected float getWaterInertia() {
-        return this.getAspectStrength(Aspects.HYDRODYNAMIC) > 0.0f ? 0.99F : super.getWaterInertia();
+        return this.hasAspect(Aspects.HYDRODYNAMIC) ? 0.99F : super.getWaterInertia();
     }
 
     @Override

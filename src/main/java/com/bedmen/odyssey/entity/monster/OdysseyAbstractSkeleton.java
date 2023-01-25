@@ -200,9 +200,6 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         Item item = switch(random.nextInt(10)){
             default -> ItemRegistry.WOODEN_BOOMERANG.get();
             case 0 -> ItemRegistry.BONERANG.get();
-            case 1 -> ItemRegistry.HEAVY_BONE_BOOMERANG.get();
-            case 2 -> ItemRegistry.SHARP_BONE_BOOMERANG.get();
-            case 3 -> ItemRegistry.SPEEDY_BONE_BOOMERANG.get();
         };
         this.boomerangItem = item;
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
