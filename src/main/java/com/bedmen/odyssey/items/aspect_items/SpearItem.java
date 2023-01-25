@@ -84,7 +84,7 @@ public class SpearItem extends ThrowableWeaponItem {
     }
 
     protected Optional<SoundEvent> getThrowSound(){
-        return Optional.of(SoundEvents.PLAYER_ATTACK_SWEEP);
+        return Optional.of(this.getSpearType().isTrident ? SoundEvents.TRIDENT_THROW : SoundEvents.PLAYER_ATTACK_SWEEP);
     }
 
     public SpearType getSpearType(){

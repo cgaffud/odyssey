@@ -269,6 +269,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATROOT_SLUG_BOW = ITEMS.register("greatroot_slug_bow", () -> new AspectCrossbowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.8f, 25, List.of(), List.of(new AspectInstance(Aspects.PROJECTILE_KNOCKBACK, 1.0f))));
     public static final RegistryObject<Item> GREATROOT_SHOT_BOW = ITEMS.register("greatroot_shot_bow", () -> new AspectCrossbowItem((new Item.Properties()).durability(OdysseyTiers.GREATROOT.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.8f, 25, List.of(), List.of(new AspectInstance(Aspects.MULTISHOT, 2.0f))));
 
+    // ## Tier 3
+
+    public static final RegistryObject<Item> MARINE_TRIDENT = ITEMS.register("marine_trident", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.MARINE, SpearType.MARINE));
+
     // ## Quivers
     public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.RANGED), QuiverItem.QuiverType.RABBIT_HIDE_QUIVER));
     public static final RegistryObject<Item> RABBIT_HIDE_ROCKET_BAG = ITEMS.register("rabbit_hide_rocket_bag", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.RANGED), QuiverItem.QuiverType.RABBIT_HIDE_ROCKET_BAG));

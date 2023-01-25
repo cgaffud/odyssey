@@ -36,8 +36,8 @@ import net.minecraftforge.network.NetworkHooks;
 import java.util.Arrays;
 
 public abstract class OdysseyAbstractArrow extends AbstractArrow {
-    private static final EntityDataAccessor<Float> DATA_LOYALTY_ASPECT = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.FLOAT);
-    private AspectStrengthMap aspectStrengthMap = new AspectStrengthMap();
+    private static final EntityDataAccessor<Boolean> DATA_HYDRODYNAMIC = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BOOLEAN);
+    protected AspectStrengthMap aspectStrengthMap = new AspectStrengthMap();
     public static final String ASPECT_STRENGTH_MAP_TAG = "AspectStrengthMap";
     public static final String PIERCING_DAMAGE_PENALTY_TAG = "PiercingDamagePenalty";
     // Decreases damage of arrow on last piercing
@@ -57,7 +57,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_LOYALTY_ASPECT, 0.0f);
+        this.entityData.define(DATA_HYDRODYNAMIC, false);
     }
 
     public void updatePiercingValues(){
@@ -67,23 +67,19 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         this.setPierceLevel((byte)ceil);
     }
 
-    public void updateLoyalty(){
-        this.entityData.set(DATA_LOYALTY_ASPECT, this.aspectStrengthMap.getNonNull(Aspects.LOYALTY));
-    }
-
     public void addAspectStrengthMap(AspectStrengthMap aspectStrengthMap){
         this.aspectStrengthMap.putAll(aspectStrengthMap);
         if(this.aspectStrengthMap.containsKey(Aspects.PIERCING)){
             this.updatePiercingValues();
         }
-        if(this.aspectStrengthMap.containsKey(Aspects.LOYALTY)){
-            this.updateLoyalty();
+        if(this.aspectStrengthMap.containsKey(Aspects.HYDRODYNAMIC)){
+            this.entityData.set(DATA_HYDRODYNAMIC, true);
         }
     }
 
     public float getAspectStrength(Aspect aspect){
-        if(aspect == Aspects.LOYALTY){
-            return this.entityData.get(DATA_LOYALTY_ASPECT);
+        if(aspect == Aspects.HYDRODYNAMIC){
+            return this.entityData.get(DATA_HYDRODYNAMIC) ? 1.0f : 0.0f;
         }
         return this.aspectStrengthMap.getNonNull(aspect);
     }
@@ -180,6 +176,10 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
             this.onHurt(target, false);
         }
 
+    }
+
+    protected float getWaterInertia() {
+        return this.getAspectStrength(Aspects.HYDRODYNAMIC) > 0.0f ? 0.99F : super.getWaterInertia();
     }
 
     @Override

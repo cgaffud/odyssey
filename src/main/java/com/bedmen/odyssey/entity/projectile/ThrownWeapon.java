@@ -1,11 +1,16 @@
 package com.bedmen.odyssey.entity.projectile;
 
+import com.bedmen.odyssey.aspect.AspectStrengthMap;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.combat.BoomerangType;
 import com.bedmen.odyssey.combat.ThrowableType;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -23,6 +28,8 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import javax.annotation.Nullable;
 
 public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
+
+    private static final EntityDataAccessor<Float> DATA_LOYALTY_ASPECT = SynchedEntityData.defineId(ThrownWeapon.class, EntityDataSerializers.FLOAT);
 
     private static final String THROWN_WEAPON_ITEMSTACK_TAG = "ThrownWeaponItemStack";
     private static final String DONE_DEALING_DAMAGE_TAG = "DoneDealingDamage";
@@ -47,6 +54,25 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
         this.thrownStack = thrownStackIn.copy();
         this.throwableType = ((ThrowableWeaponItem)this.thrownStack.getItem()).throwableType;
         this.isMultishotClone = isMultishotClone;
+    }
+
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_LOYALTY_ASPECT, 0.0f);
+    }
+
+    public void addAspectStrengthMap(AspectStrengthMap aspectStrengthMap){
+        super.addAspectStrengthMap(aspectStrengthMap);
+        if(this.aspectStrengthMap.containsKey(Aspects.LOYALTY)){
+            this.entityData.set(DATA_LOYALTY_ASPECT, this.aspectStrengthMap.getNonNull(Aspects.LOYALTY));
+        }
+    }
+
+    public float getAspectStrength(Aspect aspect){
+        if(aspect == Aspects.LOYALTY){
+            return this.entityData.get(DATA_LOYALTY_ASPECT);
+        }
+        return super.getAspectStrength(aspect);
     }
 
     protected void despawn(){
