@@ -24,13 +24,12 @@ public class BoomerangRenderer extends EntityRenderer<Boomerang> {
     }
 
     public void render(Boomerang boomerang, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
-        float f = (float)boomerang.tickCount + partialTicks;
-        f *= boomerang.getBoomerangType().velocity * 60f;
+        float spinRotation = boomerang.getSpinRotation(partialTicks);
         matrixStackIn.pushPose();
-        matrixStackIn.translate(1/4d * Mth.sin((float) (f*Math.PI/180d)),1d/32d,-1/4d * Mth.cos((float) (f*Math.PI/180d)));
+        matrixStackIn.translate(1/4d * Mth.sin((float) (spinRotation*Math.PI/180d)),1d/32d,-1/4d * Mth.cos((float) (spinRotation*Math.PI/180d)));
         matrixStackIn.scale(2f, 2f, 2f);
         matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(90f));
-        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(f));
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(spinRotation));
         ItemStack itemStack = boomerang.getThrownStack();
         BakedModel bakedmodel = this.itemRenderer.getModel(itemStack, boomerang.level, (LivingEntity)null, boomerang.getId());
         this.itemRenderer.render(itemStack, ItemTransforms.TransformType.GROUND, false, matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, bakedmodel);
