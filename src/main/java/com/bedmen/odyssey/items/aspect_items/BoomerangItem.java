@@ -13,8 +13,8 @@ import java.util.Optional;
 
 public class BoomerangItem extends ThrowableWeaponItem {
 
-    public BoomerangItem(Item.Properties properties, BoomerangType boomerangType) {
-        super(properties, boomerangType);
+    public BoomerangItem(Item.Properties properties, Tier tier, BoomerangType boomerangType) {
+        super(properties, tier, boomerangType);
     }
 
     protected Boomerang getThrownWeaponEntity(Level level, LivingEntity owner, ItemStack boomerangStack, boolean isMultishot) {

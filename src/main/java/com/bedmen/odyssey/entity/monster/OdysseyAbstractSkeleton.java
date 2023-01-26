@@ -199,6 +199,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     protected void populateBabyEquipmentSlots() {
         Item item = switch(random.nextInt(10)){
             default -> ItemRegistry.WOODEN_BOOMERANG.get();
+            case 1, 2, 3 -> ItemRegistry.BONE_BOOMERANG.get();
             case 0 -> ItemRegistry.BONERANG.get();
         };
         this.boomerangItem = item;

@@ -1,5 +1,5 @@
 from PIL import Image
-import random, helper
+import random
 
 def openImage(path):
     newImage = Image.open(path)
@@ -204,9 +204,9 @@ def redInfo(image1, image2):
                     minRatio = ratio
     print((maxRatio, minRatio))
 
-openPath1 = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/c.png"
-savePath = r"/Users/jeremybrennan/Documents/odyssey-1.18.1-2/src/main/resources/assets/oddc/textures/c2.png"
+openPath1 = r"C:\Users\18029\Downloads\obsidian_disc_2.png"
+savePath = r"C:\Users\18029\Downloads\obsidian_disc_3.png"
 image1 = openImage(openPath1)
-grayscaleRecolorImage(image1, [0.9,0.9,0.9],[0,0,0])
+recolorImageRandomly(image1, [0.6,0.6,0.6],[1.0,1.0,1.0])
 saveImage(image1, savePath)
 print("Done")

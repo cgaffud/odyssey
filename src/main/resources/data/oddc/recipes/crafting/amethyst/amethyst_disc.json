@@ -1,19 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " AA",
-    "ABB",
-    "AB "
+    " A ",
+    "A A",
+    " A "
   ],
   "key": {
     "A": {
       "item": "minecraft:amethyst_shard"
-    },
-    "B": {
-      "item": "oddc:greatroot"
     }
   },
   "result": {
-    "item": "oddc:sharp_greatroot_boomerang"
+    "item": "oddc:amethyst_disc"
   }
 }

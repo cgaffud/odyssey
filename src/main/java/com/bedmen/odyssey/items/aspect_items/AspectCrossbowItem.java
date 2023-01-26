@@ -52,8 +52,8 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     private final int baseMaxChargeTicks;
     private final AspectHolder aspectHolder;
 
-    public AspectCrossbowItem(Item.Properties propertiesIn, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance> abilityList, List<AspectInstance> innateAspectList) {
-        super(propertiesIn);
+    public AspectCrossbowItem(Item.Properties propertiesIn, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance> abilityList, List<AspectInstance> innateAspectList) {
+        super(propertiesIn.durability(tier.getUses()));
         this.damageMultiplier = damageMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
         this.aspectHolder = new AspectHolder(abilityList, innateAspectList);

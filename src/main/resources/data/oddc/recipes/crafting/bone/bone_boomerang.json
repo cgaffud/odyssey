@@ -1,19 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " AA",
-    "ABB",
-    "AB "
+    "AA",
+    "A "
   ],
   "key": {
     "A": {
-      "item": "minecraft:flint"
-    },
-    "B": {
       "item": "minecraft:bone"
     }
   },
   "result": {
-    "item": "oddc:sharp_bone_boomerang"
+    "item": "oddc:bone_boomerang"
   }
 }

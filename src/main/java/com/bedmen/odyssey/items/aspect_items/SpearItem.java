@@ -30,7 +30,7 @@ public class SpearItem extends ThrowableWeaponItem {
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
     public SpearItem(Item.Properties properties, Tier tier, SpearType spearType) {
-        super(properties.durability(tier.getUses()), spearType);
+        super(properties, tier, spearType);
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", spearType.thrownDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", -2.9F, AttributeModifier.Operation.ADDITION));
