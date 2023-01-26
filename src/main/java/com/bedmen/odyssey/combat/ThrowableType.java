@@ -12,18 +12,21 @@ import java.util.Map;
 public abstract class ThrowableType {
 
     private static final Map<String, ThrowableType> THROWABLE_TYPE_MAP = new HashMap<>();
-    public final AspectHolder aspectHolder;
-    public final float velocity;
-    public final double thrownDamage;
-    public final SoundProfile soundProfile;
+
     protected final String id;
+    public final double thrownDamage;
+    public final float velocity;
+    public final SoundProfile soundProfile;
+    public final List<AspectInstance> abilityList;
+    public final List<AspectInstance> innateModifierList;
 
     public ThrowableType(String id, double thrownDamage, float velocity, SoundProfile soundProfile, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
         this.id = id;
         this.thrownDamage = thrownDamage;
         this.velocity = velocity;
         this.soundProfile = soundProfile;
-        this.aspectHolder = new AspectHolder(abilityList, innateModifierList);
+        this.abilityList = abilityList;
+        this.innateModifierList = innateModifierList;
         THROWABLE_TYPE_MAP.put(this.getName(), this);
     }
 

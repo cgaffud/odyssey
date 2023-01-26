@@ -21,9 +21,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.lwjgl.system.CallbackI;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class WeaponUtil {
     public static final int DEFAULT_RECOVERY_TIME = 100;
@@ -263,4 +269,24 @@ public class WeaponUtil {
     private static float getVelocityFactorFromCharge(float charge){
         return Mth.sqrt((charge * charge + charge * 2.0F) / 3.0F);
     }
+
+    public static final double THRUST_RANGE = 5.0d;
+    public static final double THRUST_RADIUS = 0.0d;
+    public static Collection<LivingEntity> getThrustAttackTargets(Entity attacker, Entity target){
+        Vec3 viewVector = attacker.getViewVector(1.0f);
+        Vec3 eyePosition = attacker.getEyePosition();
+        Vec3 endOfThrustVector = getEndOfThrustVector(eyePosition, viewVector);
+        Predicate<LivingEntity> thrustPredicate = livingEntity -> !livingEntity.isSpectator() && livingEntity.isPickable() && livingEntity != attacker && livingEntity != target;
+        AABB aabb = attacker.getBoundingBox().expandTowards(viewVector.scale(THRUST_RANGE)).inflate(1.0d + THRUST_RADIUS);
+        List<LivingEntity> livingEntityList = attacker.level.getEntitiesOfClass(LivingEntity.class, aabb, thrustPredicate);
+        return livingEntityList.stream().
+                filter(livingEntity -> livingEntity.getBoundingBox().inflate(livingEntity.getPickRadius() + THRUST_RADIUS).clip(eyePosition, endOfThrustVector).isPresent())
+                .collect(Collectors.toList());
+    }
+
+    public static Vec3 getEndOfThrustVector(Vec3 eyePosition, Vec3 viewVector){
+        return eyePosition.add(viewVector.scale(THRUST_RANGE));
+    }
 }
+
+

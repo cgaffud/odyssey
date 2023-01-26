@@ -4,12 +4,17 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.combat.SmackPush;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -21,6 +26,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -114,47 +120,63 @@ public class PlayerEvents {
     public static void onAttackEntityEvent(final AttackEntityEvent event){
         Player player = event.getPlayer();
         ItemStack itemStack = player.getMainHandItem();
-        Item item = itemStack.getItem();
-        if(item instanceof AspectItem aspectItem){
-            Entity target = event.getTarget();
-            float attackStrengthScale = player.getAttackStrengthScale(0.5F);
-            boolean isFullyCharged = attackStrengthScale > 0.9F;
-            boolean hasExtraKnockbackFromSprinting = player.isSprinting() && isFullyCharged;
-            boolean isCrit = isFullyCharged
-                    && player.fallDistance > 0.0F
-                    && !player.isOnGround()
-                    && !player.onClimbable()
-                    && !player.isInWater()
-                    && !player.hasEffect(MobEffects.BLINDNESS)
-                    && !player.isPassenger()
-                    && target instanceof LivingEntity
-                    && !player.isSprinting();
-            boolean canSweep = isFullyCharged
-                    && !isCrit
-                    && !hasExtraKnockbackFromSprinting
-                    && player.isOnGround()
-                    && (player.walkDist - player.walkDistO) < (double)player.getSpeed()
-                    && AspectUtil.hasBooleanAspect(itemStack, Aspects.SWEEP);
-            float sweepDamage = 1.0f + AspectUtil.getFloatAspectStrength(itemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
-            // Sweep
-            if(canSweep){
-                // Unchanging variables are needed to use in the below lambda expressions
-                player.level.getEntitiesOfClass(LivingEntity.class, itemStack.getSweepHitBox(player, target)).stream()
-                        .filter(livingEntity ->
-                                livingEntity != player
-                                        && livingEntity != target
-                                        && !player.isAlliedTo(livingEntity)
-                                        && (!(livingEntity instanceof ArmorStand) || !((ArmorStand)livingEntity).isMarker())
-                                        && player.distanceToSqr(livingEntity) < 9.0D)
-                        .forEach(livingEntity -> livingEntity.hurt(DamageSource.playerAttack(player), sweepDamage));
+        Entity target = event.getTarget();
+        float attackStrengthScale = player.getAttackStrengthScale(0.5F);
+        boolean isFullyCharged = attackStrengthScale > 0.9F;
+        boolean hasExtraKnockbackFromSprinting = player.isSprinting() && isFullyCharged;
+        boolean isCrit = isFullyCharged
+                && player.fallDistance > 0.0F
+                && !player.isOnGround()
+                && !player.onClimbable()
+                && !player.isInWater()
+                && !player.hasEffect(MobEffects.BLINDNESS)
+                && !player.isPassenger()
+                && target instanceof LivingEntity
+                && !player.isSprinting();
+        boolean isStandingStrike = isFullyCharged
+                && !isCrit
+                && !hasExtraKnockbackFromSprinting
+                && player.isOnGround()
+                && (player.walkDist - player.walkDistO) < (double)player.getSpeed();
+        boolean canSweep = isStandingStrike && AspectUtil.hasBooleanAspect(itemStack, Aspects.SWEEP);
+        boolean canThrust = isStandingStrike && AspectUtil.hasBooleanAspect(itemStack, Aspects.THRUST);
+        float sweepDamage = 1.0f + AspectUtil.getFloatAspectStrength(itemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
+        // Sweep
+        if(canSweep){
+            // Unchanging variables are needed to use in the below lambda expressions
+            player.level.getEntitiesOfClass(LivingEntity.class, itemStack.getSweepHitBox(player, target)).stream()
+                    .filter(livingEntity ->
+                            livingEntity != player
+                                    && livingEntity != target
+                                    && !player.isAlliedTo(livingEntity)
+                                    && (!(livingEntity instanceof ArmorStand) || !((ArmorStand)livingEntity).isMarker())
+                                    && player.distanceToSqr(livingEntity) < 9.0D)
+                    .forEach(livingEntity -> livingEntity.hurt(DamageSource.playerAttack(player), sweepDamage));
 
-                player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.0F);
-                player.sweepAttack();
+            player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.0F);
+            player.sweepAttack();
+        }
+        // Thrust
+        if(canThrust){
+            for(LivingEntity livingEntity: WeaponUtil.getThrustAttackTargets(player, target)){
+                livingEntity.hurt(DamageSource.playerAttack(player), 3.5f);
             }
-            // Smack
-            if(isFullyCharged && AspectUtil.hasBooleanAspect(itemStack, Aspects.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
-                odysseyLivingEntity.setSmackPush(new SmackPush(attackStrengthScale, player, target));
+            player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.7F);
+            if(player.level instanceof ServerLevel serverLevel){
+                Vec3 eyePosition = player.getEyePosition();
+                Vec3 endOfThrustVector = WeaponUtil.getEndOfThrustVector(eyePosition, player.getViewVector(1.0f));
+                Vec3 thrustVector = endOfThrustVector.subtract(eyePosition);
+                for(float f = 0.0f; f <= 1.0f; f += 0.1f){
+                    double d0 = -Mth.sin(player.getYRot() * ((float)Math.PI / 180F));
+                    double d1 = Mth.cos(player.getYRot() * ((float)Math.PI / 180F));
+                    Vec3 point = eyePosition.add(thrustVector.scale(f));
+                    serverLevel.sendParticles(ParticleTypes.EXPLOSION, point.x, point.y, point.z, 0, d0, 0.0D, d1, 0.0D);
+                }
             }
+        }
+        // Smack
+        if(isFullyCharged && AspectUtil.hasBooleanAspect(itemStack, Aspects.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
+            odysseyLivingEntity.setSmackPush(new SmackPush(attackStrengthScale, player, target));
         }
     }
 

@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.aspect.AspectHolder;
+import com.bedmen.odyssey.aspect.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.aspect.aspect_objects.MultishotAspect;
@@ -28,19 +29,25 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class ThrowableWeaponItem extends Item implements Vanishable, INeedsToRegisterItemModelProperty, OdysseyRangedWeapon, AspectItem {
     private static final int THROWING_CHARGE_TIME = 10;
     public final ThrowableType throwableType;
-    public ThrowableWeaponItem(Item.Properties properties, Tier tier, ThrowableType throwableType) {
+    public final AspectHolder aspectHolder;
+
+    public ThrowableWeaponItem(Item.Properties properties, Tier tier, ThrowableType throwableType, List<AspectInstance> additionalAbilityList) {
         super(properties.durability(tier.getUses()));
         this.throwableType = throwableType;
+        List<AspectInstance> abilityList = new ArrayList<>(additionalAbilityList);
+        abilityList.addAll(throwableType.abilityList);
+        this.aspectHolder = new AspectHolder(abilityList, throwableType.innateModifierList);
     }
 
     public AspectHolder getAspectHolder() {
-        return this.throwableType.aspectHolder;
+        return this.aspectHolder;
     }
 
     public UseAnim getUseAnimation(ItemStack stack) {

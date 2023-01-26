@@ -87,6 +87,7 @@ public class Aspects {
     public static final BooleanAspect DUAL_WIELD = new BooleanAspect("dual_wield");
     public static final BooleanAspect COBWEB_BREAK = new BooleanAspect("cobweb_break");
     public static final BooleanAspect SMACK = new BooleanAspect("smack");
+    public static final BooleanAspect THRUST = new BooleanAspect("thrust");
 
     // Bow Abilities
     public static final BooleanAspect SPYGLASS = new BooleanAspect("spyglass");

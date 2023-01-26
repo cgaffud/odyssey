@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
+import com.bedmen.odyssey.combat.MeleeWeaponClass;
 import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.entity.projectile.ThrownSpear;
@@ -30,10 +31,10 @@ public class SpearItem extends ThrowableWeaponItem {
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
     public SpearItem(Item.Properties properties, Tier tier, SpearType spearType) {
-        super(properties, tier, spearType);
+        super(properties, tier, spearType, MeleeWeaponClass.SPEAR.aspectInstanceList);
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", spearType.thrownDamage, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", -2.9F, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", MeleeWeaponClass.SPEAR.attackRate-4.0f, AttributeModifier.Operation.ADDITION));
         this.defaultModifiers = builder.build();
     }
 

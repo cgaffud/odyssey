@@ -9,12 +9,13 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 
 public class BoomerangItem extends ThrowableWeaponItem {
 
     public BoomerangItem(Item.Properties properties, Tier tier, BoomerangType boomerangType) {
-        super(properties, tier, boomerangType);
+        super(properties, tier, boomerangType, List.of());
     }
 
     protected Boomerang getThrownWeaponEntity(Level level, LivingEntity owner, ItemStack boomerangStack, boolean isMultishot) {
