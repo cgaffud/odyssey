@@ -1,7 +1,7 @@
 {
   "type": "oddc:recycling",
   "ingredient": {
-    "item": "oddc:heavy_bone_boomerang"
+    "item": "oddc:copper_disc"
   },
   "metalCounts": [
     {

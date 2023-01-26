@@ -1,13 +1,8 @@
 {
   "type": "oddc:recycling",
-  "ingredient": [
-    {
-      "item": "oddc:greatroot_shot_bow"
-    },
-    {
-      "item": "oddc:multishot_greatroot_boomerang"
-    }
-  ],
+  "ingredient": {
+    "item": "oddc:greatroot_shot_bow"
+  },
   "metalCounts": [
     {
       "metal": "copper",

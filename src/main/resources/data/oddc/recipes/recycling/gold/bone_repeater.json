@@ -1,12 +1,12 @@
 {
   "type": "oddc:recycling",
   "ingredient": {
-    "item": "oddc:super_greatroot_boomerang"
+    "item": "oddc:bone_repeater"
   },
   "metalCounts": [
     {
-      "metal": "silver",
-      "count": 18
+      "metal": "gold",
+      "count": 27
     }
   ]
 }
