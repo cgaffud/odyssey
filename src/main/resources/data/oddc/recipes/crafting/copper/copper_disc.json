@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "A A",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "result": {
+    "item": "oddc:copper_disc"
+  }
+}

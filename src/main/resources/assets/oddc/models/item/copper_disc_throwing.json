@@ -1,6 +1,6 @@
 {
   "parent": "oddc:item/boomerang_throwing",
   "textures": {
-    "layer0": "oddc:item/copper_discus"
+    "layer0": "oddc:item/copper_disc"
   }
 }

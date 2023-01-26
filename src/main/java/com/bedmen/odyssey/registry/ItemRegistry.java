@@ -242,7 +242,8 @@ public class ItemRegistry {
     // ## Tier 1
     public static final RegistryObject<Item> WOODEN_BOOMERANG = ITEMS.register("wooden_boomerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.WOOD.getUses()).tab(OdysseyCreativeModeTab.RANGED), ThrowableTypes.WOODEN_BOOMERANG));
 
-    public static final RegistryObject<Item> COPPER_DISCUS = ITEMS.register("copper_discus", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.COPPER.getUses()).tab(OdysseyCreativeModeTab.RANGED), ThrowableTypes.COPPER_DISCUS));
+    public static final RegistryObject<Item> COPPER_DISC = ITEMS.register("copper_disc", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.COPPER.getUses()).tab(OdysseyCreativeModeTab.RANGED), ThrowableTypes.COPPER_DISC));
+    public static final RegistryObject<Item> FLINT_DISC = ITEMS.register("flint_disc", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.COPPER.getUses()).tab(OdysseyCreativeModeTab.RANGED), ThrowableTypes.FLINT_DISC));
     public static final RegistryObject<Item> BONERANG = ITEMS.register("bonerang", () -> new BoomerangItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED), ThrowableTypes.BONERANG));
     public static final RegistryObject<Item> BONE_LONG_BOW = ITEMS.register("bone_long_bow", () -> new AspectBowItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.2f, 20, List.of(), List.of(new AspectInstance(Aspects.PIERCING, 1.0f))));
     public static final RegistryObject<Item> BONE_REPEATER = ITEMS.register("bone_repeater", () -> new AspectBowItem((new Item.Properties()).durability(OdysseyTiers.BONE.getUses()).tab(OdysseyCreativeModeTab.RANGED),1.2f, 16, List.of(new AspectInstance(Aspects.REPEAT)), List.of()));
