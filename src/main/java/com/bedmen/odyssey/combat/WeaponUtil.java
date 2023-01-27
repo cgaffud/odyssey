@@ -271,7 +271,7 @@ public class WeaponUtil {
     }
 
     public static final double THRUST_RANGE = 5.0d;
-    public static final double THRUST_RADIUS = 0.0d;
+    public static final double THRUST_RADIUS = 0.25d;
     public static Collection<LivingEntity> getThrustAttackTargets(Entity attacker, Entity target){
         Vec3 viewVector = attacker.getViewVector(1.0f);
         Vec3 eyePosition = attacker.getEyePosition();

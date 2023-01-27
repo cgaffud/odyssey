@@ -9,6 +9,7 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
+import com.bedmen.odyssey.registry.ParticleTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerBossEvent;
@@ -159,18 +160,18 @@ public class PlayerEvents {
         // Thrust
         if(canThrust){
             for(LivingEntity livingEntity: WeaponUtil.getThrustAttackTargets(player, target)){
-                livingEntity.hurt(DamageSource.playerAttack(player), 3.5f);
+                livingEntity.hurt(DamageSource.playerAttack(player), 1.0f);
             }
             player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.7F);
             if(player.level instanceof ServerLevel serverLevel){
                 Vec3 eyePosition = player.getEyePosition();
                 Vec3 endOfThrustVector = WeaponUtil.getEndOfThrustVector(eyePosition, player.getViewVector(1.0f));
                 Vec3 thrustVector = endOfThrustVector.subtract(eyePosition);
-                for(float f = 0.0f; f <= 1.0f; f += 0.1f){
+                for(float f = 0.1f; f <= 1.0f; f += 0.1f){
                     double d0 = -Mth.sin(player.getYRot() * ((float)Math.PI / 180F));
                     double d1 = Mth.cos(player.getYRot() * ((float)Math.PI / 180F));
                     Vec3 point = eyePosition.add(thrustVector.scale(f));
-                    serverLevel.sendParticles(ParticleTypes.EXPLOSION, point.x, point.y, point.z, 0, d0, 0.0D, d1, 0.0D);
+                    serverLevel.sendParticles(ParticleTypeRegistry.THRUST.get(), point.x, point.y, point.z, 0, d0, 0.0D, d1, 0.0D);
                 }
             }
         }

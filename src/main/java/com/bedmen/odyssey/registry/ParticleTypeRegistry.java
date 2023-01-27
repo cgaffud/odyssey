@@ -19,5 +19,6 @@ public class ParticleTypeRegistry {
     }
 
     public static final RegistryObject<SimpleParticleType> FATAL_HIT = PARTICLE_TYPES.register("fatal_hit", () -> new SimpleParticleType(false));
+    public static final RegistryObject<SimpleParticleType> THRUST = PARTICLE_TYPES.register("thrust", () -> new SimpleParticleType(false));
 
 }

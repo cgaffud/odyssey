@@ -19,6 +19,7 @@ import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.particle.ThrustParticle;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.google.common.collect.ImmutableMap;
@@ -26,6 +27,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.CritParticle;
+import net.minecraft.client.particle.HugeExplosionParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -248,6 +250,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onParticleFactoryRegisterEvent(ParticleFactoryRegisterEvent event){
         Minecraft.getInstance().particleEngine.register(ParticleTypeRegistry.FATAL_HIT.get(), CritParticle.Provider::new);
+        Minecraft.getInstance().particleEngine.register(ParticleTypeRegistry.THRUST.get(), ThrustParticle.Provider::new);
     }
 
     @SubscribeEvent
