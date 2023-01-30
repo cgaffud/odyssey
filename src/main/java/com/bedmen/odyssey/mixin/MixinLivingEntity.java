@@ -36,6 +36,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Mixin(LivingEntity.class)
@@ -47,7 +49,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private boolean hasSlowFall = false;
     private int flightValue = 0;
     private SmackPush smackPush = new SmackPush();
-    private float nextKnockbackAspect = 1.0f;
+    private List<Float> knockbackQueue = new ArrayList<>();
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -256,12 +258,17 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         this.smackPush = smackPush;
     }
 
-    public float getNextKnockbackAspect(){
-        return this.nextKnockbackAspect;
+    public float popKnockbackAspectQueue(){
+        if(this.knockbackQueue.isEmpty()){
+            return 0.0f;
+        }
+        float knockbackAspect = this.knockbackQueue.get(0);
+        this.knockbackQueue.remove(0);
+        return knockbackAspect;
     }
 
-    public void setNextKnockbackAspect(float nextKnockbackAspect){
-        this.nextKnockbackAspect = nextKnockbackAspect;
+    public void pushKnockbackAspectQueue(float knockbackAspect){
+        this.knockbackQueue.add(knockbackAspect);
     }
 
     protected float getDamageAfterMagicAbsorb(DamageSource damageSource, float amount) {

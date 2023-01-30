@@ -10,6 +10,6 @@ public interface OdysseyLivingEntity {
     int getMaxFlight();
     SmackPush getSmackPush();
     void setSmackPush(SmackPush smackPush);
-    float getNextKnockbackAspect();
-    void setNextKnockbackAspect(float nextKnockbackAspect);
+    float popKnockbackAspectQueue();
+    void pushKnockbackAspectQueue(float nextKnockbackAspect);
 }

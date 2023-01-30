@@ -28,7 +28,7 @@ public class AspectInstance {
         this(booleanAspect, 1.0f);
     }
 
-    protected AspectInstance(Aspect aspect, float strength){
+    public AspectInstance(Aspect aspect, float strength){
         this(aspect, strength, AspectTooltipDisplaySetting.ALWAYS, false);
     }
 

@@ -62,34 +62,45 @@ public class AspectUtil {
         return map;
     }
 
+    private static CompoundTag aspectInstanceToCompoundTag(AspectInstance aspectInstance){
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putString(ID_TAG, aspectInstance.aspect.id);
+        compoundTag.putFloat(STRENGTH_TAG, aspectInstance.strength);
+        compoundTag.putString(DISPLAY_TAG, aspectInstance.aspectTooltipDisplaySetting.name());
+        compoundTag.putBoolean(OBFUSCATED_TAG, aspectInstance.obfuscated);
+        return  compoundTag;
+    }
+
+    private static AspectInstance compoundTagToAspectInstance(CompoundTag compoundTag){
+        String id = compoundTag.getString(ID_TAG);
+        Aspect aspect = Aspects.ASPECT_REGISTER.get(id);
+        if(aspect == null) {
+            Odyssey.LOGGER.error("Unknown aspect: "+id);
+            return null;
+        } else {
+            float strength = compoundTag.getFloat(STRENGTH_TAG);
+            String displaySettingName = compoundTag.getString(DISPLAY_TAG);
+            AspectTooltipDisplaySetting aspectTooltipDisplaySetting;
+            if(displaySettingName.isEmpty()){
+                aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.ALWAYS;
+            } else {
+                try{
+                    aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.valueOf(displaySettingName);
+                } catch (IllegalArgumentException illegalArgumentException){
+                    Odyssey.LOGGER.error("Unknown AspectTooltipDisplaySetting: "+displaySettingName);
+                    aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.ALWAYS;
+                }
+            }
+            boolean obfuscated = compoundTag.getBoolean(OBFUSCATED_TAG);
+            return new AspectInstance(aspect, strength, aspectTooltipDisplaySetting, obfuscated);
+        }
+    }
+
+
     private static List<AspectInstance> tagToAspectInstanceList(ListTag listTag){
         return listTag.stream()
                 .filter(tag -> tag instanceof CompoundTag)
-                .map(tag -> {
-                    CompoundTag aspectTag = (CompoundTag)tag;
-                    String id = aspectTag.getString(ID_TAG);
-                    Aspect aspect = Aspects.ASPECT_REGISTER.get(id);
-                    if(aspect == null) {
-                        Odyssey.LOGGER.error("Unknown aspect: "+id);
-                        return null;
-                    } else {
-                        float strength = aspectTag.getFloat(STRENGTH_TAG);
-                        String displaySettingName = aspectTag.getString(DISPLAY_TAG);
-                        AspectTooltipDisplaySetting aspectTooltipDisplaySetting;
-                        if(displaySettingName.isEmpty()){
-                            aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.ALWAYS;
-                        } else {
-                            try{
-                                aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.valueOf(displaySettingName);
-                            } catch (IllegalArgumentException illegalArgumentException){
-                                Odyssey.LOGGER.error("Unknown AspectTooltipDisplaySetting: "+displaySettingName);
-                                aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.ALWAYS;
-                            }
-                        }
-                        boolean obfuscated = aspectTag.getBoolean(OBFUSCATED_TAG);
-                        return new AspectInstance(aspect, strength, aspectTooltipDisplaySetting, obfuscated);
-                    }
-                })
+                .map(tag -> compoundTagToAspectInstance((CompoundTag) tag))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -312,5 +323,23 @@ public class AspectUtil {
     // For seeing if resistant to nether flame
     public static boolean hasFireProtectionOrResistance(LivingEntity livingEntity) {
         return getFloatAspectValueFromArmor(livingEntity, Aspects.FIRE_PROTECTION) > 0 || livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE);
+    }
+
+    // Add to added modifiers
+
+    public static void addModifier(ItemStack itemStack, AspectInstance aspectInstance){
+        ListTag aspectListTag = getAspectListTag(itemStack);
+        Tag oldAspectTag = null;
+        for(Tag tag: aspectListTag){
+            if(tag instanceof CompoundTag compoundTag && compoundTag.getString(ID_TAG).equals(aspectInstance.aspect.id)){
+                oldAspectTag = compoundTag;
+                break;
+            }
+        }
+        if(oldAspectTag != null){
+            aspectListTag.remove(oldAspectTag);
+        }
+        aspectListTag.add(aspectInstanceToCompoundTag(aspectInstance));
+        itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectListTag);
     }
 }

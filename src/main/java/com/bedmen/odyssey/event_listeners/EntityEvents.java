@@ -112,7 +112,7 @@ public class EntityEvents {
 
             // Melee Knockback
             if(hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-                odysseyLivingEntity.setNextKnockbackAspect(AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
+                odysseyLivingEntity.pushKnockbackAspectQueue(AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
             }
 
             // Thorns
@@ -123,7 +123,7 @@ public class EntityEvents {
 
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
-            odysseyLivingEntity.setNextKnockbackAspect(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_KNOCKBACK));
+            odysseyLivingEntity.pushKnockbackAspectQueue(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_KNOCKBACK));
             // Ranged Larceny
             WeaponUtil.tryLarceny(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), odysseyAbstractArrow.getOwner(), hurtLivingEntity);
         }
@@ -343,9 +343,9 @@ public class EntityEvents {
     public static void onLivingKnockBackEvent(final LivingKnockBackEvent event){
         LivingEntity target = event.getEntityLiving();
         if(target instanceof OdysseyLivingEntity odysseyLivingEntity){
-            event.setStrength(event.getOriginalStrength() * (1.0f + odysseyLivingEntity.getNextKnockbackAspect()));
-            odysseyLivingEntity.setNextKnockbackAspect(0.0f);
+            event.setStrength(event.getOriginalStrength() * (1.0f + odysseyLivingEntity.popKnockbackAspectQueue()));
         }
+        System.out.println("og: "+event.getOriginalStrength()+" new: "+event.getStrength());
     }
 
     @SubscribeEvent

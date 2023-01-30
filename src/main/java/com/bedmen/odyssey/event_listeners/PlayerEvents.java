@@ -120,7 +120,7 @@ public class PlayerEvents {
     @SubscribeEvent
     public static void onAttackEntityEvent(final AttackEntityEvent event){
         Player player = event.getPlayer();
-        ItemStack itemStack = player.getMainHandItem();
+        ItemStack mainHandItemStack = player.getMainHandItem();
         Entity target = event.getTarget();
         float attackStrengthScale = player.getAttackStrengthScale(0.5F);
         boolean isFullyCharged = attackStrengthScale > 0.9F;
@@ -139,13 +139,17 @@ public class PlayerEvents {
                 && !hasExtraKnockbackFromSprinting
                 && player.isOnGround()
                 && (player.walkDist - player.walkDistO) < (double)player.getSpeed();
-        boolean canSweep = isStandingStrike && AspectUtil.hasBooleanAspect(itemStack, Aspects.SWEEP);
-        boolean canThrust = isStandingStrike && AspectUtil.hasBooleanAspect(itemStack, Aspects.THRUST);
-        float sweepDamage = 1.0f + AspectUtil.getFloatAspectStrength(itemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
+        boolean canSweep = isStandingStrike && AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.SWEEP);
+        boolean canThrust = isStandingStrike && AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.THRUST);
+        float sweepDamage = 1.0f + AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
+        // Knockback
+        if(hasExtraKnockbackFromSprinting && target instanceof OdysseyLivingEntity odysseyLivingEntity){
+            odysseyLivingEntity.pushKnockbackAspectQueue(AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
+        }
         // Sweep
         if(canSweep){
             // Unchanging variables are needed to use in the below lambda expressions
-            player.level.getEntitiesOfClass(LivingEntity.class, itemStack.getSweepHitBox(player, target)).stream()
+            player.level.getEntitiesOfClass(LivingEntity.class, mainHandItemStack.getSweepHitBox(player, target)).stream()
                     .filter(livingEntity ->
                             livingEntity != player
                                     && livingEntity != target
@@ -176,7 +180,7 @@ public class PlayerEvents {
             }
         }
         // Smack
-        if(isFullyCharged && AspectUtil.hasBooleanAspect(itemStack, Aspects.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
+        if(isFullyCharged && AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
             odysseyLivingEntity.setSmackPush(new SmackPush(attackStrengthScale, player, target));
         }
     }

@@ -9,14 +9,11 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class RegistryEvents {
+@Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class ForgeSetupEvents {
 
-    /**
-     * Initiates spawn eggs
-     */
     @SubscribeEvent
-    public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
-        OdysseySpawnEggItem.initSpawnEggs();
+    public static void onRegisterCommandsEvent(final RegisterCommandsEvent event){
+        ModifyCommand.register(event.getDispatcher());
     }
 }

@@ -16,4 +16,6 @@ public class Aspect {
         this.aspectTooltipFunction = aspectTooltipFunction;
         Aspects.ASPECT_REGISTER.put(id, this);
     }
+
+    
 }
