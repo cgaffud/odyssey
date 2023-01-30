@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AspectHolder implements AspectTooltipAdder {
+public class AspectHolder {
 
     private static final MutableComponent ABILITIES_HEADER = new TranslatableComponent("item.oddc.abilities");
     private static final MutableComponent INNATE_MODIFIERS_HEADER = new TranslatableComponent("item.oddc.innate_modifiers");

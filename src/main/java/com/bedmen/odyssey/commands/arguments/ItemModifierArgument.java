@@ -20,8 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 public class ItemModifierArgument implements ArgumentType<Aspect> {
-    // todo make examples
-    private static final Collection<String> EXAMPLES = Arrays.asList("make examples");
+    private static final Collection<String> EXAMPLES = Arrays.asList("knockback", "smite_damage");
     public static final DynamicCommandExceptionType ERROR_UNKNOWN_MODIFIER = new DynamicCommandExceptionType((object) -> new TranslatableComponent("modifier.unknown", object));
 
     public static ItemModifierArgument modifier() {
@@ -42,8 +41,7 @@ public class ItemModifierArgument implements ArgumentType<Aspect> {
     }
 
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandContext, SuggestionsBuilder suggestionsBuilder) {
-        // todo make suggestions
-        return SharedSuggestionProvider.suggest(new String[]{"Make-Suggestions"}, suggestionsBuilder);
+        return SharedSuggestionProvider.suggest(Aspects.ASPECT_REGISTER.keySet(), suggestionsBuilder);
     }
 
     public Collection<String> getExamples() {

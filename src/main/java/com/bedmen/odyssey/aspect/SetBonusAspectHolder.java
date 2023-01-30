@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 import java.util.Optional;
 
-public class SetBonusAspectHolder implements AspectTooltipAdder {
+public class SetBonusAspectHolder {
     private static final MutableComponent SET_BONUS_ABILITY_HEADER = new TranslatableComponent("item.oddc.set_bonus_abilities");
     private static final ChatFormatting SET_BONUS_COLOR = ChatFormatting.AQUA;
 
