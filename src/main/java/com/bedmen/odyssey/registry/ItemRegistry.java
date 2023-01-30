@@ -185,7 +185,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> COPPER_BAT = ITEMS.register("copper_bat", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.COPPER, MeleeWeaponClass.BAT, 5.5f, List.of(), List.of(new AspectInstance(Aspects.KNOCKBACK, 0.5f))));
     public static final RegistryObject<Item> FLINT_SABRE = ITEMS.register("flint_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.FLINT, MeleeWeaponClass.SABRE, 5f, List.of(), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 1.0f))));
     public static final RegistryObject<Item> FLINT_HATCHET = ITEMS.register("flint_hatchet", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.FLINT, MeleeWeaponClass.HATCHET, 4.5f, List.of(), List.of(new AspectInstance(Aspects.SMITE_DAMAGE, 1.5f))));
-    public static final RegistryObject<Item> FLINT_SPEAR = ITEMS.register("flint_spear", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.FLINT, ThrowableTypes.FLINT_SPEAR));
+    public static final RegistryObject<Item> FLINT_SPEAR = ITEMS.register("flint_spear", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.FLINT, MeleeWeaponClass.SPEAR, ThrowableTypes.FLINT_SPEAR));
 
     public static final RegistryObject<Item> SPIDER_FANG_DAGGER = ITEMS.register("spider_fang_dagger", () -> new AspectMeleeItem(new Item.Properties().rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.STONE, MeleeWeaponClass.DAGGER, 5f, List.of(), List.of(new AspectInstance(Aspects.POISON_DAMAGE, 2))));
     public static final RegistryObject<Item> WEAVER_FANG_DAGGER = ITEMS.register("weaver_fang_dagger", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.STONE, MeleeWeaponClass.DAGGER, 6f, List.of(), List.of(new AspectInstance(Aspects.COBWEB_CHANCE, 0.2f))));
@@ -220,7 +220,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> OBSIDIAN_BAT = ITEMS.register("obsidian_bat", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.OBSIDIAN, MeleeWeaponClass.BAT, 7.5f, List.of(), List.of(new AspectInstance(Aspects.KNOCKBACK, 1.0f))));
     public static final RegistryObject<Item> AMETHYST_SABRE = ITEMS.register("amethyst_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, MeleeWeaponClass.SABRE, 7f, List.of(), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 2.0f))));
     public static final RegistryObject<Item> AMETHYST_HATCHET = ITEMS.register("amethyst_hatchet", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, MeleeWeaponClass.HATCHET, 6f, List.of(), List.of(new AspectInstance(Aspects.SMITE_DAMAGE, 2.0f))));
-    public static final RegistryObject<Item> AMETHYST_SPEAR = ITEMS.register("amethyst_spear", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, ThrowableTypes.AMETHYST_SPEAR));
+    public static final RegistryObject<Item> AMETHYST_SPEAR = ITEMS.register("amethyst_spear", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, MeleeWeaponClass.SPEAR, ThrowableTypes.AMETHYST_SPEAR));
 
     public static final RegistryObject<Item> DIAMOND_MACE = ITEMS.register("diamond_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.DIAMOND, MeleeWeaponClass.MACE, 10f, List.of(), List.of()));
 
@@ -269,7 +269,7 @@ public class ItemRegistry {
 
     // ## Tier 3
 
-    public static final RegistryObject<Item> MARINE_TRIDENT = ITEMS.register("marine_trident", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.MARINE, ThrowableTypes.MARINE_TRIDENT));
+    public static final RegistryObject<Item> MARINE_TRIDENT = ITEMS.register("marine_trident", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.MARINE, MeleeWeaponClass.SPEAR, ThrowableTypes.MARINE_TRIDENT));
 
     // ## Quivers
     public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.RANGED), QuiverItem.QuiverType.RABBIT_HIDE_QUIVER));

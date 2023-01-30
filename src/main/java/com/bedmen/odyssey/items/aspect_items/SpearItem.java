@@ -30,11 +30,11 @@ import java.util.function.Consumer;
 public class SpearItem extends ThrowableWeaponItem {
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
-    public SpearItem(Item.Properties properties, Tier tier, SpearType spearType) {
-        super(properties, tier, spearType, MeleeWeaponClass.SPEAR.aspectInstanceList);
+    public SpearItem(Item.Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, SpearType spearType) {
+        super(properties, tier, spearType, meleeWeaponClass.aspectInstanceList);
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", spearType.thrownDamage, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", MeleeWeaponClass.SPEAR.attackRate-4.0f, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", meleeWeaponClass.attackRate-4.0f, AttributeModifier.Operation.ADDITION));
         this.defaultModifiers = builder.build();
     }
 
