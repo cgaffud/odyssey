@@ -1,7 +1,8 @@
 package com.bedmen.odyssey.client.renderer.entity.layer;
 
 import com.bedmen.odyssey.client.model.QuiverModel;
-import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.PlayerModel;
@@ -18,6 +19,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Optional;
+
 public class QuiverLayer<T extends Player, M extends PlayerModel<T>> extends RenderLayer<T, M> {
     private final QuiverModel<T> quiverModel;
 
@@ -26,19 +29,20 @@ public class QuiverLayer<T extends Player, M extends PlayerModel<T>> extends Ren
         this.quiverModel = new QuiverModel<>(entityModelSet.bakeLayer(QuiverModel.LAYER_LOCATION));
     }
 
-    public void render(PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        HumanoidArm handSide = pLivingEntity.getMainArm();
-        ItemStack itemstack = pLivingEntity.getOffhandItem();
-        Item item = itemstack.getItem();
-        if (item instanceof QuiverItem) {
-            pMatrixStack.pushPose();
+    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, T livingEntity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        HumanoidArm handSide = livingEntity.getMainArm();
+        Optional<ItemStack> optionalQuiver = WeaponUtil.getQuiver(livingEntity);
+        if (optionalQuiver.isPresent()) {
+            ItemStack quiver = optionalQuiver.get();
+            QuiverItem quiverItem = (QuiverItem)quiver.getItem();
+            poseStack.pushPose();
 
-            translateToLeg(handSide, pMatrixStack);
+            translateToLeg(handSide, poseStack);
             this.getParentModel().copyPropertiesTo(this.quiverModel);
-            this.quiverModel.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-            VertexConsumer ivertexbuilder = ItemRenderer.getArmorFoilBuffer(pBuffer, RenderType.armorCutoutNoCull(((QuiverItem) item).getQuiverType().getResourceLocation()), false, itemstack.hasFoil());
-            this.quiverModel.renderToBuffer(pMatrixStack, ivertexbuilder, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-            pMatrixStack.popPose();
+            this.quiverModel.setupAnim(livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            VertexConsumer ivertexbuilder = ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(quiverItem.quiverType.textureResourceLocation), false, quiver.hasFoil());
+            this.quiverModel.renderToBuffer(poseStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            poseStack.popPose();
         }
     }
 

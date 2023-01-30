@@ -202,7 +202,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
             if (rocketFlag) {
                 projectile = new FireworkRocketEntity(level, ammo, livingEntity, livingEntity.getX(), livingEntity.getEyeY() - (double)0.15F, livingEntity.getZ(), true);
             } else {
-                projectile = getArrow(level, livingEntity, crossbow, ammo);
+                projectile = getArrow(level, livingEntity, ammo);
                 if (creativeModeFlag || isMultishotArrow || (crossbow.getOrCreateTag().contains("QuiverFreeAmmo") && crossbow.getOrCreateTag().getBoolean("QuiverFreeAmmo"))) {
                     ((AbstractArrow)projectile).pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
@@ -361,9 +361,9 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
         }
     }
 
-    public static AbstractArrow getArrow(Level level, LivingEntity shooter, ItemStack crossbow, ItemStack ammo) {
+    public static AbstractArrow getArrow(Level level, LivingEntity shooter, ItemStack ammo) {
         AspectArrowItem arrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
-        AbstractArrow abstractArrow = arrowItem.createAbstractOdysseyArrow(level, crossbow, ammo, shooter);
+        AbstractArrow abstractArrow = arrowItem.createArrow(level, ammo, shooter);
         abstractArrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractArrow.setShotFromCrossbow(true);
         return abstractArrow;

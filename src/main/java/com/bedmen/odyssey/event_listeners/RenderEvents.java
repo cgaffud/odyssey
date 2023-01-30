@@ -2,14 +2,12 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
-import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
-import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -18,11 +16,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpyglassItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.FOVModifierEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.model.ForgeModelBakery;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 

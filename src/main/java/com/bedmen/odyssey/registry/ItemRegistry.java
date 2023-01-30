@@ -272,8 +272,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MARINE_TRIDENT = ITEMS.register("marine_trident", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.MARINE, MeleeWeaponClass.SPEAR, ThrowableTypes.MARINE_TRIDENT));
 
     // ## Quivers
-    public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.RANGED), QuiverItem.QuiverType.RABBIT_HIDE_QUIVER));
-    public static final RegistryObject<Item> RABBIT_HIDE_ROCKET_BAG = ITEMS.register("rabbit_hide_rocket_bag", () -> new QuiverItem((new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.RANGED), QuiverItem.QuiverType.RABBIT_HIDE_ROCKET_BAG));
+    public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), QuiverType.RABBIT_HIDE_QUIVER));
+    public static final RegistryObject<Item> RABBIT_HIDE_ROCKET_BAG = ITEMS.register("rabbit_hide_rocket_bag", () -> new QuiverItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), QuiverType.RABBIT_HIDE_ROCKET_BAG));
 
     // ## Arrows
     public static final RegistryObject<Item> SPIDER_FANG_ARROW = ITEMS.register("spider_fang_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.SPIDER_FANG));

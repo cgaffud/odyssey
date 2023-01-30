@@ -83,23 +83,23 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
                     boolean flag1 = player.getAbilities().instabuild || (ammo.getItem() instanceof ArrowItem && ((ArrowItem)ammo.getItem()).isInfinite(ammo, bow, player));
                     if (!level.isClientSide) {
                         AspectArrowItem arrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
-                        OdysseyAbstractArrow odysseyAbstractArrow = arrowItem.createAbstractOdysseyArrow(level, bow, ammo, player);
+                        AbstractArrow abstractArrow = arrowItem.createArrow(level, ammo, player);
 
                         float accuracyMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(bow, Aspects.ACCURACY);
                         if(useTicks >= WeaponUtil.getRangedMaxChargeTicks(bow)){
-                            odysseyAbstractArrow.setCritArrow(true);
+                            abstractArrow.setCritArrow(true);
                         }
 
-                        odysseyAbstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, velocity, 1.0f / accuracyMultiplier);
+                        abstractArrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, velocity, 1.0f / accuracyMultiplier);
 
                         bow.hurtAndBreak(1, player, (player1) -> {
                             player1.broadcastBreakEvent(player.getUsedItemHand());
                         });
                         if (!ammoStack.canPickUp || flag1 || player.getAbilities().instabuild && (ammo.is(Items.SPECTRAL_ARROW) || ammo.is(Items.TIPPED_ARROW))) {
-                            odysseyAbstractArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                            abstractArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
 
-                        level.addFreshEntity(odysseyAbstractArrow);
+                        level.addFreshEntity(abstractArrow);
                     }
 
                     level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.4F + 1.2F) + velocity * 0.5F);

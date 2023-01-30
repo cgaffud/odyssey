@@ -1,11 +1,12 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.combat.QuiverType;
 import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.inventory.RecyclingFurnaceMenu;
 import com.bedmen.odyssey.inventory.StitchingMenu;
-import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -36,14 +37,12 @@ public class ContainerRegistry {
 //    public static final RegistryObject<MenuType<OdysseyRepairContainer>> ANVIL = CONTAINER.register("anvil", () -> new MenuType<OdysseyRepairContainer>(OdysseyRepairContainer::new));
 
     //Quivers
-    public static final RegistryObject<MenuType<QuiverMenu>> ROCKET_BAG_2 = CONTAINER.register("quiver_2", () -> new MenuType<QuiverMenu>(QuiverMenu.QuiverMaker(QuiverItem.QuiverType.RABBIT_HIDE_ROCKET_BAG)));
-    public static final RegistryObject<MenuType<QuiverMenu>> QUIVER_3 = CONTAINER.register("quiver_3", () -> new MenuType<QuiverMenu>(QuiverMenu.QuiverMaker(QuiverItem.QuiverType.RABBIT_HIDE_QUIVER)));
-    public static final RegistryObject<MenuType<QuiverMenu>> QUIVER_5 = CONTAINER.register("quiver_5", () -> new MenuType<QuiverMenu>(QuiverMenu.QuiverMaker(QuiverItem.QuiverType.LEVIATHAN_QUIVER)));
-    public static final Map<QuiverItem.QuiverType, MenuType<QuiverMenu>> QUIVER_MAP = new HashMap<>();
+    public static final RegistryObject<MenuType<QuiverMenu>> ROCKET_BAG_2 = CONTAINER.register("quiver_2", () -> new MenuType<QuiverMenu>(QuiverMenu.QuiverMaker(QuiverType.RABBIT_HIDE_ROCKET_BAG)));
+    public static final RegistryObject<MenuType<QuiverMenu>> QUIVER_3 = CONTAINER.register("quiver_3", () -> new MenuType<QuiverMenu>(QuiverMenu.QuiverMaker(QuiverType.RABBIT_HIDE_QUIVER)));
+    public static final Map<QuiverType, MenuType<QuiverMenu>> QUIVER_MAP = new HashMap<>();
 
     public static void initQuivers(){
-        QUIVER_MAP.put(QuiverItem.QuiverType.RABBIT_HIDE_ROCKET_BAG, ContainerRegistry.ROCKET_BAG_2.get());
-        QUIVER_MAP.put(QuiverItem.QuiverType.RABBIT_HIDE_QUIVER, ContainerRegistry.QUIVER_3.get());
-        QUIVER_MAP.put(QuiverItem.QuiverType.LEVIATHAN_QUIVER, ContainerRegistry.QUIVER_5.get());
+        QUIVER_MAP.put(QuiverType.RABBIT_HIDE_ROCKET_BAG, ContainerRegistry.ROCKET_BAG_2.get());
+        QUIVER_MAP.put(QuiverType.RABBIT_HIDE_QUIVER, ContainerRegistry.QUIVER_3.get());
     }
 }

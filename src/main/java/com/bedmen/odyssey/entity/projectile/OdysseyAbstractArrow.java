@@ -69,7 +69,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     }
 
     public void addAspectStrengthMap(AspectStrengthMap aspectStrengthMap){
-        this.aspectStrengthMap.putAll(aspectStrengthMap);
+        this.aspectStrengthMap = this.aspectStrengthMap.combine(aspectStrengthMap);
         if(this.aspectStrengthMap.containsKey(Aspects.PIERCING)){
             this.updatePiercingValues();
         }

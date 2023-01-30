@@ -3,6 +3,7 @@ package com.bedmen.odyssey.entity.projectile;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.combat.ArrowType;
 import com.bedmen.odyssey.combat.WeaponUtil;
@@ -22,6 +23,8 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
+
+import java.util.Optional;
 
 public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
     public static final String ARROW_TYPE_TAG = "ArrowType";
@@ -81,10 +84,7 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
     }
 
     public void setEnchantmentEffectsFromEntity(LivingEntity shooter, float bowDamageMultiplier) {
-        ItemStack bow = shooter.getItemInHand(ProjectileUtil.getWeaponHoldingHand(shooter, item -> item instanceof AspectBowItem || item instanceof AspectCrossbowItem));
         this.setBaseDamage((bowDamageMultiplier + this.random.nextGaussian() * 0.1D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage * (WeaponUtil.BASE_ARROW_VELOCITY * WeaponUtil.BASE_ARROW_VELOCITY) / (WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES));
-        // Aspects
-        this.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(bow));
     }
 
     protected double getDamage(){

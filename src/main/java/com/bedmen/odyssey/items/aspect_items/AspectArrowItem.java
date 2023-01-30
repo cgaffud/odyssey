@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.aspect.AspectHolder;
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
 import com.bedmen.odyssey.util.StringUtil;
@@ -13,7 +14,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +26,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 public class AspectArrowItem extends ArrowItem implements AspectItem {
     private final ArrowType arrowType;
@@ -38,11 +42,12 @@ public class AspectArrowItem extends ArrowItem implements AspectItem {
         });
     }
 
-    public OdysseyAbstractArrow createAbstractOdysseyArrow(Level world, ItemStack bow, ItemStack ammo, LivingEntity livingEntity) {
-        OdysseyArrow odysseyArrow = new OdysseyArrow(world, livingEntity, arrowType);
+    public AbstractArrow createArrow(Level level, ItemStack ammo, LivingEntity shooter) {
+        OdysseyArrow odysseyArrow = new OdysseyArrow(level, shooter, arrowType);
 
-        odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(bow));
         odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(ammo));
+        WeaponUtil.getProjectileWeapon(shooter).ifPresent(itemStack -> odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(itemStack)));
+        WeaponUtil.getQuiver(shooter).ifPresent(itemStack -> odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(itemStack)));
 
         return odysseyArrow;
     }

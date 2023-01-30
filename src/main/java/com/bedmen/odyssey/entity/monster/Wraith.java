@@ -145,9 +145,9 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
 
     }
 
-    protected AbstractArrow getOdysseyArrow(ItemStack bow, ItemStack ammo, float bowDamageMultiplier) {
+    protected AbstractArrow getOdysseyArrow(ItemStack ammo, float bowDamageMultiplier) {
         AspectArrowItem aspectArrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
-        AbstractArrow abstractarrow = aspectArrowItem.createAbstractOdysseyArrow(this.level, bow, ammo, this);
+        AbstractArrow abstractarrow = aspectArrowItem.createArrow(this.level, ammo, this);
         abstractarrow.setEnchantmentEffectsFromEntity(this, bowDamageMultiplier);
         return abstractarrow;
     }
@@ -156,7 +156,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     public void performRangedAttack(LivingEntity target, float bowDamageMultiplier) {
         ItemStack bow = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem));
         ItemStack ammoStack = this.getProjectile(bow);
-        AbstractArrow abstractarrow = this.getOdysseyArrow(bow, ammoStack, bowDamageMultiplier);
+        AbstractArrow abstractarrow = this.getOdysseyArrow(ammoStack, bowDamageMultiplier);
         Item item = bow.getItem();
         if (item instanceof BowItem  bowItem)
             abstractarrow = bowItem.customArrow(abstractarrow);
