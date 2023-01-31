@@ -52,7 +52,7 @@ public class ModifyCommand {
                 if (!itemstack.isEmpty()) {
                     AspectInstance aspectInstance = new AspectInstance(aspect, strength);
                     aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
-                    AspectUtil.addModifier(itemstack, aspectInstance);
+                    AspectUtil.replaceModifier(itemstack, aspectInstance);
                     ++numSuccess;
                 } else if (entityCollection.size() == 1) {
                     throw ERROR_NO_ITEM.create(livingentity.getName().getString());

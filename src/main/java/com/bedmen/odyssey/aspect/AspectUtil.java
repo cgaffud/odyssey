@@ -41,7 +41,7 @@ public class AspectUtil {
     private static final List<EquipmentSlot> ARMOR_EQUIPMENT_SLOT_LIST = Arrays.stream(EquipmentSlot.values()).filter(equipmentSlot -> equipmentSlot.getType() == EquipmentSlot.Type.ARMOR).collect(Collectors.toList());
     private static final MutableComponent OBFUSCATED_TOOLTIP = new TextComponent("AAAAAAAAAA").withStyle(ChatFormatting.OBFUSCATED).withStyle(ChatFormatting.DARK_RED);
 
-    private static ListTag getAspectListTag(ItemStack itemStack) {
+    private static ListTag getAddedModifierListTag(ItemStack itemStack) {
         CompoundTag compoundTag = itemStack.getTag();
         return compoundTag != null ? compoundTag.getList(ADDED_MODIFIERS_TAG, Tag.TAG_COMPOUND) : new ListTag();
     }
@@ -106,11 +106,7 @@ public class AspectUtil {
     }
 
     private static AspectStrengthMap getAddedModifierMap(ItemStack itemStack){
-        return tagToMap(getAspectListTag(itemStack));
-    }
-
-    private static List<AspectInstance> getAspectInstanceList(ItemStack itemStack){
-        return tagToAspectInstanceList(getAspectListTag(itemStack));
+        return tagToMap(getAddedModifierListTag(itemStack));
     }
 
     private static float getTotalStrengthForFunctionFromMap(Map<Aspect, Float> map, Function<Aspect, Float> strengthFunction){
@@ -183,12 +179,21 @@ public class AspectUtil {
 
     // Get AspectStrengthMap
 
+    public static List<AspectInstance> getAddedModifiersAsAspectInstanceList(ItemStack itemStack){
+        return tagToAspectInstanceList(getAddedModifierListTag(itemStack));
+    }
+
     public static AspectStrengthMap getAspectStrengthMap(ItemStack itemStack){
         AspectStrengthMap addedModifierMap = getAddedModifierMap(itemStack);
         if(itemStack.getItem() instanceof AspectItem aspectItem){
             return addedModifierMap.combine(aspectItem.getAspectHolder().allAspectMap);
         }
         return addedModifierMap;
+    }
+
+    public static boolean hasAddedModifiers(ItemStack itemStack){
+        AspectStrengthMap addedModifierMap = getAddedModifierMap(itemStack);
+        return !addedModifierMap.isEmpty();
     }
 
     // Get aspect strength from single itemStack
@@ -272,11 +277,11 @@ public class AspectUtil {
     // Tooltips
 
     public static void addAddedModifierTooltip(ItemStack itemStack, List<Component> tooltip, TooltipFlag tooltipFlag, Optional<Level> optionalLevel){
-        List<AspectInstance> aspectInstanceList = getAspectInstanceList(itemStack);
+        List<AspectInstance> addedModifiers = getAddedModifiersAsAspectInstanceList(itemStack);
         Optional<MutableComponent> optionalHeader = tooltipFlag.isAdvanced() ? Optional.of(ADDED_MODIFIER_HEADER) : Optional.empty();
         // The isAdvanced flag for getTooltip is for filtering aspectInstances based on their display properties
         // Here we want there to be a header or not based on the isAdvanced flag
-        tooltip.addAll(getTooltip(aspectInstanceList, tooltipFlag.isAdvanced(), optionalHeader, ChatFormatting.GRAY, optionalLevel));
+        tooltip.addAll(getTooltip(addedModifiers, tooltipFlag.isAdvanced(), optionalHeader, ChatFormatting.GRAY, optionalLevel));
     }
 
     public static List<Component> getTooltip(List<AspectInstance> aspectInstanceList, boolean isAdvanced, Optional<MutableComponent> optionalHeader, ChatFormatting chatFormatting, Optional<Level> optionalLevel){
@@ -325,24 +330,32 @@ public class AspectUtil {
         return getFloatAspectValueFromArmor(livingEntity, Aspects.FIRE_PROTECTION) > 0 || livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE);
     }
 
-    // Add to added modifiers
+    // Add/Remove added modifiers
 
-    public static void addModifier(ItemStack itemStack, AspectInstance aspectInstance){
-        ListTag aspectListTag = getAspectListTag(itemStack);
+    // Replaces added modifier with same aspect as aspectInstance with aspectInstance,
+    // or removes the modifier altogether if aspectInstance.strength is 0
+    public static void replaceModifier(ItemStack itemStack, AspectInstance aspectInstance){
+        removeAddedModifier(itemStack, aspectInstance.aspect);
+        // Just removes old modifier if the strength is set to 0
+        if(aspectInstance.strength > 0.0f){
+            ListTag aspectListTag = getAddedModifierListTag(itemStack);
+            aspectListTag.add(aspectInstanceToCompoundTag(aspectInstance));
+            itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectListTag);
+        }
+    }
+
+    public static void removeAddedModifier(ItemStack itemStack, Aspect aspect){
+        ListTag aspectListTag = getAddedModifierListTag(itemStack);
         Tag oldAspectTag = null;
         for(Tag tag: aspectListTag){
-            if(tag instanceof CompoundTag compoundTag && compoundTag.getString(ID_TAG).equals(aspectInstance.aspect.id)){
+            if(tag instanceof CompoundTag compoundTag && compoundTag.getString(ID_TAG).equals(aspect.id)){
                 oldAspectTag = compoundTag;
                 break;
             }
         }
         if(oldAspectTag != null){
             aspectListTag.remove(oldAspectTag);
+            itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectListTag);
         }
-        // Just removes old modifier if the strength is set to 0
-        if(aspectInstance.strength > 0.0f){
-            aspectListTag.add(aspectInstanceToCompoundTag(aspectInstance));
-        }
-        itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectListTag);
     }
 }

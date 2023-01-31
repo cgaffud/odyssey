@@ -1,103 +1,110 @@
 package com.bedmen.odyssey.inventory;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
+import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
+import com.bedmen.odyssey.inventory.slot.BetterResultContainer;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ContainerRegistry;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 
 public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
+    public static  final int CONTAINER_DATA_SIZE = 1;
     public static final int INPUT_SLOT = 0;
-    public static final int ADDITIONAL_SLOT = 1;
+    public static final int TABLET_SLOT = 1;
     public static final int RESULT_SLOT = 2;
     private static final int INV_SLOT_START = 3;
     private static final int INV_SLOT_END = 30;
     private static final int USE_ROW_SLOT_END = 39;
-    private final Container resultSlots = new ResultContainer();
-    final Container repairSlots = new SimpleContainer(2) {
+    private final BetterResultContainer resultContainer = new BetterResultContainer();
+    final Container inputContainer = new SimpleContainer(2) {
         public void setChanged() {
             super.setChanged();
             ArcaneGrindstoneMenu.this.slotsChanged(this);
         }
+
+        public void setItem(int index, ItemStack itemStack) {
+            super.setItem(index, itemStack);
+            if(index == INPUT_SLOT){
+                ArcaneGrindstoneMenu.this.setCurrentPage(0);
+            }
+        }
     };
     private final ContainerLevelAccess access;
+    // stores what modifier we are interested in removing
+    private final ContainerData containerData;
 
     public ArcaneGrindstoneMenu(int id, Inventory inventory) {
-        this(id, inventory, ContainerLevelAccess.NULL);
+        this(id, inventory, new SimpleContainerData(CONTAINER_DATA_SIZE), ContainerLevelAccess.NULL);
     }
 
-    public ArcaneGrindstoneMenu(int id, Inventory inventory, final ContainerLevelAccess containerLevelAccess) {
+    public ArcaneGrindstoneMenu(int id, Inventory inventory, ContainerData containerData, final ContainerLevelAccess containerLevelAccess) {
         super(ContainerRegistry.ARCANE_GRINDSTONE.get(), id);
+        checkContainerDataCount(containerData, CONTAINER_DATA_SIZE);
+        this.containerData = containerData;
+        this.addDataSlots(containerData);
         this.access = containerLevelAccess;
-        this.addSlot(new Slot(this.repairSlots, INPUT_SLOT, 49, 19) {
+        this.addSlot(new Slot(this.inputContainer, INPUT_SLOT, 35, 19) {
             public boolean mayPlace(ItemStack itemStack) {
-                return itemStack.isDamageableItem() || itemStack.is(Items.ENCHANTED_BOOK) || itemStack.isEnchanted();
+                return AspectUtil.hasAddedModifiers(itemStack);
             }
         });
-        this.addSlot(new Slot(this.repairSlots, ADDITIONAL_SLOT, 49, 40) {
+        this.addSlot(new Slot(this.inputContainer, TABLET_SLOT, 35, 40) {
             public boolean mayPlace(ItemStack itemStack) {
-                return itemStack.isDamageableItem() || itemStack.is(Items.ENCHANTED_BOOK) || itemStack.isEnchanted();
+                return false;
             }
         });
-        this.addSlot(new Slot(this.resultSlots, RESULT_SLOT, 129, 34) {
+        this.addSlot(new Slot(this.resultContainer, RESULT_SLOT, 134, 29) {
             public boolean mayPlace(ItemStack itemStack) {
                 return false;
             }
 
             public void onTake(Player player, ItemStack itemStack) {
                 containerLevelAccess.execute((level, blockPos) -> {
-                    if (level instanceof ServerLevel) {
-                        ExperienceOrb.award((ServerLevel)level, Vec3.atCenterOf(blockPos), this.getExperienceAmount(level));
-                    }
+//                    if (level instanceof ServerLevel) {
+//                        ExperienceOrb.award((ServerLevel)level, Vec3.atCenterOf(blockPos), this.getExperienceAmount(level));
+//                    }
 
                     level.levelEvent(1042, blockPos, 0);
                 });
-                ArcaneGrindstoneMenu.this.repairSlots.setItem(INPUT_SLOT, ItemStack.EMPTY);
-                ArcaneGrindstoneMenu.this.repairSlots.setItem(ADDITIONAL_SLOT, ItemStack.EMPTY);
+                ArcaneGrindstoneMenu.this.inputContainer.setItem(INPUT_SLOT, ItemStack.EMPTY);
+                ArcaneGrindstoneMenu.this.inputContainer.setItem(TABLET_SLOT, ItemStack.EMPTY);
             }
 
-            private int getExperienceAmount(Level level) {
-                int l = 0;
-                l += this.getExperienceFromItem(ArcaneGrindstoneMenu.this.repairSlots.getItem(INPUT_SLOT));
-                l += this.getExperienceFromItem(ArcaneGrindstoneMenu.this.repairSlots.getItem(ADDITIONAL_SLOT));
-                if (l > 0) {
-                    int i1 = (int)Math.ceil((double)l / 2.0D);
-                    return i1 + level.random.nextInt(i1);
-                } else {
-                    return 0;
-                }
-            }
+//            private int getExperienceAmount(Level level) {
+//                int l = 0;
+//                l += this.getExperienceFromItem(ArcaneGrindstoneMenu.this.repairSlots.getItem(INPUT_SLOT));
+//                l += this.getExperienceFromItem(ArcaneGrindstoneMenu.this.repairSlots.getItem(ADDITIONAL_SLOT));
+//                if (l > 0) {
+//                    int i1 = (int)Math.ceil((double)l / 2.0D);
+//                    return i1 + level.random.nextInt(i1);
+//                } else {
+//                    return 0;
+//                }
+//            }
 
-            private int getExperienceFromItem(ItemStack itemStack) {
-                int l = 0;
-                Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
-
-                for(Entry<Enchantment, Integer> entry : map.entrySet()) {
-                    Enchantment enchantment = entry.getKey();
-                    Integer integer = entry.getValue();
-                    if (!enchantment.isCurse()) {
-                        l += enchantment.getMinCost(integer);
-                    }
-                }
-
-                return l;
-            }
+//            private int getExperienceFromItem(ItemStack itemStack) {
+//                int l = 0;
+//                Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
+//
+//                for(Entry<Enchantment, Integer> entry : map.entrySet()) {
+//                    Enchantment enchantment = entry.getKey();
+//                    Integer integer = entry.getValue();
+//                    if (!enchantment.isCurse()) {
+//                        l += enchantment.getMinCost(integer);
+//                    }
+//                }
+//
+//                return l;
+//            }
         });
 
         for(int i = 0; i < 3; ++i) {
@@ -114,113 +121,29 @@ public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
 
     public void slotsChanged(Container container) {
         super.slotsChanged(container);
-        if (container == this.repairSlots) {
+        if (container == this.inputContainer) {
             this.createResult();
         }
-
     }
 
     private void createResult() {
-        ItemStack itemstack = this.repairSlots.getItem(INPUT_SLOT);
-        ItemStack itemstack1 = this.repairSlots.getItem(ADDITIONAL_SLOT);
-        boolean flag = !itemstack.isEmpty() || !itemstack1.isEmpty();
-        boolean flag1 = !itemstack.isEmpty() && !itemstack1.isEmpty();
-        if (!flag) {
-            this.resultSlots.setItem(INPUT_SLOT, ItemStack.EMPTY);
+        ItemStack itemStack = this.inputContainer.getItem(INPUT_SLOT);
+        ItemStack tablet = this.inputContainer.getItem(TABLET_SLOT);
+        ItemStack resultStack = itemStack.copy();
+        Optional<Aspect> optionalAspect = this.getSelectedAddedModifierAspect();
+        if(optionalAspect.isPresent()){
+            AspectUtil.removeAddedModifier(resultStack, optionalAspect.get());
+            this.resultContainer.setItem(resultStack);
         } else {
-            boolean flag2 = !itemstack.isEmpty() && !itemstack.is(Items.ENCHANTED_BOOK) && !itemstack.isEnchanted() || !itemstack1.isEmpty() && !itemstack1.is(Items.ENCHANTED_BOOK) && !itemstack1.isEnchanted();
-            if (itemstack.getCount() > 1 || itemstack1.getCount() > 1 || !flag1 && flag2) {
-                this.resultSlots.setItem(INPUT_SLOT, ItemStack.EMPTY);
-                this.broadcastChanges();
-                return;
-            }
-
-            int j = 1;
-            int i;
-            ItemStack itemstack2;
-            if (flag1) {
-                if (!itemstack.is(itemstack1.getItem())) {
-                    this.resultSlots.setItem(INPUT_SLOT, ItemStack.EMPTY);
-                    this.broadcastChanges();
-                    return;
-                }
-
-                Item item = itemstack.getItem();
-                int k = itemstack.getMaxDamage() - itemstack.getDamageValue();
-                int l = itemstack.getMaxDamage() - itemstack1.getDamageValue();
-                int i1 = k + l + itemstack.getMaxDamage() * 5 / 100;
-                i = Math.max(itemstack.getMaxDamage() - i1, 0);
-                itemstack2 = this.mergeEnchants(itemstack, itemstack1);
-                if (!itemstack2.isRepairable()) i = itemstack.getDamageValue();
-                if (!itemstack2.isDamageableItem() || !itemstack2.isRepairable()) {
-                    if (!ItemStack.matches(itemstack, itemstack1)) {
-                        this.resultSlots.setItem(INPUT_SLOT, ItemStack.EMPTY);
-                        this.broadcastChanges();
-                        return;
-                    }
-
-                    j = 2;
-                }
-            } else {
-                boolean flag3 = !itemstack.isEmpty();
-                i = flag3 ? itemstack.getDamageValue() : itemstack1.getDamageValue();
-                itemstack2 = flag3 ? itemstack : itemstack1;
-            }
-
-            this.resultSlots.setItem(INPUT_SLOT, this.removeNonCurses(itemstack2, i, j));
+            this.resultContainer.setItem(ItemStack.EMPTY);
         }
-
         this.broadcastChanges();
-    }
-
-    private ItemStack mergeEnchants(ItemStack itemStack1, ItemStack itemStack2) {
-        ItemStack itemstack = itemStack1.copy();
-        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack2);
-
-        for(Entry<Enchantment, Integer> entry : map.entrySet()) {
-            Enchantment enchantment = entry.getKey();
-            if (!enchantment.isCurse() || EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemstack) == 0) {
-                itemstack.enchant(enchantment, entry.getValue());
-            }
-        }
-
-        return itemstack;
-    }
-
-    private ItemStack removeNonCurses(ItemStack itemStack, int damage, int count) {
-        ItemStack itemstack = itemStack.copy();
-        itemstack.removeTagKey("Enchantments");
-        itemstack.removeTagKey("StoredEnchantments");
-        if (damage > 0) {
-            itemstack.setDamageValue(damage);
-        } else {
-            itemstack.removeTagKey("Damage");
-        }
-
-        itemstack.setCount(count);
-        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack).entrySet().stream().filter((enchantmentIntegerEntry) -> {
-            return enchantmentIntegerEntry.getKey().isCurse();
-        }).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-        EnchantmentHelper.setEnchantments(map, itemstack);
-        itemstack.setRepairCost(0);
-        if (itemstack.is(Items.ENCHANTED_BOOK) && map.size() == 0) {
-            itemstack = new ItemStack(Items.BOOK);
-            if (itemStack.hasCustomHoverName()) {
-                itemstack.setHoverName(itemStack.getHoverName());
-            }
-        }
-
-        for(int i = 0; i < map.size(); ++i) {
-            itemstack.setRepairCost(AnvilMenu.calculateIncreasedRepairCost(itemstack.getBaseRepairCost()));
-        }
-
-        return itemstack;
     }
 
     public void removed(Player player) {
         super.removed(player);
         this.access.execute((level, blockPos) -> {
-            this.clearContainer(player, this.repairSlots);
+            this.clearContainer(player, this.inputContainer);
         });
     }
 
@@ -234,15 +157,15 @@ public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            ItemStack itemstack2 = this.repairSlots.getItem(INPUT_SLOT);
-            ItemStack itemstack3 = this.repairSlots.getItem(ADDITIONAL_SLOT);
+            ItemStack itemstack2 = this.inputContainer.getItem(INPUT_SLOT);
+            ItemStack itemstack3 = this.inputContainer.getItem(TABLET_SLOT);
             if (slotID == RESULT_SLOT) {
                 if (!this.moveItemStackTo(itemstack1, INV_SLOT_START, USE_ROW_SLOT_END, true)) {
                     return ItemStack.EMPTY;
                 }
 
                 slot.onQuickCraft(itemstack1, itemstack);
-            } else if (slotID != INPUT_SLOT && slotID != ADDITIONAL_SLOT) {
+            } else if (slotID != INPUT_SLOT && slotID != TABLET_SLOT) {
                 if (!itemstack2.isEmpty() && !itemstack3.isEmpty()) {
                     if (slotID >= INV_SLOT_START && slotID < INV_SLOT_END) {
                         if (!this.moveItemStackTo(itemstack1, INV_SLOT_END, USE_ROW_SLOT_END, false)) {
@@ -272,5 +195,54 @@ public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
         }
 
         return itemstack;
+    }
+
+    public int getNumberOfAddedModifiers(){
+        ItemStack itemStack = this.inputContainer.getItem(INPUT_SLOT);
+        return itemStack.isEmpty() ? 0 : AspectUtil.getAddedModifiersAsAspectInstanceList(itemStack).size();
+    }
+
+    public int getCurrentPage(){
+        return this.containerData.get(0);
+    }
+
+    public void setCurrentPage(int i){
+        this.containerData.set(0, i);
+        this.createResult();
+    }
+
+    public void movePageBackward(){
+        int currentPage = this.getCurrentPage();
+        if(!this.onFirstPage()){
+            this.setCurrentPage(currentPage-1);
+        }
+    }
+
+    public void movePageForward(){
+        int currentPage = this.getCurrentPage();
+        if(!this.onLastPage()){
+            this.setCurrentPage(currentPage+1);
+        }
+    }
+
+    public boolean onFirstPage(){
+        return this.getCurrentPage() <= 0;
+    }
+
+    public boolean onLastPage(){
+        return this.getCurrentPage() >= this.getNumberOfAddedModifiers() - 1;
+    }
+
+    public Optional<Aspect> getSelectedAddedModifierAspect(){
+        ItemStack itemStack = this.inputContainer.getItem(INPUT_SLOT);
+        List<AspectInstance> aspectInstanceList = AspectUtil.getAddedModifiersAsAspectInstanceList(itemStack);
+        if(aspectInstanceList.isEmpty() || this.getCurrentPage() < 0 || this.getCurrentPage() >= aspectInstanceList.size()){
+            return Optional.empty();
+        }
+        return Optional.of(aspectInstanceList.get(this.getCurrentPage()).aspect);
+    }
+
+    public boolean showBigRedX(){
+        return !this.inputContainer.getItem(INPUT_SLOT).isEmpty() && this.resultContainer.getItem().isEmpty();
     }
 }

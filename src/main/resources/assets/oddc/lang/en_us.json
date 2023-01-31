@@ -514,5 +514,6 @@
   "commands.modify.success.single": "Applied modifier %s to %s's item",
   "commands.modify.success.multiple": "Applied modifier %s to %s entities",
   "modifier.unknown": "Unknown modifier: %s",
-  "container.oddc.modifier_removal": "Modifier Removal"
+  "container.oddc.modifier_removal": "Modifier Removal",
+  "container.oddc.remove_modifier": "Remove %s"
 }

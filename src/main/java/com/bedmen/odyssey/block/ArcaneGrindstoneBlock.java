@@ -14,6 +14,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.GrindstoneMenu;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -159,7 +160,7 @@ public class ArcaneGrindstoneBlock extends FaceAttachedHorizontalDirectionalBloc
     }
 
     public MenuProvider getMenuProvider(BlockState blockState, Level level, BlockPos blockPos) {
-        return new SimpleMenuProvider((id, inventory, player) -> new ArcaneGrindstoneMenu(id, inventory, ContainerLevelAccess.create(level, blockPos)), CONTAINER_TITLE);
+        return new SimpleMenuProvider((id, inventory, player) -> new ArcaneGrindstoneMenu(id, inventory, new SimpleContainerData(ArcaneGrindstoneMenu.CONTAINER_DATA_SIZE), ContainerLevelAccess.create(level, blockPos)), CONTAINER_TITLE);
     }
 
     public BlockState rotate(BlockState blockState, Rotation rotation) {
