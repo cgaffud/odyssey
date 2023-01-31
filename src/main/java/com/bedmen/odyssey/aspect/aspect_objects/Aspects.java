@@ -23,38 +23,38 @@ public class Aspects {
     public static final TargetConditionalAspect DAMAGE_ON_ARTHROPOD = new TargetConditionalAspect("damage_on_arthropod", livingEntity -> livingEntity.getMobType() == MobType.ARTHROPOD);
     public static final TargetConditionalAspect SMITE_DAMAGE = new TargetConditionalAspect("smite_damage", livingEntity -> livingEntity.getMobType() == MobType.UNDEAD);
     public static final TargetConditionalAspect HYDRO_DAMAGE = new TargetConditionalAspect("hydro_damage", livingEntity -> livingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
-    public static final UnitAspect KNOCKBACK = new UnitAspect("knockback");
-    public static final FloatAspect FATAL_HIT = new FloatAspect("fatal_hit");
-    public static final UnitAspect ADDITIONAL_SWEEP_DAMAGE = new UnitAspect("additional_sweep_damage");
-    public static final IntegerAspect POISON_DAMAGE = new IntegerAspect("poison_damage");
-    public static final PercentageAspect COBWEB_CHANCE = new PercentageAspect("cobweb_chance");
+    public static final FloatAspect KNOCKBACK = new FloatAspect("knockback", AspectTooltipFunctions.PERCENTAGE_ADDITION);
+    public static final FloatAspect FATAL_HIT = new FloatAspect("fatal_hit", AspectTooltipFunctions.HP_THRESHHOLD);
+    public static final FloatAspect ADDITIONAL_SWEEP_DAMAGE = new FloatAspect("additional_sweep_damage", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final IntegerAspect POISON_DAMAGE = new IntegerAspect("poison_damage", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final FloatAspect COBWEB_CHANCE = new FloatAspect("cobweb_chance", AspectTooltipFunctions.PERCENTAGE_DELCARATION);
     public static final EnvironmentConditionalAspect SOLAR_STRENGTH = new EnvironmentConditionalAspect("solar_strength", Aspects::getSunBoost);
     public static final EnvironmentConditionalAspect LUNAR_STRENGTH = new EnvironmentConditionalAspect("lunar_strength", Aspects::getMoonBoost);
     public static final EnvironmentConditionalAspect BOTANICAL_STRENGTH = new EnvironmentConditionalAspect("botanical_strength", Aspects::getHotHumidBoost);
     public static final EnvironmentConditionalAspect SCORCHED_STRENGTH = new EnvironmentConditionalAspect("scorched_strength", Aspects::getHotDryBoost);
     public static final EnvironmentConditionalAspect WINTERY_STRENGTH = new EnvironmentConditionalAspect("wintery_strength", Aspects::getColdBoost);
     public static final EnvironmentConditionalAspect VOID_STRENGTH = new EnvironmentConditionalAspect("void_strength", Aspects::getBoostFromVoid);
-    public static final IntegerAspect LOOTING_LUCK = new IntegerAspect("looting_luck");
-    public static final PercentageAspect LARCENY_CHANCE = new PercentageAspect("larceny_chance");
+    public static final IntegerAspect LOOTING_LUCK = new IntegerAspect("looting_luck", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final FloatAspect LARCENY_CHANCE = new FloatAspect("larceny_chance", AspectTooltipFunctions.PERCENTAGE_DELCARATION);
 
     // Ranged
 
     // Shooting
-    public static final UnitAspect ACCURACY = new UnitAspect("accuracy");
-    public static final UnitAspect MAX_CHARGE_TIME = new UnitAspect("max_charge_time");
+    public static final FloatAspect ACCURACY = new FloatAspect("accuracy", AspectTooltipFunctions.PERCENTAGE_ADDITION);
+    public static final FloatAspect MAX_CHARGE_TIME = new FloatAspect("max_charge_time", AspectTooltipFunctions.PERCENTAGE_ADDITION);
     public static final MultishotAspect MULTISHOT = new MultishotAspect("multishot");
 
     // Throwing
-    public static final FloatAspect LOYALTY = new FloatAspect("loyalty");
-    public static final UnitAspect VELOCITY = new UnitAspect("velocity");
+    public static final FloatAspect LOYALTY = new FloatAspect("loyalty", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final FloatAspect VELOCITY = new FloatAspect("velocity", AspectTooltipFunctions.PERCENTAGE_ADDITION);
 
     // Projectile
-    public static final FloatAspect PIERCING = new FloatAspect("piercing");
-    public static final IntegerAspect PROJECTILE_LOOTING_LUCK = new IntegerAspect("projectile_looting_luck");
-    public static final IntegerAspect PROJECTILE_POISON_DAMAGE = new IntegerAspect("projectile_poison_damage");
-    public static final PercentageAspect PROJECTILE_COBWEB_CHANCE = new PercentageAspect("projectile_cobweb_chance");
-    public static final PercentageAspect PROJECTILE_LARCENY_CHANCE = new PercentageAspect("projectile_larceny_chance");
-    public static final UnitAspect PROJECTILE_KNOCKBACK = new UnitAspect("projectile_knockback");
+    public static final FloatAspect PIERCING = new FloatAspect("piercing", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final IntegerAspect PROJECTILE_LOOTING_LUCK = new IntegerAspect("projectile_looting_luck", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final IntegerAspect PROJECTILE_POISON_DAMAGE = new IntegerAspect("projectile_poison_damage", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final FloatAspect PROJECTILE_COBWEB_CHANCE = new FloatAspect("projectile_cobweb_chance", AspectTooltipFunctions.PERCENTAGE_DELCARATION);
+    public static final FloatAspect PROJECTILE_LARCENY_CHANCE = new FloatAspect("projectile_larceny_chance", AspectTooltipFunctions.PERCENTAGE_DELCARATION);
+    public static final FloatAspect PROJECTILE_KNOCKBACK = new FloatAspect("projectile_knockback", AspectTooltipFunctions.PERCENTAGE_ADDITION);
     public static final BooleanAspect HYDRODYNAMIC = new BooleanAspect("hydrodynamic");
 
     // Armor
@@ -62,24 +62,24 @@ public class Aspects {
     public static final DamageSourcePredicateAspect ICE_PROTECTION = new DamageSourcePredicateAspect("ice_protection", damageSource -> damageSource == DamageSource.FREEZE);
     public static final DamageSourcePredicateAspect FIRE_PROTECTION = new DamageSourcePredicateAspect("fire_protection", DamageSource::isFire);
     public static final DamageSourcePredicateAspect BLAST_PROTECTION = new DamageSourcePredicateAspect("blast_protection", DamageSource::isExplosion);
-    public static final FloatAspect RESPIRATION = new FloatAspect("respiration");
+    public static final FloatAspect RESPIRATION = new FloatAspect("respiration", AspectTooltipFunctions.PERCENTAGE_ADDITION);
     public static final BooleanAspect SNOWSHOE = new BooleanAspect("snowshoe");
-    public static final IntegerAspect FREEZE_IMMUNITY = new IntegerAspect("freeze_immunity");
-    public static final FloatAspect THORNS = new FloatAspect("thorns");
+    public static final IntegerAspect FREEZE_IMMUNITY = new IntegerAspect("freeze_immunity", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final FloatAspect THORNS = new FloatAspect("thorns", AspectTooltipFunctions.NUMBER_ADDITION);
 
     // Shields
     public static final ShieldDamageBlockAspect EXPLOSION_DAMAGE_BLOCK = new ShieldDamageBlockAspect("explosion_damage_block", DamageSource::isExplosion);
-    public static final FloatAspect IMPENETRABILITY = new FloatAspect("impenetrability");
-    public static final UnitAspect RECOVERY_SPEED = new UnitAspect("recovery_speed");
+    public static final FloatAspect IMPENETRABILITY = new FloatAspect("impenetrability", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final FloatAspect RECOVERY_SPEED = new FloatAspect("recovery_speed", AspectTooltipFunctions.PERCENTAGE_ADDITION);
 
     // Tools
-    public static final IntegerAspect FORTUNE = new IntegerAspect("fortune");
+    public static final IntegerAspect FORTUNE = new IntegerAspect("fortune", AspectTooltipFunctions.NUMBER_ADDITION);
     public static final BooleanAspect AQUA_AFFINITY = new BooleanAspect("aqua_affinity");
 
     // Attribute
-    public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
-    public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
-    public static final AttributeAspect SWIM_SPEED = new AttributeAspect("swim_speed", ForgeMod.SWIM_SPEED::get, AttributeModifier.Operation.ADDITION);
+    public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", AspectTooltipFunctions.PERCENTAGE_ADDITION, () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
+    public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", AspectTooltipFunctions.NUMBER_ADDITION, () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
+    public static final AttributeAspect SWIM_SPEED = new AttributeAspect("swim_speed", AspectTooltipFunctions.PERCENTAGE_ADDITION, ForgeMod.SWIM_SPEED::get, AttributeModifier.Operation.ADDITION);
 
     // Melee Abilities
     public static final BooleanAspect SHIELD_BASH = new BooleanAspect("shield_bash");
@@ -97,19 +97,19 @@ public class Aspects {
     public static final BooleanAspect PIGLIN_NEUTRAL = new BooleanAspect("piglin_neutral");
 
     // Set Bonus Abilities
-    public static final BooleanAspect SLOW_FALL = new BooleanAspect("slow_fall");
-    public static final TimeAspect GLIDE = new TimeAspect("glide");
+    public static final BooleanAspect SLOW_FALL = new BooleanActivationAspect("slow_fall", "key.sneak");
+    public static final GlideAspect GLIDE = new GlideAspect("glide");
     public static final BooleanAspect FROST_WALKER = new BooleanAspect("frost_walker");
-    public static final BooleanAspect TURTLE_MASTERY = new BooleanAspect("turtle_mastery");
+    public static final BooleanAspect TURTLE_MASTERY = new BooleanActivationAspect("turtle_mastery", "key.sneak");
 
     // Curses
     public static final BooleanAspect BINDING = new BooleanAspect("binding");
     public static final BooleanAspect VANISHING = new BooleanAspect("vanishing");
-    public static final IntegerAspect BLOOD_LOSS = new IntegerAspect("blood_loss");
-    public static final IntegerAspect WEIGHT = new IntegerAspect("weight");
-    public static final IntegerAspect OXYGEN_DEPRIVATION = new IntegerAspect("oxygen_deprivation");
+    public static final IntegerAspect BLOOD_LOSS = new IntegerAspect("blood_loss", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final IntegerAspect WEIGHT = new IntegerAspect("weight", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final IntegerAspect OXYGEN_DEPRIVATION = new IntegerAspect("oxygen_deprivation", AspectTooltipFunctions.NUMBER_ADDITION);
     public static final BooleanAspect BLANK = new BooleanAspect("blank");
-    public static final FloatAspect VOLATILITY = new FloatAspect("volatility");
+    public static final FloatAspect VOLATILITY = new FloatAspect("volatility", AspectTooltipFunctions.NUMBER_ADDITION);
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

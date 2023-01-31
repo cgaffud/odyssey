@@ -12,7 +12,6 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -66,10 +65,9 @@ public class ModifyCommand {
                 throw ERROR_NOTHING_HAPPENED.create();
             } else {
                 if (entityCollection.size() == 1) {
-                    // todo aspect names
-                    commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.single", new TextComponent("Aspect-Name-Placeholder"), entityCollection.iterator().next().getDisplayName()), true);
+                    commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.single", aspect.getName(), entityCollection.iterator().next().getDisplayName()), true);
                 } else {
-                    commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.multiple", new TextComponent("Aspect-Name-Placeholder"), entityCollection.size()), true);
+                    commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.multiple", aspect.getName(), entityCollection.size()), true);
                 }
 
                 return numSuccess;

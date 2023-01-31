@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.aspect.aspect_objects;
 
 import com.bedmen.odyssey.aspect.AspectTooltipFunction;
-import com.bedmen.odyssey.aspect.aspect_objects.FloatAspect;
 import net.minecraft.world.damagesource.DamageSource;
 
 import java.util.function.Predicate;
@@ -9,7 +8,7 @@ import java.util.function.Predicate;
 public class DamageSourcePredicateAspect extends FloatAspect {
     public final Predicate<DamageSource> damageSourcePredicate;
     protected DamageSourcePredicateAspect(String id, Predicate<DamageSource> damageSourcePredicate) {
-        super(id);
+        super(id, AspectTooltipFunctions.NUMBER_ADDITION);
         this.damageSourcePredicate = damageSourcePredicate;
     }
 

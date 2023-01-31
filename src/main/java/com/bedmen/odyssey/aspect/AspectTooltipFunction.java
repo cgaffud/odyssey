@@ -6,5 +6,5 @@ import net.minecraft.world.level.Level;
 import java.util.Optional;
 
 public interface AspectTooltipFunction {
-    MutableComponent apply(float strength, Optional<Level> optionalLevel);
+    MutableComponent apply(AspectInstance aspectInstance, Optional<Level> optionalLevel);
 }

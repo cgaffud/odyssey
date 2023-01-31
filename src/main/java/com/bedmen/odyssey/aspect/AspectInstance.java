@@ -48,7 +48,7 @@ public class AspectInstance {
     }
 
     public MutableComponent getMutableComponent(Optional<Level> optionalLevel){
-        return this.aspect.aspectTooltipFunction.apply(this.strength, optionalLevel);
+        return this.aspect.aspectTooltipFunction.apply(this, optionalLevel);
     }
 
 }

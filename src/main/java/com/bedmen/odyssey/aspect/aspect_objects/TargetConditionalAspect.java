@@ -8,7 +8,7 @@ public class TargetConditionalAspect extends FloatAspect {
     public final Predicate<LivingEntity> livingEntityPredicate;
 
     protected TargetConditionalAspect(String id, Predicate<LivingEntity> livingEntityPredicate) {
-        super(id);
+        super(id, AspectTooltipFunctions.NUMBER_ADDITION);
         this.livingEntityPredicate = livingEntityPredicate;
     }
 }
