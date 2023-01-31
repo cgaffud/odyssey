@@ -509,7 +509,6 @@
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
   "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
-  "commands.modify.failed.negative": "Modify requires a non-negative strenth value",
   "commands.modify.success.single": "Applied modifier %s to %s's item",
   "commands.modify.success.multiple": "Applied modifier %s to %s entities",
   "modifier.unknown": "Unknown modifier: %s"

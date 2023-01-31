@@ -339,7 +339,10 @@ public class AspectUtil {
         if(oldAspectTag != null){
             aspectListTag.remove(oldAspectTag);
         }
-        aspectListTag.add(aspectInstanceToCompoundTag(aspectInstance));
+        // Just removes old modifier if the strength is set to 0
+        if(aspectInstance.strength > 0.0f){
+            aspectListTag.add(aspectInstanceToCompoundTag(aspectInstance));
+        }
         itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectListTag);
     }
 }

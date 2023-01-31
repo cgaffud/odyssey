@@ -5,6 +5,7 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
 import com.bedmen.odyssey.commands.arguments.ItemModifierArgument;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
@@ -27,7 +28,6 @@ public class ModifyCommand {
     private static final DynamicCommandExceptionType ERROR_NO_ITEM = new DynamicCommandExceptionType((object) -> {
         return new TranslatableComponent("commands.enchant.failed.itemless", object);
     });
-    private static final SimpleCommandExceptionType ERROR_NEGATIVE_STRENGTH = new SimpleCommandExceptionType(new TranslatableComponent("commands.modify.failed.negative"));
     private static final SimpleCommandExceptionType ERROR_NOTHING_HAPPENED = new SimpleCommandExceptionType(new TranslatableComponent("commands.enchant.failed"));
 
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -35,43 +35,43 @@ public class ModifyCommand {
                 .requires((commandSourceStack) -> commandSourceStack.hasPermission(2))
                 .then(Commands.argument("targets", EntityArgument.entities())
                         .then(Commands.argument("modifier", ItemModifierArgument.modifier())
-                                .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1))
+                                .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1, false))
                                 .then(Commands.argument("strength", FloatArgumentType.floatArg(0.0f))
-                                        .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength")))))));
+                                        .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), false))
+                                        .then(Commands.argument("obfuscated", BoolArgumentType.bool())
+                                                .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"))))))));
     }
 
-    private static int modify(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect aspect, float strength) throws CommandSyntaxException {
-        if (strength < 0.0f) {
-            throw ERROR_NEGATIVE_STRENGTH.create();
-        } else {
-            int numSuccess = 0;
+    private static int modify(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect aspect, float strength, boolean obfuscated) throws CommandSyntaxException {
+        int numSuccess = 0;
 
-            for(Entity entity : entityCollection) {
-                if (entity instanceof LivingEntity) {
-                    LivingEntity livingentity = (LivingEntity)entity;
-                    ItemStack itemstack = livingentity.getMainHandItem();
-                    if (!itemstack.isEmpty()) {
-                        AspectUtil.addModifier(itemstack, new AspectInstance(aspect, strength));
-                        ++numSuccess;
-                    } else if (entityCollection.size() == 1) {
-                        throw ERROR_NO_ITEM.create(livingentity.getName().getString());
-                    }
+        for(Entity entity : entityCollection) {
+            if (entity instanceof LivingEntity) {
+                LivingEntity livingentity = (LivingEntity)entity;
+                ItemStack itemstack = livingentity.getMainHandItem();
+                if (!itemstack.isEmpty()) {
+                    AspectInstance aspectInstance = new AspectInstance(aspect, strength);
+                    aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
+                    AspectUtil.addModifier(itemstack, aspectInstance);
+                    ++numSuccess;
                 } else if (entityCollection.size() == 1) {
-                    throw ERROR_NOT_LIVING_ENTITY.create(entity.getName().getString());
+                    throw ERROR_NO_ITEM.create(livingentity.getName().getString());
                 }
+            } else if (entityCollection.size() == 1) {
+                throw ERROR_NOT_LIVING_ENTITY.create(entity.getName().getString());
             }
+        }
 
-            if (numSuccess == 0) {
-                throw ERROR_NOTHING_HAPPENED.create();
+        if (numSuccess == 0) {
+            throw ERROR_NOTHING_HAPPENED.create();
+        } else {
+            if (entityCollection.size() == 1) {
+                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.single", aspect.getName(), entityCollection.iterator().next().getDisplayName()), true);
             } else {
-                if (entityCollection.size() == 1) {
-                    commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.single", aspect.getName(), entityCollection.iterator().next().getDisplayName()), true);
-                } else {
-                    commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.multiple", aspect.getName(), entityCollection.size()), true);
-                }
-
-                return numSuccess;
+                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.multiple", aspect.getName(), entityCollection.size()), true);
             }
+
+            return numSuccess;
         }
     }
 
