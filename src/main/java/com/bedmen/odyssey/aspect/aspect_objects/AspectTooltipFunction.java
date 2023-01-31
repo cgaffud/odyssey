@@ -1,5 +1,6 @@
-package com.bedmen.odyssey.aspect;
+package com.bedmen.odyssey.aspect.aspect_objects;
 
+import com.bedmen.odyssey.aspect.AspectInstance;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.Level;
 

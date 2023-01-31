@@ -1,7 +1,5 @@
 package com.bedmen.odyssey.aspect.aspect_objects;
 
-import com.bedmen.odyssey.aspect.AttackBoostFactorFunction;
-
 public class EnvironmentConditionalAspect extends FloatAspect {
     public final AttackBoostFactorFunction attackBoostFactorFunction;
 

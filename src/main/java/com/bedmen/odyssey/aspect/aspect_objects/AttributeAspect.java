@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.aspect.aspect_objects;
 
-import com.bedmen.odyssey.aspect.AspectTooltipFunction;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.common.util.Lazy;

@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.aspect.aspect_objects;
 
-import com.bedmen.odyssey.aspect.AspectTooltipFunction;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.network.chat.TextComponent;

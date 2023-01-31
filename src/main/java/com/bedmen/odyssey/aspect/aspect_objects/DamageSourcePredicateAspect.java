@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.aspect.aspect_objects;
 
-import com.bedmen.odyssey.aspect.AspectTooltipFunction;
 import net.minecraft.world.damagesource.DamageSource;
 
 import java.util.function.Predicate;
