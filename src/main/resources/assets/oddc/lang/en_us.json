@@ -84,6 +84,7 @@
   "block.oddc.golden_cobweb": "Golden Cobweb",
   "block.oddc.greatroots": "Greatroots",
   "block.oddc.greatwood_button": "Greatwood Button",
+  "block.oddc.arcane_grindstone": "Arcane Grindstone",
   "block.oddc.greatwood_door": "Greatwood Door",
   "block.oddc.greatwood_fence": "Greatwood Fence",
   "block.oddc.greatwood_fence_gate": "Greatwood Fence Gate",
@@ -507,9 +508,11 @@
   "stat.oddc.interact_with_alloy_furnace": "Interactions with Alloy Furnace",
   "stat.oddc.interact_with_recycling_furnace": "Interactions with Recycling Furnace",
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
+  "stat.oddc.interact_with_arcane_grindstone": "Interactions with Arcane Grindstone",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
   "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
   "commands.modify.success.single": "Applied modifier %s to %s's item",
   "commands.modify.success.multiple": "Applied modifier %s to %s entities",
-  "modifier.unknown": "Unknown modifier: %s"
+  "modifier.unknown": "Unknown modifier: %s",
+  "container.oddc.modifier_removal": "Modifier Removal"
 }
