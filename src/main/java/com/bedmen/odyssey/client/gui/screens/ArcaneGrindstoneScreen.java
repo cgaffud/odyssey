@@ -9,13 +9,13 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.List;
 import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
@@ -56,10 +56,11 @@ public class ArcaneGrindstoneScreen extends AbstractContainerScreen<ArcaneGrinds
         Optional<Aspect> optionalAspect = this.menu.getSelectedAddedModifierAspect();
         poseStack.pushPose();
         poseStack.scale(ASPECT_TEXT_SCALE, ASPECT_TEXT_SCALE, 1.0f);
-        int yOffset = 0;
         if(optionalAspect.isPresent()){
-            for(FormattedCharSequence formattedcharsequence : this.font.split(optionalAspect.get().getName(), (int)(ASPECT_TEXT_BOX_WIDTH/ASPECT_TEXT_SCALE))) {
-                this.font.draw(poseStack, formattedcharsequence, ASPECT_TEXT_LEFT_X/ASPECT_TEXT_SCALE, (ASPECT_TEXT_TOP_Y + yOffset)/ASPECT_TEXT_SCALE, 4210752);
+            List<FormattedCharSequence> formattedCharSequenceList = this.font.split(optionalAspect.get().getComponent(), (int)(ASPECT_TEXT_BOX_WIDTH/ASPECT_TEXT_SCALE));
+            float yOffset = 8.5f + -4.5f * formattedCharSequenceList.size();
+            for(FormattedCharSequence formattedcharsequence : formattedCharSequenceList) {
+                this.font.draw(poseStack, formattedcharsequence, (ASPECT_TEXT_LEFT_X + (ASPECT_TEXT_BOX_WIDTH - this.font.width(formattedcharsequence)*ASPECT_TEXT_SCALE)/2.0f)/ASPECT_TEXT_SCALE, (ASPECT_TEXT_TOP_Y + yOffset)/ASPECT_TEXT_SCALE, 4210752);
                 yOffset += 9;
             }
         }
@@ -77,8 +78,8 @@ public class ArcaneGrindstoneScreen extends AbstractContainerScreen<ArcaneGrinds
 
     protected void createPageControlButtons() {
         int topYForButtons = this.topPos + ASPECT_TEXT_BOTTOM_Y + 2;
-        this.forwardButton = this.addRenderableWidget(new PageButton(this.leftPos + ASPECT_TEXT_RIGHT_X - 19, topYForButtons, true, (button) -> this.pageForward(), true));
-        this.backButton = this.addRenderableWidget(new PageButton(this.leftPos + ASPECT_TEXT_LEFT_X - 3, topYForButtons, false, (button) -> this.pageBack(), true));
+        this.forwardButton = this.addRenderableWidget(new PageButton(this.leftPos + ASPECT_TEXT_RIGHT_X - 19, topYForButtons, true, (button) -> this.pageForward(), false));
+        this.backButton = this.addRenderableWidget(new PageButton(this.leftPos + ASPECT_TEXT_LEFT_X - 3, topYForButtons, false, (button) -> this.pageBack(), false));
         this.updateButtonVisibility();
     }
 

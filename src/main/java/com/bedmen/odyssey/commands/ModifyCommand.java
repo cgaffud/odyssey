@@ -66,9 +66,9 @@ public class ModifyCommand {
             throw ERROR_NOTHING_HAPPENED.create();
         } else {
             if (entityCollection.size() == 1) {
-                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.single", aspect.getName(), entityCollection.iterator().next().getDisplayName()), true);
+                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.single", aspect.getComponent(), entityCollection.iterator().next().getDisplayName()), true);
             } else {
-                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.multiple", aspect.getName(), entityCollection.size()), true);
+                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.multiple", aspect.getComponent(), entityCollection.size()), true);
             }
 
             return numSuccess;

@@ -12,7 +12,7 @@ public class Aspect {
         Aspects.ASPECT_REGISTER.put(id, this);
     }
 
-    public TranslatableComponent getName(){
+    public TranslatableComponent getComponent(){
         return new TranslatableComponent("aspect.oddc."+this.id);
     }
 

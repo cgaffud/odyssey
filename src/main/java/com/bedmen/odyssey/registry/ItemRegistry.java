@@ -170,6 +170,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MARINE_AXE = ITEMS.register("marine_axe", () -> new AspectAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.AXE.withBetterAttackSpeed(), 5.0f, List.of(), MARINE_TOOL_INNATE_MODIFIER_LIST));
     public static final RegistryObject<Item> MARINE_HOE = ITEMS.register("marine_hoe", () -> new AspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.HOE.withBetterAttackSpeed(), 2.0f, List.of(), MARINE_TOOL_INNATE_MODIFIER_LIST));
 
+    // # Magic
+    public static final RegistryObject<Item> PURIFICATION_TABLET = ITEMS.register("purification_tablet", () -> new PurificationTabletItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC)));
+
     // # Miscellaneous
     public static final RegistryObject<Item> GREATWOOD_MINERAL_WATER_BOTTLE = ITEMS.register("greatwood_mineral_water_bottle", () -> new GreatSaplingHelperItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC), BlockRegistry.GREATWOOD_SAPLING::get, true));
     public static final RegistryObject<Item> GREATWOOD_FERTILIZER = ITEMS.register("greatwood_fertilizer", () -> new GreatSaplingHelperItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC), BlockRegistry.GREATWOOD_SAPLING::get, false));
