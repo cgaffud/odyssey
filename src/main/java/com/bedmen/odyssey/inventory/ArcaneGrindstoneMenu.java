@@ -62,7 +62,7 @@ public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
                 return false;
             }
         });
-        this.addSlot(new Slot(this.resultContainer, RESULT_SLOT, 134, 29) {
+        this.addSlot(new Slot(this.resultContainer, RESULT_SLOT, 116, 29) {
             public boolean mayPlace(ItemStack itemStack) {
                 return false;
             }
