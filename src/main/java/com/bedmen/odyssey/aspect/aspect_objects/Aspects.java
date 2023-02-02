@@ -31,8 +31,6 @@ public class Aspects {
 
     // # All Weapons
     public static final IntegerAspect LOOTING_LUCK = new IntegerAspect("looting_luck", AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ALL_WEAPON);
-
-    // # Melee and Bows/Crossbows
     public static final EnvironmentConditionalAspect SOLAR_STRENGTH = new EnvironmentConditionalAspect("solar_strength", Aspects::getSunBoost);
     public static final EnvironmentConditionalAspect LUNAR_STRENGTH = new EnvironmentConditionalAspect("lunar_strength", Aspects::getMoonBoost);
     public static final EnvironmentConditionalAspect BOTANICAL_STRENGTH = new EnvironmentConditionalAspect("botanical_strength", Aspects::getHotHumidBoost);
@@ -71,7 +69,7 @@ public class Aspects {
     public static final FloatAspect PROJECTILE_KNOCKBACK = new FloatAspect("projectile_knockback", AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.PROJECTILE);
     public static final BooleanAspect HYDRODYNAMIC = new BooleanAspect("hydrodynamic", AspectItemPredicates.PROJECTILE);
 
-    // Armor
+    // # Armor
     public static final DamageSourcePredicateAspect FEATHER_FALLING = new DamageSourcePredicateAspect("feather_falling", damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL, AspectItemPredicates.BOOTS);
     public static final DamageSourcePredicateAspect ICE_PROTECTION = new DamageSourcePredicateAspect("ice_protection", damageSource -> damageSource == DamageSource.FREEZE, AspectItemPredicates.ARMOR);
     public static final DamageSourcePredicateAspect FIRE_PROTECTION = new DamageSourcePredicateAspect("fire_protection", DamageSource::isFire, AspectItemPredicates.ARMOR);
@@ -81,16 +79,18 @@ public class Aspects {
     public static final IntegerAspect FREEZE_IMMUNITY = new IntegerAspect("freeze_immunity", AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR);
     public static final FloatAspect THORNS = new FloatAspect("thorns", AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR);
 
-    // Shields
+    // # Shields
     public static final ShieldDamageBlockAspect EXPLOSION_DAMAGE_BLOCK = new ShieldDamageBlockAspect("explosion_damage_block", DamageSource::isExplosion);
     public static final FloatAspect IMPENETRABILITY = new FloatAspect("impenetrability", AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.SHIELD);
     public static final FloatAspect RECOVERY_SPEED = new FloatAspect("recovery_speed", AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.SHIELD);
 
-    // Tools
+    // # Tools
     public static final IntegerAspect FORTUNE = new IntegerAspect("fortune", AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.TOOL);
     public static final BooleanAspect AQUA_AFFINITY = new BooleanAspect("aqua_affinity", AspectItemPredicates.TOOL);
 
-    // Melee Abilities
+    // # Abilities
+
+    // ## Melee Abilities
     public static final BooleanAspect SHIELD_BASH = new BooleanAspect("shield_bash", AspectItemPredicates.MELEE);
     public static final BooleanAspect SWEEP = new BooleanAspect("sweep", AspectItemPredicates.MELEE);
     public static final BooleanAspect DUAL_WIELD = new BooleanAspect("dual_wield", AspectItemPredicates.MELEE);
@@ -98,20 +98,20 @@ public class Aspects {
     public static final BooleanAspect SMACK = new BooleanAspect("smack", AspectItemPredicates.MELEE);
     public static final BooleanAspect THRUST = new BooleanAspect("thrust", AspectItemPredicates.MELEE);
 
-    // Bow Abilities
+    // ## Bow Abilities
     public static final BooleanAspect SPYGLASS = new BooleanAspect("spyglass", AspectItemPredicates.BOW);
     public static final BooleanAspect REPEAT = new BooleanAspect("repeat", AspectItemPredicates.RANGED_AMMO_WEAPON);
 
-    // Armor Abilities
+    // ## Armor Abilities
     public static final BooleanAspect PIGLIN_NEUTRAL = new BooleanAspect("piglin_neutral", AspectItemPredicates.ARMOR);
 
-    // Set Bonus Abilities
+    // ## Set Bonus Abilities
     public static final BooleanAspect SLOW_FALL = new BooleanActivationAspect("slow_fall", "key.sneak");
     public static final GlideAspect GLIDE = new GlideAspect("glide");
     public static final BooleanAspect FROST_WALKER = new BooleanAspect("frost_walker", AspectItemPredicates.BOOTS);
     public static final BooleanAspect TURTLE_MASTERY = new BooleanActivationAspect("turtle_mastery", "key.sneak");
 
-    // Curses
+    // # Curses
     public static final BooleanAspect BINDING = new BooleanAspect("binding", AspectItemPredicates.ARMOR);
     public static final BooleanAspect VANISHING = new BooleanAspect("vanishing", AspectItemPredicates.DAMAGEABLE);
     public static final IntegerAspect BLOOD_LOSS = new IntegerAspect("blood_loss", AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.DAMAGEABLE);
