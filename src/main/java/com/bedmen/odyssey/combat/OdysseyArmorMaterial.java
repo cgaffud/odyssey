@@ -30,9 +30,9 @@ public enum OdysseyArmorMaterial implements ArmorMaterial {
     ZEPHYR("oddc:zephyr", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, () -> Ingredient.EMPTY, List.of(new AspectInstance(Aspects.GLIDE, 40))),
     STERLING_SILVER("oddc:sterling_silver", 20, new int[]{5,9,10,6}, 0, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, () -> Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get()), List.of()),
     REINFORCED("oddc:reinforced", 25, new int[]{6,10,11,7}, 0, SoundEvents.ARMOR_EQUIP_IRON, 0.1F, () -> Ingredient.of(Items.IRON_INGOT), List.of()),
-    DIAMOND("diamond", 33, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(Items.DIAMOND), List.of()),
+    DIAMOND("diamond", 11, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(Items.DIAMOND), List.of()),
     ARCTIC("oddc:arctic", 20, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()), List.of(new AspectInstance(Aspects.FROST_WALKER))),
-    NETHERITE("netherite", 37, new int[]{7,13,15,9}, 0, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.1F, () -> Ingredient.of(Items.NETHERITE_INGOT), List.of());
+    NETHERITE("netherite", 22, new int[]{7,13,15,9}, 0, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.1F, () -> Ingredient.of(Items.NETHERITE_INGOT), List.of());
 //    MARINE("oddc:marine", 25, new int[]{7,13,14,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(ItemRegistry.PEARL.get())),
 //    LEVIATHAN("oddc:leviathan", 30, new int[]{8,14,16,10}, 0, SoundEvents.ARMOR_EQUIP_TURTLE , 0.0F, () -> Ingredient.of(ItemRegistry.LEVIATHAN_SCALE.get()); }, new SetBonusEnchSup(EnchantmentRegistry.FIREPROOF, "key.sneak"));
 

@@ -21,6 +21,7 @@ public class Aspects {
 
     // All
     public static final FloatAspect DURABILITY = new FloatAspect("durability", AspectTooltipFunctions.PERCENTAGE_ADDITION);
+    public static final BooleanAspect BURN_PROOF = new BooleanAspect("burn_proof");
 
     // Attribute
     public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", AspectTooltipFunctions.PERCENTAGE_ADDITION, () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
