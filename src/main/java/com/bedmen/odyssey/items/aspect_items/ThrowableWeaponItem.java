@@ -9,6 +9,7 @@ import com.bedmen.odyssey.combat.OdysseyRangedWeapon;
 import com.bedmen.odyssey.combat.ThrowableType;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -21,6 +22,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -48,6 +50,15 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
 
     public AspectHolder getAspectHolder() {
         return this.aspectHolder;
+    }
+
+    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
+        ConditionalAmpUtil.setDamageTag(itemStack, entity);
+        super.inventoryTick(itemStack, level, entity, compartments, selected);
+    }
+
+    public double getEffectiveDamage(ItemStack itemStack){
+        return this.throwableType.thrownDamage + ConditionalAmpUtil.getDamageTag(itemStack);
     }
 
     public UseAnim getUseAnimation(ItemStack stack) {
@@ -92,7 +103,8 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
 
     private OdysseyAbstractArrow shootAndGetThrownWeaponEntity(Level level, LivingEntity owner, ItemStack thrownWeaponStack, boolean isMultishot, Vector3f vector3f) {
         OdysseyAbstractArrow thrownWeaponEntity = getThrownWeaponEntity(level, owner, thrownWeaponStack, isMultishot);
-        thrownWeaponEntity.setBaseDamage(isMultishot ? MultishotAspect.strengthToDamagePenalty(AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.MULTISHOT)) : 1.0d);
+        double multishotDamagePenalty = isMultishot ? MultishotAspect.strengthToDamagePenalty(AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.MULTISHOT)) : 1.0d;
+        thrownWeaponEntity.setBaseDamage(this.getEffectiveDamage(thrownWeaponStack) * multishotDamagePenalty);
         thrownWeaponEntity.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(thrownWeaponStack));
         float accuracyMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.ACCURACY);
         thrownWeaponEntity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.getFinalVelocity(thrownWeaponStack), 1.0f / accuracyMultiplier);
@@ -151,7 +163,7 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
 
     public void appendHoverText(ItemStack thrownWeaponStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(thrownWeaponStack, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.throwable_weapon.damage").append(StringUtil.doubleFormat(this.throwableType.thrownDamage)).withStyle(ChatFormatting.BLUE));
+        tooltip.add(new TranslatableComponent("item.oddc.throwable_weapon.damage").append(StringUtil.doubleFormat(this.getEffectiveDamage(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
         tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getFinalVelocity(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
     }
 }

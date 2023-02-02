@@ -10,6 +10,11 @@ import java.util.function.Predicate;
 
 public class AspectItemPredicates {
 
+    /*
+        These predicates aren't suppose to be the end-all-be-all of restricting modification.
+        The point is to prevent items where a modification would be useless/unusable from receiving the modification
+     */
+
     public static final Predicate<Item> NONE = item -> false;
 
     public static final Predicate<Item> DAMAGEABLE = Item::canBeDepleted;

@@ -108,7 +108,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
     }
 
     protected double getDamage() {
-        return this.throwableType.thrownDamage * this.getBaseDamage();
+        return this.getBaseDamage();
     }
 
     protected void onHurt(Entity target, boolean hurtSuccessful) {}

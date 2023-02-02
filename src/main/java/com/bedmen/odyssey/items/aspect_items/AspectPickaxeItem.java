@@ -6,6 +6,7 @@ import com.bedmen.odyssey.combat.MeleeWeaponClass;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,5 +40,15 @@ public class AspectPickaxeItem extends PickaxeItem implements AspectItem, Odysse
 
     public MeleeWeaponClass getMeleeWeaponClass(){
         return this.meleeWeaponClass;
+    }
+
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack)
+    {
+        return ConditionalAmpUtil.getAttributeModifiersWithAdjustedAttackDamage(equipmentSlot, itemStack, this.getDefaultAttributeModifiers(equipmentSlot));
+    }
+
+    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
+        ConditionalAmpUtil.setDamageTag(itemStack, entity);
+        super.inventoryTick(itemStack, level, entity, compartments, selected);
     }
 }

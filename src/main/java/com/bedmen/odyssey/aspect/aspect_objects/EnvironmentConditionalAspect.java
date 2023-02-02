@@ -14,7 +14,7 @@ public class EnvironmentConditionalAspect extends FloatAspect {
     public final AttackBoostFactorFunction attackBoostFactorFunction;
 
     protected EnvironmentConditionalAspect(String id, AttackBoostFactorFunction attackBoostFactorFunction) {
-        super(id, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.MELEE_AND_RANGED_AMMO_WEAPON);
+        super(id, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ALL_WEAPON);
         this.attackBoostFactorFunction = attackBoostFactorFunction;
     }
 }

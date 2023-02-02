@@ -122,27 +122,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, AspectIte
 
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack)
     {
-        if (equipmentSlot == EquipmentSlot.MAINHAND) {
-            Multimap<Attribute, AttributeModifier> stackAttributeModifiers = LinkedHashMultimap.create();
-            float conditionalAmpBonus = ConditionalAmpUtil.getDamageTag(itemStack);
-            for(Map.Entry<Attribute, Collection<AttributeModifier>> entry : this.attributeModifiers.asMap().entrySet()){
-                if (entry.getKey() == Attributes.ATTACK_DAMAGE && conditionalAmpBonus > 0.0f) {
-                    Collection<AttributeModifier> newDamageModifiers = entry.getValue().stream()
-                            .map(attributeModifier -> {
-                                if (attributeModifier.getId() == BASE_ATTACK_DAMAGE_UUID) {
-                                    return new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", attributeModifier.getAmount() + conditionalAmpBonus, AttributeModifier.Operation.ADDITION);
-                                }
-                                return attributeModifier;
-                            })
-                            .collect(Collectors.toSet());
-                    stackAttributeModifiers.putAll(entry.getKey(), newDamageModifiers);
-                } else {
-                    stackAttributeModifiers.putAll(entry.getKey(), entry.getValue());
-                }
-            }
-            return stackAttributeModifiers;
-        }
-        return super.getAttributeModifiers(equipmentSlot, itemStack);
+        return ConditionalAmpUtil.getAttributeModifiersWithAdjustedAttackDamage(equipmentSlot, itemStack, this.attributeModifiers);
     }
 
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {

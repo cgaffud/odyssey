@@ -32,7 +32,7 @@ public class Aspects {
     // # All Weapons
     public static final IntegerAspect LOOTING_LUCK = new IntegerAspect("looting_luck", AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ALL_WEAPON);
 
-    // # Melee and Bows
+    // # Melee and Bows/Crossbows
     public static final EnvironmentConditionalAspect SOLAR_STRENGTH = new EnvironmentConditionalAspect("solar_strength", Aspects::getSunBoost);
     public static final EnvironmentConditionalAspect LUNAR_STRENGTH = new EnvironmentConditionalAspect("lunar_strength", Aspects::getMoonBoost);
     public static final EnvironmentConditionalAspect BOTANICAL_STRENGTH = new EnvironmentConditionalAspect("botanical_strength", Aspects::getHotHumidBoost);

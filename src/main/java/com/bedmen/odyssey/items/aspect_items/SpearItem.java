@@ -5,12 +5,14 @@ import com.bedmen.odyssey.combat.MeleeWeaponClass;
 import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.entity.projectile.ThrownSpear;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -62,6 +64,16 @@ public class SpearItem extends ThrowableWeaponItem implements OdysseyMeleeItem {
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
         return equipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(equipmentSlot);
+    }
+
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack)
+    {
+        return ConditionalAmpUtil.getAttributeModifiersWithAdjustedAttackDamage(equipmentSlot, itemStack, this.defaultModifiers);
+    }
+
+    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
+        ConditionalAmpUtil.setDamageTag(itemStack, entity);
+        super.inventoryTick(itemStack, level, entity, compartments, selected);
     }
 
     protected OdysseyAbstractArrow getThrownWeaponEntity(Level level, LivingEntity owner, ItemStack thrownWeaponStack, boolean isMultishot) {

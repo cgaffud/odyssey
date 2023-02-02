@@ -11,7 +11,7 @@ public class MeleeWeaponClass {
     public static final MeleeWeaponClass PADDLE = new MeleeWeaponClass(0.7f, true, List.of(new AspectInstance(Aspects.SMACK)));
     public static final MeleeWeaponClass HAMMER = new MeleeWeaponClass(0.8f, true, List.of(new AspectInstance(Aspects.SHIELD_BASH)));
     public static final MeleeWeaponClass BATTLE_AXE = new MeleeWeaponClass(1.0f, true, List.of(new AspectInstance(Aspects.SHIELD_BASH)));
-    public static final MeleeWeaponClass SPEAR = new MeleeWeaponClass(1.1f, true, List.of());
+    public static final MeleeWeaponClass SPEAR = new MeleeWeaponClass(1.1f, false, List.of());
     public static final MeleeWeaponClass MACE = new MeleeWeaponClass(1.2f, true, List.of(new AspectInstance(Aspects.SHIELD_BASH)));
     public static final MeleeWeaponClass BAT = new MeleeWeaponClass(1.4f, true, List.of(new AspectInstance(Aspects.SWEEP)));
     public static final MeleeWeaponClass SWORD = new MeleeWeaponClass(1.6f, true, List.of(new AspectInstance(Aspects.SWEEP), new AspectInstance(Aspects.COBWEB_BREAK).withDisplaySetting(AspectTooltipDisplaySetting.ADVANCED_ONLY)));
