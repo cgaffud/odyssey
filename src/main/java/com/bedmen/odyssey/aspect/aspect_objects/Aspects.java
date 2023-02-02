@@ -19,6 +19,14 @@ import java.util.Map;
 public class Aspects {
     public static final Map<String, Aspect> ASPECT_REGISTER = new HashMap<>();
 
+    // All
+    public static final FloatAspect DURABILITY = new FloatAspect("durability", AspectTooltipFunctions.PERCENTAGE_ADDITION);
+
+    // Attribute
+    public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", AspectTooltipFunctions.PERCENTAGE_ADDITION, () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
+    public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", AspectTooltipFunctions.NUMBER_ADDITION, () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
+    public static final AttributeAspect SWIM_SPEED = new AttributeAspect("swim_speed", AspectTooltipFunctions.PERCENTAGE_ADDITION, ForgeMod.SWIM_SPEED::get, AttributeModifier.Operation.ADDITION);
+
     // Melee
     public static final TargetConditionalAspect DAMAGE_ON_ARTHROPOD = new TargetConditionalAspect("damage_on_arthropod", livingEntity -> livingEntity.getMobType() == MobType.ARTHROPOD);
     public static final TargetConditionalAspect SMITE_DAMAGE = new TargetConditionalAspect("smite_damage", livingEntity -> livingEntity.getMobType() == MobType.UNDEAD);
@@ -75,11 +83,6 @@ public class Aspects {
     // Tools
     public static final IntegerAspect FORTUNE = new IntegerAspect("fortune", AspectTooltipFunctions.NUMBER_ADDITION);
     public static final BooleanAspect AQUA_AFFINITY = new BooleanAspect("aqua_affinity");
-
-    // Attribute
-    public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", AspectTooltipFunctions.PERCENTAGE_ADDITION, () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
-    public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", AspectTooltipFunctions.NUMBER_ADDITION, () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
-    public static final AttributeAspect SWIM_SPEED = new AttributeAspect("swim_speed", AspectTooltipFunctions.PERCENTAGE_ADDITION, ForgeMod.SWIM_SPEED::get, AttributeModifier.Operation.ADDITION);
 
     // Melee Abilities
     public static final BooleanAspect SHIELD_BASH = new BooleanAspect("shield_bash");

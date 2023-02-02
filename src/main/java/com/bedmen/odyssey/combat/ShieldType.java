@@ -4,23 +4,25 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectHolder;
 import com.bedmen.odyssey.aspect.AspectInstance;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.tools.OdysseyTiers;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Tier;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 public enum ShieldType {
-    WOODEN("wooden", 200, 4.0f, 100, item -> item.builtInRegistryHolder().is(ItemTags.PLANKS), List.of(), List.of()),
-    COPPER("copper", 400, 5.0f, 100, item -> item == Items.COPPER_INGOT, List.of(), List.of()),
-    RUSTY("rusty", 600, 6.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.IMPENETRABILITY, 1.0f))),
-    GOLDEN("golden", 300, 6.0f, 80, item -> item == Items.GOLD_INGOT, List.of(), List.of(new AspectInstance(Aspects.RECOVERY_SPEED, 1.0f))),
-    REINFORCED("reinforced", 800, 7.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.EXPLOSION_DAMAGE_BLOCK, 7.0f))),
-    DIAMOND("diamond", 1600, 8.0f, 100, item -> item == Items.DIAMOND, List.of(), List.of());
+    WOODEN("wooden", OdysseyTiers.WOOD, 4.0f, 100, item -> item.builtInRegistryHolder().is(ItemTags.PLANKS), List.of(), List.of()),
+    COPPER("copper", OdysseyTiers.COPPER, 5.0f, 100, item -> item == Items.COPPER_INGOT, List.of(), List.of()),
+    RUSTY("rusty", OdysseyTiers.RUSTY_IRON, 6.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.IMPENETRABILITY, 1.0f))),
+    GOLDEN("golden", OdysseyTiers.GOLD, 6.0f, 80, item -> item == Items.GOLD_INGOT, List.of(), List.of(new AspectInstance(Aspects.RECOVERY_SPEED, 1.0f))),
+    REINFORCED("reinforced", OdysseyTiers.IRON, 7.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.EXPLOSION_DAMAGE_BLOCK, 7.0f))),
+    DIAMOND("diamond", OdysseyTiers.DIAMOND, 8.0f, 100, item -> item == Items.DIAMOND, List.of(), List.of(new AspectInstance(Aspects.DURABILITY, 2.0f)));
 
     public final int durability;
     public final float damageBlock;
@@ -30,8 +32,8 @@ public enum ShieldType {
     public final Material material_nopattern;
     public final AspectHolder aspectHolder;
 
-    ShieldType(String id, int durability, float damageBlock, int recoveryTime, Predicate<Item> repairItemPredicate, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
-        this.durability = durability;
+    ShieldType(String id, Tier tier, float damageBlock, int recoveryTime, Predicate<Item> repairItemPredicate, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
+        this.durability = tier.getUses() * 2;
         this.damageBlock = damageBlock;
         this.recoveryTime = recoveryTime;
         this.repairItemPredicate = repairItemPredicate;
