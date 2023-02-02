@@ -156,8 +156,8 @@ def unionWeightEntries(entryWeightPairs):
 
 # FUNCTIONS ------------------------
 
-def createEnchantWithTierFunction(tier):
-    return {"function": "oddc:enchant_with_tier", "tier": tier}
+def createModifyWithTierFunction(tier):
+    return {"function": "oddc:modify_with_tier", "tier": tier}
 
 def createSetCountFunction(count):
     return {

@@ -4,7 +4,7 @@ def generate():
     swiftSabreEntry = createItemEntry("oddc:swift_sabre")
     swiftSabrePool = Pool(createUniformNumberProvider(0, 1))\
         .withEntries(swiftSabreEntry)\
-        .withFunctions(createEnchantWithTierFunction(1))
+        .withFunctions(createModifyWithTierFunction(1))
 
     hoeEntries = [
         createItemEntry("minecraft:stone_hoe"),
@@ -14,7 +14,7 @@ def generate():
         ]
     hoePool = Pool(createUniformNumberProvider(0, 1))\
         .withEntries(hoeEntries)\
-        .withFunctions(createEnchantWithTierFunction(1))
+        .withFunctions(createModifyWithTierFunction(1))
 
     shovelEntries = [
         createItemEntry("minecraft:stone_shovel"),
@@ -24,7 +24,7 @@ def generate():
         ]
     shovelPool = Pool(createUniformNumberProvider(0, 1))\
         .withEntries(shovelEntries)\
-        .withFunctions(createEnchantWithTierFunction(1))
+        .withFunctions(createModifyWithTierFunction(1))
 
     cropEntries = [
         createWeightedUniformCountItemEntry("minecraft:wheat_seeds", 4, 5, 10),

@@ -5,7 +5,7 @@ def generate():
     goldenToolEntries = createToolEntries("minecraft:golden")
     toolPool = Pool(createUniformNumberProvider(0, 2))\
         .withEntries(ironToolEntries + goldenToolEntries)\
-        .withFunctions(createEnchantWithTierFunction(1))
+        .withFunctions(createModifyWithTierFunction(1))
 
     armorEntries = createArmorEntries("minecraft:chainmail") + createArmorEntries("minecraft:golden")
     shieldEntries = [
@@ -52,7 +52,7 @@ def generate():
     ])
     combatPool = Pool(createUniformNumberProvider(1, 4))\
             .withEntries(combatEntries)\
-            .withFunctions(createEnchantWithTierFunction(1))
+            .withFunctions(createModifyWithTierFunction(1))
 
     materialEntries = [
         createWeightedUniformCountItemEntry("minecraft:raw_iron", 2, 2, 4),

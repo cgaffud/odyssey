@@ -2,7 +2,7 @@ package com.bedmen.odyssey.loot;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.loot.functions.ApplyChanceDecayFunction;
-import com.bedmen.odyssey.loot.functions.EnchantWithTierFunction;
+import com.bedmen.odyssey.loot.functions.ModifyWithTierFunction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.Serializer;
@@ -14,7 +14,7 @@ public class OdysseyLootItemFunctions {
     public static LootItemFunctionType CHANCE_DECAY;
 
     public static void registerFunctions() {
-        ENCHANT_WITH_TIER = OdysseyLootItemFunctions.register("enchant_with_tier", new EnchantWithTierFunction.Serializer());
+        ENCHANT_WITH_TIER = OdysseyLootItemFunctions.register("enchant_with_tier", new ModifyWithTierFunction.Serializer());
         CHANCE_DECAY = OdysseyLootItemFunctions.register("chance_decay", new ApplyChanceDecayFunction.Serializer());
     }
 

@@ -1,14 +1,11 @@
 package com.bedmen.odyssey.loot.functions;
 
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
@@ -17,16 +14,15 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class EnchantWithTierFunction extends LootItemConditionalFunction {
-    private static final int[] ENCHANTMENT_RARITY = new int[]{2, 5};
+public class ModifyWithTierFunction extends LootItemConditionalFunction {
+    private static final int[] MODIFIER_RARITY = new int[]{2, 5};
     private static final int[] CURSE_RARITY = new int[]{3, 5};
     final NumberProvider tier;
 
-    EnchantWithTierFunction(LootItemCondition[] lootItemConditions, NumberProvider numberProvider) {
+    ModifyWithTierFunction(LootItemCondition[] lootItemConditions, NumberProvider numberProvider) {
         super(lootItemConditions);
         this.tier = numberProvider;
     }
@@ -45,8 +41,8 @@ public class EnchantWithTierFunction extends LootItemConditionalFunction {
         //Enchantments
 //        List<Pair<Enchantment, Integer>> enchantmentList = EnchantmentUtil.getEnchantmentsByTier(this.tier.getInt(lootContext));
 //        enchantmentList = EnchantmentUtil.filterEnchantments(enchantmentList, itemStack);
-//        for(int i = 0; i < ENCHANTMENT_RARITY.length && enchantmentList.size() > 0; i++){
-//            if(random.nextInt(ENCHANTMENT_RARITY[i]) == 0){
+//        for(int i = 0; i < MODIFIER_RARITY.length && enchantmentList.size() > 0; i++){
+//            if(random.nextInt(MODIFIER_RARITY[i]) == 0){
 //                Pair<Enchantment, Integer> enchantmentIntegerPair = enchantmentList.get(random.nextInt(enchantmentList.size()));
 //                enchantmentList.remove(enchantmentIntegerPair);
 //                itemStack.enchant(enchantmentIntegerPair.getFirst(), enchantmentIntegerPair.getSecond());
@@ -72,35 +68,35 @@ public class EnchantWithTierFunction extends LootItemConditionalFunction {
     }
 
 
-    public static EnchantWithTierFunction.Builder enchantWithTier(NumberProvider numberProvider) {
-        return new EnchantWithTierFunction.Builder(numberProvider);
+    public static ModifyWithTierFunction.Builder modifyWithTier(NumberProvider numberProvider) {
+        return new ModifyWithTierFunction.Builder(numberProvider);
     }
 
-    public static class Builder extends LootItemConditionalFunction.Builder<EnchantWithTierFunction.Builder> {
+    public static class Builder extends LootItemConditionalFunction.Builder<ModifyWithTierFunction.Builder> {
         private final NumberProvider tier;
 
         public Builder(NumberProvider numberProvider) {
             this.tier = numberProvider;
         }
 
-        protected EnchantWithTierFunction.Builder getThis() {
+        protected ModifyWithTierFunction.Builder getThis() {
             return this;
         }
 
         public LootItemFunction build() {
-            return new EnchantWithTierFunction(this.getConditions(), this.tier);
+            return new ModifyWithTierFunction(this.getConditions(), this.tier);
         }
     }
 
-    public static class Serializer extends LootItemConditionalFunction.Serializer<EnchantWithTierFunction> {
-        public void serialize(JsonObject jsonObject, EnchantWithTierFunction enchantWithTierFunction, JsonSerializationContext jsonSerializationContext) {
-            super.serialize(jsonObject, enchantWithTierFunction, jsonSerializationContext);
-            jsonObject.add("tier", jsonSerializationContext.serialize(enchantWithTierFunction.tier));
+    public static class Serializer extends LootItemConditionalFunction.Serializer<ModifyWithTierFunction> {
+        public void serialize(JsonObject jsonObject, ModifyWithTierFunction modifyWithTierFunction, JsonSerializationContext jsonSerializationContext) {
+            super.serialize(jsonObject, modifyWithTierFunction, jsonSerializationContext);
+            jsonObject.add("tier", jsonSerializationContext.serialize(modifyWithTierFunction.tier));
         }
 
-        public EnchantWithTierFunction deserialize(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext, LootItemCondition[] lootItemConditions) {
+        public ModifyWithTierFunction deserialize(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext, LootItemCondition[] lootItemConditions) {
             NumberProvider numberprovider = GsonHelper.getAsObject(jsonObject, "tier", jsonDeserializationContext, NumberProvider.class);
-            return new EnchantWithTierFunction(lootItemConditions, numberprovider);
+            return new ModifyWithTierFunction(lootItemConditions, numberprovider);
         }
     }
 }

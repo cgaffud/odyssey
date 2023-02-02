@@ -5,7 +5,7 @@ def generate():
     goldenToolEntries = createToolEntries("oddc:clover_stone")
     toolPool = Pool(createUniformNumberProvider(0, 2))\
         .withEntries(ironToolEntries + goldenToolEntries)\
-        .withFunctions(createEnchantWithTierFunction(1))
+        .withFunctions(createModifyWithTierFunction(1))
 
     armorEntries = createArmorEntries("oddc:sterling_silver")
     shieldEntries = [
@@ -45,7 +45,7 @@ def generate():
     ])
     combatPool = Pool(createUniformNumberProvider(1, 4))\
             .withEntries(combatEntries)\
-            .withFunctions(createEnchantWithTierFunction(1))
+            .withFunctions(createModifyWithTierFunction(1))
 
     materialEntries = [
         createWeightedUniformCountItemEntry("oddc:silver_ingot", 2, 2, 4),

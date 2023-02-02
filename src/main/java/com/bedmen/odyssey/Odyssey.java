@@ -19,7 +19,6 @@ import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.trades.OdysseyTrades;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.CompostUtil;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OdysseyGeneration;
 import com.bedmen.odyssey.world.gen.OreGen;
@@ -85,9 +84,6 @@ public class Odyssey
             OdysseyTrades.addTrades();
             EntityEvents.initEntityMap();
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
-
-            //Equipment / Enchantments
-            EnchantmentUtil.init();
 
             //Generation
             BiomeUtil.init();

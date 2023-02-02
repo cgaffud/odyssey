@@ -1,13 +1,13 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectTierManager;
 import com.bedmen.odyssey.entity.monster.DungeonSkeleton;
 import com.bedmen.odyssey.entity.monster.DungeonZombie;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.util.WorldGenUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -141,16 +141,16 @@ public class MoonTowerPiece extends TemplateStructurePiece {
             zombie.moveTo(blockPos, 0.0F, 0.0F);
 
             if (zombie.getItemBySlot(EquipmentSlot.HEAD).isEmpty())
-                zombie.setItemSlot(EquipmentSlot.HEAD, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_HELMET.get(), random , 1, 0.75));
+                zombie.setItemSlot(EquipmentSlot.HEAD, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_HELMET.get(), random , 1, 0.75));
             if (zombie.getItemBySlot(EquipmentSlot.FEET).isEmpty())
-                zombie.setItemSlot(EquipmentSlot.FEET,  EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_BOOTS.get(), random, 1, 0.75));
+                zombie.setItemSlot(EquipmentSlot.FEET,  AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_BOOTS.get(), random, 1, 0.75));
             if (zombie.getItemBySlot(EquipmentSlot.LEGS).isEmpty() && (random.nextBoolean() || random.nextBoolean()))
-                zombie.setItemSlot(EquipmentSlot.LEGS,  EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random, 1, 0.75));
+                zombie.setItemSlot(EquipmentSlot.LEGS,  AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random, 1, 0.75));
 
             if ("beefy_zombie".equals(dataMarker) && zombie.getItemBySlot(EquipmentSlot.CHEST).isEmpty())
-                zombie.setItemSlot(EquipmentSlot.CHEST, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_CHESTPLATE.get(), random, 1, 0.75));
+                zombie.setItemSlot(EquipmentSlot.CHEST, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_CHESTPLATE.get(), random, 1, 0.75));
 
-            zombie.setItemInHand(InteractionHand.MAIN_HAND, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_MACE.get(), random, 1, 1.0));
+            zombie.setItemInHand(InteractionHand.MAIN_HAND, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_MACE.get(), random, 1, 1.0));
 
             zombie.finalizeSpawn(accessor, accessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, (SpawnGroupData)null, (CompoundTag)null);
             accessor.addFreshEntityWithPassengers(zombie);
@@ -161,11 +161,11 @@ public class MoonTowerPiece extends TemplateStructurePiece {
             skeleton.moveTo(blockPos, 0.0F, 0.0F);
 
             if (skeleton.getItemBySlot(EquipmentSlot.HEAD).isEmpty())
-                skeleton.setItemSlot(EquipmentSlot.HEAD, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_HELMET.get(), random, 1, 0.75));
+                skeleton.setItemSlot(EquipmentSlot.HEAD, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_HELMET.get(), random, 1, 0.75));
             if (skeleton.getItemBySlot(EquipmentSlot.LEGS).isEmpty())
-                skeleton.setItemSlot(EquipmentSlot.LEGS, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random, 1, 0.75));
+                skeleton.setItemSlot(EquipmentSlot.LEGS, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random, 1, 0.75));
             if (skeleton.getItemBySlot(EquipmentSlot.FEET).isEmpty() && (random.nextBoolean() || random.nextBoolean()))
-                skeleton.setItemSlot(EquipmentSlot.FEET, EnchantmentUtil.itemWithEnchantmentByTier(ItemRegistry.STERLING_SILVER_BOOTS.get(), random, 1, 0.75));
+                skeleton.setItemSlot(EquipmentSlot.FEET, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_BOOTS.get(), random, 1, 0.75));
 
             skeleton.finalizeSpawn(accessor, accessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, (SpawnGroupData)null, (CompoundTag)null);
             skeleton.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemRegistry.BOWN.get()));
