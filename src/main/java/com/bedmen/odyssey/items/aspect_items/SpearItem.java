@@ -24,11 +24,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.IItemRenderProperties;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 
-public class SpearItem extends ThrowableWeaponItem {
+public class SpearItem extends ThrowableWeaponItem implements OdysseyMeleeItem {
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
+    protected final MeleeWeaponClass meleeWeaponClass;
 
     public SpearItem(Item.Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, SpearType spearType) {
         super(properties, tier, spearType, meleeWeaponClass.aspectInstanceList);
@@ -36,6 +36,7 @@ public class SpearItem extends ThrowableWeaponItem {
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", spearType.thrownDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", meleeWeaponClass.attackRate-4.0f, AttributeModifier.Operation.ADDITION));
         this.defaultModifiers = builder.build();
+        this.meleeWeaponClass = meleeWeaponClass;
     }
 
     public boolean canAttackBlock(BlockState blockState, Level level, BlockPos blockPos, Player player) {
@@ -79,5 +80,9 @@ public class SpearItem extends ThrowableWeaponItem {
 
     public SpearType getSpearType(){
         return (SpearType)this.throwableType;
+    }
+
+    public MeleeWeaponClass getMeleeWeaponClass(){
+        return this.meleeWeaponClass;
     }
 }

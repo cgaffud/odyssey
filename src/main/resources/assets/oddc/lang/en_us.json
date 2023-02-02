@@ -149,6 +149,7 @@
   "block.oddc.transcendental_obsidian": "Transcendental Obsidian",
   "block.oddc.transcendental_transmuter": "Transcendental Transmuter",
   "block.oddc.weaver_egg_cobweb": "Weaver Egg Cobweb",
+  "commands.modify.failed.incompatible": "%s cannot support that modifier",
   "commands.modify.success.multiple": "Applied modifier %s to %s entities",
   "commands.modify.success.single": "Applied modifier %s to %s's item",
   "container.oddc.alloy_furnace": "Alloy Furnace",

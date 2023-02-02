@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.aspect.aspect_objects;
+package com.bedmen.odyssey.aspect;
 
 import com.bedmen.odyssey.aspect.AspectInstance;
 import net.minecraft.network.chat.MutableComponent;

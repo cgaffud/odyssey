@@ -218,8 +218,8 @@ public class AspectUtil {
 
     public static float getTargetConditionalAspectStrength(ItemStack itemStack, LivingEntity target){
         return getTotalStrengthForFunction(itemStack, aspect -> {
-            if(aspect instanceof TargetConditionalAspect targetConditionalAspect){
-                return targetConditionalAspect.livingEntityPredicate.test(target) ? 1.0f : 0.0f;
+            if(aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect){
+                return targetConditionalMeleeAspect.livingEntityPredicate.test(target) ? 1.0f : 0.0f;
             }
             return 0.0f;
         });
@@ -331,6 +331,10 @@ public class AspectUtil {
     }
 
     // Add/Remove added modifiers
+
+    public static boolean canAddModifier(ItemStack itemStack, Aspect aspect){
+        return aspect.itemPredicate.test(itemStack.getItem());
+    }
 
     // Replaces added modifier with same aspect as aspectInstance with aspectInstance,
     // or removes the modifier altogether if aspectInstance.strength is 0

@@ -35,16 +35,18 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class AspectMeleeItem extends TieredItem implements Vanishable, AspectItem, DyeableLeatherItem {
+public class AspectMeleeItem extends TieredItem implements Vanishable, AspectItem, OdysseyMeleeItem {
     /** Modifiers applied when the item is in the mainhand of a user. */
     protected final Multimap<Attribute, AttributeModifier> attributeModifiers;
     private final AspectHolder aspectHolder;
+    protected final MeleeWeaponClass meleeWeaponClass;
 
     public AspectMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance> innateModifierList) {
         super(tier, properties);
         List<AspectInstance> fullAbilityList = new ArrayList<>(meleeWeaponClass.aspectInstanceList);
         fullAbilityList.addAll(additionalAbilityList);
         this.aspectHolder = new AspectHolder(fullAbilityList, innateModifierList);
+        this.meleeWeaponClass = meleeWeaponClass;
         float attackDamage = damage + tier.getAttackDamageBonus();
 
         Multimap<Attribute, AttributeModifier> attributeModifiers = LinkedHashMultimap.create();
@@ -55,6 +57,10 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, AspectIte
 
     public AspectHolder getAspectHolder() {
         return this.aspectHolder;
+    }
+
+    public MeleeWeaponClass getMeleeWeaponClass(){
+        return this.meleeWeaponClass;
     }
 
     public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {

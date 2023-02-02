@@ -28,6 +28,9 @@ public class ModifyCommand {
     private static final DynamicCommandExceptionType ERROR_NO_ITEM = new DynamicCommandExceptionType((object) -> {
         return new TranslatableComponent("commands.enchant.failed.itemless", object);
     });
+    private static final DynamicCommandExceptionType ERROR_INCOMPATIBLE = new DynamicCommandExceptionType((p_137020_) -> {
+        return new TranslatableComponent("commands.modify.failed.incompatible", p_137020_);
+    });
     private static final SimpleCommandExceptionType ERROR_NOTHING_HAPPENED = new SimpleCommandExceptionType(new TranslatableComponent("commands.enchant.failed"));
 
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -50,10 +53,14 @@ public class ModifyCommand {
                 LivingEntity livingentity = (LivingEntity)entity;
                 ItemStack itemstack = livingentity.getMainHandItem();
                 if (!itemstack.isEmpty()) {
-                    AspectInstance aspectInstance = new AspectInstance(aspect, strength);
-                    aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
-                    AspectUtil.replaceModifier(itemstack, aspectInstance);
-                    ++numSuccess;
+                    if(AspectUtil.canAddModifier(itemstack, aspect)){
+                        AspectInstance aspectInstance = new AspectInstance(aspect, strength);
+                        aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
+                        AspectUtil.replaceModifier(itemstack, aspectInstance);
+                        ++numSuccess;
+                    } else if (entityCollection.size() == 1) {
+                        throw ERROR_INCOMPATIBLE.create(itemstack.getItem().getName(itemstack).getString());
+                    }
                 } else if (entityCollection.size() == 1) {
                     throw ERROR_NO_ITEM.create(livingentity.getName().getString());
                 }

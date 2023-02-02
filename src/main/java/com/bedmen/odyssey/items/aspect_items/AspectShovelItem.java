@@ -9,17 +9,23 @@ import net.minecraft.world.item.Tier;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AspectShovelItem extends ShovelItem implements AspectItem {
+public class AspectShovelItem extends ShovelItem implements AspectItem, OdysseyMeleeItem {
     private final AspectHolder aspectHolder;
+    protected final MeleeWeaponClass meleeWeaponClass;
 
     public AspectShovelItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance> innateModifierList) {
         super(tier, damage, meleeWeaponClass.attackRate - 4.0f, properties);
         List<AspectInstance> fullAbilityList = new ArrayList<>(meleeWeaponClass.aspectInstanceList);
         fullAbilityList.addAll(additionalAbilityList);
         this.aspectHolder = new AspectHolder(fullAbilityList, innateModifierList);
+        this.meleeWeaponClass = meleeWeaponClass;
     }
 
     public AspectHolder getAspectHolder() {
         return this.aspectHolder;
+    }
+
+    public MeleeWeaponClass getMeleeWeaponClass(){
+        return this.meleeWeaponClass;
     }
 }
