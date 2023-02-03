@@ -2,13 +2,17 @@ package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
+import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.ReduceInvulnerabilityPacket;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +27,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Collection;
 import java.util.List;
@@ -151,9 +156,9 @@ public class WeaponUtil {
         return pLiving.getMainHandItem().getItem() instanceof AspectBowItem ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
     }
 
-    public static boolean isDualWielding(Player player){
-        ItemStack mainHandItem = player.getMainHandItem();
-        return isDualWieldItem(mainHandItem) && player.getOffhandItem().is(mainHandItem.getItem());
+    public static boolean isDualWielding(LivingEntity livingEntity){
+        ItemStack mainHandItem = livingEntity.getMainHandItem();
+        return isDualWieldItem(mainHandItem) && livingEntity.getOffhandItem().is(mainHandItem.getItem());
     }
 
     public static boolean isDualWieldItem(ItemStack itemStack){
@@ -308,6 +313,25 @@ public class WeaponUtil {
             return Optional.of(offHandItemStack);
         }
         return Optional.empty();
+    }
+
+    public static void hurtWithReducedInvulnerability(LivingEntity livingEntity, DamageSource damageSource, float damageAmount, int invulnerabilityTicks){
+        if(livingEntity.hurt(damageSource, damageAmount)){
+            setInvulnerability(livingEntity, invulnerabilityTicks);
+        }
+    }
+
+    public static void setInvulnerability(LivingEntity livingEntity, int invulnerabilityTicks){
+        if(livingEntity.level.isClientSide){
+            if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
+                odysseyLivingEntity.setTrueHurtTime(Optional.of(invulnerabilityTicks));
+            }
+        } else {
+            livingEntity.invulnerableTime = 10 + invulnerabilityTicks;
+            livingEntity.hurtDuration = invulnerabilityTicks;
+            livingEntity.hurtTime = livingEntity.hurtDuration;
+            OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> livingEntity), new ReduceInvulnerabilityPacket(livingEntity, invulnerabilityTicks));
+        }
     }
 }
 

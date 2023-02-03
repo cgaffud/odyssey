@@ -17,7 +17,6 @@ public class ThrustParticle extends TextureSheetParticle {
         this.rCol = f;
         this.gCol = f;
         this.bCol = f;
-        System.out.println(d);
         this.quadSize = 0.15f * (1.0F - (float)d * 0.5F);
         this.sprites = spriteSet;
         this.setSpriteFromAge(spriteSet);

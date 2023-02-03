@@ -44,9 +44,11 @@ public class FatalHitAnimatePacket {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             Minecraft minecraft = Minecraft.getInstance();
-            Entity entity = minecraft.level.getEntity(fatalHitAnimatePacket.id);
-            if(entity != null){
-                minecraft.particleEngine.createTrackingEmitter(entity, ParticleTypeRegistry.FATAL_HIT.get());
+            if(minecraft.level != null){
+                Entity entity = minecraft.level.getEntity(fatalHitAnimatePacket.id);
+                if(entity != null){
+                    minecraft.particleEngine.createTrackingEmitter(entity, ParticleTypeRegistry.FATAL_HIT.get());
+                }
             }
         });
         context.setPacketHandled(true);

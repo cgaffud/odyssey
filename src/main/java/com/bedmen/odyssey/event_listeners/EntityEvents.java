@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.entity.monster.BabyCreeper;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
@@ -11,6 +12,7 @@ import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
+import com.bedmen.odyssey.network.packet.ReduceInvulnerabilityPacket;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -58,6 +60,15 @@ public class EntityEvents {
             if(odysseyLivingEntity.getSmackPush().shouldPush){
                 WeaponUtil.smackTarget(odysseyLivingEntity.getSmackPush());
                 odysseyLivingEntity.setSmackPush(new SmackPush());
+            }
+            // Set true hurt time on client side
+            if(livingEntity.level.isClientSide){
+                Optional<Integer> trueHurtTime = odysseyLivingEntity.getTrueHurtTime();
+                trueHurtTime.ifPresent(hurtTime -> {
+                    livingEntity.hurtDuration = hurtTime;
+                    livingEntity.hurtTime = livingEntity.hurtDuration-1;
+                });
+                odysseyLivingEntity.setTrueHurtTime(Optional.empty());
             }
         }
 
@@ -121,6 +132,11 @@ public class EntityEvents {
                 damageSourceLivingEntity.hurt(DamageSource.thorns(hurtLivingEntity), thornsStrength);
             }
 
+            // Dual Wield reduced invulnerability
+            if(WeaponUtil.isDualWielding(damageSourceLivingEntity)){
+                WeaponUtil.setInvulnerability(hurtLivingEntity, hurtLivingEntity.hurtDuration/2);
+            }
+
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
             odysseyLivingEntity.pushKnockbackAspectQueue(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_KNOCKBACK));
@@ -160,7 +176,7 @@ public class EntityEvents {
                 float deathChance = (fatalDamage - newHealth) / fatalDamage;
                 if(deathChance > hurtLivingEntity.getRandom().nextFloat()) {
                     event.setAmount(currentHealth);
-                    OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> hurtLivingEntity), new FatalHitAnimatePacket(hurtLivingEntity));
+                    OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> hurtLivingEntity), new FatalHitAnimatePacket(hurtLivingEntity));
                 }
             }
         }
@@ -345,7 +361,6 @@ public class EntityEvents {
         if(target instanceof OdysseyLivingEntity odysseyLivingEntity){
             event.setStrength(event.getOriginalStrength() * (1.0f + odysseyLivingEntity.popKnockbackAspectQueue()));
         }
-        System.out.println("og: "+event.getOriginalStrength()+" new: "+event.getStrength());
     }
 
     @SubscribeEvent

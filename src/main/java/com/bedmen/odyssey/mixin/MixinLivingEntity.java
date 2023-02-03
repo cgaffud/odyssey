@@ -2,6 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.combat.SmackPush;
@@ -49,7 +50,8 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private boolean hasSlowFall = false;
     private int flightValue = 0;
     private SmackPush smackPush = new SmackPush();
-    private List<Float> knockbackQueue = new ArrayList<>();
+    private final List<Float> knockbackQueue = new ArrayList<>();
+    private Optional<Integer> trueHurtTime = Optional.empty();
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -141,12 +143,8 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
                             this.level.addParticle(ParticleTypes.BUBBLE, this.getX() + d2, this.getY() + d3, this.getZ() + d4, vec3.x, vec3.y, vec3.z);
                         }
 
-                        this.hurt(DamageSource.DROWN, 2.0F);
-                        if(drowningAmount > 2){
-                            int invulnerabilityFrames = 20 / drowningAmount;
-                            this.invulnerableTime = 10 + invulnerabilityFrames;
-                            this.hurtTime = invulnerabilityFrames;
-                        }
+                        int invulnerabilityFrames = drowningAmount > 2 ? 20 / drowningAmount : 10;
+                        WeaponUtil.hurtWithReducedInvulnerability(livingEntity, DamageSource.DROWN, 2.0f, invulnerabilityFrames);
                     }
                 }
 
@@ -269,6 +267,14 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
 
     public void pushKnockbackAspectQueue(float knockbackAspect){
         this.knockbackQueue.add(knockbackAspect);
+    }
+
+    public void setTrueHurtTime(Optional<Integer> trueHurtTime){
+        this.trueHurtTime = trueHurtTime;
+    }
+
+    public Optional<Integer> getTrueHurtTime(){
+        return this.trueHurtTime;
     }
 
     protected float getDamageAfterMagicAbsorb(DamageSource damageSource, float amount) {
