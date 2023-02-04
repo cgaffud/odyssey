@@ -1,8 +1,7 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.combat.OdysseyArmorMaterial;
-import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.DyeableLeatherItem;
 

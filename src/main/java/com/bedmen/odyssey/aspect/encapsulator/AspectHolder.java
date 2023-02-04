@@ -1,12 +1,13 @@
-package com.bedmen.odyssey.aspect;
+package com.bedmen.odyssey.aspect.encapsulator;
 
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +32,13 @@ public class AspectHolder {
         this.allAspectMap = new AspectStrengthMap(aspectInstanceList);
     }
 
-    public void addTooltip(List<Component> tooltip, TooltipFlag tooltipFlag, Optional<Level> optionalLevel){
+    public void addTooltip(List<Component> tooltip, TooltipFlag tooltipFlag, AspectTooltipContext aspectTooltipContext){
         if(tooltipFlag.isAdvanced()){
-            tooltip.addAll(AspectUtil.getTooltip(this.abilityList, true, Optional.of(ABILITIES_HEADER), ABILITY_COLOR, optionalLevel));
-            tooltip.addAll(AspectUtil.getTooltip(this.innateModifierList, true, Optional.of(INNATE_MODIFIERS_HEADER), INNATE_MODIFIER_COLOR, optionalLevel));
+            tooltip.addAll(AspectUtil.getTooltip(aspectTooltipContext.withOtherContextVariables(this.abilityList, true, Optional.of(ABILITIES_HEADER), ABILITY_COLOR)));
+            tooltip.addAll(AspectUtil.getTooltip(aspectTooltipContext.withOtherContextVariables(this.innateModifierList, true, Optional.of(INNATE_MODIFIERS_HEADER), INNATE_MODIFIER_COLOR)));
         } else {
-            tooltip.addAll(AspectUtil.getTooltip(this.abilityList, false, Optional.empty(), ABILITY_COLOR, optionalLevel));
-            tooltip.addAll(AspectUtil.getTooltip(this.innateModifierList, false, Optional.empty(), INNATE_MODIFIER_COLOR, optionalLevel));
+            tooltip.addAll(AspectUtil.getTooltip(aspectTooltipContext.withOtherContextVariables(this.abilityList, false, Optional.empty(), ABILITY_COLOR)));
+            tooltip.addAll(AspectUtil.getTooltip(aspectTooltipContext.withOtherContextVariables(this.innateModifierList, false, Optional.empty(), INNATE_MODIFIER_COLOR)));
         }
     }
 }

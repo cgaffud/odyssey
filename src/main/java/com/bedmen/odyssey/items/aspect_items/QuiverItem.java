@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.AspectHolder;
-import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.combat.QuiverType;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.registry.ContainerRegistry;

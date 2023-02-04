@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
@@ -10,9 +11,7 @@ import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -193,13 +192,14 @@ public class PlayerEvents {
         Player player = event.getPlayer();
         Optional<Level> optionalLevel = player == null ? Optional.empty() : Optional.of(player.level);
         List<Component> componentList = new ArrayList<>();
+        AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(optionalLevel, itemStack);
         if(item instanceof AspectArmorItem aspectArmorItem){
-            aspectArmorItem.getSetBonusAbilityHolder().addTooltip(componentList, tooltipFlag, optionalLevel);
+            aspectArmorItem.getSetBonusAbilityHolder().addTooltip(componentList, tooltipFlag, aspectTooltipContext);
         }
         if(item instanceof AspectItem aspectItem){
-            aspectItem.getAspectHolder().addTooltip(componentList, tooltipFlag, optionalLevel);
+            aspectItem.getAspectHolder().addTooltip(componentList, tooltipFlag, aspectTooltipContext);
         }
-        AspectUtil.addAddedModifierTooltip(itemStack, componentList, tooltipFlag, optionalLevel);
+        AspectUtil.addAddedModifierTooltip(itemStack, componentList, tooltipFlag, aspectTooltipContext);
 
         List<Component> tooltip = event.getToolTip();
         tooltip.addAll(1, componentList);

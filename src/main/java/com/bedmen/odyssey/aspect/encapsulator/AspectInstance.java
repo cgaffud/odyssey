@@ -1,13 +1,13 @@
-package com.bedmen.odyssey.aspect;
+package com.bedmen.odyssey.aspect.encapsulator;
 
-import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
-import com.bedmen.odyssey.aspect.aspect_objects.BooleanAspect;
-import com.bedmen.odyssey.aspect.aspect_objects.FloatAspect;
-import com.bedmen.odyssey.aspect.aspect_objects.IntegerAspect;
+import com.bedmen.odyssey.aspect.object.Aspect;
+import com.bedmen.odyssey.aspect.object.BooleanAspect;
+import com.bedmen.odyssey.aspect.object.FloatAspect;
+import com.bedmen.odyssey.aspect.object.IntegerAspect;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctionInput;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.level.Level;
-
-import java.util.Optional;
 
 public class AspectInstance {
     public final Aspect aspect;
@@ -32,7 +32,7 @@ public class AspectInstance {
         this(aspect, strength, AspectTooltipDisplaySetting.ALWAYS, false);
     }
 
-    protected AspectInstance(Aspect aspect, float strength, AspectTooltipDisplaySetting aspectTooltipDisplaySetting, boolean obfuscated){
+    public AspectInstance(Aspect aspect, float strength, AspectTooltipDisplaySetting aspectTooltipDisplaySetting, boolean obfuscated){
         this.aspect = aspect;
         this.strength = strength;
         this.aspectTooltipDisplaySetting = aspectTooltipDisplaySetting;
@@ -47,8 +47,8 @@ public class AspectInstance {
         return new AspectInstance(this.aspect, this.strength, aspectTooltipDisplaySetting, true);
     }
 
-    public MutableComponent getMutableComponent(Optional<Level> optionalLevel){
-        return this.aspect.aspectTooltipFunction.apply(this, optionalLevel);
+    public MutableComponent getMutableComponent(AspectTooltipContext aspectTooltipContext){
+        return this.aspect.aspectTooltipFunction.apply(new AspectTooltipFunctionInput(this, aspectTooltipContext.optionalLevel, aspectTooltipContext.itemStack));
     }
 
 }

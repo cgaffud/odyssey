@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.client.gui.screens;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
+import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.inventory.ArcaneGrindstoneMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

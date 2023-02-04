@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.object.Aspect;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.ChatFormatting;

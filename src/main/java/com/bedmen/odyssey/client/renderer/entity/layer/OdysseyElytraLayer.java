@@ -2,7 +2,7 @@ package com.bedmen.odyssey.client.renderer.entity.layer;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.entity.RenderLayerParent;

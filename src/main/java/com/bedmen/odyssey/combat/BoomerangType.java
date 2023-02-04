@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.combat;
 
-import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 
 import java.util.List;
 

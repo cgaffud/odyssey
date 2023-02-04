@@ -1,7 +1,7 @@
-package com.bedmen.odyssey.aspect.aspect_objects;
+package com.bedmen.odyssey.aspect.object;
 
 import com.bedmen.odyssey.aspect.AspectItemPredicates;
-import com.bedmen.odyssey.aspect.AspectTooltipFunction;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.common.util.Lazy;

@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.aspect.aspect_objects;
+package com.bedmen.odyssey.aspect.object;
 
 import net.minecraft.network.chat.TranslatableComponent;
 

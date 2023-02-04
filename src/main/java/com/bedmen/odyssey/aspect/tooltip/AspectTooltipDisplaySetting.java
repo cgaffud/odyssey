@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.aspect;
+package com.bedmen.odyssey.aspect.tooltip;
 
 public enum AspectTooltipDisplaySetting {
     ALWAYS,

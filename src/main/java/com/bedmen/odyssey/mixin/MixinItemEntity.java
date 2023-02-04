@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;

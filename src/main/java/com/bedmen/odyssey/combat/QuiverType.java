@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.AspectHolder;
-import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;

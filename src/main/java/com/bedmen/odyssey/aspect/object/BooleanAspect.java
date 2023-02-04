@@ -1,7 +1,7 @@
-package com.bedmen.odyssey.aspect.aspect_objects;
+package com.bedmen.odyssey.aspect.object;
 
-import com.bedmen.odyssey.aspect.AspectTooltipFunction;
-import com.bedmen.odyssey.aspect.AspectTooltipFunctions;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import net.minecraft.world.item.Item;
 
 import java.util.function.Predicate;

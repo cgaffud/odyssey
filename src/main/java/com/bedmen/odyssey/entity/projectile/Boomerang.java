@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.BoomerangType;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.sounds.SoundEvent;

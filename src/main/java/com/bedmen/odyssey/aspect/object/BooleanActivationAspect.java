@@ -1,7 +1,7 @@
-package com.bedmen.odyssey.aspect.aspect_objects;
+package com.bedmen.odyssey.aspect.object;
 
 import com.bedmen.odyssey.aspect.AspectItemPredicates;
-import com.bedmen.odyssey.aspect.AspectTooltipFunctions;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public class BooleanActivationAspect extends BooleanAspect implements ActivationAspect {

@@ -1,12 +1,9 @@
-package com.bedmen.odyssey.aspect;
+package com.bedmen.odyssey.aspect.encapsulator;
 
-import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.object.Aspect;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
-import org.checkerframework.checker.units.qual.K;
 
 import java.util.HashMap;
 import java.util.List;

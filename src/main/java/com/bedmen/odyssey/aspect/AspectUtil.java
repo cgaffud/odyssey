@@ -1,7 +1,11 @@
 package com.bedmen.odyssey.aspect;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.aspect_objects.*;
+import com.bedmen.odyssey.aspect.object.*;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.google.common.collect.Multimap;
@@ -122,6 +126,15 @@ public class AspectUtil {
         return getTotalStrengthForFunctionFromMap(getAspectStrengthMap(itemStack), strengthFunction);
     }
 
+    private static float getBonusDamageAspectStrength(ItemStack itemStack, Function<Aspect, Float> strengthFunction){
+        return getTotalStrengthForFunction(itemStack, aspect -> {
+            if(aspect instanceof BonusDamageAspect){
+                return strengthFunction.apply(aspect) * BonusDamageAspect.getStrengthAmplifier(itemStack.getItem());
+            }
+            return 0.0f;
+        });
+    }
+
     private static float getTotalArmorStrengthForFunction(LivingEntity livingEntity, Function<Aspect, Float> strengthFunction){
         float total = 0.0f;
         for(ItemStack armorPiece: livingEntity.getArmorSlots()){
@@ -217,7 +230,7 @@ public class AspectUtil {
     // Special totals over multiple aspects on single item
 
     public static float getTargetConditionalAspectStrength(ItemStack itemStack, LivingEntity target){
-        return getTotalStrengthForFunction(itemStack, aspect -> {
+        return getBonusDamageAspectStrength(itemStack, aspect -> {
             if(aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect){
                 return targetConditionalMeleeAspect.livingEntityPredicate.test(target) ? 1.0f : 0.0f;
             }
@@ -226,7 +239,7 @@ public class AspectUtil {
     }
 
     public static float getEnvironmentalAspectStrength(ItemStack itemStack, BlockPos blockPos, Level level){
-        return getTotalStrengthForFunction(itemStack, aspect -> {
+        return getBonusDamageAspectStrength(itemStack, aspect -> {
             if(aspect instanceof EnvironmentConditionalAspect environmentConditionalAspect){
                 return environmentConditionalAspect.attackBoostFactorFunction.getBoostFactor(blockPos, level);
             }
@@ -276,26 +289,26 @@ public class AspectUtil {
 
     // Tooltips
 
-    public static void addAddedModifierTooltip(ItemStack itemStack, List<Component> tooltip, TooltipFlag tooltipFlag, Optional<Level> optionalLevel){
+    public static void addAddedModifierTooltip(ItemStack itemStack, List<Component> tooltip, TooltipFlag tooltipFlag, AspectTooltipContext aspectTooltipContext){
         List<AspectInstance> addedModifiers = getAddedModifiersAsAspectInstanceList(itemStack);
         Optional<MutableComponent> optionalHeader = tooltipFlag.isAdvanced() ? Optional.of(ADDED_MODIFIER_HEADER) : Optional.empty();
         // The isAdvanced flag for getTooltip is for filtering aspectInstances based on their display properties
         // Here we want there to be a header or not based on the isAdvanced flag
-        tooltip.addAll(getTooltip(addedModifiers, tooltipFlag.isAdvanced(), optionalHeader, ChatFormatting.GRAY, optionalLevel));
+        tooltip.addAll(getTooltip(aspectTooltipContext.withOtherContextVariables(addedModifiers, tooltipFlag.isAdvanced(), optionalHeader, ChatFormatting.GRAY)));
     }
 
-    public static List<Component> getTooltip(List<AspectInstance> aspectInstanceList, boolean isAdvanced, Optional<MutableComponent> optionalHeader, ChatFormatting chatFormatting, Optional<Level> optionalLevel){
+    public static List<Component> getTooltip(AspectTooltipContext context){
         List<Component> componentList = new ArrayList<>();
-        componentList.addAll(aspectInstanceList.stream()
-                .filter(aspectInstance -> isAdvanced ? aspectInstance.aspectTooltipDisplaySetting != AspectTooltipDisplaySetting.NEVER : aspectInstance.aspectTooltipDisplaySetting == AspectTooltipDisplaySetting.ALWAYS)
+        componentList.addAll(context.aspectInstanceList.stream()
+                .filter(aspectInstance -> context.isAdvanced ? aspectInstance.aspectTooltipDisplaySetting != AspectTooltipDisplaySetting.NEVER : aspectInstance.aspectTooltipDisplaySetting == AspectTooltipDisplaySetting.ALWAYS)
                 .map(aspectInstance ->
-                        new TextComponent(optionalHeader.isPresent() ? " " : "")
-                                .append(aspectInstance.obfuscated ? OBFUSCATED_TOOLTIP : aspectInstance.getMutableComponent(optionalLevel)).withStyle(chatFormatting))
+                        new TextComponent(context.optionalHeader.isPresent() ? " " : "")
+                                .append(aspectInstance.obfuscated ? OBFUSCATED_TOOLTIP : aspectInstance.getMutableComponent(context)).withStyle(context.chatFormatting))
                 .collect(Collectors.toList()));
         if(componentList.isEmpty()){
             return componentList;
         }
-        optionalHeader.ifPresent(header -> componentList.add(0, header.withStyle(chatFormatting)));
+        context.optionalHeader.ifPresent(header -> componentList.add(0, header.withStyle(context.chatFormatting)));
         return componentList;
     }
 

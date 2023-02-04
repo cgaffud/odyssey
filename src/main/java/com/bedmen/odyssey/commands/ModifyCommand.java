@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.commands;
 
-import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
+import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.commands.arguments.ItemModifierArgument;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;

@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
+import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.inventory.slot.BetterResultContainer;
 import com.bedmen.odyssey.items.PurificationTabletItem;
 import com.bedmen.odyssey.registry.BlockRegistry;
@@ -21,7 +21,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class ArcaneGrindstoneMenu extends AbstractContainerMenu {

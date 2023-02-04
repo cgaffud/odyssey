@@ -1,9 +1,9 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.AspectHolder;
-import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.combat.MeleeWeaponClass;
@@ -29,11 +29,8 @@ import net.minecraft.world.level.material.Material;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class AspectMeleeItem extends TieredItem implements Vanishable, AspectItem, OdysseyMeleeItem {
     /** Modifiers applied when the item is in the mainhand of a user. */

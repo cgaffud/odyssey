@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.combat;
 
-import com.bedmen.odyssey.aspect.AspectHolder;
-import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 

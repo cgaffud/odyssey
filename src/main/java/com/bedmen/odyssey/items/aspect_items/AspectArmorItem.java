@@ -1,7 +1,10 @@
 package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.aspect.*;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.SetBonusAspectHolder;
 import com.bedmen.odyssey.combat.*;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import net.minecraft.world.entity.EquipmentSlot;

@@ -1,6 +1,6 @@
-package com.bedmen.odyssey.aspect.aspect_objects;
+package com.bedmen.odyssey.aspect.object;
 
-import com.bedmen.odyssey.aspect.AspectTooltipFunction;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 

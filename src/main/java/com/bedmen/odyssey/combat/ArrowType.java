@@ -1,21 +1,12 @@
 package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.AspectHolder;
-import com.bedmen.odyssey.aspect.AspectInstance;
-import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.util.Lazy;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.commands.arguments;
 
-import com.bedmen.odyssey.aspect.aspect_objects.Aspect;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
+import com.bedmen.odyssey.aspect.object.Aspect;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -14,10 +14,8 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.enchantment.Enchantment;
 
 public class ItemModifierArgument implements ArgumentType<Aspect> {
     private static final Collection<String> EXAMPLES = Arrays.asList("knockback", "smite_damage");

@@ -1,10 +1,10 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.AspectHolder;
-import com.bedmen.odyssey.aspect.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.aspect_objects.Aspects;
-import com.bedmen.odyssey.aspect.aspect_objects.MultishotAspect;
+import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.aspect.object.MultishotAspect;
 import com.bedmen.odyssey.combat.OdysseyRangedWeapon;
 import com.bedmen.odyssey.combat.ThrowableType;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
