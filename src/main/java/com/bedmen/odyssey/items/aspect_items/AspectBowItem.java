@@ -140,7 +140,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
             if (livingEntity == null) {
                 return 0.0F;
             } else {
-                return livingEntity.getUseItem() != itemStack ? 0.0F : WeaponUtil.getChargeFactor(livingEntity, itemStack);
+                return livingEntity.getUseItem() != itemStack ? 0.0F : WeaponUtil.getCharge(livingEntity, itemStack);
             }
         });
         ItemProperties.register(this, new ResourceLocation("pulling"), (itemStack, clientLevel, livingEntity, i) -> {

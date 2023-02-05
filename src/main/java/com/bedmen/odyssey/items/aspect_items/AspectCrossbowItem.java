@@ -284,7 +284,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
             int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, crossbow);
             SoundEvent soundevent = this.getStartSound(i);
             SoundEvent soundevent1 = i == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
-            float f = WeaponUtil.getChargeFactor(livingEntity, crossbow);
+            float f = WeaponUtil.getCharge(livingEntity, crossbow);
             if (f < 0.2F) {
                 this.startSoundPlayed = false;
                 this.midLoadSoundPlayed = false;
@@ -300,7 +300,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
                 level.playSound((Player)null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), soundevent1, SoundSource.PLAYERS, 0.5F, 1.0F);
             }
         }
-        if(WeaponUtil.getChargeFactor(livingEntity, crossbow) >= 1.0f && AspectUtil.hasBooleanAspect(crossbow, Aspects.REPEAT)){
+        if(WeaponUtil.getCharge(livingEntity, crossbow) >= 1.0f && AspectUtil.hasBooleanAspect(crossbow, Aspects.REPEAT)){
             livingEntity.stopUsingItem();
             this.releaseUsing(crossbow, level, livingEntity, count);
         }
@@ -386,7 +386,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
             if (livingEntity == null) {
                 return 0.0F;
             } else {
-                return CrossbowItem.isCharged(itemStack) ? 0.0F : WeaponUtil.getChargeFactor(livingEntity, itemStack);
+                return CrossbowItem.isCharged(itemStack) ? 0.0F : WeaponUtil.getCharge(livingEntity, itemStack);
             }
         });
         ItemProperties.register(this, new ResourceLocation("pulling"), (itemStack, clientLevel, livingEntity, i) -> {

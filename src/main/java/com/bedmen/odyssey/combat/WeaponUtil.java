@@ -243,24 +243,20 @@ public class WeaponUtil {
         return getVelocityFactorFromCharge(getCharge(useTicks, bow));
     }
 
-    public static float getChargeFactor(LivingEntity livingEntity, ItemStack itemStack){
-        return Mth.clamp((float)livingEntity.getTicksUsingItem() / (float) WeaponUtil.getRangedMaxChargeTicks(itemStack), 0.0f, 1.0f);
+    public static float getCharge(LivingEntity livingEntity, ItemStack bow){
+        return getCharge(livingEntity.getTicksUsingItem(), bow);
     }
 
-    private static float getCharge(int useTicks, ItemStack bow){
-        int ticks = Integer.min(useTicks, getRangedMaxChargeTicks(bow));
-        int baseMaxChargeTicks = bow.getItem() instanceof OdysseyRangedWeapon odysseyRangedWeapon ? odysseyRangedWeapon.getBaseMaxChargeTicks() : 20;
-        return (float)ticks / (float)baseMaxChargeTicks;
+    public static float getCharge(int useTicks, ItemStack bow){
+        return Mth.clamp((float)useTicks / (float)getRangedMaxChargeTicks(bow), 0.0f, 1.0f);
     }
 
     /**
      * @return The number of ticks needed to fully charge the item
      */
     public static int getRangedMaxChargeTicks(ItemStack itemStack){
-        Item item = itemStack.getItem();
-        if(item instanceof OdysseyRangedWeapon odysseyRangedWeapon){
-
-            return Mth.floor(odysseyRangedWeapon.getBaseMaxChargeTicks() * (1.0f + AspectUtil.getFloatAspectStrength(itemStack, Aspects.MAX_CHARGE_TIME)));
+        if(itemStack.getItem() instanceof OdysseyRangedWeapon odysseyRangedWeapon){
+            return odysseyRangedWeapon.getBaseMaxChargeTicks();
         }
         return 20;
     }

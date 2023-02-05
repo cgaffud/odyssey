@@ -53,7 +53,6 @@ public class Aspects {
 
     // ## Shooting
     public static final FloatAspect ACCURACY = new FloatAspect("accuracy", AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.THROWABLE_AND_RANGED_AMMO_WEAPON);
-    public static final FloatAspect MAX_CHARGE_TIME = new FloatAspect("max_charge_time", AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.BOW);
     public static final MultishotAspect MULTISHOT = new MultishotAspect("multishot");
 
     // ## Throwing
