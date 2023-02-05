@@ -3,6 +3,7 @@ package com.bedmen.odyssey.aspect.object;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import com.bedmen.odyssey.combat.OdysseyRangedAmmoWeapon;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.items.aspect_items.OdysseyMeleeItem;
 import net.minecraft.world.item.Item;
 
@@ -20,6 +21,9 @@ public abstract class BonusDamageAspect extends FloatAspect {
         }
         if(item instanceof OdysseyRangedAmmoWeapon){
             return WeaponUtil.getRangedMaxChargeTicks(item.getDefaultInstance()) / 20.0f;
+        }
+        if(item instanceof BoomerangItem){
+            return 2.5f;
         }
         return 1.0f;
     }
