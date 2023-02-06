@@ -14,6 +14,7 @@ import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -42,10 +43,6 @@ public class AspectUtil {
 
     private static final MutableComponent ADDED_MODIFIER_HEADER = new TranslatableComponent("aspect_tooltip.oddc.added_modifiers");
     private static final String ADDED_MODIFIERS_TAG = Odyssey.MOD_ID + ":AddedModifiers";
-    private static final String ID_TAG = "id";
-    private static final String STRENGTH_TAG = "strength";
-    private static final String DISPLAY_TAG = "display";
-    private static final String OBFUSCATED_TAG = "obfuscated";
     private static final String SET_BONUS_STRING = "SET_BONUS";
     private static final List<EquipmentSlot> ARMOR_EQUIPMENT_SLOT_LIST = Arrays.stream(EquipmentSlot.values()).filter(equipmentSlot -> equipmentSlot.getType() == EquipmentSlot.Type.ARMOR).collect(Collectors.toList());
     private static final MutableComponent OBFUSCATED_TOOLTIP = new TextComponent("AAAAAAAAAA").withStyle(ChatFormatting.OBFUSCATED).withStyle(ChatFormatting.DARK_RED);
@@ -59,57 +56,19 @@ public class AspectUtil {
         AspectStrengthMap map = new AspectStrengthMap();
         for(Tag tag: listTag){
             if(tag instanceof CompoundTag aspectTag){
-                String id = aspectTag.getString(ID_TAG);
-                Aspect aspect = Aspects.ASPECT_REGISTER.get(id);
-                if(aspect == null) {
-                    Odyssey.LOGGER.error("Unknown aspect: "+id);
-                } else {
-                    map.put(aspect, aspectTag.getFloat(STRENGTH_TAG));
+                AspectInstance aspectInstance = AspectInstance.fromCompoundTag(aspectTag);
+                if(aspectInstance != null){
+                    map.put(aspectInstance.aspect, aspectInstance.strength);
                 }
             }
         }
         return map;
     }
 
-    private static CompoundTag aspectInstanceToCompoundTag(AspectInstance aspectInstance){
-        CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putString(ID_TAG, aspectInstance.aspect.id);
-        compoundTag.putFloat(STRENGTH_TAG, aspectInstance.strength);
-        compoundTag.putString(DISPLAY_TAG, aspectInstance.aspectTooltipDisplaySetting.name());
-        compoundTag.putBoolean(OBFUSCATED_TAG, aspectInstance.obfuscated);
-        return  compoundTag;
-    }
-
-    private static AspectInstance compoundTagToAspectInstance(CompoundTag compoundTag){
-        String id = compoundTag.getString(ID_TAG);
-        Aspect aspect = Aspects.ASPECT_REGISTER.get(id);
-        if(aspect == null) {
-            Odyssey.LOGGER.error("Unknown aspect: "+id);
-            return null;
-        } else {
-            float strength = compoundTag.getFloat(STRENGTH_TAG);
-            String displaySettingName = compoundTag.getString(DISPLAY_TAG);
-            AspectTooltipDisplaySetting aspectTooltipDisplaySetting;
-            if(displaySettingName.isEmpty()){
-                aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.ALWAYS;
-            } else {
-                try{
-                    aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.valueOf(displaySettingName);
-                } catch (IllegalArgumentException illegalArgumentException){
-                    Odyssey.LOGGER.error("Unknown AspectTooltipDisplaySetting: "+displaySettingName);
-                    aspectTooltipDisplaySetting = AspectTooltipDisplaySetting.ALWAYS;
-                }
-            }
-            boolean obfuscated = compoundTag.getBoolean(OBFUSCATED_TAG);
-            return new AspectInstance(aspect, strength, aspectTooltipDisplaySetting, obfuscated);
-        }
-    }
-
-
     private static List<AspectInstance> tagToAspectInstanceList(ListTag listTag){
         return listTag.stream()
                 .filter(tag -> tag instanceof CompoundTag)
-                .map(tag -> compoundTagToAspectInstance((CompoundTag) tag))
+                .map(tag -> AspectInstance.fromCompoundTag((CompoundTag)tag))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -224,7 +183,7 @@ public class AspectUtil {
 
     public static int getPermabuffAspectStrength(Player player, PermabuffAspect permabuffAspect){
         if(player instanceof OdysseyPlayer odysseyPlayer){
-            return odysseyPlayer.getPermabuffMap().get(permabuffAspect);
+            return odysseyPlayer.getPermabuffHolder().permabuffMap.get(permabuffAspect);
         }
         return 0;
     }
@@ -314,6 +273,17 @@ public class AspectUtil {
         return componentList;
     }
 
+    public static List<Component> getPermabuffTooltip(Player player){
+        if(player instanceof OdysseyPlayer odysseyPlayer){
+            AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(Optional.of(Minecraft.getInstance().level), Optional.empty());
+            List<Component> componentList = new ArrayList<>();
+            odysseyPlayer.getPermabuffHolder().addTooltip(componentList, TooltipFlag.Default.ADVANCED, aspectTooltipContext);
+            return componentList;
+        } else {
+            return List.of();
+        }
+    }
+
     // Attribute Multimap
 
     public static void fillAttributeMultimaps(LivingEntity livingEntity, ItemStack oldItemStack, ItemStack newItemStack, EquipmentSlot equipmentSlot, Multimap<Attribute, AttributeModifier> oldMultimap, Multimap<Attribute, AttributeModifier> newMultimap){
@@ -358,7 +328,7 @@ public class AspectUtil {
         // Just removes old modifier if the strength is set to 0
         if(aspectInstance.strength > 0.0f){
             ListTag aspectListTag = getAddedModifierListTag(itemStack);
-            aspectListTag.add(aspectInstanceToCompoundTag(aspectInstance));
+            aspectListTag.add(aspectInstance.toCompoundTag());
             itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectListTag);
         }
     }
@@ -367,7 +337,7 @@ public class AspectUtil {
         ListTag aspectListTag = getAddedModifierListTag(itemStack);
         Tag oldAspectTag = null;
         for(Tag tag: aspectListTag){
-            if(tag instanceof CompoundTag compoundTag && compoundTag.getString(ID_TAG).equals(aspect.id)){
+            if(tag instanceof CompoundTag compoundTag && compoundTag.getString(AspectInstance.ID_TAG).equals(aspect.id)){
                 oldAspectTag = compoundTag;
                 break;
             }

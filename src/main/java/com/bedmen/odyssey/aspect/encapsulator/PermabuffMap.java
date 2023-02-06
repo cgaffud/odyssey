@@ -3,6 +3,7 @@ package com.bedmen.odyssey.aspect.encapsulator;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.object.PermabuffAspect;
 import com.bedmen.odyssey.util.NonNullMap;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
 
@@ -54,4 +55,7 @@ public class PermabuffMap extends NonNullMap<PermabuffAspect, Integer> {
         return permabuffMap;
     }
 
+    public static PermabuffMap fromCompoundTag(CompoundTag compoundTag){
+        return NonNullMap.fromCompoundTag(compoundTag, PermabuffMap.class);
+    }
 }

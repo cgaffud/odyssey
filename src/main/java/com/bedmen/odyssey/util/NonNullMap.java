@@ -37,7 +37,7 @@ public abstract class NonNullMap<K, V> extends HashMap<K, V> {
         return compoundTag;
     }
 
-    public static <K, V, T extends NonNullMap<K,V>> T fromCompoundTag(CompoundTag compoundTag, Class<T> clazz){
+    protected static <K, V, T extends NonNullMap<K,V>> T fromCompoundTag(CompoundTag compoundTag, Class<T> clazz){
         try{
             T nonNullMap = clazz.cast(clazz.getDeclaredConstructor().newInstance());
             for(String keyString: compoundTag.getAllKeys()){

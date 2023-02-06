@@ -3,17 +3,17 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
-import com.bedmen.odyssey.aspect.object.PermabuffAspect;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
-import com.bedmen.odyssey.aspect.encapsulator.PermabuffMap;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
@@ -26,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -38,12 +39,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mixin(Player.class)
 public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer {
 
-    private static final EntityDataAccessor<PermabuffMap> DATA_PERMABUFF_MAP = SynchedEntityData.defineId(Player.class, OdysseyDataSerializers.PERMABUFF_MAP);
+    private static final EntityDataAccessor<PermabuffHolder> DATA_PERMABUFF_HOLDER = SynchedEntityData.defineId(Player.class, OdysseyDataSerializers.PERMABUFF_HOLDER);
 
     @Shadow
     public void awardStat(Stat<?> p_36247_) {}
@@ -54,9 +58,15 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
 
     @Shadow public abstract void aiStep();
 
+    @Shadow public abstract void awardStat(ResourceLocation p_36221_);
+
+    @Shadow public abstract int awardRecipes(Collection<Recipe<?>> p_36213_);
+
+    @Shadow public abstract void awardStat(Stat<?> p_36145_, int p_36146_);
+
     private int attackStrengthTickerO;
     private boolean isSniperScoping;
-    private static final String PERMABUFF_MAP_TAG = Odyssey.MOD_ID + ":PermabuffMap";
+    private static final String PERMABUFF_HOLDER_TAG = Odyssey.MOD_ID + ":PermabuffHolder";
 
     protected MixinPlayer(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
@@ -64,23 +74,23 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
 
     @Inject(method = "defineSynchedData", at = @At(value = "RETURN"))
     public void onDefineSynchedData(CallbackInfo ci){
-        this.entityData.define(DATA_PERMABUFF_MAP, new PermabuffMap());
+        this.entityData.define(DATA_PERMABUFF_HOLDER, new PermabuffHolder(new ArrayList<>()));
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At(value = "RETURN"))
     public void onAddAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
         compoundTag.putInt("AttackStrengthTickerO", this.attackStrengthTickerO);
         compoundTag.putBoolean("IsSniperScoping", this.isSniperScoping);
-        CompoundTag permabuffMapTag =  this.getPermabuffMap().toCompoundTag();
-        compoundTag.put(PERMABUFF_MAP_TAG, permabuffMapTag);
+        CompoundTag permabuffHolderTag = this.getPermabuffHolder().toCompoundTag();
+        compoundTag.put(PERMABUFF_HOLDER_TAG, permabuffHolderTag);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
     public void onReadAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
         this.attackStrengthTickerO = compoundTag.getInt("AttackStrengthTickerO");
         this.isSniperScoping = compoundTag.getBoolean("IsSniperScoping");
-        if(compoundTag.contains(PERMABUFF_MAP_TAG)){
-            this.setPermabuffMap(PermabuffMap.fromCompoundTag(compoundTag.getCompound(PERMABUFF_MAP_TAG), PermabuffMap.class));
+        if(compoundTag.contains(PERMABUFF_HOLDER_TAG)){
+            this.setPermabuffHolder(PermabuffHolder.fromCompoundTag(compoundTag.getCompound(PERMABUFF_HOLDER_TAG)));
         }
     }
 
@@ -167,23 +177,31 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         return false;
     }
 
-    public PermabuffMap getPermabuffMap(){
-        return this.entityData.get(DATA_PERMABUFF_MAP).copy();
+    public PermabuffHolder getPermabuffHolder(){
+        return this.entityData.get(DATA_PERMABUFF_HOLDER).copy();
     }
 
-    public void setPermabuffMap(PermabuffMap permabuffMap){
-        this.entityData.set(DATA_PERMABUFF_MAP, permabuffMap.copy());
+    public void setPermabuffHolder(PermabuffHolder permabuffHolder){
+        this.entityData.set(DATA_PERMABUFF_HOLDER, permabuffHolder.copy());
     }
 
     public void setPermabuff(AspectInstance aspectInstance){
-        PermabuffMap permabuffMap = this.getPermabuffMap();
-        permabuffMap.put((PermabuffAspect)aspectInstance.aspect, (int)aspectInstance.strength);
-        this.setPermabuffMap(permabuffMap);
+        List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermabuffHolder().aspectInstanceList);
+        aspectInstanceList.add(aspectInstance);
+        PermabuffHolder permabuffHolder = new PermabuffHolder(aspectInstanceList);
+        this.setPermabuffHolder(permabuffHolder);
     }
 
     public void addPermabuffs(List<AspectInstance> permabuffList){
-        PermabuffMap permabuffMap = this.getPermabuffMap().combine(new PermabuffMap(permabuffList));
-        this.setPermabuffMap(permabuffMap);
+        List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermabuffHolder().aspectInstanceList);
+        for(AspectInstance aspectInstance: permabuffList){
+            if(aspectInstanceList.stream().anyMatch(aspectInstance1 -> aspectInstance1.aspect == aspectInstance.aspect)){
+                aspectInstanceList = aspectInstanceList.stream().map(aspectInstance1 -> aspectInstance1.addAspectInstance(aspectInstance)).collect(Collectors.toList());
+            } else {
+                aspectInstanceList.add(aspectInstance);
+            }
+        }
+        this.setPermabuffHolder(new PermabuffHolder(aspectInstanceList));
     }
 
     private Player getPlayer(){

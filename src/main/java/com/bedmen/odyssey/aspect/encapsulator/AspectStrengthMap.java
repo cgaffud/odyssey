@@ -3,6 +3,7 @@ package com.bedmen.odyssey.aspect.encapsulator;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.util.NonNullMap;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.Tag;
 
@@ -50,5 +51,9 @@ public class AspectStrengthMap extends NonNullMap<Aspect, Float> {
         for(AspectInstance aspectInstance : aspectInstanceList){
             this.put(aspectInstance.aspect, this.get(aspectInstance.aspect) + aspectInstance.strength);
         }
+    }
+
+    public static AspectStrengthMap fromCompoundTag(CompoundTag compoundTag){
+        return NonNullMap.fromCompoundTag(compoundTag, AspectStrengthMap.class);
     }
 }

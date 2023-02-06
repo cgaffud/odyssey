@@ -8,5 +8,4 @@ import java.util.Optional;
 
 public record AspectTooltipFunctionInput(AspectInstance aspectInstance,
                                          Optional<Level> optionalLevel,
-                                         ItemStack itemStack) {
-}
+                                         Optional<ItemStack> optionalItemStack) {}

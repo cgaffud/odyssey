@@ -12,14 +12,14 @@ import java.util.Optional;
 
 public class AspectTooltipContext {
     public final Optional<Level> optionalLevel;
-    public final ItemStack itemStack;
+    public final Optional<ItemStack> optionalItemStack;
     public final List<AspectInstance> aspectInstanceList;
     public final boolean isAdvanced;
     public final Optional<MutableComponent> optionalHeader;
     public final ChatFormatting chatFormatting;
-    public AspectTooltipContext(Optional<Level> optionalLevel, ItemStack itemStack){
+    public AspectTooltipContext(Optional<Level> optionalLevel, Optional<ItemStack> optionalItemStack){
         this.optionalLevel = optionalLevel;
-        this.itemStack = itemStack;
+        this.optionalItemStack = optionalItemStack;
         this.aspectInstanceList = new ArrayList<>();
         this.isAdvanced = false;
         this.optionalHeader = Optional.empty();
@@ -27,13 +27,13 @@ public class AspectTooltipContext {
     }
 
     private AspectTooltipContext(Optional<Level> optionalLevel,
-                                 ItemStack itemStack,
+                                 Optional<ItemStack> optionalItemStack,
                                  List<AspectInstance> aspectInstanceList,
                                  boolean isAdvanced,
                                  Optional<MutableComponent> optionalHeader,
                                  ChatFormatting chatFormatting){
         this.optionalLevel = optionalLevel;
-        this.itemStack = itemStack;
+        this.optionalItemStack = optionalItemStack;
         this.aspectInstanceList = aspectInstanceList;
         this.isAdvanced = isAdvanced;
         this.optionalHeader = optionalHeader;
@@ -41,7 +41,7 @@ public class AspectTooltipContext {
     }
 
     public AspectTooltipContext withOtherContextVariables(List<AspectInstance> aspectInstanceList, boolean isAdvanced, Optional<MutableComponent> optionalHeader, ChatFormatting chatFormatting){
-        return new AspectTooltipContext(this.optionalLevel, this.itemStack, aspectInstanceList, isAdvanced, optionalHeader, chatFormatting);
+        return new AspectTooltipContext(this.optionalLevel, this.optionalItemStack, aspectInstanceList, isAdvanced, optionalHeader, chatFormatting);
     }
 
 }

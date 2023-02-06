@@ -192,7 +192,7 @@ public class PlayerEvents {
         Player player = event.getPlayer();
         Optional<Level> optionalLevel = player == null ? Optional.empty() : Optional.of(player.level);
         List<Component> componentList = new ArrayList<>();
-        AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(optionalLevel, itemStack);
+        AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(optionalLevel, Optional.of(itemStack));
         if(item instanceof AspectItem aspectItem){
             List<AspectHolder> aspectHolderList = aspectItem.getAspectHolderList();
             for(AspectHolder aspectHolder: aspectHolderList){
@@ -210,7 +210,7 @@ public class PlayerEvents {
         Player newPlayer = event.getPlayer();
         Player oldPlayer = event.getOriginal();
         if(newPlayer instanceof OdysseyPlayer newOdysseyPlayer && oldPlayer instanceof OdysseyPlayer oldOdysseyPlayer){
-            newOdysseyPlayer.setPermabuffMap(oldOdysseyPlayer.getPermabuffMap());
+            newOdysseyPlayer.setPermabuffHolder(oldOdysseyPlayer.getPermabuffHolder());
         }
     }
 }

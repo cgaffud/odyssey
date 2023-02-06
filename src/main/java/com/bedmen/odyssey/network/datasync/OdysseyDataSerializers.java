@@ -1,16 +1,19 @@
 package com.bedmen.odyssey.network.datasync;
 
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
+import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
-import com.bedmen.odyssey.aspect.object.PermabuffAspect;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
-import com.bedmen.odyssey.aspect.encapsulator.PermabuffMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -80,14 +83,37 @@ public class OdysseyDataSerializers {
         return getMapSerializer(FriendlyByteBuf::writeEnum, writeValueToBuffer, friendlyByteBuf -> friendlyByteBuf.readEnum(enumClass), readValueFromBuffer, HashMap::new, Map::copyOf);
     }
 
-    public static final EntityDataSerializer<PermabuffMap> PERMABUFF_MAP = getMapSerializer(
-            (friendlyByteBuf, permabuffAspect) -> friendlyByteBuf.writeUtf(permabuffAspect.id),
-            FriendlyByteBuf::writeVarInt,
-            friendlyByteBuf -> (PermabuffAspect) Aspects.ASPECT_REGISTER.get(friendlyByteBuf.readUtf()),
-            FriendlyByteBuf::readVarInt,
-            PermabuffMap::new,
-            PermabuffMap::copy
-            );
+    public static final EntityDataSerializer<AspectInstance> ASPECT_INSTANCE = new EntityDataSerializer<>() {
+        public void write(FriendlyByteBuf buffer, @NotNull AspectInstance aspectInstance) {
+            buffer.writeUtf(aspectInstance.aspect.id);
+            buffer.writeFloat(aspectInstance.strength);
+        }
+
+        public AspectInstance read(FriendlyByteBuf buffer) {
+            Aspect aspect = Aspects.ASPECT_REGISTER.get(buffer.readUtf());
+            float strength = buffer.readFloat();
+            return new AspectInstance(aspect, strength);
+        }
+
+        public AspectInstance copy(@NotNull AspectInstance aspectInstance) {
+            return new AspectInstance(aspectInstance.aspect, aspectInstance.strength);
+        }
+    };
+
+    public static final EntityDataSerializer<PermabuffHolder> PERMABUFF_HOLDER = new EntityDataSerializer<>() {
+        public void write(FriendlyByteBuf buffer, @NotNull PermabuffHolder permabuffHolder) {
+            buffer.writeCollection(permabuffHolder.aspectInstanceList, ASPECT_INSTANCE::write);
+        }
+
+        public PermabuffHolder read(FriendlyByteBuf buffer) {
+            List<AspectInstance> aspectInstanceList = buffer.readCollection(i -> new ArrayList<>(), ASPECT_INSTANCE::read);
+            return new PermabuffHolder(aspectInstanceList);
+        }
+
+        public PermabuffHolder copy(@NotNull PermabuffHolder permabuffHolder) {
+            return permabuffHolder.copy();
+        }
+    };
     public static final EntityDataSerializer<Map<CovenType, Integer>> COVENTYPE_INT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeVarInt, FriendlyByteBuf::readVarInt);
     public static final EntityDataSerializer<Map<CovenType, Float>> COVENTYPE_FLOAT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeFloat, FriendlyByteBuf::readFloat);
 }
