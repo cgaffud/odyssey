@@ -2,11 +2,12 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.aspect.object.PermabuffAspect;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
-import com.bedmen.odyssey.entity.player.permabuff.Permabuff;
-import com.bedmen.odyssey.entity.player.permabuff.PermabuffMap;
+import com.bedmen.odyssey.aspect.encapsulator.PermabuffMap;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
@@ -37,6 +38,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 @Mixin(Player.class)
 public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer {
 
@@ -48,6 +51,8 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
     public float getCurrentItemAttackStrengthDelay() {return 0.0f;}
 
     @Shadow public abstract void playSound(SoundEvent p_36137_, float p_36138_, float p_36139_);
+
+    @Shadow public abstract void aiStep();
 
     private int attackStrengthTickerO;
     private boolean isSniperScoping;
@@ -162,10 +167,6 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         return false;
     }
 
-    public int getPermabuffValue(Permabuff permabuff){
-        return this.getPermabuffMap().getNonNull(permabuff);
-    }
-
     public PermabuffMap getPermabuffMap(){
         return this.entityData.get(DATA_PERMABUFF_MAP).copy();
     }
@@ -174,8 +175,15 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         this.entityData.set(DATA_PERMABUFF_MAP, permabuffMap.copy());
     }
 
-    public void addPermabuffMap(PermabuffMap permabuffMap){
-        this.entityData.set(DATA_PERMABUFF_MAP, this.getPermabuffMap().combine(permabuffMap));
+    public void setPermabuff(AspectInstance aspectInstance){
+        PermabuffMap permabuffMap = this.getPermabuffMap();
+        permabuffMap.put((PermabuffAspect)aspectInstance.aspect, (int)aspectInstance.strength);
+        this.setPermabuffMap(permabuffMap);
+    }
+
+    public void addPermabuffs(List<AspectInstance> permabuffList){
+        PermabuffMap permabuffMap = this.getPermabuffMap().combine(new PermabuffMap(permabuffList));
+        this.setPermabuffMap(permabuffMap);
     }
 
     private Player getPlayer(){

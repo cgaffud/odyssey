@@ -1,24 +1,23 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.combat.*;
-import com.bedmen.odyssey.entity.player.permabuff.Permabuff;
-import com.bedmen.odyssey.entity.player.permabuff.PermabuffMap;
 import com.bedmen.odyssey.entity.projectile.SonicBoom;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.items.*;
-import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
-import com.bedmen.odyssey.items.ProjectileLaunchItem;
 import com.bedmen.odyssey.items.aspect_items.*;
-import com.bedmen.odyssey.items.odyssey_versions.*;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyBoatItem;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyFood;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.Foods;
@@ -152,7 +151,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new BurnToSummonItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), EntityTypeRegistry.COVEN_MASTER::get));
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
-    public static final RegistryObject<Item> MINERAL_FRUIT = ITEMS.register("mineral_fruit", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), new PermabuffMap(List.of(new Pair<>(Permabuff.MINERAL_FRUIT_EATEN, 1))), odysseyPlayer -> odysseyPlayer.getPermabuffValue(Permabuff.MINERAL_FRUIT_EATEN) < 1));
+    public static final RegistryObject<Item> MINERAL_FRUIT = ITEMS.register("mineral_fruit", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1)), player -> AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) < 1));
 
     // # Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestMaterial.COPPER));

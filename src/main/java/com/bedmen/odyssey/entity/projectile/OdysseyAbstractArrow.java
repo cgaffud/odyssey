@@ -55,7 +55,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     }
 
     public void updatePiercingValues(){
-        float strength = this.aspectStrengthMap.getNonNull(Aspects.PIERCING);
+        float strength = this.aspectStrengthMap.get(Aspects.PIERCING);
         int ceil = Mth.ceil(strength);
         this.piercingDamagePenalty = 1.0f - ((float)ceil) + strength;
         this.setPierceLevel((byte)ceil);
@@ -75,7 +75,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         if(aspect == Aspects.HYDRODYNAMIC){
             return this.entityData.get(DATA_HYDRODYNAMIC) ? 1.0f : 0.0f;
         }
-        return this.aspectStrengthMap.getNonNull(aspect);
+        return this.aspectStrengthMap.get(aspect);
     }
 
     public boolean hasAspect(Aspect aspect){

@@ -18,8 +18,6 @@ import java.util.Random;
 import java.util.Set;
 
 public class ModifyWithTierFunction extends LootItemConditionalFunction {
-    private static final int[] MODIFIER_RARITY = new int[]{2, 5};
-    private static final int[] CURSE_RARITY = new int[]{3, 5};
     final NumberProvider tier;
 
     ModifyWithTierFunction(LootItemCondition[] lootItemConditions, NumberProvider numberProvider) {
@@ -28,7 +26,7 @@ public class ModifyWithTierFunction extends LootItemConditionalFunction {
     }
 
     public LootItemFunctionType getType() {
-        return OdysseyLootItemFunctions.ENCHANT_WITH_TIER;
+        return OdysseyLootItemFunctions.MODIFY_WITH_TIER;
     }
 
     public Set<LootContextParam<?>> getReferencedContextParams() {

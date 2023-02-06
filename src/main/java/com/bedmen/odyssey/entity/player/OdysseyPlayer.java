@@ -1,18 +1,16 @@
 package com.bedmen.odyssey.entity.player;
 
-import com.bedmen.odyssey.entity.player.permabuff.Permabuff;
-import com.bedmen.odyssey.entity.player.permabuff.PermabuffMap;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.PermabuffMap;
+
+import java.util.List;
 
 public interface OdysseyPlayer {
     float getAttackStrengthScaleO();
     void updateSniperScoping();
     boolean isSniperScoping();
-    int getPermabuffValue(Permabuff permabuff);
     PermabuffMap getPermabuffMap();
     void setPermabuffMap(PermabuffMap permabuffMap);
-    void addPermabuffMap(PermabuffMap permabuffMap);
-//    int getLifeFruits();
-//    void setLifeFruits(int i);
-//    void incrementLifeFruits();
-//    ItemStack getTrinketSlot();
+    void setPermabuff(AspectInstance aspectInstance);
+    void addPermabuffs(List<AspectInstance> permabuffList);
 }

@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.network.datasync;
 
+import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.aspect.object.PermabuffAspect;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
-import com.bedmen.odyssey.entity.player.permabuff.Permabuff;
-import com.bedmen.odyssey.entity.player.permabuff.PermabuffMap;
+import com.bedmen.odyssey.aspect.encapsulator.PermabuffMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -80,9 +81,9 @@ public class OdysseyDataSerializers {
     }
 
     public static final EntityDataSerializer<PermabuffMap> PERMABUFF_MAP = getMapSerializer(
-            (friendlyByteBuf, permabuff) -> friendlyByteBuf.writeUtf(permabuff.id),
+            (friendlyByteBuf, permabuffAspect) -> friendlyByteBuf.writeUtf(permabuffAspect.id),
             FriendlyByteBuf::writeVarInt,
-            friendlyByteBuf -> Permabuff.PERMABUFF_REGISTER.get(friendlyByteBuf.readUtf()),
+            friendlyByteBuf -> (PermabuffAspect) Aspects.ASPECT_REGISTER.get(friendlyByteBuf.readUtf()),
             FriendlyByteBuf::readVarInt,
             PermabuffMap::new,
             PermabuffMap::copy

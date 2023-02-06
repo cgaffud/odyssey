@@ -1,11 +1,12 @@
 package com.bedmen.odyssey.aspect;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.object.*;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
+import com.bedmen.odyssey.aspect.object.*;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.google.common.collect.Multimap;
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -225,6 +227,13 @@ public class AspectUtil {
 
     public static boolean hasBooleanAspect(ItemStack itemStack, BooleanAspect booleanAspect){
         return getAspectStrength(itemStack, booleanAspect) > 0.0f;
+    }
+
+    public static int getPermabuffAspectStrength(Player player, PermabuffAspect permabuffAspect){
+        if(player instanceof OdysseyPlayer odysseyPlayer){
+            return odysseyPlayer.getPermabuffMap().get(permabuffAspect);
+        }
+        return 0;
     }
 
     // Special totals over multiple aspects on single item

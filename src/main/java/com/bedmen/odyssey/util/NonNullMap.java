@@ -24,15 +24,11 @@ public abstract class NonNullMap<K, V> extends HashMap<K, V> {
 
     protected abstract V combineValues(V v1, V v2);
 
-    public V getNonNull(K k) {
-        if(this.containsKey(k)){
-            return super.get(k);
+    public V get(Object object) {
+        if(this.containsKey(object)){
+            return super.get(object);
         }
         return this.defaultValue();
-    }
-
-    public V get(Object object) {
-        throw new IllegalArgumentException("Do not use get, use getNonNull");
     }
 
     public CompoundTag toCompoundTag(){
@@ -62,7 +58,7 @@ public abstract class NonNullMap<K, V> extends HashMap<K, V> {
             Class clazz = nonNullMap.getClass();
             T newNonNullMap = (T)clazz.getDeclaredConstructor().newInstance();
             newNonNullMap.putAll(this);
-            nonNullMap.forEach((k, v) -> newNonNullMap.put(k, this.combineValues(newNonNullMap.getNonNull(k), v)));
+            nonNullMap.forEach((k, v) -> newNonNullMap.put(k, this.combineValues(newNonNullMap.get(k), v)));
             return newNonNullMap;
         } catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException exception){
             Odyssey.LOGGER.error(exception);

@@ -48,7 +48,7 @@ public class AspectStrengthMap extends NonNullMap<Aspect, Float> {
     public AspectStrengthMap(List<AspectInstance> aspectInstanceList){
         super();
         for(AspectInstance aspectInstance : aspectInstanceList){
-            this.put(aspectInstance.aspect, this.getNonNull(aspectInstance.aspect) + aspectInstance.strength);
+            this.put(aspectInstance.aspect, this.get(aspectInstance.aspect) + aspectInstance.strength);
         }
     }
 }

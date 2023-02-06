@@ -1,20 +1,21 @@
-package com.bedmen.odyssey.entity.player.permabuff;
+package com.bedmen.odyssey.aspect.encapsulator;
 
+import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.aspect.object.PermabuffAspect;
 import com.bedmen.odyssey.util.NonNullMap;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
 
 import java.util.List;
 
-public class PermabuffMap extends NonNullMap<Permabuff, Integer> {
+public class PermabuffMap extends NonNullMap<PermabuffAspect, Integer> {
     public PermabuffMap(){
         super();
     }
 
-    public PermabuffMap(List<Pair<Permabuff, Integer>> list){
+    public PermabuffMap(List<AspectInstance> permabuffList){
         super();
-        list.forEach(permabuffIntegerPair -> this.put(permabuffIntegerPair.getFirst(), permabuffIntegerPair.getSecond()));
+        permabuffList.forEach(aspectInstance -> this.put((PermabuffAspect)aspectInstance.aspect, (int)aspectInstance.strength));
     }
 
     @Override
@@ -23,13 +24,13 @@ public class PermabuffMap extends NonNullMap<Permabuff, Integer> {
     }
 
     @Override
-    protected String keyToString(Permabuff permabuff) {
-        return permabuff.id;
+    protected String keyToString(PermabuffAspect permabuffAspect) {
+        return permabuffAspect.id;
     }
 
     @Override
-    protected Permabuff stringToKey(String string) {
-        return Permabuff.PERMABUFF_REGISTER.get(string);
+    protected PermabuffAspect stringToKey(String string) {
+        return (PermabuffAspect) Aspects.ASPECT_REGISTER.get(string);
     }
 
     @Override

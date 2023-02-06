@@ -21,5 +21,4 @@ public class Aspect {
     public TranslatableComponent getComponent(){
         return new TranslatableComponent("aspect.oddc."+this.id);
     }
-
 }

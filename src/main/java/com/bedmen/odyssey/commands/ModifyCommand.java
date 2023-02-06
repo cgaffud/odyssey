@@ -1,9 +1,11 @@
 package com.bedmen.odyssey.commands;
 
-import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspect;
+import com.bedmen.odyssey.aspect.object.PermabuffAspect;
 import com.bedmen.odyssey.commands.arguments.ItemModifierArgument;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -49,20 +51,29 @@ public class ModifyCommand {
         int numSuccess = 0;
 
         for(Entity entity : entityCollection) {
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingentity = (LivingEntity)entity;
-                ItemStack itemstack = livingentity.getMainHandItem();
-                if (!itemstack.isEmpty()) {
-                    if(AspectUtil.canAddModifier(itemstack, aspect)){
+            if (entity instanceof LivingEntity livingEntity) {
+                if(aspect instanceof PermabuffAspect){
+                    if(entity instanceof OdysseyPlayer odysseyPlayer){
                         AspectInstance aspectInstance = new AspectInstance(aspect, strength);
-                        aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
-                        AspectUtil.replaceModifier(itemstack, aspectInstance);
+                        odysseyPlayer.setPermabuff(aspectInstance);
                         ++numSuccess;
                     } else if (entityCollection.size() == 1) {
-                        throw ERROR_INCOMPATIBLE.create(itemstack.getItem().getName(itemstack).getString());
+                        throw ERROR_INCOMPATIBLE.create(entity.getName());
                     }
-                } else if (entityCollection.size() == 1) {
-                    throw ERROR_NO_ITEM.create(livingentity.getName().getString());
+                } else {
+                    ItemStack itemstack = livingEntity.getMainHandItem();
+                    if (!itemstack.isEmpty()) {
+                        if(AspectUtil.canAddModifier(itemstack, aspect)){
+                            AspectInstance aspectInstance = new AspectInstance(aspect, strength);
+                            aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
+                            AspectUtil.replaceModifier(itemstack, aspectInstance);
+                            ++numSuccess;
+                        } else if (entityCollection.size() == 1) {
+                            throw ERROR_INCOMPATIBLE.create(itemstack.getItem().getName(itemstack).getString());
+                        }
+                    } else if (entityCollection.size() == 1) {
+                        throw ERROR_NO_ITEM.create(livingEntity.getName().getString());
+                    }
                 }
             } else if (entityCollection.size() == 1) {
                 throw ERROR_NOT_LIVING_ENTITY.create(entity.getName().getString());

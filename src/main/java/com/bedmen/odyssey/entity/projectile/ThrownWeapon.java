@@ -65,7 +65,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
     public void addAspectStrengthMap(AspectStrengthMap aspectStrengthMap){
         super.addAspectStrengthMap(aspectStrengthMap);
         if(this.aspectStrengthMap.containsKey(Aspects.LOYALTY)){
-            this.entityData.set(DATA_LOYALTY_ASPECT, this.aspectStrengthMap.getNonNull(Aspects.LOYALTY));
+            this.entityData.set(DATA_LOYALTY_ASPECT, this.aspectStrengthMap.get(Aspects.LOYALTY));
         }
     }
 
