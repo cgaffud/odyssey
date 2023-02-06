@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.combat.MeleeWeaponClass;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
@@ -17,20 +17,20 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AspectHoeItem extends HoeItem implements AspectItem, OdysseyMeleeItem {
-    private final AspectHolder aspectHolder;
+public class AspectHoeItem extends HoeItem implements InnateAspectItem, OdysseyMeleeItem {
+    private final InnateAspectHolder innateAspectHolder;
     protected final MeleeWeaponClass meleeWeaponClass;
 
     public AspectHoeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance> innateModifierList) {
         super(tier, (int)damage, meleeWeaponClass.attackRate - 4.0f, properties);
         List<AspectInstance> fullAbilityList = new ArrayList<>(meleeWeaponClass.aspectInstanceList);
         fullAbilityList.addAll(additionalAbilityList);
-        this.aspectHolder = new AspectHolder(fullAbilityList, innateModifierList);
+        this.innateAspectHolder = new InnateAspectHolder(fullAbilityList, innateModifierList);
         this.meleeWeaponClass = meleeWeaponClass;
     }
 
-    public AspectHolder getAspectHolder() {
-        return this.aspectHolder;
+    public InnateAspectHolder getInnateAspectHolder() {
+        return this.innateAspectHolder;
     }
 
     public MeleeWeaponClass getMeleeWeaponClass(){

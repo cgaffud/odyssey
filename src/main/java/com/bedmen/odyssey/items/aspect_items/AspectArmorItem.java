@@ -1,11 +1,12 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.*;
-import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.SetBonusAspectHolder;
-import com.bedmen.odyssey.combat.*;
+import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.OdysseyArmorMaterial;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,21 +15,25 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class AspectArmorItem extends ArmorItem implements AspectItem {
+public class AspectArmorItem extends ArmorItem implements InnateAspectItem {
 
-    private final AspectHolder aspectHolder;
+    private final InnateAspectHolder innateAspectHolder;
 
     public AspectArmorItem(Properties properties, OdysseyArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList) {
         super(armorMaterial, equipmentSlot, properties);
-        this.aspectHolder = new AspectHolder(abilityList, innateModifierList);
+        this.innateAspectHolder = new InnateAspectHolder(abilityList, innateModifierList);
     }
 
     public SetBonusAspectHolder getSetBonusAbilityHolder() {
         return ((OdysseyArmorMaterial)this.material).getSetBonusAbilityHolder();
     }
 
-    public AspectHolder getAspectHolder() {
-        return this.aspectHolder;
+    public InnateAspectHolder getInnateAspectHolder() {
+        return this.innateAspectHolder;
+    }
+
+    public List<AspectHolder> getAspectHolderList(){
+        return List.of(this.getSetBonusAbilityHolder(), this.getInnateAspectHolder());
     }
 
     public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer)

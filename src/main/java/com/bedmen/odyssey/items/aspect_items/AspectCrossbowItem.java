@@ -3,7 +3,7 @@ package com.bedmen.odyssey.items.aspect_items;
 import com.bedmen.odyssey.aspect.*;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.object.MultishotAspect;
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
@@ -47,22 +47,22 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegisterItemModelProperty, OdysseyRangedAmmoWeapon, AspectItem {
+public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegisterItemModelProperty, OdysseyRangedAmmoWeapon, InnateAspectItem {
     private boolean startSoundPlayed = false;
     private boolean midLoadSoundPlayed = false;
     private final float damageMultiplier;
     private final int baseMaxChargeTicks;
-    private final AspectHolder aspectHolder;
+    private final InnateAspectHolder innateAspectHolder;
 
     public AspectCrossbowItem(Item.Properties propertiesIn, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance> abilityList, List<AspectInstance> innateAspectList) {
         super(propertiesIn.durability(tier.getUses()));
         this.damageMultiplier = damageMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
-        this.aspectHolder = new AspectHolder(abilityList, innateAspectList);
+        this.innateAspectHolder = new InnateAspectHolder(abilityList, innateAspectList);
     }
 
-    public AspectHolder getAspectHolder(){
-        return this.aspectHolder;
+    public InnateAspectHolder getInnateAspectHolder(){
+        return this.innateAspectHolder;
     }
 
     public Predicate<ItemStack> getSupportedHeldProjectiles() {

@@ -1,14 +1,14 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
-import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
 import net.minecraft.network.chat.Component;
@@ -193,11 +193,11 @@ public class PlayerEvents {
         Optional<Level> optionalLevel = player == null ? Optional.empty() : Optional.of(player.level);
         List<Component> componentList = new ArrayList<>();
         AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(optionalLevel, itemStack);
-        if(item instanceof AspectArmorItem aspectArmorItem){
-            aspectArmorItem.getSetBonusAbilityHolder().addTooltip(componentList, tooltipFlag, aspectTooltipContext);
-        }
         if(item instanceof AspectItem aspectItem){
-            aspectItem.getAspectHolder().addTooltip(componentList, tooltipFlag, aspectTooltipContext);
+            List<AspectHolder> aspectHolderList = aspectItem.getAspectHolderList();
+            for(AspectHolder aspectHolder: aspectHolderList){
+                aspectHolder.addTooltip(componentList, tooltipFlag, aspectTooltipContext);
+            }
         }
         AspectUtil.addAddedModifierTooltip(itemStack, componentList, tooltipFlag, aspectTooltipContext);
 

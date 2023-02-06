@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -20,20 +20,20 @@ public enum ArrowType{
 
     private final Lazy<Item> lazyItem;
     public final double damage;
-    public final AspectHolder aspectHolder;
+    public final InnateAspectHolder innateAspectHolder;
     public final ResourceLocation resourceLocation;
 
     ArrowType(Lazy<Item> lazyItem, double damage, ResourceLocation resourceLocation){
         this.lazyItem = lazyItem;
         this.damage = damage;
-        this.aspectHolder = new AspectHolder(List.of(), List.of());
+        this.innateAspectHolder = new InnateAspectHolder(List.of(), List.of());
         this.resourceLocation = resourceLocation;
     }
 
     ArrowType(String id, Lazy<Item> lazyItem, double damage, List<AspectInstance> innateAspectList){
         this.lazyItem = lazyItem;
         this.damage = damage;
-        this.aspectHolder = new AspectHolder(List.of(), innateAspectList);
+        this.innateAspectHolder = new InnateAspectHolder(List.of(), innateAspectList);
         this.resourceLocation = new ResourceLocation(Odyssey.MOD_ID, String.format("textures/entity/projectiles/%s_arrow.png", id));
     }
 

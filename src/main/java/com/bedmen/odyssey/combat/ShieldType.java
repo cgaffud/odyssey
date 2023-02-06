@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.tools.OdysseyTiers;
@@ -30,7 +30,7 @@ public enum ShieldType {
     public final Predicate<Item> repairItemPredicate;
     public final Material material;
     public final Material material_nopattern;
-    public final AspectHolder aspectHolder;
+    public final InnateAspectHolder innateAspectHolder;
 
     ShieldType(String id, Tier tier, float damageBlock, int recoveryTime, Predicate<Item> repairItemPredicate, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
         this.durability = tier.getUses() * 2;
@@ -39,7 +39,7 @@ public enum ShieldType {
         this.repairItemPredicate = repairItemPredicate;
         this.material = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/"+id+"_shield_base"));
         this.material_nopattern = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/"+id+"_shield_base_nopattern"));
-        this.aspectHolder = new AspectHolder(abilityList, innateModifierList);
+        this.innateAspectHolder = new InnateAspectHolder(abilityList, innateModifierList);
     }
 
     public Material getRenderMaterial(Boolean pattern) {

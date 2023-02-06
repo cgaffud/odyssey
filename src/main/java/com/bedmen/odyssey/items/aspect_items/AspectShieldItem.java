@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, AspectItem {
+public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, InnateAspectItem {
     public final ShieldType shieldType;
     public AspectShieldItem(Properties builder, ShieldType shieldType) {
         super(builder.durability(shieldType.durability));
@@ -33,8 +33,8 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
     }
 
-    public AspectHolder getAspectHolder() {
-        return this.shieldType.aspectHolder;
+    public InnateAspectHolder getInnateAspectHolder() {
+        return this.shieldType.innateAspectHolder;
     }
 
     public boolean isValidRepairItem(ItemStack itemStack, ItemStack repairStack) {

@@ -8,7 +8,7 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
-import com.bedmen.odyssey.items.aspect_items.AspectItem;
+import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -200,8 +200,8 @@ public class AspectUtil {
 
     public static AspectStrengthMap getAspectStrengthMap(ItemStack itemStack){
         AspectStrengthMap addedModifierMap = getAddedModifierMap(itemStack);
-        if(itemStack.getItem() instanceof AspectItem aspectItem){
-            return addedModifierMap.combine(aspectItem.getAspectHolder().allAspectMap);
+        if(itemStack.getItem() instanceof InnateAspectItem innateAspectItem){
+            return addedModifierMap.combine(innateAspectItem.getInnateAspectHolder().allAspectMap);
         }
         return addedModifierMap;
     }

@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AspectArrowItem extends ArrowItem implements AspectItem {
+public class AspectArrowItem extends ArrowItem implements InnateAspectItem {
     private final ArrowType arrowType;
     public AspectArrowItem(Item.Properties properties, ArrowType arrowType) {
         super(properties);
@@ -52,7 +52,7 @@ public class AspectArrowItem extends ArrowItem implements AspectItem {
         tooltip.add(new TranslatableComponent("item.oddc.arrow.damage").append(StringUtil.doubleFormat(this.arrowType.damage)).withStyle(ChatFormatting.BLUE));
     }
 
-    public AspectHolder getAspectHolder() {
-        return this.arrowType.aspectHolder;
+    public InnateAspectHolder getInnateAspectHolder() {
+        return this.arrowType.innateAspectHolder;
     }
 }

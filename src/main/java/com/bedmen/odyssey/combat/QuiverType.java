@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import net.minecraft.resources.ResourceLocation;
 
@@ -15,13 +15,13 @@ public enum QuiverType{
     public final float freeAmmoChance;
     public final boolean isRocketBag;
     public final ResourceLocation textureResourceLocation;
-    public final AspectHolder aspectHolder;
+    public final InnateAspectHolder innateAspectHolder;
 
     QuiverType(String id, int size, float freeAmmoChance, boolean isRocketBag, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
         this.size = size;
         this.freeAmmoChance = freeAmmoChance;
         this.isRocketBag = isRocketBag;
         this.textureResourceLocation = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/"+id+".png");
-        this.aspectHolder = new AspectHolder(abilityList, innateModifierList);
+        this.innateAspectHolder = new InnateAspectHolder(abilityList, innateModifierList);
     }
 }

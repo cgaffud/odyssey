@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.combat.QuiverType;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.registry.ContainerRegistry;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class QuiverItem extends Item implements AspectItem {
+public class QuiverItem extends Item implements InnateAspectItem {
 
     public final QuiverType quiverType;
 
@@ -31,8 +31,8 @@ public class QuiverItem extends Item implements AspectItem {
         this.quiverType = quiverType;
     }
 
-    public AspectHolder getAspectHolder() {
-        return this.quiverType.aspectHolder;
+    public InnateAspectHolder getInnateAspectHolder() {
+        return this.quiverType.innateAspectHolder;
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {

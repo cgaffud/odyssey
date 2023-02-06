@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
@@ -35,21 +35,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class ThrowableWeaponItem extends Item implements Vanishable, INeedsToRegisterItemModelProperty, OdysseyRangedWeapon, AspectItem {
+public abstract class ThrowableWeaponItem extends Item implements Vanishable, INeedsToRegisterItemModelProperty, OdysseyRangedWeapon, InnateAspectItem {
     private static final int THROWING_CHARGE_TIME = 10;
     public final ThrowableType throwableType;
-    public final AspectHolder aspectHolder;
+    public final InnateAspectHolder innateAspectHolder;
 
     public ThrowableWeaponItem(Item.Properties properties, Tier tier, ThrowableType throwableType, List<AspectInstance> additionalAbilityList) {
         super(properties.durability(tier.getUses()));
         this.throwableType = throwableType;
         List<AspectInstance> abilityList = new ArrayList<>(additionalAbilityList);
         abilityList.addAll(throwableType.abilityList);
-        this.aspectHolder = new AspectHolder(abilityList, throwableType.innateModifierList);
+        this.innateAspectHolder = new InnateAspectHolder(abilityList, throwableType.innateModifierList);
     }
 
-    public AspectHolder getAspectHolder() {
-        return this.aspectHolder;
+    public InnateAspectHolder getInnateAspectHolder() {
+        return this.innateAspectHolder;
     }
 
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {

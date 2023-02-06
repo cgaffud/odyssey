@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
@@ -30,16 +30,16 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelProperty, AspectItem, OdysseyRangedAmmoWeapon {
+public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelProperty, InnateAspectItem, OdysseyRangedAmmoWeapon {
     public final float damageMultiplier;
     public final int baseMaxChargeTicks;
-    private final AspectHolder aspectHolder;
+    private final InnateAspectHolder innateAspectHolder;
 
     public AspectBowItem(Item.Properties properties, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList) {
         super(properties.durability(tier.getUses()));
         this.damageMultiplier = damageMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
-        this.aspectHolder = new AspectHolder(abilityList, innateModifierList);
+        this.innateAspectHolder = new InnateAspectHolder(abilityList, innateModifierList);
     }
 
     public int getBaseMaxChargeTicks(){
@@ -50,8 +50,8 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
         return this.damageMultiplier + ConditionalAmpUtil.getDamageTag(bow);
     }
 
-    public AspectHolder getAspectHolder(){
-        return this.aspectHolder;
+    public InnateAspectHolder getInnateAspectHolder(){
+        return this.innateAspectHolder;
     }
 
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int count) {

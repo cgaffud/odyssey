@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
@@ -32,17 +32,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AspectMeleeItem extends TieredItem implements Vanishable, AspectItem, OdysseyMeleeItem {
+public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAspectItem, OdysseyMeleeItem {
     /** Modifiers applied when the item is in the mainhand of a user. */
     protected final Multimap<Attribute, AttributeModifier> attributeModifiers;
-    private final AspectHolder aspectHolder;
+    private final InnateAspectHolder innateAspectHolder;
     protected final MeleeWeaponClass meleeWeaponClass;
 
     public AspectMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance> innateModifierList) {
         super(tier, properties);
         List<AspectInstance> fullAbilityList = new ArrayList<>(meleeWeaponClass.aspectInstanceList);
         fullAbilityList.addAll(additionalAbilityList);
-        this.aspectHolder = new AspectHolder(fullAbilityList, innateModifierList);
+        this.innateAspectHolder = new InnateAspectHolder(fullAbilityList, innateModifierList);
         this.meleeWeaponClass = meleeWeaponClass;
         float attackDamage = damage + tier.getAttackDamageBonus();
 
@@ -52,8 +52,8 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, AspectIte
         this.attributeModifiers = attributeModifiers;
     }
 
-    public AspectHolder getAspectHolder() {
-        return this.aspectHolder;
+    public InnateAspectHolder getInnateAspectHolder() {
+        return this.innateAspectHolder;
     }
 
     public MeleeWeaponClass getMeleeWeaponClass(){
