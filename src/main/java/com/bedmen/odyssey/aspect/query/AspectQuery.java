@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.aspect;
+package com.bedmen.odyssey.aspect.query;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 

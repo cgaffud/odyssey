@@ -4,6 +4,9 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.object.*;
+import com.bedmen.odyssey.aspect.query.AspectQuery;
+import com.bedmen.odyssey.aspect.query.FunctionQuery;
+import com.bedmen.odyssey.aspect.query.SingleQuery;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
@@ -37,7 +40,7 @@ import java.util.stream.Collectors;
 
 public class AspectUtil {
 
-    private static final MutableComponent ADDED_MODIFIER_HEADER = new TranslatableComponent("item.oddc.added_modifiers");
+    private static final MutableComponent ADDED_MODIFIER_HEADER = new TranslatableComponent("aspect_tooltip.oddc.added_modifiers");
     private static final String ADDED_MODIFIERS_TAG = Odyssey.MOD_ID + ":AddedModifiers";
     private static final String ID_TAG = "id";
     private static final String STRENGTH_TAG = "strength";

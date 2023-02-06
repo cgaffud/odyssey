@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class SetBonusAspectHolder implements AspectHolder {
-    private static final MutableComponent SET_BONUS_ABILITY_HEADER = new TranslatableComponent("item.oddc.set_bonus_abilities");
+    private static final MutableComponent SET_BONUS_ABILITY_HEADER = new TranslatableComponent("aspect_tooltip.oddc.set_bonus_abilities");
     private static final ChatFormatting SET_BONUS_COLOR = ChatFormatting.AQUA;
 
     public final List<AspectInstance> aspectInstanceList;
