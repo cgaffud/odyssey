@@ -18,7 +18,7 @@ import java.util.Optional;
 public class PermabuffHolder implements AspectHolder {
     private static final MutableComponent PERMABUFF_HEADER = new TranslatableComponent("aspect_tooltip.oddc.permabuffs");
     private static final ChatFormatting PERMABUFF_COLOR = ChatFormatting.YELLOW;
-    private static final String ASPECT_INSTANCE_LIST_TAG = "AspectInstaneceList";
+    private static final String ASPECT_INSTANCE_LIST_TAG = "AspectInstanceList";
 
     public final List<AspectInstance> aspectInstanceList;
     public final PermabuffMap permabuffMap;

@@ -42,6 +42,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Mixin(Player.class)
@@ -187,7 +188,19 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
 
     public void setPermabuff(AspectInstance aspectInstance){
         List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermabuffHolder().aspectInstanceList);
-        aspectInstanceList.add(aspectInstance);
+        if(aspectInstanceList.stream().anyMatch(oldAspectInstance -> oldAspectInstance.aspect == aspectInstance.aspect)){
+            aspectInstanceList = aspectInstanceList.stream().map(oldAspectInstance -> {
+                if(oldAspectInstance.aspect == aspectInstance.aspect){
+                    if(aspectInstance.strength <= 0.0f){
+                        return null;
+                    }
+                    return aspectInstance;
+                }
+                return oldAspectInstance;
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+        } else {
+            aspectInstanceList.add(aspectInstance);
+        }
         PermabuffHolder permabuffHolder = new PermabuffHolder(aspectInstanceList);
         this.setPermabuffHolder(permabuffHolder);
     }
