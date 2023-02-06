@@ -1,20 +1,19 @@
 package com.bedmen.odyssey.network.datasync;
 
-import com.bedmen.odyssey.combat.ThrowableType;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
-import com.google.common.collect.Maps;
-import it.unimi.dsi.fastutil.floats.FloatArrayList;
-import it.unimi.dsi.fastutil.floats.FloatList;
+import com.bedmen.odyssey.entity.player.permabuff.Permabuff;
+import com.bedmen.odyssey.entity.player.permabuff.PermabuffMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class OdysseyDataSerializers {
     public static final EntityDataSerializer<IntList> INT_LIST = new EntityDataSerializer<>() {
@@ -49,33 +48,45 @@ public class OdysseyDataSerializers {
         };
     }
 
-    public static <E extends Enum<E>, V> EntityDataSerializer<Map<E, V>> getEnumMapSerializer(Class<E> enumClass, BiConsumer<FriendlyByteBuf, V> addValueToBufferFunction, Function<FriendlyByteBuf, V> readValueFromBufferFunction){
+    public static <K, V, T extends Map<K, V>> EntityDataSerializer<T> getMapSerializer(BiConsumer<FriendlyByteBuf, K> writeKeyToBuffer, BiConsumer<FriendlyByteBuf, V> writeValueToBuffer, Function<FriendlyByteBuf, K> readKeyFromBuffer, Function<FriendlyByteBuf, V> readValueFromBuffer, Supplier<T> supplier, Function<T, T> copier){
         return new EntityDataSerializer<>() {
-            public void write(FriendlyByteBuf buffer, @NotNull Map<E, V> map) {
+            public void write(FriendlyByteBuf buffer, @NotNull T map) {
                 buffer.writeVarInt(map.size());
-                for (Map.Entry<E, V> entry : map.entrySet()) {
-                    buffer.writeEnum(entry.getKey());
-                    addValueToBufferFunction.accept(buffer, entry.getValue());
+                for (Map.Entry<K, V> entry : map.entrySet()) {
+                    writeKeyToBuffer.accept(buffer, entry.getKey());
+                    writeValueToBuffer.accept(buffer, entry.getValue());
                 }
             }
 
-            public Map<E, V> read(FriendlyByteBuf buffer) {
-                Map<E, V> map = new HashMap<>();
+            public T read(FriendlyByteBuf buffer) {
+                T map = supplier.get();
                 int size = buffer.readVarInt();
                 for (int i = 0; i < size; i++) {
-                    E enumValue = buffer.readEnum(enumClass);
-                    V value = readValueFromBufferFunction.apply(buffer);
-                    map.put(enumValue, value);
+                    K key = readKeyFromBuffer.apply(buffer);
+                    V value = readValueFromBuffer.apply(buffer);
+                    map.put(key, value);
                 }
                 return map;
             }
 
-            public Map<E, V> copy(@NotNull Map<E, V> map) {
-                return Map.copyOf(map);
+            public T copy(@NotNull T map) {
+                return copier.apply(map);
             }
         };
     }
 
+    public static <E extends Enum<E>, V> EntityDataSerializer<Map<E, V>> getEnumMapSerializer(Class<E> enumClass, BiConsumer<FriendlyByteBuf, V> writeValueToBuffer, Function<FriendlyByteBuf, V> readValueFromBuffer){
+        return getMapSerializer(FriendlyByteBuf::writeEnum, writeValueToBuffer, friendlyByteBuf -> friendlyByteBuf.readEnum(enumClass), readValueFromBuffer, HashMap::new, Map::copyOf);
+    }
+
+    public static final EntityDataSerializer<PermabuffMap> PERMABUFF_MAP = getMapSerializer(
+            (friendlyByteBuf, permabuff) -> friendlyByteBuf.writeUtf(permabuff.id),
+            FriendlyByteBuf::writeVarInt,
+            friendlyByteBuf -> Permabuff.PERMABUFF_REGISTER.get(friendlyByteBuf.readUtf()),
+            FriendlyByteBuf::readVarInt,
+            PermabuffMap::new,
+            PermabuffMap::copy
+            );
     public static final EntityDataSerializer<Map<CovenType, Integer>> COVENTYPE_INT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeVarInt, FriendlyByteBuf::readVarInt);
     public static final EntityDataSerializer<Map<CovenType, Float>> COVENTYPE_FLOAT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeFloat, FriendlyByteBuf::readFloat);
 }

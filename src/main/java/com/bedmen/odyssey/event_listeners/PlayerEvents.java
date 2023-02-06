@@ -204,4 +204,13 @@ public class PlayerEvents {
         List<Component> tooltip = event.getToolTip();
         tooltip.addAll(1, componentList);
     }
+
+    @SubscribeEvent
+    public static void onPlayerEventClone(final PlayerEvent.Clone event){
+        Player newPlayer = event.getPlayer();
+        Player oldPlayer = event.getOriginal();
+        if(newPlayer instanceof OdysseyPlayer newOdysseyPlayer && oldPlayer instanceof OdysseyPlayer oldOdysseyPlayer){
+            newOdysseyPlayer.setPermabuffMap(oldOdysseyPlayer.getPermabuffMap());
+        }
+    }
 }

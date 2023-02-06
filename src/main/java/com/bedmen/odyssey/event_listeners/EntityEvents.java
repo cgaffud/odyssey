@@ -3,6 +3,8 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.SmackPush;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
@@ -15,8 +17,6 @@ import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.combat.SmackPush;
-import com.bedmen.odyssey.combat.WeaponUtil;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
@@ -42,7 +42,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -191,22 +194,6 @@ public class EntityEvents {
                     IDS.add(entity.getId());
                 }
             }
-
-            //Todo lifefruits
-            //Update Max Health Attribute for Player
-//            if(entity instanceof IOdysseyPlayer){
-//                IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)entity;
-//                Player playerEntity = (Player)entity;
-//                PacketDistributor.PacketTarget packetTarget = PacketDistributor.PLAYER.with(() -> (ServerPlayer) entity);
-//                int lifeFruits = playerPermanentBuffs.getLifeFruits();
-//                //Sync Client
-//                OdysseyNetwork.CHANNEL.send(packetTarget, new PermanentBuffsPacket(lifeFruits));
-//                //Increase max health
-//                AttributeInstance modifiableattributeinstance = playerEntity.getAttributes().getInstance(Attributes.MAX_HEALTH);
-//                if (modifiableattributeinstance != null) {
-//                    modifiableattributeinstance.setBaseValue(20.0d + 2.0d*lifeFruits);
-//                }
-//            }
         }
     }
 

@@ -23,11 +23,10 @@ public class OdysseyNetwork {
         //Client to Server
         CHANNEL.registerMessage(0, SwungWithVolatilePacket.class, SwungWithVolatilePacket::encode, SwungWithVolatilePacket::decode, SwungWithVolatilePacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
         CHANNEL.registerMessage(1, ShootSwungProjectilePacket.class, ShootSwungProjectilePacket::encode, ShootSwungProjectilePacket::decode, ShootSwungProjectilePacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+        //Server to Client
         CHANNEL.registerMessage(2, FatalHitAnimatePacket.class, FatalHitAnimatePacket::encode, FatalHitAnimatePacket::decode, FatalHitAnimatePacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(3, ReduceInvulnerabilityPacket.class, ReduceInvulnerabilityPacket::encode, ReduceInvulnerabilityPacket::decode, ReduceInvulnerabilityPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 //        CHANNEL.registerMessage(3, RenameItemPacket.class, RenameItemPacket::encode, RenameItemPacket::decode, RenameItemPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
-        //Server to Client
 //        CHANNEL.registerMessage(5, SoundPacket.class, SoundPacket::encode, SoundPacket::decode, SoundPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-//        CHANNEL.registerMessage(6, PermanentBuffsPacket.class, PermanentBuffsPacket::encode, PermanentBuffsPacket::decode, PermanentBuffsPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 }

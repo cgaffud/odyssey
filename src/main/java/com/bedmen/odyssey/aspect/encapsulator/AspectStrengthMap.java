@@ -2,15 +2,47 @@ package com.bedmen.odyssey.aspect.encapsulator;
 
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
-import net.minecraft.nbt.CompoundTag;
+import com.bedmen.odyssey.util.NonNullMap;
 import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.Tag;
 
-import java.util.HashMap;
+import javax.annotation.Nullable;
 import java.util.List;
 
-public class AspectStrengthMap extends HashMap<Aspect, Float> {
+public class AspectStrengthMap extends NonNullMap<Aspect, Float> {
     public AspectStrengthMap(){
         super();
+    }
+
+    @Override
+    protected Float defaultValue() {
+        return 0.0f;
+    }
+
+    @Override
+    protected String keyToString(Aspect aspect) {
+        return aspect.id;
+    }
+
+    @Override
+    @Nullable
+    protected Aspect stringToKey(String string) {
+        return Aspects.ASPECT_REGISTER.get(string);
+    }
+
+    @Override
+    protected Tag valueToTag(Float aFloat) {
+        return FloatTag.valueOf(aFloat);
+    }
+
+    @Override
+    protected Float tagToValue(Tag tag) {
+        return ((FloatTag)tag).getAsFloat();
+    }
+
+    @Override
+    protected Float combineValues(Float v1, Float v2) {
+        return v1 + v2;
     }
 
     public AspectStrengthMap(List<AspectInstance> aspectInstanceList){
@@ -18,39 +50,5 @@ public class AspectStrengthMap extends HashMap<Aspect, Float> {
         for(AspectInstance aspectInstance : aspectInstanceList){
             this.put(aspectInstance.aspect, this.getNonNull(aspectInstance.aspect) + aspectInstance.strength);
         }
-    }
-
-    public float getNonNull(Aspect aspect) {
-        if(this.containsKey(aspect)){
-            return super.get(aspect);
-        }
-        return 0.0f;
-    }
-
-    public <V extends Float, K extends Aspect> V get(K key) {
-        throw new IllegalArgumentException("Do not use get, use getNonNull");
-    }
-
-    public AspectStrengthMap combine(AspectStrengthMap map){
-        AspectStrengthMap aspectStrengthMap = new AspectStrengthMap();
-        aspectStrengthMap.putAll(this);
-        map.forEach((aspect, strength) -> aspectStrengthMap.put(aspect, aspectStrengthMap.getNonNull(aspect) + strength));
-        return aspectStrengthMap;
-    }
-
-    public CompoundTag toCompoundTag(){
-        CompoundTag compoundTag = new CompoundTag();
-        this.forEach(((aspect, strength) -> compoundTag.put(aspect.id, FloatTag.valueOf(strength))));
-        return compoundTag;
-    }
-
-    public static AspectStrengthMap fromCompoundTag(CompoundTag compoundTag){
-        AspectStrengthMap aspectStrengthMap = new AspectStrengthMap();
-        for(String key: compoundTag.getAllKeys()){
-            if(Aspects.ASPECT_REGISTER.containsKey(key)){
-                aspectStrengthMap.put(Aspects.ASPECT_REGISTER.get(key), compoundTag.getFloat(key));
-            }
-        }
-        return aspectStrengthMap;
     }
 }

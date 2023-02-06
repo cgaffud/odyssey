@@ -1,12 +1,19 @@
 package com.bedmen.odyssey.mixin;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
+import com.bedmen.odyssey.entity.player.permabuff.Permabuff;
+import com.bedmen.odyssey.entity.player.permabuff.PermabuffMap;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
+import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
 import net.minecraft.util.Mth;
@@ -33,35 +40,48 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Player.class)
 public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer {
 
+    private static final EntityDataAccessor<PermabuffMap> DATA_PERMABUFF_MAP = SynchedEntityData.defineId(Player.class, OdysseyDataSerializers.PERMABUFF_MAP);
+
     @Shadow
     public void awardStat(Stat<?> p_36247_) {}
     @Shadow
     public float getCurrentItemAttackStrengthDelay() {return 0.0f;}
 
-    @Shadow public abstract void increaseScore(int p_36402_);
+    @Shadow public abstract void playSound(SoundEvent p_36137_, float p_36138_, float p_36139_);
 
     private int attackStrengthTickerO;
     private boolean isSniperScoping;
+    private static final String PERMABUFF_MAP_TAG = Odyssey.MOD_ID + ":PermabuffMap";
 
     protected MixinPlayer(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
+    }
+
+    @Inject(method = "defineSynchedData", at = @At(value = "RETURN"))
+    public void onDefineSynchedData(CallbackInfo ci){
+        this.entityData.define(DATA_PERMABUFF_MAP, new PermabuffMap());
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At(value = "RETURN"))
     public void onAddAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
         compoundTag.putInt("AttackStrengthTickerO", this.attackStrengthTickerO);
         compoundTag.putBoolean("IsSniperScoping", this.isSniperScoping);
+        CompoundTag permabuffMapTag =  this.getPermabuffMap().toCompoundTag();
+        compoundTag.put(PERMABUFF_MAP_TAG, permabuffMapTag);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
     public void onReadAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
         this.attackStrengthTickerO = compoundTag.getInt("AttackStrengthTickerO");
         this.isSniperScoping = compoundTag.getBoolean("IsSniperScoping");
+        if(compoundTag.contains(PERMABUFF_MAP_TAG)){
+            this.setPermabuffMap(PermabuffMap.fromCompoundTag(compoundTag.getCompound(PERMABUFF_MAP_TAG), PermabuffMap.class));
+        }
     }
 
     @Inject(method = "getCurrentItemAttackStrengthDelay", at = @At("HEAD"), cancellable = true)
     private void onGetCurrentItemAttackStrengthDelay(CallbackInfoReturnable<Float> cir) {
-        if(WeaponUtil.isDualWielding(getPlayerEntity())){
+        if(WeaponUtil.isDualWielding(getPlayer())){
             cir.setReturnValue((float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 10.0D));
             cir.cancel();
         }
@@ -118,7 +138,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
             ITagManager<Item> itemITagManager = ForgeRegistries.ITEMS.tags();
             if(itemITagManager != null){
                 for(Item item : itemITagManager.getTag(OdysseyItemTags.SHIELDS).stream().toList()){
-                    getPlayerEntity().getCooldowns().addCooldown(item, recoveryTime);
+                    getPlayer().getCooldowns().addCooldown(item, recoveryTime);
                 }
                 this.stopUsingItem();
                 this.level.broadcastEntityEvent(this, (byte)30);
@@ -142,7 +162,23 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         return false;
     }
 
-    private Player getPlayerEntity(){
+    public int getPermabuffValue(Permabuff permabuff){
+        return this.getPermabuffMap().getNonNull(permabuff);
+    }
+
+    public PermabuffMap getPermabuffMap(){
+        return this.entityData.get(DATA_PERMABUFF_MAP).copy();
+    }
+
+    public void setPermabuffMap(PermabuffMap permabuffMap){
+        this.entityData.set(DATA_PERMABUFF_MAP, permabuffMap.copy());
+    }
+
+    public void addPermabuffMap(PermabuffMap permabuffMap){
+        this.entityData.set(DATA_PERMABUFF_MAP, this.getPermabuffMap().combine(permabuffMap));
+    }
+
+    private Player getPlayer(){
         return (Player)(Object)this;
     }
 }
