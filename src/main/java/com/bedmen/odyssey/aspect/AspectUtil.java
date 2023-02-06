@@ -115,41 +115,35 @@ public class AspectUtil {
         return tagToMap(getAddedModifierListTag(itemStack));
     }
 
-    private static float getTotalStrengthForFunctionFromMap(Map<Aspect, Float> map, Function<Aspect, Float> strengthFunction){
-        return map.entrySet().stream()
-                .map(entry -> strengthFunction.apply(entry.getKey()) * entry.getValue())
-                .reduce(Float::sum).orElse(0.0f);
-    }
-
-    private static float getTotalStrengthForFunction(ItemStack itemStack, Function<Aspect, Float> strengthFunction){
+    private static float getTotalStrengthFromItemStack(ItemStack itemStack, AspectQuery aspectQuery){
         if(itemStack.isEmpty()){
             return 0.0f;
         }
-        return getTotalStrengthForFunctionFromMap(getAspectStrengthMap(itemStack), strengthFunction);
-    }
-
-    private static float getBonusDamageAspectStrength(ItemStack itemStack, Function<Aspect, Float> strengthFunction){
-        return getTotalStrengthForFunction(itemStack, aspect -> {
-            if(aspect instanceof BonusDamageAspect){
-                return strengthFunction.apply(aspect) * BonusDamageAspect.getStrengthAmplifier(itemStack.getItem());
-            }
-            return 0.0f;
-        });
-    }
-
-    private static float getTotalArmorStrengthForFunction(LivingEntity livingEntity, Function<Aspect, Float> strengthFunction){
-        float total = 0.0f;
-        for(ItemStack armorPiece: livingEntity.getArmorSlots()){
-            total += getTotalStrengthForFunction(armorPiece, strengthFunction);
-        }
-        if(isFullArmorSet(livingEntity.getArmorSlots()) && livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AspectArmorItem aspectArmorItem){
-            total += getTotalStrengthForFunctionFromMap(aspectArmorItem.getSetBonusAbilityHolder().map, strengthFunction);
+        float total = aspectQuery.queryStrengthMap(getAddedModifierMap(itemStack));
+        if(itemStack.getItem() instanceof InnateAspectItem innateAspectItem){
+            total += aspectQuery.queryStrengthMap(innateAspectItem.getInnateAspectHolder().allAspectMap);
         }
         return total;
     }
 
-    private static float getTotalArmorStrengthForAspect(LivingEntity livingEntity, Aspect aspect){
-        return getTotalArmorStrengthForFunction(livingEntity, aspect1 -> aspect1 == aspect ? 1.0f : 0.0f);
+    private static float getBonusDamageAspectStrength(ItemStack itemStack, Function<Aspect, Float> strengthFunction){
+        return getTotalStrengthFromItemStack(itemStack, new FunctionQuery(aspect -> {
+            if(aspect instanceof BonusDamageAspect){
+                return strengthFunction.apply(aspect) * BonusDamageAspect.getStrengthAmplifier(itemStack.getItem());
+            }
+            return 0.0f;
+        }));
+    }
+
+    private static float getTotalArmorStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
+        float total = 0.0f;
+        for(ItemStack armorPiece: livingEntity.getArmorSlots()){
+            total += getTotalStrengthFromItemStack(armorPiece, aspectQuery);
+        }
+        if(isFullArmorSet(livingEntity.getArmorSlots()) && livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AspectArmorItem aspectArmorItem){
+            total += aspectQuery.queryStrengthMap(aspectArmorItem.getSetBonusAbilityHolder().map);
+        }
+        return total;
     }
 
     private static void fillAttributeMultimap(ItemStack itemStack, EquipmentSlot equipmentSlot, Multimap<Attribute, AttributeModifier> multimap){
@@ -180,14 +174,10 @@ public class AspectUtil {
         return count == 4;
     }
 
-    private static float getTotalAspectStrengthAllSlotsForFunction(LivingEntity livingEntity, Function<Aspect, Float> strengthFunction){
-        return getTotalArmorStrengthForFunction(livingEntity, strengthFunction)
-                + getTotalStrengthForFunction(livingEntity.getMainHandItem(), strengthFunction)
-                + getTotalStrengthForFunction(livingEntity.getOffhandItem(), strengthFunction);
-    }
-
-    private static float getTotalAspectStrengthAllSlotsForAspect(LivingEntity livingEntity, Aspect aspect){
-        return getTotalAspectStrengthAllSlotsForFunction(livingEntity, aspect1 -> aspect1 == aspect ? 1.0f : 0.0f);
+    private static float getTotalAspectStrengthAllSlots(LivingEntity livingEntity, AspectQuery aspectQuery){
+        return getTotalArmorStrength(livingEntity, aspectQuery)
+                + getTotalStrengthFromItemStack(livingEntity.getMainHandItem(), aspectQuery)
+                + getTotalStrengthFromItemStack(livingEntity.getOffhandItem(), aspectQuery);
     }
 
     // -- Public endpoints -----------------------------------------------------
@@ -214,7 +204,7 @@ public class AspectUtil {
     // Get aspect strength from single itemStack
 
     public static float getAspectStrength(ItemStack itemStack, Aspect aspect){
-        return getTotalStrengthForFunction(itemStack, aspect1 -> aspect1 == aspect ? 1.0f : 0.0f);
+        return getTotalStrengthFromItemStack(itemStack, new SingleQuery(aspect));
     }
 
     public static float getFloatAspectStrength(ItemStack itemStack, FloatAspect floatAspect){
@@ -257,43 +247,43 @@ public class AspectUtil {
     }
 
     public static float getDamageSourcePredicateAspectStrength(ItemStack itemStack, DamageSource damageSource){
-        return getTotalStrengthForFunction(itemStack, aspect -> {
+        return getTotalStrengthFromItemStack(itemStack, new FunctionQuery(aspect -> {
             if(aspect instanceof DamageSourcePredicateAspect damageSourcePredicateAspect){
                 return damageSourcePredicateAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
             }
             return 0.0f;
-        });
+        }));
     }
 
     // Get total value from armor
 
     public static float getFloatAspectValueFromArmor(LivingEntity livingEntity, FloatAspect floatAspect){
-        return getTotalArmorStrengthForAspect(livingEntity, floatAspect);
+        return getTotalArmorStrength(livingEntity, new SingleQuery(floatAspect));
     }
 
     public static int getIntegerAspectValueFromArmor(LivingEntity livingEntity, IntegerAspect integerAspect){
-        return (int) getTotalArmorStrengthForAspect(livingEntity, integerAspect);
+        return (int) getTotalArmorStrength(livingEntity, new SingleQuery(integerAspect));
     }
 
     public static boolean hasBooleanAspectOnArmor(LivingEntity livingEntity, BooleanAspect booleanAspect){
-        return getTotalArmorStrengthForAspect(livingEntity, booleanAspect) > 0.0f;
+        return getTotalArmorStrength(livingEntity, new SingleQuery(booleanAspect)) > 0.0f;
     }
 
     // Special totals over multiple aspects on armor
 
     public static float getProtectionAspectStrength(LivingEntity livingEntity, DamageSource damageSource){
-        return getTotalArmorStrengthForFunction(livingEntity, aspect -> {
+        return getTotalArmorStrength(livingEntity, new FunctionQuery(aspect -> {
             if(aspect instanceof DamageSourcePredicateAspect damageSourcePredicateAspect){
                 return damageSourcePredicateAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
             }
             return 0.0f;
-        });
+        }));
     }
 
     // Aspect total over all EquipmentSlots
 
     public static int getIntegerAspectStrengthAllSlots(LivingEntity livingEntity, IntegerAspect integerAspect){
-        return (int) getTotalAspectStrengthAllSlotsForAspect(livingEntity, integerAspect);
+        return (int) getTotalAspectStrengthAllSlots(livingEntity, new SingleQuery(integerAspect));
     }
 
     // Tooltips
