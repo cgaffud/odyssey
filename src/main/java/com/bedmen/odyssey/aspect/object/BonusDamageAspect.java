@@ -6,13 +6,14 @@ import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.items.aspect_items.OdysseyMeleeItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Predicate;
 
 public abstract class BonusDamageAspect extends FloatAspect {
 
     protected BonusDamageAspect(String id, Predicate<Item> itemPredicate) {
-        super(id, AspectTooltipFunctions.BONUS_DAMAGE, itemPredicate);
+        super(id, 1.0f, AspectTooltipFunctions.BONUS_DAMAGE, itemPredicate);
     }
 
     public static float getStrengthAmplifier(Item item){
@@ -26,6 +27,10 @@ public abstract class BonusDamageAspect extends FloatAspect {
             return 2.5f;
         }
         return 1.0f;
+    }
+
+    public float getWeight(Item item){
+        return this.weight * (item instanceof OdysseyRangedAmmoWeapon ? 5.0f : 1.0f);
     }
 
 }

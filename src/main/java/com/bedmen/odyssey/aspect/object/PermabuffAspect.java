@@ -5,6 +5,6 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 
 public class PermabuffAspect extends IntegerAspect {
     protected PermabuffAspect(String id, AspectTooltipFunction aspectTooltipFunction) {
-        super(id, aspectTooltipFunction, AspectItemPredicates.NONE);
+        super(id, 0.0f, aspectTooltipFunction, AspectItemPredicates.NONE);
     }
 }

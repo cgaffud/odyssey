@@ -6,7 +6,7 @@ import net.minecraft.world.item.Item;
 import java.util.function.Predicate;
 
 public class FloatAspect extends Aspect {
-    protected FloatAspect(String id, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate){
-        super(id, aspectTooltipFunction, itemPredicate);
+    protected FloatAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate){
+        super(id, weight, aspectTooltipFunction, itemPredicate);
     }
 }

@@ -5,8 +5,8 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import net.minecraft.util.Mth;
 
 public class MultishotAspect extends FloatAspect {
-    protected MultishotAspect(String id) {
-        super(id, AspectTooltipFunctions.MULTISHOT, AspectItemPredicates.CROSSBOW);
+    protected MultishotAspect() {
+        super("multishot", 1.0f, AspectTooltipFunctions.MULTISHOT, AspectItemPredicates.CROSSBOW);
     }
 
     public static int strengthToNumberOfSideProjectiles(float strength){

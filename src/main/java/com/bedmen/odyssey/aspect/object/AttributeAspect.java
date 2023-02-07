@@ -9,8 +9,8 @@ import net.minecraftforge.common.util.Lazy;
 public class AttributeAspect extends FloatAspect {
     private final Lazy<Attribute> attributeLazy;
     public final AttributeModifier.Operation operation;
-    protected AttributeAspect(String id, AspectTooltipFunction aspectTooltipFunction, Lazy<Attribute> attributeLazy, AttributeModifier.Operation operation) {
-        super(id, aspectTooltipFunction, AspectItemPredicates.DAMAGEABLE);
+    protected AttributeAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Lazy<Attribute> attributeLazy, AttributeModifier.Operation operation) {
+        super(id, weight, aspectTooltipFunction, AspectItemPredicates.DAMAGEABLE);
         this.attributeLazy = attributeLazy;
         this.operation = operation;
     }
