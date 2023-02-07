@@ -18,8 +18,7 @@ import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.tools.OdysseyTier;
-import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
@@ -51,7 +50,6 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
@@ -370,7 +368,7 @@ public class EntityEvents {
     }
 
     // The array represents the highest tier in each mob harvest level
-    public static final Tier[] TIER_ARRAY = {OdysseyTiers.ULTRA_1, OdysseyTiers.ULTRA_2, OdysseyTiers.NETHERITE};
+    private static final Tier[] TIER_ARRAY = {OdysseyTiers.ULTRA_1, OdysseyTiers.ULTRA_2, OdysseyTiers.NETHERITE};
     @SubscribeEvent
     public static void onLivingDropsEvent(final LivingDropsEvent event){
         LivingEntity deadEntity = event.getEntityLiving();

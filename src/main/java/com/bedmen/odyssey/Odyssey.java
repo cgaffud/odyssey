@@ -15,7 +15,7 @@ import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
-import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.trades.OdysseyTrades;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.CompostUtil;

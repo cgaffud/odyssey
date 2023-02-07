@@ -106,7 +106,7 @@ public class Aspects {
 
     // ## Set Bonus Abilities
     public static final BooleanAspect SLOW_FALL = new BooleanActivationAspect("slow_fall", "key.sneak");
-    public static final GlideAspect GLIDE = new GlideAspect("glide");
+    public static final GlideAspect GLIDE = new GlideAspect();
     public static final BooleanAspect FROST_WALKER = new BooleanAspect("frost_walker", AspectItemPredicates.BOOTS);
     public static final BooleanAspect TURTLE_MASTERY = new BooleanActivationAspect("turtle_mastery", "key.sneak");
 

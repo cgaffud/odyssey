@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-only
  */
 
-package com.bedmen.odyssey.tools;
+package com.bedmen.odyssey.tier;
 
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
@@ -20,23 +20,18 @@ public class OdysseyTier implements Tier
     private final float speed;
     private final TagKey<Block> tag;
     @Nonnull
-    private final Supplier<Ingredient> repairIngredient;
+    public final Supplier<Ingredient> repairIngredient;
 
-    public OdysseyTier(int uses, @Nonnull Supplier<Ingredient> repairIngredient) {
-        this.uses = uses;
-        this.speed = 2.0f;
-        this.tag = null;
-        this.repairIngredient = repairIngredient;
+    public OdysseyTier(@Nonnull Supplier<Ingredient> repairIngredient) {
+        this(1, repairIngredient);
     }
 
-    public OdysseyTier(int uses,
-                       float speed,
-                       @Nonnull Supplier<Ingredient> repairIngredient)
-    {
-        this.uses = uses;
-        this.speed = speed;
-        this.tag = null;
-        this.repairIngredient = repairIngredient;
+    public OdysseyTier(int uses, @Nonnull Supplier<Ingredient> repairIngredient) {
+        this(uses, 2.0f, repairIngredient);
+    }
+
+    public OdysseyTier(int uses, float speed, @Nonnull Supplier<Ingredient> repairIngredient) {
+        this(uses, speed, null, repairIngredient);
     }
 
     public OdysseyTier(int uses,

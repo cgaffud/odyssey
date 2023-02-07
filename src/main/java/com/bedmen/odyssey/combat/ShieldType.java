@@ -4,7 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspects;
-import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.tier.OdysseyTiers;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;

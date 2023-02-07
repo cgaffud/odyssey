@@ -15,7 +15,7 @@ import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyFood;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
-import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.resources.ResourceLocation;
