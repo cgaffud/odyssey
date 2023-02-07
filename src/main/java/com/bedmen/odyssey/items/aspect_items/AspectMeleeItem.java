@@ -24,6 +24,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 
@@ -90,7 +91,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     }
 
     public boolean isCorrectToolForDrops(BlockState blockState) {
-        return blockState.is(Blocks.COBWEB) && AspectUtil.hasBooleanAspect(this.getDefaultInstance(), Aspects.COBWEB_BREAK);
+        return (blockState.getBlock() instanceof WebBlock) && AspectUtil.hasBooleanAspect(this.getDefaultInstance(), Aspects.COBWEB_BREAK);
     }
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {

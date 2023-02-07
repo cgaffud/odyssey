@@ -22,17 +22,4 @@ public class OdysseyWebBlock extends WebBlock implements INeedsToRegisterRenderT
     public RenderType getRenderType() {
         return RenderType.cutout();
     }
-
-    public float getDestroyProgress(BlockState blockState, Player player, BlockGetter blockGetter, BlockPos blockPos) {
-        float f = blockState.getDestroySpeed(blockGetter, blockPos);
-        ItemStack itemStack = player.getMainHandItem();
-        Item item = itemStack.getItem();
-        if(item instanceof SwordItem || item == Items.SHEARS || AspectUtil.hasBooleanAspect(itemStack, Aspects.COBWEB_BREAK)){
-            f /= 15f;
-        }
-        int i = ForgeHooks.isCorrectToolForDrops(blockState, player) ? 30 : 100;
-        return player.getDigSpeed(blockState, blockPos) / f / (float)i;
-    }
-
-
 }
