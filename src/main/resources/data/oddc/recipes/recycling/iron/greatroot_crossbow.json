@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:greatroot_slug_bow"
+  },
+  "metalCounts": [
+    {
+      "metal": "iron",
+      "count": 4.5
+    }
+  ]
+}
