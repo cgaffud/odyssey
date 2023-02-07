@@ -31,7 +31,7 @@ public class ThrownSpearRenderer extends EntityRenderer<ThrownSpear> {
         poseStack.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(partialTicks, thrownSpear.yRotO, thrownSpear.getYRot()) - 90.0F));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerp(partialTicks, thrownSpear.xRotO, thrownSpear.getXRot()) + 90.0F));
         Model model = thrownSpear.getSpearType().isTrident ? this.tridentModel : this.spearModel;
-        VertexConsumer vertexconsumer = ItemRenderer.getFoilBufferDirect(multiBufferSource, model.renderType(this.getTextureLocation(thrownSpear)), false, false);
+        VertexConsumer vertexconsumer = ItemRenderer.getFoilBufferDirect(multiBufferSource, model.renderType(this.getTextureLocation(thrownSpear)), false, thrownSpear.isFoil());
         model.renderToBuffer(poseStack, vertexconsumer, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.popPose();
         super.render(thrownSpear, entityYaw, partialTicks, poseStack, multiBufferSource, packedLightIn);

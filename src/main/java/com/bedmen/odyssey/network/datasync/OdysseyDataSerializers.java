@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.network.datasync;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
@@ -114,6 +115,15 @@ public class OdysseyDataSerializers {
             return permabuffHolder.copy();
         }
     };
+
+    public static final EntityDataSerializer<AspectStrengthMap> ASPECT_STRENGTH_MAP = getMapSerializer(
+            (buffer, aspect) -> buffer.writeUtf(aspect.id),
+            FriendlyByteBuf::writeFloat,
+            (buffer) -> Aspects.ASPECT_REGISTER.get(buffer.readUtf()),
+            FriendlyByteBuf::readFloat,
+            AspectStrengthMap::new,
+            AspectStrengthMap::copy
+    );
     public static final EntityDataSerializer<Map<CovenType, Integer>> COVENTYPE_INT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeVarInt, FriendlyByteBuf::readVarInt);
     public static final EntityDataSerializer<Map<CovenType, Float>> COVENTYPE_FLOAT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeFloat, FriendlyByteBuf::readFloat);
 }

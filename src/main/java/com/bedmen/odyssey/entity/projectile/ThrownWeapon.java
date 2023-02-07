@@ -30,8 +30,6 @@ import javax.annotation.Nullable;
 
 public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
 
-    private static final EntityDataAccessor<Float> DATA_LOYALTY_ASPECT = SynchedEntityData.defineId(ThrownWeapon.class, EntityDataSerializers.FLOAT);
-
     private static final String THROWN_WEAPON_ITEMSTACK_TAG = "ThrownWeaponItemStack";
     private static final String DONE_DEALING_DAMAGE_TAG = "DoneDealingDamage";
     private static final String THROWABLE_TYPE_TAG = "ThrowableType";
@@ -59,21 +57,6 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_LOYALTY_ASPECT, 0.0f);
-    }
-
-    public void addAspectStrengthMap(AspectStrengthMap aspectStrengthMap){
-        super.addAspectStrengthMap(aspectStrengthMap);
-        if(this.aspectStrengthMap.containsKey(Aspects.LOYALTY)){
-            this.entityData.set(DATA_LOYALTY_ASPECT, this.aspectStrengthMap.get(Aspects.LOYALTY));
-        }
-    }
-
-    public float getAspectStrength(Aspect aspect){
-        if(aspect == Aspects.LOYALTY){
-            return this.entityData.get(DATA_LOYALTY_ASPECT);
-        }
-        return super.getAspectStrength(aspect);
     }
 
     protected void despawn(){

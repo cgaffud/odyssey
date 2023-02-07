@@ -260,8 +260,9 @@ public class AspectUtil {
         // The isAdvanced flag for getTooltip is for filtering aspectInstances based on their display properties
         // Here we want there to be a header or not based on the isAdvanced flag
         tooltip.addAll(getTooltip(aspectTooltipContext.withOtherContextVariables(addedModifiers, tooltipFlag.isAdvanced(), optionalHeader, ADDED_MODIFIER_COLOR)));
-        if(tooltipFlag.isAdvanced()){
-            tooltip.add(new TranslatableComponent("aspect_tooltip.oddc.modifiability_remaining", StringUtil.floatFormat(getModifiabilityRemaining(itemStack)), getTotalModifiability(itemStack)).withStyle(ADDED_MODIFIER_COLOR));
+        int totalModifiability =  getTotalModifiability(itemStack);
+        if(tooltipFlag.isAdvanced() && totalModifiability > 0){
+            tooltip.add(new TranslatableComponent("aspect_tooltip.oddc.modifiability_remaining", StringUtil.floatFormat(getModifiabilityRemaining(itemStack)), totalModifiability).withStyle(ADDED_MODIFIER_COLOR));
         }
     }
 

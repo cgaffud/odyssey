@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.projectile;
 
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -31,5 +32,9 @@ public class ThrownSpear extends ThrownWeapon {
         if(this.hasAspect(Aspects.LOYALTY)){
             this.playSound(this.throwableType.soundProfile.returnSound, 10.0F, 1.0F);
         }
+    }
+
+    public boolean isFoil(){
+        return AspectUtil.hasAddedModifiers(this.getThrownStack());
     }
 }

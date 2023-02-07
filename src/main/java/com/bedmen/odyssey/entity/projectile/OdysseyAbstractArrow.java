@@ -1,9 +1,11 @@
 package com.bedmen.odyssey.entity.projectile;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.entity.monster.Weaver;
+import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -30,8 +32,7 @@ import net.minecraftforge.network.NetworkHooks;
 import java.util.Arrays;
 
 public abstract class OdysseyAbstractArrow extends AbstractArrow {
-    private static final EntityDataAccessor<Boolean> DATA_HYDRODYNAMIC = SynchedEntityData.defineId(OdysseyAbstractArrow.class, EntityDataSerializers.BOOLEAN);
-    protected AspectStrengthMap aspectStrengthMap = new AspectStrengthMap();
+    private static final EntityDataAccessor<AspectStrengthMap> DATA_ASPECT_STRENGTH_MAP = SynchedEntityData.defineId(OdysseyAbstractArrow.class, OdysseyDataSerializers.ASPECT_STRENGTH_MAP);
     public static final String ASPECT_STRENGTH_MAP_TAG = "AspectStrengthMap";
     public static final String PIERCING_DAMAGE_PENALTY_TAG = "PiercingDamagePenalty";
     // Decreases damage of arrow on last piercing
@@ -51,31 +52,34 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_HYDRODYNAMIC, false);
+        this.entityData.define(DATA_ASPECT_STRENGTH_MAP, new AspectStrengthMap());
     }
 
     public void updatePiercingValues(){
-        float strength = this.aspectStrengthMap.get(Aspects.PIERCING);
+        float strength = this.getAspectStrength(Aspects.PIERCING);
         int ceil = Mth.ceil(strength);
         this.piercingDamagePenalty = 1.0f - ((float)ceil) + strength;
         this.setPierceLevel((byte)ceil);
     }
 
-    public void addAspectStrengthMap(AspectStrengthMap aspectStrengthMap){
-        this.aspectStrengthMap = this.aspectStrengthMap.combine(aspectStrengthMap);
-        if(this.aspectStrengthMap.containsKey(Aspects.PIERCING)){
+    public AspectStrengthMap getAspectStrengthMap(){
+        return this.entityData.get(DATA_ASPECT_STRENGTH_MAP).copy();
+    }
+
+    public void setAspectStrengthMap(AspectStrengthMap aspectStrengthMap){
+        this.entityData.set(DATA_ASPECT_STRENGTH_MAP, aspectStrengthMap.copy());
+        if(aspectStrengthMap.containsKey(Aspects.PIERCING)){
             this.updatePiercingValues();
-        }
-        if(this.aspectStrengthMap.containsKey(Aspects.HYDRODYNAMIC)){
-            this.entityData.set(DATA_HYDRODYNAMIC, true);
         }
     }
 
+    public void addAspectStrengthMap(AspectStrengthMap aspectStrengthMap){
+        AspectStrengthMap newAspectStrengthMap = this.getAspectStrengthMap().combine(aspectStrengthMap);
+        this.setAspectStrengthMap(newAspectStrengthMap);
+    }
+
     public float getAspectStrength(Aspect aspect){
-        if(aspect == Aspects.HYDRODYNAMIC){
-            return this.entityData.get(DATA_HYDRODYNAMIC) ? 1.0f : 0.0f;
-        }
-        return this.aspectStrengthMap.get(aspect);
+        return this.getAspectStrengthMap().get(aspect);
     }
 
     public boolean hasAspect(Aspect aspect){
@@ -189,7 +193,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        CompoundTag aspectStrengthMapTag = this.aspectStrengthMap.toCompoundTag();
+        CompoundTag aspectStrengthMapTag = this.getAspectStrengthMap().toCompoundTag();
         compoundTag.put(ASPECT_STRENGTH_MAP_TAG, aspectStrengthMapTag);
         compoundTag.putFloat(PIERCING_DAMAGE_PENALTY_TAG, this.piercingDamagePenalty);
     }
@@ -197,7 +201,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         if(compoundTag.contains(ASPECT_STRENGTH_MAP_TAG)){
-            this.addAspectStrengthMap(AspectStrengthMap.fromCompoundTag(compoundTag.getCompound(ASPECT_STRENGTH_MAP_TAG)));
+            this.setAspectStrengthMap(AspectStrengthMap.fromCompoundTag(compoundTag.getCompound(ASPECT_STRENGTH_MAP_TAG)));
         }
         this.piercingDamagePenalty = compoundTag.contains(PIERCING_DAMAGE_PENALTY_TAG) ? compoundTag.getFloat(PIERCING_DAMAGE_PENALTY_TAG) : 1.0f;
     }

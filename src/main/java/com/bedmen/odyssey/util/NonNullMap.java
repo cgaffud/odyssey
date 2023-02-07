@@ -65,4 +65,8 @@ public abstract class NonNullMap<K, V> extends HashMap<K, V> {
             return null;
         }
     }
+
+    public <T extends NonNullMap<K,V>> T copy(){
+        return (T)this.clone();
+    }
 }

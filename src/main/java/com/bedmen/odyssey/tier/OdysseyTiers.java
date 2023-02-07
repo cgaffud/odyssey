@@ -52,7 +52,7 @@ public class OdysseyTiers {
     public static final OdysseyTier UNCRAFTABLE_2 = new OdysseyTier(2,700, 9.0F, () -> Ingredient.EMPTY);
     public static final OdysseyTier ULTRA_2 = new OdysseyTier(2,750, () -> Ingredient.EMPTY);
     // ## Tier 3
-    public static final OdysseyTier ZEPHYR = new OdysseyTier(4,() -> Ingredient.EMPTY);
+    public static final OdysseyTier ZEPHYR = new OdysseyTier(3,() -> Ingredient.EMPTY);
     public static final OdysseyTier NETHERITE = new OdysseyTier(4,1000,9.0F, Tags.Blocks.NEEDS_NETHERITE_TOOL, () -> Ingredient.of(Items.NETHERITE_INGOT));
 
     // # No Diggers

@@ -9,6 +9,7 @@ import net.minecraft.world.item.enchantment.DigDurabilityEnchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -57,6 +58,11 @@ public abstract class MixinItemStack extends net.minecraftforge.common.capabilit
             itemStack.setDamageValue(newDamageValue);
             return newDamageValue >= itemStack.getMaxDamage();
         }
+    }
+
+    public boolean hasFoil() {
+        ItemStack itemStack = this.getItemStack();
+        return itemStack.getItem().isFoil(itemStack) || AspectUtil.hasAddedModifiers(itemStack);
     }
     
     private ItemStack getItemStack(){
