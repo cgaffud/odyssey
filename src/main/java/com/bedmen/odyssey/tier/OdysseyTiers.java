@@ -32,7 +32,7 @@ public class OdysseyTiers {
     public static final OdysseyTier COPPER = new OdysseyTier(2,200, () -> Ingredient.of(Items.COPPER_INGOT));
     public static final OdysseyTier RUSTY_IRON = new OdysseyTier(2,200, () -> Ingredient.EMPTY);
     public static final OdysseyTier IRON = new OdysseyTier(2,250,6.0F, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.of(Items.IRON_INGOT));
-    public static final OdysseyTier GOLD = new OdysseyTier(5,32,12.0F, Tags.Blocks.NEEDS_GOLD_TOOL, () -> Ingredient.of(Items.GOLD_INGOT));
+    public static final OdysseyTier GOLD = new OdysseyTier(5,32,8.0F, Tags.Blocks.NEEDS_GOLD_TOOL, () -> Ingredient.of(Items.GOLD_INGOT));
     public static final OdysseyTier TURTLE = new OdysseyTier(2,() -> Ingredient.of(Items.SCUTE));
     public static final OdysseyTier UNCRAFTABLE_1 = new OdysseyTier(2,350, 6.0F, () -> Ingredient.EMPTY);
     public static final OdysseyTier ULTRA_1 = new OdysseyTier(2,500, () -> Ingredient.EMPTY);

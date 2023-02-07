@@ -53,16 +53,6 @@ public abstract class MixinEnchantmentHelper {
 
     /**
      * @author JemBren
-     * @reason Aqua Affinity Aspect
-     */
-    @Overwrite
-    public static boolean hasAquaAffinity(LivingEntity livingEntity) {
-        return getEnchantmentLevel(Enchantments.AQUA_AFFINITY, livingEntity) > 0
-                || AspectUtil.hasBooleanAspect(livingEntity.getMainHandItem(), Aspects.AQUA_AFFINITY);
-    }
-
-    /**
-     * @author JemBren
      * @reason Binding Aspect
      */
     @Overwrite

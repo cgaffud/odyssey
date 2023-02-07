@@ -14,6 +14,7 @@ import com.bedmen.odyssey.registry.ParticleTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
@@ -188,5 +190,19 @@ public class PlayerEvents {
         if(newPlayer instanceof OdysseyPlayer newOdysseyPlayer && oldPlayer instanceof OdysseyPlayer oldOdysseyPlayer){
             newOdysseyPlayer.setPermabuffHolder(oldOdysseyPlayer.getPermabuffHolder());
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerEventBreakSpeed(final PlayerEvent.BreakSpeed event){
+        Player player = event.getPlayer();
+        ItemStack itemStack = player.getMainHandItem();
+        float speed = event.getOriginalSpeed();
+        if (player.isEyeInFluid(FluidTags.WATER)
+                && !EnchantmentHelper.hasAquaAffinity(player)
+                && AspectUtil.hasBooleanAspect(itemStack, Aspects.AQUA_AFFINITY)) {
+            speed *= 5.0F;
+        }
+        speed *= 1.0f + AspectUtil.getFloatAspectStrength(itemStack, Aspects.EFFICIENCY);
+        event.setNewSpeed(speed);
     }
 }
