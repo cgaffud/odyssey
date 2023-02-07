@@ -20,7 +20,7 @@ public class OdysseyTiers {
     // # Has diggers
 
     // ## Tier 1
-    public static final OdysseyTier CACTUS = new OdysseyTier(2, () -> Ingredient.of(Items.CACTUS));
+    public static final OdysseyTier CACTUS = new OdysseyTier(3, () -> Ingredient.of(Items.CACTUS));
     public static final OdysseyTier WOOD = new OdysseyTier(3,59,2.0F, Tags.Blocks.NEEDS_WOOD_TOOL, () -> Ingredient.of(ItemTags.PLANKS));
     public static final OdysseyTier COCONUT = new OdysseyTier(3,() -> Ingredient.of(ItemRegistry.HOLLOW_COCONUT.get()));
     public static final OdysseyTier STONE = new OdysseyTier(1,131,4.0F, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(ItemTags.STONE_TOOL_MATERIALS));
@@ -30,9 +30,11 @@ public class OdysseyTiers {
     public static final OdysseyTier CHICKEN = new OdysseyTier(3,() -> Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get()));
     public static final OdysseyTier FUR = new OdysseyTier(3,() -> Ingredient.of(ItemRegistry.POLAR_BEAR_FUR.get()));
     public static final OdysseyTier COPPER = new OdysseyTier(2,200, () -> Ingredient.of(Items.COPPER_INGOT));
-    public static final OdysseyTier RUSTY_IRON = new OdysseyTier(2,200, () -> Ingredient.EMPTY);
+    public static final OdysseyTier SPIDER_FANG = new OdysseyTier(2,225, () -> Ingredient.of(ItemRegistry.SPIDER_FANG.get()));
+    public static final OdysseyTier RUSTY_IRON = new OdysseyTier(2,240, () -> Ingredient.EMPTY);
     public static final OdysseyTier IRON = new OdysseyTier(2,250,6.0F, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.of(Items.IRON_INGOT));
     public static final OdysseyTier GOLD = new OdysseyTier(5,32,8.0F, Tags.Blocks.NEEDS_GOLD_TOOL, () -> Ingredient.of(Items.GOLD_INGOT));
+    public static final OdysseyTier WEAVER_FANG = new OdysseyTier(2,225, () -> Ingredient.of(ItemRegistry.WEAVER_FANG.get()));
     public static final OdysseyTier TURTLE = new OdysseyTier(2,() -> Ingredient.of(Items.SCUTE));
     public static final OdysseyTier UNCRAFTABLE_1 = new OdysseyTier(2,350, 6.0F, () -> Ingredient.EMPTY);
     public static final OdysseyTier ULTRA_1 = new OdysseyTier(2,500, () -> Ingredient.EMPTY);
@@ -68,10 +70,12 @@ public class OdysseyTiers {
         TierSortingRegistry.registerTier(CHICKEN, new ResourceLocation(Odyssey.MOD_ID,"chicken"), List.of(LEATHER), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(FUR, new ResourceLocation(Odyssey.MOD_ID,"fur"), List.of(CHICKEN), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(COPPER, new ResourceLocation(Odyssey.MOD_ID,"copper"), List.of(FUR), List.of(Tiers.IRON));
-        TierSortingRegistry.registerTier(RUSTY_IRON, new ResourceLocation(Odyssey.MOD_ID,"rusty_iron"), List.of(COPPER), List.of(Tiers.IRON));
+        TierSortingRegistry.registerTier(SPIDER_FANG, new ResourceLocation(Odyssey.MOD_ID,"spider_fang"), List.of(COPPER), List.of(Tiers.IRON));
+        TierSortingRegistry.registerTier(RUSTY_IRON, new ResourceLocation(Odyssey.MOD_ID,"rusty_iron"), List.of(SPIDER_FANG), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(IRON, new ResourceLocation(Odyssey.MOD_ID,"iron"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));
         TierSortingRegistry.registerTier(GOLD, new ResourceLocation(Odyssey.MOD_ID,"gold"), List.of(IRON), List.of(Tiers.DIAMOND));
-        TierSortingRegistry.registerTier(TURTLE, new ResourceLocation(Odyssey.MOD_ID,"turtle"), List.of(GOLD), List.of(Tiers.DIAMOND));
+        TierSortingRegistry.registerTier(WEAVER_FANG, new ResourceLocation(Odyssey.MOD_ID,"weaver_fang"), List.of(GOLD), List.of(Tiers.DIAMOND));
+        TierSortingRegistry.registerTier(TURTLE, new ResourceLocation(Odyssey.MOD_ID,"turtle"), List.of(WEAVER_FANG), List.of(Tiers.DIAMOND));
         TierSortingRegistry.registerTier(UNCRAFTABLE_1, new ResourceLocation(Odyssey.MOD_ID,"uncraftable_1"), List.of(TURTLE), List.of(Tiers.DIAMOND));
         TierSortingRegistry.registerTier(ULTRA_1, new ResourceLocation(Odyssey.MOD_ID,"ultra_1"), List.of(UNCRAFTABLE_1), List.of(Tiers.DIAMOND));
         TierSortingRegistry.registerTier(GLIDER, new ResourceLocation(Odyssey.MOD_ID,"glider"), List.of(ULTRA_1), List.of(Tiers.DIAMOND));

@@ -4,6 +4,8 @@ import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
+import com.bedmen.odyssey.items.OdysseyTierItem;
+import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.util.StringUtil;
 import com.bedmen.odyssey.combat.ArrowType;
 import net.minecraft.ChatFormatting;
@@ -14,17 +16,14 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AspectArrowItem extends ArrowItem implements InnateAspectItem {
+public class AspectArrowItem extends ArrowItem implements InnateAspectItem, OdysseyTierItem {
     private final ArrowType arrowType;
     public AspectArrowItem(Item.Properties properties, ArrowType arrowType) {
         super(properties);
@@ -54,5 +53,9 @@ public class AspectArrowItem extends ArrowItem implements InnateAspectItem {
 
     public InnateAspectHolder getInnateAspectHolder() {
         return this.arrowType.innateAspectHolder;
+    }
+
+    public Tier getTier(){
+        return this.arrowType.tier;
     }
 }

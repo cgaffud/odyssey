@@ -3,6 +3,7 @@ package com.bedmen.odyssey.items.aspect_items;
 import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.combat.QuiverType;
 import com.bedmen.odyssey.inventory.QuiverMenu;
+import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
@@ -16,14 +17,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-// todo OdysseyTierItem
-public class QuiverItem extends Item implements InnateAspectItem {
+public class QuiverItem extends Item implements InnateAspectItem, OdysseyTierItem {
 
     public final QuiverType quiverType;
 
@@ -34,6 +35,10 @@ public class QuiverItem extends Item implements InnateAspectItem {
 
     public InnateAspectHolder getInnateAspectHolder() {
         return this.quiverType.innateAspectHolder;
+    }
+
+    public Tier getTier(){
+        return this.quiverType.tier;
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {
