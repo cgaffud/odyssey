@@ -267,6 +267,7 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> OBSIDIAN_DISC = ITEMS.register("obsidian_disc", () -> new BoomerangItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.OBSIDIAN, ThrowableTypes.OBSIDIAN_DISC));
     public static final RegistryObject<Item> AMETHYST_DISC = ITEMS.register("amethyst_disc", () -> new BoomerangItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.AMETHYST, ThrowableTypes.AMETHYST_DISC));
+    public static final RegistryObject<Item> DIAMOND_DISC = ITEMS.register("diamond_disc", () -> new BoomerangItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.DIAMOND, ThrowableTypes.DIAMOND_DISC));
     public static final RegistryObject<Item> GREATROOT_BOOMERANG = ITEMS.register("greatroot_boomerang", () -> new BoomerangItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.GREATROOT, ThrowableTypes.GREATROOT_BOOMERANG));
     public static final RegistryObject<Item> GREATROOT_LONG_BOW = ITEMS.register("greatroot_long_bow", () -> new AspectBowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.GREATROOT,1.5f, 20, List.of(), List.of(new AspectInstance(Aspects.PIERCING, 2.0f))));
     public static final RegistryObject<Item> GREATROOT_REPEATER = ITEMS.register("greatroot_repeater", () -> new AspectBowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.GREATROOT,1.4f, 14, List.of(new AspectInstance(Aspects.REPEAT)), List.of()));
