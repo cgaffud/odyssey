@@ -10,7 +10,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
 
@@ -18,41 +17,54 @@ import java.util.List;
 
 public class OdysseyTiers {
 
-    //Main-line; Require an associated blocktag
-    public static final Tier STERLING_SILVER = new ForgeTier(2, 500,7.0F, -1.0f, 2, OdysseyBlockTags.STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.SILVER_INGOT.get()));
+    // # Has diggers
 
-    //Vanilla Overrides
-    public static final Tier WOOD = new ForgeTier(0, 59,2.0F, -1.0f, 0, Tags.Blocks.NEEDS_WOOD_TOOL, () -> Ingredient.of(ItemTags.PLANKS));
-    public static final Tier STONE = new ForgeTier(1, 131,4.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(ItemTags.STONE_TOOL_MATERIALS));
-    public static final Tier IRON = new ForgeTier(2, 250,6.0F, -1.0f, 0, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.of(Items.IRON_INGOT));
-    public static final Tier GOLD = new ForgeTier(2, 32,12.0F, -1.0f, 0, Tags.Blocks.NEEDS_GOLD_TOOL, () -> Ingredient.of(Items.GOLD_INGOT));
-    public static final Tier DIAMOND = new ForgeTier(3, 500,8.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(Items.DIAMOND));
-    public static final Tier NETHERITE = new ForgeTier(4, 1000,9.0F, -1.0f, 0, Tags.Blocks.NEEDS_NETHERITE_TOOL, () -> Ingredient.of(Items.NETHERITE_INGOT));
+    // ## Tier 1
+    public static final Tier WOOD = new OdysseyTier(59,2.0F, Tags.Blocks.NEEDS_WOOD_TOOL, () -> Ingredient.of(ItemTags.PLANKS));
+    public static final Tier STONE = new OdysseyTier(131,4.0F, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(ItemTags.STONE_TOOL_MATERIALS));
+    public static final Tier IRON = new OdysseyTier(250,6.0F, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.of(Items.IRON_INGOT));
+    public static final Tier GOLD = new OdysseyTier(32,12.0F, Tags.Blocks.NEEDS_GOLD_TOOL, () -> Ingredient.of(Items.GOLD_INGOT));
+    public static final Tier UNCRAFTABLE_1 = new OdysseyTier(350, 6.0F, () -> Ingredient.EMPTY);
+    // ## Tier 2
+    public static final Tier STERLING_SILVER = new OdysseyTier(500,7.0F, OdysseyBlockTags.STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get()));
+    public static final Tier CLOVER_STONE = new OdysseyTier(131,9.0F, () -> Ingredient.of(ItemRegistry.CLOVER_STONE.get()));
+    public static final Tier DIAMOND = new OdysseyTier(500,8.0F, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(Items.DIAMOND));
+    public static final Tier MARINE = new OdysseyTier(1000,10.0F, () -> Ingredient.of(ItemRegistry.PEARL.get()));
+    public static final Tier UNCRAFTABLE_2 = new OdysseyTier(700, 9.0F, () -> Ingredient.EMPTY);
+    // ## Tier 3
+    public static final Tier NETHERITE = new OdysseyTier(1000,9.0F, Tags.Blocks.NEEDS_NETHERITE_TOOL, () -> Ingredient.of(Items.NETHERITE_INGOT));
 
-    //Equipment, No Diggers
-    public static final Tier FLINT = new ForgeTier(0, 150,2.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(Items.FLINT));
-    public static final Tier BONE = new ForgeTier(0, 175,2.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(Items.BONE));
-    public static final Tier COPPER = new ForgeTier(0, 200,2.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(Items.COPPER_INGOT));
-    public static final Tier RUSTY_IRON = new ForgeTier(0, 200,2.0F, -1.0f, 0, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.EMPTY);
-    public static final Tier AMETHYST = new ForgeTier(0, 450,2.0F, -1.0f, 0, OdysseyBlockTags.STERLING_SILVER_TAG, () -> Ingredient.of(Items.AMETHYST_SHARD));
-    public static final Tier OBSIDIAN = new ForgeTier(0, 800,2.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(Items.OBSIDIAN));
-    public static final Tier ULTRA_1 = new ForgeTier(0, 500,7.0F, -1.0f, 0, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.EMPTY);
-    public static final Tier GREATROOT = new ForgeTier(0, 750,2.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(ItemRegistry.GREATROOT.get()));
-    public static final Tier ULTRA_2 = new ForgeTier(0, 900, 8.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.EMPTY);
-    //Equipment, Diggers
-    public static final Tier TIER_1_UNCRAFTABLE = new ForgeTier(2, 350, 7.0F, -1.0f, 0, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.EMPTY);
-    public static final Tier TIER_2_UNCRAFTABLE = new ForgeTier(2, 700, 9.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.EMPTY);
-    public static final Tier CLOVER_STONE = new ForgeTier(2, 131,9.0F, -1.0f, 0, OdysseyBlockTags.STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.CLOVER_STONE.get()));
-    public static final Tier MARINE = new ForgeTier(3, 1000,10.0F, -1.0f, 0, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(ItemRegistry.PEARL.get()));
+    // # No Diggers
+    public static final Tier FLINT = new OdysseyTier(150, () -> Ingredient.of(Items.FLINT));
+    public static final Tier BONE = new OdysseyTier(175, () -> Ingredient.of(Items.BONE));
+    public static final Tier COPPER = new OdysseyTier(200, () -> Ingredient.of(Items.COPPER_INGOT));
+    public static final Tier RUSTY_IRON = new OdysseyTier(200, () -> Ingredient.EMPTY);
+    public static final Tier ULTRA_1 = new OdysseyTier(500, () -> Ingredient.EMPTY);
+    public static final Tier AMETHYST = new OdysseyTier(450, () -> Ingredient.of(Items.AMETHYST_SHARD));
+    public static final Tier OBSIDIAN = new OdysseyTier(800, () -> Ingredient.of(Items.OBSIDIAN));
+    public static final Tier GREATROOT = new OdysseyTier(750, () -> Ingredient.of(ItemRegistry.GREATROOT.get()));
+    public static final Tier ULTRA_2 = new OdysseyTier(750, () -> Ingredient.EMPTY);
 
     public static void init(){
-        TierSortingRegistry.registerTier(STERLING_SILVER, new ResourceLocation(Odyssey.MOD_ID,"sterling_silver"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));
-
         TierSortingRegistry.registerTier(WOOD, new ResourceLocation(Odyssey.MOD_ID,"wood"), List.of(Tiers.WOOD), List.of(Tiers.STONE));
         TierSortingRegistry.registerTier(STONE, new ResourceLocation(Odyssey.MOD_ID,"stone"), List.of(Tiers.STONE), List.of(Tiers.IRON));
-        TierSortingRegistry.registerTier(IRON, new ResourceLocation(Odyssey.MOD_ID,"iron"), List.of(Tiers.IRON), List.of(STERLING_SILVER));
-        TierSortingRegistry.registerTier(GOLD, new ResourceLocation(Odyssey.MOD_ID,"gold"), List.of(IRON), List.of(STERLING_SILVER));
+        TierSortingRegistry.registerTier(FLINT, new ResourceLocation(Odyssey.MOD_ID,"flint"), List.of(STONE), List.of(Tiers.IRON));
+        TierSortingRegistry.registerTier(BONE, new ResourceLocation(Odyssey.MOD_ID,"bone"), List.of(FLINT), List.of(Tiers.IRON));
+        TierSortingRegistry.registerTier(COPPER, new ResourceLocation(Odyssey.MOD_ID,"copper"), List.of(BONE), List.of(Tiers.IRON));
+        TierSortingRegistry.registerTier(RUSTY_IRON, new ResourceLocation(Odyssey.MOD_ID,"rusty_iron"), List.of(COPPER), List.of(Tiers.IRON));
+        TierSortingRegistry.registerTier(IRON, new ResourceLocation(Odyssey.MOD_ID,"iron"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));
+        TierSortingRegistry.registerTier(GOLD, new ResourceLocation(Odyssey.MOD_ID,"gold"), List.of(IRON), List.of(Tiers.DIAMOND));
+        TierSortingRegistry.registerTier(UNCRAFTABLE_1, new ResourceLocation(Odyssey.MOD_ID,"uncraftable_1"), List.of(GOLD), List.of(Tiers.DIAMOND));
+        TierSortingRegistry.registerTier(ULTRA_1, new ResourceLocation(Odyssey.MOD_ID,"ultra_1"), List.of(UNCRAFTABLE_1), List.of(Tiers.DIAMOND));
+        TierSortingRegistry.registerTier(STERLING_SILVER, new ResourceLocation(Odyssey.MOD_ID,"sterling_silver"), List.of(ULTRA_1), List.of(Tiers.DIAMOND));
+        TierSortingRegistry.registerTier(AMETHYST, new ResourceLocation(Odyssey.MOD_ID,"amethyst"), List.of(STERLING_SILVER), List.of(Tiers.DIAMOND));
+        TierSortingRegistry.registerTier(OBSIDIAN, new ResourceLocation(Odyssey.MOD_ID,"obsidian"), List.of(AMETHYST), List.of(Tiers.DIAMOND));
+        TierSortingRegistry.registerTier(CLOVER_STONE, new ResourceLocation(Odyssey.MOD_ID,"clover_stone"), List.of(OBSIDIAN), List.of(Tiers.DIAMOND));
         TierSortingRegistry.registerTier(DIAMOND, new ResourceLocation(Odyssey.MOD_ID,"diamond"), List.of(Tiers.DIAMOND), List.of(Tiers.NETHERITE));
+        TierSortingRegistry.registerTier(GREATROOT, new ResourceLocation(Odyssey.MOD_ID,"greatroot"), List.of(DIAMOND), List.of(Tiers.NETHERITE));
+        TierSortingRegistry.registerTier(MARINE, new ResourceLocation(Odyssey.MOD_ID,"marine"), List.of(GREATROOT), List.of(Tiers.NETHERITE));
+        TierSortingRegistry.registerTier(UNCRAFTABLE_2, new ResourceLocation(Odyssey.MOD_ID,"uncraftable_2"), List.of(MARINE), List.of(Tiers.NETHERITE));
+        TierSortingRegistry.registerTier(ULTRA_2, new ResourceLocation(Odyssey.MOD_ID,"ultra_2"), List.of(UNCRAFTABLE_2), List.of(Tiers.NETHERITE));
         TierSortingRegistry.registerTier(NETHERITE, new ResourceLocation(Odyssey.MOD_ID,"netherite"), List.of(Tiers.NETHERITE), List.of());
     }
 }

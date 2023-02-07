@@ -10,11 +10,11 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 
 public class OdysseyLootItemFunctions {
-    public static LootItemFunctionType ENCHANT_WITH_TIER;
+    public static LootItemFunctionType MODIFY_WITH_TIER;
     public static LootItemFunctionType CHANCE_DECAY;
 
     public static void registerFunctions() {
-        ENCHANT_WITH_TIER = OdysseyLootItemFunctions.register("enchant_with_tier", new ModifyWithTierFunction.Serializer());
+        MODIFY_WITH_TIER = OdysseyLootItemFunctions.register("modify_with_tier", new ModifyWithTierFunction.Serializer());
         CHANCE_DECAY = OdysseyLootItemFunctions.register("chance_decay", new ApplyChanceDecayFunction.Serializer());
     }
 

@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -38,14 +39,11 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
 
-    /**
-     * Sets player on fire unless they are nether immune
-     * Increases max health when eating life fruit
-     */
     @SubscribeEvent
     public static void onPlayerTickEvent(final TickEvent.PlayerTickEvent event){
         Player player =  event.player;
@@ -57,20 +55,11 @@ public class PlayerEvents {
             }
             //Server Side
             if(event.side == LogicalSide.SERVER){
+                System.out.println(TierSortingRegistry.getSortedTiers().stream().map(TierSortingRegistry::getName).collect(Collectors.toList()));
                 if(!(player.isCreative() || player.isSpectator()) && player.level.dimensionType().ultraWarm()){
                     if(!AspectUtil.hasFireProtectionOrResistance(player))
                         player.setSecondsOnFire(1);
                 }
-                //TODO life fruits
-//                if(player.hasEffect(EffectRegistry.LIFE_INCREASE.get())){
-//                    IOdysseyPlayer playerPermanentBuffs = (IOdysseyPlayer)player;
-//                    playerPermanentBuffs.incrementLifeFruits();
-//                    AttributeInstance modifiableattributeinstance = player.getAttributes().getInstance(Attributes.MAX_HEALTH);
-//                    if (modifiableattributeinstance != null) {
-//                        modifiableattributeinstance.setBaseValue(20.0d + 2.0d * playerPermanentBuffs.getLifeFruits());
-//                        player.setHealth(player.getHealth()+2.0f);
-//                    }
-//                }
             } else { //Client Side
 
             }
@@ -93,18 +82,6 @@ public class PlayerEvents {
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, 0, false, false, true));
             }
         }
-    }
-
-    /**
-     * Sets player health to the appropriate level upon respawn based don life fruits eaten
-     */
-    @SubscribeEvent
-    public static void onPlayerRespawnEvent(final PlayerEvent.PlayerRespawnEvent event){
-        //Todo life fruits
-//        Player player =  event.getPlayer();
-//        if(player instanceof IOdysseyPlayer && !player.level.isClientSide){
-//            player.setHealth(20.0f + 2.0f * ((IOdysseyPlayer) player).getLifeFruits());
-//        }
     }
 
     @SubscribeEvent

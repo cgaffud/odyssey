@@ -29,6 +29,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -42,10 +43,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -362,6 +360,23 @@ public class EntityEvents {
         }
         if(!(newItemStack.getItem() instanceof AspectArmorItem) || equipmentSlot.getType() == EquipmentSlot.Type.ARMOR){
             livingEntity.getAttributes().addTransientAttributeModifiers(newMultimap);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDropsEvent(final LivingDropsEvent event){
+        LivingEntity deadEntity = event.getEntityLiving();
+        if(deadEntity instanceof Mob) {
+            Set<ItemEntity> itemEntitySet = new HashSet<>();
+            DamageSource damageSource = deadEntity.getLastDamageSource();
+            Entity entity = damageSource.getDirectEntity();
+            int harvestLevel = entity instanceof Player player ? 1 + AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 1;
+
+        }
+
+
+        for(ItemEntity itemEntity: event.getDrops()){
+            System.out.println(itemEntity.getItem());
         }
     }
 }
