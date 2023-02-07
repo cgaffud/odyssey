@@ -8,14 +8,17 @@ import com.bedmen.odyssey.aspect.encapsulator.SetBonusAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.OdysseyArmorMaterial;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.items.OdysseyTierItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraftforge.common.TierSortingRegistry;
 
 import java.util.List;
 
-public class AspectArmorItem extends ArmorItem implements InnateAspectItem {
+public class AspectArmorItem extends ArmorItem implements InnateAspectItem, OdysseyTierItem {
 
     private final InnateAspectHolder innateAspectHolder;
 
@@ -24,8 +27,16 @@ public class AspectArmorItem extends ArmorItem implements InnateAspectItem {
         this.innateAspectHolder = new InnateAspectHolder(abilityList, innateModifierList);
     }
 
+    public OdysseyArmorMaterial getOdysseyArmorMaterial(){
+        return (OdysseyArmorMaterial)this.material;
+    }
+
     public SetBonusAspectHolder getSetBonusAbilityHolder() {
-        return ((OdysseyArmorMaterial)this.material).getSetBonusAbilityHolder();
+        return this.getOdysseyArmorMaterial().getSetBonusAbilityHolder();
+    }
+
+    public Tier getTier(){
+        return this.getOdysseyArmorMaterial().getTier();
     }
 
     public InnateAspectHolder getInnateAspectHolder() {

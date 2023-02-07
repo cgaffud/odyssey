@@ -3,18 +3,21 @@ package com.bedmen.odyssey.combat;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.encapsulator.SetBonusAspectHolder;
+import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 public enum OdysseyArmorMaterial implements ArmorMaterial {
+    // Tier 1
     CACTUS("oddc:cactus", 5, new int[]{2,3,3,2}, 0, SoundEvents.WOOL_BREAK, 0.0f, () -> Ingredient.of(Items.CACTUS), List.of()),
     LEATHER("leather", 5, new int[]{2,3,4,3}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> Ingredient.of(Items.LEATHER), List.of()),
     COCONUT("oddc:coconut", 0, new int[]{0,0,0,3}, 0, SoundEvents.WOOD_BREAK, 0.0f, () -> Ingredient.of(ItemRegistry.HOLLOW_COCONUT.get()), List.of()),
@@ -25,6 +28,7 @@ public enum OdysseyArmorMaterial implements ArmorMaterial {
     IRON("iron", 15, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, () -> Ingredient.of(Items.IRON_INGOT), List.of()),
     TURTLE("oddc:turtle", 25, new int[]{3,6,7,4}, 0, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, () -> Ingredient.of(Items.SCUTE), List.of(new AspectInstance(Aspects.TURTLE_MASTERY))),
     GOLD("gold", 7, new int[]{4,7,8,5}, 10, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, () -> Ingredient.of(Items.GOLD_INGOT), List.of()),
+    // Tier 2
     THORNMAIL("oddc:thornmail", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_CHAIN, 0.0f, () -> Ingredient.EMPTY, List.of(new AspectInstance(Aspects.ATTACK_DAMAGE, 1.0f))),
     PARKA("oddc:parka", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, () -> Ingredient.EMPTY, List.of()),
     ZEPHYR("oddc:zephyr", 20, new int[]{5,8,9,6}, 0, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, () -> Ingredient.EMPTY, List.of(new AspectInstance(Aspects.GLIDE, 40))),
@@ -32,6 +36,7 @@ public enum OdysseyArmorMaterial implements ArmorMaterial {
     REINFORCED("oddc:reinforced", 25, new int[]{6,10,11,7}, 0, SoundEvents.ARMOR_EQUIP_IRON, 0.1F, () -> Ingredient.of(Items.IRON_INGOT), List.of()),
     DIAMOND("diamond", 11, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(Items.DIAMOND), List.of()),
     ARCTIC("oddc:arctic", 20, new int[]{7,12,13,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()), List.of(new AspectInstance(Aspects.FROST_WALKER))),
+    // Tier 3
     NETHERITE("netherite", 22, new int[]{7,13,15,9}, 0, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.1F, () -> Ingredient.of(Items.NETHERITE_INGOT), List.of());
 //    MARINE("oddc:marine", 25, new int[]{7,13,14,8}, 0, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(ItemRegistry.PEARL.get())),
 //    LEVIATHAN("oddc:leviathan", 30, new int[]{8,14,16,10}, 0, SoundEvents.ARMOR_EQUIP_TURTLE , 0.0F, () -> Ingredient.of(ItemRegistry.LEVIATHAN_SCALE.get()); }, new SetBonusEnchSup(EnchantmentRegistry.FIREPROOF, "key.sneak"));
@@ -57,6 +62,18 @@ public enum OdysseyArmorMaterial implements ArmorMaterial {
         this.knockbackResistance = knockbackResistance;
         this.repairMaterial = repairMaterial;
         this.setBonusAspectHolder = new SetBonusAspectHolder(aspectInstanceList);
+    }
+
+    // I don't want to give every material a tier so this is just a shortcut purely for preventing good armors from dropping early
+    public Tier getTier(){
+        int i = 0;
+        if(this.ordinal() > GOLD.ordinal()){
+            i = 1;
+        }
+        if(this.ordinal() > ARCTIC.ordinal()){
+            i = 2;
+        }
+        return EntityEvents.TIER_ARRAY[i];
     }
 
     @Override

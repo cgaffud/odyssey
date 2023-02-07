@@ -6,6 +6,7 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
+import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -25,12 +26,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, InnateAspectItem {
+public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, InnateAspectItem, OdysseyTierItem {
     public final ShieldType shieldType;
     public AspectShieldItem(Properties builder, ShieldType shieldType) {
-        super(builder.durability(shieldType.durability));
+        super(builder.durability(shieldType.tier.getUses() * 2));
         this.shieldType = shieldType;
         DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
+    }
+
+    public Tier getTier(){
+        return this.shieldType.tier;
     }
 
     public InnateAspectHolder getInnateAspectHolder() {

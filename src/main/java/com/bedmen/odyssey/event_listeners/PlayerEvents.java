@@ -55,7 +55,6 @@ public class PlayerEvents {
             }
             //Server Side
             if(event.side == LogicalSide.SERVER){
-                System.out.println(TierSortingRegistry.getSortedTiers().stream().map(TierSortingRegistry::getName).collect(Collectors.toList()));
                 if(!(player.isCreative() || player.isSpectator()) && player.level.dimensionType().ultraWarm()){
                     if(!AspectUtil.hasFireProtectionOrResistance(player))
                         player.setSecondsOnFire(1);

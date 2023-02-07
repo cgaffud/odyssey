@@ -34,12 +34,18 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
     public final float damageMultiplier;
     public final int baseMaxChargeTicks;
     private final InnateAspectHolder innateAspectHolder;
+    protected final Tier tier;
 
     public AspectBowItem(Item.Properties properties, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList) {
         super(properties.durability(tier.getUses()));
         this.damageMultiplier = damageMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
         this.innateAspectHolder = new InnateAspectHolder(abilityList, innateModifierList);
+        this.tier = tier;
+    }
+
+    public Tier getTier(){
+        return this.tier;
     }
 
     public int getBaseMaxChargeTicks(){

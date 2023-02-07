@@ -22,6 +22,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
+// todo OdysseyTierItem
 public class QuiverItem extends Item implements InnateAspectItem {
 
     public final QuiverType quiverType;

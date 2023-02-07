@@ -9,6 +9,7 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
@@ -17,6 +18,8 @@ import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.tools.OdysseyTier;
+import com.bedmen.odyssey.tools.OdysseyTiers;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
@@ -34,8 +37,10 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraftforge.common.ForgeConfig;
+import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.Event;
@@ -46,6 +51,7 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
@@ -363,20 +369,36 @@ public class EntityEvents {
         }
     }
 
+    // The array represents the highest tier in each mob harvest level
+    public static final Tier[] TIER_ARRAY = {OdysseyTiers.ULTRA_1, OdysseyTiers.ULTRA_2, OdysseyTiers.NETHERITE};
     @SubscribeEvent
     public static void onLivingDropsEvent(final LivingDropsEvent event){
         LivingEntity deadEntity = event.getEntityLiving();
         if(deadEntity instanceof Mob) {
-            Set<ItemEntity> itemEntitySet = new HashSet<>();
-            DamageSource damageSource = deadEntity.getLastDamageSource();
-            Entity entity = damageSource.getDirectEntity();
-            int harvestLevel = entity instanceof Player player ? 1 + AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 1;
-
-        }
-
-
-        for(ItemEntity itemEntity: event.getDrops()){
-            System.out.println(itemEntity.getItem());
+            DamageSource damageSource = event.getSource();
+            Tier tier;
+            if(damageSource != null){
+                Entity entity = damageSource.getEntity();
+                int mobHarvestLevel = entity instanceof Player player ? AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 0;
+                mobHarvestLevel = Integer.min(TIER_ARRAY.length-1, mobHarvestLevel);
+                tier = TIER_ARRAY[mobHarvestLevel];
+            } else {
+                tier = TIER_ARRAY[0];
+            }
+            List<Tier> lowerTiers = TierSortingRegistry.getTiersLowerThan(tier);
+            Collection<ItemEntity> itemEntityCollection = event.getDrops();
+            Set<ItemEntity> itemEntityToRemove = new HashSet<>();
+            for(ItemEntity itemEntity: itemEntityCollection){
+                if(itemEntity.getItem().getItem() instanceof OdysseyTierItem odysseyTierItem){
+                    Tier itemTier = odysseyTierItem.getTier();
+                    if(!lowerTiers.contains(itemTier) && tier != itemTier){
+                        itemEntityToRemove.add(itemEntity);
+                    }
+                }
+            }
+            for(ItemEntity itemEntity: itemEntityToRemove){
+                itemEntityCollection.remove(itemEntity);
+            }
         }
     }
 }

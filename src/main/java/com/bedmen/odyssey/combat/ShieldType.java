@@ -24,7 +24,7 @@ public enum ShieldType {
     REINFORCED("reinforced", OdysseyTiers.IRON, 7.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.EXPLOSION_DAMAGE_BLOCK, 7.0f))),
     DIAMOND("diamond", OdysseyTiers.DIAMOND, 8.0f, 100, item -> item == Items.DIAMOND, List.of(), List.of(new AspectInstance(Aspects.DURABILITY, 2.0f)));
 
-    public final int durability;
+    public final Tier tier;
     public final float damageBlock;
     public final int recoveryTime;
     public final Predicate<Item> repairItemPredicate;
@@ -33,7 +33,7 @@ public enum ShieldType {
     public final InnateAspectHolder innateAspectHolder;
 
     ShieldType(String id, Tier tier, float damageBlock, int recoveryTime, Predicate<Item> repairItemPredicate, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
-        this.durability = tier.getUses() * 2;
+        this.tier = tier;
         this.damageBlock = damageBlock;
         this.recoveryTime = recoveryTime;
         this.repairItemPredicate = repairItemPredicate;
