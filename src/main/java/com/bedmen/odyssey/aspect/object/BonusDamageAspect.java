@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 public abstract class BonusDamageAspect extends FloatAspect {
 
     protected BonusDamageAspect(String id, Predicate<Item> itemPredicate) {
-        super(id, 1.0f, AspectTooltipFunctions.BONUS_DAMAGE, itemPredicate);
+        super(id, 2.0f, AspectTooltipFunctions.BONUS_DAMAGE, itemPredicate);
     }
 
     public static float getStrengthAmplifier(Item item){

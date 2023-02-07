@@ -16,26 +16,26 @@ import java.util.function.Supplier;
 @SuppressWarnings("ClassCanBeRecord") // can't make it a record because the method names will be obfuscated
 public class OdysseyTier implements Tier
 {
-    public final float modifiability;
+    private final int modifiability;
     private final int uses;
     private final float speed;
     private final TagKey<Block> tag;
     @Nonnull
     public final Supplier<Ingredient> repairIngredient;
 
-    public OdysseyTier(float modifiability, @Nonnull Supplier<Ingredient> repairIngredient) {
+    public OdysseyTier(int modifiability, @Nonnull Supplier<Ingredient> repairIngredient) {
         this(modifiability, 1, repairIngredient);
     }
 
-    public OdysseyTier(float modifiability, int uses, @Nonnull Supplier<Ingredient> repairIngredient) {
+    public OdysseyTier(int modifiability, int uses, @Nonnull Supplier<Ingredient> repairIngredient) {
         this(modifiability, uses, 2.0f, repairIngredient);
     }
 
-    public OdysseyTier(float modifiability, int uses, float speed, @Nonnull Supplier<Ingredient> repairIngredient) {
+    public OdysseyTier(int modifiability, int uses, float speed, @Nonnull Supplier<Ingredient> repairIngredient) {
         this(modifiability, uses, speed, null, repairIngredient);
     }
 
-    public OdysseyTier(float modifiability,
+    public OdysseyTier(int modifiability,
                        int uses,
                        float speed,
                        TagKey<Block> tag,
@@ -75,7 +75,7 @@ public class OdysseyTier implements Tier
     @Override
     public int getEnchantmentValue()
     {
-        return 0;
+        return modifiability;
     }
 
     public TagKey<Block> getTag()

@@ -10,8 +10,11 @@ import com.bedmen.odyssey.aspect.query.SingleQuery;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
+import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
+import com.bedmen.odyssey.tier.OdysseyTier;
+import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -42,6 +45,7 @@ import java.util.stream.Collectors;
 public class AspectUtil {
 
     private static final MutableComponent ADDED_MODIFIER_HEADER = new TranslatableComponent("aspect_tooltip.oddc.added_modifiers");
+    private static final ChatFormatting ADDED_MODIFIER_COLOR = ChatFormatting.GRAY;
     private static final String ADDED_MODIFIERS_TAG = Odyssey.MOD_ID + ":AddedModifiers";
     private static final String SET_BONUS_STRING = "SET_BONUS";
     private static final List<EquipmentSlot> ARMOR_EQUIPMENT_SLOT_LIST = Arrays.stream(EquipmentSlot.values()).filter(equipmentSlot -> equipmentSlot.getType() == EquipmentSlot.Type.ARMOR).collect(Collectors.toList());
@@ -255,7 +259,10 @@ public class AspectUtil {
         Optional<MutableComponent> optionalHeader = tooltipFlag.isAdvanced() ? Optional.of(ADDED_MODIFIER_HEADER) : Optional.empty();
         // The isAdvanced flag for getTooltip is for filtering aspectInstances based on their display properties
         // Here we want there to be a header or not based on the isAdvanced flag
-        tooltip.addAll(getTooltip(aspectTooltipContext.withOtherContextVariables(addedModifiers, tooltipFlag.isAdvanced(), optionalHeader, ChatFormatting.GRAY)));
+        tooltip.addAll(getTooltip(aspectTooltipContext.withOtherContextVariables(addedModifiers, tooltipFlag.isAdvanced(), optionalHeader, ADDED_MODIFIER_COLOR)));
+        if(tooltipFlag.isAdvanced()){
+            tooltip.add(new TranslatableComponent("aspect_tooltip.oddc.modifiability_remaining", StringUtil.floatFormat(getModifiabilityRemaining(itemStack)), getTotalModifiability(itemStack)).withStyle(ADDED_MODIFIER_COLOR));
+        }
     }
 
     public static List<Component> getTooltip(AspectTooltipContext context){
@@ -317,8 +324,27 @@ public class AspectUtil {
 
     // Add/Remove added modifiers
 
-    public static boolean canAddModifier(ItemStack itemStack, Aspect aspect){
-        return aspect.itemPredicate.test(itemStack.getItem());
+    public static float getUsedModifiability(ItemStack itemStack){
+        AspectStrengthMap addedModifierMap = getAddedModifierMap(itemStack);
+        FunctionQuery functionQuery = new FunctionQuery(aspect -> aspect.getWeight(itemStack.getItem()));
+        return functionQuery.queryStrengthMap(addedModifierMap);
+    }
+
+    public static int getTotalModifiability(ItemStack itemStack){
+        if(itemStack.getItem() instanceof OdysseyTierItem odysseyTierItem){
+            return odysseyTierItem.getTier().getEnchantmentValue();
+        }
+        return 0;
+    }
+
+    public static float getModifiabilityRemaining(ItemStack itemStack){
+        return getTotalModifiability(itemStack) - getUsedModifiability(itemStack);
+    }
+
+    public static boolean canAddModifier(ItemStack itemStack, AspectInstance aspectInstance){
+        boolean passesItemPredicate = aspectInstance.aspect.itemPredicate.test(itemStack.getItem());
+        boolean passesModifiabilityCheck = aspectInstance.getModifiability(itemStack) <= getModifiabilityRemaining(itemStack);
+        return passesItemPredicate && passesModifiabilityCheck;
     }
 
     // Replaces added modifier with same aspect as aspectInstance with aspectInstance,

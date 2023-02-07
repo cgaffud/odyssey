@@ -1,6 +1,7 @@
 {
   "aspect_tooltip.oddc.abilities": "Abilities:",
   "aspect_tooltip.oddc.added_modifiers": "Added Modifiers:",
+  "aspect_tooltip.oddc.modifiability_remaining": "%s/%s Modifiability Remaining",
   "aspect_tooltip.oddc.innate_modifiers": "Innate Modifiers:",
   "aspect_tooltip.oddc.set_bonus_abilities": "Set Bonus:",
   "aspect_tooltip.oddc.permabuffs": "Permanent Buffs:",

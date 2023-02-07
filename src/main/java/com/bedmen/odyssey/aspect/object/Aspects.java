@@ -25,9 +25,9 @@ public class Aspects {
     public static final FloatAspect DURABILITY = new FloatAspect("durability", 1.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.DAMAGEABLE);
     public static final BooleanAspect BURN_PROOF = new BooleanAspect("burn_proof", AspectItemPredicates.DAMAGEABLE);
     // ## Attribute
-    public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", 5.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
-    public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
-    public static final AttributeAspect SWIM_SPEED = new AttributeAspect("swim_speed", 4.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, ForgeMod.SWIM_SPEED::get, AttributeModifier.Operation.ADDITION);
+    public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", 10.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
+    public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", 4.0f, AspectTooltipFunctions.NUMBER_ADDITION, () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
+    public static final AttributeAspect SWIM_SPEED = new AttributeAspect("swim_speed", 8.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, ForgeMod.SWIM_SPEED::get, AttributeModifier.Operation.ADDITION);
 
     // # All Weapons
     public static final IntegerAspect LOOTING_LUCK = new IntegerAspect("looting_luck", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ALL_WEAPON);
@@ -42,30 +42,30 @@ public class Aspects {
     public static final TargetConditionalMeleeAspect DAMAGE_ON_ARTHROPOD = new TargetConditionalMeleeAspect("damage_on_arthropod", livingEntity -> livingEntity.getMobType() == MobType.ARTHROPOD);
     public static final TargetConditionalMeleeAspect SMITE_DAMAGE = new TargetConditionalMeleeAspect("smite_damage", livingEntity -> livingEntity.getMobType() == MobType.UNDEAD);
     public static final TargetConditionalMeleeAspect HYDRO_DAMAGE = new TargetConditionalMeleeAspect("hydro_damage", livingEntity -> livingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
-    public static final FloatAspect KNOCKBACK = new FloatAspect("knockback", 1.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.MELEE);
-    public static final FloatAspect FATAL_HIT = new FloatAspect("fatal_hit", 0.2f, AspectTooltipFunctions.HP_THRESHHOLD, AspectItemPredicates.MELEE);
+    public static final FloatAspect KNOCKBACK = new FloatAspect("knockback", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.MELEE);
+    public static final FloatAspect FATAL_HIT = new FloatAspect("fatal_hit", 0.4f, AspectTooltipFunctions.HP_THRESHHOLD, AspectItemPredicates.MELEE);
     public static final FloatAspect ADDITIONAL_SWEEP_DAMAGE = new FloatAspect("additional_sweep_damage", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.HAS_SWEEP);
-    public static final IntegerAspect POISON_DAMAGE = new IntegerAspect("poison_damage", 0.5f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.MELEE);
-    public static final FloatAspect COBWEB_CHANCE = new FloatAspect("cobweb_chance", 5.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE);
-    public static final FloatAspect LARCENY_CHANCE = new FloatAspect("larceny_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE);
+    public static final IntegerAspect POISON_DAMAGE = new IntegerAspect("poison_damage", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.MELEE);
+    public static final FloatAspect COBWEB_CHANCE = new FloatAspect("cobweb_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE);
+    public static final FloatAspect LARCENY_CHANCE = new FloatAspect("larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE);
 
     // # Ranged
 
     // ## Shooting
-    public static final FloatAspect ACCURACY = new FloatAspect("accuracy", 0.25f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.THROWABLE_AND_RANGED_AMMO_WEAPON);
+    public static final FloatAspect ACCURACY = new FloatAspect("accuracy", 0.5f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.THROWABLE_AND_RANGED_AMMO_WEAPON);
     public static final MultishotAspect MULTISHOT = new MultishotAspect();
 
     // ## Throwing
-    public static final FloatAspect LOYALTY = new FloatAspect("loyalty", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.THROWABLE);
-    public static final FloatAspect VELOCITY = new FloatAspect("velocity", 1.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.THROWABLE);
+    public static final FloatAspect LOYALTY = new FloatAspect("loyalty", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.THROWABLE);
+    public static final FloatAspect VELOCITY = new FloatAspect("velocity", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.THROWABLE);
 
     // ## Projectile
-    public static final FloatAspect PIERCING = new FloatAspect("piercing", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE);
+    public static final FloatAspect PIERCING = new FloatAspect("piercing", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE);
     public static final IntegerAspect PROJECTILE_LOOTING_LUCK = new IntegerAspect("projectile_looting_luck", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE);
-    public static final IntegerAspect PROJECTILE_POISON_DAMAGE = new IntegerAspect("projectile_poison_damage", 0.5f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE);
-    public static final FloatAspect PROJECTILE_COBWEB_CHANCE = new FloatAspect("projectile_cobweb_chance", 5.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
-    public static final FloatAspect PROJECTILE_LARCENY_CHANCE = new FloatAspect("projectile_larceny_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
-    public static final FloatAspect PROJECTILE_KNOCKBACK = new FloatAspect("projectile_knockback", 1.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.PROJECTILE);
+    public static final IntegerAspect PROJECTILE_POISON_DAMAGE = new IntegerAspect("projectile_poison_damage", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE);
+    public static final FloatAspect PROJECTILE_COBWEB_CHANCE = new FloatAspect("projectile_cobweb_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
+    public static final FloatAspect PROJECTILE_LARCENY_CHANCE = new FloatAspect("projectile_larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
+    public static final FloatAspect PROJECTILE_KNOCKBACK = new FloatAspect("projectile_knockback", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.PROJECTILE);
     public static final BooleanAspect HYDRODYNAMIC = new BooleanAspect("hydrodynamic", AspectItemPredicates.PROJECTILE);
 
     // # Armor
@@ -73,15 +73,15 @@ public class Aspects {
     public static final DamageSourcePredicateAspect ICE_PROTECTION = new DamageSourcePredicateAspect("ice_protection", damageSource -> damageSource == DamageSource.FREEZE, AspectItemPredicates.ARMOR);
     public static final DamageSourcePredicateAspect FIRE_PROTECTION = new DamageSourcePredicateAspect("fire_protection", DamageSource::isFire, AspectItemPredicates.ARMOR);
     public static final DamageSourcePredicateAspect BLAST_PROTECTION = new DamageSourcePredicateAspect("blast_protection", DamageSource::isExplosion, AspectItemPredicates.ARMOR);
-    public static final FloatAspect RESPIRATION = new FloatAspect("respiration", 1.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.UPPER_ARMOR);
+    public static final FloatAspect RESPIRATION = new FloatAspect("respiration", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.UPPER_ARMOR);
     public static final BooleanAspect SNOWSHOE = new BooleanAspect("snowshoe", AspectItemPredicates.BOOTS);
-    public static final IntegerAspect FREEZE_IMMUNITY = new IntegerAspect("freeze_immunity", 0.5f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR);
-    public static final FloatAspect THORNS = new FloatAspect("thorns", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR);
+    public static final IntegerAspect FREEZE_IMMUNITY = new IntegerAspect("freeze_immunity", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR);
+    public static final FloatAspect THORNS = new FloatAspect("thorns", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR);
 
     // # Shields
     public static final ShieldDamageBlockAspect EXPLOSION_DAMAGE_BLOCK = new ShieldDamageBlockAspect("explosion_damage_block", DamageSource::isExplosion);
-    public static final FloatAspect IMPENETRABILITY = new FloatAspect("impenetrability", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.SHIELD);
-    public static final FloatAspect RECOVERY_SPEED = new FloatAspect("recovery_speed", 1.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.SHIELD);
+    public static final FloatAspect IMPENETRABILITY = new FloatAspect("impenetrability", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.SHIELD);
+    public static final FloatAspect RECOVERY_SPEED = new FloatAspect("recovery_speed", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.SHIELD);
 
     // # Tools
     public static final IntegerAspect FORTUNE = new IntegerAspect("fortune", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.TOOL);

@@ -7,6 +7,7 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctionInput;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
 
 public class AspectInstance {
 
@@ -94,5 +95,9 @@ public class AspectInstance {
             return new AspectInstance(this.aspect, this.strength + aspectInstance.strength, this.aspectTooltipDisplaySetting, this.obfuscated);
         }
         return this;
+    }
+
+    public float getModifiability(ItemStack itemStack){
+        return this.aspect.getWeight(itemStack.getItem()) * this.strength;
     }
 }

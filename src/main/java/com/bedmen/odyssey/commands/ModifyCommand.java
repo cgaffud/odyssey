@@ -40,14 +40,16 @@ public class ModifyCommand {
                 .requires((commandSourceStack) -> commandSourceStack.hasPermission(2))
                 .then(Commands.argument("targets", EntityArgument.entities())
                         .then(Commands.argument("modifier", ItemModifierArgument.modifier())
-                                .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1, false))
+                                .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1, false, false))
                                 .then(Commands.argument("strength", FloatArgumentType.floatArg(0.0f))
-                                        .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), false))
+                                        .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), false, false))
                                         .then(Commands.argument("obfuscated", BoolArgumentType.bool())
-                                                .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"))))))));
+                                                .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"), false))
+                                                .then(Commands.argument("bypass_checks", BoolArgumentType.bool())
+                                                        .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"), BoolArgumentType.getBool(commandContext, "bypass_checks")))))))));
     }
 
-    private static int modify(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect aspect, float strength, boolean obfuscated) throws CommandSyntaxException {
+    private static int modify(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect aspect, float strength, boolean obfuscated, boolean bypassChecks) throws CommandSyntaxException {
         int numSuccess = 0;
 
         for(Entity entity : entityCollection) {
@@ -63,8 +65,8 @@ public class ModifyCommand {
                 } else {
                     ItemStack itemstack = livingEntity.getMainHandItem();
                     if (!itemstack.isEmpty()) {
-                        if(AspectUtil.canAddModifier(itemstack, aspect)){
-                            AspectInstance aspectInstance = new AspectInstance(aspect, strength);
+                        AspectInstance aspectInstance = new AspectInstance(aspect, strength);
+                        if(bypassChecks || AspectUtil.canAddModifier(itemstack, aspectInstance)){
                             aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
                             AspectUtil.replaceModifier(itemstack, aspectInstance);
                             ++numSuccess;
