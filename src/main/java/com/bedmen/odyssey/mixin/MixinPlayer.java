@@ -207,13 +207,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
 
     public void addPermabuffs(List<AspectInstance> permabuffList){
         List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermabuffHolder().aspectInstanceList);
-        for(AspectInstance aspectInstance: permabuffList){
-            if(aspectInstanceList.stream().anyMatch(aspectInstance1 -> aspectInstance1.aspect == aspectInstance.aspect)){
-                aspectInstanceList = aspectInstanceList.stream().map(aspectInstance1 -> aspectInstance1.addAspectInstance(aspectInstance)).collect(Collectors.toList());
-            } else {
-                aspectInstanceList.add(aspectInstance);
-            }
-        }
+        permabuffList.forEach(aspectInstance -> AspectUtil.addInstance(aspectInstanceList, aspectInstance));
         this.setPermabuffHolder(new PermabuffHolder(aspectInstanceList));
     }
 

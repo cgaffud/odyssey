@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.commands;
 
+import com.bedmen.odyssey.aspect.AspectTierManager;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspect;
@@ -16,6 +17,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -51,6 +53,7 @@ public class ModifyCommand {
 
     private static int modify(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect aspect, float strength, boolean obfuscated, boolean bypassChecks) throws CommandSyntaxException {
         int numSuccess = 0;
+        boolean isSingleEntity = entityCollection.size() == 1;
 
         for(Entity entity : entityCollection) {
             if (entity instanceof LivingEntity livingEntity) {
@@ -59,7 +62,7 @@ public class ModifyCommand {
                         AspectInstance aspectInstance = new AspectInstance(aspect, strength);
                         odysseyPlayer.setPermabuff(aspectInstance);
                         ++numSuccess;
-                    } else if (entityCollection.size() == 1) {
+                    } else if (isSingleEntity) {
                         throw ERROR_INCOMPATIBLE.create(entity.getName());
                     }
                 } else {
@@ -68,16 +71,23 @@ public class ModifyCommand {
                         AspectInstance aspectInstance = new AspectInstance(aspect, strength);
                         if(bypassChecks || AspectUtil.canAddModifier(itemstack, aspectInstance)){
                             aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
-                            AspectUtil.replaceModifier(itemstack, aspectInstance);
+                            //AspectUtil.replaceModifier(itemstack, aspectInstance);
+                            try{
+                                livingEntity.setItemInHand(InteractionHand.MAIN_HAND, AspectTierManager.itemBuffedByTier(itemstack.getItem(), livingEntity.getRandom(), 1, 0.5f));
+                            } catch (Exception e){
+                                for(StackTraceElement stackTraceElement: e.getStackTrace()){
+                                    System.out.println(stackTraceElement.toString());
+                                }
+                            }
                             ++numSuccess;
-                        } else if (entityCollection.size() == 1) {
+                        } else if (isSingleEntity) {
                             throw ERROR_INCOMPATIBLE.create(itemstack.getItem().getName(itemstack).getString());
                         }
-                    } else if (entityCollection.size() == 1) {
+                    } else if (isSingleEntity) {
                         throw ERROR_NO_ITEM.create(livingEntity.getName().getString());
                     }
                 }
-            } else if (entityCollection.size() == 1) {
+            } else if (isSingleEntity) {
                 throw ERROR_NOT_LIVING_ENTITY.create(entity.getName().getString());
             }
         }

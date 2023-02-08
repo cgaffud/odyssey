@@ -13,7 +13,6 @@ import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
-import com.bedmen.odyssey.tier.OdysseyTier;
 import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
@@ -250,6 +249,26 @@ public class AspectUtil {
 
     public static int getIntegerAspectStrengthAllSlots(LivingEntity livingEntity, IntegerAspect integerAspect){
         return (int) getTotalAspectStrengthAllSlots(livingEntity, new SingleQuery(integerAspect));
+    }
+
+    // Add AspectInstance to a list of AspectInstances
+
+    public static void addInstance(List<AspectInstance> aspectInstanceList, AspectInstance aspectInstance){
+        AspectInstance match = null;
+        for(AspectInstance aspectInstance1: aspectInstanceList){
+            if(aspectInstance1.aspect == aspectInstance.aspect){
+                match = aspectInstance1;
+                break;
+            }
+        }
+        if(match == null){
+            aspectInstanceList.add(aspectInstance);
+        } else {
+            int index = aspectInstanceList.indexOf(match);
+            aspectInstanceList.remove(match);
+            AspectInstance newAspectInstance = new AspectInstance(match.aspect, match.strength + aspectInstance.strength);
+            aspectInstanceList.add(index, newAspectInstance);
+        }
     }
 
     // Tooltips

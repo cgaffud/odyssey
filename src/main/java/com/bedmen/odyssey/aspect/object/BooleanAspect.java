@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.aspect.object;
 
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import net.minecraft.world.item.Item;
@@ -15,8 +16,11 @@ public class BooleanAspect extends Aspect {
         this(id, weight, AspectTooltipFunctions.NAME, itemPredicate);
     }
 
-
     protected BooleanAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate){
         super(id, weight, aspectTooltipFunction, itemPredicate);
+    }
+
+    public AspectInstance generateInstanceWithUnitModifiability(Item item){
+        return new AspectInstance(this);
     }
 }

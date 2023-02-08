@@ -1,9 +1,9 @@
 package com.bedmen.odyssey.aspect.object;
 
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Predicate;
 
@@ -27,5 +27,13 @@ public class Aspect {
 
     public float getWeight(Item item){
         return this.weight;
+    }
+
+    public AspectInstance generateInstanceWithModifiability(Item item, float modifiability){
+        float weight = this.getWeight(item);
+        if(weight <= 0.0f){
+            return new AspectInstance(this, 1.0f);
+        }
+        return new AspectInstance(this, modifiability / weight);
     }
 }
