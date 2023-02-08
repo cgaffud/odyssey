@@ -10,6 +10,7 @@ import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -17,6 +18,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -71,14 +73,7 @@ public class ModifyCommand {
                         AspectInstance aspectInstance = new AspectInstance(aspect, strength);
                         if(bypassChecks || AspectUtil.canAddModifier(itemstack, aspectInstance)){
                             aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
-                            //AspectUtil.replaceModifier(itemstack, aspectInstance);
-                            try{
-                                livingEntity.setItemInHand(InteractionHand.MAIN_HAND, AspectTierManager.itemBuffedByTier(itemstack.getItem(), livingEntity.getRandom(), 1, 0.5f));
-                            } catch (Exception e){
-                                for(StackTraceElement stackTraceElement: e.getStackTrace()){
-                                    System.out.println(stackTraceElement.toString());
-                                }
-                            }
+                            AspectUtil.replaceModifier(itemstack, aspectInstance);
                             ++numSuccess;
                         } else if (isSingleEntity) {
                             throw ERROR_INCOMPATIBLE.create(itemstack.getItem().getName(itemstack).getString());
@@ -95,7 +90,7 @@ public class ModifyCommand {
         if (numSuccess == 0) {
             throw ERROR_NOTHING_HAPPENED.create();
         } else {
-            if (entityCollection.size() == 1) {
+            if (isSingleEntity) {
                 commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.single", aspect.getComponent(), entityCollection.iterator().next().getDisplayName()), true);
             } else {
                 commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.multiple", aspect.getComponent(), entityCollection.size()), true);

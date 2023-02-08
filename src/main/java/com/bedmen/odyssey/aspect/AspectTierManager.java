@@ -11,12 +11,17 @@ import java.util.Random;
 
 public class AspectTierManager {
 
+    public static final int HIGHEST_TIER = 1;
+
     public static ItemStack itemBuffedByTier(Item item, Random random, int tier) {
         return itemBuffedByTier(item, random, tier, 0.5f);
     }
 
     public static ItemStack itemBuffedByTier(Item item, Random random, int tier, float chance) {
-        ItemStack itemStack = item.getDefaultInstance();
+        return itemStackBuffedByTier(item.getDefaultInstance(), random, tier, chance);
+    }
+
+    public static ItemStack itemStackBuffedByTier(ItemStack itemStack, Random random, int tier, float chance) {
         List<AspectInstance> aspectInstanceList = BONUS_MODIFIERS_BY_TIER.get(tier-1).generateAspectInstances(itemStack, random, chance);
         aspectInstanceList.forEach(aspectInstance -> AspectUtil.replaceModifier(itemStack, aspectInstance));
         return itemStack;

@@ -393,4 +393,8 @@ public class AspectUtil {
             itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectListTag);
         }
     }
+
+    public static void resetAddedModifiers(ItemStack itemStack){
+        itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, new ListTag());
+    }
 }

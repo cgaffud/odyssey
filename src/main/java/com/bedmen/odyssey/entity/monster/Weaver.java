@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.WorldGenUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.Util;
@@ -190,7 +191,7 @@ public class Weaver extends Monster {
     public static void tryPlaceCobwebOnTarget(float chance, LivingEntity target){
         if(chance > target.getRandom().nextFloat()){
             BlockPos blockPos = new BlockPos(target.getPosition(1f));
-            if(target.level.getBlockState(blockPos).getBlock() == Blocks.AIR){
+            if(WorldGenUtil.isEmpty(target.level, blockPos)){
                 target.level.setBlock(blockPos, BlockRegistry.TEMPORARY_COBWEB.get().defaultBlockState(), 3);
             }
         }

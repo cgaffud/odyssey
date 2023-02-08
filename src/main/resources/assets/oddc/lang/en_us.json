@@ -159,6 +159,8 @@
   "commands.modify.failed.incompatible": "%s cannot support that modifier",
   "commands.modify.success.multiple": "Applied modifier %s to %s entities",
   "commands.modify.success.single": "Applied modifier %s to %s's item",
+  "commands.modifywithtier.success.multiple": "Applied random modifiers to %s entities",
+  "commands.modifywithtier.success.single": "Applied random modifiers to %s's item",
   "container.oddc.alloy_furnace": "Alloy Furnace",
   "container.oddc.modifier_removal": "Modifier Removal",
   "container.oddc.recycling_furnace": "Recycling Furnace",
@@ -520,10 +522,12 @@
   "itemGroup.oddc_tools": "Odyssey Tools",
   "itemGroup.oddc_wood": "Odyssey Wood and Plants",
   "modifier.unknown": "Unknown modifier: %s",
+  "single_or_tier_random.unknown": "Unknown Choice: %s",
   "stat.oddc.interact_with_alloy_furnace": "Interactions with Alloy Furnace",
   "stat.oddc.interact_with_arcane_grindstone": "Interactions with Arcane Grindstone",
   "stat.oddc.interact_with_recycling_furnace": "Interactions with Recycling Furnace",
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",
-  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened"
+  "stat.oddc.open_sterling_silver_chest": "Sterling Silver Chests Opened",
+  "commands.modifywithtier.failed.tier": "Tier %s exceeds highest available tier of %s"
 }
