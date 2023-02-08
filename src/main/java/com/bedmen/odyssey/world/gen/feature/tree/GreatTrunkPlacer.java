@@ -226,13 +226,16 @@ public class GreatTrunkPlacer extends TrunkPlacer {
     }
 
     private void placeRoots(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos pos, TreeConfiguration config, Function<BlockState, BlockState> func) {
-        boolean isDirt = levelSimulatedReader.isStateAtPosition(pos, blockState -> blockState.is(BlockTags.DIRT));
-        boolean isWater = levelSimulatedReader.isStateAtPosition(pos, blockState -> blockState.is(Blocks.WATER));
-        BlockState blockState = this.roots.getState(random, pos);
-        if (blockState.getBlock() instanceof RootBlock) {
-            blockState = blockState.setValue(RootBlock.DIRTLOGGED, isDirt).setValue(BlockStateProperties.WATERLOGGED, isWater);
+        boolean isImmuneBlock = levelSimulatedReader.isStateAtPosition(pos, blockState -> blockState.is(BlockTags.WITHER_IMMUNE));
+        if(!isImmuneBlock){
+            boolean isDirt = levelSimulatedReader.isStateAtPosition(pos, blockState -> blockState.is(BlockTags.DIRT));
+            boolean isWater = levelSimulatedReader.isStateAtPosition(pos, blockState -> blockState.is(Blocks.WATER));
+            BlockState blockState = this.roots.getState(random, pos);
+            if (blockState.getBlock() instanceof RootBlock) {
+                blockState = blockState.setValue(RootBlock.DIRTLOGGED, isDirt).setValue(BlockStateProperties.WATERLOGGED, isWater);
+            }
+            biConsumer.accept(pos, func.apply(blockState));
         }
-        biConsumer.accept(pos, func.apply(blockState));
     }
 
     private void placeSeedIfFreeWithOffset(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, BlockPos.MutableBlockPos mutable, TreeConfiguration config, BlockPos pos, int x, int y, int z) {
