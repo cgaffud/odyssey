@@ -204,9 +204,63 @@ def redInfo(image1, image2):
                     minRatio = ratio
     print((maxRatio, minRatio))
 
-openPath1 = r"C:\Users\18029\Downloads\obsidian_disc_2.png"
-savePath = r"C:\Users\18029\Downloads\obsidian_disc_3.png"
+def getAverageRGB(image):
+    width, height = image.size
+    rTotal, gTotal, bTotal = 0,0,0
+    totalPixels = 0
+    for i in range(width):
+        for j in range(height):
+            pos = (i,j)
+            r1,g1,b1,a1 = image.getpixel(pos)
+            if(a1 > 0):
+                rTotal += r1
+                gTotal += g1
+                bTotal += b1
+                totalPixels += 1
+    return (rTotal/totalPixels, gTotal/totalPixels, bTotal/totalPixels)
+
+def getMinMaxRGB(image):
+    width, height = image.size
+    rMin, gMin, bMin = 256,256,256
+    rMax, gMax, bMax = -1,-1,-1
+    for i in range(width):
+        for j in range(height):
+            pos = (i,j)
+            r,g,b,a = image.getpixel(pos)
+            if(a > 0):
+                if(r > rMax):
+                    rMax = r
+                if(g > gMax):
+                    gMax = g
+                if(b > bMax):
+                    bMax = b
+                if(r < rMin):
+                    rMin = r
+                if(g < gMin):
+                    gMin = g
+                if(b < bMin):
+                    bMin = b
+    return (rMax, gMax, bMax, rMin, gMin, bMin)
+    
+
+def printRGBInfo(image1, image2):
+    r1,g1,b1 = getAverageRGB(image1)
+    r2,g2,b2 = getAverageRGB(image2)
+    print("Average 1: "+str((r1,g1,b1)))
+    print("Average 2: "+str((r2,g2,b2)))
+    print("Ratio: "+str((r2/r1,g2/g1,b2/b1)))
+    maxMin1 = getMinMaxRGB(image1)
+    print("MaxMin 1: "+str(maxMin1))
+    maxMin2 = getMinMaxRGB(image2)
+    print("MaxMin 2: "+str(maxMin2))
+
+# Notes on how to do certain effects:
+# Clover Stone: recolorImageRandomly(image1, [0.9,1.0,0.9],[0.85,1.0,0.85])
+
+openPath1 = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\depreciated\stone_spear_projectile.png"
+savePath = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\depreciated\clover_stone_spear.png"
 image1 = openImage(openPath1)
-recolorImageRandomly(image1, [0.6,0.6,0.6],[1.0,1.0,1.0])
+recolorImageRandomly(image1, [0.9,1.0,0.9],[0.85,1.0,0.85])
 saveImage(image1, savePath)
+
 print("Done")

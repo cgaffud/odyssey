@@ -25,9 +25,9 @@ def generate():
         ]
     boomerangEntries = [
         createItemEntry("oddc:wooden_boomerang").withWeight(2),
-        createItemEntry("oddc:sharp_bone_boomerang"),
-        createItemEntry("oddc:heavy_bone_boomerang"),
-        createItemEntry("oddc:speedy_bone_boomerang"),
+        createItemEntry("oddc:bone_boomerang"),
+        createItemEntry("oddc:flint_disc"),
+        createItemEntry("oddc:copper_disc"),
         ]
     meleeWeaponEntries = [
         createItemEntry("minecraft:iron_sword").withWeight(2),

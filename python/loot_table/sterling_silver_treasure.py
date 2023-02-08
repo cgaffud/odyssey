@@ -22,11 +22,14 @@ def generate():
         createItemEntry("oddc:bown").withWeight(2)
         ]
     boomerangEntries = [
-        createItemEntry("oddc:clover_stone_boomerang"),
-        createItemEntry("oddc:sharp_bone_boomerang"),
-        createItemEntry("oddc:heavy_bone_boomerang"),
-        createItemEntry("oddc:speedy_bone_boomerang"),
-        createItemEntry("oddc:bonerang").withWeight(2)
+        createItemEntry("oddc:clover_stone_boomerang").withWeight(2),
+        createItemEntry("oddc:bone_boomerang"),
+        createItemEntry("oddc:flint_disc"),
+        createItemEntry("oddc:copper_disc"),
+        createItemEntry("oddc:bonerang").withWeight(2),
+        createItemEntry("oddc:amethyst_disc").withWeight(2),
+        createItemEntry("oddc:obsidian_disc").withWeight(2),
+        createItemEntry("oddc:diamond_disc"),
         ]
     meleeWeaponEntries = [
         createItemEntry("oddc:smackin_shovel"),

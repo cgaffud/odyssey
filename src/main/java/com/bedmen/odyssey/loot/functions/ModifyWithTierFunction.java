@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.loot.functions;
 
+import com.bedmen.odyssey.aspect.AspectTierManager;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -19,6 +21,8 @@ import java.util.Set;
 
 public class ModifyWithTierFunction extends LootItemConditionalFunction {
     final NumberProvider tier;
+    private static final float BUFF_CHANCE = 0.5f;
+    private static final float CURSE_CHANCE = 0.33333333f;
 
     ModifyWithTierFunction(LootItemCondition[] lootItemConditions, NumberProvider numberProvider) {
         super(lootItemConditions);
@@ -35,33 +39,15 @@ public class ModifyWithTierFunction extends LootItemConditionalFunction {
 
     public ItemStack run(ItemStack itemStack, LootContext lootContext) {
         Random random = lootContext.getRandom();
-        // todo fix this
-        //Enchantments
-//        List<Pair<Enchantment, Integer>> enchantmentList = EnchantmentUtil.getEnchantmentsByTier(this.tier.getInt(lootContext));
-//        enchantmentList = EnchantmentUtil.filterEnchantments(enchantmentList, itemStack);
-//        for(int i = 0; i < MODIFIER_RARITY.length && enchantmentList.size() > 0; i++){
-//            if(random.nextInt(MODIFIER_RARITY[i]) == 0){
-//                Pair<Enchantment, Integer> enchantmentIntegerPair = enchantmentList.get(random.nextInt(enchantmentList.size()));
-//                enchantmentList.remove(enchantmentIntegerPair);
-//                itemStack.enchant(enchantmentIntegerPair.getFirst(), enchantmentIntegerPair.getSecond());
-//            } else {
-//                break;
-//            }
-//            enchantmentList = EnchantmentUtil.filterEnchantments(enchantmentList, itemStack);
-//        }
-//        //Curses
-//        List<Pair<Enchantment, Integer>> curseList = EnchantmentUtil.getCursesByTier(this.tier.getInt(lootContext));
-//        curseList = EnchantmentUtil.filterEnchantments(curseList, itemStack);
-//        for(int i = 0; i < CURSE_RARITY.length && curseList.size() > 0; i++){
-//            if(random.nextInt(CURSE_RARITY[i]) == 0){
-//                Pair<Enchantment, Integer> curseIntegerPair = curseList.get(random.nextInt(curseList.size()));
-//                curseList.remove(curseIntegerPair);
-//                itemStack.enchant(curseIntegerPair.getFirst(), curseIntegerPair.getSecond());
-//            } else {
-//                break;
-//            }
-//            curseList = EnchantmentUtil.filterEnchantments(curseList, itemStack);
-//        }
+        int tier = this.tier.getInt(lootContext);
+        try{
+            AspectTierManager.itemStackModifyByTier(itemStack, random, tier, BUFF_CHANCE, false);
+            AspectTierManager.itemStackModifyByTier(itemStack, random, tier, CURSE_CHANCE, true);
+        } catch(Exception exception){
+            for(StackTraceElement stackTraceElement: exception.getStackTrace()){
+                System.out.println(stackTraceElement.toString());
+            }
+        }
         return itemStack;
     }
 

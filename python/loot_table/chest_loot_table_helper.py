@@ -131,7 +131,7 @@ def createMainMeleeEntries(resourceLocation):
     return createEntriesOf(resourceLocation, ["sword", "mace"])
 
 def createSharpMeleeEntries(resourceLocation):
-    return createEntriesOf(resourceLocation, ["sabre", "hatchet"])
+    return createEntriesOf(resourceLocation, ["sabre", "hatchet", "spear"])
 
 def createHeavyMeleeEntries(resourceLocation):
     return createEntriesOf(resourceLocation, ["hammer", "battle_axe", "bat"])

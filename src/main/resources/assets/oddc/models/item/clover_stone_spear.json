@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "oddc:item/clover_stone_spear"
+  },
+  "overrides": [
+    {
+      "predicate": {},
+      "model": "oddc:item/clover_stone_spear_in_hand"
+    }
+  ]
+}

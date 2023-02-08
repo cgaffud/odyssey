@@ -15,15 +15,11 @@ public class RandomCurseList extends RandomAspectList {
     }
 
     protected void generateAndAdd(ItemStack itemStack, Random random, float chance){
-        for(int i = 0; i < MAX_CURSES; i++){
-            if(random.nextFloat() < chance){
-                WeightedAspectEntry weightedAspectEntry = this.getRandomWeightedAspectEntry(random);
-                this.filteredList.remove(weightedAspectEntry);
-                AspectInstance aspectInstance = new AspectInstance(weightedAspectEntry.aspect(), weightedAspectEntry.strength()).withObfuscation();
-                AspectUtil.replaceModifier(itemStack, aspectInstance);
-            } else {
-                break;
-            }
+        for(int i = 0; i < MAX_CURSES && random.nextFloat() < chance && !this.filteredList.isEmpty(); i++){
+            WeightedAspectEntry weightedAspectEntry = this.getRandomWeightedAspectEntry(random);
+            this.filteredList.remove(weightedAspectEntry);
+            AspectInstance aspectInstance = new AspectInstance(weightedAspectEntry.aspect(), weightedAspectEntry.strength()).withObfuscation();
+            AspectUtil.replaceModifier(itemStack, aspectInstance);
         }
     }
 
