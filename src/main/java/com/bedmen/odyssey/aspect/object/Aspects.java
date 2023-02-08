@@ -25,9 +25,9 @@ public class Aspects {
     public static final FloatAspect DURABILITY = new FloatAspect("durability", 1.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.DAMAGEABLE);
     public static final BooleanAspect BURN_PROOF = new BooleanAspect("burn_proof", AspectItemPredicates.DAMAGEABLE);
     // ## Attribute
-    public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", 10.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
-    public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
-    public static final AttributeAspect SWIM_SPEED = new AttributeAspect("swim_speed", 8.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, ForgeMod.SWIM_SPEED::get, AttributeModifier.Operation.ADDITION);
+    public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", 10.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.LOWER_ARMOR, () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
+    public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.DAMAGEABLE, () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
+    public static final AttributeAspect SWIM_SPEED = new AttributeAspect("swim_speed", 8.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.NECK_DOWN_ARMOR, ForgeMod.SWIM_SPEED::get, AttributeModifier.Operation.ADDITION);
 
     // # All Weapons
     public static final IntegerAspect LOOTING_LUCK = new IntegerAspect("looting_luck", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ALL_WEAPON);

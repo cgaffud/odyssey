@@ -24,7 +24,7 @@ public abstract class BonusDamageAspect extends FloatAspect {
             return WeaponUtil.getRangedMaxChargeTicks(item.getDefaultInstance()) / 20.0f;
         }
         if(item instanceof BoomerangItem){
-            return 2.5f;
+            return 2.0f;
         }
         return 1.0f;
     }

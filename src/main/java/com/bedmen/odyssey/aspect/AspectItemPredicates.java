@@ -39,7 +39,9 @@ public class AspectItemPredicates {
     public static final Predicate<Item> PROJECTILE = item -> THROWABLE_AND_RANGED_AMMO_WEAPON.test(item) || item instanceof QuiverItem || item instanceof ArrowItem;
 
     public static final Predicate<Item> ARMOR = item -> item instanceof ArmorItem;
+    public static final Predicate<Item> NECK_DOWN_ARMOR = item -> item instanceof ArmorItem armorItem && armorItem.getSlot() != EquipmentSlot.HEAD;
     public static final Predicate<Item> UPPER_ARMOR = item -> item instanceof ArmorItem armorItem && (armorItem.getSlot() == EquipmentSlot.HEAD || armorItem.getSlot() == EquipmentSlot.CHEST);
+    public static final Predicate<Item> LOWER_ARMOR = item -> item instanceof ArmorItem armorItem && (armorItem.getSlot() == EquipmentSlot.LEGS || armorItem.getSlot() == EquipmentSlot.FEET);
     public static final Predicate<Item> CHEST = item -> item instanceof ArmorItem armorItem && armorItem.getSlot() == EquipmentSlot.CHEST;
     public static final Predicate<Item> BOOTS = item -> item instanceof ArmorItem armorItem && armorItem.getSlot() == EquipmentSlot.FEET;
     public static final Predicate<Item> SHIELD = item -> item instanceof ShieldItem;

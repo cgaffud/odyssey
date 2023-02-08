@@ -141,16 +141,16 @@ public class MoonTowerPiece extends TemplateStructurePiece {
             zombie.moveTo(blockPos, 0.0F, 0.0F);
 
             if (zombie.getItemBySlot(EquipmentSlot.HEAD).isEmpty())
-                zombie.setItemSlot(EquipmentSlot.HEAD, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_HELMET.get(), random , 1, 0.75f));
+                zombie.setItemSlot(EquipmentSlot.HEAD, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_HELMET.get(), random , 1, 0.75f, false));
             if (zombie.getItemBySlot(EquipmentSlot.FEET).isEmpty())
-                zombie.setItemSlot(EquipmentSlot.FEET,  AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_BOOTS.get(), random, 1, 0.75f));
+                zombie.setItemSlot(EquipmentSlot.FEET,  AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_BOOTS.get(), random, 1, 0.75f, false));
             if (zombie.getItemBySlot(EquipmentSlot.LEGS).isEmpty() && (random.nextBoolean() || random.nextBoolean()))
-                zombie.setItemSlot(EquipmentSlot.LEGS,  AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random, 1, 0.75f));
+                zombie.setItemSlot(EquipmentSlot.LEGS,  AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random, 1, 0.75f, false));
 
             if ("beefy_zombie".equals(dataMarker) && zombie.getItemBySlot(EquipmentSlot.CHEST).isEmpty())
-                zombie.setItemSlot(EquipmentSlot.CHEST, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_CHESTPLATE.get(), random, 1, 0.75f));
+                zombie.setItemSlot(EquipmentSlot.CHEST, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_CHESTPLATE.get(), random, 1, 0.75f, false));
 
-            zombie.setItemInHand(InteractionHand.MAIN_HAND, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_MACE.get(), random, 1, 1.0f));
+            zombie.setItemInHand(InteractionHand.MAIN_HAND, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_MACE.get(), random, 1, 1.0f, false));
 
             zombie.finalizeSpawn(accessor, accessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, (SpawnGroupData)null, (CompoundTag)null);
             accessor.addFreshEntityWithPassengers(zombie);
@@ -161,11 +161,11 @@ public class MoonTowerPiece extends TemplateStructurePiece {
             skeleton.moveTo(blockPos, 0.0F, 0.0F);
 
             if (skeleton.getItemBySlot(EquipmentSlot.HEAD).isEmpty())
-                skeleton.setItemSlot(EquipmentSlot.HEAD, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_HELMET.get(), random, 1, 0.75f));
+                skeleton.setItemSlot(EquipmentSlot.HEAD, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_HELMET.get(), random, 1, 0.75f, false));
             if (skeleton.getItemBySlot(EquipmentSlot.LEGS).isEmpty())
-                skeleton.setItemSlot(EquipmentSlot.LEGS, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random, 1, 0.75f));
+                skeleton.setItemSlot(EquipmentSlot.LEGS, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random, 1, 0.75f, false));
             if (skeleton.getItemBySlot(EquipmentSlot.FEET).isEmpty() && (random.nextBoolean() || random.nextBoolean()))
-                skeleton.setItemSlot(EquipmentSlot.FEET, AspectTierManager.itemBuffedByTier(ItemRegistry.STERLING_SILVER_BOOTS.get(), random, 1, 0.75f));
+                skeleton.setItemSlot(EquipmentSlot.FEET, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_BOOTS.get(), random, 1, 0.75f, false));
 
             skeleton.finalizeSpawn(accessor, accessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, (SpawnGroupData)null, (CompoundTag)null);
             skeleton.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemRegistry.BOWN.get()));

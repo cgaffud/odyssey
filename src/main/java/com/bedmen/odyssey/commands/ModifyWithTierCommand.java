@@ -2,16 +2,10 @@ package com.bedmen.odyssey.commands;
 
 import com.bedmen.odyssey.aspect.AspectTierManager;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.object.Aspect;
-import com.bedmen.odyssey.aspect.object.PermabuffAspect;
-import com.bedmen.odyssey.commands.arguments.ItemModifierArgument;
-import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -19,8 +13,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -46,12 +38,14 @@ public class ModifyWithTierCommand {
                 .requires((commandSourceStack) -> commandSourceStack.hasPermission(2))
                 .then(Commands.argument("targets", EntityArgument.entities())
                         .then(Commands.argument("tier", IntegerArgumentType.integer())
-                                .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), 1.0f))
+                                .executes((commandContext) -> modifyWithTier(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), 1.0f, false))
                                 .then(Commands.argument("chance", FloatArgumentType.floatArg(0.0f, 1.0f))
-                                        .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), FloatArgumentType.getFloat(commandContext, "chance")))))));
+                                        .executes((commandContext) -> modifyWithTier(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), FloatArgumentType.getFloat(commandContext, "chance"), false))
+                                        .then(Commands.argument("curse", BoolArgumentType.bool())
+                                                .executes((commandContext) -> modifyWithTier(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), FloatArgumentType.getFloat(commandContext, "chance"), BoolArgumentType.getBool(commandContext, "curse"))))))));
     }
 
-    private static int modify(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, int tier, float chance) throws CommandSyntaxException {
+    private static int modifyWithTier(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, int tier, float chance, boolean curse) throws CommandSyntaxException {
         if(tier > AspectTierManager.HIGHEST_TIER){
             throw ERROR_TIER.create(tier);
         }
@@ -64,7 +58,7 @@ public class ModifyWithTierCommand {
                 ItemStack itemstack = livingEntity.getMainHandItem();
                 if (!itemstack.isEmpty()) {
                     AspectUtil.resetAddedModifiers(itemstack);
-                    AspectTierManager.itemStackBuffedByTier(itemstack, livingEntity.getRandom(), tier, chance);
+                    AspectTierManager.itemStackModifyByTier(itemstack, livingEntity.getRandom(), tier, chance, curse);
                     ++numSuccess;
                 } else if (isSingleEntity) {
                     throw ERROR_NO_ITEM.create(livingEntity.getName().getString());
@@ -78,9 +72,9 @@ public class ModifyWithTierCommand {
             throw ERROR_NOTHING_HAPPENED.create();
         } else {
             if (isSingleEntity) {
-                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.single", entityCollection.iterator().next().getDisplayName()), true);
+                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modifywithtier.success.single", entityCollection.iterator().next().getDisplayName()), true);
             } else {
-                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modify.success.multiple", entityCollection.size()), true);
+                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modifywithtier.success.multiple", entityCollection.size()), true);
             }
 
             return numSuccess;

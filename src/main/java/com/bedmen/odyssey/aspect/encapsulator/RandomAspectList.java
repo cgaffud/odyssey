@@ -1,93 +1,86 @@
 package com.bedmen.odyssey.aspect.encapsulator;
 
-import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.object.Aspect;
+import com.bedmen.odyssey.aspect.object.BooleanAspect;
+import com.bedmen.odyssey.aspect.object.IntegerAspect;
 import net.minecraft.world.item.ItemStack;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class RandomAspectList {
+public abstract class RandomAspectList {
 
-    private final List<TieredAspectEntry> list;
+    protected final List<WeightedAspectEntry> weightedAspectEntryList;
+    protected List<WeightedAspectEntry> filteredList;
 
-    private RandomAspectList(List<TieredAspectEntry> list){
-        this.list = list;
+    protected RandomAspectList(List<WeightedAspectEntry> weightedAspectEntryList){
+        this.weightedAspectEntryList = weightedAspectEntryList;
     }
 
-    private RandomAspectList filter(ItemStack itemStack){
-        return new RandomAspectList(
-                this.list.stream()
-                        .filter(tieredAspectEntry ->  tieredAspectEntry.aspect.itemPredicate.test(itemStack.getItem()))
-                        .collect(Collectors.toList()));
+    public void addAspectInstances(ItemStack itemStack, Random random, float chance){
+        this.filter(itemStack);
+        this.generateAndAdd(itemStack, random, chance);
     }
 
-    private List<AspectInstance> generate(ItemStack itemStack, Random random, float chance){
-        float modifiabilityLeft = AspectUtil.getTotalModifiability(itemStack);
-        List<AspectInstance> aspectInstanceList = new ArrayList<>();
-        while(modifiabilityLeft > 0.0f && !this.list.isEmpty()){
-            TieredAspectEntry tieredAspectEntry = getRandomTieredAspectEntry(random);
-            AspectInstance aspectInstance = tieredAspectEntry.aspect.generateInstanceWithModifiability(itemStack.getItem(), 0.5f);
-            float modifiability = aspectInstance.getModifiability(itemStack);
-            if(modifiability > modifiabilityLeft){
-                this.list.remove(tieredAspectEntry);
-            } else {
-                List<AspectInstance> possibleNewAspectInstanceList = new ArrayList<>(aspectInstanceList);
-                AspectUtil.addInstance(possibleNewAspectInstanceList, aspectInstance);
-                AspectInstance newAspectInstance = possibleNewAspectInstanceList.stream().filter(aspectInstance1 -> aspectInstance1.aspect == aspectInstance.aspect).findFirst().get();
-                if(newAspectInstance.strength > tieredAspectEntry.maxStrength){
-                    this.list.remove(tieredAspectEntry);
-                } else {
-                    aspectInstanceList = possibleNewAspectInstanceList;
-                    modifiabilityLeft -= modifiability;
-                }
-            }
-        }
-        return aspectInstanceList.stream().filter(aspectInstance -> random.nextFloat() < chance).collect(Collectors.toList());
+    protected void filter(ItemStack itemStack){
+        this.filteredList = this.weightedAspectEntryList.stream()
+                .filter(weightedAspectEntry ->  weightedAspectEntry.aspect().itemPredicate.test(itemStack.getItem()))
+                .collect(Collectors.toList());
     }
 
-    private TieredAspectEntry getRandomTieredAspectEntry(Random random){
-        int totalWeight = list.stream().reduce(0, (accumulator, tieredAspectEntry) -> accumulator + tieredAspectEntry.weight, Integer::sum);
+    protected abstract void generateAndAdd(ItemStack itemStack, Random random, float chance);
+
+    protected WeightedAspectEntry getRandomWeightedAspectEntry(Random random){
+        int totalWeight = this.filteredList.stream().reduce(0, (accumulator, weightedAspectEntry) -> accumulator + weightedAspectEntry.weight, Integer::sum);
         int randomInteger = random.nextInt(totalWeight);
         int counter = 0;
-        for(TieredAspectEntry tieredAspectEntry: this.list){
-            counter += tieredAspectEntry.weight;
+        for(WeightedAspectEntry weightedAspectEntry : this.filteredList){
+            counter += weightedAspectEntry.weight;
             if(counter > randomInteger){
-                return tieredAspectEntry;
+                return weightedAspectEntry;
             }
         }
         // Should never reach here
         return null;
     }
 
-    public List<AspectInstance> generateAspectInstances(ItemStack itemStack, Random random, float chance){
-        return this.filter(itemStack).generate(itemStack, random, chance);
-    }
+    public static class Builder<R extends RandomAspectList>{
 
-    public static Builder builder(){
-        return new Builder();
-    }
+        private final List<WeightedAspectEntry> weightedAspectEntryList = new ArrayList<>();
+        private final Class<R> clazz;
 
-    public static class Builder{
-
-        private final List<TieredAspectEntry> list = new ArrayList<>();
-
-        private Builder(){
-
+        protected Builder(Class<R> clazz){
+            this.clazz = clazz;
         }
 
-        public Builder add(Aspect aspect, float maxStrength, int weight){
-            list.add(new TieredAspectEntry(aspect, maxStrength, weight));
+        public Builder<R> add(Aspect aspect, float strength, int weight){
+            if(aspect instanceof IntegerAspect && strength != (float)(int)strength){
+                throw new IllegalArgumentException("Must be an integer strength for IntegerAspects");
+            }
+            if(aspect instanceof BooleanAspect){
+                strength = 1.0f;
+            }
+            weightedAspectEntryList.add(new WeightedAspectEntry(aspect, strength, weight));
             return this;
         }
 
-        public RandomAspectList build(){
-            return new RandomAspectList(this.list);
+        public R build(){
+            try{
+                return this.clazz.getDeclaredConstructor(List.class).newInstance(this.weightedAspectEntryList);
+            } catch(InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException noSuchMethodException){
+                Odyssey.LOGGER.error("RandomAspectList.Builder build failed.");
+                for(StackTraceElement stackTraceElement: noSuchMethodException.getStackTrace()){
+                    Odyssey.LOGGER.error(stackTraceElement);
+                }
+                return null;
+            }
         }
 
     }
 
-    public static record TieredAspectEntry(Aspect aspect, float maxStrength, int weight){}
+    public static record WeightedAspectEntry(Aspect aspect, float strength, int weight){}
 }
