@@ -15,7 +15,8 @@
     "MixinJunglePyramidPiece",
     "MixinLivingEntity",
     "MixinPlayer",
-    "MixinPowderSnowBlock"
+    "MixinPowderSnowBlock",
+    "MixinScreenEffectRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

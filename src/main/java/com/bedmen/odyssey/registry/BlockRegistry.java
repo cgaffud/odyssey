@@ -49,6 +49,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> ALLOY_FURNACE = BLOCKS.register("alloy_furnace", () -> new AlloyFurnaceBlock(BlockBehaviour.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(3.5F).lightLevel((state) -> {return state.getValue(BlockStateProperties.LIT) ? 13 : 0;})));
     public static final RegistryObject<Block> STERLING_SILVER_CHEST = BLOCKS.register("sterling_silver_chest", () -> new TreasureChestBlock(TreasureChestMaterial.STERLING_SILVER, BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(4.0F, 6.0F).requiresCorrectToolForDrops().sound(SoundType.METAL)));
     public static final RegistryObject<Block> STERLING_SILVER_BLOCK = BLOCKS.register("sterling_silver_block", () -> new Block(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(4.0F, 6.0F).sound(SoundType.METAL)));
+    public static final RegistryObject<Block> INFUSION_PEDESTAL = BLOCKS.register("infusion_pedestal", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(4.0F, 6.0F).sound(SoundType.POLISHED_DEEPSLATE).noOcclusion()));
     public static final RegistryObject<Block> ELECTRUM_BLOCK = BLOCKS.register("electrum_block", () -> new Block(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().strength(4.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> CLOVER_STONE = BLOCKS.register("clover_stone", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GREEN).requiresCorrectToolForDrops().strength(10.0F)));
     private static final int moonrockLightAmount = 8;
@@ -120,8 +121,11 @@ public class BlockRegistry {
     public static final RegistryObject<Block> STERLING_SILVER_COBWEB = BLOCKS.register("sterling_silver_cobweb", () ->  new OdysseyWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().color(MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(4.0F)));
     public static final RegistryObject<Block> ELECTRUM_COBWEB = BLOCKS.register("electrum_cobweb", () ->  new OdysseyWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().color(MaterialColor.SNOW).requiresCorrectToolForDrops().strength(4.0F)));
     public static final RegistryObject<Block> DIAMOND_COBWEB = BLOCKS.register("diamond_cobweb", () ->  new OdysseyWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().color(MaterialColor.SNOW).requiresCorrectToolForDrops().strength(4.0F)));
-
     public static final RegistryObject<Block> ABANDONED_IRON_GOLEM = BLOCKS.register("abandoned_iron_golem", () -> new AbandonedIronGolemBlock(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.COLOR_GRAY).strength(1.0f, 3600000.0F).sound(SoundType.GRAVEL)));
+
+    public static final RegistryObject<Block> HEX_FIRE = BLOCKS.register("hex_fire", () -> new HexFireBlock(BlockBehaviour.Properties.of(Material.FIRE, MaterialColor.COLOR_PURPLE).noCollission().instabreak().lightLevel((p_152605_) -> {
+        return 15;
+    }).sound(SoundType.WOOL)));
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
