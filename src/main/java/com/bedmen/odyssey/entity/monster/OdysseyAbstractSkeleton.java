@@ -1,14 +1,16 @@
 package com.bedmen.odyssey.entity.monster;
 
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.entity.ai.BoomerangAttackGoal;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
-import com.bedmen.odyssey.items.OdysseyBowItem;
-import com.bedmen.odyssey.items.OdysseyCrossbowItem;
-import com.bedmen.odyssey.items.equipment.BoomerangItem;
+import com.bedmen.odyssey.items.aspect_items.AspectArrowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
+import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.util.WeaponUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -35,6 +37,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implements CrossbowAttackMob, BoomerangAttackMob {
@@ -142,29 +145,35 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         return this.isBaby() ? 0.0D : -0.45D;
     }
 
-    public void performRangedAttack(LivingEntity target, float power) {
+    protected AbstractArrow getOdysseyArrow(ItemStack ammo, float bowDamageMultiplier) {
+        AspectArrowItem aspectArrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
+        AbstractArrow abstractarrow = aspectArrowItem.createArrow(this.level, ammo, this);
+        abstractarrow.setEnchantmentEffectsFromEntity(this, bowDamageMultiplier);
+        return abstractarrow;
+    }
+
+    public void performRangedAttack(LivingEntity target, float bowDamageMultiplier) {
         if(!this.crossbowMode){
-            ItemStack itemstack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem)));
-            AbstractArrow abstractarrow = this.getArrow(itemstack, power);
-            ItemStack itemStack = this.getMainHandItem();
-            Item item = itemStack.getItem();
+            ItemStack bow = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem));
+            ItemStack ammoStack = this.getProjectile(bow);
+            AbstractArrow abstractarrow = this.getOdysseyArrow(ammoStack, bowDamageMultiplier);
+            Item item = bow.getItem();
             if (item instanceof BowItem  bowItem)
                 abstractarrow = bowItem.customArrow(abstractarrow);
             double d0 = target.getX() - this.getX();
             double d1 = target.getY(0.3333333333333333D) - abstractarrow.getY();
             double d2 = target.getZ() - this.getZ();
             double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-            float velocity = WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * (item instanceof OdysseyBowItem odysseyBowItem ? odysseyBowItem.velocityMultiplier : 1.0f);
-            float accuracyMultiplier = EnchantmentUtil.getAccuracyMultiplier(this);
-            float superCharge = EnchantmentUtil.getSuperChargeMultiplier(itemStack);
-            abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier / superCharge);
+            float velocity = WeaponUtil.getMaxArrowVelocity(bow, false);
+            float accuracyMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(bow, Aspects.ACCURACY);
+            abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier);
             this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
             this.level.addFreshEntity(abstractarrow);
         } else {
             InteractionHand interactionhand = ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem);
             ItemStack crossbow = this.getItemInHand(interactionhand);
-            if (this.isHolding(is -> is.getItem() instanceof OdysseyCrossbowItem)) {
-                OdysseyCrossbowItem.performShooting(this.level, this, interactionhand, crossbow, 0.0f, (float)(14 - this.level.getDifficulty().getId() * 4));
+            if (this.isHolding(is -> is.getItem() instanceof AspectCrossbowItem)) {
+                AspectCrossbowItem.performShooting(this.level, this, interactionhand, crossbow, 0.0f, (float)(14 - this.level.getDifficulty().getId() * 4));
             }
             this.onCrossbowAttackPerformed();
         }
@@ -190,10 +199,8 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     protected void populateBabyEquipmentSlots() {
         Item item = switch(random.nextInt(10)){
             default -> ItemRegistry.WOODEN_BOOMERANG.get();
+            case 1, 2, 3 -> ItemRegistry.BONE_BOOMERANG.get();
             case 0 -> ItemRegistry.BONERANG.get();
-            case 1 -> ItemRegistry.HEAVY_BONE_BOOMERANG.get();
-            case 2 -> ItemRegistry.SHARP_BONE_BOOMERANG.get();
-            case 3 -> ItemRegistry.SPEEDY_BONE_BOOMERANG.get();
         };
         this.boomerangItem = item;
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
@@ -208,7 +215,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
                         .noneMatch(wrappedGoal -> wrappedGoal.getGoal() == this.boomerangGoal)){
                     ItemStack boomerang = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BoomerangItem));
                     if(boomerang.getItem() instanceof BoomerangItem boomerangItem){
-                        int i = boomerangItem.getChargeTime(boomerang);
+                        int i = boomerangItem.getBaseMaxChargeTicks();
                         if (this.level.getDifficulty() == Difficulty.HARD) {
                             i *= 3;
                         } else {
@@ -229,8 +236,8 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
             Item bowItem = bow.getItem();
             ItemStack crossbow = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem));
             Item crossbowItem = crossbow.getItem();
-            if (bowItem instanceof OdysseyBowItem) {
-                int i = ((OdysseyBowItem) bowItem).getChargeTime(bow);
+            if (bowItem instanceof AspectBowItem) {
+                int i = WeaponUtil.getRangedMaxChargeTicks(bow);
                 if (this.level.getDifficulty() != Difficulty.HARD) {
                     i *= 2;
                 }
@@ -274,8 +281,8 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
 
     @Override
     public void shootCrossbowProjectile(LivingEntity livingEntity, ItemStack crossbow, Projectile projectile, float angle) {
-        float velocity = (crossbow.getItem() instanceof OdysseyCrossbowItem odysseyCrossbowItem ? odysseyCrossbowItem.getEffectiveVelocityMultiplier(crossbow) : 1.25f);
-        this.shootCrossbowProjectile(this, livingEntity, projectile, angle, WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * velocity);
+        float velocity = WeaponUtil.getMaxArrowVelocity(crossbow, false);
+        this.shootCrossbowProjectile(this, livingEntity, projectile, angle, velocity);
     }
 
     @Override
@@ -302,7 +309,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
             InteractionHand hand = this.getBoomerangHand();
             ItemStack itemstack = new ItemStack(this.getItemInHand(hand).getItem());
             BoomerangItem boomerangItem = (BoomerangItem) itemstack.getItem();
-            boomerangItem.releaseBoomerang(itemstack, this.level, this, false, target);
+            boomerangItem.releaseThrownEntity(itemstack, this.level, this, Optional.of(target));
             this.setItemInHand(hand, ItemStack.EMPTY);
         }
     }

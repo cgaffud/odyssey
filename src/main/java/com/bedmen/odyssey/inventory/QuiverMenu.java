@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.inventory;
 
-import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.combat.QuiverType;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -32,8 +33,8 @@ public class QuiverMenu extends AbstractContainerMenu {
         return true;
     }
 
-    public static MenuType.MenuSupplier<QuiverMenu> QuiverMaker(QuiverItem.QuiverType quiverType){
-        return (int pContainerId, Inventory pPlayerInventory) ->  new QuiverMenu(pContainerId, pPlayerInventory, quiverType.getSize(), quiverType.getIsRocketBag(), ContainerRegistry.QUIVER_MAP.get(quiverType));
+    public static MenuType.MenuSupplier<QuiverMenu> QuiverMaker(QuiverType quiverType){
+        return (int pContainerId, Inventory pPlayerInventory) ->  new QuiverMenu(pContainerId, pPlayerInventory, quiverType.size, quiverType.isRocketBag, ContainerRegistry.QUIVER_MAP.get(quiverType));
     }
 
     public QuiverMenu(int id, Inventory playerInventory, int size, boolean isRocketBag, MenuType<?> type){
@@ -85,22 +86,21 @@ public class QuiverMenu extends AbstractContainerMenu {
 
     public void removed(Player playerIn) {
         super.removed(playerIn);
-        ItemStack itemStack1 = this.player.getMainHandItem();
-        boolean flag = false;
-        if(!(itemStack1.getItem() instanceof QuiverItem)){
-            itemStack1 = this.player.getOffhandItem();
-            flag = true;
+        ItemStack itemStack = this.player.getMainHandItem();
+        EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
+        if(!(itemStack.getItem() instanceof QuiverItem)){
+            itemStack = this.player.getOffhandItem();
+            equipmentSlot = EquipmentSlot.OFFHAND;
         }
-        CompoundTag compoundNBT =  itemStack1.getOrCreateTag();
+        CompoundTag compoundNBT =  itemStack.getOrCreateTag();
         compoundNBT.remove("Items");
         NonNullList<ItemStack> list = NonNullList.withSize(this.size, ItemStack.EMPTY);
         for(int i = 0; i < this.size; i++){
             list.set(i, this.inv.getItem(i));
         }
         ContainerHelper.saveAllItems(compoundNBT, list, false);
-        itemStack1.setTag(compoundNBT);
-        if(flag) playerIn.setItemSlot(EquipmentSlot.OFFHAND, itemStack1);
-        else playerIn.setItemSlot(EquipmentSlot.MAINHAND, itemStack1);
+        itemStack.setTag(compoundNBT);
+        playerIn.setItemSlot(equipmentSlot, itemStack);
     }
 
     public ItemStack quickMoveStack(Player playerIn, int index) {

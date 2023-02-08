@@ -2,14 +2,18 @@ package com.bedmen.odyssey.client.renderer.blockentity;
 
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
+import com.bedmen.odyssey.client.model.SpearModel;
 import com.bedmen.odyssey.items.BEWLRBlockItem;
-import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
+import com.bedmen.odyssey.items.aspect_items.SpearItem;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.model.ShieldModel;
+import net.minecraft.client.model.TridentModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -18,6 +22,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -34,18 +39,11 @@ import java.util.Map;
 
 public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLevelRenderer {
 
-//    public static final Material WOODEN_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/wooden_shield_base"));
-//    public static final Material WOODEN_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/wooden_shield_base_nopattern"));
-//    public static final Material COPPER_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base"));
-//    public static final Material COPPER_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base_nopattern"));
-//    public static final Material COPPER_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base"));
-//    public static final Material COPPER_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/copper_shield_base_nopattern"));
-//    public static final Material REINFORCED_MATERIAL = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/reinforced_shield_base"));
-//    public static final Material REINFORCED_MATERIAL_NOPATTERN = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/reinforced_shield_base_nopattern"));
-    
     private static OdysseyBlockEntityWithoutLevelRenderer instance = null;
     private final EntityModelSet entityModelSet;
     private final Map<TreasureChestMaterial, TreasureChestBlockEntity> treasureChestMap = new HashMap<>();
+    private SpearModel spearModel;
+    private TridentModel tridentModel;
 
     public OdysseyBlockEntityWithoutLevelRenderer(BlockEntityRenderDispatcher blockEntityRenderDispatcher, EntityModelSet entityModelSet) {
         super(blockEntityRenderDispatcher, entityModelSet);
@@ -54,6 +52,8 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
         for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
             this.treasureChestMap.put(treasureChestMaterial, new TreasureChestBlockEntity(BlockPos.ZERO, treasureChestMaterial.getBlockState()));
         }
+        this.spearModel = new SpearModel(this.entityModelSet.bakeLayer(SpearModel.LAYER_LOCATION));
+        this.tridentModel = new TridentModel(this.entityModelSet.bakeLayer(ModelLayers.TRIDENT));
     }
 
     public static OdysseyBlockEntityWithoutLevelRenderer getInstance(){
@@ -66,14 +66,17 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
     }
 
     public void onResourceManagerReload(ResourceManager resourceManager) {
+        this.shieldModel = new ShieldModel(this.entityModelSet.bakeLayer(ModelLayers.SHIELD));
         this.treasureChestMap.clear();
         for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
             this.treasureChestMap.put(treasureChestMaterial, new TreasureChestBlockEntity(BlockPos.ZERO, treasureChestMaterial.getBlockState()));
         }
+        this.spearModel = new SpearModel(this.entityModelSet.bakeLayer(SpearModel.LAYER_LOCATION));
+        this.tridentModel = new TridentModel(this.entityModelSet.bakeLayer(ModelLayers.TRIDENT));
         super.onResourceManagerReload(resourceManager);
     }
 
-    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource multiBufferSource, int p_108834_, int p_108835_) {
+    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, int packedOverlay) {
         Item item = itemStack.getItem();
         if(item instanceof BEWLRBlockItem bewlrBlockItem){
             Block block = bewlrBlockItem.getBlock();
@@ -83,26 +86,42 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
                 blockEntity = this.treasureChestMap.get(treasureChestBlock.treasureChestMaterial);
             }
             if(blockEntity != null){
-                this.blockEntityRenderDispatcher.renderItem(blockEntity, poseStack, multiBufferSource, p_108834_, p_108835_);
+                this.blockEntityRenderDispatcher.renderItem(blockEntity, poseStack, multiBufferSource, packedLight, packedOverlay);
             }
         } else {
-            if (itemStack.getItem() instanceof OdysseyShieldItem odysseyShieldItem) {
+            if (item instanceof AspectShieldItem aspectShieldItem) {
                 boolean pattern = BlockItem.getBlockEntityData(itemStack) != null;
                 poseStack.pushPose();
                 poseStack.scale(1.0F, -1.0F, -1.0F);
-                Material material = odysseyShieldItem.shieldType.getRenderMaterial(pattern);
+                Material material = aspectShieldItem.shieldType.getRenderMaterial(pattern);
                 VertexConsumer vertexconsumer = material.sprite().wrap(ItemRenderer.getFoilBufferDirect(multiBufferSource, this.shieldModel.renderType(material.atlasLocation()), true, itemStack.hasFoil()));
-                this.shieldModel.handle().render(poseStack, vertexconsumer, p_108834_, p_108835_, 1.0F, 1.0F, 1.0F, 1.0F);
+                this.shieldModel.handle().render(poseStack, vertexconsumer, packedLight, packedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
                 if (pattern) {
                     List<Pair<BannerPattern, DyeColor>> list = BannerBlockEntity.createPatterns(ShieldItem.getColor(itemStack), BannerBlockEntity.getItemPatterns(itemStack));
-                    BannerRenderer.renderPatterns(poseStack, multiBufferSource, p_108834_, p_108835_, this.shieldModel.plate(), material, false, list, itemStack.hasFoil());
+                    BannerRenderer.renderPatterns(poseStack, multiBufferSource, packedLight, packedOverlay, this.shieldModel.plate(), material, false, list, itemStack.hasFoil());
                 } else {
-                    this.shieldModel.plate().render(poseStack, vertexconsumer, p_108834_, p_108835_, 1.0F, 1.0F, 1.0F, 1.0F);
+                    this.shieldModel.plate().render(poseStack, vertexconsumer, packedLight, packedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
                 }
 
                 poseStack.popPose();
+            } else if (item instanceof SpearItem spearItem){
+                boolean useItemModelNotEntityModel = transformType == ItemTransforms.TransformType.GUI || transformType == ItemTransforms.TransformType.GROUND || transformType == ItemTransforms.TransformType.FIXED;
+                if(useItemModelNotEntityModel){
+                    ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+                    BakedModel bakedModel = itemRenderer.itemModelShaper.getModelManager().getModel(spearItem.getSpearType().itemModelResourceLocation);
+                    poseStack.popPose();
+                    itemRenderer.render(itemStack, transformType, false, poseStack, multiBufferSource, packedLight, packedOverlay, bakedModel);
+                    poseStack.pushPose();
+                } else {
+                    poseStack.pushPose();
+                    poseStack.scale(1.0F, -1.0F, -1.0F);
+                    Model model = spearItem.getSpearType().isTrident ? this.tridentModel : this.spearModel;
+                    VertexConsumer vertexconsumer1 = ItemRenderer.getFoilBufferDirect(multiBufferSource, model.renderType(spearItem.getSpearType().entityTexture), false, itemStack.hasFoil());
+                    model.renderToBuffer(poseStack, vertexconsumer1, packedLight, packedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+                    poseStack.popPose();
+                }
             }
-            super.renderByItem(itemStack, transformType, poseStack, multiBufferSource, p_108834_, p_108835_);
+            super.renderByItem(itemStack, transformType, poseStack, multiBufferSource, packedLight, packedOverlay);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.ai;
 
-import com.bedmen.odyssey.items.OdysseyBowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
@@ -37,7 +38,7 @@ public class OdysseyRangedBowAttackGoal<T extends net.minecraft.world.entity.Mob
     }
 
     protected boolean isHoldingBow() {
-        return this.mob.isHolding(is -> is.getItem() instanceof OdysseyBowItem);
+        return this.mob.isHolding(is -> is.getItem() instanceof AspectBowItem);
     }
 
     public boolean canContinueToUse() {
@@ -112,19 +113,19 @@ public class OdysseyRangedBowAttackGoal<T extends net.minecraft.world.entity.Mob
 
             if (this.mob.isUsingItem()) {
                 ItemStack bow = this.mob.getUseItem();
-                OdysseyBowItem odysseyBowItem = (OdysseyBowItem)bow.getItem();
+                AspectBowItem aspectBowItem = (AspectBowItem)bow.getItem();
                 if (!flag && this.seeTime < -60) {
                     this.mob.stopUsingItem();
                 } else if (flag) {
                     int i = this.mob.getTicksUsingItem();
-                    if (i >= odysseyBowItem.getChargeTime(bow)) {
+                    if (i >= WeaponUtil.getRangedMaxChargeTicks(bow)) {
                         this.mob.stopUsingItem();
-                        this.mob.performRangedAttack(livingentity, odysseyBowItem.getChargeForTime(i, bow));
+                        this.mob.performRangedAttack(livingentity, WeaponUtil.getMaxDamageMultiplier(bow));
                         this.attackTime = this.attackIntervalMin;
                     }
                 }
             } else if (--this.attackTime <= 0 && this.seeTime >= -60) {
-                this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof OdysseyBowItem));
+                this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof AspectBowItem));
             }
 
         }

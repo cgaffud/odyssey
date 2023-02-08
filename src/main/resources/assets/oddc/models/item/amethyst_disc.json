@@ -1,0 +1,14 @@
+{
+  "parent": "oddc:item/boomerang",
+  "textures": {
+    "layer0": "oddc:item/amethyst_disc"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "throwing": 1
+      },
+      "model": "oddc:item/amethyst_disc_throwing"
+    }
+  ]
+}

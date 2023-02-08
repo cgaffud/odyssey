@@ -131,7 +131,7 @@ def createMainMeleeEntries(resourceLocation):
     return createEntriesOf(resourceLocation, ["sword", "mace"])
 
 def createSharpMeleeEntries(resourceLocation):
-    return createEntriesOf(resourceLocation, ["sabre", "hatchet"])
+    return createEntriesOf(resourceLocation, ["sabre", "hatchet", "spear"])
 
 def createHeavyMeleeEntries(resourceLocation):
     return createEntriesOf(resourceLocation, ["hammer", "battle_axe", "bat"])
@@ -156,8 +156,8 @@ def unionWeightEntries(entryWeightPairs):
 
 # FUNCTIONS ------------------------
 
-def createEnchantWithTierFunction(tier):
-    return {"function": "oddc:enchant_with_tier", "tier": tier}
+def createModifyWithTierFunction(tier):
+    return {"function": "oddc:modify_with_tier", "tier": tier}
 
 def createSetCountFunction(count):
     return {

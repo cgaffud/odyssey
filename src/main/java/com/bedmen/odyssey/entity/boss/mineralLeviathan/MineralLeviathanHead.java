@@ -64,9 +64,9 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
     }
 
     public void aiStep() {
-        Optional<MineralLeviathanMaster> master = this.getMaster();
-        if(!this.isNoAi() && master.isPresent()){
-            MineralLeviathanMaster mineralLeviathanMaster = master.get();
+        Optional<MineralLeviathanMaster> optionalMineralLeviathanMaster = this.getMaster();
+        if(!this.isNoAi() && optionalMineralLeviathanMaster.isPresent()){
+            MineralLeviathanMaster mineralLeviathanMaster = optionalMineralLeviathanMaster.get();
             if(!this.level.isClientSide){
                 Phase phase = this.getPhase();
                 //Choose Target

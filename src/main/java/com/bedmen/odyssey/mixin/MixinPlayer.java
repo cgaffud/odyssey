@@ -1,25 +1,32 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
-import com.bedmen.odyssey.items.OdysseyShieldItem;
-import com.bedmen.odyssey.items.equipment.SniperBowItem;
-import com.bedmen.odyssey.items.equipment.base.EquipmentMeleeItem;
+import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
+import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
+import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
+import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
-import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -32,38 +39,65 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 @Mixin(Player.class)
-public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer {
+public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer {
+
+    private static final EntityDataAccessor<PermabuffHolder> DATA_PERMABUFF_HOLDER = SynchedEntityData.defineId(Player.class, OdysseyDataSerializers.PERMABUFF_HOLDER);
 
     @Shadow
     public void awardStat(Stat<?> p_36247_) {}
     @Shadow
     public float getCurrentItemAttackStrengthDelay() {return 0.0f;}
 
-    @Shadow public abstract void increaseScore(int p_36402_);
+    @Shadow public abstract void playSound(SoundEvent p_36137_, float p_36138_, float p_36139_);
+
+    @Shadow public abstract void aiStep();
+
+    @Shadow public abstract void awardStat(ResourceLocation p_36221_);
+
+    @Shadow public abstract int awardRecipes(Collection<Recipe<?>> p_36213_);
+
+    @Shadow public abstract void awardStat(Stat<?> p_36145_, int p_36146_);
 
     private int attackStrengthTickerO;
     private boolean isSniperScoping;
+    private static final String PERMABUFF_HOLDER_TAG = Odyssey.MOD_ID + ":PermabuffHolder";
 
     protected MixinPlayer(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
+    }
+
+    @Inject(method = "defineSynchedData", at = @At(value = "RETURN"))
+    public void onDefineSynchedData(CallbackInfo ci){
+        this.entityData.define(DATA_PERMABUFF_HOLDER, new PermabuffHolder(new ArrayList<>()));
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At(value = "RETURN"))
     public void onAddAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
         compoundTag.putInt("AttackStrengthTickerO", this.attackStrengthTickerO);
         compoundTag.putBoolean("IsSniperScoping", this.isSniperScoping);
+        CompoundTag permabuffHolderTag = this.getPermabuffHolder().toCompoundTag();
+        compoundTag.put(PERMABUFF_HOLDER_TAG, permabuffHolderTag);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
     public void onReadAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
         this.attackStrengthTickerO = compoundTag.getInt("AttackStrengthTickerO");
         this.isSniperScoping = compoundTag.getBoolean("IsSniperScoping");
+        if(compoundTag.contains(PERMABUFF_HOLDER_TAG)){
+            this.setPermabuffHolder(PermabuffHolder.fromCompoundTag(compoundTag.getCompound(PERMABUFF_HOLDER_TAG)));
+        }
     }
 
     @Inject(method = "getCurrentItemAttackStrengthDelay", at = @At("HEAD"), cancellable = true)
     private void onGetCurrentItemAttackStrengthDelay(CallbackInfoReturnable<Float> cir) {
-        if(WeaponUtil.isDualWielding(getPlayerEntity())){
+        if(WeaponUtil.isDualWielding(getPlayer())){
             cir.setReturnValue((float)(1.0D / this.getAttributeValue(Attributes.ATTACK_SPEED) * 10.0D));
             cir.cancel();
         }
@@ -86,7 +120,8 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     public void updateSniperScoping() {
         boolean isSniperScopingO = this.isSniperScoping;
-        this.isSniperScoping = this.getMainHandItem().getItem() instanceof SniperBowItem && this.isShiftKeyDown();
+        ItemStack itemStack = this.getMainHandItem();
+        this.isSniperScoping = AspectUtil.hasBooleanAspect(itemStack, Aspects.SPYGLASS) && this.isShiftKeyDown();
         if(!isSniperScopingO && this.isSniperScoping){
             this.playSound(SoundEvents.SPYGLASS_USE, 1.0F, 1.0F);
         } else if (isSniperScopingO && !this.isSniperScoping){
@@ -100,8 +135,8 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
 
     protected void blockUsingShield(LivingEntity livingEntity) {
         super.blockUsingShield(livingEntity);
-        if (livingEntity.getMainHandItem().getItem() instanceof EquipmentMeleeItem equipmentMeleeItem
-        && equipmentMeleeItem.meleeWeaponClass.canBreakShield) {
+        ItemStack itemStack = livingEntity.getMainHandItem();
+        if (AspectUtil.hasBooleanAspect(itemStack, Aspects.SHIELD_BASH)) {
             this.disableShield(true);
         }
     }
@@ -113,12 +148,13 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
         }
 
         if (this.random.nextFloat() < f) {
-            Item useItem = this.getUseItem().getItem();
-            int recoveryTime = useItem instanceof OdysseyShieldItem odysseyShieldItem ? odysseyShieldItem.getRecoveryTime() : 100;
+            ItemStack shield = this.getUseItem();
+            Item shieldItem = shield.getItem();
+            int recoveryTime = shieldItem instanceof AspectShieldItem aspectShieldItem ? aspectShieldItem.getRecoveryTime(shield) : 100;
             ITagManager<Item> itemITagManager = ForgeRegistries.ITEMS.tags();
             if(itemITagManager != null){
                 for(Item item : itemITagManager.getTag(OdysseyItemTags.SHIELDS).stream().toList()){
-                    getPlayerEntity().getCooldowns().addCooldown(item, recoveryTime);
+                    getPlayer().getCooldowns().addCooldown(item, recoveryTime);
                 }
                 this.stopUsingItem();
                 this.level.broadcastEntityEvent(this, (byte)30);
@@ -127,17 +163,7 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
     }
 
     public boolean isDamageSourceBlocked(DamageSource damageSource) {
-        Entity entity = damageSource.getDirectEntity();
-        boolean flag = false;
-        if (entity instanceof AbstractArrow) {
-            AbstractArrow abstractarrow = (AbstractArrow)entity;
-            // Change from > 0 to > EnchantmentUtil.getImpenetrable(this)
-            if (abstractarrow.getPierceLevel() > EnchantmentUtil.getImpenetrable(this)) {
-                flag = true;
-            }
-        }
-
-        if (!damageSource.isBypassArmor() && this.isBlocking() && !flag) {
+        if (!damageSource.isBypassArmor() && this.isBlocking()) {
             Vec3 vec32 = damageSource.getSourcePosition();
             if (vec32 != null) {
                 Vec3 vec3 = this.getViewVector(1.0F);
@@ -152,7 +178,40 @@ public abstract class MixinPlayer extends LivingEntity implements IOdysseyPlayer
         return false;
     }
 
-    private Player getPlayerEntity(){
+    public PermabuffHolder getPermabuffHolder(){
+        return this.entityData.get(DATA_PERMABUFF_HOLDER).copy();
+    }
+
+    public void setPermabuffHolder(PermabuffHolder permabuffHolder){
+        this.entityData.set(DATA_PERMABUFF_HOLDER, permabuffHolder.copy());
+    }
+
+    public void setPermabuff(AspectInstance aspectInstance){
+        List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermabuffHolder().aspectInstanceList);
+        if(aspectInstanceList.stream().anyMatch(oldAspectInstance -> oldAspectInstance.aspect == aspectInstance.aspect)){
+            aspectInstanceList = aspectInstanceList.stream().map(oldAspectInstance -> {
+                if(oldAspectInstance.aspect == aspectInstance.aspect){
+                    if(aspectInstance.strength <= 0.0f){
+                        return null;
+                    }
+                    return aspectInstance;
+                }
+                return oldAspectInstance;
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+        } else {
+            aspectInstanceList.add(aspectInstance);
+        }
+        PermabuffHolder permabuffHolder = new PermabuffHolder(aspectInstanceList);
+        this.setPermabuffHolder(permabuffHolder);
+    }
+
+    public void addPermabuffs(List<AspectInstance> permabuffList){
+        List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermabuffHolder().aspectInstanceList);
+        permabuffList.forEach(aspectInstance -> AspectUtil.addInstance(aspectInstanceList, aspectInstance));
+        this.setPermabuffHolder(new PermabuffHolder(aspectInstanceList));
+    }
+
+    private Player getPlayer(){
         return (Player)(Object)this;
     }
 }

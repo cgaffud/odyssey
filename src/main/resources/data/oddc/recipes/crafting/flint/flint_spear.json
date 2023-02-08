@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " BA",
+    " CB",
+    "C  "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:flint"
+    },
+    "B": {
+      "item": "minecraft:string"
+    },
+    "C": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "oddc:flint_spear"
+  }
+}

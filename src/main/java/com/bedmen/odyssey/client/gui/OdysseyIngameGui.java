@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.client.gui;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -85,13 +85,13 @@ public class OdysseyIngameGui extends ForgeIngameGui
         int left = width / 2 + 91;
         int top = height - right_height;
 
-        if (player instanceof IOdysseyLivingEntity odysseyLivingEntity)
+        if (player instanceof OdysseyLivingEntity odysseyLivingEntity)
         {
-            int maxGlidingTicks = odysseyLivingEntity.getMaxFlightTicks();
-            if(maxGlidingTicks > 0){
-                int glidingTicksLeft = maxGlidingTicks - odysseyLivingEntity.getFlightTicks();
-                int full = Mth.ceil((double)(glidingTicksLeft - 1.99f) * 10.0D / maxGlidingTicks);
-                int partial = Mth.ceil((double)glidingTicksLeft * 10.0D / maxGlidingTicks) - full;
+            int maxFlight = odysseyLivingEntity.getMaxFlight();
+            if(maxFlight > 0){
+                double flight = odysseyLivingEntity.getFlightValue();
+                int full = Mth.ceil((flight - 1.99d) * 10.0D / (double)maxFlight);
+                int partial = Mth.ceil(flight * 10.0D / (double)maxFlight) - full;
 
                 for (int i = 0; i < full + partial; ++i)
                 {

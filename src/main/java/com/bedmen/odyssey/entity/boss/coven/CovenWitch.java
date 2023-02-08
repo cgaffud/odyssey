@@ -175,9 +175,8 @@ public abstract class CovenWitch extends Monster implements SubEntity<CovenMaste
         }
     }
 
-    @Override
     public void checkDespawn() {
-        if (!this.getMaster().isPresent())
+        if (this.getMaster().isEmpty())
             this.discard();
     }
 

@@ -3,20 +3,22 @@ package com.bedmen.odyssey;
 import com.bedmen.odyssey.block.wood.OdysseyFlowerPotBlock;
 import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
-import com.bedmen.odyssey.entity.boss.coven.*;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.*;
+import com.bedmen.odyssey.entity.boss.coven.CovenMaster;
+import com.bedmen.odyssey.entity.boss.coven.EnderWitch;
+import com.bedmen.odyssey.entity.boss.coven.NetherWitch;
+import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
-import com.bedmen.odyssey.items.TomeItem;
-import com.bedmen.odyssey.items.equipment.base.*;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
-import com.bedmen.odyssey.tools.OdysseyTiers;
+import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.trades.OdysseyTrades;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.CompostUtil;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OdysseyGeneration;
 import com.bedmen.odyssey.world.gen.OreGen;
@@ -57,11 +59,11 @@ public class Odyssey
         ContainerRegistry.init();
         DataSerializerRegistry.init();
         EffectRegistry.init();
-        EnchantmentRegistry.init();
         EntityTypeRegistry.init();
         FeatureRegistry.init();
         FoliagePlacerTypeRegistry.init();
         LootModifierRegistry.init();
+        ParticleTypeRegistry.init();
 //        PotionRegistry.init();
         RecipeSerializerRegistry.init();
         RecipeTypeRegistry.init();
@@ -82,20 +84,6 @@ public class Odyssey
             OdysseyTrades.addTrades();
             EntityEvents.initEntityMap();
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
-
-            //Equipment / Enchantments
-            EquipmentArmorItem.initEquipment();
-            EquipmentShieldItem.initEquipment();
-            EquipmentMeleeItem.initEquipment();
-            EquipmentItem.initEquipment();
-            EquipmentPickaxeItem.initEquipment();
-            EquipmentHoeItem.initEquipment();
-            EquipmentShovelItem.initEquipment();
-            EquipmentAxeItem.initEquipment();
-            EquipmentBowItem.initEquipment();
-            EquipmentCrossbowItem.initEquipment();
-            TomeItem.initTomes();
-            EnchantmentUtil.init();
 
             //Generation
             BiomeUtil.init();

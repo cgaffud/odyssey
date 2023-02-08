@@ -1,11 +1,12 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.items.equipment.ProjectileLaunchItem;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.items.ProjectileLaunchItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ShootSwungProjectilePacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
-import com.bedmen.odyssey.util.EnchantmentUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -24,8 +25,9 @@ public class InputEvents {
         InteractionHand hand = event.getHand();
         if(localPlayer != null){
             ItemStack itemStack = localPlayer.getItemInHand(hand);
-            if (EnchantmentUtil.hasVolatile(itemStack)){
-                OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket());
+            float volatilityStrength = AspectUtil.getFloatAspectStrength(itemStack, Aspects.VOLATILITY);
+            if (volatilityStrength > 0.0f){
+                OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket(volatilityStrength));
             }
             if(event.isAttack()){
                 if(itemStack.getItem() instanceof ProjectileLaunchItem && localPlayer.getAttackStrengthScale(0.5F) > 0.9f){

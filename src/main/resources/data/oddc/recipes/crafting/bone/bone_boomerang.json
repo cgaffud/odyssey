@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AA",
+    "A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:bone"
+    }
+  },
+  "result": {
+    "item": "oddc:bone_boomerang"
+  }
+}

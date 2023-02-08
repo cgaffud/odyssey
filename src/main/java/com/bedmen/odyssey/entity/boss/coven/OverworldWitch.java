@@ -1,10 +1,7 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
 import com.bedmen.odyssey.entity.ai.CovenReturnToMasterGoal;
-import com.bedmen.odyssey.items.OdysseyBowItem;
-import com.bedmen.odyssey.items.equipment.BoomerangItem;
 import com.bedmen.odyssey.util.GeneralUtil;
-import com.bedmen.odyssey.util.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -15,27 +12,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.entity.monster.Evoker;
-import net.minecraft.world.entity.monster.Skeleton;
-import net.minecraft.world.entity.monster.SpellcasterIllager;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.EvokerFangs;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
@@ -381,26 +368,25 @@ public class OverworldWitch extends CovenWitch {
 
         protected void performSpellCasting(List<ServerPlayer> serverPlayerEntityList) {
             for (ServerPlayer player : serverPlayerEntityList) {
-                createSpellEntity(player.blockPosition());
+                createSpellEntity(player.position());
             }
         }
 
-        private void createSpellEntity(BlockPos playerPos) {
-            BlockPos.MutableBlockPos mutableBlockPos = playerPos.mutable();
-            double y = playerPos.getY();
+        private void createSpellEntity(Vec3 playerPosition) {
+            BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos(playerPosition.x, playerPosition.y, playerPosition.z);
+            double initialY = playerPosition.y;
             BlockState blockstate;
 
             do {
                 mutableBlockPos.move(Direction.UP);
                 blockstate = overworldWitch.level.getBlockState(mutableBlockPos);
-            } while (blockstate.isAir() && (mutableBlockPos.getY() < y+10));
+            } while (blockstate.isAir() && (mutableBlockPos.getY() < initialY+10));
 
-            if (mutableBlockPos.getY() != y) {
-                FallingBlockEntity dripstone = new FallingBlockEntity(overworldWitch.level, playerPos.getX(), mutableBlockPos.getY(), playerPos.getZ(), Blocks.POINTED_DRIPSTONE.defaultBlockState());
-                //int i = Math.max(1 + p_154100_.getY() - blockpos$mutableblockpos.getY(), 6);
+            if (mutableBlockPos.getY() != initialY) {
+                FallingBlockEntity dripstone = new FallingBlockEntity(overworldWitch.level, playerPosition.x, mutableBlockPos.getY(), playerPosition.z, Blocks.POINTED_DRIPSTONE.defaultBlockState().setValue(PointedDripstoneBlock.TIP_DIRECTION, Direction.DOWN));
+                System.out.println(dripstone.position());
                 dripstone.setHurtsEntities(6, 40);
                 overworldWitch.level.addFreshEntity(dripstone);
-
             }
         }
 

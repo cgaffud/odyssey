@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.network.packet;
 
 import com.bedmen.odyssey.entity.projectile.SwungProjectile;
-import com.bedmen.odyssey.items.equipment.ProjectileLaunchItem;
+import com.bedmen.odyssey.items.ProjectileLaunchItem;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

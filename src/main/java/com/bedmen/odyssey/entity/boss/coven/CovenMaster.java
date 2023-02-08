@@ -5,7 +5,6 @@ import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.entity.boss.SubEntity;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import it.unimi.dsi.fastutil.floats.FloatList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -31,9 +30,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CovenMaster extends BossMaster {
-    private static final EntityDataAccessor<Map<CovenType, Integer>> DATA_WITCH_ID_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_INT_MAP_SERIALIZER);
-    private static final EntityDataAccessor<Map<CovenType, Float>> DATA_WITCH_HEALTH_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_FLOAT_MAP_SERIALIZER);
-    public static final int NUM_WITCHES = 3;
+    private static final EntityDataAccessor<Map<CovenType, Integer>> DATA_WITCH_ID_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_INT_MAP);
+    private static final EntityDataAccessor<Map<CovenType, Float>> DATA_WITCH_HEALTH_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_FLOAT_MAP);
+    public static final int NUM_WITCHES = CovenType.values().length;
     public static final float HEALTH_PER_WITCH = 50.0f;
     public static final double MAX_HEALTH = HEALTH_PER_WITCH * NUM_WITCHES;
     public static final double DAMAGE = 8.0d;
@@ -273,14 +272,15 @@ public class CovenMaster extends BossMaster {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH).add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
     }
 
     // Server Side
     public void bringWitchesToMe(){
         if(!this.level.isClientSide) {
-            for (int i = 0; i < NUM_WITCHES; i++) {
-                CovenWitch witch = this.witchMap.get(i);
+            for(CovenType covenType: CovenType.values()){
+                int i = covenType.ordinal();
+                CovenWitch witch = this.witchMap.get(covenType);
                 float xOffset = Mth.cos(Mth.PI*2/NUM_WITCHES * i);
                 float zOffset = Mth.sin(Mth.PI*2/NUM_WITCHES * i);
                 witch.teleport(this.getX() + xOffset, this.getY(), this.getZ()+zOffset);

@@ -1,7 +1,8 @@
 package com.bedmen.odyssey.client.renderer;
 
-import com.bedmen.odyssey.items.equipment.BoomerangItem;
-import com.bedmen.odyssey.util.WeaponUtil;
+import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
+import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import com.google.common.base.MoreObjects;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -362,7 +363,7 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
                             p_109379_.mulPose(Vector3f.YP.rotationDegrees((float)k * 35.3F));
                             p_109379_.mulPose(Vector3f.ZP.rotationDegrees((float)k * -9.785F));
                             float f7 = (float)itemStack.getUseDuration() - ((float)this.minecraft.player.getUseItemRemainingTicks() - p_109373_ + 1.0F);
-                            float f11 = f7 / (float)(itemStack.getItem() instanceof BoomerangItem boomerangItem ? boomerangItem.getChargeTime(itemStack) : 10);
+                            float f11 = f7 / (float)(itemStack.getItem() instanceof ThrowableWeaponItem throwableWeaponItem ? throwableWeaponItem.getBaseMaxChargeTicks() : 10.0f);
                             if (f11 > 1.0F) {
                                 f11 = 1.0F;
                             }

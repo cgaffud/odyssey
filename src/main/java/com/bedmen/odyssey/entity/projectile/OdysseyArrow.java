@@ -1,48 +1,47 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.monster.Weaver;
-import com.bedmen.odyssey.registry.EnchantmentRegistry;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import com.bedmen.odyssey.registry.ItemRegistry;
-import net.minecraft.core.BlockPos;
+import com.bedmen.odyssey.combat.ArrowType;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
-import java.util.Locale;
-import java.util.function.Consumer;
+import java.util.Optional;
 
 public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
-    public static final float WEAVER_FANG_ARROW_WEB_AMPLIFY = 2f;
+    public static final String ARROW_TYPE_TAG = "ArrowType";
     private ArrowType arrowType = ArrowType.AMETHYST;
 
-    public OdysseyArrow(EntityType<? extends OdysseyArrow> p_i50158_1_, Level p_i50158_2_) {
-        super(p_i50158_1_, p_i50158_2_);
+    public OdysseyArrow(EntityType<? extends OdysseyArrow> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public OdysseyArrow(Level p_i46768_1_, LivingEntity p_i46768_2_, ArrowType arrowType) {
-        super(EntityTypeRegistry.ARROW.get(), p_i46768_2_, p_i46768_1_);
+    public OdysseyArrow(Level level, LivingEntity livingEntity, ArrowType arrowType) {
+        super(EntityTypeRegistry.ARROW.get(), livingEntity, level);
         this.arrowType = arrowType;
         this.setBaseDamage(arrowType.damage);
     }
 
-    public OdysseyArrow(Level p_i46769_1_, double p_i46769_2_, double p_i46769_4_, double p_i46769_6_) {
-        super(EntityTypeRegistry.ARROW.get(), p_i46769_2_, p_i46769_4_, p_i46769_6_, p_i46769_1_);
+    public OdysseyArrow(Level level, double x, double y, double z) {
+        super(EntityTypeRegistry.ARROW.get(), x, y, z, level);
     }
 
     protected void defineSynchedData() {
@@ -53,21 +52,25 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         return new ItemStack(this.getArrowType().getItem());
     }
 
-    public void readAdditionalSaveData(CompoundTag compoundNBT) {
-        super.readAdditionalSaveData(compoundNBT);
-        if (compoundNBT.contains("ArrowType")) {
-            this.arrowType = ArrowType.valueOf(compoundNBT.getString("ArrowType"));
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        if (compoundTag.contains(ARROW_TYPE_TAG)) {
+            this.arrowType = ArrowType.valueOf(compoundTag.getString(ARROW_TYPE_TAG));
         }
         this.setBaseDamage(this.getArrowType().damage);
     }
 
-    public void addAdditionalSaveData(CompoundTag compoundNBT) {
-        super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.putString("ArrowType", this.arrowType.name());
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putString(ARROW_TYPE_TAG, this.arrowType.name());
     }
 
     public ArrowType getArrowType(){
         return this.arrowType;
+    }
+
+    protected SoundEvent getEntityHitSoundEvent(){
+        return SoundEvents.ARROW_HIT;
     }
 
     @Override
@@ -80,98 +83,43 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         this.arrowType = ArrowType.values()[additionalData.readInt()];
     }
 
-    protected void onHitEntity(EntityHitResult entityHitResult) {
-        this.arrowType.onEntityHit(entityHitResult);
-        super.onHitEntity(entityHitResult);
+    public void setEnchantmentEffectsFromEntity(LivingEntity shooter, float bowDamageMultiplier) {
+        this.setBaseDamage((bowDamageMultiplier + this.random.nextGaussian() * 0.1D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage * (WeaponUtil.BASE_ARROW_VELOCITY * WeaponUtil.BASE_ARROW_VELOCITY) / (WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES));
     }
 
-    public void setEnchantmentEffectsFromEntity(LivingEntity shooter, float bowChargePower) {
-        this.setBaseDamage((bowChargePower + this.random.nextGaussian() * 0.125D + (double)((float)this.level.getDifficulty().getId() * 0.055F)) * this.arrowType.damage);
-        int i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.POWER_ARROWS.get(), shooter);
-        if (i > 0) {
-            this.setBaseDamage(this.getBaseDamage() + (double)i * 0.5D + 0.5D);
-        }
-        i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.PUNCH_ARROWS.get(), shooter);
-        if (i > 0) {
-            this.setKnockback(i);
-        }
-        i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.FLAMING_ARROWS.get(), shooter);
-        if (i > 0) {
-            this.setSecondsOnFire(100*i);
-        }
-        i = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.PIERCING.get(), shooter);
-        if (i > 0) {
-            this.setPierceLevel((byte) i);
-        }
-        i = EnchantmentHelper.getEnchantmentLevel(Enchantments.MOB_LOOTING, shooter);
-        if (i > 0) {
-            this.setLootingLevel((byte) i);
-        }
+    protected double getDamage(){
+        double velocity = this.getDeltaMovement().length();
+        double velocityFactor = velocity / WeaponUtil.BASE_ARROW_VELOCITY;
+        return Mth.clamp(velocityFactor * velocityFactor * this.getBaseDamage(), 0.0D, 2.147483647E9D);
     }
 
-    public enum ArrowType{
-        FLINT(ItemRegistry.ARROW::get, 5.0d, new ResourceLocation("textures/entity/projectiles/arrow.png")),
-        SPIDER_FANG(ItemRegistry.SPIDER_FANG_ARROW::get, 5d, (entityHitResult) -> {
-            Entity entity = entityHitResult.getEntity();
-            if(!entity.level.isClientSide && entity instanceof LivingEntity livingTarget) {
-                livingTarget.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + 25, 0));
-            }
-        }),
-        WEAVER_FANG(ItemRegistry.WEAVER_FANG_ARROW::get, 5.5, (entityHitResult) -> {
-            Entity entity = entityHitResult.getEntity();
-            if(entity.level.random.nextFloat() < Weaver.WEB_ATTACK_CHANCE * WEAVER_FANG_ARROW_WEB_AMPLIFY){
-                BlockPos blockPos = new BlockPos(entity.getPosition(1f));
-                if (entity.level.getBlockState(blockPos).getBlock() == Blocks.AIR) {
-                    entity.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
+    protected void onFinalPierce(){
+        this.discard();
+    }
+
+    protected void onHurt(Entity target, boolean hurtSuccessful) {
+        if(hurtSuccessful){
+            if (target instanceof LivingEntity livingEntity) {
+                Entity owner = this.getOwner();
+
+                if (!this.level.isClientSide && this.getPierceLevel() <= 0) {
+                    livingEntity.setArrowCount(livingEntity.getArrowCount() + 1);
+                }
+
+                if (livingEntity != owner && livingEntity instanceof Player && owner instanceof ServerPlayer && !this.isSilent()) {
+                    ((ServerPlayer)owner).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
                 }
             }
-        }),
-        CLOVER_STONE(ItemRegistry.CLOVER_STONE_ARROW::get, 6d, 1),
-        AMETHYST(ItemRegistry.AMETHYST_ARROW::get, 6.0d);
-
-        private final Lazy<Item> lazyItem;
-        public final double damage;
-        private int looting;
-        private Consumer<EntityHitResult> onEntityHit;
-        private ResourceLocation resourceLocation;
-
-        ArrowType(Lazy<Item> lazyItem, double damage, ResourceLocation resourceLocation){
-            this(lazyItem, damage);
-            this.resourceLocation = resourceLocation;
-        }
-
-        ArrowType(Lazy<Item> lazyItem, double damage, int looting){
-            this(lazyItem, damage);
-            this.looting = looting;
-        }
-
-        ArrowType(Lazy<Item> lazyItem, double damage, Consumer<EntityHitResult> onEntityHit){
-            this(lazyItem, damage);
-            this.onEntityHit = onEntityHit;
-        }
-
-        ArrowType(Lazy<Item> lazyItem, double damage){
-            this.lazyItem = lazyItem;
-            this.damage = damage;
-            this.looting = 0;
-            this.onEntityHit = (entityHitResult) -> {};
-            this.resourceLocation = new ResourceLocation(Odyssey.MOD_ID, String.format("textures/entity/projectiles/%s_arrow.png", this.name().toLowerCase(Locale.ROOT)));
-        }
-
-        public Item getItem(){
-            return this.lazyItem.get();
-        }
-
-        public int getLooting(){
-            return this.looting;
-        }
-
-        public void onEntityHit(EntityHitResult entityHitResult) {
-            this.onEntityHit.accept(entityHitResult);
-        }
-
-        public ResourceLocation getResourceLocation(){
-            return this.resourceLocation;
+        } else {
+            this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
+            this.setYRot(this.getYRot() + 180.0F);
+            this.yRotO += 180.0F;
+            if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                if (this.pickup == AbstractArrow.Pickup.ALLOWED) {
+                    this.spawnAtLocation(this.getPickupItem(), 0.1F);
+                }
+                this.discard();
+            }
         }
     }
 }

@@ -1,6 +1,0 @@
-{
-  "parent": "oddc:item/boomerang_throwing",
-  "textures": {
-    "layer0": "oddc:item/speedy_greatroot_boomerang"
-  }
-}

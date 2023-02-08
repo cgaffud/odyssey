@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.recipes;
 
-import com.bedmen.odyssey.items.OdysseyShieldItem;
+import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +30,7 @@ public class OdysseyShieldDecorationRecipes extends CustomRecipe {
 
                     itemstack1 = itemstack2;
                 } else {
-                    if (!(itemstack2.getItem() instanceof OdysseyShieldItem)) {
+                    if (!(itemstack2.getItem() instanceof AspectShieldItem)) {
                         return false;
                     }
 
@@ -59,7 +59,7 @@ public class OdysseyShieldDecorationRecipes extends CustomRecipe {
             if (!itemstack2.isEmpty()) {
                 if (itemstack2.getItem() instanceof BannerItem) {
                     itemstack = itemstack2;
-                } else if (itemstack2.getItem() instanceof OdysseyShieldItem) {
+                } else if (itemstack2.getItem() instanceof AspectShieldItem) {
                     itemstack1 = itemstack2.copy();
                 }
             }

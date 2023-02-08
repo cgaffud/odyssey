@@ -2,12 +2,16 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.entity.OdysseySignBlockEntity;
+import com.bedmen.odyssey.client.gui.screens.OdysseyCreativeModeInventoryScreen;
+import com.bedmen.odyssey.client.gui.screens.OdysseyInventoryScreen;
 import com.bedmen.odyssey.client.gui.screens.OdysseySignEditScreen;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.RenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,13 +26,19 @@ public class GuiEvents {
     @SubscribeEvent
     public static void onScreenOpenEvent(final ScreenOpenEvent event){
         Screen screen = event.getScreen();
-        if(screen instanceof SignEditScreen signEditScreen && signEditScreen.sign instanceof OdysseySignBlockEntity odysseySignBlockEntity){
-            event.setScreen(new OdysseySignEditScreen(odysseySignBlockEntity, Minecraft.getInstance().isTextFilteringEnabled()));
+        Minecraft minecraft = Minecraft.getInstance();
+        if(minecraft != null){
+            if(screen instanceof SignEditScreen signEditScreen
+                    && signEditScreen.sign instanceof OdysseySignBlockEntity odysseySignBlockEntity){
+                event.setScreen(new OdysseySignEditScreen(odysseySignBlockEntity, Minecraft.getInstance().isTextFilteringEnabled()));
+            }
+            if(screen instanceof InventoryScreen && !(screen instanceof OdysseyInventoryScreen)){
+                event.setScreen(new OdysseyInventoryScreen(minecraft.player));
+            }
+            if(screen instanceof CreativeModeInventoryScreen && !(screen instanceof OdysseyCreativeModeInventoryScreen)){
+                event.setScreen(new OdysseyCreativeModeInventoryScreen(minecraft.player));
+            }
         }
-        //todo trinkets / amulets
-//        if(gui instanceof CreativeModeInventoryScreen){
-//            event.setGui(new OdysseyCreativeScreen(((CreativeModeInventoryScreen) gui).inventory.player));
-//        }
     }
 
     @SubscribeEvent

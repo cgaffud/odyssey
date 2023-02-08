@@ -5,7 +5,7 @@
       "conditions": [],
       "functions": [
         {
-          "function": "oddc:enchant_with_tier",
+          "function": "oddc:modify_with_tier",
           "tier": 1
         }
       ],
@@ -30,7 +30,7 @@
       "conditions": [],
       "functions": [
         {
-          "function": "oddc:enchant_with_tier",
+          "function": "oddc:modify_with_tier",
           "tier": 1
         }
       ],
@@ -79,7 +79,7 @@
       "conditions": [],
       "functions": [
         {
-          "function": "oddc:enchant_with_tier",
+          "function": "oddc:modify_with_tier",
           "tier": 1
         }
       ],

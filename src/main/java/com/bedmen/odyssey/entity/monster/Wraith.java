@@ -1,10 +1,11 @@
 package com.bedmen.odyssey.entity.monster;
 
-import com.bedmen.odyssey.items.OdysseyBowItem;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.items.aspect_items.AspectArrowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.SoundEventRegistry;
-import com.bedmen.odyssey.util.EnchantmentUtil;
-import com.bedmen.odyssey.util.WeaponUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -144,22 +145,28 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
 
     }
 
+    protected AbstractArrow getOdysseyArrow(ItemStack ammo, float bowDamageMultiplier) {
+        AspectArrowItem aspectArrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
+        AbstractArrow abstractarrow = aspectArrowItem.createArrow(this.level, ammo, this);
+        abstractarrow.setEnchantmentEffectsFromEntity(this, bowDamageMultiplier);
+        return abstractarrow;
+    }
+
     @Override
-    public void performRangedAttack(LivingEntity target, float power) {
-        ItemStack itemstack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem)));
-        AbstractArrow abstractarrow = this.getArrow(itemstack, power);
-        ItemStack itemStack = this.getMainHandItem();
-        Item item = itemStack.getItem();
-        if (item instanceof BowItem bowItem)
+    public void performRangedAttack(LivingEntity target, float bowDamageMultiplier) {
+        ItemStack bow = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof net.minecraft.world.item.BowItem));
+        ItemStack ammoStack = this.getProjectile(bow);
+        AbstractArrow abstractarrow = this.getOdysseyArrow(ammoStack, bowDamageMultiplier);
+        Item item = bow.getItem();
+        if (item instanceof BowItem  bowItem)
             abstractarrow = bowItem.customArrow(abstractarrow);
         double d0 = target.getX() - this.getX();
         double d1 = target.getY(0.3333333333333333D) - abstractarrow.getY();
         double d2 = target.getZ() - this.getZ();
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        float velocity = WeaponUtil.BASE_ARROW_VELOCITY_ENEMIES * (item instanceof OdysseyBowItem odysseyBowItem ? odysseyBowItem.velocityMultiplier : 1.0f);
-        float accuracyMultiplier = EnchantmentUtil.getAccuracyMultiplier(this);
-        float superCharge = EnchantmentUtil.getSuperChargeMultiplier(itemStack);
-        abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier / superCharge);
+        float velocity = WeaponUtil.getMaxArrowVelocity(bow, false);
+        float accuracyMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(bow, Aspects.ACCURACY);
+        abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier);
         this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.level.addFreshEntity(abstractarrow);
     }

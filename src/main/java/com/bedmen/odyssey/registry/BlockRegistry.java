@@ -62,6 +62,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> MOONROCK_WALL = BLOCKS.register("moonrock_wall", () -> new LightEmitterWallBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(10.0F).randomTicks().lightLevel(litBlockEmission(moonrockLightAmount)), BlockRegistry::atNightSkyEmission));
     public static final RegistryObject<Block> TRANSCENDENTAL_OBSIDIAN = BLOCKS.register("transcendental_obsidian", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
     public static final RegistryObject<Block> TRANSCENDENTAL_TRANSMUTER = BLOCKS.register("transcendental_transmuter", () -> new WallBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
+    public static final RegistryObject<Block> ARCANE_GRINDSTONE = BLOCKS.register("arcane_grindstone", () -> new ArcaneGrindstoneBlock(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).requiresCorrectToolForDrops().strength(2.0F, 6.0F).sound(SoundType.STONE)));
 
     public static final RegistryObject<Block> PRAIRIE_GRASS = BLOCKS.register("prairie_grass", () -> new TriplePlantBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
 
@@ -112,6 +113,7 @@ public class BlockRegistry {
 
 
     public static final RegistryObject<Block> WEAVER_EGG_COBWEB = BLOCKS.register("weaver_egg_cobweb", () ->  new WeaverEggWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().requiresCorrectToolForDrops().strength(4.0F)));
+    public static final RegistryObject<Block> TEMPORARY_COBWEB = BLOCKS.register("temporary_cobweb", () ->  new TemporaryWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().strength(4.0F)));
     public static final RegistryObject<Block> COPPER_COBWEB = BLOCKS.register("copper_cobweb", () ->  new OdysseyWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().color(MaterialColor.COLOR_ORANGE).requiresCorrectToolForDrops().strength(4.0F)));
     public static final RegistryObject<Block> IRON_COBWEB = BLOCKS.register("iron_cobweb", () ->  new OdysseyWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().color(MaterialColor.METAL).requiresCorrectToolForDrops().strength(4.0F)));
     public static final RegistryObject<Block> SILVER_COBWEB = BLOCKS.register("silver_cobweb", () ->  new OdysseyWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().color(MaterialColor.SNOW).requiresCorrectToolForDrops().strength(4.0F)));

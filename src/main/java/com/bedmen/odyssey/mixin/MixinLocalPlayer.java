@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.util.WeaponUtil;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;

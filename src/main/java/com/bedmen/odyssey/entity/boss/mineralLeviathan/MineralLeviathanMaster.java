@@ -35,7 +35,7 @@ public class MineralLeviathanMaster extends BossMaster {
     public static final int NUM_SEGMENTS = 20;
     public static final double MAX_HEALTH = 150.0d;
     public static final double DAMAGE = 8.0d;
-    public static final double FOLLOW_RANGE = 75d;
+    public static final double FOLLOW_RANGE = 75.0d;
     public static final double DODGE_RANGE = 3.5d;
     private static final String HEAD_TAG = "HeadSubEntity";
     private static final String BODY_TAG = "BodySubEntities";
@@ -260,6 +260,6 @@ public class MineralLeviathanMaster extends BossMaster {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH).add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
     }
 }
