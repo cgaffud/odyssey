@@ -10,6 +10,7 @@ import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.items.OdysseyTierItem;
+import com.bedmen.odyssey.items.WarpTotem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
@@ -163,7 +164,7 @@ public class EntityEvents {
         }
         event.setAmount(amount);
 
-        if (livingEntity instanceof Player player) {
+        if (hurtLivingEntity instanceof Player player) {
             if (player.isUsingItem() && (player.getUseItem().getItem() instanceof WarpTotem))
                 player.stopUsingItem();
             player.getCooldowns().addCooldown(ItemRegistry.WARP_TOTEM.get(), 30);

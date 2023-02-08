@@ -3,6 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
+import com.bedmen.odyssey.items.WarpTotem;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import net.minecraft.client.Minecraft;
