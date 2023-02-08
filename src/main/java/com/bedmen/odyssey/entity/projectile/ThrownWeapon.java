@@ -134,7 +134,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
         Entity owner = this.getOwner();
         this.setNoPhysics(true);
         Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
-        double returnSpeed = 0.06D * this.getAspectStrength(Aspects.LOYALTY);
+        double returnSpeed = 0.03f * (1.0f + this.getAspectStrength(Aspects.LOYALTY));
         this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(returnSpeed)));
     }
 
