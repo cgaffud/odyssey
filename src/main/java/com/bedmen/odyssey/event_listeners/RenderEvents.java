@@ -2,9 +2,9 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
-import com.bedmen.odyssey.entity.player.IOdysseyPlayer;
-import com.bedmen.odyssey.items.OdysseyBowItem;
-import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
+import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -77,12 +77,12 @@ public class RenderEvents {
     @SubscribeEvent
     public static void onFOVModifierEvent(final FOVModifierEvent event) {
         Player player = event.getEntity();
-        if(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player instanceof IOdysseyPlayer odysseyPlayer && odysseyPlayer.isSniperScoping()){
+        if(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player instanceof OdysseyPlayer odysseyPlayer && odysseyPlayer.isSniperScoping()){
             event.setNewfov(SpyglassItem.ZOOM_FOV_MODIFIER);
         }
         else if (player.isUsingItem()) {
             ItemStack itemstack = player.getUseItem();
-            if (itemstack.getItem() instanceof OdysseyBowItem && !itemstack.is(Items.BOW)) {
+            if (itemstack.getItem() instanceof AspectBowItem && !itemstack.is(Items.BOW)) {
                 int i = player.getTicksUsingItem();
                 float f1 = (float)i / 20.0F;
                 if (f1 > 1.0F) {

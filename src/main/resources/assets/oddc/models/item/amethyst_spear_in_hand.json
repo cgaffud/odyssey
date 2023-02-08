@@ -1,0 +1,14 @@
+{
+  "parent": "oddc:item/spear_in_hand",
+  "textures": {
+    "particle": "oddc:item/amethyst_spear"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "throwing": 1
+      },
+      "model": "oddc:item/amethyst_spear_throwing"
+    }
+  ]
+}

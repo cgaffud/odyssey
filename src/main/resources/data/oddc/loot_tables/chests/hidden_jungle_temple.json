@@ -89,6 +89,14 @@
           "functions": [],
           "weight": 1,
           "quality": 0,
+          "name": "oddc:clover_stone_spear"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
           "name": "oddc:clover_stone_shovel"
         },
         {

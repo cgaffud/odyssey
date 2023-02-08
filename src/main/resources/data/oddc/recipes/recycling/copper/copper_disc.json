@@ -1,0 +1,12 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:copper_disc"
+  },
+  "metalCounts": [
+    {
+      "metal": "copper",
+      "count": 36
+    }
+  ]
+}

@@ -5,7 +5,6 @@ import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.entity.boss.SubEntity;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import it.unimi.dsi.fastutil.floats.FloatList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -31,8 +30,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CovenMaster extends BossMaster {
-    private static final EntityDataAccessor<Map<CovenType, Integer>> DATA_WITCH_ID_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_INT_MAP_SERIALIZER);
-    private static final EntityDataAccessor<Map<CovenType, Float>> DATA_WITCH_HEALTH_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_FLOAT_MAP_SERIALIZER);
+    private static final EntityDataAccessor<Map<CovenType, Integer>> DATA_WITCH_ID_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_INT_MAP);
+    private static final EntityDataAccessor<Map<CovenType, Float>> DATA_WITCH_HEALTH_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_FLOAT_MAP);
     public static final int NUM_WITCHES = CovenType.values().length;
     public static final float HEALTH_PER_WITCH = 50.0f;
     public static final double MAX_HEALTH = HEALTH_PER_WITCH * NUM_WITCHES;

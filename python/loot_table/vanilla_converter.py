@@ -20,7 +20,7 @@ def convert(directory):
                 if("diamond" in entry["name"] or entry["name"] == "minecraft:obsidian"):
                     replaceFileFlag = True
                     entryRemovalList.append(entry)
-                #Find Enchanted items, remove if they are books else switch to oddc:enchant_with_tier
+                #Find Enchanted items, remove if they are books else switch to oddc:modify_with_tier
                 elif("functions" in entry):
                     functionRemovalList = []
                     for function in entry["functions"]:
@@ -32,7 +32,7 @@ def convert(directory):
                                 functionRemovalList.append(function)
                     for function in functionRemovalList:
                         entry["functions"].remove(function)
-                        entry["functions"].append({"function":"oddc:enchant_with_tier","tier":1})
+                        entry["functions"].append({"function":"oddc:modify_with_tier","tier":1})
                             
                 #Make copies of gold entries for silver loot
                 if("ruined_portal" not in directory):

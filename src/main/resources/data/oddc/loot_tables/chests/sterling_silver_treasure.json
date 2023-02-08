@@ -5,7 +5,7 @@
       "conditions": [],
       "functions": [
         {
-          "function": "oddc:enchant_with_tier",
+          "function": "oddc:modify_with_tier",
           "tier": 1
         }
       ],
@@ -86,7 +86,7 @@
       "conditions": [],
       "functions": [
         {
-          "function": "oddc:enchant_with_tier",
+          "function": "oddc:modify_with_tier",
           "tier": 1
         }
       ],
@@ -233,31 +233,31 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 28,
+          "weight": 14,
           "quality": 0,
-          "name": "oddc:sharp_bone_boomerang"
+          "name": "oddc:bone_boomerang"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:flint_disc"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 14,
+          "quality": 0,
+          "name": "oddc:copper_disc"
         },
         {
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
           "weight": 28,
-          "quality": 0,
-          "name": "oddc:heavy_bone_boomerang"
-        },
-        {
-          "type": "minecraft:item",
-          "condtions": [],
-          "functions": [],
-          "weight": 28,
-          "quality": 0,
-          "name": "oddc:speedy_bone_boomerang"
-        },
-        {
-          "type": "minecraft:item",
-          "condtions": [],
-          "functions": [],
-          "weight": 56,
           "quality": 0,
           "name": "oddc:bonerang"
         },
@@ -265,7 +265,31 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:amethyst_disc"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:obsidian_disc"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
           "weight": 14,
+          "quality": 0,
+          "name": "oddc:diamond_disc"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 12,
           "quality": 0,
           "name": "oddc:smackin_shovel"
         },
@@ -273,7 +297,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 14,
+          "weight": 12,
           "quality": 0,
           "name": "oddc:sledgeaxe"
         },
@@ -281,7 +305,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 14,
+          "weight": 12,
           "quality": 0,
           "name": "oddc:blunt_sabre"
         },
@@ -289,7 +313,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 28,
+          "weight": 25,
           "quality": 0,
           "name": "oddc:amethyst_sabre"
         },
@@ -297,7 +321,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 28,
+          "weight": 25,
           "quality": 0,
           "name": "oddc:amethyst_hatchet"
         },
@@ -305,7 +329,15 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 28,
+          "weight": 25,
+          "quality": 0,
+          "name": "oddc:amethyst_spear"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 25,
           "quality": 0,
           "name": "oddc:obsidian_hammer"
         },
@@ -313,7 +345,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 28,
+          "weight": 25,
           "quality": 0,
           "name": "oddc:obsidian_battle_axe"
         },
@@ -321,7 +353,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 28,
+          "weight": 25,
           "quality": 0,
           "name": "oddc:obsidian_bat"
         },
@@ -329,7 +361,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 28,
+          "weight": 25,
           "quality": 0,
           "name": "oddc:sterling_silver_sword"
         },
@@ -337,7 +369,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 28,
+          "weight": 25,
           "quality": 0,
           "name": "oddc:sterling_silver_mace"
         },
@@ -345,7 +377,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 14,
+          "weight": 12,
           "quality": 0,
           "name": "oddc:clover_stone_sword"
         },
@@ -353,7 +385,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 14,
+          "weight": 12,
           "quality": 0,
           "name": "oddc:clover_stone_mace"
         },
@@ -361,7 +393,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 14,
+          "weight": 12,
           "quality": 0,
           "name": "oddc:clover_stone_hammer"
         },
@@ -369,7 +401,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 14,
+          "weight": 12,
           "quality": 0,
           "name": "oddc:clover_stone_battle_axe"
         },
@@ -377,7 +409,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 14,
+          "weight": 12,
           "quality": 0,
           "name": "oddc:clover_stone_bat"
         },
@@ -385,7 +417,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 14,
+          "weight": 12,
           "quality": 0,
           "name": "oddc:clover_stone_sabre"
         },
@@ -393,9 +425,17 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 14,
+          "weight": 12,
           "quality": 0,
           "name": "oddc:clover_stone_hatchet"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 12,
+          "quality": 0,
+          "name": "oddc:clover_stone_spear"
         }
       ]
     },

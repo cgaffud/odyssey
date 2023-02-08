@@ -4,27 +4,27 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
 import com.bedmen.odyssey.block.TriplePlantBlock;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
-import com.bedmen.odyssey.client.gui.screens.AlloyFurnaceScreen;
-import com.bedmen.odyssey.client.gui.screens.QuiverScreen;
-import com.bedmen.odyssey.client.gui.screens.RecyclingFurnaceScreen;
-import com.bedmen.odyssey.client.gui.screens.StitchingTableScreen;
+import com.bedmen.odyssey.client.gui.screens.*;
 import com.bedmen.odyssey.client.model.*;
 import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
 import com.bedmen.odyssey.client.renderer.entity.*;
+import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
-import com.bedmen.odyssey.items.ShieldType;
-import com.bedmen.odyssey.items.TomeItem;
+import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.particle.ThrustParticle;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.particle.CritParticle;
+import net.minecraft.client.particle.HugeExplosionParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -39,11 +39,10 @@ import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -114,12 +113,12 @@ public class ClientEvents {
             MenuScreens.register(ContainerRegistry.RECYCLING_FURNACE.get(), RecyclingFurnaceScreen::new);
             MenuScreens.register(ContainerRegistry.STITCHING_TABLE.get(), StitchingTableScreen::new);
             MenuScreens.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
+            MenuScreens.register(ContainerRegistry.ARCANE_GRINDSTONE.get(), ArcaneGrindstoneScreen::new);
 //        ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
 //        ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), OdysseySmithingTableScreen::new);
 //        ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), OdysseyEnchantmentScreen::new);
 //        ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
 //        ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
-//        ScreenManager.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
 //        ScreenManager.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
             for(MenuType<QuiverMenu> containerType : ContainerRegistry.QUIVER_MAP.values()){
                 MenuScreens.register(containerType, QuiverScreen::new);
@@ -159,6 +158,7 @@ public class ClientEvents {
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.THROWN_SPEAR.get(), ThrownSpearRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.SONIC_BOOM.get(), SonicBoomRenderer::new);
 
             //Boat Renderings
@@ -206,6 +206,7 @@ public class ClientEvents {
         event.registerLayerDefinition(MineralLeviathanBodyModel.LAYER_LOCATION, MineralLeviathanBodyModel::createBodyLayer);
         event.registerLayerDefinition(ArmedCovenWitchModel.LAYER_LOCATION, ArmedCovenWitchModel::createBodyLayer);
         event.registerLayerDefinition(CovenRootModel.LAYER_LOCATION, CovenRootModel::createBodyLayer);
+        event.registerLayerDefinition(SpearModel.LAYER_LOCATION, SpearModel::createBodyLayer);
     }
 
     @SubscribeEvent
@@ -241,10 +242,18 @@ public class ClientEvents {
         event.getItemColors().register((itemStack, i) -> {
             return ConditionalAmpUtil.getColorTag(itemStack);
         }, ItemRegistry.ICE_DAGGER.get());
-        for(TomeItem tomeItem : TomeItem.TOMES){
-            event.getItemColors().register((itemStack, i) -> {
-                return i < 1 ? -1 : ((TomeItem)itemStack.getItem()).getColor();
-            }, tomeItem);
+    }
+
+    @SubscribeEvent
+    public static void onParticleFactoryRegisterEvent(ParticleFactoryRegisterEvent event){
+        Minecraft.getInstance().particleEngine.register(ParticleTypeRegistry.FATAL_HIT.get(), CritParticle.Provider::new);
+        Minecraft.getInstance().particleEngine.register(ParticleTypeRegistry.THRUST.get(), ThrustParticle.Provider::new);
+    }
+
+    @SubscribeEvent
+    public static void onModelRegistryEvent(final ModelRegistryEvent event) {
+        for(SpearType spearType: SpearType.NEED_MODEL_REGISTERED_SET){
+            ForgeModelBakery.addSpecialModel(spearType.entityModelResourceLocation);
         }
     }
 }

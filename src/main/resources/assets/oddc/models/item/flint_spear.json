@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "oddc:item/flint_spear"
+  },
+  "overrides": [
+    {
+      "predicate": {},
+      "model": "oddc:item/flint_spear_in_hand"
+    }
+  ]
+}

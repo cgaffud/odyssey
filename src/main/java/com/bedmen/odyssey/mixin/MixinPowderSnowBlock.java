@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.mixin;
 
-import com.bedmen.odyssey.tags.OdysseyItemTags;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BucketPickup;
@@ -21,7 +21,7 @@ public abstract class MixinPowderSnowBlock extends Block implements BucketPickup
 
     @Inject(method = "canEntityWalkOnPowderSnow", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private static void onCanEntityWalkOnPowderSnow(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(entity instanceof LivingEntity && ((LivingEntity) entity).getItemBySlot(EquipmentSlot.FEET).is(OdysseyItemTags.POWDER_SNOW_WALKABLES));
+        cir.setReturnValue(entity instanceof LivingEntity livingEntity && AspectUtil.hasBooleanAspectOnArmor(livingEntity, Aspects.SNOWSHOE));
         cir.cancel();
     }
 }

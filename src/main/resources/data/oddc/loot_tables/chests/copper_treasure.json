@@ -5,7 +5,7 @@
       "conditions": [],
       "functions": [
         {
-          "function": "oddc:enchant_with_tier",
+          "function": "oddc:modify_with_tier",
           "tier": 1
         }
       ],
@@ -86,7 +86,7 @@
       "conditions": [],
       "functions": [
         {
-          "function": "oddc:enchant_with_tier",
+          "function": "oddc:modify_with_tier",
           "tier": 1
         }
       ],
@@ -283,7 +283,7 @@
           "functions": [],
           "weight": 33,
           "quality": 0,
-          "name": "oddc:sharp_bone_boomerang"
+          "name": "oddc:bone_boomerang"
         },
         {
           "type": "minecraft:item",
@@ -291,7 +291,7 @@
           "functions": [],
           "weight": 33,
           "quality": 0,
-          "name": "oddc:heavy_bone_boomerang"
+          "name": "oddc:flint_disc"
         },
         {
           "type": "minecraft:item",
@@ -299,13 +299,13 @@
           "functions": [],
           "weight": 33,
           "quality": 0,
-          "name": "oddc:speedy_bone_boomerang"
+          "name": "oddc:copper_disc"
         },
         {
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 25,
+          "weight": 23,
           "quality": 0,
           "name": "minecraft:iron_sword"
         },
@@ -313,7 +313,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 25,
+          "weight": 23,
           "quality": 0,
           "name": "oddc:iron_mace"
         },
@@ -321,7 +321,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 25,
+          "weight": 23,
           "quality": 0,
           "name": "minecraft:golden_sword"
         },
@@ -329,7 +329,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 25,
+          "weight": 23,
           "quality": 0,
           "name": "oddc:golden_mace"
         },
@@ -337,7 +337,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 25,
+          "weight": 23,
           "quality": 0,
           "name": "oddc:spider_fang_dagger"
         },
@@ -345,7 +345,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 12,
+          "weight": 11,
           "quality": 0,
           "name": "oddc:battle_pickaxe"
         },
@@ -353,7 +353,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 12,
+          "weight": 11,
           "quality": 0,
           "name": "oddc:slime_bat"
         },
@@ -361,7 +361,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 12,
+          "weight": 11,
           "quality": 0,
           "name": "oddc:mini_hammer"
         },
@@ -369,7 +369,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 12,
+          "weight": 11,
           "quality": 0,
           "name": "oddc:swift_sabre"
         },
@@ -377,7 +377,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 12,
+          "weight": 11,
           "quality": 0,
           "name": "oddc:sledgehammer"
         },
@@ -385,7 +385,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 12,
+          "weight": 11,
           "quality": 0,
           "name": "oddc:weaver_fang_dagger"
         },
@@ -393,7 +393,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 12,
+          "weight": 11,
           "quality": 0,
           "name": "oddc:rusty_paddle"
         },
@@ -401,7 +401,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 25,
+          "weight": 23,
           "quality": 0,
           "name": "oddc:flint_sabre"
         },
@@ -409,7 +409,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 25,
+          "weight": 23,
           "quality": 0,
           "name": "oddc:flint_hatchet"
         },
@@ -417,7 +417,15 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 25,
+          "weight": 23,
+          "quality": 0,
+          "name": "oddc:flint_spear"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
           "quality": 0,
           "name": "oddc:copper_hammer"
         },
@@ -425,7 +433,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 25,
+          "weight": 23,
           "quality": 0,
           "name": "oddc:copper_battle_axe"
         },
@@ -433,7 +441,7 @@
           "type": "minecraft:item",
           "condtions": [],
           "functions": [],
-          "weight": 25,
+          "weight": 23,
           "quality": 0,
           "name": "oddc:copper_bat"
         }

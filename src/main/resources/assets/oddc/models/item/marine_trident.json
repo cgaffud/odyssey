@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "oddc:item/marine_trident"
+  },
+  "overrides": [
+    {
+      "predicate": {},
+      "model": "oddc:item/marine_trident_in_hand"
+    }
+  ]
+}

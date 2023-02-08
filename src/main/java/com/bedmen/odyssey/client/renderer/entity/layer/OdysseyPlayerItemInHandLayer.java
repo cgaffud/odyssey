@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.client.renderer.entity.layer;
 
-import com.bedmen.odyssey.items.QuiverItem;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ArmedModel;
@@ -33,7 +33,6 @@ public class OdysseyPlayerItemInHandLayer<T extends Player, M extends EntityMode
         } else if(!(itemStack.getItem() instanceof QuiverItem)) {
             super.renderArmWithItem(livingEntity, itemStack, transformType, humanoidArm, poseStack, multiBufferSource, p_174531_);
         }
-
     }
 
     private void renderArmWithSpyglass(LivingEntity p_174518_, ItemStack p_174519_, HumanoidArm p_174520_, PoseStack p_174521_, MultiBufferSource p_174522_, int p_174523_) {

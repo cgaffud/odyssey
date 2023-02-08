@@ -1,0 +1,20 @@
+{
+  "type": "oddc:recycling",
+  "ingredient": {
+    "item": "oddc:greatroot_shot_bow"
+  },
+  "metalCounts": [
+    {
+      "metal": "sterling_silver",
+      "count": 9
+    },
+    {
+      "metal": "silver",
+      "count": 9
+    },
+    {
+      "metal": "gold",
+      "count": 9
+    }
+  ]
+}

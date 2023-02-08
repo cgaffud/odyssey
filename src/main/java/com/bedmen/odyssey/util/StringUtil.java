@@ -25,8 +25,12 @@ public class StringUtil {
 
     public static String percentFormat(float f)
     {
-        int i = Math.round(f * 100);
-        return Integer.toString(i) + "%";
+        f *= 100;
+        if(f > 0.0f && f < 10.0f){
+            return floatFormat(f) + "%";
+        }
+        int i = Math.round(f);
+        return i + "%";
     }
 
     public static String doubleFormat(double d)

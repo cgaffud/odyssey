@@ -1,7 +1,8 @@
 package com.bedmen.odyssey.client.renderer.entity.layer;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.IOdysseyLivingEntity;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -16,8 +17,8 @@ public class OdysseyElytraLayer<T extends LivingEntity, M extends EntityModel<T>
         super(renderLayerParent, entityModelSet);
     }
 
-    public boolean shouldRender(ItemStack stack, T entity) {
-        return entity instanceof IOdysseyLivingEntity odysseyLivingEntity && odysseyLivingEntity.getGlidingLevel() > 0;
+    public boolean shouldRender(ItemStack stack, T livingEntity) {
+        return AspectUtil.getIntegerAspectValueFromArmor(livingEntity, Aspects.GLIDE) > 0;
     }
 
     public ResourceLocation getElytraTexture(ItemStack itemStack, T entity) {

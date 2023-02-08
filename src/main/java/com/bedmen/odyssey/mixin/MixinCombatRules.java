@@ -15,14 +15,4 @@ public abstract class MixinCombatRules {
     public static float getDamageAfterAbsorb(float damage, float totalArmor, float toughnessAttribute) {
         return damage * (float)(Math.pow(0.5d, 0.05d*((double)totalArmor)));
     }
-
-    /**
-     * @author JemBren
-     * @reason So Odyssey has a custom damage function
-     */
-    @Overwrite()
-    public static float getDamageAfterMagicAbsorb(float damage, float enchantModifiers) {
-        float f = enchantModifiers;
-        return damage * (float)(Math.pow(0.5d, 0.05d*((double)f) ) );
-    }
 }

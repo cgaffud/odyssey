@@ -9,7 +9,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class OdysseyItemTags {
 
     public static final TagKey<Item> PALM_LOGS = create("palm_logs");
-    public static final TagKey<Item> POWDER_SNOW_WALKABLES = create("powder_snow_walkables");
     public static final TagKey<Item> RAW_COPPERS = create("raw_coppers");
     public static final TagKey<Item> RAW_GOLDS = create("raw_golds");
     public static final TagKey<Item> RAW_SILVERS = create("raw_silvers");

@@ -5,7 +5,7 @@ def generate():
     goldenToolEntries = createToolEntries("oddc:clover_stone")
     toolPool = Pool(createUniformNumberProvider(0, 2))\
         .withEntries(ironToolEntries + goldenToolEntries)\
-        .withFunctions(createEnchantWithTierFunction(1))
+        .withFunctions(createModifyWithTierFunction(1))
 
     armorEntries = createArmorEntries("oddc:sterling_silver")
     shieldEntries = [
@@ -22,11 +22,14 @@ def generate():
         createItemEntry("oddc:bown").withWeight(2)
         ]
     boomerangEntries = [
-        createItemEntry("oddc:clover_stone_boomerang"),
-        createItemEntry("oddc:sharp_bone_boomerang"),
-        createItemEntry("oddc:heavy_bone_boomerang"),
-        createItemEntry("oddc:speedy_bone_boomerang"),
-        createItemEntry("oddc:bonerang").withWeight(2)
+        createItemEntry("oddc:clover_stone_boomerang").withWeight(2),
+        createItemEntry("oddc:bone_boomerang"),
+        createItemEntry("oddc:flint_disc"),
+        createItemEntry("oddc:copper_disc"),
+        createItemEntry("oddc:bonerang").withWeight(2),
+        createItemEntry("oddc:amethyst_disc").withWeight(2),
+        createItemEntry("oddc:obsidian_disc").withWeight(2),
+        createItemEntry("oddc:diamond_disc"),
         ]
     meleeWeaponEntries = [
         createItemEntry("oddc:smackin_shovel"),
@@ -45,7 +48,7 @@ def generate():
     ])
     combatPool = Pool(createUniformNumberProvider(1, 4))\
             .withEntries(combatEntries)\
-            .withFunctions(createEnchantWithTierFunction(1))
+            .withFunctions(createModifyWithTierFunction(1))
 
     materialEntries = [
         createWeightedUniformCountItemEntry("oddc:silver_ingot", 2, 2, 4),
