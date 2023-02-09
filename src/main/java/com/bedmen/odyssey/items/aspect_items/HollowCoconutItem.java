@@ -37,16 +37,16 @@ public class HollowCoconutItem extends AspectArmorItem {
         super(properties, armorMaterial, equipmentSlot, abilityList, innateModifierList);
     }
 
-    public InteractionResult useOn(UseOnContext p_195939_1_) {
-        InteractionResult actionresulttype = this.place(new BlockPlaceContext(p_195939_1_));
-        return !actionresulttype.consumesAction() && this.isEdible() ? this.use(p_195939_1_.getLevel(), p_195939_1_.getPlayer(), p_195939_1_.getHand()).getResult() : actionresulttype;
+    public InteractionResult useOn(UseOnContext useOnContext) {
+        InteractionResult actionresulttype = this.place(new BlockPlaceContext(useOnContext));
+        return !actionresulttype.consumesAction() && this.isEdible() ? this.use(useOnContext.getLevel(), useOnContext.getPlayer(), useOnContext.getHand()).getResult() : actionresulttype;
     }
 
-    public InteractionResult place(BlockPlaceContext p_40577_) {
-        if (!p_40577_.canPlace()) {
+    public InteractionResult place(BlockPlaceContext blockPlaceContext) {
+        if (!blockPlaceContext.canPlace()) {
             return InteractionResult.FAIL;
         } else {
-            BlockPlaceContext blockplacecontext = this.updatePlacementContext(p_40577_);
+            BlockPlaceContext blockplacecontext = this.updatePlacementContext(blockPlaceContext);
             if (blockplacecontext == null) {
                 return InteractionResult.FAIL;
             } else {
@@ -71,8 +71,8 @@ public class HollowCoconutItem extends AspectArmorItem {
                     }
 
                     level.gameEvent(player, GameEvent.BLOCK_PLACE, blockpos);
-                    SoundType soundtype = blockstate1.getSoundType(level, blockpos, p_40577_.getPlayer());
-                    level.playSound(player, blockpos, this.getPlaceSound(blockstate1, level, blockpos, p_40577_.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                    SoundType soundtype = blockstate1.getSoundType(level, blockpos, blockPlaceContext.getPlayer());
+                    level.playSound(player, blockpos, this.getPlaceSound(blockstate1, level, blockpos, blockPlaceContext.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     if (player == null || !player.getAbilities().instabuild) {
                         itemstack.shrink(1);
                     }
@@ -84,24 +84,24 @@ public class HollowCoconutItem extends AspectArmorItem {
     }
 
     @Nullable
-    public static CompoundTag getBlockEntityData(ItemStack p_186337_) {
-        return p_186337_.getTagElement("BlockEntityTag");
+    public static CompoundTag getBlockEntityData(ItemStack itemStack) {
+        return itemStack.getTagElement("BlockEntityTag");
     }
 
-    protected boolean updateCustomBlockEntityTag(BlockPos p_40597_, Level p_40598_, @Nullable Player p_40599_, ItemStack p_40600_, BlockState p_40601_) {
-        return updateCustomBlockEntityTag(p_40598_, p_40599_, p_40597_, p_40600_);
+    protected boolean updateCustomBlockEntityTag(BlockPos blockPos, Level level, @Nullable Player player, ItemStack itemStack, BlockState blockState) {
+        return updateCustomBlockEntityTag(level, player, blockPos, itemStack);
     }
 
-    public static boolean updateCustomBlockEntityTag(Level p_40583_, @Nullable Player p_40584_, BlockPos p_40585_, ItemStack p_40586_) {
-        MinecraftServer minecraftserver = p_40583_.getServer();
+    public static boolean updateCustomBlockEntityTag(Level level, @Nullable Player player, BlockPos blockPos, ItemStack itemStack) {
+        MinecraftServer minecraftserver = level.getServer();
         if (minecraftserver == null) {
             return false;
         } else {
-            CompoundTag compoundtag = getBlockEntityData(p_40586_);
+            CompoundTag compoundtag = getBlockEntityData(itemStack);
             if (compoundtag != null) {
-                BlockEntity blockentity = p_40583_.getBlockEntity(p_40585_);
+                BlockEntity blockentity = level.getBlockEntity(blockPos);
                 if (blockentity != null) {
-                    if (!p_40583_.isClientSide && blockentity.onlyOpCanSetNbt() && (p_40584_ == null || !p_40584_.canUseGameMasterBlocks())) {
+                    if (!level.isClientSide && blockentity.onlyOpCanSetNbt() && (player == null || !player.canUseGameMasterBlocks())) {
                         return false;
                     }
 
@@ -121,8 +121,8 @@ public class HollowCoconutItem extends AspectArmorItem {
     }
 
     @Deprecated //Forge: Use more sensitive version {@link BlockItem#getPlaceSound(BlockState, IBlockReader, BlockPos, Entity) }
-    protected SoundEvent getPlaceSound(BlockState p_219983_1_) {
-        return p_219983_1_.getSoundType().getPlaceSound();
+    protected SoundEvent getPlaceSound(BlockState blockState) {
+        return blockState.getSoundType().getPlaceSound();
     }
 
     //Forge: Sensitive version of BlockItem#getPlaceSound
@@ -131,22 +131,22 @@ public class HollowCoconutItem extends AspectArmorItem {
     }
 
     @Nullable
-    public BlockPlaceContext updatePlacementContext(BlockPlaceContext p_219984_1_) {
-        return p_219984_1_;
+    public BlockPlaceContext updatePlacementContext(BlockPlaceContext blockPlaceContext) {
+        return blockPlaceContext;
     }
 
     @Nullable
-    protected BlockState getPlacementState(BlockPlaceContext p_195945_1_) {
-        BlockState blockstate = this.getBlock().getStateForPlacement(p_195945_1_);
-        return blockstate != null && this.canPlace(p_195945_1_, blockstate) ? blockstate : null;
+    protected BlockState getPlacementState(BlockPlaceContext blockPlaceContext) {
+        BlockState blockstate = this.getBlock().getStateForPlacement(blockPlaceContext);
+        return blockstate != null && this.canPlace(blockPlaceContext, blockstate) ? blockstate : null;
     }
 
-    private BlockState updateBlockStateFromTag(BlockPos p_40603_, Level p_40604_, ItemStack p_40605_, BlockState p_40606_) {
-        BlockState blockstate = p_40606_;
-        CompoundTag compoundtag = p_40605_.getTag();
+    private BlockState updateBlockStateFromTag(BlockPos blockPos, Level level, ItemStack itemStack, BlockState blockState) {
+        BlockState blockstate = blockState;
+        CompoundTag compoundtag = itemStack.getTag();
         if (compoundtag != null) {
             CompoundTag compoundtag1 = compoundtag.getCompound("BlockStateTag");
-            StateDefinition<Block, BlockState> statedefinition = p_40606_.getBlock().getStateDefinition();
+            StateDefinition<Block, BlockState> statedefinition = blockState.getBlock().getStateDefinition();
 
             for(String s : compoundtag1.getAllKeys()) {
                 Property<?> property = statedefinition.getProperty(s);
@@ -157,31 +157,31 @@ public class HollowCoconutItem extends AspectArmorItem {
             }
         }
 
-        if (blockstate != p_40606_) {
-            p_40604_.setBlock(p_40603_, blockstate, 2);
+        if (blockstate != blockState) {
+            level.setBlock(blockPos, blockstate, 2);
         }
 
         return blockstate;
     }
 
-    private static <T extends Comparable<T>> BlockState updateState(BlockState p_219988_0_, Property<T> p_219988_1_, String p_219988_2_) {
-        return p_219988_1_.getValue(p_219988_2_).map((p_219986_2_) -> {
-            return p_219988_0_.setValue(p_219988_1_, p_219986_2_);
-        }).orElse(p_219988_0_);
+    private static <T extends Comparable<T>> BlockState updateState(BlockState blockState, Property<T> property, String s) {
+        return property.getValue(s).map((p_219986_2_) -> {
+            return blockState.setValue(property, p_219986_2_);
+        }).orElse(blockState);
     }
 
-    protected boolean canPlace(BlockPlaceContext p_195944_1_, BlockState p_195944_2_) {
-        Player playerentity = p_195944_1_.getPlayer();
+    protected boolean canPlace(BlockPlaceContext blockPlaceContext, BlockState blockState) {
+        Player playerentity = blockPlaceContext.getPlayer();
         CollisionContext iselectioncontext = playerentity == null ? CollisionContext.empty() : CollisionContext.of(playerentity);
-        return (!this.mustSurvive() || p_195944_2_.canSurvive(p_195944_1_.getLevel(), p_195944_1_.getClickedPos())) && p_195944_1_.getLevel().isUnobstructed(p_195944_2_, p_195944_1_.getClickedPos(), iselectioncontext);
+        return (!this.mustSurvive() || blockState.canSurvive(blockPlaceContext.getLevel(), blockPlaceContext.getClickedPos())) && blockPlaceContext.getLevel().isUnobstructed(blockState, blockPlaceContext.getClickedPos(), iselectioncontext);
     }
 
     protected boolean mustSurvive() {
         return true;
     }
 
-    protected boolean placeBlock(BlockPlaceContext p_195941_1_, BlockState p_195941_2_) {
-        return p_195941_1_.getLevel().setBlock(p_195941_1_.getClickedPos(), p_195941_2_, 11);
+    protected boolean placeBlock(BlockPlaceContext blockPlaceContext, BlockState blockState) {
+        return blockPlaceContext.getLevel().setBlock(blockPlaceContext.getClickedPos(), blockState, 11);
     }
 
     public String getDescriptionId() {
