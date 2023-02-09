@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    " A ",
+    "CCC"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:polished_deepslate"
+    },
+    "B": {
+      "item": "oddc:auric_dust"
+    },
+    "C": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "result": {
+    "item": "oddc:infusion_pedestal"
+  }
+}
