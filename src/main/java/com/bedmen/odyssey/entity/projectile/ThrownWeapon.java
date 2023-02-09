@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -134,7 +135,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
         Entity owner = this.getOwner();
         this.setNoPhysics(true);
         Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
-        double returnSpeed = 0.03f * (1.0f + this.getAspectStrength(Aspects.LOYALTY));
+        double returnSpeed = 0.06f * Mth.sqrt(this.getAspectStrength(Aspects.LOYALTY));
         this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(returnSpeed)));
     }
 
