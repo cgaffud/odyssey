@@ -20,9 +20,9 @@ public class OdysseyTiers {
     // # Has diggers
 
     // ## Tier 1
+    public static final OdysseyTier NO_TIER = new OdysseyTier(0,() -> Ingredient.EMPTY);
     public static final OdysseyTier CACTUS = new OdysseyTier(3, () -> Ingredient.of(Items.CACTUS));
     public static final OdysseyTier WOOD = new OdysseyTier(3,59,2.0F, Tags.Blocks.NEEDS_WOOD_TOOL, () -> Ingredient.of(ItemTags.PLANKS));
-    public static final OdysseyTier COCONUT = new OdysseyTier(3,() -> Ingredient.of(ItemRegistry.HOLLOW_COCONUT.get()));
     public static final OdysseyTier STONE = new OdysseyTier(1,131,4.0F, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(ItemTags.STONE_TOOL_MATERIALS));
     public static final OdysseyTier FLINT = new OdysseyTier(2,150, () -> Ingredient.of(Items.FLINT));
     public static final OdysseyTier BONE = new OdysseyTier(2,175, () -> Ingredient.of(Items.BONE));
@@ -60,9 +60,9 @@ public class OdysseyTiers {
     // # No Diggers
 
     public static void init(){
-        TierSortingRegistry.registerTier(CACTUS, new ResourceLocation(Odyssey.MOD_ID,"cactus"), List.of(), List.of(Tiers.WOOD));
+        TierSortingRegistry.registerTier(NO_TIER, new ResourceLocation(Odyssey.MOD_ID,"coconut"), List.of(), List.of(Tiers.WOOD));
+        TierSortingRegistry.registerTier(CACTUS, new ResourceLocation(Odyssey.MOD_ID,"cactus"), List.of(NO_TIER), List.of(Tiers.WOOD));
         TierSortingRegistry.registerTier(WOOD, new ResourceLocation(Odyssey.MOD_ID,"wood"), List.of(Tiers.WOOD), List.of(Tiers.STONE));
-        TierSortingRegistry.registerTier(COCONUT, new ResourceLocation(Odyssey.MOD_ID,"coconut"), List.of(WOOD), List.of(Tiers.STONE));
         TierSortingRegistry.registerTier(STONE, new ResourceLocation(Odyssey.MOD_ID,"stone"), List.of(Tiers.STONE), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(FLINT, new ResourceLocation(Odyssey.MOD_ID,"flint"), List.of(STONE), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(BONE, new ResourceLocation(Odyssey.MOD_ID,"bone"), List.of(FLINT), List.of(Tiers.IRON));
