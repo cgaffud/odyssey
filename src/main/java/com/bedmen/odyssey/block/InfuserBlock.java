@@ -1,16 +1,22 @@
 package com.bedmen.odyssey.block;
 
 
+import com.bedmen.odyssey.block.entity.AlloyFurnaceBlockEntity;
 import com.bedmen.odyssey.block.entity.InfuserBlockEntity;
-import com.bedmen.odyssey.block.entity.InfusionPedestalBlockEntity;
+import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nullable;
 
 public class InfuserBlock extends InfusionPedestalBlock {
 
@@ -43,5 +49,15 @@ public class InfuserBlock extends InfusionPedestalBlock {
 
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new InfuserBlockEntity(blockPos, blockState);
+    }
+
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        return createInfuserTicker(level, blockEntityType, BlockEntityTypeRegistry.INFUSER.get());
+    }
+
+    @Nullable
+    protected static <T extends BlockEntity> BlockEntityTicker<T> createInfuserTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<? extends InfuserBlockEntity> blockEntityType2) {
+        return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntityType2, InfuserBlockEntity::serverTick);
     }
 }
