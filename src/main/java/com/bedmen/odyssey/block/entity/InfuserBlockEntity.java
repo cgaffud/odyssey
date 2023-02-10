@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.world.NoteBlockEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,7 +35,6 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
 
         if(infuserBlockEntity.inValidConfiguration()){
             List<Player> playerList = infuserBlockEntity.getPlayersWhoMadeChanges();
-            System.out.println(playerList);
         }
 
         infuserBlockEntity.updateOldItemStacks();
