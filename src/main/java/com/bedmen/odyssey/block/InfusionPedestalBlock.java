@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -70,17 +69,17 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
             if (level.isClientSide) {
                 return putOnPedestal || takeFromPedestal ? InteractionResult.SUCCESS : InteractionResult.PASS;
             } else {
-                if(putOnPedestal){
-                    ItemStack newPedestalItemStack = handItemStack.copy();
-                    newPedestalItemStack.setCount(1);
-                    handItemStack.shrink(1);
-                    infusionPedestalBlockEntity.itemStack = newPedestalItemStack;
-                    infusionPedestalBlockEntity.direction = Direction.fromYRot(player.getYHeadRot());//getDirection(blockPos, player);
-                    infusionPedestalBlockEntity.markUpdated();
-                    return InteractionResult.CONSUME;
-                } else if(takeFromPedestal){
-                    player.setItemInHand(interactionHand, infusionPedestalBlockEntity.itemStack);
-                    infusionPedestalBlockEntity.itemStack = ItemStack.EMPTY;
+                if(putOnPedestal || takeFromPedestal){
+                    if(putOnPedestal){
+                        ItemStack newPedestalItemStack = handItemStack.copy();
+                        newPedestalItemStack.setCount(1);
+                        handItemStack.shrink(1);
+                        infusionPedestalBlockEntity.itemStack = newPedestalItemStack;
+                        infusionPedestalBlockEntity.itemRenderDirection = Direction.fromYRot(player.getYHeadRot());
+                    } else {
+                        player.setItemInHand(interactionHand, infusionPedestalBlockEntity.itemStack);
+                        infusionPedestalBlockEntity.itemStack = ItemStack.EMPTY;
+                    }
                     infusionPedestalBlockEntity.markUpdated();
                     return InteractionResult.CONSUME;
                 } else {

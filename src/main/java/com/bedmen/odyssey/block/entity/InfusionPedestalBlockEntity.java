@@ -15,9 +15,9 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class InfusionPedestalBlockEntity extends BlockEntity {
     public ItemStack itemStack = ItemStack.EMPTY;
-    public Direction direction = Direction.NORTH;
+    public Direction itemRenderDirection = Direction.NORTH;
     private static final String ITEM_STACK_TAG = Odyssey.MOD_ID + ":ItemStack";
-    private static final String DIRECTION_TAG = Odyssey.MOD_ID + ":Direction";
+    private static final String ITEM_RENDER_DIRECTION_TAG = Odyssey.MOD_ID + ":ItemRenderDirection";
 
     public InfusionPedestalBlockEntity(BlockPos blockPos, BlockState blockState) {
         this(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), blockPos, blockState);
@@ -27,22 +27,24 @@ public class InfusionPedestalBlockEntity extends BlockEntity {
         super(blockEntityType, blockPos, blockState);
     }
 
+    protected void saveAdditional(CompoundTag compoundTag) {
+        super.saveAdditional(compoundTag);
+        this.saveUpdateData(compoundTag);
+    }
+
+    protected void saveUpdateData(CompoundTag compoundTag){
+        compoundTag.put(ITEM_STACK_TAG, this.itemStack.save(new CompoundTag()));
+        compoundTag.put(ITEM_RENDER_DIRECTION_TAG, StringTag.valueOf(this.itemRenderDirection.name()));
+    }
+
     public void load(CompoundTag compoundTag) {
         super.load(compoundTag);
         if(compoundTag.contains(ITEM_STACK_TAG)){
             this.itemStack = ItemStack.of(compoundTag.getCompound(ITEM_STACK_TAG));
         }
-        if(compoundTag.contains(DIRECTION_TAG)){
-            this.direction = Direction.valueOf(compoundTag.getString(DIRECTION_TAG));
+        if(compoundTag.contains(ITEM_RENDER_DIRECTION_TAG)){
+            this.itemRenderDirection = Direction.valueOf(compoundTag.getString(ITEM_RENDER_DIRECTION_TAG));
         }
-    }
-
-    protected void saveAdditional(CompoundTag compoundTag) {
-        super.saveAdditional(compoundTag);
-        CompoundTag itemStackTag = new CompoundTag();
-        this.itemStack.save(itemStackTag);
-        compoundTag.put(ITEM_STACK_TAG, itemStackTag);
-        compoundTag.put(DIRECTION_TAG, StringTag.valueOf(this.direction.name()));
     }
 
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -51,7 +53,7 @@ public class InfusionPedestalBlockEntity extends BlockEntity {
 
     public CompoundTag getUpdateTag() {
         CompoundTag compoundtag = new CompoundTag();
-        saveAdditional(compoundtag);
+        saveUpdateData(compoundtag);
         return compoundtag;
     }
 
