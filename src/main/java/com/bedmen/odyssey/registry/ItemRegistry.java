@@ -99,6 +99,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> PALM_BOAT = ITEMS.register("palm_boat", () -> new OdysseyBoatItem(OdysseyBoat.Type.PALM, (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_SIGN = ITEMS.register("palm_sign", () -> new SignItem((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD), BlockRegistry.PALM_SIGN.get(), BlockRegistry.PALM_WALL_SIGN.get()));
 
+    public static final RegistryObject<Item> COVEN_DOOR = ITEMS.register("coven_door", () -> new BlockItem(BlockRegistry.COVEN_DOOR.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> COVEN_ROOTS = ITEMS.register("coven_roots", () -> new BlockItem(BlockRegistry.COVEN_ROOTS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
 
     public static final RegistryObject<Item> GREATWOOD_PLANKS = ITEMS.register("greatwood_planks", () -> new BlockItem(BlockRegistry.GREATWOOD_PLANKS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
