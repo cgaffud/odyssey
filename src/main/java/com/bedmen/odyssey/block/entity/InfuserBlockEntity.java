@@ -5,13 +5,15 @@ import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.event.world.NoteBlockEvent;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
 
@@ -30,20 +32,58 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, InfuserBlockEntity infuserBlockEntity) {
-        infuserBlockEntity.updateNewItemStacks(blockPos);
+        infuserBlockEntity.updateNewItemStacks();
 
+        if(infuserBlockEntity.inValidConfiguration()){
+            List<Player> playerList = infuserBlockEntity.getPlayersWhoMadeChanges();
+            System.out.println(playerList);
+        }
 
         infuserBlockEntity.updateOldItemStacks();
     }
 
-    private void updateNewItemStacks(BlockPos blockPos){
-        for(Direction direction: HORIZONTALS){
-            BlockPos pedestalBlockPos = blockPos.relative(direction, DISTANCE_TO_PEDESTALS);
-            BlockEntity blockEntity = level.getBlockEntity(pedestalBlockPos);
+    private Optional<InfusionPedestalBlockEntity> getInfusionPedestalBlockEntity(Direction direction){
+        BlockPos pedestalBlockPos = this.getBlockPos().relative(direction, DISTANCE_TO_PEDESTALS);
+        if(this.level != null){
+            BlockEntity blockEntity = this.level.getBlockEntity(pedestalBlockPos);
             if(blockEntity instanceof InfusionPedestalBlockEntity infusionPedestalBlockEntity && !(blockEntity instanceof InfuserBlockEntity)){
-                this.newPedestalItemStackMap.put(direction, infusionPedestalBlockEntity.itemStack.copy());
+                return Optional.of(infusionPedestalBlockEntity);
             }
         }
+        return Optional.empty();
+    }
+
+    private Optional<Player> getPlayerFromInfusionPedestal(Direction direction){
+        return this.getInfusionPedestalBlockEntity(direction).flatMap(InfusionPedestalBlockEntity::getPlayer);
+    }
+
+    private void updateNewItemStacks(){
+        for(Direction direction: HORIZONTALS){
+            this.getInfusionPedestalBlockEntity(direction)
+                    .ifPresentOrElse(
+                            infusionPedestalBlockEntity -> this.newPedestalItemStackMap.put(direction, infusionPedestalBlockEntity.itemStack.copy()),
+                            () -> this.newPedestalItemStackMap.put(direction, ItemStack.EMPTY)
+                            );
+        }
+    }
+
+    private boolean inValidConfiguration(){
+        return true;
+    }
+
+    private List<Player> getPlayersWhoMadeChanges(){
+        List<Player> playerList = new ArrayList<>();
+        Optional<Player> optionalPlayer = this.getPlayer();
+        if(this.itemStack != this.oldItemStack && optionalPlayer.isPresent()){
+            playerList.add(optionalPlayer.get());
+        }
+        playerList.addAll(Arrays.stream(HORIZONTALS)
+                .filter(direction -> this.newPedestalItemStackMap.get(direction) != this.oldPedestalItemStackMap.get(direction))
+                .map(this::getPlayerFromInfusionPedestal)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList()));
+        return playerList;
     }
 
     private void updateOldItemStacks(){
@@ -51,7 +91,6 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         this.oldPedestalItemStackMap.clear();
         this.oldPedestalItemStackMap.putAll(this.newPedestalItemStackMap);
     }
-
 
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);

@@ -80,6 +80,7 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
                         player.setItemInHand(interactionHand, infusionPedestalBlockEntity.getItemStackCopy());
                         infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY);
                     }
+                    infusionPedestalBlockEntity.playerUUID = player.getUUID();
                     infusionPedestalBlockEntity.markUpdated();
                     return InteractionResult.CONSUME;
                 } else {
