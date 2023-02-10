@@ -92,28 +92,6 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
         }
     }
 
-    private Direction getDirection(BlockPos blockPos, Player player){
-        player.getYHeadRot();
-
-
-        Vec3 playerPosition = player.getPosition(1.0f);
-        double x = playerPosition.x - (blockPos.getX() + 0.5d);
-        double z = playerPosition.z - (blockPos.getZ() + 0.5d);
-        if(Math.abs(x) > Math.abs(z)){
-            if(x > 0){
-                return Direction.EAST;
-            } else {
-                return Direction.WEST;
-            }
-        } else {
-            if(z > 0){
-                return Direction.SOUTH;
-            } else {
-                return Direction.NORTH;
-            }
-        }
-    }
-
     public boolean hasAnalogOutputSignal(BlockState blockState) {
         return true;
     }

@@ -3,6 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
 import com.bedmen.odyssey.block.TriplePlantBlock;
+import com.bedmen.odyssey.block.entity.InfuserBlockEntity;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.*;
 import com.bedmen.odyssey.client.model.*;
@@ -108,6 +109,7 @@ public class ClientEvents {
             //Block Entity Renderings
             BlockEntityRenderers.register(BlockEntityTypeRegistry.SIGN.get(), OdysseySignRenderer::new);
             BlockEntityRenderers.register(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), InfusionPedestalRenderer::new);
+            BlockEntityRenderers.register(BlockEntityTypeRegistry.INFUSER.get(), InfusionPedestalRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
             BlockEntityRenderers.register(BlockEntityTypeRegistry.TREASURE_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestMaterial.STERLING_SILVER, context));

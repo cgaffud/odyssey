@@ -1,9 +1,12 @@
 package com.bedmen.odyssey.block;
 
 
+import com.bedmen.odyssey.block.entity.InfuserBlockEntity;
+import com.bedmen.odyssey.block.entity.InfusionPedestalBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -36,5 +39,9 @@ public class InfuserBlock extends InfusionPedestalBlock {
 
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         return VOXEL_SHAPE;
+    }
+
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new InfuserBlockEntity(blockPos, blockState);
     }
 }

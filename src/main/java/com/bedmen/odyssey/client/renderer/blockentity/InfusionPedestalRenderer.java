@@ -22,7 +22,6 @@ public class InfusionPedestalRenderer implements BlockEntityRenderer<InfusionPed
     public void render(InfusionPedestalBlockEntity infusionPedestalBlockEntity, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, int packedOverlay) {
         int i = (int)infusionPedestalBlockEntity.getBlockPos().asLong();
         ItemStack itemStack = infusionPedestalBlockEntity.itemStack;
-        System.out.println(itemStack);
         Direction direction = infusionPedestalBlockEntity.direction;
         if (itemStack != ItemStack.EMPTY) {
             poseStack.pushPose();

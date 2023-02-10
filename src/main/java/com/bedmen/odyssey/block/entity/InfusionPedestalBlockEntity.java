@@ -10,9 +10,8 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.Optional;
 
 public class InfusionPedestalBlockEntity extends BlockEntity {
     public ItemStack itemStack = ItemStack.EMPTY;
@@ -21,7 +20,11 @@ public class InfusionPedestalBlockEntity extends BlockEntity {
     private static final String DIRECTION_TAG = Odyssey.MOD_ID + ":Direction";
 
     public InfusionPedestalBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), blockPos, blockState);
+        this(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), blockPos, blockState);
+    }
+
+    public InfusionPedestalBlockEntity(BlockEntityType<? extends InfusionPedestalBlockEntity> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
     }
 
     public void load(CompoundTag compoundTag) {
