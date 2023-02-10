@@ -129,7 +129,8 @@ public class Aspects {
     }
 
     private static float getMoonBoost(BlockPos pos, Level level) {
-        return 1.0f - getSunBoost(pos, level);
+        long time = level.getDayTime() % 24000L;
+        return getSkyBoost(pos, level) * (time < 12000L ? 0.0f : 1.0f);
     }
 
     private static float getSkyBoost(BlockPos pos, Level level) {
