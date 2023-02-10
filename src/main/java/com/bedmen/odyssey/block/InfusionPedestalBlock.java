@@ -74,10 +74,12 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
                     handItemStack.shrink(1);
                     infusionPedestalBlockEntity.itemStack = newPedestalItemStack;
                     player.setItemInHand(interactionHand, handItemStack);
+                    infusionPedestalBlockEntity.markUpdated();
                     return InteractionResult.CONSUME;
                 } else if(takeFromPedestal){
                     player.setItemInHand(interactionHand, infusionPedestalBlockEntity.itemStack);
                     infusionPedestalBlockEntity.itemStack = ItemStack.EMPTY;
+                    infusionPedestalBlockEntity.markUpdated();
                     return InteractionResult.CONSUME;
                 } else {
                     return InteractionResult.FAIL;

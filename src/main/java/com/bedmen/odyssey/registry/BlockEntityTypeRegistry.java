@@ -2,6 +2,7 @@ package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.entity.*;
+import com.bedmen.odyssey.client.renderer.blockentity.InfusionPedestalRenderer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,5 +22,5 @@ public class BlockEntityTypeRegistry {
     public static final RegistryObject<BlockEntityType<RecyclingFurnaceBlockEntity>> RECYCLING_FURNACE = BLOCK_ENTITY_TYPES.register("recycling_furnace", () -> BlockEntityType.Builder.of(RecyclingFurnaceBlockEntity::new, BlockRegistry.RECYCLING_FURNACE.get()).build(null));
     public static final RegistryObject<BlockEntityType<AlloyFurnaceBlockEntity>> ALLOY_FURNACE = BLOCK_ENTITY_TYPES.register("alloy_furnace", () -> BlockEntityType.Builder.of(AlloyFurnaceBlockEntity::new, BlockRegistry.ALLOY_FURNACE.get()).build(null));
     public static final RegistryObject<BlockEntityType<TreasureChestBlockEntity>> TREASURE_CHEST = BLOCK_ENTITY_TYPES.register("treasure_chest", () -> BlockEntityType.Builder.of(TreasureChestBlockEntity::new, BlockRegistry.COPPER_CHEST.get(), BlockRegistry.STERLING_SILVER_CHEST.get()).build(null));
-    public static final RegistryObject<BlockEntityType<AlloyFurnaceBlockEntity>> INFUSION_PEDESTAL = BLOCK_ENTITY_TYPES.register("infusion_pedestal", () -> BlockEntityType.Builder.of(AlloyFurnaceBlockEntity::new, BlockRegistry.ALLOY_FURNACE.get()).build(null));
+    public static final RegistryObject<BlockEntityType<InfusionPedestalBlockEntity>> INFUSION_PEDESTAL = BLOCK_ENTITY_TYPES.register("infusion_pedestal", () -> BlockEntityType.Builder.of(InfusionPedestalBlockEntity::new, BlockRegistry.INFUSION_PEDESTAL.get()).build(null));
 }

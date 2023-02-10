@@ -4,7 +4,9 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -30,5 +32,25 @@ public class InfusionPedestalBlockEntity extends BlockEntity {
         CompoundTag itemStackTag = new CompoundTag();
         this.itemStack.save(itemStackTag);
         compoundTag.put(ITEM_STACK_TAG, itemStackTag);
+    }
+
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    public CompoundTag getUpdateTag() {
+        CompoundTag compoundtag = new CompoundTag();
+        CompoundTag itemStackTag = new CompoundTag();
+        this.itemStack.save(itemStackTag);
+        compoundtag.put(ITEM_STACK_TAG, itemStackTag);
+        return compoundtag;
+    }
+
+    public void markUpdated() {
+        this.setChanged();
+        Level level = this.getLevel();
+        if(level != null){
+            level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
+        }
     }
 }
