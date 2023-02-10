@@ -30,21 +30,28 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, InfuserBlockEntity infuserBlockEntity) {
-        // Update new itemStacks
+        infuserBlockEntity.updateNewItemStacks(blockPos);
+
+
+        infuserBlockEntity.updateOldItemStacks();
+    }
+
+    private void updateNewItemStacks(BlockPos blockPos){
         for(Direction direction: HORIZONTALS){
             BlockPos pedestalBlockPos = blockPos.relative(direction, DISTANCE_TO_PEDESTALS);
             BlockEntity blockEntity = level.getBlockEntity(pedestalBlockPos);
             if(blockEntity instanceof InfusionPedestalBlockEntity infusionPedestalBlockEntity && !(blockEntity instanceof InfuserBlockEntity)){
-                infuserBlockEntity.newPedestalItemStackMap.put(direction, infusionPedestalBlockEntity.itemStack.copy());
+                this.newPedestalItemStackMap.put(direction, infusionPedestalBlockEntity.itemStack.copy());
             }
         }
-
-
-        // Update old itemStacks
-        infuserBlockEntity.oldItemStack = infuserBlockEntity.itemStack.copy();
-        infuserBlockEntity.oldPedestalItemStackMap.clear();
-        infuserBlockEntity.oldPedestalItemStackMap.putAll(infuserBlockEntity.newPedestalItemStackMap);
     }
+
+    private void updateOldItemStacks(){
+        this.oldItemStack = this.itemStack;
+        this.oldPedestalItemStackMap.clear();
+        this.oldPedestalItemStackMap.putAll(this.newPedestalItemStackMap);
+    }
+
 
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);

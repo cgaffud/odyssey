@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class InfusionPedestalBlockEntity extends BlockEntity {
-    public ItemStack itemStack = ItemStack.EMPTY;
+    protected ItemStack itemStack = ItemStack.EMPTY;
     public Direction itemRenderDirection = Direction.NORTH;
     private static final String ITEM_STACK_TAG = Odyssey.MOD_ID + ":ItemStack";
     private static final String ITEM_RENDER_DIRECTION_TAG = Odyssey.MOD_ID + ":ItemRenderDirection";
@@ -63,5 +63,19 @@ public class InfusionPedestalBlockEntity extends BlockEntity {
         if(level != null){
             level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
         }
+    }
+
+    public void setItemStack(ItemStack itemStack){
+        this.itemStack = itemStack.copy();
+    }
+
+    // Use when giving away the itemStack to player
+    public ItemStack getItemStackCopy(){
+        return this.itemStack.copy();
+    }
+
+    // Use when a copy is not needed, like for renderering or just to check something about the itemStack
+    public ItemStack getItemStackOriginal(){
+        return this.itemStack;
     }
 }

@@ -52,7 +52,7 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
             BlockEntity blockentity = level.getBlockEntity(blockPos);
             if (blockentity instanceof InfusionPedestalBlockEntity infusionPedestalBlockEntity) {
                 if (level instanceof ServerLevel) {
-                    Containers.dropItemStack(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), infusionPedestalBlockEntity.itemStack);
+                    Containers.dropItemStack(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), infusionPedestalBlockEntity.getItemStackCopy());
                 }
                 level.updateNeighbourForOutputSignal(blockPos, this);
             }
@@ -64,8 +64,8 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
         BlockEntity blockentity = level.getBlockEntity(blockPos);
         if (blockentity instanceof InfusionPedestalBlockEntity infusionPedestalBlockEntity) {
             ItemStack handItemStack = player.getItemInHand(interactionHand);
-            boolean putOnPedestal = !handItemStack.isEmpty() && infusionPedestalBlockEntity.itemStack.isEmpty();
-            boolean takeFromPedestal = handItemStack.isEmpty() && !infusionPedestalBlockEntity.itemStack.isEmpty();
+            boolean putOnPedestal = !handItemStack.isEmpty() && infusionPedestalBlockEntity.getItemStackOriginal().isEmpty();
+            boolean takeFromPedestal = handItemStack.isEmpty() && !infusionPedestalBlockEntity.getItemStackOriginal().isEmpty();
             if (level.isClientSide) {
                 return putOnPedestal || takeFromPedestal ? InteractionResult.SUCCESS : InteractionResult.PASS;
             } else {
@@ -74,11 +74,11 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
                         ItemStack newPedestalItemStack = handItemStack.copy();
                         newPedestalItemStack.setCount(1);
                         handItemStack.shrink(1);
-                        infusionPedestalBlockEntity.itemStack = newPedestalItemStack;
+                        infusionPedestalBlockEntity.setItemStack(newPedestalItemStack);
                         infusionPedestalBlockEntity.itemRenderDirection = Direction.fromYRot(player.getYHeadRot());
                     } else {
-                        player.setItemInHand(interactionHand, infusionPedestalBlockEntity.itemStack);
-                        infusionPedestalBlockEntity.itemStack = ItemStack.EMPTY;
+                        player.setItemInHand(interactionHand, infusionPedestalBlockEntity.getItemStackCopy());
+                        infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY);
                     }
                     infusionPedestalBlockEntity.markUpdated();
                     return InteractionResult.CONSUME;
@@ -98,7 +98,7 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
     public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
         BlockEntity blockentity = level.getBlockEntity(blockPos);
         if (blockentity instanceof InfusionPedestalBlockEntity infusionPedestalBlockEntity) {
-            return infusionPedestalBlockEntity.itemStack.isEmpty() ? 0 : 15;
+            return infusionPedestalBlockEntity.getItemStackOriginal().isEmpty() ? 0 : 15;
         }
         return 0;
     }
