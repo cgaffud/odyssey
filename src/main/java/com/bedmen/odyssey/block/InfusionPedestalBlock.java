@@ -18,7 +18,7 @@ public class InfusionPedestalBlock extends Block {
     public static final VoxelShape NORTH_CENTER_PIECE = Block.box(7.0d, 3.0d, 10.0d, 9.0d, 10.0d, 11.0d);
     public static final VoxelShape SOUTH_CENTER_PIECE = Block.box(7.0d, 3.0d, 5.0d, 9.0d, 10.0d, 6.0d);
     public static final VoxelShape TOP = Block.box(3.0d, 13.0d, 3.0d, 13.0d, 15.0d, 13.0d);
-    public static final VoxelShape SOUTH_TOP_PIECE = Block.box(1.0d, 11.0d, 1.0d, 15.0d, 15.0d, 13.0d);
+    public static final VoxelShape SOUTH_TOP_PIECE = Block.box(1.0d, 11.0d, 1.0d, 15.0d, 15.0d, 3.0d);
     public static final VoxelShape NORTH_TOP_PIECE = Block.box(1.0d, 11.0d, 13.0d, 15.0d, 15.0d, 15.0d);
     public static final VoxelShape WEST_TOP_PIECE = Block.box(1.0d, 11.0d, 3.0d, 3.0d, 15.0d, 13.0d);
     public static final VoxelShape EAST_TOP_PIECE = Block.box(13.0d, 11.0d, 3.0d, 15.0d, 15.0d, 13.0d);
