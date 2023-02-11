@@ -17,11 +17,11 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
-public class WarpTotem extends MagicItem {
+public class WarpTotemItem extends MagicItem {
 
     private final boolean isCracked;
 
-    public WarpTotem(Properties properties, boolean isCracked) {
+    public WarpTotemItem(Properties properties, boolean isCracked) {
         super(properties, new ExperienceCost(5.0f));
         this.isCracked = isCracked;
     }
