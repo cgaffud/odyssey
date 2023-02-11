@@ -178,14 +178,14 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MARINE_HOE = ITEMS.register("marine_hoe", () -> new AspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.HOE.withBetterAttackSpeed(), 2.0f, List.of(), MARINE_TOOL_INNATE_MODIFIER_LIST));
 
     // # Magic
+    public static final RegistryObject<Item> WARP_TOTEM = ITEMS.register("warp_totem", () -> new WarpTotem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), false));
+    public static final RegistryObject<Item> CRACKED_WARP_TOTEM = ITEMS.register("cracked_warp_totem", () -> new WarpTotem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).durability(5), true));
     public static final RegistryObject<Item> PURIFICATION_TABLET = ITEMS.register("purification_tablet", () -> new PurificationTabletItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC)));
 
     // # Miscellaneous
     public static final RegistryObject<Item> GREATWOOD_MINERAL_WATER_BOTTLE = ITEMS.register("greatwood_mineral_water_bottle", () -> new GreatSaplingHelperItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC), BlockRegistry.GREATWOOD_SAPLING::get, true));
     public static final RegistryObject<Item> GREATWOOD_FERTILIZER = ITEMS.register("greatwood_fertilizer", () -> new GreatSaplingHelperItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC), BlockRegistry.GREATWOOD_SAPLING::get, false));
     public static final RegistryObject<Item> MUSIC_DISC_MESA = ITEMS.register("music_disc_mesa", () -> new RecordItem(14, SoundEventRegistry.MUSIC_DISC_MESA, (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.MISC).rarity(Rarity.RARE)));
-    public static final RegistryObject<Item> WARP_TOTEM = ITEMS.register("warp_totem", () -> new WarpTotem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC), false));
-    public static final RegistryObject<Item> CRACKED_WARP_TOTEM = ITEMS.register("cracked_warp_totem", () -> new WarpTotem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC).durability(5), true));
 
 
     // # Melee Weapons
