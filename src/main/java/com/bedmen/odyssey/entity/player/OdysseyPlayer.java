@@ -13,4 +13,6 @@ public interface OdysseyPlayer {
     void setPermabuffHolder(PermabuffHolder permabuffHolder);
     void setPermabuff(AspectInstance aspectInstance);
     void addPermabuffs(List<AspectInstance> permabuffList);
+    float getPartialExperiencePoint();
+    void setPartialExperiencePoint(float partialExperiencePoint);
 }
