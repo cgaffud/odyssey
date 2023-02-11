@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.magic;
 
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -18,7 +19,11 @@ public class ExperienceCost {
     }
 
     public static float getTotalExperienceLevel(Player player){
-        return player.experienceLevel + player.experienceProgress;
+        float totalExperienceLevel = player.experienceLevel + player.experienceProgress;
+        if(player instanceof OdysseyPlayer odysseyPlayer){
+            totalExperienceLevel += odysseyPlayer.getPartialExperiencePoint() / player.getXpNeededForNextLevel();
+        }
+        return totalExperienceLevel;
     }
 
     public boolean canPay(Player player){
@@ -31,6 +36,12 @@ public class ExperienceCost {
         int newExperienceLevel = (int)newTotalExperienceLevel;
         serverPlayer.setExperienceLevels(newExperienceLevel);
         float fractionLevel = newTotalExperienceLevel - newExperienceLevel;
-        serverPlayer.setExperiencePoints((int) (fractionLevel * serverPlayer.getXpNeededForNextLevel()));
+        float experiencePoints = fractionLevel * serverPlayer.getXpNeededForNextLevel();
+        int intExperiencePoints = (int)experiencePoints;
+        float partialExperiencePoint = experiencePoints - intExperiencePoints;
+        serverPlayer.setExperiencePoints(intExperiencePoints);
+        if(serverPlayer instanceof OdysseyPlayer odysseyPlayer){
+            odysseyPlayer.setPartialExperiencePoint(partialExperiencePoint);
+        }
     }
 }
