@@ -1,0 +1,17 @@
+{
+  "type": "oddc:infuser_crafting",
+  "centerIngredient": {
+    "item": "minecraft:leather"
+  },
+  "ingredientList": [
+    {
+      "item": "oddc:feather_bundle"
+    },
+    {
+      "item": "minecraft:phantom_membrane"
+    }
+  ],
+  "result": {
+    "item": "oddc:aerial_fabric"
+  }
+}

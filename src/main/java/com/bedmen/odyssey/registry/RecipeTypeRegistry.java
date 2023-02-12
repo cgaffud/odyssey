@@ -1,10 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.recipes.AlloyRecipe;
-import com.bedmen.odyssey.recipes.RecyclingRecipe;
-import com.bedmen.odyssey.recipes.StitchingRecipe;
-import com.bedmen.odyssey.recipes.WeavingRecipe;
+import com.bedmen.odyssey.recipes.*;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -43,8 +40,13 @@ public class RecipeTypeRegistry {
         }
     });
 
+    public static final RegistryObject<RecipeType<InfuserCraftingRecipe>> INFUSER_CRAFTING = RECIPE_TYPES.register("infuser_crafting", () -> new RecipeType<>() {
+        public String toString() {
+            return "infuser_crafting";
+        }
+    });
+
 //    RecipeType<OdysseySmithingRecipe> ODYSSEY_SMITHING = register("odyssey_smithing");
-//    RecipeType<RecycleRecipe> RECYCLING = register("recycling");
 //    RecipeType<ResearchRecipe> RESEARCH = register("research");
 
 }
