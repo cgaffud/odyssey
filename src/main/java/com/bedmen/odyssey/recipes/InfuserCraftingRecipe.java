@@ -67,7 +67,7 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
     }
 
     public ItemStack getResultItem() {
-        return this.result;
+        return this.result.copy();
     }
 
     public ResourceLocation getId() {

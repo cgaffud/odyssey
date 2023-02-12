@@ -7,6 +7,7 @@ import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -38,8 +39,10 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         Optional<InfuserCraftingRecipe> optionalInfuserCraftingRecipe = level.getRecipeManager().getAllRecipesFor(RecipeTypeRegistry.INFUSER_CRAFTING.get())
                 .stream().filter(infuserCraftingRecipe -> infuserCraftingRecipe.matches(infuserBlockEntity.itemStack, infuserBlockEntity.newPedestalItemStackMap.values())).findFirst();
         optionalInfuserCraftingRecipe.ifPresent(infuserCraftingRecipe -> {
-            infuserBlockEntity.clearAllInfusionPedestals();
-            infuserBlockEntity.itemStack = optionalInfuserCraftingRecipe.get().result;
+            int count = infuserBlockEntity.getMinimumCountOfInputItemStacks();
+            infuserBlockEntity.reduceItemStackCountOnAllInfusionPedestals(count);
+            infuserBlockEntity.itemStack = optionalInfuserCraftingRecipe.get().getResultItem();
+            infuserBlockEntity.itemStack.setCount(count);
             infuserBlockEntity.markUpdated();
         });
 
@@ -65,23 +68,31 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         return this.getInfusionPedestalBlockEntity(direction).flatMap(InfusionPedestalBlockEntity::getPlayer);
     }
 
-    private void clearAllInfusionPedestals(){
+    private void reduceItemStackCountOnAllInfusionPedestals(int reductionCount){
         for(Direction direction: HORIZONTALS){
             this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> {
-                infusionPedestalBlockEntity.itemStack = ItemStack.EMPTY;
+                infusionPedestalBlockEntity.itemStack.shrink(reductionCount);
                 infusionPedestalBlockEntity.markUpdated();
             });
         }
-    }
-
-    private void updateNewItemStacks(){
-        for(Direction direction: HORIZONTALS){
-            this.getInfusionPedestalBlockEntity(direction)
-                    .ifPresentOrElse(
-                            infusionPedestalBlockEntity -> this.newPedestalItemStackMap.put(direction, infusionPedestalBlockEntity.itemStack.copy()),
-                            () -> this.newPedestalItemStackMap.put(direction, ItemStack.EMPTY)
-                            );
+        this.itemStack.shrink(reductionCount);
+        if(!this.itemStack.isEmpty() && this.level != null){
+            Containers.dropItemStack(this.level, this.getBlockPos().getX(), this.getBlockPos().getY()+1.0d, this.getBlockPos().getZ(), this.getItemStackCopy());
         }
+    }
+    
+    private int getMinimumCountOfInputItemStacks(){
+        int minimumCount = this.itemStack.getCount();
+        for(Direction direction: HORIZONTALS){
+            Optional<InfusionPedestalBlockEntity> optionalInfusionPedestalBlockEntity = this.getInfusionPedestalBlockEntity(direction);
+            if(optionalInfusionPedestalBlockEntity.isPresent()) {
+                ItemStack pedestalItemStack = optionalInfusionPedestalBlockEntity.get().itemStack;
+                if(!pedestalItemStack.isEmpty() && pedestalItemStack.getCount() < minimumCount){
+                    minimumCount = pedestalItemStack.getCount();;
+                }
+            }
+        }
+        return minimumCount;
     }
 
     private boolean inValidConfiguration(){
@@ -101,6 +112,16 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
                 .map(Optional::get)
                 .collect(Collectors.toList()));
         return playerList;
+    }
+
+    private void updateNewItemStacks(){
+        for(Direction direction: HORIZONTALS){
+            this.getInfusionPedestalBlockEntity(direction)
+                    .ifPresentOrElse(
+                            infusionPedestalBlockEntity -> this.newPedestalItemStackMap.put(direction, infusionPedestalBlockEntity.itemStack.copy()),
+                            () -> this.newPedestalItemStackMap.put(direction, ItemStack.EMPTY)
+                    );
+        }
     }
 
     private void updateOldItemStacks(){
