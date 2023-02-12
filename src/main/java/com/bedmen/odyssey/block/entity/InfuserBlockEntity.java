@@ -21,6 +21,7 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
 
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
     private static final int DISTANCE_TO_PEDESTALS = 3;
+    public static final float STRENGTH_PENALTY = 0.5f;
 
     protected ItemStack oldItemStack = ItemStack.EMPTY;
     private static final String OLD_ITEM_STACK_TAG = Odyssey.MOD_ID + ":OldItemStack";

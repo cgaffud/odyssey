@@ -3,12 +3,18 @@
   "centerIngredient": {
     "item": "minecraft:leather"
   },
-  "ingredientList": [
+  "pedestalRequirementList": [
     {
-      "item": "oddc:feather_bundle"
+      "isIngredient": true,
+      "object": {
+        "item": "oddc:feather_bundle"
+      }
     },
     {
-      "item": "minecraft:phantom_membrane"
+      "isIngredient": true,
+      "object": {
+        "item": "minecraft:phantom_membrane"
+      }
     }
   ],
   "result": {

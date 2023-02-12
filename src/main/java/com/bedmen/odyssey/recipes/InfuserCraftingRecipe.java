@@ -1,8 +1,13 @@
 package com.bedmen.odyssey.recipes;
 
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.block.entity.InfuserBlockEntity;
+import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.bedmen.odyssey.util.JsonUtil;
+import com.bedmen.odyssey.util.Union;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,19 +21,18 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class InfuserCraftingRecipe implements Recipe<Container> {
 
     public final ResourceLocation id;
     public final Ingredient centerIngredient;
-    public final NonNullList<Ingredient> ingredientList;
+    public final NonNullList<Union<Ingredient, AspectInstance>> pedestalRequirementList;
     public final ItemStack result;
 
-    public InfuserCraftingRecipe(ResourceLocation id, Ingredient centerIngredient, NonNullList<Ingredient> ingredientList, ItemStack result) {
+    public InfuserCraftingRecipe(ResourceLocation id, Ingredient centerIngredient, NonNullList<Union<Ingredient, AspectInstance>> pedestalRequirementList, ItemStack result) {
         this.id = id;
         this.centerIngredient = centerIngredient;
-        this.ingredientList = ingredientList;
+        this.pedestalRequirementList = pedestalRequirementList;
         this.result = result;
     }
 
@@ -40,17 +44,39 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
     public boolean matches(ItemStack centerItemStack, Collection<ItemStack> itemStackCollection) {
         // Ensure every ingredient in ingredientList is matched to an itemstack and vice versa
         Set<ItemStack> matchedItemStacks = new HashSet<>();
-        for(Ingredient ingredient: this.ingredientList){
-            boolean ingredientFound = false;
-            for(ItemStack itemStack: itemStackCollection){
-                if(!matchedItemStacks.contains(itemStack) && ingredient.test(itemStack)){
-                    ingredientFound = true;
-                    matchedItemStacks.add(itemStack);
-                    break;
+        for(Union<Ingredient, AspectInstance> union: this.pedestalRequirementList){
+            if(union.valueIsFirstType()){
+                Ingredient ingredient = union.getFirstTypeValue();
+                boolean ingredientFound = false;
+                for(ItemStack itemStack: itemStackCollection){
+                    if(!matchedItemStacks.contains(itemStack) && ingredient.test(itemStack)){
+                        ingredientFound = true;
+                        matchedItemStacks.add(itemStack);
+                        break;
+                    }
                 }
-            }
-            if(!ingredientFound){
-                return false;
+                if(!ingredientFound){
+                    return false;
+                }
+            } else {
+                AspectInstance aspectInstance = union.getSecondTypeValue();
+                float strength = AspectUtil.getAspectStrength(centerItemStack, aspectInstance.aspect);
+                // If the aspect is already infused on central item, then aspect requirement has been fulfilled
+                if(strength >= aspectInstance.strength * InfuserBlockEntity.STRENGTH_PENALTY){
+                    continue;
+                }
+                boolean matchingItemFound = false;
+                for(ItemStack itemStack: itemStackCollection){
+                    if(!matchedItemStacks.contains(itemStack) && itemStack.getItem() instanceof InnateAspectItem innateAspectItem
+                            && innateAspectItem.getInnateAspectHolder().allAspectMap.get(aspectInstance.aspect) >= aspectInstance.strength){
+                        matchingItemFound = true;
+                        matchedItemStacks.add(itemStack);
+                        break;
+                    }
+                }
+                if(!matchingItemFound){
+                    return false;
+                }
             }
         }
         return this.centerIngredient.test(centerItemStack);
@@ -86,26 +112,36 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
 
         public InfuserCraftingRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             Ingredient centerIngredient = JsonUtil.getIngredient(jsonObject, "centerIngredient");
-            JsonArray ingredientListJsonArray = GsonHelper.getAsJsonArray(jsonObject, "ingredientList");
-            NonNullList<Ingredient> ingredientList = NonNullList.create();
+            JsonArray ingredientListJsonArray = GsonHelper.getAsJsonArray(jsonObject, "pedestalRequirementList");
+            NonNullList<Union<Ingredient, AspectInstance>> pedestalRequirementList = NonNullList.create();
             for(JsonElement jsonElement: ingredientListJsonArray){
-                ingredientList.add(Ingredient.fromJson(jsonElement));
+                JsonObject unionObject = jsonElement.getAsJsonObject();
+                boolean isIngredient = unionObject.getAsJsonPrimitive("isIngredient").getAsBoolean();
+                if(isIngredient){
+                    pedestalRequirementList.add(makePedestalRequirement(JsonUtil.getIngredient(unionObject, "object")));
+                } else {
+                    pedestalRequirementList.add(makePedestalRequirement(JsonUtil.getAspectInstance(unionObject, "object")));
+                }
             }
             ItemStack itemStack = JsonUtil.getItemStack(jsonObject, "result");
-            return new InfuserCraftingRecipe(resourceLocation, centerIngredient, ingredientList, itemStack);
+            return new InfuserCraftingRecipe(resourceLocation, centerIngredient, pedestalRequirementList, itemStack);
         }
 
         public InfuserCraftingRecipe fromNetwork(ResourceLocation resourceLocation, FriendlyByteBuf buf) {
             Ingredient centerIngredient = Ingredient.fromNetwork(buf);
-            NonNullList<Ingredient> ingredientList = buf.readCollection((i) -> NonNullList.create(), Ingredient::fromNetwork);
+            NonNullList<Union<Ingredient, AspectInstance>> pedestalRequirements = buf.readCollection((i) -> NonNullList.create(), friendlyByteBuf -> Union.fromNetwork(Ingredient.class, AspectInstance.class, friendlyByteBuf, Ingredient::fromNetwork, AspectInstance::fromNetwork));
             ItemStack result = buf.readItem();
-            return new InfuserCraftingRecipe(resourceLocation, centerIngredient, ingredientList, result);
+            return new InfuserCraftingRecipe(resourceLocation, centerIngredient, pedestalRequirements, result);
         }
 
         public void toNetwork(FriendlyByteBuf buf, InfuserCraftingRecipe infuserCraftingRecipe) {
             infuserCraftingRecipe.centerIngredient.toNetwork(buf);
-            buf.writeCollection(infuserCraftingRecipe.ingredientList, (friendlyByteBuf, ingredient) -> ingredient.toNetwork(friendlyByteBuf));
+            buf.writeCollection(infuserCraftingRecipe.pedestalRequirementList, (friendlyByteBuf, pedestalRequirement) -> pedestalRequirement.toNetwork(friendlyByteBuf, (friendlyByteBuf1, ingredient) -> ingredient.toNetwork(friendlyByteBuf1), (friendlyByteBuf1, aspectInstance) -> aspectInstance.toNetwork(friendlyByteBuf1)));
             buf.writeItem(infuserCraftingRecipe.result);
         }
+    }
+
+    private static Union<Ingredient, AspectInstance> makePedestalRequirement(Object object){
+        return new Union<>(Ingredient.class, AspectInstance.class, object);
     }
 }
