@@ -1,7 +1,9 @@
 package com.bedmen.odyssey.block.entity;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
+import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -33,9 +35,17 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, InfuserBlockEntity infuserBlockEntity) {
         infuserBlockEntity.updateNewItemStacks();
 
-        if(infuserBlockEntity.inValidConfiguration()){
-            List<Player> playerList = infuserBlockEntity.getPlayersWhoMadeChanges();
-        }
+        Optional<InfuserCraftingRecipe> optionalInfuserCraftingRecipe = level.getRecipeManager().getAllRecipesFor(RecipeTypeRegistry.INFUSER_CRAFTING.get())
+                .stream().filter(infuserCraftingRecipe -> infuserCraftingRecipe.matches(infuserBlockEntity.itemStack, infuserBlockEntity.newPedestalItemStackMap.values())).findFirst();
+        optionalInfuserCraftingRecipe.ifPresent(infuserCraftingRecipe -> {
+            infuserBlockEntity.clearAllInfusionPedestals();
+            infuserBlockEntity.itemStack = optionalInfuserCraftingRecipe.get().result;
+            infuserBlockEntity.markUpdated();
+        });
+
+//        if(infuserBlockEntity.inValidConfiguration()){
+//            List<Player> playerList = infuserBlockEntity.getPlayersWhoMadeChanges();
+//        }
 
         infuserBlockEntity.updateOldItemStacks();
     }
@@ -53,6 +63,15 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
 
     private Optional<Player> getPlayerFromInfusionPedestal(Direction direction){
         return this.getInfusionPedestalBlockEntity(direction).flatMap(InfusionPedestalBlockEntity::getPlayer);
+    }
+
+    private void clearAllInfusionPedestals(){
+        for(Direction direction: HORIZONTALS){
+            this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> {
+                infusionPedestalBlockEntity.itemStack = ItemStack.EMPTY;
+                infusionPedestalBlockEntity.markUpdated();
+            });
+        }
     }
 
     private void updateNewItemStacks(){

@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.recipes;
 
+import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.bedmen.odyssey.util.JsonUtil;
 import com.google.gson.JsonArray;
@@ -13,6 +14,9 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InfuserCraftingRecipe implements Recipe<Container> {
 
@@ -31,6 +35,25 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
     // Never used
     public boolean matches(Container container, Level level) {
         return true;
+    }
+
+    public boolean matches(ItemStack centerItemStack, Collection<ItemStack> itemStackCollection) {
+        // Ensure every ingredient in ingredientList is matched to an itemstack and vice versa
+        Set<ItemStack> matchedItemStacks = new HashSet<>();
+        for(Ingredient ingredient: this.ingredientList){
+            boolean ingredientFound = false;
+            for(ItemStack itemStack: itemStackCollection){
+                if(!matchedItemStacks.contains(itemStack) && ingredient.test(itemStack)){
+                    ingredientFound = true;
+                    matchedItemStacks.add(itemStack);
+                    break;
+                }
+            }
+            if(!ingredientFound){
+                return false;
+            }
+        }
+        return this.centerIngredient.test(centerItemStack);
     }
 
     // Never used
@@ -52,7 +75,7 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
     }
 
     public RecipeSerializer<?> getSerializer() {
-        return null;
+        return RecipeSerializerRegistry.INFUSER_CRAFTING.get();
     }
 
     public RecipeType<?> getType() {
