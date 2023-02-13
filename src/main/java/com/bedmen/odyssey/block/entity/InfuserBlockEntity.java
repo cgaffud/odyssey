@@ -42,7 +42,7 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         optionalInfuserCraftingRecipe.ifPresent(infuserCraftingRecipe -> {
             int count = infuserBlockEntity.getMinimumCountOfInputItemStacks();
             infuserBlockEntity.reduceItemStackCountOnAllInfusionPedestals(count);
-            infuserBlockEntity.itemStack = optionalInfuserCraftingRecipe.get().getResultItem();
+            infuserBlockEntity.itemStack = optionalInfuserCraftingRecipe.get().getResultItemWithOldItemStackData(infuserBlockEntity.itemStack);
             infuserBlockEntity.itemStack.setCount(count);
             infuserBlockEntity.markUpdated();
         });

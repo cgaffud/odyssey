@@ -56,6 +56,7 @@ public class OdysseyTiers {
     // ## Tier 3
     public static final OdysseyTier ZEPHYR = new OdysseyTier(3,() -> Ingredient.EMPTY);
     public static final OdysseyTier NETHERITE = new OdysseyTier(4,1000,9.0F, Tags.Blocks.NEEDS_NETHERITE_TOOL, () -> Ingredient.of(Items.NETHERITE_INGOT));
+    public static final OdysseyTier ULTRA_3 = new OdysseyTier(3,1000, () -> Ingredient.EMPTY);
 
     // # No Diggers
 
@@ -94,5 +95,6 @@ public class OdysseyTiers {
         TierSortingRegistry.registerTier(ULTRA_2, new ResourceLocation(Odyssey.MOD_ID,"ultra_2"), List.of(UNCRAFTABLE_2), List.of(Tiers.NETHERITE));
         TierSortingRegistry.registerTier(ZEPHYR, new ResourceLocation(Odyssey.MOD_ID,"zephyr"), List.of(ULTRA_2), List.of(Tiers.NETHERITE));
         TierSortingRegistry.registerTier(NETHERITE, new ResourceLocation(Odyssey.MOD_ID,"netherite"), List.of(Tiers.NETHERITE), List.of());
+        TierSortingRegistry.registerTier(ULTRA_3, new ResourceLocation(Odyssey.MOD_ID,"ultra_3"), List.of(NETHERITE), List.of());
     }
 }

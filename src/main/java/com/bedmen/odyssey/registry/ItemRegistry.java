@@ -214,7 +214,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MINI_HAMMER = ITEMS.register("mini_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_1, MeleeWeaponClass.HATCHET, 5f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_ON_ARTHROPOD, 0.75f))));
     public static final RegistryObject<Item> SLEDGEHAMMER = ITEMS.register("sledgehammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_1, MeleeWeaponClass.HAMMER, 8f, List.of(), List.of(new AspectInstance(Aspects.SMITE_DAMAGE, 0.75f))));
     public static final RegistryObject<Item> SWIFT_SABRE = ITEMS.register("swift_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_1, MeleeWeaponClass.SABRE, 6.0f, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, 0.2f)), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 1.0f))));
-    public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.SWORD,  5f, List.of(), List.of(new AspectInstance(Aspects.SOLAR_STRENGTH, 1.0f)), 2));
+    public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.SWORD,  6f, List.of(), List.of(new AspectInstance(Aspects.SOLAR_STRENGTH, 0.5f)), 2));
 
     // ## Tier 2
     public static final RegistryObject<Item> BANDIT_DAGGER = ITEMS.register("bandit_dagger", () -> new AspectMeleeItem(new Item.Properties().rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.UNCRAFTABLE_2, MeleeWeaponClass.DAGGER, 6.5f, List.of(), List.of(new AspectInstance(Aspects.LARCENY_CHANCE, 0.1f))));
@@ -252,6 +252,7 @@ public class ItemRegistry {
 
     // ## Tier 3
     public static final RegistryObject<Item> NETHERITE_MACE = ITEMS.register("netherite_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.NETHERITE, MeleeWeaponClass.MACE, 11f, List.of(), List.of(new AspectInstance(Aspects.BURN_PROOF))));
+    public static final RegistryObject<Item> SKY_SWORD = ITEMS.register("sky_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_3, MeleeWeaponClass.SWORD,  9f, List.of(), List.of(new AspectInstance(Aspects.SKY_STRENGTH, 1.5f)), 2));
 
     // # Ranged Weapons
 

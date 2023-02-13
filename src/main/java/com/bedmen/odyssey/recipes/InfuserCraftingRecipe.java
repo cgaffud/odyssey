@@ -2,6 +2,7 @@ package com.bedmen.odyssey.recipes;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.block.entity.InfuserBlockEntity;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
@@ -94,6 +95,18 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
 
     public ItemStack getResultItem() {
         return this.result.copy();
+    }
+
+    public ItemStack getResultItemWithOldItemStackData(ItemStack itemStack) {
+        ItemStack newItemStack = this.result.copy();
+        newItemStack.setTag(itemStack.getOrCreateTag());
+        for(Union<Ingredient, AspectInstance> union: this.pedestalRequirementList){
+            union.caseOnType(
+                    ingredient -> {},
+                    aspectInstance -> AspectUtil.removeAddedModifier(newItemStack, aspectInstance.aspect)
+            );
+        }
+        return newItemStack;
     }
 
     public ResourceLocation getId() {
