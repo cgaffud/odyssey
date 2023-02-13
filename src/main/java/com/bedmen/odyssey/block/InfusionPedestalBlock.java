@@ -82,7 +82,7 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
                             int countToMaxStack = pedestalItemStack.getMaxStackSize() - pedestalItemStack.getCount();
                             int countToAdd = Integer.min(countToMaxStack, handItemStack.getCount());
                             handItemStack.shrink(countToAdd);
-                            pedestalItemStack.grow(countToAdd);
+                            infusionPedestalBlockEntity.growItemStack(countToAdd);
                         } else {
                             player.setItemInHand(interactionHand, ItemStack.EMPTY);
                             infusionPedestalBlockEntity.setItemStack(handItemStack.copy());
@@ -93,7 +93,6 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
                         infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY);
                     }
                     infusionPedestalBlockEntity.playerUUID = player.getUUID();
-                    infusionPedestalBlockEntity.markUpdated();
                     return InteractionResult.CONSUME;
                 } else {
                     return InteractionResult.FAIL;

@@ -4,17 +4,20 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
+import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 public class DamageSourcePredicateAspect extends FloatAspect {
     public final Predicate<DamageSource> damageSourcePredicate;
     // Protections
-    protected DamageSourcePredicateAspect(String id, Predicate<DamageSource> damageSourcePredicate, Predicate<Item> itemPredicate) {
-        this(id, 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, damageSourcePredicate, itemPredicate);
+    protected DamageSourcePredicateAspect(String id, Predicate<Item> itemPredicate, Predicate<DamageSource> damageSourcePredicate) {
+        this(id, 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, itemPredicate, damageSourcePredicate);
     }
 
-    protected DamageSourcePredicateAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<DamageSource> damageSourcePredicate, Predicate<Item> itemPredicate) {
+    protected DamageSourcePredicateAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, Predicate<DamageSource> damageSourcePredicate) {
         super(id, weight, aspectTooltipFunction, itemPredicate);
         this.damageSourcePredicate = damageSourcePredicate;
     }

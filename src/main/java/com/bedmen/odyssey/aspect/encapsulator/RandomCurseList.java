@@ -19,7 +19,7 @@ public class RandomCurseList extends RandomAspectList {
             WeightedAspectEntry weightedAspectEntry = this.getRandomWeightedAspectEntry(random);
             this.filteredList.remove(weightedAspectEntry);
             AspectInstance aspectInstance = new AspectInstance(weightedAspectEntry.aspect(), weightedAspectEntry.strength()).withObfuscation();
-            AspectUtil.replaceModifier(itemStack, aspectInstance);
+            AspectUtil.addModifier(itemStack, aspectInstance);
         }
     }
 

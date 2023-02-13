@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class InfusionPedestalBlockEntity extends BlockEntity {
-    protected ItemStack itemStack = ItemStack.EMPTY;
+    private ItemStack itemStack = ItemStack.EMPTY;
     private static final String ITEM_STACK_TAG = Odyssey.MOD_ID + ":ItemStack";
     public Direction itemRenderDirection = Direction.NORTH;
     private static final String ITEM_RENDER_DIRECTION_TAG = Odyssey.MOD_ID + ":ItemRenderDirection";
@@ -77,8 +77,24 @@ public class InfusionPedestalBlockEntity extends BlockEntity {
         }
     }
 
+    public void shrinkItemStack(int amount){
+        this.itemStack.shrink(amount);
+        this.markUpdated();
+    }
+
+    public void growItemStack(int amount){
+        this.itemStack.grow(amount);
+        this.markUpdated();
+    }
+
+    public void setItemStackCount(int count){
+        this.itemStack.setCount(count);
+        this.markUpdated();
+    }
+
     public void setItemStack(ItemStack itemStack){
         this.itemStack = itemStack.copy();
+        this.markUpdated();
     }
 
     // Use when giving away the itemStack to player

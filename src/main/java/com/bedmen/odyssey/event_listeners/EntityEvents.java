@@ -113,7 +113,7 @@ public class EntityEvents {
             // Poison Damage
             int poisonStrength = AspectUtil.getIntegerAspectStrength(mainHandItemStack, Aspects.POISON_DAMAGE);
             if(poisonStrength > 0){
-                hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (int)(12 * poisonStrength), 1));
+                AspectUtil.applyPoisonDamage(hurtLivingEntity, poisonStrength);
             }
             // Cobweb Chance
             float cobwebChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.COBWEB_CHANCE);

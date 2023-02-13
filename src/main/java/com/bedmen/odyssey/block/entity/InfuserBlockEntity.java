@@ -1,6 +1,14 @@
 package com.bedmen.odyssey.block.entity;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectItemPredicates;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.combat.OdysseyRangedAmmoWeapon;
+import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
+import com.bedmen.odyssey.items.aspect_items.SpearItem;
+import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
@@ -9,7 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,8 +28,8 @@ import java.util.stream.Collectors;
 public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
 
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+    private static final Class<?>[] DIGGER_CLASSES = new Class<?>[]{PickaxeItem.class, AxeItem.class, HoeItem.class, ShovelItem.class};
     private static final int DISTANCE_TO_PEDESTALS = 3;
-    public static final float STRENGTH_PENALTY = 0.5f;
 
     protected ItemStack oldItemStack = ItemStack.EMPTY;
     private static final String OLD_ITEM_STACK_TAG = Odyssey.MOD_ID + ":OldItemStack";
@@ -38,14 +46,14 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         infuserBlockEntity.updateNewItemStacks();
 
         Optional<InfuserCraftingRecipe> optionalInfuserCraftingRecipe = level.getRecipeManager().getAllRecipesFor(RecipeTypeRegistry.INFUSER_CRAFTING.get())
-                .stream().filter(infuserCraftingRecipe -> infuserCraftingRecipe.matches(infuserBlockEntity.itemStack, infuserBlockEntity.newPedestalItemStackMap.values())).findFirst();
-        optionalInfuserCraftingRecipe.ifPresent(infuserCraftingRecipe -> {
-            int count = infuserBlockEntity.getMinimumCountOfInputItemStacks();
-            infuserBlockEntity.reduceItemStackCountOnAllInfusionPedestals(count);
-            infuserBlockEntity.itemStack = optionalInfuserCraftingRecipe.get().getResultItemWithOldItemStackData(infuserBlockEntity.itemStack);
-            infuserBlockEntity.itemStack.setCount(count);
-            infuserBlockEntity.markUpdated();
-        });
+                .stream().filter(infuserCraftingRecipe -> infuserCraftingRecipe.matches(infuserBlockEntity.getItemStackOriginal(), infuserBlockEntity.newPedestalItemStackMap.values())).findFirst();
+        optionalInfuserCraftingRecipe.ifPresentOrElse(
+            infuserCraftingRecipe -> {
+                int count = infuserBlockEntity.getMinimumCountOfInputItemStacks();
+                infuserBlockEntity.reduceItemStackCountOnAllInfusionPedestals(count);
+                infuserBlockEntity.setItemStack(optionalInfuserCraftingRecipe.get().getResultItemWithOldItemStackData(infuserBlockEntity.getItemStackOriginal()));
+                infuserBlockEntity.setItemStackCount(count);
+        }, infuserBlockEntity::tryInfusion);
 
 //        if(infuserBlockEntity.inValidConfiguration()){
 //            List<Player> playerList = infuserBlockEntity.getPlayersWhoMadeChanges();
@@ -72,38 +80,118 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
     private void reduceItemStackCountOnAllInfusionPedestals(int reductionCount){
         for(Direction direction: HORIZONTALS){
             this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> {
-                infusionPedestalBlockEntity.itemStack.shrink(reductionCount);
-                infusionPedestalBlockEntity.markUpdated();
+                infusionPedestalBlockEntity.shrinkItemStack(reductionCount);
             });
         }
-        this.itemStack.shrink(reductionCount);
-        if(!this.itemStack.isEmpty() && this.level != null){
+        this.shrinkItemStack(reductionCount);
+        if(!this.getItemStackOriginal().isEmpty() && this.level != null){
             Containers.dropItemStack(this.level, this.getBlockPos().getX(), this.getBlockPos().getY()+1.0d, this.getBlockPos().getZ(), this.getItemStackCopy());
         }
     }
     
     private int getMinimumCountOfInputItemStacks(){
-        int minimumCount = this.itemStack.getCount();
+        int minimumCount = this.getItemStackOriginal().getCount();
         for(Direction direction: HORIZONTALS){
-            Optional<InfusionPedestalBlockEntity> optionalInfusionPedestalBlockEntity = this.getInfusionPedestalBlockEntity(direction);
-            if(optionalInfusionPedestalBlockEntity.isPresent()) {
-                ItemStack pedestalItemStack = optionalInfusionPedestalBlockEntity.get().itemStack;
-                if(!pedestalItemStack.isEmpty() && pedestalItemStack.getCount() < minimumCount){
-                    minimumCount = pedestalItemStack.getCount();;
+            ItemStack pedestalItemStack = this.newPedestalItemStackMap.get(direction);
+            if(!pedestalItemStack.isEmpty()){
+                int pedestalItemStackCount = pedestalItemStack.getCount();
+                if(pedestalItemStackCount < minimumCount){
+                    minimumCount = pedestalItemStackCount;
                 }
             }
         }
         return minimumCount;
     }
 
-    private boolean inValidConfiguration(){
-        return true;
+    private void tryInfusion(){
+        for(Direction direction: HORIZONTALS){
+            ItemStack pedestalItemStack = this.newPedestalItemStackMap.get(direction);
+            if(canInfuse(this.getItemStackOriginal(), pedestalItemStack)){
+                List<AspectInstance> infusionModifierList = getValidInfusionModifiers(this.getItemStackOriginal(), pedestalItemStack);
+                if(infusionModifierList.size() > 0){
+                    List<AspectInstance> adjustedModifierList = infusionModifierList.stream().map(AspectInstance::applyInfusionPenalty).collect(Collectors.toList());
+                    float modifiabilityToBeUsed = adjustedModifierList.stream().map(aspectInstance -> aspectInstance.getModifiability(this.getItemStackOriginal())).reduce(0.0f, Float::sum);
+                    if(AspectUtil.getModifiabilityRemaining(this.getItemStackOriginal()) >= modifiabilityToBeUsed){
+                        this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY));
+                        adjustedModifierList.forEach(adjustedAspectInstance -> AspectUtil.addModifier(this.getItemStackOriginal(), adjustedAspectInstance));
+                        this.markUpdated();
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean canInfuse(ItemStack infuserItemStack, ItemStack pedestalItemStack){
+        if(pedestalItemStack.getItem() instanceof InnateAspectItem pedestalInnateAspectItem){
+            Item infuserItem = infuserItemStack.getItem();
+            Item pedestalItem = pedestalItemStack.getItem();
+            // Make sure all aspect item predicates pass
+            List<AspectInstance> pedestalInnateModifierList = pedestalInnateAspectItem.getInnateAspectHolder().innateModifierList;
+            if(pedestalInnateModifierList.size() <= 0){
+                return false;
+            }
+            // If both items are digger tools, the tool type has to match
+            if(infuserItem instanceof DiggerItem && pedestalItem instanceof DiggerItem){
+                boolean diggerClassesMatch = false;
+                for(Class<?> diggerClass: DIGGER_CLASSES){
+                    if(diggerClass.isInstance(infuserItem) && diggerClass.isInstance(pedestalItem)){
+                        diggerClassesMatch = true;
+                        break;
+                    }
+                }
+                if(!diggerClassesMatch){
+                    return false;
+                }
+            }
+            // If infuserItem is armor, then pedestalItem must be armor and the slot has to match (some exceptions based on requiresSlotsAreSame)
+            if(infuserItem instanceof ArmorItem infuserArmorItem){
+                if(pedestalItem instanceof ArmorItem pedestalArmorItem){
+                    // Checks if any of the innate modifiers require the slots to be the same
+                    return infuserArmorItem.getSlot() != pedestalArmorItem.getSlot();
+                } else {
+                    return false;
+                }
+            } else if(infuserItem instanceof OdysseyRangedAmmoWeapon){
+                return pedestalItem instanceof OdysseyRangedAmmoWeapon;
+            } else if(infuserItem instanceof ThrowableWeaponItem){
+                return pedestalItem instanceof ThrowableWeaponItem;
+            } else if(infuserItem instanceof QuiverItem){
+                return pedestalItem instanceof QuiverItem;
+            } else if(infuserItem instanceof ArrowItem){
+                return pedestalItem instanceof ArrowItem;
+            } else if(infuserItem instanceof ShieldItem){
+                return pedestalItem instanceof ShieldItem;
+            } else if(infuserItem instanceof DiggerItem && !AspectItemPredicates.MELEE.test(infuserItem)){
+                return pedestalItem instanceof DiggerItem;
+            } else if(infuserItem instanceof DiggerItem && AspectItemPredicates.MELEE.test(infuserItem)){
+                return pedestalItem instanceof DiggerItem || AspectItemPredicates.MELEE.test(pedestalItem) || pedestalItem instanceof SpearItem;
+            } else if(!(infuserItem instanceof DiggerItem) && AspectItemPredicates.MELEE.test(infuserItem)){
+                return AspectItemPredicates.MELEE.test(pedestalItem) || pedestalItem instanceof SpearItem;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static List<AspectInstance> getValidInfusionModifiers(ItemStack infuserItemStack, ItemStack pedestalItemStack){
+        List<AspectInstance> pedestalInnateModifierList = ((InnateAspectItem)pedestalItemStack.getItem()).getInnateAspectHolder().innateModifierList;
+        // Remove any modifiers that are already innate on the infuserItemStack
+        List<AspectInstance> validModifierList = new ArrayList<>(pedestalInnateModifierList);
+        for(AspectInstance pedestalAspectInstance: pedestalInnateModifierList){
+            if(!pedestalAspectInstance.aspect.itemPredicate.test(infuserItemStack.getItem())){
+                validModifierList.remove(pedestalAspectInstance);
+            } else if(AspectUtil.getAspectStrength(infuserItemStack, pedestalAspectInstance.aspect) > 0.0f){
+                validModifierList.remove(pedestalAspectInstance);
+            }
+        }
+        return validModifierList;
     }
 
     private List<Player> getPlayersWhoMadeChanges(){
         List<Player> playerList = new ArrayList<>();
         Optional<Player> optionalPlayer = this.getPlayer();
-        if(this.itemStack != this.oldItemStack && optionalPlayer.isPresent()){
+        if(this.getItemStackOriginal() != this.oldItemStack && optionalPlayer.isPresent()){
             playerList.add(optionalPlayer.get());
         }
         playerList.addAll(Arrays.stream(HORIZONTALS)
@@ -119,14 +207,14 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         for(Direction direction: HORIZONTALS){
             this.getInfusionPedestalBlockEntity(direction)
                     .ifPresentOrElse(
-                            infusionPedestalBlockEntity -> this.newPedestalItemStackMap.put(direction, infusionPedestalBlockEntity.itemStack.copy()),
+                            infusionPedestalBlockEntity -> this.newPedestalItemStackMap.put(direction, infusionPedestalBlockEntity.getItemStackCopy()),
                             () -> this.newPedestalItemStackMap.put(direction, ItemStack.EMPTY)
                     );
         }
     }
 
     private void updateOldItemStacks(){
-        this.oldItemStack = this.itemStack;
+        this.oldItemStack = this.getItemStackOriginal();
         this.oldPedestalItemStackMap.clear();
         this.oldPedestalItemStackMap.putAll(this.newPedestalItemStackMap);
     }

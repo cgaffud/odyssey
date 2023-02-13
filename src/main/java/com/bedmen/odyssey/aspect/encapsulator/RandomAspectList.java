@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.aspect.encapsulator;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.BooleanAspect;
 import com.bedmen.odyssey.aspect.object.IntegerAspect;
@@ -28,7 +29,9 @@ public abstract class RandomAspectList {
 
     protected void filter(ItemStack itemStack){
         this.filteredList = this.weightedAspectEntryList.stream()
-                .filter(weightedAspectEntry ->  weightedAspectEntry.aspect().itemPredicate.test(itemStack.getItem()))
+                .filter(weightedAspectEntry ->
+                        weightedAspectEntry.aspect().itemPredicate.test(itemStack.getItem())
+                        && AspectUtil.getAspectStrength(itemStack, weightedAspectEntry.aspect) <= 0.0f)
                 .collect(Collectors.toList());
     }
 

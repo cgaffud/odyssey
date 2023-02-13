@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
@@ -159,8 +160,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 // Poison Damage
                 int poisonStrength = (int)this.getAspectStrength(Aspects.PROJECTILE_POISON_DAMAGE);
                 if(!target.level.isClientSide && poisonStrength > 0) {
-                    livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + 24, 0));
-                    livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (12 * poisonStrength), 1));
+                    AspectUtil.applyPoisonDamage(livingEntity, poisonStrength);
                 }
                 // Cobweb Chance
                 float cobwebChance = this.getAspectStrength(Aspects.PROJECTILE_COBWEB_CHANCE);

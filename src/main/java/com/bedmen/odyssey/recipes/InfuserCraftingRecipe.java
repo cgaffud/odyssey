@@ -63,7 +63,7 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
                 AspectInstance aspectInstance = union.getSecondTypeValue();
                 float strength = AspectUtil.getAspectStrength(centerItemStack, aspectInstance.aspect);
                 // If the aspect is already infused on central item, then aspect requirement has been fulfilled
-                if(strength >= aspectInstance.strength * InfuserBlockEntity.STRENGTH_PENALTY){
+                if(strength >= aspectInstance.applyInfusionPenalty().strength){
                     continue;
                 }
                 boolean matchingItemFound = false;

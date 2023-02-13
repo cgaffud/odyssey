@@ -21,7 +21,7 @@ public enum ShieldType {
     COPPER("copper", OdysseyTiers.COPPER, 5.0f, 100, item -> item == Items.COPPER_INGOT, List.of(), List.of()),
     RUSTY("rusty", OdysseyTiers.RUSTY_IRON, 6.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.IMPENETRABILITY, 1.0f))),
     GOLDEN("golden", OdysseyTiers.GOLD, 6.0f, 80, item -> item == Items.GOLD_INGOT, List.of(), List.of(new AspectInstance(Aspects.RECOVERY_SPEED, 1.0f))),
-    REINFORCED("reinforced", OdysseyTiers.IRON, 7.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.EXPLOSION_DAMAGE_BLOCK, 7.0f))),
+    REINFORCED("reinforced", OdysseyTiers.IRON, 7.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.EXPLOSION_DAMAGE_BLOCK, 10.0f))),
     DIAMOND("diamond", OdysseyTiers.DIAMOND, 8.0f, 100, item -> item == Items.DIAMOND, List.of(), List.of(new AspectInstance(Aspects.DURABILITY, 2.0f)));
 
     public final Tier tier;

@@ -26,6 +26,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -266,7 +267,7 @@ public class AspectUtil {
         } else {
             int index = aspectInstanceList.indexOf(match);
             aspectInstanceList.remove(match);
-            AspectInstance newAspectInstance = new AspectInstance(match.aspect, match.strength + aspectInstance.strength);
+            AspectInstance newAspectInstance = match.withAddedStrength(aspectInstance.strength);
             aspectInstanceList.add(index, newAspectInstance);
         }
     }
@@ -367,6 +368,12 @@ public class AspectUtil {
         return passesItemPredicate && passesModifiabilityCheck;
     }
 
+    public static void addModifier(ItemStack itemStack, AspectInstance aspectInstance){
+        float strength = AspectUtil.getAddedModifierMap(itemStack).get(aspectInstance.aspect);
+        AspectInstance newAspectInstance = aspectInstance.withAddedStrength(strength);
+        replaceModifier(itemStack, newAspectInstance);
+    }
+
     // Replaces added modifier with same aspect as aspectInstance with aspectInstance,
     // or removes the modifier altogether if aspectInstance.strength is 0
     public static void replaceModifier(ItemStack itemStack, AspectInstance aspectInstance){
@@ -396,5 +403,11 @@ public class AspectUtil {
 
     public static void resetAddedModifiers(ItemStack itemStack){
         itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, new ListTag());
+    }
+
+    // Apply poison damage
+
+    public static void applyPoisonDamage(LivingEntity target, int poisonStrength){
+        target.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (25 * poisonStrength), 0));
     }
 }
