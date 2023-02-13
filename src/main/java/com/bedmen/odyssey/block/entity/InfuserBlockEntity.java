@@ -153,19 +153,21 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
                 }
             } else if(infuserItem instanceof OdysseyRangedAmmoWeapon){
                 return pedestalItem instanceof OdysseyRangedAmmoWeapon;
-            } else if(infuserItem instanceof ThrowableWeaponItem){
+            } else if(infuserItem instanceof ThrowableWeaponItem && !(infuserItem instanceof SpearItem)){
                 return pedestalItem instanceof ThrowableWeaponItem;
-            } else if(infuserItem instanceof QuiverItem){
+            } else if(infuserItem instanceof SpearItem){
+                return pedestalItem instanceof ThrowableWeaponItem || AspectItemPredicates.MELEE.test(pedestalItem);
+            }else if(infuserItem instanceof QuiverItem){
                 return pedestalItem instanceof QuiverItem;
             } else if(infuserItem instanceof ArrowItem){
                 return pedestalItem instanceof ArrowItem;
             } else if(infuserItem instanceof ShieldItem){
                 return pedestalItem instanceof ShieldItem;
-            } else if(infuserItem instanceof DiggerItem && !AspectItemPredicates.MELEE.test(infuserItem)){
+            } else if(infuserItem instanceof DiggerItem && !AspectItemPredicates.MELEE.test(pedestalItem)){
                 return pedestalItem instanceof DiggerItem;
-            } else if(infuserItem instanceof DiggerItem && AspectItemPredicates.MELEE.test(infuserItem)){
+            } else if(infuserItem instanceof DiggerItem && AspectItemPredicates.MELEE.test(pedestalItem)){
                 return pedestalItem instanceof DiggerItem || AspectItemPredicates.MELEE.test(pedestalItem) || pedestalItem instanceof SpearItem;
-            } else if(!(infuserItem instanceof DiggerItem) && AspectItemPredicates.MELEE.test(infuserItem)){
+            } else if(!(infuserItem instanceof DiggerItem) && AspectItemPredicates.MELEE.test(pedestalItem)){
                 return AspectItemPredicates.MELEE.test(pedestalItem) || pedestalItem instanceof SpearItem;
             }
             return true;
