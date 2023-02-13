@@ -2,9 +2,8 @@ package com.bedmen.odyssey.recipes;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.object.Aspects;
-import com.bedmen.odyssey.block.entity.InfuserBlockEntity;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
+import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.bedmen.odyssey.util.JsonUtil;
@@ -28,12 +27,14 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
     public final ResourceLocation id;
     public final Ingredient centerIngredient;
     public final NonNullList<Union<Ingredient, AspectInstance>> pedestalRequirementList;
+    public final ExperienceCost experienceCost;
     public final ItemStack result;
 
-    public InfuserCraftingRecipe(ResourceLocation id, Ingredient centerIngredient, NonNullList<Union<Ingredient, AspectInstance>> pedestalRequirementList, ItemStack result) {
+    public InfuserCraftingRecipe(ResourceLocation id, Ingredient centerIngredient, NonNullList<Union<Ingredient, AspectInstance>> pedestalRequirementList, ExperienceCost experienceCost, ItemStack result) {
         this.id = id;
         this.centerIngredient = centerIngredient;
         this.pedestalRequirementList = pedestalRequirementList;
+        this.experienceCost = experienceCost;
         this.result = result;
     }
 
@@ -136,20 +137,23 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
                     pedestalRequirementList.add(makePedestalRequirement(JsonUtil.getAspectInstance(unionObject, "object")));
                 }
             }
+            ExperienceCost experienceCost = JsonUtil.getExperienceCost(jsonObject, "experienceCost");
             ItemStack itemStack = JsonUtil.getItemStack(jsonObject, "result");
-            return new InfuserCraftingRecipe(resourceLocation, centerIngredient, pedestalRequirementList, itemStack);
+            return new InfuserCraftingRecipe(resourceLocation, centerIngredient, pedestalRequirementList, experienceCost, itemStack);
         }
 
         public InfuserCraftingRecipe fromNetwork(ResourceLocation resourceLocation, FriendlyByteBuf buf) {
             Ingredient centerIngredient = Ingredient.fromNetwork(buf);
             NonNullList<Union<Ingredient, AspectInstance>> pedestalRequirements = buf.readCollection((i) -> NonNullList.create(), friendlyByteBuf -> Union.fromNetwork(Ingredient.class, AspectInstance.class, friendlyByteBuf, Ingredient::fromNetwork, AspectInstance::fromNetwork));
+            ExperienceCost experienceCost = ExperienceCost.fromNetwork(buf);
             ItemStack result = buf.readItem();
-            return new InfuserCraftingRecipe(resourceLocation, centerIngredient, pedestalRequirements, result);
+            return new InfuserCraftingRecipe(resourceLocation, centerIngredient, pedestalRequirements, experienceCost, result);
         }
 
         public void toNetwork(FriendlyByteBuf buf, InfuserCraftingRecipe infuserCraftingRecipe) {
             infuserCraftingRecipe.centerIngredient.toNetwork(buf);
             buf.writeCollection(infuserCraftingRecipe.pedestalRequirementList, (friendlyByteBuf, pedestalRequirement) -> pedestalRequirement.toNetwork(friendlyByteBuf, (friendlyByteBuf1, ingredient) -> ingredient.toNetwork(friendlyByteBuf1), (friendlyByteBuf1, aspectInstance) -> aspectInstance.toNetwork(friendlyByteBuf1)));
+            infuserCraftingRecipe.experienceCost.toNetwork(buf);
             buf.writeItem(infuserCraftingRecipe.result);
         }
     }

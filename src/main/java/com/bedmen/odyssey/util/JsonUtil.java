@@ -2,6 +2,7 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.magic.ExperienceCost;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -37,5 +38,15 @@ public class JsonUtil {
         return new AspectInstance(aspectId, strength);
     }
 
-
+    private static final String LEVEL_REQUIREMENT_KEY = "levelRequirement";
+    private static final String LEVEL_COST_KEY = "levelCost";
+    public static ExperienceCost getExperienceCost(JsonObject jsonObject, String key){
+        JsonObject experienceCostObject = jsonObject.getAsJsonObject(key);
+        int levelRequirement = 0;
+        if(experienceCostObject.has(LEVEL_REQUIREMENT_KEY)){
+            levelRequirement = experienceCostObject.getAsJsonPrimitive(LEVEL_REQUIREMENT_KEY).getAsInt();
+        }
+        float levelCost = experienceCostObject.getAsJsonPrimitive(LEVEL_COST_KEY).getAsFloat();
+        return new ExperienceCost(levelRequirement, levelCost);
+    }
 }

@@ -17,6 +17,9 @@
       }
     }
   ],
+  "experienceCost": {
+    "levelCost": 0.5
+  },
   "result": {
     "item": "oddc:aerial_fabric"
   }

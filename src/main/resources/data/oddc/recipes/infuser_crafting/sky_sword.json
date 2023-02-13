@@ -19,6 +19,10 @@
       }
     }
   ],
+  "experienceCost": {
+    "levelRequirement": 30,
+    "levelCost": 5.0
+  },
   "result": {
     "item": "oddc:sky_sword"
   }

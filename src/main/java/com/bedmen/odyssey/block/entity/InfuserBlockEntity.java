@@ -9,12 +9,14 @@ import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.items.aspect_items.SpearItem;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
+import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -24,12 +26,14 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
 
     private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
     private static final Class<?>[] DIGGER_CLASSES = new Class<?>[]{PickaxeItem.class, AxeItem.class, HoeItem.class, ShovelItem.class};
     private static final int DISTANCE_TO_PEDESTALS = 3;
+    private static final double MAX_PLAYER_DISTANCE = 10.0d;
 
     protected ItemStack oldItemStack = ItemStack.EMPTY;
     private static final String OLD_ITEM_STACK_TAG = Odyssey.MOD_ID + ":OldItemStack";
@@ -50,9 +54,18 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         optionalInfuserCraftingRecipe.ifPresentOrElse(
             infuserCraftingRecipe -> {
                 int count = infuserBlockEntity.getMinimumCountOfInputItemStacks();
-                infuserBlockEntity.reduceItemStackCountOnAllInfusionPedestals(count);
-                infuserBlockEntity.setItemStack(optionalInfuserCraftingRecipe.get().getResultItemWithOldItemStackData(infuserBlockEntity.getItemStackOriginal()));
-                infuserBlockEntity.setItemStackCount(count);
+                ExperienceCost experienceCost = infuserCraftingRecipe.experienceCost.multiplyCost(count);
+                Set<ServerPlayer> serverPlayerSet = infuserBlockEntity.getNearbyPlayersWhoMadeChanges();
+                Set<ServerPlayer> serverPlayersWhoCanPay = serverPlayerSet.stream().filter(experienceCost::canPay).collect(Collectors.toSet());
+                if(serverPlayersWhoCanPay.isEmpty()){
+                    serverPlayerSet.forEach(experienceCost::displayRequirementMessage);
+                } else {
+                    ServerPlayer serverPlayer = serverPlayersWhoCanPay.stream().findFirst().get();
+                    experienceCost.pay(serverPlayer);
+                    infuserBlockEntity.reduceItemStackCountOnAllInfusionPedestals(count);
+                    infuserBlockEntity.setItemStack(infuserCraftingRecipe.getResultItemWithOldItemStackData(infuserBlockEntity.getItemStackOriginal()));
+                    infuserBlockEntity.setItemStackCount(count);
+                }
         }, infuserBlockEntity::tryInfusion);
 
 //        if(infuserBlockEntity.inValidConfiguration()){
@@ -190,19 +203,25 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         return validModifierList;
     }
 
-    private List<Player> getPlayersWhoMadeChanges(){
+    private Set<ServerPlayer> getNearbyPlayersWhoMadeChanges(){
         List<Player> playerList = new ArrayList<>();
         Optional<Player> optionalPlayer = this.getPlayer();
-        if(this.getItemStackOriginal() != this.oldItemStack && optionalPlayer.isPresent()){
+        if(!sameItemStack(this.getItemStackOriginal(), this.oldItemStack) && optionalPlayer.isPresent()){
             playerList.add(optionalPlayer.get());
         }
         playerList.addAll(Arrays.stream(HORIZONTALS)
-                .filter(direction -> this.newPedestalItemStackMap.get(direction) != this.oldPedestalItemStackMap.get(direction))
+                .filter(direction -> !sameItemStack(this.newPedestalItemStackMap.get(direction), this.oldPedestalItemStackMap.get(direction)))
                 .map(this::getPlayerFromInfusionPedestal)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList()));
-        return playerList;
+        return playerList.stream().flatMap(player -> player instanceof ServerPlayer serverPlayer && this.getBlockPos().distToCenterSqr(serverPlayer.position()) < MAX_PLAYER_DISTANCE * MAX_PLAYER_DISTANCE
+                ? Stream.of(serverPlayer)
+                : Stream.of()).collect(Collectors.toSet());
+    }
+
+    private static boolean sameItemStack(ItemStack itemStack1, ItemStack itemStack2){
+        return ItemStack.isSameItemSameTags(itemStack1, itemStack2) && itemStack1.getCount() == itemStack2.getCount();
     }
 
     private void updateNewItemStacks(){
