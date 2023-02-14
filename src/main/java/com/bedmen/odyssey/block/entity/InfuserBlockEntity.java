@@ -135,9 +135,9 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
     }
 
     private static boolean canInfuse(ItemStack infuserItemStack, ItemStack pedestalItemStack){
-        if(pedestalItemStack.getItem() instanceof InnateAspectItem pedestalInnateAspectItem){
+        Item pedestalItem = pedestalItemStack.getItem();
+        if(pedestalItem instanceof InnateAspectItem pedestalInnateAspectItem){
             Item infuserItem = infuserItemStack.getItem();
-            Item pedestalItem = pedestalItemStack.getItem();
             // Make sure all aspect item predicates pass
             List<AspectInstance> pedestalInnateModifierList = pedestalInnateAspectItem.getInnateAspectHolder().innateModifierList;
             if(pedestalInnateModifierList.size() <= 0){
@@ -160,7 +160,7 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
             if(infuserItem instanceof ArmorItem infuserArmorItem){
                 if(pedestalItem instanceof ArmorItem pedestalArmorItem){
                     // Checks if any of the innate modifiers require the slots to be the same
-                    return infuserArmorItem.getSlot() != pedestalArmorItem.getSlot();
+                    return infuserArmorItem.getSlot() == pedestalArmorItem.getSlot();
                 } else {
                     return false;
                 }
@@ -183,10 +183,8 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
             } else if(!(infuserItem instanceof DiggerItem) && AspectItemPredicates.MELEE.test(pedestalItem)){
                 return AspectItemPredicates.MELEE.test(pedestalItem) || pedestalItem instanceof SpearItem;
             }
-            return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     private static List<AspectInstance> getValidInfusionModifiers(ItemStack infuserItemStack, ItemStack pedestalItemStack){

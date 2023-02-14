@@ -70,10 +70,10 @@ public class Aspects {
     public static final BooleanAspect HYDRODYNAMIC = new BooleanAspect("hydrodynamic", AspectItemPredicates.PROJECTILE);
 
     // # Armor
-    public static final DamageSourcePredicateAspect FEATHER_FALLING = new DamageSourcePredicateAspect("feather_falling", AspectItemPredicates.BOOTS, damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);
-    public static final DamageSourcePredicateAspect ICE_PROTECTION = new DamageSourcePredicateAspect("ice_protection", AspectItemPredicates.ARMOR, damageSource -> damageSource == DamageSource.FREEZE);
-    public static final DamageSourcePredicateAspect FIRE_PROTECTION = new DamageSourcePredicateAspect("fire_protection", AspectItemPredicates.ARMOR, DamageSource::isFire);
-    public static final DamageSourcePredicateAspect BLAST_PROTECTION = new DamageSourcePredicateAspect("blast_protection", AspectItemPredicates.ARMOR, DamageSource::isExplosion);
+    public static final DamageSourcePredicateAspect FEATHER_FALLING = new DamageSourcePredicateAspect("feather_falling", 1.0f, AspectItemPredicates.LOWER_ARMOR, damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);
+    public static final DamageSourcePredicateAspect ICE_PROTECTION = new DamageSourcePredicateAspect("ice_protection", 2.0f, AspectItemPredicates.ARMOR, damageSource -> damageSource == DamageSource.FREEZE);
+    public static final DamageSourcePredicateAspect FIRE_PROTECTION = new DamageSourcePredicateAspect("fire_protection", 2.0f, AspectItemPredicates.ARMOR, DamageSource::isFire);
+    public static final DamageSourcePredicateAspect BLAST_PROTECTION = new DamageSourcePredicateAspect("blast_protection", 2.0f, AspectItemPredicates.ARMOR, DamageSource::isExplosion);
     public static final FloatAspect RESPIRATION = new FloatAspect("respiration", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.UPPER_ARMOR);
     public static final BooleanAspect SNOWSHOE = new BooleanAspect("snowshoe", AspectItemPredicates.BOOTS);
     public static final IntegerAspect FREEZE_IMMUNITY = new IntegerAspect("freeze_immunity", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR, false);
