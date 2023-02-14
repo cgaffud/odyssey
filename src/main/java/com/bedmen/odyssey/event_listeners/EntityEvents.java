@@ -115,6 +115,17 @@ public class EntityEvents {
             if(poisonStrength > 0){
                 hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (int)(12 * poisonStrength), 1));
             }
+
+            int hexflameStrength = AspectUtil.getIntegerAspectStrength(mainHandItemStack, Aspects.HEXFLAME_DAMAGE);
+            if(hexflameStrength > 0) {
+                if (hurtLivingEntity.hasEffect(EffectRegistry.HEXFLAME.get())) {
+                    MobEffectInstance mobEffectInstance = hurtLivingEntity.getEffect(EffectRegistry.HEXFLAME.get());
+                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (int)(80 * hexflameStrength);
+                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), hexflameDuration > (160 * hexflameStrength) ? (160 * hexflameStrength) : hexflameDuration, 1));
+                }
+                else
+                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(80 * hexflameStrength), 1));
+            }
             // Cobweb Chance
             float cobwebChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.COBWEB_CHANCE);
             if(!(damageSourceLivingEntity instanceof OdysseyPlayer odysseyPlayer)
