@@ -65,7 +65,11 @@ public class ExperienceCost {
         if(serverPlayer.experienceLevel < this.levelRequirement){
             serverPlayer.sendMessage(new TranslatableComponent("magic.oddc.level_requirement", this.levelRequirement), ChatType.GAME_INFO, Util.NIL_UUID);
         } else {
-            serverPlayer.sendMessage(new TranslatableComponent("magic.oddc.level_cost", this.levelCost), ChatType.GAME_INFO, Util.NIL_UUID);
+            if(this.levelCost == 1.0f){
+                serverPlayer.sendMessage(new TranslatableComponent("magic.oddc.level_cost.singular"), ChatType.GAME_INFO, Util.NIL_UUID);
+            } else {
+                serverPlayer.sendMessage(new TranslatableComponent("magic.oddc.level_cost.plural", StringUtil.floatFormat(this.levelCost)), ChatType.GAME_INFO, Util.NIL_UUID);
+            }
         }
 
     }

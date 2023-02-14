@@ -59,22 +59,12 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
             infuserCraftingRecipe -> {
                 int count = infuserBlockEntity.getMinimumCountOfInputItemStacks();
                 ExperienceCost experienceCost = infuserCraftingRecipe.experienceCost.multiplyCost(count);
-                Set<ServerPlayer> serverPlayerSet = infuserBlockEntity.getNearbyPlayersWhoMadeChanges();
-                Set<ServerPlayer> serverPlayersWhoCanPay = serverPlayerSet.stream().filter(experienceCost::canPay).collect(Collectors.toSet());
-                if(serverPlayersWhoCanPay.isEmpty()){
-                    serverPlayerSet.forEach(experienceCost::displayRequirementMessage);
-                } else {
-                    ServerPlayer serverPlayer = serverPlayersWhoCanPay.stream().findFirst().get();
-                    experienceCost.pay(serverPlayer);
+                if(infuserBlockEntity.tryToPayExperienceCost(experienceCost)){
                     infuserBlockEntity.reduceItemStackCountOnAllInfusionPedestals(count);
                     infuserBlockEntity.setItemStack(infuserCraftingRecipe.getResultItemWithOldItemStackData(infuserBlockEntity.getItemStackOriginal()));
                     infuserBlockEntity.setItemStackCount(count);
                 }
         }, infuserBlockEntity::tryInfusion);
-
-//        if(infuserBlockEntity.inValidConfiguration()){
-//            List<Player> playerList = infuserBlockEntity.getPlayersWhoMadeChanges();
-//        }
 
         infuserBlockEntity.updateOldItemStacks();
     }
@@ -128,15 +118,17 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
                 if(infusionModifierList.size() > 0){
                     List<AspectInstance> adjustedModifierList = infusionModifierList.stream().map(AspectInstance::applyInfusionPenalty).collect(Collectors.toList());
                     float modifiabilityToBeUsed = adjustedModifierList.stream().map(aspectInstance -> aspectInstance.getModifiability(this.getItemStackOriginal())).reduce(0.0f, Float::sum);
+                    ExperienceCost experienceCost = new ExperienceCost(modifiabilityToBeUsed * 2.0f);
                     if(AspectUtil.getModifiabilityRemaining(this.getItemStackOriginal()) >= modifiabilityToBeUsed){
-                        this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY));
-                        adjustedModifierList.forEach(adjustedAspectInstance -> AspectUtil.addModifier(this.getItemStackOriginal(), adjustedAspectInstance));
-                        this.markUpdated();
-                    } else {
-                        Set<ServerPlayer> serverPlayerSet = this.getNearbyPlayersWhoMadeChanges();
-                        for(ServerPlayer serverPlayer: serverPlayerSet){
-                            serverPlayer.sendMessage(new TranslatableComponent("magic.oddc.modifiability", StringUtil.floatFormat(modifiabilityToBeUsed)), ChatType.GAME_INFO, Util.NIL_UUID);
+                        if(this.tryToPayExperienceCost(experienceCost)){
+                            this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY));
+                            adjustedModifierList.forEach(adjustedAspectInstance -> AspectUtil.addModifier(this.getItemStackOriginal(), adjustedAspectInstance));
+                            this.markUpdated();
                         }
+                    } else {
+                        this.getNearbyPlayersWhoMadeChanges().forEach(
+                                serverPlayer -> serverPlayer.sendMessage(new TranslatableComponent("magic.oddc.modifiability", StringUtil.floatFormat(modifiabilityToBeUsed)), ChatType.GAME_INFO, Util.NIL_UUID)
+                        );
                     }
                 }
             }
@@ -229,6 +221,19 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
 
     private static boolean sameItemStack(ItemStack itemStack1, ItemStack itemStack2){
         return ItemStack.isSameItemSameTags(itemStack1, itemStack2) && itemStack1.getCount() == itemStack2.getCount();
+    }
+
+    private boolean tryToPayExperienceCost(ExperienceCost experienceCost){
+        Set<ServerPlayer> serverPlayerSet = this.getNearbyPlayersWhoMadeChanges();
+        Set<ServerPlayer> serverPlayersWhoCanPay = serverPlayerSet.stream().filter(experienceCost::canPay).collect(Collectors.toSet());
+        if(serverPlayersWhoCanPay.isEmpty()){
+            serverPlayerSet.forEach(experienceCost::displayRequirementMessage);
+            return false;
+        } else {
+            ServerPlayer serverPlayer = serverPlayersWhoCanPay.stream().findFirst().get();
+            experienceCost.pay(serverPlayer);
+            return true;
+        }
     }
 
     private void updateNewItemStacks(){
