@@ -18,6 +18,8 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,6 +31,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,6 +41,7 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
     private static final Class<?>[] DIGGER_CLASSES = new Class<?>[]{PickaxeItem.class, AxeItem.class, HoeItem.class, ShovelItem.class};
     private static final int DISTANCE_TO_PEDESTALS = 3;
     private static final double MAX_PLAYER_DISTANCE = 10.0d;
+    private static final int TOTAL_INFUSION_TIME = 60;
 
     protected ItemStack oldItemStack = ItemStack.EMPTY;
     private static final String OLD_ITEM_STACK_TAG = Odyssey.MOD_ID + ":OldItemStack";
@@ -45,6 +49,10 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
     private static final String OLD_PEDESTAL_ITEM_STACKS_TAG = Odyssey.MOD_ID + ":OldPedestalItemStacks";
     protected Map<Direction, ItemStack> newPedestalItemStackMap = new HashMap<>();
     private static final String NEW_PEDESTAL_ITEM_STACKS_TAG = Odyssey.MOD_ID + ":NewPedestalItemStacks";
+    protected int infuserCraftingTicks = 0;
+    private static final String INFUSER_CRAFTING_TICKS_TAG = Odyssey.MOD_ID + ":InfuserCraftingTicks";
+    protected Map<Direction, Integer> infusingTicksMap = new HashMap<>();
+    private static final String INFUSING_TICKS_MAP_TAG = Odyssey.MOD_ID + ":InfusingTicksMap";
 
     public InfuserBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityTypeRegistry.INFUSER.get(), blockPos, blockState);
@@ -55,19 +63,56 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
 
         Optional<InfuserCraftingRecipe> optionalInfuserCraftingRecipe = level.getRecipeManager().getAllRecipesFor(RecipeTypeRegistry.INFUSER_CRAFTING.get())
                 .stream().filter(infuserCraftingRecipe -> infuserCraftingRecipe.matches(infuserBlockEntity.getItemStackOriginal(), infuserBlockEntity.newPedestalItemStackMap.values())).findFirst();
-        optionalInfuserCraftingRecipe.ifPresentOrElse(
-            infuserCraftingRecipe -> {
-                int count = infuserBlockEntity.getMinimumCountOfInputItemStacks();
-                ExperienceCost experienceCost = infuserCraftingRecipe.experienceCost.multiplyCost(count);
-                if(infuserBlockEntity.tryToPayExperienceCost(experienceCost)){
-                    infuserBlockEntity.reduceItemStackCountOnAllInfusionPedestals(count);
-                    infuserBlockEntity.setItemStack(infuserCraftingRecipe.getResultItemWithOldItemStackData(infuserBlockEntity.getItemStackOriginal()));
-                    infuserBlockEntity.setItemStackCount(count);
-                }
-        }, infuserBlockEntity::tryInfusion);
+        optionalInfuserCraftingRecipe.ifPresentOrElse(infuserBlockEntity::tryInfuserCrafting, infuserBlockEntity::tryInfusion);
 
         infuserBlockEntity.updateOldItemStacks();
     }
+
+    private void tryInfuserCrafting(InfuserCraftingRecipe infuserCraftingRecipe){
+        int count = this.getMinimumCountOfInputItemStacks();
+        if(!this.isInfuserCrafting()){
+            ExperienceCost experienceCost = infuserCraftingRecipe.experienceCost.multiplyCost(count);
+            if(this.tryToPayExperienceCost(experienceCost)){
+                this.infuserCraftingTicks++;
+                this.stopAllInfusing();
+            }
+        } else if(this.infuserCraftingTicks < TOTAL_INFUSION_TIME){
+            this.infuserCraftingTicks++;
+        } else {
+            this.reduceItemStackCountOnAllInfusionPedestals(count);
+            this.setItemStack(infuserCraftingRecipe.getResultItemWithOldItemStackData(this.getItemStackOriginal()));
+            this.setItemStackCount(count);
+            this.stopInfuserCrafting();
+        }
+    }
+
+    private boolean isInfuserCrafting(){
+        return this.infuserCraftingTicks > 0;
+    }
+
+    private boolean isInfusing(Direction direction){
+        Integer integer = this.infusingTicksMap.get(direction);
+        return integer != null && integer > 0;
+    }
+
+    private void stopInfuserCrafting(){
+        this.infuserCraftingTicks = 0;
+    }
+
+    private void stopInfusing(Direction direction){
+        this.infusingTicksMap.put(direction, 0);
+    }
+
+    private void stopAllInfusing(){
+        this.infusingTicksMap.keySet().forEach(this::stopInfusing);
+    }
+
+    private void incrementInfusingTick(Direction direction){
+        Integer integer = this.infusingTicksMap.get(direction);
+        int i = integer == null ? 0 : integer;
+        this.infusingTicksMap.put(direction, i+1);
+    }
+
 
     private Optional<InfusionPedestalBlockEntity> getInfusionPedestalBlockEntity(Direction direction){
         BlockPos pedestalBlockPos = this.getBlockPos().relative(direction, DISTANCE_TO_PEDESTALS);
@@ -111,6 +156,7 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
     }
 
     private void tryInfusion(){
+        this.stopInfuserCrafting();
         for(Direction direction: HORIZONTALS){
             ItemStack pedestalItemStack = this.newPedestalItemStackMap.get(direction);
             if(canInfuse(this.getItemStackOriginal(), pedestalItemStack)){
@@ -118,12 +164,19 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
                 if(infusionModifierList.size() > 0){
                     List<AspectInstance> adjustedModifierList = infusionModifierList.stream().map(AspectInstance::applyInfusionPenalty).collect(Collectors.toList());
                     float modifiabilityToBeUsed = adjustedModifierList.stream().map(aspectInstance -> aspectInstance.getModifiability(this.getItemStackOriginal())).reduce(0.0f, Float::sum);
-                    ExperienceCost experienceCost = new ExperienceCost(modifiabilityToBeUsed * 2.0f);
                     if(AspectUtil.getModifiabilityRemaining(this.getItemStackOriginal()) >= modifiabilityToBeUsed){
-                        if(this.tryToPayExperienceCost(experienceCost)){
+                        if(!this.isInfusing(direction)){
+                            ExperienceCost experienceCost = new ExperienceCost(modifiabilityToBeUsed * 2.0f);
+                            if(this.tryToPayExperienceCost(experienceCost)){
+                                this.incrementInfusingTick(direction);
+                            }
+                        } else if(this.isInfusing(direction) && this.infusingTicksMap.get(direction) < TOTAL_INFUSION_TIME){
+                            this.incrementInfusingTick(direction);
+                        } else {
                             this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY));
                             adjustedModifierList.forEach(adjustedAspectInstance -> AspectUtil.addModifier(this.getItemStackOriginal(), adjustedAspectInstance));
                             this.markUpdated();
+                            this.stopInfusing(direction);
                         }
                     } else {
                         this.getNearbyPlayersWhoMadeChanges().forEach(
@@ -257,6 +310,8 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         compoundTag.put(OLD_ITEM_STACK_TAG, this.oldItemStack.save(new CompoundTag()));
         compoundTag.put(OLD_PEDESTAL_ITEM_STACKS_TAG, itemStackMapToTag(this.oldPedestalItemStackMap));
         compoundTag.put(NEW_PEDESTAL_ITEM_STACKS_TAG, itemStackMapToTag(this.newPedestalItemStackMap));
+        compoundTag.putInt(INFUSER_CRAFTING_TICKS_TAG, this.infuserCraftingTicks);
+        compoundTag.put(INFUSING_TICKS_MAP_TAG, ticksMapToTag(this.infusingTicksMap));
     }
 
     public void load(CompoundTag compoundTag) {
@@ -270,17 +325,37 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         if(compoundTag.contains(NEW_PEDESTAL_ITEM_STACKS_TAG)){
             this.newPedestalItemStackMap = itemStackMapFromTag(compoundTag.getCompound(NEW_PEDESTAL_ITEM_STACKS_TAG));
         }
+        this.infuserCraftingTicks = compoundTag.getInt(INFUSER_CRAFTING_TICKS_TAG);
+        if(compoundTag.contains(INFUSING_TICKS_MAP_TAG)){
+            this.infusingTicksMap = ticksMapFromTag(compoundTag.getCompound(INFUSING_TICKS_MAP_TAG));
+        }
     }
 
     protected static CompoundTag itemStackMapToTag(Map<Direction, ItemStack> itemStackMap){
+        return directionMapToTag(itemStackMap, itemStack -> itemStack.save(new CompoundTag()));
+    }
+
+    protected static CompoundTag ticksMapToTag(Map<Direction, Integer> ticksMap){
+        return directionMapToTag(ticksMap, IntTag::valueOf);
+    }
+
+    protected static <T> CompoundTag directionMapToTag(Map<Direction, T> directionMap, Function<T, Tag> toCompoundTagFunction){
         CompoundTag compoundTag = new CompoundTag();
-        itemStackMap.forEach((direction, itemStack) -> compoundTag.put(direction.name(), itemStack.save(new CompoundTag())));
+        directionMap.forEach((direction, object) -> compoundTag.put(direction.name(), toCompoundTagFunction.apply(object)));
         return compoundTag;
     }
 
     protected static Map<Direction, ItemStack> itemStackMapFromTag(CompoundTag compoundTag){
-        Map<Direction, ItemStack> map = new HashMap<>();
-        compoundTag.getAllKeys().forEach(key -> map.put(Direction.valueOf(key), ItemStack.of(compoundTag.getCompound(key))));
+        return directionMapFromTag(compoundTag, tag -> ItemStack.of((CompoundTag) tag));
+    }
+
+    protected static Map<Direction, Integer> ticksMapFromTag(CompoundTag compoundTag){
+        return directionMapFromTag(compoundTag, tag -> ((IntTag)tag).getAsInt());
+    }
+
+    protected static <T> Map<Direction, T> directionMapFromTag(CompoundTag compoundTag, Function<Tag, T> fromCompoundTagFunction){
+        Map<Direction, T> map = new HashMap<>();
+        compoundTag.getAllKeys().forEach(key -> map.put(Direction.valueOf(key), fromCompoundTagFunction.apply(compoundTag.get(key))));
         return map;
     }
 }
