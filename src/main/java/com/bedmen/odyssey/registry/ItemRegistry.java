@@ -153,6 +153,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SUNSTONE = ITEMS.register("sunstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> MOONSTONE = ITEMS.register("moonstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new BurnToSummonItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), EntityTypeRegistry.COVEN_MASTER::get));
+
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
     public static final RegistryObject<Item> MINERAL_FRUIT = ITEMS.register("mineral_fruit", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1)), player -> AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) < 1));
@@ -247,6 +248,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ARID_MACE = ITEMS.register("arid_mace", () -> new ConditionalAmpMeleeItem.GradientItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.MACE, 9f, List.of(), List.of(new AspectInstance(Aspects.SCORCHED_STRENGTH, 1.0f)), BiomeUtil::getAridColor, 0xFF8B33));
     public static final RegistryObject<Item> ICE_DAGGER = ITEMS.register("ice_dagger", () -> new ConditionalAmpMeleeItem.GradientItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.DAGGER, 6f, List.of(), List.of(new AspectInstance(Aspects.WINTERY_STRENGTH, 1.0f)), BiomeUtil::getColdColor, 0x66A6FF));
     public static final RegistryObject<Item> VOID_SWORD = ITEMS.register("void_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.SWORD, 7f, List.of(), List.of(new AspectInstance(Aspects.VOID_STRENGTH, 1.0f)), 9));
+    public static final RegistryObject<Item> HEXFLAME_DAGGER = ITEMS.register("hexflame_dagger", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_2, MeleeWeaponClass.DAGGER, 7f, List.of(), List.of(new AspectInstance(Aspects.HEXFLAME_DAMAGE, 1))));
     public static final RegistryObject<Item> BROKEN_SEA_SWORD = ITEMS.register("broken_sea_sword", () -> new AspectMeleeItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.DAGGER, 7f, List.of(), List.of(new AspectInstance(Aspects.HYDRO_DAMAGE, 3.0f))));
 
     // ## Tier 3
