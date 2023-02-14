@@ -17,13 +17,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Optional;
 import java.util.UUID;
 
-public class InfusionPedestalBlockEntity extends BlockEntity {
-    private ItemStack itemStack = ItemStack.EMPTY;
-    private static final String ITEM_STACK_TAG = Odyssey.MOD_ID + ":ItemStack";
-    public Direction itemRenderDirection = Direction.NORTH;
-    private static final String ITEM_RENDER_DIRECTION_TAG = Odyssey.MOD_ID + ":ItemRenderDirection";
-    public UUID playerUUID = null;
-    private static final String PLAYER_UUID_TAG = Odyssey.MOD_ID + ":PlayerUUID";
+public class InfusionPedestalBlockEntity extends AbstractInfusionPedestalBlockEntity {
+
+    protected int inUseTicks = 0;
+    private static final String IN_USE_TICKS_TAG = Odyssey.MOD_ID + ":InUseTicks";
+    public Optional<Direction> useDirection = Optional.empty();
+    private static final String USE_DIRECTION_TAG = Odyssey.MOD_ID + ":UseDirection";
 
     public InfusionPedestalBlockEntity(BlockPos blockPos, BlockState blockState) {
         this(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), blockPos, blockState);
@@ -35,88 +34,34 @@ public class InfusionPedestalBlockEntity extends BlockEntity {
 
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
-        this.saveUpdateData(compoundTag);
-        if(this.playerUUID != null){
-            compoundTag.putUUID(PLAYER_UUID_TAG, this.playerUUID);
-        }
+        this.useDirection.ifPresent(direction -> compoundTag.putString(USE_DIRECTION_TAG, direction.name()));
     }
 
     protected void saveUpdateData(CompoundTag compoundTag){
-        compoundTag.put(ITEM_STACK_TAG, this.itemStack.save(new CompoundTag()));
-        compoundTag.put(ITEM_RENDER_DIRECTION_TAG, StringTag.valueOf(this.itemRenderDirection.name()));
+        super.saveUpdateData(compoundTag);
+        compoundTag.putInt(IN_USE_TICKS_TAG, this.inUseTicks);
     }
 
     public void load(CompoundTag compoundTag) {
         super.load(compoundTag);
-        if(compoundTag.contains(ITEM_STACK_TAG)){
-            this.itemStack = ItemStack.of(compoundTag.getCompound(ITEM_STACK_TAG));
-        }
-        if(compoundTag.contains(ITEM_RENDER_DIRECTION_TAG)){
-            this.itemRenderDirection = Direction.valueOf(compoundTag.getString(ITEM_RENDER_DIRECTION_TAG));
-        }
-        if(compoundTag.contains(PLAYER_UUID_TAG)){
-            this.playerUUID = compoundTag.getUUID(PLAYER_UUID_TAG);
-        }
-    }
-
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    public CompoundTag getUpdateTag() {
-        CompoundTag compoundtag = new CompoundTag();
-        saveUpdateData(compoundtag);
-        return compoundtag;
-    }
-
-    public void markUpdated() {
-        this.setChanged();
-        Level level = this.getLevel();
-        if(level != null){
-            level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
-        }
-    }
-
-    public void shrinkItemStack(int amount){
-        this.itemStack.shrink(amount);
-        this.markUpdated();
-    }
-
-    public void growItemStack(int amount){
-        this.itemStack.grow(amount);
-        this.markUpdated();
-    }
-
-    public void setItemStackCount(int count){
-        this.itemStack.setCount(count);
-        this.markUpdated();
-    }
-
-    public void setItemStack(ItemStack itemStack){
-        this.itemStack = itemStack.copy();
-        this.markUpdated();
-    }
-
-    // Use when giving away the itemStack to player
-    public ItemStack getItemStackCopy(){
-        return this.itemStack.copy();
-    }
-
-    // Use when a copy is not needed, like for renderering or just to check something about the itemStack
-    public ItemStack getItemStackOriginal(){
-        return this.itemStack;
-    }
-
-    protected Optional<Player> getPlayer(){
-        if(this.level != null && this.playerUUID != null){
-            Player player = this.level.getPlayerByUUID(this.playerUUID);
-            if(player != null){
-                return Optional.of(player);
-            } else {
-                return Optional.empty();
-            }
+        this.inUseTicks = compoundTag.getInt(IN_USE_TICKS_TAG);
+        if(compoundTag.contains(USE_DIRECTION_TAG)){
+            this.useDirection = Optional.of(Direction.valueOf(compoundTag.getString(USE_DIRECTION_TAG)));
         } else {
-            return Optional.empty();
+            this.useDirection = Optional.empty();
         }
+    }
+
+    public void setInUseTicks(int inUseTicks){
+        this.inUseTicks = inUseTicks;
+        this.markUpdated();
+    }
+
+    // Use for InfuserBlockEntity.updateNewItemStacks code, since multiple infusers might try to get the itemStack even when one is already infusing with it
+    public ItemStack getItemStackForInfuserBlockEntity(Direction direction){
+        if(this.useDirection.isPresent() && this.useDirection.get() != direction){
+            return ItemStack.EMPTY;
+        }
+        return this.getItemStackOriginal();
     }
 }

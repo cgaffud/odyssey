@@ -11,6 +11,7 @@ import com.bedmen.odyssey.util.Union;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -43,22 +44,27 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
         return true;
     }
 
-    public boolean matches(ItemStack centerItemStack, Collection<ItemStack> itemStackCollection) {
+    // Returns Optional.empty() if the recipe is not matched
+    // Returns a List of Directions for the pedestals to be used if the recipe does match
+    public Optional<Set<Direction>> matches(ItemStack centerItemStack, Map<Direction, ItemStack> pedestalItemStackMap) {
         // Ensure every ingredient in ingredientList is matched to an itemstack and vice versa
+        Set<Direction> directionSet = new HashSet<>();
         Set<ItemStack> matchedItemStacks = new HashSet<>();
         for(Union<Ingredient, AspectInstance> union: this.pedestalRequirementList){
             if(union.valueIsFirstType()){
                 Ingredient ingredient = union.getFirstTypeValue();
                 boolean ingredientFound = false;
-                for(ItemStack itemStack: itemStackCollection){
+                for(Map.Entry<Direction, ItemStack> entry: pedestalItemStackMap.entrySet()){
+                    ItemStack itemStack = entry.getValue();
                     if(!matchedItemStacks.contains(itemStack) && ingredient.test(itemStack)){
                         ingredientFound = true;
                         matchedItemStacks.add(itemStack);
+                        directionSet.add(entry.getKey());
                         break;
                     }
                 }
                 if(!ingredientFound){
-                    return false;
+                    return Optional.empty();
                 }
             } else {
                 AspectInstance aspectInstance = union.getSecondTypeValue();
@@ -68,20 +74,25 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
                     continue;
                 }
                 boolean matchingItemFound = false;
-                for(ItemStack itemStack: itemStackCollection){
+                for(Map.Entry<Direction, ItemStack> entry: pedestalItemStackMap.entrySet()){
+                    ItemStack itemStack = entry.getValue();
                     if(!matchedItemStacks.contains(itemStack) && itemStack.getItem() instanceof InnateAspectItem innateAspectItem
                             && innateAspectItem.getInnateAspectHolder().allAspectMap.get(aspectInstance.aspect) >= aspectInstance.strength){
                         matchingItemFound = true;
                         matchedItemStacks.add(itemStack);
+                        directionSet.add(entry.getKey());
                         break;
                     }
                 }
                 if(!matchingItemFound){
-                    return false;
+                    return Optional.empty();
                 }
             }
         }
-        return this.centerIngredient.test(centerItemStack);
+        if(!this.centerIngredient.test(centerItemStack)){
+            return Optional.empty();
+        }
+        return Optional.of(directionSet);
     }
 
     // Never used
