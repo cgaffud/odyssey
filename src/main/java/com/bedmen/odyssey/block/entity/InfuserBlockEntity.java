@@ -13,9 +13,13 @@ import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
+import com.bedmen.odyssey.util.StringUtil;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
@@ -128,6 +132,11 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
                         this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY));
                         adjustedModifierList.forEach(adjustedAspectInstance -> AspectUtil.addModifier(this.getItemStackOriginal(), adjustedAspectInstance));
                         this.markUpdated();
+                    } else {
+                        Set<ServerPlayer> serverPlayerSet = this.getNearbyPlayersWhoMadeChanges();
+                        for(ServerPlayer serverPlayer: serverPlayerSet){
+                            serverPlayer.sendMessage(new TranslatableComponent("magic.oddc.modifiability", StringUtil.floatFormat(modifiabilityToBeUsed)), ChatType.GAME_INFO, Util.NIL_UUID);
+                        }
                     }
                 }
             }

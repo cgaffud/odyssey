@@ -537,6 +537,7 @@
   "itemGroup.oddc_wood": "Odyssey Wood and Plants",
   "magic.oddc.level_cost": "Costs %s Levels",
   "magic.oddc.level_requirement": "Requires Level %s",
+  "magic.oddc.modifiability": "Item has less than %s modifiability remaining",
   "modifier.unknown": "Unknown modifier: %s",
   "single_or_tier_random.unknown": "Unknown Choice: %s",
   "stat.oddc.interact_with_alloy_furnace": "Interactions with Alloy Furnace",
