@@ -64,6 +64,7 @@ public class Aspects {
     public static final FloatAspect PIERCING = new FloatAspect("piercing", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE);
     public static final IntegerAspect PROJECTILE_LOOTING_LUCK = new IntegerAspect("projectile_looting_luck", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE);
     public static final IntegerAspect PROJECTILE_POISON_DAMAGE = new IntegerAspect("projectile_poison_damage", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE);
+    public static final FloatAspect PROJECTILE_HEXED_EARTH = new FloatAspect("projectile_hexed_earth", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
     public static final FloatAspect PROJECTILE_COBWEB_CHANCE = new FloatAspect("projectile_cobweb_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
     public static final FloatAspect PROJECTILE_LARCENY_CHANCE = new FloatAspect("projectile_larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
     public static final FloatAspect PROJECTILE_KNOCKBACK = new FloatAspect("projectile_knockback", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.PROJECTILE);

@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -45,7 +46,7 @@ public class CovenRootsBlock extends Block implements SimpleWaterloggedBlock {
 
 
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if ((pos.distToCenterSqr(entity.position()) <= 0.5f) && (entity instanceof Player)) {
+        if ((pos.distToCenterSqr(entity.position()) <= 0.5f) && (entity instanceof LivingEntity)) {
 
             if (entity.position().y > pos.getY())
                 entity.makeStuckInBlock(state, new Vec3(2E-4D, 1.0, 2E-4D));

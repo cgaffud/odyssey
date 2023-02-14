@@ -145,6 +145,23 @@ public class OverworldWitch extends CovenWitch {
         setRootGoal();
     }
 
+    public static void summonDripstoneAboveEntity(Vec3 position, Level level, float fallDamagePerDistance, int fallDamageMax, int dropHeight) {
+        BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos(position.x, position.y, position.z);
+        double initialY = position.y;
+        BlockState blockstate;
+
+        do {
+            mutableBlockPos.move(Direction.UP);
+            blockstate = level.getBlockState(mutableBlockPos);
+        } while (blockstate.isAir() && (mutableBlockPos.getY() < initialY+dropHeight));
+
+        if (mutableBlockPos.getY() != initialY) {
+            FallingBlockEntity dripstone = new FallingBlockEntity(level, position.x, mutableBlockPos.getY(), position.z, Blocks.POINTED_DRIPSTONE.defaultBlockState().setValue(PointedDripstoneBlock.TIP_DIRECTION, Direction.DOWN));
+            dripstone.setHurtsEntities(fallDamagePerDistance, fallDamageMax);
+            level.addFreshEntity(dripstone);
+        }
+    }
+
     private class OverworldWitchRootGoal extends Goal {
         private final OverworldWitch overworldWitch;
 
@@ -373,21 +390,7 @@ public class OverworldWitch extends CovenWitch {
         }
 
         private void createSpellEntity(Vec3 playerPosition) {
-            BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos(playerPosition.x, playerPosition.y, playerPosition.z);
-            double initialY = playerPosition.y;
-            BlockState blockstate;
-
-            do {
-                mutableBlockPos.move(Direction.UP);
-                blockstate = overworldWitch.level.getBlockState(mutableBlockPos);
-            } while (blockstate.isAir() && (mutableBlockPos.getY() < initialY+10));
-
-            if (mutableBlockPos.getY() != initialY) {
-                FallingBlockEntity dripstone = new FallingBlockEntity(overworldWitch.level, playerPosition.x, mutableBlockPos.getY(), playerPosition.z, Blocks.POINTED_DRIPSTONE.defaultBlockState().setValue(PointedDripstoneBlock.TIP_DIRECTION, Direction.DOWN));
-                System.out.println(dripstone.position());
-                dripstone.setHurtsEntities(6, 40);
-                overworldWitch.level.addFreshEntity(dripstone);
-            }
+            OverworldWitch.summonDripstoneAboveEntity(playerPosition, overworldWitch.level, 6, 40, 10);
         }
 
         protected SoundEvent getSpellPrepareSound() {

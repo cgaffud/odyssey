@@ -299,6 +299,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> WEAVER_FANG_ARROW = ITEMS.register("weaver_fang_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.WEAVER_FANG));
     public static final RegistryObject<Item> CLOVER_STONE_ARROW = ITEMS.register("clover_stone_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.CLOVER_STONE));
     public static final RegistryObject<Item> AMETHYST_ARROW = ITEMS.register("amethyst_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.AMETHYST));
+    public static final RegistryObject<Item> HEXED_EARTH_ARROW = ITEMS.register("hexed_earth_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.HEXED_EARTH));
 
     // # Armors
 
