@@ -58,6 +58,6 @@ public class InfuserBlock extends InfusionPedestalBlock {
 
     @Nullable
     protected static <T extends BlockEntity> BlockEntityTicker<T> createInfuserTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<? extends InfuserBlockEntity> blockEntityType2) {
-        return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntityType2, InfuserBlockEntity::serverTick);
+        return level.isClientSide ? createTickerHelper(blockEntityType, blockEntityType2, InfuserBlockEntity::clientTick) : createTickerHelper(blockEntityType, blockEntityType2, InfuserBlockEntity::serverTick);
     }
 }

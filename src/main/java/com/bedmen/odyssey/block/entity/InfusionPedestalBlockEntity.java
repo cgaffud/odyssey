@@ -65,7 +65,7 @@ public class InfusionPedestalBlockEntity extends AbstractInfusionPedestalBlockEn
         return this.getItemStackOriginal();
     }
 
-    public float getItemRenderScale(){
-        return 1.0f - ((float)this.inUseTicks / (float)InfuserBlockEntity.TOTAL_INFUSION_TIME);
+    public float getCompletionInSeconds(){
+        return ((float)this.inUseTicks / 20.0f);
     }
 }
