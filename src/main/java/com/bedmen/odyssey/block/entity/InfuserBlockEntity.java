@@ -14,10 +14,20 @@ import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.bedmen.odyssey.util.StringUtil;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -457,11 +467,14 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         private Vec3 positionO;
         private Vec3 position;
         public boolean isVisible = false;
+        public boolean isEnchantmentTableText = false;
 
         private Vec3 initialYBasisVector;
         private Vec3 initialXBasisVector;
         private Vec3 finalYBasisVector;
         private Vec3 finalXBasisVector;
+
+        public int enchantmentTextIndex;
 
         private PathParticle(Vec3 playerCenter, BlockPos blockPos, Direction direction, float delay, Random random){
             this.delay = delay;
@@ -480,6 +493,11 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             this.positionO = positionO;
             this.position = position;
             this.setPathParameters();
+
+            Level level = Minecraft.getInstance().level;
+            if(level != null){
+                this.enchantmentTextIndex = level.random.nextInt(67);
+            }
         }
 
         private boolean updatePosition(float completion){
@@ -487,11 +505,8 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             this.positionO = this.position;
             this.position = this.getPositionFromCompletionInSeconds(completionInSeconds);
             boolean oldVisible = this.isVisible;
-            if(completionInSeconds >= this.delay && completionInSeconds <= this.delay + 2.0f){
-                this.isVisible = true;
-            } else {
-                this.isVisible = false;
-            }
+            this.isVisible = completionInSeconds >= this.delay && completionInSeconds <= this.delay + 2.0f;
+            this.isEnchantmentTableText = completionInSeconds >= this.delay + 1.0f;
             return !oldVisible && this.isVisible;
         }
 

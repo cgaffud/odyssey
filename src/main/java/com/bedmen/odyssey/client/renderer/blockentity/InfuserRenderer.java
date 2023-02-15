@@ -18,7 +18,9 @@ import net.minecraft.world.phys.Vec3;
 public class InfuserRenderer extends AbstractInfusionPedestalRenderer<InfuserBlockEntity> {
 
     private static final ResourceLocation EXPERIENCE_ORB_LOCATION = new ResourceLocation("textures/entity/experience_orb.png");
-    private static final RenderType RENDER_TYPE = RenderType.itemEntityTranslucentCull(EXPERIENCE_ORB_LOCATION);
+    public static final ResourceLocation ENCHANTMENT_TEXT_LOCATION = new ResourceLocation("textures/font/asciillager.png");
+    private static final RenderType EXPERIENCE_ORB_RENDER_TYPE = RenderType.itemEntityTranslucentCull(EXPERIENCE_ORB_LOCATION);
+    private static final RenderType ENCHANTMENT_TEXT_RENDER_TYPE = RenderType.itemEntityTranslucentCull(ENCHANTMENT_TEXT_LOCATION);
 
     public InfuserRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
@@ -26,7 +28,12 @@ public class InfuserRenderer extends AbstractInfusionPedestalRenderer<InfuserBlo
 
     public void render(InfuserBlockEntity blockEntity, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, int packedOverlay) {
         super.render(blockEntity, partialTicks, poseStack, multiBufferSource, packedLight, packedOverlay);
-        blockEntity.pathParticleList.forEach(pathParticle -> renderPathParticle(blockEntity, pathParticle, partialTicks, poseStack, multiBufferSource, packedLight));
+        blockEntity.pathParticleList.forEach(pathParticle -> {
+            renderPathParticle(blockEntity, pathParticle, partialTicks, poseStack, multiBufferSource, packedLight, false);
+            if(pathParticle.isEnchantmentTableText){
+                renderPathParticle(blockEntity, pathParticle, partialTicks, poseStack, multiBufferSource, packedLight, true);
+            }
+        });
     }
 
     protected float getItemScale(InfuserBlockEntity blockEntity) {
@@ -37,41 +44,46 @@ public class InfuserRenderer extends AbstractInfusionPedestalRenderer<InfuserBlo
         vertexConsumer.vertex(matrix4f, x, y, 0.0F).color(red, 255, blue, 128).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
-    private void renderPathParticle(InfuserBlockEntity infuserBlockEntity, InfuserBlockEntity.PathParticle pathParticle, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight){
+    private void renderPathParticle(InfuserBlockEntity infuserBlockEntity, InfuserBlockEntity.PathParticle pathParticle, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, boolean enchantmentTableText){
         if(pathParticle.isVisible){
-
-//            ParticleEngine particleEngine = Minecraft.getInstance().particleEngine;
-//            BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-//            particlerendertype.begin(bufferbuilder, particleEngine.textureManager);
-//
-//            EnchantmentTableParticle.render
-
             poseStack.pushPose();
-            int xpOrbTypeIndex = 0;
-            float f = (float)(xpOrbTypeIndex % 4 * 16) / 64.0F;
-            float f1 = (float)(xpOrbTypeIndex % 4 * 16 + 16) / 64.0F;
-            float f2 = (float)(xpOrbTypeIndex / 4 * 16) / 64.0F;
-            float f3 = (float)(xpOrbTypeIndex / 4 * 16 + 16) / 64.0F;
+            float f;
+            float f1;
+            float f2;
+            float f3;
+            VertexConsumer vertexConsumer;
+            if(enchantmentTableText){
+                f = (float)(pathParticle.enchantmentTextIndex % 16 * 8) / 128.0F;
+                f1 = (float)(pathParticle.enchantmentTextIndex % 16 * 8 + 8) / 128.0F;
+                f2 = (float)(pathParticle.enchantmentTextIndex / 16 * 8) / 40.0F;
+                f3 = (float)(pathParticle.enchantmentTextIndex / 16 * 8 + 8) / 40.0F;
+                vertexConsumer = multiBufferSource.getBuffer(ENCHANTMENT_TEXT_RENDER_TYPE);
+            } else {
+                int xpOrbTypeIndex = 0;
+                f = (float)(xpOrbTypeIndex % 4 * 16) / 64.0F;
+                f1 = (float)(xpOrbTypeIndex % 4 * 16 + 16) / 64.0F;
+                f2 = (float)(xpOrbTypeIndex / 4 * 16) / 64.0F;
+                f3 = (float)(xpOrbTypeIndex / 4 * 16 + 16) / 64.0F;
+                vertexConsumer = multiBufferSource.getBuffer(EXPERIENCE_ORB_RENDER_TYPE);
+            }
 
             float f8 = (infuserBlockEntity.infuserCraftingTicks + partialTicks) / 2.0F;
             int j = (int)((Mth.sin(f8 + 0.0F) + 1.0F) * 0.5F * 255.0F);
             int l = (int)((Mth.sin(f8 + 4.1887903F) + 1.0F) * 0.1F * 255.0F);
             Vec3 position = pathParticle.getPosition(partialTicks);
-            poseStack.translate(position.x, position.y, position.z);
+            poseStack.translate(position.x, position.y + (enchantmentTableText ? 0.15d : 0.0d), position.z);
             poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
             poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
-            poseStack.scale(0.3F, 0.3F, 0.3F);
-            VertexConsumer vertexconsumer = multiBufferSource.getBuffer(RENDER_TYPE);
+            float scale = enchantmentTableText ? 0.2F : 0.3F;
+            poseStack.scale(scale, scale, scale);
             PoseStack.Pose posestack$pose = poseStack.last();
             Matrix4f matrix4f = posestack$pose.pose();
             Matrix3f matrix3f = posestack$pose.normal();
-            vertex(vertexconsumer, matrix4f, matrix3f, -0.5F, -0.25F, j, l, f, f3, packedLight);
-            vertex(vertexconsumer, matrix4f, matrix3f, 0.5F, -0.25F, j, l, f1, f3, packedLight);
-            vertex(vertexconsumer, matrix4f, matrix3f, 0.5F, 0.75F, j, l, f1, f2, packedLight);
-            vertex(vertexconsumer, matrix4f, matrix3f, -0.5F, 0.75F, j, l, f, f2, packedLight);
+            vertex(vertexConsumer, matrix4f, matrix3f, -0.5F, -0.25F, j, l, f, f3, packedLight);
+            vertex(vertexConsumer, matrix4f, matrix3f, 0.5F, -0.25F, j, l, f1, f3, packedLight);
+            vertex(vertexConsumer, matrix4f, matrix3f, 0.5F, 0.75F, j, l, f1, f2, packedLight);
+            vertex(vertexConsumer, matrix4f, matrix3f, -0.5F, 0.75F, j, l, f, f2, packedLight);
             poseStack.popPose();
         }
     }
-
-
 }

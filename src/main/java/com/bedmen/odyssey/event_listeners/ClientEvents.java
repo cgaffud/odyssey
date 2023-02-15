@@ -191,6 +191,7 @@ public class ClientEvents {
         }
         // Modded fire variants
         event.addSprite(RenderUtil.HEX_FIRE.texture());
+        event.addSprite(InfuserRenderer.ENCHANTMENT_TEXT_LOCATION);
 //        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
 //        event.addSprite(PermafrostRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
 //        event.addSprite(PermafrostRenderer.WIND_RESOURCE_LOCATION);
