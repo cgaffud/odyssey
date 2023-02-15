@@ -40,6 +40,10 @@ public class InfuserRenderer extends AbstractInfusionPedestalRenderer<InfuserBlo
         return 1.0f;
     }
 
+    protected int getCountToShrink(InfuserBlockEntity blockEntity) {
+        return 0;
+    }
+
     private static void vertex(VertexConsumer vertexConsumer, Matrix4f matrix4f, Matrix3f matrix3f, float x, float y, int red, int blue, float u, float v, int packedLight) {
         vertexConsumer.vertex(matrix4f, x, y, 0.0F).color(red, 255, blue, 128).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
     }

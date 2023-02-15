@@ -28,4 +28,8 @@ public class InfusionPedestalRenderer extends AbstractInfusionPedestalRenderer<I
         }
     }
 
+    protected int getCountToShrink(InfusionPedestalBlockEntity blockEntity) {
+        return blockEntity.stackCountInUse;
+    }
+
 }

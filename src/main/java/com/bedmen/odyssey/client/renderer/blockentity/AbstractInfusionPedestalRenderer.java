@@ -28,13 +28,16 @@ public abstract class AbstractInfusionPedestalRenderer<T extends AbstractInfusio
             Random psuedoRandom = new Random(positionNumber);
             float itemScale = this.getItemScale(blockEntity);
             for(int i = 0; i < itemStack.getCount(); i++){
+                float activeItemScale =  i >= itemStack.getCount() - this.getCountToShrink(blockEntity) ? itemScale : 1.0f;
                 Vec3 offset = i == 0 ? Vec3.ZERO : new Vec3(0.5d * psuedoRandom.nextDouble() - 0.25d, (double)i / 256.0d, 0.5d * psuedoRandom.nextDouble() - 0.25d);
-                this.renderItemWithOffset(itemStack, direction, offset, itemScale, poseStack, multiBufferSource, packedLight, packedOverlay, positionNumber);
+                this.renderItemWithOffset(itemStack, direction, offset, activeItemScale, poseStack, multiBufferSource, packedLight, packedOverlay, positionNumber);
             }
         }
     }
 
     protected abstract float getItemScale(T blockEntity);
+
+    protected abstract int getCountToShrink(T blockEntity);
 
     protected void renderItemWithOffset(ItemStack itemStack, Direction direction, Vec3 offset, float itemScale, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, int packedOverlay, int positionNumber){
         poseStack.pushPose();

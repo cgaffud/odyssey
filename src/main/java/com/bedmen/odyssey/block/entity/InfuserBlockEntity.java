@@ -89,7 +89,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
     }
 
     private void tryInfuserCrafting(InfuserCraftingRecipe infuserCraftingRecipe, Set<Direction> pedestalsToUseSet){
-        int count = this.getMinimumCountOfInputItemStacks();
+        int count = this.getMinimumCountOfInputItemStacks(pedestalsToUseSet);
         if(!this.isInfuserCrafting()){
             ExperienceCost experienceCost = infuserCraftingRecipe.experienceCost.multiplyCost(count);
             Optional<ServerPlayer> payer = this.tryToPayExperienceCost(experienceCost);
@@ -99,7 +99,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
                 this.pedestalsInUseSet = pedestalsToUseSet;
                 this.forEveryPedestalInUse((direction, infusionPedestalBlockEntity) -> {
                     infusionPedestalBlockEntity.useDirection = Optional.of(direction);
-                    infusionPedestalBlockEntity.setInUseTicks(this.infuserCraftingTicks);
+                    infusionPedestalBlockEntity.setUsageValues(this.infuserCraftingTicks, count);
                 });
                 this.pedestalsInUseSet.forEach(direction -> {
                     for(float delay = 0.0f; delay <= 1.0f; delay += 0.1f){
@@ -110,7 +110,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             });
         } else if(this.infuserCraftingTicks < TOTAL_INFUSION_TIME){
             this.infuserCraftingTicks++;
-            this.forEveryPedestalInUse((direction, infusionPedestalBlockEntity) -> infusionPedestalBlockEntity.setInUseTicks(this.infuserCraftingTicks));
+            this.forEveryPedestalInUse((direction, infusionPedestalBlockEntity) -> infusionPedestalBlockEntity.setUsageValues(this.infuserCraftingTicks, count));
         } else {
             this.reduceItemStackCountOnInUsePedestals(count);
             this.setItemStack(infuserCraftingRecipe.getResultItemWithOldItemStackData(this.getItemStackOriginal()));
@@ -146,9 +146,9 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         }
     }
     
-    private int getMinimumCountOfInputItemStacks(){
+    private int getMinimumCountOfInputItemStacks(Set<Direction> pedestalsToUseSet){
         int minimumCount = this.getItemStackOriginal().getCount();
-        for(Direction direction: HORIZONTALS){
+        for(Direction direction: pedestalsToUseSet){
             ItemStack pedestalItemStack = this.newPedestalItemStackMap.get(direction);
             if(!pedestalItemStack.isEmpty()){
                 int pedestalItemStackCount = pedestalItemStack.getCount();
@@ -165,6 +165,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             this.stopInfuserCrafting();
         }
         for(Direction direction: HORIZONTALS){
+            int count = this.getMinimumCountOfInputItemStacks(Set.of(direction));
             ItemStack pedestalItemStack = this.newPedestalItemStackMap.get(direction);
             if(canInfuse(this.getItemStackOriginal(), pedestalItemStack)){
                 List<AspectInstance> infusionModifierList = getValidInfusionModifiers(this.getItemStackOriginal(), pedestalItemStack);
@@ -180,13 +181,13 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
                                 this.pedestalsInUseSet.add(direction);
                                 this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> {
                                     infusionPedestalBlockEntity.useDirection = Optional.of(direction);
-                                    infusionPedestalBlockEntity.setInUseTicks(this.infusingTicksMap.get(direction));
+                                    infusionPedestalBlockEntity.setUsageValues(this.infusingTicksMap.get(direction), count);
                                 });
                                 return; // Avoids stopInfusing call below
                             }
                         } else if(this.isInfusing(direction) && this.infusingTicksMap.get(direction) < TOTAL_INFUSION_TIME){
                             this.incrementInfusingTick(direction);
-                            this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setInUseTicks(this.infusingTicksMap.get(direction)));
+                            this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setUsageValues(this.infusingTicksMap.get(direction), count));
                             return; // Avoids stopInfusing call below
                         } else {
                             this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY));
@@ -365,7 +366,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
 
     private void stopUsingInfusionPedestal(Direction direction){
         this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> {
-            infusionPedestalBlockEntity.setInUseTicks(0);
+            infusionPedestalBlockEntity.setUsageValues(0, 0);
             infusionPedestalBlockEntity.useDirection = Optional.empty();
         });
     }

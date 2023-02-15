@@ -23,6 +23,8 @@ public class InfusionPedestalBlockEntity extends AbstractInfusionPedestalBlockEn
     private static final String IN_USE_TICKS_TAG = Odyssey.MOD_ID + ":InUseTicks";
     public Optional<Direction> useDirection = Optional.empty();
     private static final String USE_DIRECTION_TAG = Odyssey.MOD_ID + ":UseDirection";
+    public int stackCountInUse = 0;
+    private static final String STACK_COUNT_IN_USE = Odyssey.MOD_ID + ":StackCountInUse";
 
     public InfusionPedestalBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), blockPos, blockState);
@@ -36,6 +38,7 @@ public class InfusionPedestalBlockEntity extends AbstractInfusionPedestalBlockEn
     protected void saveUpdateData(CompoundTag compoundTag){
         super.saveUpdateData(compoundTag);
         compoundTag.putInt(IN_USE_TICKS_TAG, this.inUseTicks);
+        compoundTag.putInt(STACK_COUNT_IN_USE, this.stackCountInUse);
     }
 
     public void load(CompoundTag compoundTag) {
@@ -46,10 +49,12 @@ public class InfusionPedestalBlockEntity extends AbstractInfusionPedestalBlockEn
         } else {
             this.useDirection = Optional.empty();
         }
+        this.stackCountInUse = compoundTag.getInt(STACK_COUNT_IN_USE);
     }
 
-    public void setInUseTicks(int inUseTicks){
+    public void setUsageValues(int inUseTicks, int stackCountInUse){
         this.inUseTicks = inUseTicks;
+        this.stackCountInUse = stackCountInUse;
         this.markUpdated();
     }
 
