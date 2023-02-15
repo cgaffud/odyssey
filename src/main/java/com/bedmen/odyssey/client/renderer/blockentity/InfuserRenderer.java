@@ -15,6 +15,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Optional;
+
 public class InfuserRenderer extends AbstractInfusionPedestalRenderer<InfuserBlockEntity> {
 
     private static final ResourceLocation EXPERIENCE_ORB_LOCATION = new ResourceLocation("textures/entity/experience_orb.png");
@@ -74,19 +76,21 @@ public class InfuserRenderer extends AbstractInfusionPedestalRenderer<InfuserBlo
             float f8 = (infuserBlockEntity.infuserCraftingTicks + partialTicks) / 2.0F;
             int j = (int)((Mth.sin(f8 + 0.0F) + 1.0F) * 0.5F * 255.0F);
             int l = (int)((Mth.sin(f8 + 4.1887903F) + 1.0F) * 0.1F * 255.0F);
-            Vec3 position = pathParticle.getPosition(partialTicks);
-            poseStack.translate(position.x, position.y + (enchantmentTableText ? 0.15d : 0.0d), position.z);
-            poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
-            float scale = enchantmentTableText ? 0.2F : 0.3F;
-            poseStack.scale(scale, scale, scale);
-            PoseStack.Pose posestack$pose = poseStack.last();
-            Matrix4f matrix4f = posestack$pose.pose();
-            Matrix3f matrix3f = posestack$pose.normal();
-            vertex(vertexConsumer, matrix4f, matrix3f, -0.5F, -0.25F, j, l, f, f3, packedLight);
-            vertex(vertexConsumer, matrix4f, matrix3f, 0.5F, -0.25F, j, l, f1, f3, packedLight);
-            vertex(vertexConsumer, matrix4f, matrix3f, 0.5F, 0.75F, j, l, f1, f2, packedLight);
-            vertex(vertexConsumer, matrix4f, matrix3f, -0.5F, 0.75F, j, l, f, f2, packedLight);
+            Optional<Vec3> optionalPosition = pathParticle.getPosition(partialTicks);
+            optionalPosition.ifPresent(position -> {
+                poseStack.translate(position.x, position.y + (enchantmentTableText ? 0.15d : 0.0d), position.z);
+                poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
+                poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
+                float scale = enchantmentTableText ? 0.2F : 0.3F;
+                poseStack.scale(scale, scale, scale);
+                PoseStack.Pose posestack$pose = poseStack.last();
+                Matrix4f matrix4f = posestack$pose.pose();
+                Matrix3f matrix3f = posestack$pose.normal();
+                vertex(vertexConsumer, matrix4f, matrix3f, -0.5F, -0.25F, j, l, f, f3, packedLight);
+                vertex(vertexConsumer, matrix4f, matrix3f, 0.5F, -0.25F, j, l, f1, f3, packedLight);
+                vertex(vertexConsumer, matrix4f, matrix3f, 0.5F, 0.75F, j, l, f1, f2, packedLight);
+                vertex(vertexConsumer, matrix4f, matrix3f, -0.5F, 0.75F, j, l, f, f2, packedLight);
+            });
             poseStack.popPose();
         }
     }

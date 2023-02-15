@@ -16,7 +16,6 @@ import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.bedmen.odyssey.util.StringUtil;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
@@ -432,7 +431,30 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             this.pedestalsInUseSet = compoundTag.getList(PEDESTALS_IN_USE_SET_TAG, Tag.TAG_STRING).stream().map(tag -> Direction.valueOf(tag.getAsString())).collect(Collectors.toSet());
         }
         if(compoundTag.contains(PATH_PARTICLE_LIST_TAG)){
-            this.pathParticleList = compoundTag.getList(PATH_PARTICLE_LIST_TAG, Tag.TAG_COMPOUND).stream().map(tag -> PathParticle.fromCompoundTag((CompoundTag)tag)).collect(Collectors.toList());
+            List<PathParticle> loadedPathParticleList = compoundTag.getList(PATH_PARTICLE_LIST_TAG, Tag.TAG_COMPOUND).stream().map(tag -> PathParticle.fromCompoundTag((CompoundTag)tag)).collect(Collectors.toList());
+            List<PathParticle> newPathParticleList = new ArrayList<>(this.pathParticleList);
+            Set<PathParticle> matchedLoadedPathParticleSet = new HashSet<>();
+            // Check to see if particles are already loaded on client
+            for(PathParticle pathParticle: this.pathParticleList){
+                boolean foundExistingParticle = false;
+                for(PathParticle loadedPathParticle: loadedPathParticleList){
+                    if(pathParticle.randomSeed == loadedPathParticle.randomSeed){
+                        foundExistingParticle = true;
+                        matchedLoadedPathParticleSet.add(loadedPathParticle);
+                        break;
+                    }
+                }
+                if(!foundExistingParticle){
+                    newPathParticleList.remove(pathParticle);
+                }
+            }
+            // Check to see if a loaded particle does not exist on client
+            for(PathParticle loadedPathParticle: loadedPathParticleList){
+                if(!matchedLoadedPathParticleSet.contains(loadedPathParticle)){
+                    newPathParticleList.add(loadedPathParticle);
+                }
+            }
+            this.pathParticleList = newPathParticleList;
         }
     }
 
@@ -475,8 +497,11 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         // All positions are relative to the Infuser's blockPos
         private final float delay;
         private Direction direction;
-        private final Vec3 initialPosition;
-        private final Vec3 halfWayPosition;
+        private int randomSeed;
+        private Random random;
+        private final Vec3 playerPosition;
+        private Vec3 initialPosition;
+        private Vec3 halfWayPosition;
         private static final Vec3 FINAL_POSITION = new Vec3(0.5d, 15.0d/16.0d, 0.5d);
         private Vec3 positionO;
         private Vec3 position;
@@ -493,27 +518,33 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         private PathParticle(Vec3 playerCenter, BlockPos blockPos, Direction direction, float delay, Random random){
             this.delay = delay;
             this.direction = direction;
-            Vec3 randomOffset = new Vec3(random.nextDouble(), random.nextDouble(), random.nextDouble()).subtract(0.5d, 0.5d, 0.5d).scale(0.4d);
-            this.initialPosition = playerCenter.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ()).add(randomOffset);
-            this.halfWayPosition = FINAL_POSITION.add(direction.getStepX() * DISTANCE_TO_PEDESTALS, 0, direction.getStepZ() * DISTANCE_TO_PEDESTALS).add(randomOffset.scale(0.5d));
+            this.randomSeed = random.nextInt();
+            this.playerPosition = playerCenter.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+            this.createCalculatedPositions();
             this.positionO = this.initialPosition;
             this.position = this.initialPosition;
             this.setPathParameters();
         }
 
-        private PathParticle(float delay, Direction direction, Vec3 initialPosition, Vec3 halfWayPosition, Vec3 positionO, Vec3 position){
+        private PathParticle(float delay, Direction direction, int randomSeed, Vec3 playerPosition){
             this.delay = delay;
             this.direction = direction;
-            this.initialPosition = initialPosition;
-            this.halfWayPosition = halfWayPosition;
-            this.positionO = positionO;
-            this.position = position;
+            this.randomSeed = randomSeed;
+            this.playerPosition = playerPosition;
+            this.createCalculatedPositions();
             this.setPathParameters();
+            this.enchantmentTextIndex = this.random.nextInt(67);
+        }
 
-            Level level = Minecraft.getInstance().level;
-            if(level != null){
-                this.enchantmentTextIndex = level.random.nextInt(67);
-            }
+        private Vec3 getRandomOffset(){
+            return new Vec3(this.random.nextDouble(), this.random.nextDouble(), this.random.nextDouble()).subtract(0.5d, 0.5d, 0.5d).scale(0.4d);
+        }
+
+        private void createCalculatedPositions(){
+            this.random = new Random(this.randomSeed);
+            Vec3 randomOffset = this.getRandomOffset();
+            this.initialPosition = this.playerPosition.add(randomOffset);
+            this.halfWayPosition = FINAL_POSITION.add(direction.getStepX() * DISTANCE_TO_PEDESTALS, 0, direction.getStepZ() * DISTANCE_TO_PEDESTALS).add(randomOffset.scale(0.5d));
         }
 
         private boolean updatePosition(float completion){
@@ -540,8 +571,11 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             }
         }
 
-        public Vec3 getPosition(float partialTicks){
-            return this.positionO.lerp(this.position, partialTicks);
+        public Optional<Vec3> getPosition(float partialTicks){
+            if(this.position != null && this.positionO != null){
+                return Optional.of(this.positionO.lerp(this.position, partialTicks));
+            }
+            return Optional.empty();
         }
 
         private void setPathParameters(){
@@ -568,21 +602,17 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             CompoundTag compoundTag = new CompoundTag();
             compoundTag.putFloat("delay", this.delay);
             compoundTag.putInt("direction", this.direction.ordinal());
-            compoundTag.put("initialPosition", vec3ToListTag(this.initialPosition));
-            compoundTag.put("halfWayPosition", vec3ToListTag(this.halfWayPosition));
-            compoundTag.put("positionO", vec3ToListTag(this.positionO));
-            compoundTag.put("position", vec3ToListTag(this.position));
+            compoundTag.putInt("randomSeed", this.randomSeed);
+            compoundTag.put("playerPosition", vec3ToListTag(this.playerPosition));
             return compoundTag;
         }
 
         private static PathParticle fromCompoundTag(CompoundTag compoundTag){
             float delay = compoundTag.getFloat("delay");
             Direction direction = Direction.values()[compoundTag.getInt("direction")];
-            Vec3 initialPosition = listTagToVec3(compoundTag.getList("initialPosition", Tag.TAG_DOUBLE));
-            Vec3 halfWayPosition = listTagToVec3(compoundTag.getList("halfWayPosition", Tag.TAG_DOUBLE));
-            Vec3 positionO = listTagToVec3(compoundTag.getList("positionO", Tag.TAG_DOUBLE));
-            Vec3 position = listTagToVec3(compoundTag.getList("position", Tag.TAG_DOUBLE));
-            return new PathParticle(delay, direction, initialPosition, halfWayPosition, positionO, position);
+            int randomSeed = compoundTag.getInt("randomSeed");
+            Vec3 playerPosition = listTagToVec3(compoundTag.getList("playerPosition", Tag.TAG_DOUBLE));
+            return new PathParticle(delay, direction, randomSeed, playerPosition);
         }
 
         private static ListTag vec3ToListTag(Vec3 vec3) {

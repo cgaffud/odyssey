@@ -51,9 +51,9 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
     public void onRemove(BlockState state, Level level, BlockPos blockPos, BlockState blockState, boolean b) {
         if (!state.is(blockState.getBlock())) {
             BlockEntity blockentity = level.getBlockEntity(blockPos);
-            if (blockentity instanceof InfusionPedestalBlockEntity infusionPedestalBlockEntity) {
+            if (blockentity instanceof AbstractInfusionPedestalBlockEntity blockEntity) {
                 if (level instanceof ServerLevel) {
-                    Containers.dropItemStack(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), infusionPedestalBlockEntity.getItemStackCopy());
+                    Containers.dropItemStack(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), blockEntity.getItemStackCopy());
                 }
                 level.updateNeighbourForOutputSignal(blockPos, this);
             }
@@ -110,8 +110,8 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
 
     public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
         BlockEntity blockentity = level.getBlockEntity(blockPos);
-        if (blockentity instanceof InfusionPedestalBlockEntity infusionPedestalBlockEntity) {
-            return infusionPedestalBlockEntity.getItemStackOriginal().isEmpty() ? 0 : 15;
+        if (blockentity instanceof AbstractInfusionPedestalBlockEntity blockEntity) {
+            return blockEntity.getItemStackOriginal().isEmpty() ? 0 : 15;
         }
         return 0;
     }
