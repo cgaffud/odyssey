@@ -14,20 +14,11 @@ import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.bedmen.odyssey.util.StringUtil;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleEngine;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -39,7 +30,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -363,6 +353,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         this.forEveryPedestalInUse((direction, infusionPedestalBlockEntity) -> this.stopUsingInfusionPedestal(direction));
         this.pedestalsInUseSet.clear();
         this.pathParticleList.clear();
+        this.markUpdated();
     }
 
     private void stopInfusing(Direction direction){
