@@ -71,6 +71,12 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         if(infuserBlockEntity.infuserCraftingTicks > 0 && infuserBlockEntity.infuserCraftingTicks < TOTAL_INFUSION_TIME){
             infuserBlockEntity.infuserCraftingTicks++;
         }
+        for(Direction direction: HORIZONTALS){
+            int ticks = infuserBlockEntity.getInfusingTicks(direction);
+            if(ticks > 0 && ticks < TOTAL_INFUSION_TIME){
+                infuserBlockEntity.incrementInfusingTick(direction);
+            }
+        }
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, InfuserBlockEntity infuserBlockEntity) {
@@ -101,12 +107,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
                     infusionPedestalBlockEntity.useDirection = Optional.of(direction);
                     infusionPedestalBlockEntity.setUsageValues(this.infuserCraftingTicks, count);
                 });
-                this.pedestalsInUseSet.forEach(direction -> {
-                    for(float delay = 0.0f; delay <= 1.0f; delay += 0.1f){
-                        this.pathParticleList.add(new PathParticle(serverPlayer.position().add(0.0d, serverPlayer.getBoundingBox().getYsize()/2.0d, 0.0d), this.getBlockPos(), direction, delay, this.level.random));
-                    }
-                });
-                this.markUpdated();
+                this.pedestalsInUseSet.forEach(direction -> createPathParticles(serverPlayer, direction));
             });
         } else if(this.infuserCraftingTicks < TOTAL_INFUSION_TIME){
             this.infuserCraftingTicks++;
@@ -117,6 +118,13 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             this.setItemStackCount(count);
             this.stopInfuserCrafting();
         }
+    }
+
+    private void createPathParticles(ServerPlayer serverPlayer, Direction direction){
+        for(float delay = 0.0f; delay <= 1.0f && this.level != null; delay += 0.1f){
+            this.pathParticleList.add(new PathParticle(serverPlayer.position().add(0.0d, serverPlayer.getBoundingBox().getYsize()/2.0d, 0.0d), this.getBlockPos(), direction, delay, this.level.random));
+        }
+        this.markUpdated();
     }
 
     private void forEveryPedestalInUse(BiConsumer<Direction, InfusionPedestalBlockEntity> biConsumer){
@@ -181,18 +189,18 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
                                 this.pedestalsInUseSet.add(direction);
                                 this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> {
                                     infusionPedestalBlockEntity.useDirection = Optional.of(direction);
-                                    infusionPedestalBlockEntity.setUsageValues(this.infusingTicksMap.get(direction), count);
+                                    infusionPedestalBlockEntity.setUsageValues(this.getInfusingTicks(direction), count);
                                 });
+                                createPathParticles(payer.get(), direction);
                                 return; // Avoids stopInfusing call below
                             }
-                        } else if(this.isInfusing(direction) && this.infusingTicksMap.get(direction) < TOTAL_INFUSION_TIME){
+                        } else if(this.isInfusing(direction) && this.getInfusingTicks(direction) < TOTAL_INFUSION_TIME){
                             this.incrementInfusingTick(direction);
-                            this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setUsageValues(this.infusingTicksMap.get(direction), count));
+                            this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setUsageValues(this.getInfusingTicks(direction), count));
                             return; // Avoids stopInfusing call below
                         } else {
                             this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY));
                             adjustedModifierList.forEach(adjustedAspectInstance -> AspectUtil.addModifier(this.getItemStackOriginal(), adjustedAspectInstance));
-                            this.markUpdated();
                             this.stopInfusing(direction);
                         }
                     } else {
@@ -203,7 +211,9 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
                 }
             }
             // Resets infusing ticker in case of one of the checks failing, or if we finish infusing
-            this.stopInfusing(direction);
+            if(this.isInfusing(direction)){
+                this.stopInfusing(direction);
+            }
         }
     }
 
@@ -321,13 +331,18 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
     }
 
     private void updatePathParticles(){
-        this.pathParticleList.stream().filter(pathParticle -> pathParticle.updatePosition((float)this.infuserCraftingTicks / (float)TOTAL_INFUSION_TIME))
-                .forEach(pathParticle -> {
-                    if(this.level != null){
-                        BlockPos blockPos = this.getBlockPos();
-                        this.level.playSound(null, blockPos.getX() + pathParticle.position.x, blockPos.getY() + pathParticle.position.y, blockPos.getZ() + pathParticle.position.z, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1F, (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.35F + 0.9F);
-                    }
-                });
+        this.pathParticleList.stream().filter(pathParticle -> {
+            int ticks = Integer.max(this.infuserCraftingTicks, this.getInfusingTicks(pathParticle.direction));
+            if(this.level != null){
+                System.out.println("Client? "+this.level.isClientSide+" Ticks: "+ticks);
+            }
+            return pathParticle.updatePosition((float)ticks / (float)TOTAL_INFUSION_TIME);
+        }).forEach(pathParticle -> {
+                if(this.level != null){
+                    BlockPos blockPos = this.getBlockPos();
+                    this.level.playSound(null, blockPos.getX() + pathParticle.position.x, blockPos.getY() + pathParticle.position.y, blockPos.getZ() + pathParticle.position.z, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1F, (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.35F + 0.9F);
+                }
+            });
     }
 
     private static boolean sameItemStack(ItemStack itemStack1, ItemStack itemStack2){
@@ -335,9 +350,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
     }
 
     private void incrementInfusingTick(Direction direction){
-        Integer integer = this.infusingTicksMap.get(direction);
-        int i = integer == null ? 0 : integer;
-        this.infusingTicksMap.put(direction, i+1);
+        this.infusingTicksMap.put(direction, this.getInfusingTicks(direction)+1);
     }
 
     private boolean isInfuserCrafting(){
@@ -345,8 +358,14 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
     }
 
     private boolean isInfusing(Direction direction){
-        Integer integer = this.infusingTicksMap.get(direction);
-        return integer != null && integer > 0;
+        return this.getInfusingTicks(direction) > 0;
+    }
+
+    private int getInfusingTicks(Direction direction){
+        if(!this.infusingTicksMap.containsKey(direction)){
+            this.infusingTicksMap.put(direction, 0);
+        }
+        return this.infusingTicksMap.get(direction);
     }
 
     private void stopInfuserCrafting(){
@@ -362,6 +381,8 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         if(this.pedestalsInUseSet.contains(direction)){
             this.stopUsingInfusionPedestal(direction);
         }
+        this.pathParticleList = this.pathParticleList.stream().filter(pathParticle -> pathParticle.direction != direction).collect(Collectors.toList());
+        this.markUpdated();
     }
 
     private void stopUsingInfusionPedestal(Direction direction){
@@ -372,7 +393,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
     }
 
     private void stopAllInfusing(){
-        this.infusingTicksMap.keySet().forEach(this::stopInfusing);
+        Arrays.stream(HORIZONTALS).forEach(this::stopInfusing);
     }
 
     protected void saveAdditional(CompoundTag compoundTag) {
@@ -380,13 +401,13 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         compoundTag.put(OLD_ITEM_STACK_TAG, this.oldItemStack.save(new CompoundTag()));
         compoundTag.put(OLD_PEDESTAL_ITEM_STACKS_TAG, itemStackMapToTag(this.oldPedestalItemStackMap));
         compoundTag.put(NEW_PEDESTAL_ITEM_STACKS_TAG, itemStackMapToTag(this.newPedestalItemStackMap));
-        compoundTag.put(INFUSING_TICKS_MAP_TAG, ticksMapToTag(this.infusingTicksMap));
         compoundTag.put(PEDESTALS_IN_USE_SET_TAG, directionSetToTag(this.pedestalsInUseSet));
     }
 
     protected void saveUpdateData(CompoundTag compoundTag){
         super.saveUpdateData(compoundTag);
         compoundTag.putInt(INFUSER_CRAFTING_TICKS_TAG, this.infuserCraftingTicks);
+        compoundTag.put(INFUSING_TICKS_MAP_TAG, ticksMapToTag(this.infusingTicksMap));
         ListTag pathParticleListTag = new ListTag();
         this.pathParticleList.forEach(pathParticle -> pathParticleListTag.add(pathParticle.toCompoundTag()));
         compoundTag.put(PATH_PARTICLE_LIST_TAG, pathParticleListTag);
@@ -453,6 +474,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
 
         // All positions are relative to the Infuser's blockPos
         private final float delay;
+        private Direction direction;
         private final Vec3 initialPosition;
         private final Vec3 halfWayPosition;
         private static final Vec3 FINAL_POSITION = new Vec3(0.5d, 15.0d/16.0d, 0.5d);
@@ -470,6 +492,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
 
         private PathParticle(Vec3 playerCenter, BlockPos blockPos, Direction direction, float delay, Random random){
             this.delay = delay;
+            this.direction = direction;
             Vec3 randomOffset = new Vec3(random.nextDouble(), random.nextDouble(), random.nextDouble()).subtract(0.5d, 0.5d, 0.5d).scale(0.4d);
             this.initialPosition = playerCenter.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ()).add(randomOffset);
             this.halfWayPosition = FINAL_POSITION.add(direction.getStepX() * DISTANCE_TO_PEDESTALS, 0, direction.getStepZ() * DISTANCE_TO_PEDESTALS).add(randomOffset.scale(0.5d));
@@ -478,8 +501,9 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             this.setPathParameters();
         }
 
-        private PathParticle(float delay, Vec3 initialPosition, Vec3 halfWayPosition, Vec3 positionO, Vec3 position){
+        private PathParticle(float delay, Direction direction, Vec3 initialPosition, Vec3 halfWayPosition, Vec3 positionO, Vec3 position){
             this.delay = delay;
+            this.direction = direction;
             this.initialPosition = initialPosition;
             this.halfWayPosition = halfWayPosition;
             this.positionO = positionO;
@@ -543,6 +567,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         private CompoundTag toCompoundTag(){
             CompoundTag compoundTag = new CompoundTag();
             compoundTag.putFloat("delay", this.delay);
+            compoundTag.putInt("direction", this.direction.ordinal());
             compoundTag.put("initialPosition", vec3ToListTag(this.initialPosition));
             compoundTag.put("halfWayPosition", vec3ToListTag(this.halfWayPosition));
             compoundTag.put("positionO", vec3ToListTag(this.positionO));
@@ -552,11 +577,12 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
 
         private static PathParticle fromCompoundTag(CompoundTag compoundTag){
             float delay = compoundTag.getFloat("delay");
+            Direction direction = Direction.values()[compoundTag.getInt("direction")];
             Vec3 initialPosition = listTagToVec3(compoundTag.getList("initialPosition", Tag.TAG_DOUBLE));
             Vec3 halfWayPosition = listTagToVec3(compoundTag.getList("halfWayPosition", Tag.TAG_DOUBLE));
             Vec3 positionO = listTagToVec3(compoundTag.getList("positionO", Tag.TAG_DOUBLE));
             Vec3 position = listTagToVec3(compoundTag.getList("position", Tag.TAG_DOUBLE));
-            return new PathParticle(delay, initialPosition, halfWayPosition, positionO, position);
+            return new PathParticle(delay, direction, initialPosition, halfWayPosition, positionO, position);
         }
 
         private static ListTag vec3ToListTag(Vec3 vec3) {
