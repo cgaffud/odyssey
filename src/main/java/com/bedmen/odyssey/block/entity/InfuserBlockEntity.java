@@ -22,11 +22,14 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -36,11 +39,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
+public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
 
-    private static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+    public static final Direction[] HORIZONTALS = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
     private static final Class<?>[] DIGGER_CLASSES = new Class<?>[]{PickaxeItem.class, AxeItem.class, HoeItem.class, ShovelItem.class};
-    private static final int DISTANCE_TO_PEDESTALS = 3;
+    public static final int DISTANCE_TO_PEDESTALS = 3;
     private static final double MAX_PLAYER_DISTANCE = 10.0d;
     public static final int TOTAL_INFUSION_TIME = 60;
 
@@ -100,7 +103,7 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
                 });
                 this.pedestalsInUseSet.forEach(direction -> {
                     for(float delay = 0.0f; delay <= 1.0f; delay += 0.1f){
-                        this.pathParticleList.add(new PathParticle(serverPlayer.position(), this.getBlockPos(), direction, delay));
+                        this.pathParticleList.add(new PathParticle(serverPlayer.position().add(0.0d, serverPlayer.getBoundingBox().getYsize()/2.0d, 0.0d), this.getBlockPos(), direction, delay, this.level.random));
                     }
                 });
                 this.markUpdated();
@@ -317,7 +320,13 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
     }
 
     private void updatePathParticles(){
-        this.pathParticleList.forEach(pathParticle -> pathParticle.updatePosition((float)this.infuserCraftingTicks / (float)TOTAL_INFUSION_TIME));
+        this.pathParticleList.stream().filter(pathParticle -> pathParticle.updatePosition((float)this.infuserCraftingTicks / (float)TOTAL_INFUSION_TIME))
+                .forEach(pathParticle -> {
+                    if(this.level != null){
+                        BlockPos blockPos = this.getBlockPos();
+                        this.level.playSound(null, blockPos.getX() + pathParticle.position.x, blockPos.getY() + pathParticle.position.y, blockPos.getZ() + pathParticle.position.z, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1F, (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.35F + 0.9F);
+                    }
+                });
     }
 
     private static boolean sameItemStack(ItemStack itemStack1, ItemStack itemStack2){
@@ -447,13 +456,21 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
         private static final Vec3 FINAL_POSITION = new Vec3(0.5d, 15.0d/16.0d, 0.5d);
         private Vec3 positionO;
         private Vec3 position;
+        public boolean isVisible = false;
 
-        private PathParticle(Vec3 playerPosition, BlockPos blockPos, Direction direction, float delay){
+        private Vec3 initialYBasisVector;
+        private Vec3 initialXBasisVector;
+        private Vec3 finalYBasisVector;
+        private Vec3 finalXBasisVector;
+
+        private PathParticle(Vec3 playerCenter, BlockPos blockPos, Direction direction, float delay, Random random){
             this.delay = delay;
-            this.initialPosition = playerPosition.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-            this.halfWayPosition = FINAL_POSITION.add(direction.getStepX() * DISTANCE_TO_PEDESTALS, 0, direction.getStepZ() * DISTANCE_TO_PEDESTALS);
+            Vec3 randomOffset = new Vec3(random.nextDouble(), random.nextDouble(), random.nextDouble()).subtract(0.5d, 0.5d, 0.5d).scale(0.4d);
+            this.initialPosition = playerCenter.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ()).add(randomOffset);
+            this.halfWayPosition = FINAL_POSITION.add(direction.getStepX() * DISTANCE_TO_PEDESTALS, 0, direction.getStepZ() * DISTANCE_TO_PEDESTALS).add(randomOffset.scale(0.5d));
             this.positionO = this.initialPosition;
             this.position = this.initialPosition;
+            this.setPathParameters();
         }
 
         private PathParticle(float delay, Vec3 initialPosition, Vec3 halfWayPosition, Vec3 positionO, Vec3 position){
@@ -462,23 +479,31 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
             this.halfWayPosition = halfWayPosition;
             this.positionO = positionO;
             this.position = position;
+            this.setPathParameters();
         }
 
-        private void updatePosition(float completion){
-            this.positionO = this.position;
-            this.position = this.getPositionFromCompletion(completion);
-        }
-
-        private Vec3 getPositionFromCompletion(float completion){
+        private boolean updatePosition(float completion){
             float completionInSeconds = completion * TOTAL_INFUSION_TIME / 20.0f;
+            this.positionO = this.position;
+            this.position = this.getPositionFromCompletionInSeconds(completionInSeconds);
+            boolean oldVisible = this.isVisible;
+            if(completionInSeconds >= this.delay && completionInSeconds <= this.delay + 2.0f){
+                this.isVisible = true;
+            } else {
+                this.isVisible = false;
+            }
+            return !oldVisible && this.isVisible;
+        }
+
+        private Vec3 getPositionFromCompletionInSeconds(float completionInSeconds){
             if(completionInSeconds <= this.delay){
                 return this.initialPosition;
             } else if(completionInSeconds <= this.delay + 1.0f){
-                float firstHalfCompletion = completionInSeconds - this.delay;
-                return this.initialPosition.lerp(this.halfWayPosition, firstHalfCompletion);
+                float firstHalfCompletion = 1.0f - (completionInSeconds - this.delay);
+                return this.getParabolaPosition(this.initialXBasisVector, this.initialYBasisVector, firstHalfCompletion);
             } else if(completionInSeconds <= this.delay + 2.0f){
                 float secondHalfCompletion = completionInSeconds - this.delay - 1.0f;
-                return this.halfWayPosition.lerp(FINAL_POSITION, secondHalfCompletion);
+                return this.getParabolaPosition(this.finalXBasisVector, this.finalYBasisVector, secondHalfCompletion);
             } else {
                 return FINAL_POSITION;
             }
@@ -486,6 +511,26 @@ public class InfuserBlockEntity extends InfusionPedestalBlockEntity {
 
         public Vec3 getPosition(float partialTicks){
             return this.positionO.lerp(this.position, partialTicks);
+        }
+
+        private void setPathParameters(){
+            Vec3 differenceWithInitialWithYValue = this.initialPosition.subtract(this.halfWayPosition);
+            Vec3 differenceWithInitial = differenceWithInitialWithYValue.multiply(1.0d, 0.0d, 1.0d);
+            Vec3 differenceWithInitialNormalized = differenceWithInitial.normalize();
+            Vec3 differenceWithFinal = FINAL_POSITION.subtract(this.halfWayPosition);
+            Vec3 differenceWithFinalNormalized = differenceWithFinal.normalize();
+            Vec3 bisectingVector = differenceWithInitialNormalized.add(differenceWithFinalNormalized).normalize();
+            Vec3 perpendicularVector = bisectingVector.yRot((float) (Math.PI / 2.0d));
+
+            this.initialYBasisVector = bisectingVector.scale(differenceWithInitial.dot(bisectingVector)).add(0.0d, differenceWithInitialWithYValue.y, 0.0d);
+            this.initialXBasisVector = perpendicularVector.scale(differenceWithInitial.dot(perpendicularVector));
+
+            this.finalYBasisVector = bisectingVector.scale(differenceWithFinal.dot(bisectingVector));
+            this.finalXBasisVector = perpendicularVector.scale(differenceWithFinal.dot(perpendicularVector));
+        }
+
+        private Vec3 getParabolaPosition(Vec3 xBasis, Vec3 yBasis, float completion){
+            return this.halfWayPosition.add(xBasis.scale(completion)).add(yBasis.scale(completion * completion));
         }
 
         private CompoundTag toCompoundTag(){

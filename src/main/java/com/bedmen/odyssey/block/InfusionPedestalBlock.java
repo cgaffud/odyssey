@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.block;
 
+import com.bedmen.odyssey.block.entity.AbstractInfusionPedestalBlockEntity;
 import com.bedmen.odyssey.block.entity.InfusionPedestalBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -62,10 +63,10 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
 
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         BlockEntity blockentity = level.getBlockEntity(blockPos);
-        if (blockentity instanceof InfusionPedestalBlockEntity infusionPedestalBlockEntity) {
+        if (blockentity instanceof AbstractInfusionPedestalBlockEntity pedestalBlockEntity) {
             ItemStack handItemStack = player.getItemInHand(interactionHand);
             // Don't give pedestalItemStack to player since it is not a copy
-            ItemStack pedestalItemStack = infusionPedestalBlockEntity.getItemStackOriginal();
+            ItemStack pedestalItemStack = pedestalBlockEntity.getItemStackOriginal();
             boolean handEmpty = handItemStack.isEmpty();
             boolean pedestalEmpty = pedestalItemStack.isEmpty();
             boolean addToPedestal = !handEmpty && ItemStack.isSameItemSameTags(handItemStack, pedestalItemStack);
@@ -82,17 +83,17 @@ public class InfusionPedestalBlock extends BaseEntityBlock {
                             int countToMaxStack = pedestalItemStack.getMaxStackSize() - pedestalItemStack.getCount();
                             int countToAdd = Integer.min(countToMaxStack, handItemStack.getCount());
                             handItemStack.shrink(countToAdd);
-                            infusionPedestalBlockEntity.growItemStack(countToAdd);
+                            pedestalBlockEntity.growItemStack(countToAdd);
                         } else {
                             player.setItemInHand(interactionHand, ItemStack.EMPTY);
-                            infusionPedestalBlockEntity.setItemStack(handItemStack.copy());
-                            infusionPedestalBlockEntity.itemRenderDirection = Direction.fromYRot(player.getYHeadRot());
+                            pedestalBlockEntity.setItemStack(handItemStack.copy());
+                            pedestalBlockEntity.itemRenderDirection = Direction.fromYRot(player.getYHeadRot());
                         }
                     } else {
-                        player.setItemInHand(interactionHand, infusionPedestalBlockEntity.getItemStackCopy());
-                        infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY);
+                        player.setItemInHand(interactionHand, pedestalBlockEntity.getItemStackCopy());
+                        pedestalBlockEntity.setItemStack(ItemStack.EMPTY);
                     }
-                    infusionPedestalBlockEntity.playerUUID = player.getUUID();
+                    pedestalBlockEntity.playerUUID = player.getUUID();
                     return InteractionResult.CONSUME;
                 } else {
                     return InteractionResult.FAIL;

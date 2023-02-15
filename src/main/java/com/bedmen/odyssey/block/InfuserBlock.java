@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.block;
 
 
-import com.bedmen.odyssey.block.entity.AlloyFurnaceBlockEntity;
 import com.bedmen.odyssey.block.entity.InfuserBlockEntity;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import net.minecraft.core.BlockPos;

@@ -25,11 +25,7 @@ public class InfusionPedestalBlockEntity extends AbstractInfusionPedestalBlockEn
     private static final String USE_DIRECTION_TAG = Odyssey.MOD_ID + ":UseDirection";
 
     public InfusionPedestalBlockEntity(BlockPos blockPos, BlockState blockState) {
-        this(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), blockPos, blockState);
-    }
-
-    public InfusionPedestalBlockEntity(BlockEntityType<? extends InfusionPedestalBlockEntity> blockEntityType, BlockPos blockPos, BlockState blockState) {
-        super(blockEntityType, blockPos, blockState);
+        super(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), blockPos, blockState);
     }
 
     protected void saveAdditional(CompoundTag compoundTag) {

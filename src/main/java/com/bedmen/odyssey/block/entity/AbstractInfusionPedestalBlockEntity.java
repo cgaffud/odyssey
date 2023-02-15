@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.block.entity;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +24,7 @@ public abstract class AbstractInfusionPedestalBlockEntity extends BlockEntity {
     public UUID playerUUID = null;
     private static final String PLAYER_UUID_TAG = Odyssey.MOD_ID + ":PlayerUUID";
 
-    public AbstractInfusionPedestalBlockEntity(BlockEntityType<? extends InfusionPedestalBlockEntity> blockEntityType, BlockPos blockPos, BlockState blockState) {
+    public AbstractInfusionPedestalBlockEntity(BlockEntityType<? extends AbstractInfusionPedestalBlockEntity> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
     }
 
