@@ -1,11 +1,16 @@
 package com.bedmen.odyssey.block.wood;
 
 import com.bedmen.odyssey.block.entity.CovenHutDoorBlockEntity;
+import com.bedmen.odyssey.items.KeyItem;
+import com.bedmen.odyssey.lock.LockableDoorType;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
+import com.bedmen.odyssey.registry.SoundEventRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -39,9 +44,30 @@ public class CovenHutDoorBlock extends TransparentDoorBlock implements EntityBlo
 
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if(blockState.getValue(LOCKED)){
-            return InteractionResult.PASS;
+            ItemStack itemStack = player.getItemInHand(interactionHand);
+            if(itemStack.getItem() instanceof KeyItem keyItem && keyItem.lockType == LockableDoorType.COVEN_HUT){
+                level.setBlock(blockPos, blockState.setValue(LOCKED, Boolean.FALSE), 3);
+                if(blockState.getValue(HALF) == DoubleBlockHalf.UPPER){
+                    BlockPos lowerBlockPos = blockPos.below();
+                    BlockState lowerBlockState = level.getBlockState(lowerBlockPos);
+                    level.setBlock(lowerBlockPos, lowerBlockState.setValue(LOCKED, Boolean.FALSE), 3);
+                } else {
+                    BlockPos higherBlockPos = blockPos.above();
+                    BlockState higherBlockState = level.getBlockState(higherBlockPos);
+                    level.setBlock(higherBlockPos, higherBlockState.setValue(LOCKED, Boolean.FALSE), 3);
+                }
+                level.playSound(player, blockPos, SoundEventRegistry.KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+                if(!player.getAbilities().instabuild){
+                    itemStack.shrink(1);
+                }
+                return InteractionResult.SUCCESS;
+            } else {
+                level.playSound(player, blockPos, SoundEventRegistry.LOCKED_CHEST.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+                return InteractionResult.FAIL;
+            }
+        } else {
+            return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
         }
-        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {

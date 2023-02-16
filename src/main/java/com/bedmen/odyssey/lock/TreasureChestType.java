@@ -1,5 +1,6 @@
-package com.bedmen.odyssey.loot;
+package com.bedmen.odyssey.lock;
 
+import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.util.OdysseyStats;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Locale;
 import java.util.function.Supplier;
 
-public enum TreasureChestMaterial {
+public enum TreasureChestType implements LockType {
     COPPER(BlockRegistry.COPPER_CHEST::get, OdysseyLootTables.COPPER_TREASURE_CHEST),
     STERLING_SILVER(BlockRegistry.STERLING_SILVER_CHEST::get, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
 
@@ -18,7 +19,7 @@ public enum TreasureChestMaterial {
     public final ResourceLocation lootTable;
     public final ResourceLocation stat;
 
-    TreasureChestMaterial(Supplier<Block> blockSupplier, ResourceLocation lootTable){
+    TreasureChestType(Supplier<Block> blockSupplier, ResourceLocation lootTable){
         this.blockSupplier = blockSupplier;
         this.lootTable = lootTable;
         String name = this.name().toLowerCase(Locale.ROOT);

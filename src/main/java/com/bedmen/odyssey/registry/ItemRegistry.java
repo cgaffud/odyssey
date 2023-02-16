@@ -14,7 +14,8 @@ import com.bedmen.odyssey.items.odyssey_versions.OdysseyBoatItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyFood;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.lock.LockableDoorType;
+import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
@@ -160,7 +161,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MINERAL_FRUIT = ITEMS.register("mineral_fruit", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1)), player -> AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) < 1));
 
     // # Tools
-    public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestMaterial.COPPER));
+    public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.COPPER));
 
     public static final RegistryObject<Item> CLOVER_STONE_SHOVEL = ITEMS.register("clover_stone_shovel", () -> new AspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.SHOVEL, 4.5f, List.of(), List.of(new AspectInstance(Aspects.FORTUNE, 1))));
     public static final RegistryObject<Item> CLOVER_STONE_PICKAXE = ITEMS.register("clover_stone_pickaxe", () -> new AspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.PICKAXE, 5.0f, List.of(), List.of(new AspectInstance(Aspects.FORTUNE, 1))));
@@ -171,7 +172,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_PICKAXE = ITEMS.register("sterling_silver_pickaxe", () -> new AspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.PICKAXE, 5.0f, List.of(), List.of()));
     public static final RegistryObject<Item> STERLING_SILVER_AXE = ITEMS.register("sterling_silver_axe", () -> new AspectAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.AXE, 6.0f, List.of(), List.of()));
     public static final RegistryObject<Item> STERLING_SILVER_HOE = ITEMS.register("sterling_silver_hoe", () -> new AspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.HOE, 4.0f, List.of(), List.of()));
-    public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestMaterial.STERLING_SILVER));
+    public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.STERLING_SILVER));
+
+    public static final RegistryObject<Item> COVEN_HUT_KEY = ITEMS.register("coven_hut_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), LockableDoorType.COVEN_HUT));
 
     public static final List<AspectInstance> MARINE_TOOL_INNATE_MODIFIER_LIST = List.of(new AspectInstance(Aspects.AQUA_AFFINITY));
     public static final RegistryObject<Item> MARINE_SHOVEL = ITEMS.register("marine_shovel", () -> new AspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.SHOVEL.withBetterAttackSpeed(), 3.5f, List.of(), MARINE_TOOL_INNATE_MODIFIER_LIST));

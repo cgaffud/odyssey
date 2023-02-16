@@ -3,7 +3,7 @@ package com.bedmen.odyssey.client.renderer.blockentity;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.lock.TreasureChestType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -40,7 +40,7 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
     private final ModelPart bottom;
     private final ModelPart lock;
 
-    public TreasureChestRenderer(TreasureChestMaterial treasureChestMaterial, BlockEntityRendererProvider.Context context) {
+    public TreasureChestRenderer(TreasureChestType treasureChestType, BlockEntityRendererProvider.Context context) {
         ModelPart modelpart = context.bakeLayer(ModelLayers.CHEST);
         this.bottom = modelpart.getChild(BOTTOM);
         this.lid = modelpart.getChild(LID);
@@ -52,7 +52,7 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
         boolean flag = level != null;
 
         BlockState blockstate = flag ? blockEntity.getBlockState() : blockEntity.getBlockState().setValue(ChestBlock.FACING, Direction.SOUTH);
-        TreasureChestMaterial treasureChestMaterial = ((TreasureChestBlock)blockstate.getBlock()).treasureChestMaterial;
+        TreasureChestType treasureChestType = ((TreasureChestBlock)blockstate.getBlock()).treasureChestType;
         Block block = blockstate.getBlock();
         if (block instanceof AbstractChestBlock) {
             AbstractChestBlock<?> abstractchestblock = (AbstractChestBlock)block;
@@ -72,7 +72,7 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
             f1 = 1.0F - f1;
             f1 = 1.0F - f1 * f1 * f1;
             int i = neighborcombineresult.<Int2IntFunction>apply(new BrightnessCombiner<>()).applyAsInt(packedLight);
-            VertexConsumer vertexconsumer = getRenderMaterial(treasureChestMaterial, blockstate.getValue(TreasureChestBlock.LOCKED)).buffer(multiBufferSource, RenderType::entityCutout);
+            VertexConsumer vertexconsumer = getRenderMaterial(treasureChestType, blockstate.getValue(TreasureChestBlock.LOCKED)).buffer(multiBufferSource, RenderType::entityCutout);
             this.render(poseStack, vertexconsumer, this.lid, this.lock, this.bottom, f1, i, packedOverlay);
 
             poseStack.popPose();
@@ -87,8 +87,8 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
         p_112374_.render(p_112370_, p_112371_, p_112376_, p_112377_);
     }
 
-    public static Material getRenderMaterial(TreasureChestMaterial treasureChestMaterial, boolean locked){
-        return switch(treasureChestMaterial){
+    public static Material getRenderMaterial(TreasureChestType treasureChestType, boolean locked){
+        return switch(treasureChestType){
             case COPPER -> locked ? COPPER_MATERIAL_LOCKED : COPPER_MATERIAL;
             case STERLING_SILVER -> locked ? STERLING_SILVER_MATERIAL_LOCKED : STERLING_SILVER_MATERIAL;
         };
