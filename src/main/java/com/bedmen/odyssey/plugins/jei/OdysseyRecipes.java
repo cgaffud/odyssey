@@ -1,9 +1,6 @@
 package com.bedmen.odyssey.plugins.jei;
 
-import com.bedmen.odyssey.recipes.AlloyRecipe;
-import com.bedmen.odyssey.recipes.RecyclingRecipe;
-import com.bedmen.odyssey.recipes.StitchingRecipe;
-import com.bedmen.odyssey.recipes.WeavingRecipe;
+import com.bedmen.odyssey.recipes.*;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -15,7 +12,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import java.util.List;
 
 public final class OdysseyRecipes {
-    private final RecipeManager recipeManager;
+    public final RecipeManager recipeManager;
 
     public OdysseyRecipes() {
         Minecraft minecraft = Minecraft.getInstance();
@@ -23,20 +20,8 @@ public final class OdysseyRecipes {
         this.recipeManager = world.getRecipeManager();
     }
 
-    public List<AlloyRecipe> getAlloyingRecipes() {
-        return getRecipes(recipeManager, RecipeTypeRegistry.ALLOYING.get());
-    }
-
-    public List<StitchingRecipe> getStitchingRecipes() {
-        return getRecipes(recipeManager, RecipeTypeRegistry.STITCHING.get());
-    }
-
-    public List<WeavingRecipe> getWeavingRecipes() {
-        return getRecipes(recipeManager, RecipeTypeRegistry.WEAVING.get());
-    }
-
-    public List<RecyclingRecipe> getRecyclingRecipes() {
-        return getRecipes(recipeManager, RecipeTypeRegistry.RECYCLING.get());
+    public <C extends Container, T extends Recipe<C>> List<T> getRecipes(RecipeType<T> recipeType){
+        return getRecipes(this.recipeManager, recipeType);
     }
 
     @SuppressWarnings("unchecked")
