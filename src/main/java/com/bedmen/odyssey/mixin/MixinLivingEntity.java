@@ -6,6 +6,7 @@ import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.combat.SmackPush;
+import com.bedmen.odyssey.util.RenderUtil;
 import com.google.common.base.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -325,7 +326,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     }
 
     public boolean displayFireAnimation() {
-        return this.isOnFire() && !this.isSpectator() && !this.hasEffect(EffectRegistry.HEXFLAME.get());
+        return this.isOnFire() && !this.isSpectator() && RenderUtil.getStrongestFire(this.getLivingEntity()).isEmpty();
     }
 
     private LivingEntity getLivingEntity(){

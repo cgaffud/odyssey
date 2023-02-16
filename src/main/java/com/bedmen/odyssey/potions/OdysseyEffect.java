@@ -41,14 +41,14 @@ public class OdysseyEffect extends MobEffect {
 
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
-        if ((this == EffectRegistry.BLEEDING.get()) || (this == EffectRegistry.HEXFLAME.get())) {
+        if ((this == EffectRegistry.BLEEDING.get()) || this instanceof FireEffect) {
             return true;
         }
         return super.isDurationEffectTick(duration, amplifier);
     }
 
     public List<ItemStack> getCurativeItems() {
-        return this == EffectRegistry.HEXFLAME.get() ? List.of() : super.getCurativeItems();
+        return this instanceof FireEffect ? List.of() : super.getCurativeItems();
     }
 
     public static final EffectRenderer ODYSSEY_EFFECT_RENDERER = new EffectRenderer()
