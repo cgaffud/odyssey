@@ -324,6 +324,10 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         }
     }
 
+    public boolean displayFireAnimation() {
+        return this.isOnFire() && !this.isSpectator() && !this.hasEffect(EffectRegistry.HEXFLAME.get());
+    }
+
     private LivingEntity getLivingEntity(){
         return (LivingEntity)(Object)this;
     }

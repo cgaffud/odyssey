@@ -257,10 +257,15 @@ def printRGBInfo(image1, image2):
 # Notes on how to do certain effects:
 # Clover Stone: recolorImageRandomly(image1, [0.9,1.0,0.9],[0.85,1.0,0.85])
 
-openPath1 = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\depreciated\stone_spear_projectile.png"
-savePath = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\depreciated\clover_stone_spear.png"
+openPath1 = r"C:\Users\18029\Documents\1.18.2\assets\minecraft\textures\block\fire_1.png"
+openPath2 = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\block\hex_fire_1.png"
 image1 = openImage(openPath1)
-recolorImageRandomly(image1, [0.9,1.0,0.9],[0.85,1.0,0.85])
-saveImage(image1, savePath)
+image2 = openImage(openPath2)
+printRGBInfo(image1,image2)
+openPath1 = r"C:\Users\18029\Documents\1.18.2\assets\minecraft\textures\block\fire_0.png"
+image = openImage(openPath1)
+savePath = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\block\hex_fire_0.png"
+grayscaleRecolorImage(image, [1.18, 0.65, 1.5], [0,0,0])
+saveImage(image, savePath)
 
 print("Done")

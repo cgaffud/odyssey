@@ -51,7 +51,7 @@ public class GuiEvents {
                 PoseStack mat = event.getPoseStack();
                 event.setCanceled(true);
                 // Send a new one with the right info
-                RenderUtil.renderModdedFire(Minecraft.getInstance(), mat, RenderUtil.HEX_FIRE);
+                RenderUtil.renderBlockOverlayModdedFire(mat, RenderUtil.HEX_FIRE_0);
             }
         }
     }

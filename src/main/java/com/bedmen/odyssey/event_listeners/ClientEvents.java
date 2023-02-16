@@ -190,7 +190,8 @@ public class ClientEvents {
             event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestMaterial, true).texture());
         }
         // Modded fire variants
-        event.addSprite(RenderUtil.HEX_FIRE.texture());
+        event.addSprite(RenderUtil.HEX_FIRE_0.texture());
+        event.addSprite(RenderUtil.HEX_FIRE_1.texture());
         event.addSprite(InfuserRenderer.ENCHANTMENT_TEXT_LOCATION);
 //        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
 //        event.addSprite(PermafrostRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);

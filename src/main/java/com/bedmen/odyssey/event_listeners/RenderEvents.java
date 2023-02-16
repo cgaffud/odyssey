@@ -6,10 +6,20 @@ import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
+import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.util.RenderUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +28,7 @@ import net.minecraft.world.item.SpyglassItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.FOVModifierEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -103,6 +114,14 @@ public class RenderEvents {
                 }
                 event.setNewfov(event.getFov() * (1.0F - f1 * maxFOVDecrease));
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRenderLivingEvent(final RenderLivingEvent event){
+        LivingEntity livingEntity = event.getEntity();
+        if(livingEntity.hasEffect(EffectRegistry.HEXFLAME.get())){
+            RenderUtil.renderExternalViewModdedFire(livingEntity, event.getPoseStack(), event.getMultiBufferSource());
         }
     }
 }
