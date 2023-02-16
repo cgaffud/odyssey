@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.potions.FireEffect;
+import com.bedmen.odyssey.potions.FireType;
 import com.bedmen.odyssey.potions.OdysseyEffect;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -30,6 +32,7 @@ public class EffectRegistry {
 //    public static final RegistryObject<MobEffect> LAVA_VISION = EFFECTS.register("lava_vision", () -> new OdysseyEffect(MobEffectCategory.BENEFICIAL, 0xa01e80));
     public static final RegistryObject<MobEffect> SHATTERED = EFFECTS.register("shattered", () -> (new OdysseyEffect(MobEffectCategory.HARMFUL, 0x1E2434, true)).addAttributeModifier(Attributes.ARMOR, "54ae752d-771a-4c38-b482-a514f2bf0177", -2.0D, AttributeModifier.Operation.ADDITION));
     public static final RegistryObject<MobEffect> DROWNING = EFFECTS.register("drowning",() -> (new OdysseyEffect(MobEffectCategory.HARMFUL, 0x3D57D6, true)));
-    public static final RegistryObject<MobEffect> HEXFLAME = EFFECTS.register("hexflame", () -> new OdysseyEffect(MobEffectCategory.HARMFUL, 0x6b2494, false));
+    public static final RegistryObject<MobEffect> HEXFLAME = EFFECTS.register("hexflame", () -> new FireEffect(MobEffectCategory.HARMFUL, 0x6b2494, false, FireType.HEX));
+    public static final RegistryObject<MobEffect> SOULFLAME = EFFECTS.register("soulflame", () -> new FireEffect(MobEffectCategory.HARMFUL, 0x4ff1f6, false, FireType.SOUL));
 
 }

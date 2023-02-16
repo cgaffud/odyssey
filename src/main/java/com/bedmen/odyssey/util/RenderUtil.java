@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.util;
 
-import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.potions.FireEffect;
+import com.bedmen.odyssey.potions.FireType;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
@@ -10,21 +11,22 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 
-public class RenderUtil {
-    public static final Material SOUL_FIRE = new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation("block/soul_fire_1"));
-    public static final Material HEX_FIRE_0 = new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID,"block/hex_fire_0"));
-    public static final Material HEX_FIRE_1 = new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(Odyssey.MOD_ID,"block/hex_fire_1"));
+import java.util.Comparator;
+import java.util.Optional;
 
-    public static void renderBlockOverlayModdedFire(PoseStack poseStack, Material fire) {
+public class RenderUtil {
+
+    public static Optional<FireType> getStrongestFire(LivingEntity livingEntity){
+        return livingEntity.getActiveEffects().stream()
+                .filter(mobEffectInstance -> mobEffectInstance.getEffect() instanceof FireEffect)
+                .map(mobEffectInstance -> ((FireEffect) mobEffectInstance.getEffect()).fireType).min(Comparator.comparingInt(Enum::ordinal));
+    }
+
+    public static void renderBlockOverlayModdedFire(PoseStack poseStack, FireType fireType) {
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.depthFunc(519);
@@ -32,15 +34,15 @@ public class RenderUtil {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableTexture();
-        TextureAtlasSprite textureatlassprite = fire.sprite();
-        RenderSystem.setShaderTexture(0, textureatlassprite.atlas().location());
-        float f = textureatlassprite.getU0();
-        float f1 = textureatlassprite.getU1();
+        TextureAtlasSprite sprite = fireType.material0.sprite();
+        RenderSystem.setShaderTexture(0, sprite.atlas().location());
+        float f = sprite.getU0();
+        float f1 = sprite.getU1();
         float f2 = (f + f1) / 2.0F;
-        float f3 = textureatlassprite.getV0();
-        float f4 = textureatlassprite.getV1();
+        float f3 = sprite.getV0();
+        float f4 = sprite.getV1();
         float f5 = (f3 + f4) / 2.0F;
-        float f6 = textureatlassprite.uvShrinkRatio();
+        float f6 = sprite.uvShrinkRatio();
         float f7 = Mth.lerp(f6, f, f2);
         float f8 = Mth.lerp(f6, f1, f2);
         float f9 = Mth.lerp(f6, f3, f5);
@@ -67,9 +69,9 @@ public class RenderUtil {
         RenderSystem.depthFunc(515);
     }
 
-    public static void renderExternalViewModdedFire(LivingEntity livingEntity, PoseStack poseStack, MultiBufferSource multiBufferSource){
-        TextureAtlasSprite textureatlassprite = HEX_FIRE_0.sprite();
-        TextureAtlasSprite textureatlassprite1 = HEX_FIRE_1.sprite();
+    public static void renderExternalViewModdedFire(LivingEntity livingEntity, FireType fireType, PoseStack poseStack, MultiBufferSource multiBufferSource){
+        TextureAtlasSprite sprite0 = fireType.material0.sprite();
+        TextureAtlasSprite sprite1 = fireType.material1.sprite();
         poseStack.pushPose();
         float f = livingEntity.getBbWidth() * 1.4F;
         poseStack.scale(f, f, f);
@@ -85,7 +87,7 @@ public class RenderUtil {
         VertexConsumer vertexconsumer = multiBufferSource.getBuffer(Sheets.cutoutBlockSheet());
 
         for(PoseStack.Pose posestack$pose = poseStack.last(); f3 > 0.0F; ++i) {
-            TextureAtlasSprite textureatlassprite2 = i % 2 == 0 ? textureatlassprite : textureatlassprite1;
+            TextureAtlasSprite textureatlassprite2 = i % 2 == 0 ? sprite0 : sprite1;
             float f6 = textureatlassprite2.getU0();
             float f7 = textureatlassprite2.getV0();
             float f8 = textureatlassprite2.getU1();

@@ -175,6 +175,8 @@
   "effect.oddc.bleeding": "Bleeding",
   "effect.oddc.drowning": "Drowning",
   "effect.oddc.shattered": "Shattered",
+  "effect.oddc.hexflame": "Hexflame",
+  "effect.oddc.soulflame": "Soulflame",
   "entity.mineral_leviathan.death.sub": "Mineral Leviathan Death",
   "entity.mineral_leviathan.hurt.sub": "Mineral Leviathan Hurt",
   "entity.mineral_leviathan.roar.sub": "Mineral Leviathan Roar",
