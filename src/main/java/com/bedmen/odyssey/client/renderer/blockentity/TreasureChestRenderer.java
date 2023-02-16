@@ -47,7 +47,7 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
         this.lock = modelpart.getChild(LOCK);
     }
 
-    public void render(T blockEntity, float p_112364_, PoseStack poseStack, MultiBufferSource multiBufferSource, int p_112367_, int p_112368_) {
+    public void render(T blockEntity, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, int packedOverlay) {
         Level level = blockEntity.getLevel();
         boolean flag = level != null;
 
@@ -68,12 +68,12 @@ public class TreasureChestRenderer<T extends TreasureChestBlockEntity> implement
                 neighborcombineresult = DoubleBlockCombiner.Combiner::acceptNone;
             }
 
-            float f1 = neighborcombineresult.<Float2FloatFunction>apply(ChestBlock.opennessCombiner(blockEntity)).get(p_112364_);
+            float f1 = neighborcombineresult.<Float2FloatFunction>apply(ChestBlock.opennessCombiner(blockEntity)).get(partialTicks);
             f1 = 1.0F - f1;
             f1 = 1.0F - f1 * f1 * f1;
-            int i = neighborcombineresult.<Int2IntFunction>apply(new BrightnessCombiner<>()).applyAsInt(p_112367_);
+            int i = neighborcombineresult.<Int2IntFunction>apply(new BrightnessCombiner<>()).applyAsInt(packedLight);
             VertexConsumer vertexconsumer = getRenderMaterial(treasureChestMaterial, blockstate.getValue(TreasureChestBlock.LOCKED)).buffer(multiBufferSource, RenderType::entityCutout);
-            this.render(poseStack, vertexconsumer, this.lid, this.lock, this.bottom, f1, i, p_112368_);
+            this.render(poseStack, vertexconsumer, this.lid, this.lock, this.bottom, f1, i, packedOverlay);
 
             poseStack.popPose();
         }

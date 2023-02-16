@@ -7,10 +7,7 @@ import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.*;
 import com.bedmen.odyssey.client.model.*;
 import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.InfuserRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.InfusionPedestalRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
+import com.bedmen.odyssey.client.renderer.blockentity.*;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
@@ -107,6 +104,7 @@ public class ClientEvents {
 
             //Block Entity Renderings
             BlockEntityRenderers.register(BlockEntityTypeRegistry.SIGN.get(), OdysseySignRenderer::new);
+            BlockEntityRenderers.register(BlockEntityTypeRegistry.COVEN_HUT_DOOR.get(), CovenHutDoorRenderer::new);
             BlockEntityRenderers.register(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), InfusionPedestalRenderer::new);
             BlockEntityRenderers.register(BlockEntityTypeRegistry.INFUSER.get(), InfuserRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);

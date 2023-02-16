@@ -76,32 +76,31 @@ public class RenderUtil {
         float f = livingEntity.getBbWidth() * 1.4F;
         poseStack.scale(f, f, f);
         float f1 = 0.5F;
-        float f2 = 0.0F;
         float f3 = livingEntity.getBbHeight() / f;
         float f4 = 0.0F;
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         poseStack.mulPose(Vector3f.YP.rotationDegrees(-entityRenderDispatcher.camera.getYRot()));
-        poseStack.translate(0.0D, 0.0D, (double)(-0.3F + (float)((int)f3) * 0.02F));
+        poseStack.translate(0.0D, 0.0D, -0.3F + (float)((int)f3) * 0.02F);
         float f5 = 0.0F;
         int i = 0;
-        VertexConsumer vertexconsumer = multiBufferSource.getBuffer(Sheets.cutoutBlockSheet());
+        VertexConsumer vertexconsumer = multiBufferSource.getBuffer(Sheets.translucentCullBlockSheet());
 
         for(PoseStack.Pose posestack$pose = poseStack.last(); f3 > 0.0F; ++i) {
             TextureAtlasSprite textureatlassprite2 = i % 2 == 0 ? sprite0 : sprite1;
-            float f6 = textureatlassprite2.getU0();
-            float f7 = textureatlassprite2.getV0();
-            float f8 = textureatlassprite2.getU1();
-            float f9 = textureatlassprite2.getV1();
+            float u0 = textureatlassprite2.getU0();
+            float v0 = textureatlassprite2.getV0();
+            float u1 = textureatlassprite2.getU1();
+            float v1 = textureatlassprite2.getV1();
             if (i / 2 % 2 == 0) {
-                float f10 = f8;
-                f8 = f6;
-                f6 = f10;
+                float f10 = u1;
+                u1 = u0;
+                u0 = f10;
             }
 
-            fireVertex(posestack$pose, vertexconsumer, f1 - 0.0F, 0.0F - f4, f5, f8, f9);
-            fireVertex(posestack$pose, vertexconsumer, -f1 - 0.0F, 0.0F - f4, f5, f6, f9);
-            fireVertex(posestack$pose, vertexconsumer, -f1 - 0.0F, 1.4F - f4, f5, f6, f7);
-            fireVertex(posestack$pose, vertexconsumer, f1 - 0.0F, 1.4F - f4, f5, f8, f7);
+            fireVertex(posestack$pose, vertexconsumer, f1 - 0.0F, 0.0F - f4, f5, u1, v1);
+            fireVertex(posestack$pose, vertexconsumer, -f1 - 0.0F, 0.0F - f4, f5, u0, v1);
+            fireVertex(posestack$pose, vertexconsumer, -f1 - 0.0F, 1.4F - f4, f5, u0, v0);
+            fireVertex(posestack$pose, vertexconsumer, f1 - 0.0F, 1.4F - f4, f5, u1, v0);
             f3 -= 0.45F;
             f4 -= 0.45F;
             f1 *= 0.9F;
