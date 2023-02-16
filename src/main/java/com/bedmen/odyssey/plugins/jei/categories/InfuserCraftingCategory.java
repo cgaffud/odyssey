@@ -4,6 +4,8 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.block.entity.InfuserBlockEntity;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
+import com.bedmen.odyssey.magic.ExperienceCost;
+import com.bedmen.odyssey.magic.MagicUtil;
 import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.util.Union;
@@ -19,17 +21,20 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class InfuserCraftingCategory implements IRecipeCategory<InfuserCraftingRecipe> {
 
@@ -111,6 +116,32 @@ public class InfuserCraftingCategory implements IRecipeCategory<InfuserCraftingR
         for(int i = 0; i < count; i++){
             IDrawableAnimated arrow = this.cachedArrowsList.get(i).getUnchecked(InfuserBlockEntity.TOTAL_INFUSION_TIME);
             arrow.draw(poseStack, xArrowOffsets[i], yArrowOffsets[i]);
+        }
+        drawExperienceCost(recipe, poseStack, 0);
+    }
+
+    protected void drawExperienceCost(InfuserCraftingRecipe recipe, PoseStack poseStack, int y) {
+        ExperienceCost experienceCost = recipe.experienceCost;
+        if (experienceCost.levelCost > 0) {
+            Optional<MutableComponent> levelRequirementComponent = Optional.empty();
+            if(experienceCost.levelRequirement > 0){
+                levelRequirementComponent = Optional.of(MagicUtil.getLevelRequirementComponent(experienceCost.levelRequirement));
+            }
+            MutableComponent levelCostComponent = MagicUtil.getLevelCostComponent(experienceCost.levelCost);
+            Minecraft minecraft = Minecraft.getInstance();
+            Font fontRenderer = minecraft.font;
+            float scale = 0.75f;
+            int stringWidth = (int) (Integer.max(fontRenderer.width(levelCostComponent), levelRequirementComponent.map(fontRenderer::width).orElse(0)) * 1.0f);
+            int stringHeight = fontRenderer.lineHeight;
+            poseStack.pushPose();
+            poseStack.translate(background.getWidth() * (1.0f - scale), 0, 0);
+            poseStack.scale(scale, scale, scale);
+            if(levelRequirementComponent.isPresent()){
+                fontRenderer.draw(poseStack, levelRequirementComponent.get(), background.getWidth() - stringWidth, y, 0xFF808080);
+                y += stringHeight;
+            }
+            fontRenderer.draw(poseStack, levelCostComponent, background.getWidth() - stringWidth, y, 0xFF808080);
+            poseStack.popPose();
         }
     }
 

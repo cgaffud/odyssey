@@ -115,6 +115,9 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             this.reduceItemStackCountOnInUsePedestals(count);
             this.setItemStack(infuserCraftingRecipe.getResultItemWithOldItemStackData(this.getItemStackOriginal()));
             this.setItemStackCount(count);
+            if(this.level != null){
+                this.level.playSound(null, this.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, this.level.random.nextFloat() * 0.1F + 0.9F);
+            }
             this.stopInfuserCrafting();
         }
     }
@@ -201,6 +204,9 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
                             this.getInfusionPedestalBlockEntity(direction).ifPresent(infusionPedestalBlockEntity -> infusionPedestalBlockEntity.setItemStack(ItemStack.EMPTY));
                             adjustedModifierList.forEach(adjustedAspectInstance -> AspectUtil.addModifier(this.getItemStackOriginal(), adjustedAspectInstance));
                             this.stopInfusing(direction);
+                            if(this.level != null){
+                                this.level.playSound(null, this.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, this.level.random.nextFloat() * 0.1F + 0.9F);
+                            }
                         }
                     } else {
                         this.getNearbyPlayersWhoMadeChanges().forEach(
