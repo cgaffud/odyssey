@@ -57,9 +57,6 @@ public class CovenHutDoorBlock extends TransparentDoorBlock implements EntityBlo
                     level.setBlock(higherBlockPos, higherBlockState.setValue(LOCKED, Boolean.FALSE), 3);
                 }
                 level.playSound(player, blockPos, SoundEventRegistry.KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
-                if(!player.getAbilities().instabuild){
-                    itemStack.shrink(1);
-                }
                 return InteractionResult.SUCCESS;
             } else {
                 level.playSound(player, blockPos, SoundEventRegistry.LOCKED_CHEST.get(), SoundSource.BLOCKS, 1.0f, 1.0f);

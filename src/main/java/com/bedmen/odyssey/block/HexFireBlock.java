@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.block;
 
+import com.bedmen.odyssey.potions.FireEffect;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -56,9 +57,9 @@ public class HexFireBlock extends BaseFireBlock implements INeedsToRegisterRende
     }
 
     public void entityInside(BlockState blockState, Level level, BlockPos pos, Entity entity) {
-        if (entity instanceof LivingEntity livingEntity)
-            livingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), 16,
-                    0,false, false, false));
+        if (entity instanceof LivingEntity livingEntity){
+            livingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 16, 0));
+        }
     }
 
 }
