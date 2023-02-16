@@ -7,8 +7,10 @@ import net.minecraft.world.item.Item;
 import java.util.function.Predicate;
 
 public class IntegerAspect extends Aspect {
-    protected IntegerAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate){
+    public final boolean hasInfusionPenalty;
+    protected IntegerAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean hasInfusionPenalty){
         super(id, weight, aspectTooltipFunction, itemPredicate);
+        this.hasInfusionPenalty = hasInfusionPenalty;
     }
 
     public AspectInstance generateInstanceWithModifiability(Item item, float modifiability){

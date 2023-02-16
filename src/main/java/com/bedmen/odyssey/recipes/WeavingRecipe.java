@@ -26,18 +26,17 @@ public class WeavingRecipe implements Recipe<Container> {
         this.result = resultIn;
     }
 
-    /**
-     * Used to check if a recipe matches current crafting inventory
-     */
+    // Never used
     public boolean matches(Container inv, Level level) {
-        return this.ingredient.test(inv.getItem(0));
+        return true;
     }
 
+    // Never used
     public ItemStack assemble(Container inv) {
-        return this.result.copy();
+        return ItemStack.EMPTY;
     }
 
-    @Override
+    // Never used
     public boolean canCraftInDimensions(int i, int i1) {
         return true;
     }

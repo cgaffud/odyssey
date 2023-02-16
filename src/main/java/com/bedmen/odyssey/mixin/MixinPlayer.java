@@ -61,13 +61,13 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
 
     @Shadow public abstract void awardStat(ResourceLocation p_36221_);
 
-    @Shadow public abstract int awardRecipes(Collection<Recipe<?>> p_36213_);
-
     @Shadow public abstract void awardStat(Stat<?> p_36145_, int p_36146_);
 
     private int attackStrengthTickerO;
     private boolean isSniperScoping;
     private static final String PERMABUFF_HOLDER_TAG = Odyssey.MOD_ID + ":PermabuffHolder";
+    private float partialExperiencePoint;
+    private static final String PARTIAL_EXPERIENCE_POINT_TAG = Odyssey.MOD_ID + ":PartialExperiencePoint";
 
     protected MixinPlayer(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
@@ -84,6 +84,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         compoundTag.putBoolean("IsSniperScoping", this.isSniperScoping);
         CompoundTag permabuffHolderTag = this.getPermabuffHolder().toCompoundTag();
         compoundTag.put(PERMABUFF_HOLDER_TAG, permabuffHolderTag);
+        compoundTag.putFloat(PARTIAL_EXPERIENCE_POINT_TAG, this.partialExperiencePoint);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
@@ -93,6 +94,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         if(compoundTag.contains(PERMABUFF_HOLDER_TAG)){
             this.setPermabuffHolder(PermabuffHolder.fromCompoundTag(compoundTag.getCompound(PERMABUFF_HOLDER_TAG)));
         }
+        this.partialExperiencePoint = compoundTag.getFloat(PARTIAL_EXPERIENCE_POINT_TAG);
     }
 
     @Inject(method = "getCurrentItemAttackStrengthDelay", at = @At("HEAD"), cancellable = true)
@@ -209,6 +211,14 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermabuffHolder().aspectInstanceList);
         permabuffList.forEach(aspectInstance -> AspectUtil.addInstance(aspectInstanceList, aspectInstance));
         this.setPermabuffHolder(new PermabuffHolder(aspectInstanceList));
+    }
+
+    public float getPartialExperiencePoint(){
+        return this.partialExperiencePoint;
+    }
+
+    public void setPartialExperiencePoint(float partialExperiencePoint){
+        this.partialExperiencePoint = partialExperiencePoint;
     }
 
     private Player getPlayer(){

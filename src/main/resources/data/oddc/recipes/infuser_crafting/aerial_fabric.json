@@ -1,0 +1,26 @@
+{
+  "type": "oddc:infuser_crafting",
+  "centerIngredient": {
+    "item": "minecraft:leather"
+  },
+  "pedestalRequirementList": [
+    {
+      "isIngredient": true,
+      "object": {
+        "item": "oddc:feather_bundle"
+      }
+    },
+    {
+      "isIngredient": true,
+      "object": {
+        "item": "minecraft:phantom_membrane"
+      }
+    }
+  ],
+  "experienceCost": {
+    "levelCost": 0.5
+  },
+  "result": {
+    "item": "oddc:aerial_fabric"
+  }
+}

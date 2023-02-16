@@ -2,14 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "X X",
-    "X X"
+    "XXX",
+    "XXX"
   ],
   "key": {
     "X": {
-      "item": "minecraft:phantom_membrane"
+      "item": "oddc:aerial_fabric"
     }
   },
   "result": {
-    "item": "oddc:glider_boots"
+    "item": "oddc:glider_chestplate"
   }
 }
