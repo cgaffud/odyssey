@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/sky_sword",
+  "textures": {
+    "layer0": "oddc:item/sky_sword/active"
+  }
+}

@@ -20,7 +20,7 @@ public class BooleanAspect extends Aspect {
         super(id, weight, aspectTooltipFunction, itemPredicate);
     }
 
-    public AspectInstance generateInstanceWithUnitModifiability(Item item){
+    public AspectInstance generateInstanceWithModifiability(Item item, float modifiability){
         return new AspectInstance(this);
     }
 }

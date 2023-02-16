@@ -16,8 +16,8 @@ public class EnderWitchRenderer extends MobRenderer<EnderWitch, WitchModel<Ender
     private static final ResourceLocation ENRAGED_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/coven/enraged_ender_witch.png");
 
 
-    public EnderWitchRenderer(EntityRendererProvider.Context p_174443_) {
-        super(p_174443_, new WitchModel<>(p_174443_.bakeLayer(ModelLayers.WITCH)), 0.5F);
+    public EnderWitchRenderer(EntityRendererProvider.Context context) {
+        super(context, new WitchModel<>(context.bakeLayer(ModelLayers.WITCH)), 0.5F);
         this.addLayer(new WitchItemLayer<>(this));
     }
 
@@ -27,13 +27,13 @@ public class EnderWitchRenderer extends MobRenderer<EnderWitch, WitchModel<Ender
         return WITCH_LOCATION;
     }
 
-    public void render(EnderWitch p_116412_, float p_116413_, float p_116414_, PoseStack p_116415_, MultiBufferSource p_116416_, int p_116417_) {
-        this.model.setHoldingItem(!p_116412_.getMainHandItem().isEmpty());
-        super.render(p_116412_, p_116413_, p_116414_, p_116415_, p_116416_, p_116417_);
+    public void render(EnderWitch enderWitch, float yRot, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
+        this.model.setHoldingItem(!enderWitch.getMainHandItem().isEmpty());
+        super.render(enderWitch, yRot, partialTicks, poseStack, multiBufferSource, packedLight);
     }
 
-    protected void scale(EnderWitch p_116419_, PoseStack p_116420_, float p_116421_) {
+    protected void scale(EnderWitch enderWitch, PoseStack poseStack, float partialTicks) {
         float f = 0.9375F;
-        p_116420_.scale(0.9375F, 0.9375F, 0.9375F);
+        poseStack.scale(0.9375F, 0.9375F, 0.9375F);
     }
 }

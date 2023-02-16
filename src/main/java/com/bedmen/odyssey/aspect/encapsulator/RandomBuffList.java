@@ -36,7 +36,7 @@ public class RandomBuffList extends RandomAspectList {
             }
         }
         aspectInstanceList = aspectInstanceList.stream().filter(aspectInstance -> random.nextFloat() < chance).collect(Collectors.toList());
-        aspectInstanceList.forEach(aspectInstance -> AspectUtil.replaceModifier(itemStack, aspectInstance));
+        aspectInstanceList.forEach(aspectInstance -> AspectUtil.addModifier(itemStack, aspectInstance));
     }
 
     public static Builder<RandomBuffList> builder() {

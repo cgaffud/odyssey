@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
@@ -49,11 +50,7 @@ public class HollowCoconutBlock extends FallingBlock implements EntityBlock, INe
 
     @Nullable
     protected static <T extends BlockEntity> BlockEntityTicker<T> createCoconutTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<? extends HollowCoconutBlockEntity> blockEntityType2) {
-        return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntityType2, HollowCoconutBlockEntity::serverTick);
-    }
-
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> blockEntityType, BlockEntityType<E> blockEntityType2, BlockEntityTicker<? super E> blockEntityTicker) {
-        return blockEntityType == blockEntityType2 ? (BlockEntityTicker<A>)blockEntityTicker : null;
+        return level.isClientSide ? null : BaseEntityBlock.createTickerHelper(blockEntityType, blockEntityType2, HollowCoconutBlockEntity::serverTick);
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {

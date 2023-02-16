@@ -1,10 +1,19 @@
 package com.bedmen.odyssey.magic;
 
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
+import com.bedmen.odyssey.util.StringUtil;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 public class ExperienceCost {
+
+    private static final String LEVEL_REQUIREMENT_TAG = "LevelRequirement";
+    private static final String LEVEL_COST_TAG = "LevelCost";
 
     public final int levelRequirement;
     public final float levelCost;
@@ -43,5 +52,38 @@ public class ExperienceCost {
         if(serverPlayer instanceof OdysseyPlayer odysseyPlayer){
             odysseyPlayer.setPartialExperiencePoint(partialExperiencePoint);
         }
+    }
+
+    public ExperienceCost multiplyCost(int count){
+        return new ExperienceCost(this.levelRequirement, this.levelCost * count);
+    }
+
+    public void displayRequirementMessage(ServerPlayer serverPlayer) {
+        if(serverPlayer.experienceLevel < this.levelRequirement){
+            serverPlayer.sendMessage(MagicUtil.getLevelRequirementComponent(this.levelRequirement), ChatType.GAME_INFO, Util.NIL_UUID);
+        } else {
+            serverPlayer.sendMessage(MagicUtil.getLevelCostComponent(this.levelCost), ChatType.GAME_INFO, Util.NIL_UUID);
+        }
+    }
+
+    public CompoundTag toCompoundTag(){
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putInt(LEVEL_REQUIREMENT_TAG, this.levelRequirement);
+        compoundTag.putFloat(LEVEL_COST_TAG, this.levelCost);
+        return  compoundTag;
+    }
+
+    public static ExperienceCost fromCompoundTag(CompoundTag compoundTag){
+        int levelRequirement = compoundTag.getInt(LEVEL_REQUIREMENT_TAG);
+        float levelCost = compoundTag.getInt(LEVEL_COST_TAG);
+        return new ExperienceCost(levelRequirement, levelCost);
+    }
+
+    public void toNetwork(FriendlyByteBuf friendlyByteBuf){
+        friendlyByteBuf.writeNbt(this.toCompoundTag());
+    }
+
+    public static ExperienceCost fromNetwork(FriendlyByteBuf friendlyByteBuf){
+        return fromCompoundTag(friendlyByteBuf.readNbt());
     }
 }

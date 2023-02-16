@@ -42,10 +42,6 @@ public class RecyclingFurnaceBlock extends AbstractFurnaceBlock {
         return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntityType2, RecyclingFurnaceBlockEntity::serverTick);
     }
 
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> blockEntityType, BlockEntityType<E> blockEntityType2, BlockEntityTicker<? super E> blockEntityTicker) {
-        return blockEntityType == blockEntityType2 ? (BlockEntityTicker<A>)blockEntityTicker : null;
-    }
-
     protected void openContainer(Level level, BlockPos blockPos, Player player) {
         BlockEntity blockentity = level.getBlockEntity(blockPos);
         if (blockentity instanceof RecyclingFurnaceBlockEntity) {

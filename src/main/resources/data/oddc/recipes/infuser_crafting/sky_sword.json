@@ -1,0 +1,29 @@
+{
+  "type": "oddc:infuser_crafting",
+  "centerIngredient": {
+    "item": "minecraft:netherite_sword"
+  },
+  "pedestalRequirementList": [
+    {
+      "isIngredient": false,
+      "object": {
+        "aspect": "solar_strength",
+        "strength": 0.5
+      }
+    },
+    {
+      "isIngredient": false,
+      "object": {
+        "aspect": "lunar_strength",
+        "strength": 1.0
+      }
+    }
+  ],
+  "experienceCost": {
+    "levelRequirement": 30,
+    "levelCost": 5.0
+  },
+  "result": {
+    "item": "oddc:sky_sword"
+  }
+}

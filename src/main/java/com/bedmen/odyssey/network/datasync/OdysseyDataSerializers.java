@@ -84,30 +84,13 @@ public class OdysseyDataSerializers {
         return getMapSerializer(FriendlyByteBuf::writeEnum, writeValueToBuffer, friendlyByteBuf -> friendlyByteBuf.readEnum(enumClass), readValueFromBuffer, HashMap::new, Map::copyOf);
     }
 
-    public static final EntityDataSerializer<AspectInstance> ASPECT_INSTANCE = new EntityDataSerializer<>() {
-        public void write(FriendlyByteBuf buffer, @NotNull AspectInstance aspectInstance) {
-            buffer.writeUtf(aspectInstance.aspect.id);
-            buffer.writeFloat(aspectInstance.strength);
-        }
-
-        public AspectInstance read(FriendlyByteBuf buffer) {
-            Aspect aspect = Aspects.ASPECT_REGISTER.get(buffer.readUtf());
-            float strength = buffer.readFloat();
-            return new AspectInstance(aspect, strength);
-        }
-
-        public AspectInstance copy(@NotNull AspectInstance aspectInstance) {
-            return new AspectInstance(aspectInstance.aspect, aspectInstance.strength);
-        }
-    };
-
     public static final EntityDataSerializer<PermabuffHolder> PERMABUFF_HOLDER = new EntityDataSerializer<>() {
         public void write(FriendlyByteBuf buffer, @NotNull PermabuffHolder permabuffHolder) {
-            buffer.writeCollection(permabuffHolder.aspectInstanceList, ASPECT_INSTANCE::write);
+            buffer.writeCollection(permabuffHolder.aspectInstanceList, AspectInstance.toNetworkStatic);
         }
 
         public PermabuffHolder read(FriendlyByteBuf buffer) {
-            List<AspectInstance> aspectInstanceList = buffer.readCollection(i -> new ArrayList<>(), ASPECT_INSTANCE::read);
+            List<AspectInstance> aspectInstanceList = buffer.readCollection(i -> new ArrayList<>(), AspectInstance::fromNetwork);
             return new PermabuffHolder(aspectInstanceList);
         }
 

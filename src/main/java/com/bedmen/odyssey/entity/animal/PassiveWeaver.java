@@ -47,7 +47,7 @@ import java.util.Map;
 
 public class PassiveWeaver extends Animal {
     private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BEETROOT);
-    private final Map<Item, Block> weaveMap = new HashMap<>();
+    private static final Map<Item, Block> WEAVE_MAP = new HashMap<>();
     private final SimpleContainer inventory = new SimpleContainer(1);
     private static final int MAX_STRING = 3;
     private static final float STRING_CHANCE = 0.05f;
@@ -58,16 +58,18 @@ public class PassiveWeaver extends Animal {
     public PassiveWeaver(EntityType<? extends PassiveWeaver> entityType, Level level) {
         super(entityType, level);
         this.setCanPickUpLoot(true);
-        Collection<WeavingRecipe> recipes = level.getRecipeManager().getAllRecipesFor(RecipeTypeRegistry.WEAVING.get());
-        for(WeavingRecipe recipe : recipes){
-            Item item = recipe.getResultItem().getItem();
-            if(!(item instanceof BlockItem blockItem)){
-                continue;
-            }
-            Block block = blockItem.getBlock();
-            for(ItemStack itemStack : recipe.getIngredient().getItems()){
-                Item item1 = itemStack.getItem();
-                weaveMap.put(item1, block);
+        if(WEAVE_MAP.isEmpty()){
+            Collection<WeavingRecipe> recipes = level.getRecipeManager().getAllRecipesFor(RecipeTypeRegistry.WEAVING.get());
+            for(WeavingRecipe recipe : recipes){
+                Item item = recipe.getResultItem().getItem();
+                if(!(item instanceof BlockItem blockItem)){
+                    continue;
+                }
+                Block block = blockItem.getBlock();
+                for(ItemStack itemStack : recipe.getIngredient().getItems()){
+                    Item item1 = itemStack.getItem();
+                    WEAVE_MAP.put(item1, block);
+                }
             }
         }
     }
@@ -114,7 +116,7 @@ public class PassiveWeaver extends Animal {
 
     public boolean wantsToPickUp(ItemStack itemStack) {
         Item item = itemStack.getItem();
-        return ((weaveMap.containsKey(item) && this.inventory.canAddItem(itemStack)) || item == Items.STRING) && !this.isBaby();
+        return ((WEAVE_MAP.containsKey(item) && this.inventory.canAddItem(itemStack)) || item == Items.STRING) && !this.isBaby();
     }
 
     protected void pickUpItem(ItemEntity itemEntity) {
@@ -298,7 +300,7 @@ public class PassiveWeaver extends Animal {
                         this.passiveWeaver.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
                     } else {
                         ItemStack itemStack = this.passiveWeaver.inventory.getItem(0);
-                        this.passiveWeaver.level.setBlock(blockPos, this.passiveWeaver.weaveMap.get(itemStack.getItem()).defaultBlockState(), 3);
+                        this.passiveWeaver.level.setBlock(blockPos, WEAVE_MAP.get(itemStack.getItem()).defaultBlockState(), 3);
                         itemStack.shrink(1);
                     }
                     this.passiveWeaver.decrementStringTimer();

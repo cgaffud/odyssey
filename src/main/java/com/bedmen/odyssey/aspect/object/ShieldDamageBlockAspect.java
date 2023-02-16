@@ -8,6 +8,6 @@ import java.util.function.Predicate;
 
 public class ShieldDamageBlockAspect extends DamageSourcePredicateAspect {
     protected ShieldDamageBlockAspect(String id, Predicate<DamageSource> damageSourcePredicate) {
-        super(id, 0.2f, AspectTooltipFunctions.ADDITIONAL_SHIELD_DAMAGE_BLOCK, damageSourcePredicate, AspectItemPredicates.SHIELD);
+        super(id, 0.2f, AspectTooltipFunctions.ADDITIONAL_SHIELD_DAMAGE_BLOCK, AspectItemPredicates.SHIELD, damageSourcePredicate);
     }
 }
