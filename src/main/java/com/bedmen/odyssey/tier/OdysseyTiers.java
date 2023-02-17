@@ -32,6 +32,7 @@ public class OdysseyTiers {
     public static final OdysseyTier COPPER = new OdysseyTier(2,200, () -> Ingredient.of(Items.COPPER_INGOT));
     public static final OdysseyTier SPIDER_FANG = new OdysseyTier(2,225, () -> Ingredient.of(ItemRegistry.SPIDER_FANG.get()));
     public static final OdysseyTier RUSTY_IRON = new OdysseyTier(2,240, () -> Ingredient.EMPTY);
+    public static final OdysseyTier CHAINMAIL = new OdysseyTier(2, () -> Ingredient.of(ItemRegistry.CHAINMAIL.get()));
     public static final OdysseyTier IRON = new OdysseyTier(2,250,6.0F, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.of(Items.IRON_INGOT));
     public static final OdysseyTier GOLD = new OdysseyTier(5,32,8.0F, Tags.Blocks.NEEDS_GOLD_TOOL, () -> Ingredient.of(Items.GOLD_INGOT));
     public static final OdysseyTier WEAVER_FANG = new OdysseyTier(2,225, () -> Ingredient.of(ItemRegistry.WEAVER_FANG.get()));
@@ -61,7 +62,7 @@ public class OdysseyTiers {
     // # No Diggers
 
     public static void init(){
-        TierSortingRegistry.registerTier(NO_TIER, new ResourceLocation(Odyssey.MOD_ID,"coconut"), List.of(), List.of(Tiers.WOOD));
+        TierSortingRegistry.registerTier(NO_TIER, new ResourceLocation(Odyssey.MOD_ID,"no_tier"), List.of(), List.of(Tiers.WOOD));
         TierSortingRegistry.registerTier(CACTUS, new ResourceLocation(Odyssey.MOD_ID,"cactus"), List.of(NO_TIER), List.of(Tiers.WOOD));
         TierSortingRegistry.registerTier(WOOD, new ResourceLocation(Odyssey.MOD_ID,"wood"), List.of(Tiers.WOOD), List.of(Tiers.STONE));
         TierSortingRegistry.registerTier(STONE, new ResourceLocation(Odyssey.MOD_ID,"stone"), List.of(Tiers.STONE), List.of(Tiers.IRON));
