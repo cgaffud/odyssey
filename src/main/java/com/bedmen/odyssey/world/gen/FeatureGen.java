@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.world.gen;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.FeatureRegistry;
@@ -38,8 +38,8 @@ public class FeatureGen {
     public static Holder<PlacedFeature> PLACED_PATCH_TALL_GRASS;
     public static Holder<PlacedFeature> PLACED_PATCH_PRAIRIE_GRASS;
 
-    public static Map<TreasureChestMaterial, Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>>> TREASURE_CHESTS = new HashMap<>();
-    public static Map<TreasureChestMaterial, Holder<PlacedFeature>> PLACED_TREASURE_CHESTS = new HashMap<>();
+    public static Map<TreasureChestType, Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>>> TREASURE_CHESTS = new HashMap<>();
+    public static Map<TreasureChestType, Holder<PlacedFeature>> PLACED_TREASURE_CHESTS = new HashMap<>();
     public static Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>> ABANDONED_IRON_GOLEM;
     public static Holder<PlacedFeature> PLACED_ABANDONED_IRON_GOLEM;
 
@@ -50,9 +50,9 @@ public class FeatureGen {
         PLACED_PATCH_TALL_GRASS = PlacementUtils.register("placed_patch_tall_grass", VegetationFeatures.PATCH_TALL_GRASS, NoiseThresholdCountPlacement.of(-0.8D, 5, 10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
         PLACED_PATCH_PRAIRIE_GRASS = PlacementUtils.register("placed_patch_prairie_grass", PATCH_PRAIRIE_GRASS, NoiseThresholdCountPlacement.of(-0.8D, 5, 10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
 
-        for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
-            TREASURE_CHESTS.put(treasureChestMaterial, FeatureUtils.register(treasureChestMaterial.name().toLowerCase(Locale.ROOT) + "_treasure_chest", FeatureRegistry.TREASURE_CHEST_MAP.get(treasureChestMaterial), FeatureConfiguration.NONE));
-            PLACED_TREASURE_CHESTS.put(treasureChestMaterial, PlacementUtils.register("placed_" + treasureChestMaterial.name().toLowerCase(Locale.ROOT) + "_treasure_chest", TREASURE_CHESTS.get(treasureChestMaterial), RarityFilter.onAverageOnceEvery(20), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome()));
+        for(TreasureChestType treasureChestType : TreasureChestType.values()){
+            TREASURE_CHESTS.put(treasureChestType, FeatureUtils.register(treasureChestType.name().toLowerCase(Locale.ROOT) + "_treasure_chest", FeatureRegistry.TREASURE_CHEST_MAP.get(treasureChestType), FeatureConfiguration.NONE));
+            PLACED_TREASURE_CHESTS.put(treasureChestType, PlacementUtils.register("placed_" + treasureChestType.name().toLowerCase(Locale.ROOT) + "_treasure_chest", TREASURE_CHESTS.get(treasureChestType), RarityFilter.onAverageOnceEvery(20), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome()));
         }
         ABANDONED_IRON_GOLEM = FeatureUtils.register("abandoned_iron_golem", FeatureRegistry.ABANDONED_IRON_GOLEM.get(), FeatureConfiguration.NONE);
         PLACED_ABANDONED_IRON_GOLEM = PlacementUtils.register("placed_abandoned_iron_golem", ABANDONED_IRON_GOLEM, InSquarePlacement.spread(), CountPlacement.of(1), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
@@ -67,8 +67,8 @@ public class FeatureGen {
         } else if (event.getCategory() == Biome.BiomeCategory.THEEND) {
 
         } else {
-            for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
-                gen.addFeature(GenerationStep.Decoration.UNDERGROUND_STRUCTURES, PLACED_TREASURE_CHESTS.get(treasureChestMaterial));
+            for(TreasureChestType treasureChestType : TreasureChestType.values()){
+                gen.addFeature(GenerationStep.Decoration.UNDERGROUND_STRUCTURES, PLACED_TREASURE_CHESTS.get(treasureChestType));
             }
             gen.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, PLACED_ABANDONED_IRON_GOLEM);
 

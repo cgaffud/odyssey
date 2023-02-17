@@ -14,6 +14,9 @@ import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplie
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
 public class CovenHutFeature extends StructureFeature<NoneFeatureConfiguration> {
+
+    public static final int INITIAL_HEIGHT = 90;
+
     public CovenHutFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec, PieceGeneratorSupplier.simple(PieceGeneratorSupplier.checkForBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG), CovenHutFeature::generatePieces));
     }
@@ -23,7 +26,7 @@ public class CovenHutFeature extends StructureFeature<NoneFeatureConfiguration> 
     }
 
     private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {
-        BlockPos blockpos = new BlockPos(context.chunkPos().getMinBlockX(), 90, context.chunkPos().getMinBlockZ());
+        BlockPos blockpos = new BlockPos(context.chunkPos().getMinBlockX(), INITIAL_HEIGHT, context.chunkPos().getMinBlockZ());
         Rotation rotation = Rotation.getRandom(context.random());
         CovenHutPiece covenHutPiece = new CovenHutPiece(context.structureManager(), blockpos, rotation);
         structurePiecesBuilder.addPiece(covenHutPiece);

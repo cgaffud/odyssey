@@ -7,17 +7,14 @@ import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.*;
 import com.bedmen.odyssey.client.model.*;
 import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.InfuserRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.InfusionPedestalRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
+import com.bedmen.odyssey.client.renderer.blockentity.*;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.combat.ShieldType;
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.particle.ThrustParticle;
 import com.bedmen.odyssey.potions.FireType;
 import com.bedmen.odyssey.registry.*;
@@ -107,11 +104,12 @@ public class ClientEvents {
 
             //Block Entity Renderings
             BlockEntityRenderers.register(BlockEntityTypeRegistry.SIGN.get(), OdysseySignRenderer::new);
+            BlockEntityRenderers.register(BlockEntityTypeRegistry.COVEN_HUT_DOOR.get(), CovenHutDoorRenderer::new);
             BlockEntityRenderers.register(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), InfusionPedestalRenderer::new);
             BlockEntityRenderers.register(BlockEntityTypeRegistry.INFUSER.get(), InfuserRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
-            BlockEntityRenderers.register(BlockEntityTypeRegistry.TREASURE_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestMaterial.STERLING_SILVER, context));
+            BlockEntityRenderers.register(BlockEntityTypeRegistry.TREASURE_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestType.STERLING_SILVER, context));
 
             //Screens
             MenuScreens.register(ContainerRegistry.RECYCLING_FURNACE.get(), RecyclingFurnaceScreen::new);
@@ -185,9 +183,9 @@ public class ClientEvents {
             event.addSprite(shieldType.getRenderMaterial(true).texture());
         }
         //Treasure Chest Textures
-        for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
-            event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestMaterial, false).texture());
-            event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestMaterial, true).texture());
+        for(TreasureChestType treasureChestType : TreasureChestType.values()){
+            event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestType, false).texture());
+            event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestType, true).texture());
         }
         // Modded fire variants
         for(FireType fireType : FireType.values()){

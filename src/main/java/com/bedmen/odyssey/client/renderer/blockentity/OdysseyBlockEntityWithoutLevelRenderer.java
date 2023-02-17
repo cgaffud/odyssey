@@ -6,7 +6,7 @@ import com.bedmen.odyssey.client.model.SpearModel;
 import com.bedmen.odyssey.items.BEWLRBlockItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.items.aspect_items.SpearItem;
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.lock.TreasureChestType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
@@ -41,7 +41,7 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
 
     private static OdysseyBlockEntityWithoutLevelRenderer instance = null;
     private final EntityModelSet entityModelSet;
-    private final Map<TreasureChestMaterial, TreasureChestBlockEntity> treasureChestMap = new HashMap<>();
+    private final Map<TreasureChestType, TreasureChestBlockEntity> treasureChestMap = new HashMap<>();
     private SpearModel spearModel;
     private TridentModel tridentModel;
 
@@ -49,8 +49,8 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
         super(blockEntityRenderDispatcher, entityModelSet);
         this.entityModelSet = entityModelSet;
         this.shieldModel = new ShieldModel(this.entityModelSet.bakeLayer(ModelLayers.SHIELD));
-        for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
-            this.treasureChestMap.put(treasureChestMaterial, new TreasureChestBlockEntity(BlockPos.ZERO, treasureChestMaterial.getBlockState()));
+        for(TreasureChestType treasureChestType : TreasureChestType.values()){
+            this.treasureChestMap.put(treasureChestType, new TreasureChestBlockEntity(BlockPos.ZERO, treasureChestType.getBlockState()));
         }
         this.spearModel = new SpearModel(this.entityModelSet.bakeLayer(SpearModel.LAYER_LOCATION));
         this.tridentModel = new TridentModel(this.entityModelSet.bakeLayer(ModelLayers.TRIDENT));
@@ -68,8 +68,8 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
     public void onResourceManagerReload(ResourceManager resourceManager) {
         this.shieldModel = new ShieldModel(this.entityModelSet.bakeLayer(ModelLayers.SHIELD));
         this.treasureChestMap.clear();
-        for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
-            this.treasureChestMap.put(treasureChestMaterial, new TreasureChestBlockEntity(BlockPos.ZERO, treasureChestMaterial.getBlockState()));
+        for(TreasureChestType treasureChestType : TreasureChestType.values()){
+            this.treasureChestMap.put(treasureChestType, new TreasureChestBlockEntity(BlockPos.ZERO, treasureChestType.getBlockState()));
         }
         this.spearModel = new SpearModel(this.entityModelSet.bakeLayer(SpearModel.LAYER_LOCATION));
         this.tridentModel = new TridentModel(this.entityModelSet.bakeLayer(ModelLayers.TRIDENT));
@@ -83,7 +83,7 @@ public class OdysseyBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLe
             BlockState blockstate = block.defaultBlockState();
             BlockEntity blockEntity = null;
             if (blockstate.getBlock() instanceof TreasureChestBlock treasureChestBlock) {
-                blockEntity = this.treasureChestMap.get(treasureChestBlock.treasureChestMaterial);
+                blockEntity = this.treasureChestMap.get(treasureChestBlock.treasureChestType);
             }
             if(blockEntity != null){
                 this.blockEntityRenderDispatcher.renderItem(blockEntity, poseStack, multiBufferSource, packedLight, packedOverlay);
