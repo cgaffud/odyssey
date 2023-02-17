@@ -6,68 +6,61 @@ import com.bedmen.odyssey.lock.LockableDoorType;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.SoundEventRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
 public class CovenHutDoorBlock extends TransparentDoorBlock implements EntityBlock {
 
-    public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
-
     public CovenHutDoorBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(LOCKED, true));
-    }
-
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        builder.add(LOCKED);
     }
 
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if(blockState.getValue(LOCKED)){
-            ItemStack itemStack = player.getItemInHand(interactionHand);
-            if(itemStack.getItem() instanceof KeyItem keyItem && keyItem.lockType == LockableDoorType.COVEN_HUT){
-                level.setBlock(blockPos, blockState.setValue(LOCKED, Boolean.FALSE), 3);
-                if(blockState.getValue(HALF) == DoubleBlockHalf.UPPER){
-                    BlockPos lowerBlockPos = blockPos.below();
-                    BlockState lowerBlockState = level.getBlockState(lowerBlockPos);
-                    level.setBlock(lowerBlockPos, lowerBlockState.setValue(LOCKED, Boolean.FALSE), 3);
-                } else {
-                    BlockPos higherBlockPos = blockPos.above();
-                    BlockState higherBlockState = level.getBlockState(higherBlockPos);
-                    level.setBlock(higherBlockPos, higherBlockState.setValue(LOCKED, Boolean.FALSE), 3);
-                }
-                level.playSound(player, blockPos, SoundEventRegistry.KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
-                return InteractionResult.SUCCESS;
+        ItemStack itemStack = player.getItemInHand(interactionHand);
+        if(itemStack.getItem() instanceof KeyItem keyItem && keyItem.lockType == LockableDoorType.COVEN_HUT){
+            if(blockState.getValue(HALF) == DoubleBlockHalf.UPPER){
+                BlockPos lowerBlockPos = blockPos.below();
+                BlockState lowerBlockState = level.getBlockState(lowerBlockPos);
+                level.setBlock(lowerBlockPos, Blocks.AIR.defaultBlockState(), 3);
+                level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
+                replaceWithOakDoor(lowerBlockState, level, lowerBlockPos);
+                replaceWithOakDoor(blockState, level, blockPos);
             } else {
-                level.playSound(player, blockPos, SoundEventRegistry.LOCKED_CHEST.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
-                return InteractionResult.FAIL;
+                BlockPos higherBlockPos = blockPos.above();
+                BlockState higherBlockState = level.getBlockState(higherBlockPos);
+                level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
+                level.setBlock(higherBlockPos, Blocks.AIR.defaultBlockState(), 3);
+                replaceWithOakDoor(blockState, level, blockPos);
+                replaceWithOakDoor(higherBlockState, level, higherBlockPos);
             }
+            level.playSound(player, blockPos, SoundEventRegistry.KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+            return InteractionResult.SUCCESS;
         } else {
-            return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
+            level.playSound(player, blockPos, SoundEventRegistry.LOCKED_CHEST.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+            return InteractionResult.FAIL;
         }
+    }
+
+    public void replaceWithOakDoor(BlockState blockState, Level level, BlockPos blockPos){
+        BlockState oakDoorBlockState = Blocks.OAK_DOOR.defaultBlockState()
+                .setValue(FACING, blockState.getValue(FACING))
+                .setValue(OPEN, blockState.getValue(OPEN))
+                .setValue(HINGE, blockState.getValue(HINGE))
+                .setValue(HALF, blockState.getValue(HALF));
+        level.setBlock(blockPos, oakDoorBlockState, 3);
     }
 
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -97,8 +90,5 @@ public class CovenHutDoorBlock extends TransparentDoorBlock implements EntityBlo
     }
 
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPosNeighbor, boolean flag) {
-        if(!blockState.getValue(LOCKED)){
-            super.neighborChanged(blockState, level, blockPos, block, blockPosNeighbor, flag);
-        }
     }
 }

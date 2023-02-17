@@ -21,25 +21,21 @@ public class CovenHutDoorBlockEntity extends BlockEntity {
     }
 
     public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, CovenHutDoorBlockEntity covenHutDoorBlockEntity) {
-//        if(blockState.getValue(CovenHutDoorBlock.LOCKED)){
-//        }
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, CovenHutDoorBlockEntity covenHutDoorBlockEntity) {
-        if(blockState.getValue(CovenHutDoorBlock.LOCKED)){
-            AABB boundingBox = new AABB(blockPos).inflate(20.0d, 15.0d, 20.0d);
-            level.getEntitiesOfClass(ServerPlayer.class, boundingBox)
-                    .stream()
-                    .filter(serverPlayer ->
-                            !serverPlayer.isCreative()
-                            && !serverPlayer.isSpectator()
-                            && !serverPlayer.getItemInHand(InteractionHand.MAIN_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())
-                            && !serverPlayer.getItemInHand(InteractionHand.OFF_HAND).is(ItemRegistry.COVEN_HUT_KEY.get()))
-                    .forEach(serverPlayer -> {
-                        serverPlayer.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));
-                        teleportRandomlyOutsideBoundingBox(serverPlayer, boundingBox);
-                    });
-        }
+        AABB boundingBox = new AABB(blockPos).inflate(20.0d, 15.0d, 20.0d);
+        level.getEntitiesOfClass(ServerPlayer.class, boundingBox)
+                .stream()
+                .filter(serverPlayer ->
+                        !serverPlayer.isCreative()
+                                && !serverPlayer.isSpectator()
+                                && !serverPlayer.getItemInHand(InteractionHand.MAIN_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())
+                                && !serverPlayer.getItemInHand(InteractionHand.OFF_HAND).is(ItemRegistry.COVEN_HUT_KEY.get()))
+                .forEach(serverPlayer -> {
+                    serverPlayer.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));
+                    teleportRandomlyOutsideBoundingBox(serverPlayer, boundingBox);
+                });
     }
 
     protected static boolean teleportRandomlyOutsideBoundingBox(ServerPlayer serverPlayer, AABB boundingBox) {

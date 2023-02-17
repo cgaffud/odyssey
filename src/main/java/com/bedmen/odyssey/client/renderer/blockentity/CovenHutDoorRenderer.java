@@ -29,45 +29,43 @@ public class CovenHutDoorRenderer implements BlockEntityRenderer<CovenHutDoorBlo
             BlockPos blockPos = covenHutDoorBlockEntity.getBlockPos();
             BlockState blockState = level.getBlockState(blockPos);
             if(blockState.is(BlockRegistry.COVEN_DOOR.get())){
-                if( blockState.getValue(CovenHutDoorBlock.LOCKED)){
-                    poseStack.pushPose();
-                    Direction direction = blockState.getValue(DoorBlock.FACING);
-                    VertexConsumer vertexconsumer = multiBufferSource.getBuffer(Sheets.translucentCullBlockSheet());
-                    TextureAtlasSprite sprite = FireType.HEX.material0.sprite();
-                    float u0 = sprite.getU0();
-                    float v0 = sprite.getV0();
-                    float u1 = sprite.getU1();
-                    float v1 = sprite.getV1();
-                    PoseStack.Pose posestack$pose = poseStack.last();
-                    switch (direction){
-                        case WEST -> {
-                            fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 0, u1, v1);
-                            fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 1, u0, v1);
-                            fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 1, u0, v0);
-                            fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 0, u1, v0);
-                        }
-                        case EAST -> {
-                            fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 1, u1, v1);
-                            fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 0, u0, v1);
-                            fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 0, u0, v0);
-                            fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 1, u1, v0);
-                        }
-                        case NORTH -> {
-                            fireVertex(posestack$pose, vertexconsumer, 1, 0, 0.5f, u1, v1);
-                            fireVertex(posestack$pose, vertexconsumer, 0, 0, 0.5f, u0, v1);
-                            fireVertex(posestack$pose, vertexconsumer, 0, 2, 0.5f, u0, v0);
-                            fireVertex(posestack$pose, vertexconsumer, 1, 2, 0.5f, u1, v0);
-                        }
-                        case SOUTH -> {
-                            fireVertex(posestack$pose, vertexconsumer, 0, 0, 0.5f, u1, v1);
-                            fireVertex(posestack$pose, vertexconsumer, 1, 0, 0.5f, u0, v1);
-                            fireVertex(posestack$pose, vertexconsumer, 1, 2, 0.5f, u0, v0);
-                            fireVertex(posestack$pose, vertexconsumer, 0, 2, 0.5f, u1, v0);
-                        }
-
+                poseStack.pushPose();
+                Direction direction = blockState.getValue(DoorBlock.FACING);
+                VertexConsumer vertexconsumer = multiBufferSource.getBuffer(Sheets.translucentCullBlockSheet());
+                TextureAtlasSprite sprite = FireType.HEX.material0.sprite();
+                float u0 = sprite.getU0();
+                float v0 = sprite.getV0();
+                float u1 = sprite.getU1();
+                float v1 = sprite.getV1();
+                PoseStack.Pose posestack$pose = poseStack.last();
+                switch (direction){
+                    case WEST -> {
+                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 0, u1, v1);
+                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 1, u0, v1);
+                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 1, u0, v0);
+                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 0, u1, v0);
                     }
-                    poseStack.popPose();
+                    case EAST -> {
+                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 1, u1, v1);
+                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 0, u0, v1);
+                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 0, u0, v0);
+                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 1, u1, v0);
+                    }
+                    case NORTH -> {
+                        fireVertex(posestack$pose, vertexconsumer, 1, 0, 0.5f, u1, v1);
+                        fireVertex(posestack$pose, vertexconsumer, 0, 0, 0.5f, u0, v1);
+                        fireVertex(posestack$pose, vertexconsumer, 0, 2, 0.5f, u0, v0);
+                        fireVertex(posestack$pose, vertexconsumer, 1, 2, 0.5f, u1, v0);
+                    }
+                    case SOUTH -> {
+                        fireVertex(posestack$pose, vertexconsumer, 0, 0, 0.5f, u1, v1);
+                        fireVertex(posestack$pose, vertexconsumer, 1, 0, 0.5f, u0, v1);
+                        fireVertex(posestack$pose, vertexconsumer, 1, 2, 0.5f, u0, v0);
+                        fireVertex(posestack$pose, vertexconsumer, 0, 2, 0.5f, u1, v0);
+                    }
+
                 }
+                poseStack.popPose();
             }
         }
     }
