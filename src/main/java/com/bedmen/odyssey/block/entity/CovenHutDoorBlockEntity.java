@@ -1,25 +1,31 @@
 package com.bedmen.odyssey.block.entity;
 
-import com.bedmen.odyssey.block.wood.CovenHutDoorBlock;
 import com.bedmen.odyssey.potions.FireEffect;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.world.gen.StructureResourceKeys;
+import com.bedmen.odyssey.world.gen.structure.CovenHutFeature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.Registry;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.world.NoteBlockEvent;
 
 public class CovenHutDoorBlockEntity extends BlockEntity {
+
+    private AABB boundingBox;
+
     public CovenHutDoorBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityTypeRegistry.COVEN_HUT_DOOR.get(), blockPos, blockState);
     }
@@ -28,29 +34,31 @@ public class CovenHutDoorBlockEntity extends BlockEntity {
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, CovenHutDoorBlockEntity covenHutDoorBlockEntity) {
-        AABB boundingBox = new AABB(blockPos).inflate(20.0d, 15.0d, 20.0d);
-        level.getEntitiesOfClass(LivingEntity.class, boundingBox)
-                .stream()
-                .filter(entity -> !(entity instanceof Player player)
-                        || (!player.isCreative()
-                        && !player.isSpectator()
-                        && !player.getItemInHand(InteractionHand.MAIN_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())
-                        && !player.getItemInHand(InteractionHand.OFF_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())))
-                .forEach(livingEntity -> {
-                    livingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));
-                    teleportRandomlyOutsideBoundingBox(livingEntity, boundingBox);
-                });
-//        level.getEntitiesOfClass(ServerPlayer.class, boundingBox)
-//                .stream()
-//                .filter(serverPlayer ->
-//                        !serverPlayer.isCreative()
-//                                && !serverPlayer.isSpectator()
-//                                && !serverPlayer.getItemInHand(InteractionHand.MAIN_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())
-//                                && !serverPlayer.getItemInHand(InteractionHand.OFF_HAND).is(ItemRegistry.COVEN_HUT_KEY.get()))
-//                .forEach(serverPlayer -> {
-//                    serverPlayer.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));
-//                    teleportRandomlyOutsideBoundingBox(serverPlayer, boundingBox);
-//                });
+        if(covenHutDoorBlockEntity.boundingBox == null && level instanceof ServerLevel serverlevel){
+            StructureFeatureManager structureFeatureManager = serverlevel.structureFeatureManager();
+            ConfiguredStructureFeature<?, ?> configuredstructurefeature = structureFeatureManager.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).get(StructureResourceKeys.COVEN_HUT);
+            if(configuredstructurefeature != null){
+                BlockPos heightAdjustedBlockPos = blockPos.atY(CovenHutFeature.INITIAL_HEIGHT);
+                StructureStart structureStart = structureFeatureManager.getStructureAt(heightAdjustedBlockPos, configuredstructurefeature);
+                if(structureStart.isValid()){
+                    covenHutDoorBlockEntity.boundingBox = AABB.of(structureStart.getBoundingBox()).move(0, blockPos.getY() - CovenHutFeature.INITIAL_HEIGHT -  1, 0).inflate(5.0d);
+                }
+            }
+        }
+
+        if(covenHutDoorBlockEntity.boundingBox != null){
+            level.getEntitiesOfClass(LivingEntity.class, covenHutDoorBlockEntity.boundingBox)
+                    .stream()
+                    .filter(entity -> !(entity instanceof Player player)
+                            || (!player.isCreative()
+                            && !player.isSpectator()
+                            && !player.getItemInHand(InteractionHand.MAIN_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())
+                            && !player.getItemInHand(InteractionHand.OFF_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())))
+                    .forEach(livingEntity -> {
+                        livingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));
+                        teleportRandomlyOutsideBoundingBox(livingEntity, covenHutDoorBlockEntity.boundingBox);
+                    });
+        }
     }
 
     protected static void teleportRandomlyOutsideBoundingBox(LivingEntity livingEntity, AABB boundingBox) {

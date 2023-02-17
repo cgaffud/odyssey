@@ -3,6 +3,7 @@ package com.bedmen.odyssey.world.gen.structure.pieces;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.util.WorldGenUtil;
+import com.bedmen.odyssey.world.gen.structure.CovenHutFeature;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -69,9 +70,14 @@ public class CovenHutPiece extends TemplateStructurePiece {
 
         int height = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, entrance.getX(), entrance.getZ());
         BlockPos blockpos2 = this.templatePosition;
-        int y = height - 90 + 1;
+        int dy = height - CovenHutFeature.INITIAL_HEIGHT + 1;
+        System.out.println("postProcess CovenHutPiece");
+        System.out.println("y: "+dy);
+        System.out.println(this.boundingBox);
+        this.boundingBox.move(0, dy, 0);
+        System.out.println(this.boundingBox);
 
-        this.templatePosition = this.templatePosition.offset(0, y, 0);
+        this.templatePosition = this.templatePosition.offset(0, dy, 0);
 //        BlockPos.MutableBlockPos mutable = BlockPos.ZERO.mutable();
 //        for(Pair<Integer,Integer> pair : RELATIVE_POSTS) {
 //            // RELATIVE_POSTS (x,z) pairs were measured from the lowest x-z of the bounding box, where pos is the center.
