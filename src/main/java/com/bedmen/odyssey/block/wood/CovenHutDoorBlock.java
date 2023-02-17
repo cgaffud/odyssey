@@ -12,6 +12,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -31,20 +32,16 @@ public class CovenHutDoorBlock extends TransparentDoorBlock implements EntityBlo
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         if(itemStack.getItem() instanceof KeyItem keyItem && keyItem.lockType == LockableDoorType.COVEN_HUT){
-            if(blockState.getValue(HALF) == DoubleBlockHalf.UPPER){
-                BlockPos lowerBlockPos = blockPos.below();
-                BlockState lowerBlockState = level.getBlockState(lowerBlockPos);
-                level.setBlock(lowerBlockPos, Blocks.AIR.defaultBlockState(), 3);
-                level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
-                replaceWithOakDoor(lowerBlockState, level, lowerBlockPos);
-                replaceWithOakDoor(blockState, level, blockPos);
-            } else {
-                BlockPos higherBlockPos = blockPos.above();
-                BlockState higherBlockState = level.getBlockState(higherBlockPos);
-                level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
-                level.setBlock(higherBlockPos, Blocks.AIR.defaultBlockState(), 3);
-                replaceWithOakDoor(blockState, level, blockPos);
-                replaceWithOakDoor(higherBlockState, level, higherBlockPos);
+            BlockPos lowerBlockPos = blockState.getValue(HALF) == DoubleBlockHalf.UPPER ? blockPos.below() : blockPos;
+            BlockPos upperBlockPos = blockState.getValue(HALF) == DoubleBlockHalf.UPPER ? blockPos : blockPos.above();
+            BlockState lowerBlockState = level.getBlockState(lowerBlockPos);
+            BlockState upperBlockState = level.getBlockState(upperBlockPos);
+            level.setBlock(lowerBlockPos, Blocks.AIR.defaultBlockState(), 3);
+            level.setBlock(upperBlockPos, Blocks.AIR.defaultBlockState(), 3);
+            BlockState oakDoorLowerBlockState = getOakDoorReplacementBlockState(lowerBlockState);
+            if(Blocks.OAK_DOOR.canSurvive(oakDoorLowerBlockState, level, lowerBlockPos)){
+                level.setBlock(lowerBlockPos, oakDoorLowerBlockState, 3);
+                level.setBlock(lowerBlockPos, getOakDoorReplacementBlockState(upperBlockState), 3);
             }
             level.playSound(player, blockPos, SoundEventRegistry.KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
             return InteractionResult.SUCCESS;
@@ -54,13 +51,12 @@ public class CovenHutDoorBlock extends TransparentDoorBlock implements EntityBlo
         }
     }
 
-    public void replaceWithOakDoor(BlockState blockState, Level level, BlockPos blockPos){
-        BlockState oakDoorBlockState = Blocks.OAK_DOOR.defaultBlockState()
+    public BlockState getOakDoorReplacementBlockState(BlockState blockState){
+        return Blocks.OAK_DOOR.defaultBlockState()
                 .setValue(FACING, blockState.getValue(FACING))
                 .setValue(OPEN, blockState.getValue(OPEN))
                 .setValue(HINGE, blockState.getValue(HINGE))
                 .setValue(HALF, blockState.getValue(HALF));
-        level.setBlock(blockPos, oakDoorBlockState, 3);
     }
 
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -90,5 +86,9 @@ public class CovenHutDoorBlock extends TransparentDoorBlock implements EntityBlo
     }
 
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPosNeighbor, boolean flag) {
+    }
+
+    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+        return true;
     }
 }
