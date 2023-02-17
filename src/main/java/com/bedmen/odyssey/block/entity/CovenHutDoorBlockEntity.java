@@ -10,10 +10,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.event.world.NoteBlockEvent;
 
 public class CovenHutDoorBlockEntity extends BlockEntity {
     public CovenHutDoorBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -25,57 +29,62 @@ public class CovenHutDoorBlockEntity extends BlockEntity {
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, CovenHutDoorBlockEntity covenHutDoorBlockEntity) {
         AABB boundingBox = new AABB(blockPos).inflate(20.0d, 15.0d, 20.0d);
-        level.getEntitiesOfClass(ServerPlayer.class, boundingBox)
+        level.getEntitiesOfClass(LivingEntity.class, boundingBox)
                 .stream()
-                .filter(serverPlayer ->
-                        !serverPlayer.isCreative()
-                                && !serverPlayer.isSpectator()
-                                && !serverPlayer.getItemInHand(InteractionHand.MAIN_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())
-                                && !serverPlayer.getItemInHand(InteractionHand.OFF_HAND).is(ItemRegistry.COVEN_HUT_KEY.get()))
-                .forEach(serverPlayer -> {
-                    serverPlayer.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));
-                    teleportRandomlyOutsideBoundingBox(serverPlayer, boundingBox);
+                .filter(entity -> !(entity instanceof Player player)
+                        || (!player.isCreative()
+                        && !player.isSpectator()
+                        && !player.getItemInHand(InteractionHand.MAIN_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())
+                        && !player.getItemInHand(InteractionHand.OFF_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())))
+                .forEach(livingEntity -> {
+                    livingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));
+                    teleportRandomlyOutsideBoundingBox(livingEntity, boundingBox);
                 });
+//        level.getEntitiesOfClass(ServerPlayer.class, boundingBox)
+//                .stream()
+//                .filter(serverPlayer ->
+//                        !serverPlayer.isCreative()
+//                                && !serverPlayer.isSpectator()
+//                                && !serverPlayer.getItemInHand(InteractionHand.MAIN_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())
+//                                && !serverPlayer.getItemInHand(InteractionHand.OFF_HAND).is(ItemRegistry.COVEN_HUT_KEY.get()))
+//                .forEach(serverPlayer -> {
+//                    serverPlayer.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));
+//                    teleportRandomlyOutsideBoundingBox(serverPlayer, boundingBox);
+//                });
     }
 
-    protected static boolean teleportRandomlyOutsideBoundingBox(ServerPlayer serverPlayer, AABB boundingBox) {
-        if (!serverPlayer.level.isClientSide() && serverPlayer.isAlive()) {
-            double x = serverPlayer.getX();
-            double y = serverPlayer.getY();
-            double z = serverPlayer.getZ();
+    protected static void teleportRandomlyOutsideBoundingBox(LivingEntity livingEntity, AABB boundingBox) {
+        if (!livingEntity.level.isClientSide() && livingEntity.isAlive()) {
+            double x = livingEntity.getX();
+            double y = livingEntity.getY();
+            double z = livingEntity.getZ();
             int attempts = 0;
-            AABB wideBoundingBox = boundingBox.inflate(serverPlayer.getBbWidth(), serverPlayer.getBbHeight(), serverPlayer.getBbWidth());
+            AABB wideBoundingBox = boundingBox.inflate(livingEntity.getBbWidth(), livingEntity.getBbHeight(), livingEntity.getBbWidth());
             while(wideBoundingBox.contains(x, y, z) && attempts < 20){
-                x = serverPlayer.getX() + (serverPlayer.getRandom().nextDouble() - 0.5D) * 64.0D;
-                y = serverPlayer.getY() + (double)(serverPlayer.getRandom().nextInt(64) - 32);
-                z = serverPlayer.getZ() + (serverPlayer.getRandom().nextDouble() - 0.5D) * 64.0D;
+                x = livingEntity.getX() + (livingEntity.level.random.nextDouble() - 0.5D) * 64.0D;
+                y = livingEntity.getY() + (double)(livingEntity.level.random.nextInt(64) - 32);
+                z = livingEntity.getZ() + (livingEntity.level.random.nextDouble() - 0.5D) * 64.0D;
                 attempts++;
             }
-            return teleport(serverPlayer, x, y, z);
-        } else {
-            return false;
+            teleport(livingEntity, x, y, z);
         }
     }
 
-    private static boolean teleport(ServerPlayer serverPlayer, double x, double y, double z) {
+    private static void teleport(LivingEntity livingEntity, double x, double y, double z) {
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(x, y, z);
 
-        while(blockpos$mutableblockpos.getY() > serverPlayer.level.getMinBuildHeight() && !serverPlayer.level.getBlockState(blockpos$mutableblockpos).getMaterial().blocksMotion()) {
+        while(blockpos$mutableblockpos.getY() > livingEntity.level.getMinBuildHeight() && !livingEntity.level.getBlockState(blockpos$mutableblockpos).getMaterial().blocksMotion()) {
             blockpos$mutableblockpos.move(Direction.DOWN);
         }
 
-        BlockState blockstate = serverPlayer.level.getBlockState(blockpos$mutableblockpos);
+        BlockState blockstate = livingEntity.level.getBlockState(blockpos$mutableblockpos);
         boolean blocksMotion = blockstate.getMaterial().blocksMotion();
         if (blocksMotion) {
-            boolean flag2 = serverPlayer.randomTeleport(x, y, z, true);
-            if (flag2 && !serverPlayer.isSilent()) {
-                serverPlayer.level.playSound(null, serverPlayer.xo, serverPlayer.yo, serverPlayer.zo, SoundEvents.ENDERMAN_TELEPORT, serverPlayer.getSoundSource(), 1.0F, 1.0F);
-                serverPlayer.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+            boolean flag2 = livingEntity.randomTeleport(x, y, z, true);
+            if (flag2 && !livingEntity.isSilent()) {
+                livingEntity.level.playSound(null, livingEntity.xo, livingEntity.yo, livingEntity.zo, SoundEvents.ENDERMAN_TELEPORT, livingEntity.getSoundSource(), 1.0F, 1.0F);
+                livingEntity.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
             }
-
-            return flag2;
-        } else {
-            return false;
         }
     }
 }

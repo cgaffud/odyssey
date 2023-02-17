@@ -41,7 +41,7 @@ public class CovenHutDoorBlock extends TransparentDoorBlock implements EntityBlo
             BlockState oakDoorLowerBlockState = getOakDoorReplacementBlockState(lowerBlockState);
             if(Blocks.OAK_DOOR.canSurvive(oakDoorLowerBlockState, level, lowerBlockPos)){
                 level.setBlock(lowerBlockPos, oakDoorLowerBlockState, 3);
-                level.setBlock(lowerBlockPos, getOakDoorReplacementBlockState(upperBlockState), 3);
+                level.setBlock(upperBlockPos, getOakDoorReplacementBlockState(upperBlockState), 3);
             }
             level.playSound(player, blockPos, SoundEventRegistry.KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
             return InteractionResult.SUCCESS;
