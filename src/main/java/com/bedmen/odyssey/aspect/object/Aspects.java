@@ -123,6 +123,7 @@ public class Aspects {
 
     // # Permabuffs
     public static final PermabuffAspect ADDITIONAL_MOB_HARVEST_LEVEL = new PermabuffAspect("additional_mob_harvest_level", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final PermabuffAspect HUNGER = new PermabuffAspect("hunger", AspectTooltipFunctions.NUMBER_ADDITION);
 
     // # Other
     public static final IntegerAspect TELEPORTATION_IMMUNITY = new IntegerAspect("teleportation_immunity", 0.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, false);
