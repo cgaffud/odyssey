@@ -3,12 +3,15 @@ package com.bedmen.odyssey.entity.boss.coven;
 import com.bedmen.odyssey.entity.ai.CovenReturnToMasterGoal;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
+import com.bedmen.odyssey.items.WarpTotem;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
@@ -183,6 +186,17 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
 
             return flag;
         }
+    }
+
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean b) {
+        super.dropCustomDeathLoot(damageSource, looting, b);
+        if (this.isEnraged()) {
+            if (this.random.nextDouble() < SPECIAL_DROP_CHANCE)
+                this.spawnLoot( ItemRegistry.WARP_TOTEM.get(), 1);
+            else if (this.random.nextDouble() < ENRAGED_SPECIAL_DROP_CHANCE)
+                this.spawnLoot(ItemRegistry.CRACKED_WARP_TOTEM.get(), 1);
+        } else if (this.random.nextDouble() < SPECIAL_DROP_CHANCE)
+            this.spawnLoot(ItemRegistry.CRACKED_WARP_TOTEM.get(), 1);
     }
 
     public void performRangedAttack(LivingEntity target, float p_34144_) {

@@ -48,7 +48,6 @@ public class OdysseyTiers {
     public static final OdysseyTier CLOVER_STONE = new OdysseyTier(1,131,9.0F, () -> Ingredient.of(ItemRegistry.CLOVER_STONE.get()));
     public static final OdysseyTier REINFORCED = new OdysseyTier(2,() -> Ingredient.EMPTY);
     public static final OdysseyTier DIAMOND = new OdysseyTier(4,500,8.0F, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(Items.DIAMOND));
-    public static final OdysseyTier HEXED_EARTH = new OdysseyTier(1, 131, () -> Ingredient.EMPTY);
     public static final OdysseyTier GREATROOT = new OdysseyTier(4,750, () -> Ingredient.of(ItemRegistry.GREATROOT.get()));
     public static final OdysseyTier ARCTIC = new OdysseyTier(4,() -> Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()));
     public static final OdysseyTier MARINE = new OdysseyTier(4,1000,10.0F, () -> Ingredient.of(ItemRegistry.PEARL.get()));
