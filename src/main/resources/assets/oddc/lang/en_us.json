@@ -555,6 +555,7 @@
   "single_or_tier_random.unknown": "Unknown Choice: %s",
   "stat.oddc.interact_with_alloy_furnace": "Interactions with Alloy Furnace",
   "stat.oddc.interact_with_odyssey_grindstone": "Interactions with Odyssey Grindstone",
+  "stat.oddc.interact_with_odyssey_anvil": "Interactions with Odyssey Anvil",
   "stat.oddc.interact_with_recycling_furnace": "Interactions with Recycling Furnace",
   "stat.oddc.interact_with_stitching_table": "Interactions with Stitching Table",
   "stat.oddc.open_copper_chest": "Copper Chests Opened",

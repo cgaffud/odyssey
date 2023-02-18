@@ -13,6 +13,7 @@ public class OdysseyStats {
     public static final ResourceLocation INTERACT_WITH_STITCHING_TABLE = makeCustomStat("interact_with_stitching_table", StatFormatter.DEFAULT);
     public static final ResourceLocation INTERACT_WITH_ALLOY_FURNACE = makeCustomStat("interact_with_alloy_furnace", StatFormatter.DEFAULT);
     public static final ResourceLocation INTERACT_WITH_ODYSSEY_GRINDSTONE = makeCustomStat("interact_with_odyssey_grindstone", StatFormatter.DEFAULT);
+    public static final ResourceLocation INTERACT_WITH_ODYSSEY_ANVIL = makeCustomStat("interact_with_odyssey_anvil", StatFormatter.DEFAULT);
 
     public static ResourceLocation makeCustomStat(String s, StatFormatter statFormatter) {
         ResourceLocation resourcelocation = new ResourceLocation(Odyssey.MOD_ID, s);

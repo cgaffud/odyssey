@@ -116,12 +116,12 @@ public class ClientEvents {
             MenuScreens.register(ContainerRegistry.STITCHING_TABLE.get(), StitchingTableScreen::new);
             MenuScreens.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
             MenuScreens.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
+            MenuScreens.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
 //        ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
 //        ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), OdysseySmithingTableScreen::new);
 //        ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), OdysseyEnchantmentScreen::new);
 //        ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
 //        ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
-//        ScreenManager.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
             for(MenuType<QuiverMenu> containerType : ContainerRegistry.QUIVER_MAP.values()){
                 MenuScreens.register(containerType, QuiverScreen::new);
             }

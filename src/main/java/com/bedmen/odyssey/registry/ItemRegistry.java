@@ -299,7 +299,7 @@ public class ItemRegistry {
 
     // ## Tier 3
 
-    public static final RegistryObject<Item> MARINE_TRIDENT = ITEMS.register("marine_trident", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.MARINE, MeleeWeaponClass.SPEAR, ThrowableTypes.MARINE_TRIDENT));
+    public static final RegistryObject<Item> MARINE_TRIDENT = ITEMS.register("marine_trident", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.MARINE, MeleeWeaponClass.TRIDENT, ThrowableTypes.MARINE_TRIDENT));
 
     // ## Quivers
     public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), QuiverType.RABBIT_HIDE_QUIVER));
