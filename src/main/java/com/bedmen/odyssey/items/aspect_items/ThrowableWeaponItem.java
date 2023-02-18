@@ -67,6 +67,10 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
         return this.throwableType.thrownDamage + ConditionalAmpUtil.getDamageTag(itemStack);
     }
 
+    public boolean isValidRepairItem(ItemStack itemStack, ItemStack repairStack) {
+        return this.tier.getRepairIngredient().test(repairStack) || super.isValidRepairItem(itemStack, repairStack);
+    }
+
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.SPEAR;
     }

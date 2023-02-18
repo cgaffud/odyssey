@@ -24,10 +24,13 @@ import com.bedmen.odyssey.world.gen.OdysseyGeneration;
 import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.gen.TreeGen;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.animal.PolarBear;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraftforge.common.MinecraftForge;
@@ -84,6 +87,7 @@ public class Odyssey
             OdysseyTrades.addTrades();
             EntityEvents.initEntityMap();
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
+            PoiType.WEAPONSMITH.matchingStates = ImmutableSet.copyOf(BlockRegistry.GRINDSTONE.get().getStateDefinition().getPossibleStates());
 
             //Generation
             BiomeUtil.init();

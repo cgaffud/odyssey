@@ -10,6 +10,7 @@ import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.items.aspect_items.SpearItem;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import com.bedmen.odyssey.magic.ExperienceCost;
+import com.bedmen.odyssey.magic.MagicUtil;
 import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
@@ -184,7 +185,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
                     float modifiabilityToBeUsed = adjustedModifierList.stream().map(aspectInstance -> aspectInstance.getModifiability(this.getItemStackOriginal())).reduce(0.0f, Float::sum);
                     if(AspectUtil.getModifiabilityRemaining(this.getItemStackOriginal()) >= modifiabilityToBeUsed){
                         if(!this.isInfusing(direction)){
-                            ExperienceCost experienceCost = new ExperienceCost(modifiabilityToBeUsed * 2.0f);
+                            ExperienceCost experienceCost = new ExperienceCost(modifiabilityToBeUsed * MagicUtil.MODIFIABILITY_TO_LEVEL_COST_FACTOR);
                             Optional<ServerPlayer> payer = this.tryToPayExperienceCost(experienceCost);
                             if(payer.isPresent()){
                                 this.incrementInfusingTick(direction);

@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.inventory.slot.BetterResultContainer;
 import com.bedmen.odyssey.items.PurificationTabletItem;
 import com.bedmen.odyssey.registry.BlockRegistry;
@@ -23,7 +22,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
+public class OdysseyGrindstoneMenu extends AbstractContainerMenu {
     public static  final int CONTAINER_DATA_SIZE = 1;
     public static final int INPUT_SLOT = 0;
     public static final int TABLET_SLOT = 1;
@@ -35,24 +34,24 @@ public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
     final Container inputContainer = new SimpleContainer(2) {
         public void setChanged() {
             super.setChanged();
-            ArcaneGrindstoneMenu.this.slotsChanged(this);
+            OdysseyGrindstoneMenu.this.slotsChanged(this);
         }
 
         public void setItem(int index, ItemStack itemStack) {
             super.setItem(index, itemStack);
-            ArcaneGrindstoneMenu.this.setCurrentPage(0);
+            OdysseyGrindstoneMenu.this.setCurrentPage(0);
         }
     };
     private final ContainerLevelAccess access;
     // stores what modifier we are interested in removing
     private final ContainerData containerData;
 
-    public ArcaneGrindstoneMenu(int id, Inventory inventory) {
+    public OdysseyGrindstoneMenu(int id, Inventory inventory) {
         this(id, inventory, new SimpleContainerData(CONTAINER_DATA_SIZE), ContainerLevelAccess.NULL);
     }
 
-    public ArcaneGrindstoneMenu(int id, Inventory inventory, ContainerData containerData, final ContainerLevelAccess containerLevelAccess) {
-        super(ContainerRegistry.ARCANE_GRINDSTONE.get(), id);
+    public OdysseyGrindstoneMenu(int id, Inventory inventory, ContainerData containerData, final ContainerLevelAccess containerLevelAccess) {
+        super(ContainerRegistry.GRINDSTONE.get(), id);
         checkContainerDataCount(containerData, CONTAINER_DATA_SIZE);
         this.containerData = containerData;
         this.addDataSlots(containerData);
@@ -80,16 +79,17 @@ public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
 
                     level.levelEvent(1042, blockPos, 0);
                 });
-                ArcaneGrindstoneMenu.this.inputContainer.setItem(INPUT_SLOT, ItemStack.EMPTY);
-                ArcaneGrindstoneMenu.this.inputContainer.setItem(TABLET_SLOT, ItemStack.EMPTY);
+                OdysseyGrindstoneMenu.this.inputContainer.setItem(INPUT_SLOT, ItemStack.EMPTY);
+                OdysseyGrindstoneMenu.this.inputContainer.setItem(TABLET_SLOT, ItemStack.EMPTY);
             }
 
             private int getExperienceAmount() {
-                Optional<Aspect> optionalAspect = ArcaneGrindstoneMenu.this.getSelectedAddedModifierAspect();
+                Optional<AspectInstance> optionalAspectInstance = OdysseyGrindstoneMenu.this.getSelectedAddedModifierAspect();
                 int exp = 0;
-                if(optionalAspect.isPresent()){
-                    float strength = AspectUtil.getAspectStrength(ArcaneGrindstoneMenu.this.getInput(), optionalAspect.get());
-                    exp = (int)(strength * 10.0f);
+                if(optionalAspectInstance.isPresent()){
+                    ItemStack inputStack = OdysseyGrindstoneMenu.this.getInput();
+                    float modifiability = optionalAspectInstance.get().getModifiability(inputStack);
+                    exp = (int)(modifiability * 6.0f);
                 }
                 return exp;
             }
@@ -117,9 +117,9 @@ public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
 
     private void createResult() {
         ItemStack resultStack = this.getInput().copy();
-        Optional<Aspect> optionalAspect = this.getSelectedAddedModifierAspect();
-        if(optionalAspect.isPresent()){
-            AspectUtil.removeAddedModifier(resultStack, optionalAspect.get());
+        Optional<AspectInstance> optionalAspectInstance = this.getSelectedAddedModifierAspect();
+        if(optionalAspectInstance.isPresent()){
+            AspectUtil.removeAddedModifier(resultStack, optionalAspectInstance.get().aspect);
             this.resultContainer.setItem(resultStack);
         } else {
             this.resultContainer.setItem(ItemStack.EMPTY);
@@ -135,7 +135,7 @@ public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
     }
 
     public boolean stillValid(Player player) {
-        return stillValid(this.access, player, BlockRegistry.ARCANE_GRINDSTONE.get());
+        return stillValid(this.access, player, BlockRegistry.GRINDSTONE.get());
     }
 
     public ItemStack quickMoveStack(Player player, int slotID) {
@@ -242,12 +242,12 @@ public class ArcaneGrindstoneMenu extends AbstractContainerMenu {
         return this.getCurrentPage() >= this.getRelevantModifiers().size() - 1;
     }
 
-    public Optional<Aspect> getSelectedAddedModifierAspect(){
+    public Optional<AspectInstance> getSelectedAddedModifierAspect(){
         List<AspectInstance> aspectInstanceList = this.getRelevantModifiers();
         if(aspectInstanceList.isEmpty() || this.getCurrentPage() < 0 || this.getCurrentPage() >= aspectInstanceList.size()){
             return Optional.empty();
         }
-        return Optional.of(aspectInstanceList.get(this.getCurrentPage()).aspect);
+        return Optional.of(aspectInstanceList.get(this.getCurrentPage()));
     }
 
     public boolean showBigRedX(){

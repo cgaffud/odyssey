@@ -7,6 +7,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 public class MagicUtil {
 
+    public static final float MODIFIABILITY_TO_LEVEL_COST_FACTOR = 2.0f;
     private static final ChatFormatting MAGIC_TEXT_COLOR = ChatFormatting.GREEN;
 
     public static MutableComponent getLevelCostComponent(float levelCost){

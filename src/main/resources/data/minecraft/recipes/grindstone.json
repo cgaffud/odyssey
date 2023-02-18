@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "I-I",
+    "#A#"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:stick"
+    },
+    "-": {
+      "item": "minecraft:stone_slab"
+    },
+    "#": {
+      "tag": "minecraft:planks"
+    },
+    "A": {
+      "item": "oddc:unobtainable"
+    }
+  },
+  "result": {
+    "item": "minecraft:grindstone"
+  }
+}
