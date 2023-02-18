@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.client.gui.screens;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.inventory.OdysseyGrindstoneMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -53,11 +54,11 @@ public class OdysseyGrindstoneScreen extends AbstractContainerScreen<OdysseyGrin
 
     protected void renderLabels(PoseStack poseStack, int p_97809_, int p_97810_) {
         super.renderLabels(poseStack, p_97809_, p_97810_);
-        Optional<Aspect> optionalAspect = this.menu.getSelectedAddedModifierAspect();
+        Optional<AspectInstance> optionalAspectInstance = this.menu.getSelectedAddedModifierAspect();
         poseStack.pushPose();
         poseStack.scale(ASPECT_TEXT_SCALE, ASPECT_TEXT_SCALE, 1.0f);
-        if(optionalAspect.isPresent()){
-            List<FormattedCharSequence> formattedCharSequenceList = this.font.split(optionalAspect.get().getComponent(), (int)(ASPECT_TEXT_BOX_WIDTH/ASPECT_TEXT_SCALE));
+        if(optionalAspectInstance.isPresent()){
+            List<FormattedCharSequence> formattedCharSequenceList = this.font.split(optionalAspectInstance.get().aspect.getComponent(), (int)(ASPECT_TEXT_BOX_WIDTH/ASPECT_TEXT_SCALE));
             float yOffset = 8.5f + -4.5f * formattedCharSequenceList.size();
             for(FormattedCharSequence formattedcharsequence : formattedCharSequenceList) {
                 this.font.draw(poseStack, formattedcharsequence, (ASPECT_TEXT_LEFT_X + (ASPECT_TEXT_BOX_WIDTH - this.font.width(formattedcharsequence)*ASPECT_TEXT_SCALE)/2.0f)/ASPECT_TEXT_SCALE, (ASPECT_TEXT_TOP_Y + yOffset)/ASPECT_TEXT_SCALE, 4210752);

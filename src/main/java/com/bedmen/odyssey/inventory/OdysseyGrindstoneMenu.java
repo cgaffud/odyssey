@@ -85,11 +85,12 @@ public class OdysseyGrindstoneMenu extends AbstractContainerMenu {
             }
 
             private int getExperienceAmount() {
-                Optional<Aspect> optionalAspect = OdysseyGrindstoneMenu.this.getSelectedAddedModifierAspect();
+                Optional<AspectInstance> optionalAspectInstance = OdysseyGrindstoneMenu.this.getSelectedAddedModifierAspect();
                 int exp = 0;
-                if(optionalAspect.isPresent()){
-                    float strength = AspectUtil.getAspectStrength(OdysseyGrindstoneMenu.this.getInput(), optionalAspect.get());
-                    exp = (int)(strength * 10.0f);
+                if(optionalAspectInstance.isPresent()){
+                    ItemStack inputStack = OdysseyGrindstoneMenu.this.getInput();
+                    float modifiability = optionalAspectInstance.get().getModifiability(inputStack);
+                    exp = (int)(modifiability * 6.0f);
                 }
                 return exp;
             }
@@ -117,9 +118,9 @@ public class OdysseyGrindstoneMenu extends AbstractContainerMenu {
 
     private void createResult() {
         ItemStack resultStack = this.getInput().copy();
-        Optional<Aspect> optionalAspect = this.getSelectedAddedModifierAspect();
-        if(optionalAspect.isPresent()){
-            AspectUtil.removeAddedModifier(resultStack, optionalAspect.get());
+        Optional<AspectInstance> optionalAspectInstance = this.getSelectedAddedModifierAspect();
+        if(optionalAspectInstance.isPresent()){
+            AspectUtil.removeAddedModifier(resultStack, optionalAspectInstance.get().aspect);
             this.resultContainer.setItem(resultStack);
         } else {
             this.resultContainer.setItem(ItemStack.EMPTY);
@@ -242,12 +243,12 @@ public class OdysseyGrindstoneMenu extends AbstractContainerMenu {
         return this.getCurrentPage() >= this.getRelevantModifiers().size() - 1;
     }
 
-    public Optional<Aspect> getSelectedAddedModifierAspect(){
+    public Optional<AspectInstance> getSelectedAddedModifierAspect(){
         List<AspectInstance> aspectInstanceList = this.getRelevantModifiers();
         if(aspectInstanceList.isEmpty() || this.getCurrentPage() < 0 || this.getCurrentPage() >= aspectInstanceList.size()){
             return Optional.empty();
         }
-        return Optional.of(aspectInstanceList.get(this.getCurrentPage()).aspect);
+        return Optional.of(aspectInstanceList.get(this.getCurrentPage()));
     }
 
     public boolean showBigRedX(){
