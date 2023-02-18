@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -108,9 +109,9 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
             this.repairItemCount = 0;
 
             if (!inputStack1.isEmpty()) {
+                int repairAmountPerRepairItem = getRepairAmount(resultStack);
                 // Repairing with material specific repair item
                 if (resultStack.isDamageableItem() && resultStack.getItem().isValidRepairItem(inputStack0, inputStack1)) {
-                    int repairAmountPerRepairItem = getRepairAmount(resultStack);
                     int repairDurability = Math.min(resultStack.getDamageValue(), repairAmountPerRepairItem);
                     if (repairDurability <= 0) {
                         this.resultSlots.setItem(0, ItemStack.EMPTY);
@@ -144,8 +145,10 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
                             resultDurabilityDamage = 0;
                         }
                         if (resultDurabilityDamage < resultStack.getDamageValue()) {
+                            int damageDifference = resultStack.getDamageValue() - resultDurabilityDamage;
+                            int numberOfRepairItemsWorth = Mth.ceil((double)damageDifference/(double)repairAmountPerRepairItem);
                             resultStack.setDamageValue(resultDurabilityDamage);
-                            levelCost++;
+                            levelCost += numberOfRepairItemsWorth;
                         }
                     }
 

@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.client.gui.screens;
 
 import com.bedmen.odyssey.inventory.OdysseyAnvilMenu;
+import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.AnvilRenamePacket;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -75,14 +77,14 @@ public class OdysseyAnvilScreen extends ItemCombinerScreen<OdysseyAnvilMenu> {
 
     private void onNameChanged(String name) {
         if (!name.isEmpty()) {
-            String s = name;
+            String newName = name;
             Slot slot = this.menu.getSlot(0);
-            if (slot != null && slot.hasItem() && !slot.getItem().hasCustomHoverName() && name.equals(slot.getItem().getHoverName().getString())) {
-                s = "";
+            if (slot.hasItem() && !slot.getItem().hasCustomHoverName() && name.equals(slot.getItem().getHoverName().getString())) {
+                newName = "";
             }
 
-            this.menu.setItemName(s);
-            this.minecraft.player.connection.send(new ServerboundRenameItemPacket(s));
+            this.menu.setItemName(newName);
+            OdysseyNetwork.CHANNEL.sendToServer(new AnvilRenamePacket(newName));
         }
     }
 
