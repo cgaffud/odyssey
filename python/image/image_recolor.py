@@ -270,11 +270,12 @@ def redistributeRedAndGreenImage(image, redStrength):
 # Notes on how to do certain effects:
 # Clover Stone: recolorImageRandomly(image1, [0.9,1.0,0.9],[0.85,1.0,0.85])
 # Hex Fire: redistributeRedAndGreenImage(image, 0.75) (on soul fire)
+# Leather to Parka Hide: recolorImage(image, [0.40,0.475,0.55], [0,0,0])
 
-openPath1 = r"C:\Users\18029\Documents\1.18.2\assets\minecraft\textures\block\soul_fire_1.png"
+openPath1 = r"C:\Users\18029\Documents\1.18.2\assets\minecraft\textures\item\leather.png"
 image = openImage(openPath1)
-savePath = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\block\hex_fire_0.png"
-redistributeRedAndGreenImage(image, 0.75)
+savePath = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\item\parka_hide.png"
+recolorImage(image, [0.40,0.475,0.55], [0,0,0])
 saveImage(image, savePath)
 
 print("Done")

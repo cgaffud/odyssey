@@ -1,0 +1,17 @@
+{
+  "type": "oddc:stitching",
+  "ingredient1":
+  {
+    "item": "minecraft:leather"
+  },
+  "ingredient2":
+  {
+    "item": "oddc:polar_bear_fur"
+  },
+  "fiber":
+  {
+    "item": "oddc:golden_fiber"
+  },
+  "fiberCount": 1,
+  "result": "oddc:parka_hide"
+}
