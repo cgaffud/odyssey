@@ -124,6 +124,9 @@ public class Aspects {
     // # Permabuffs
     public static final PermabuffAspect ADDITIONAL_MOB_HARVEST_LEVEL = new PermabuffAspect("additional_mob_harvest_level", AspectTooltipFunctions.NUMBER_ADDITION);
 
+    // # Other
+    public static final IntegerAspect TELEPORTATION_IMMUNITY = new IntegerAspect("teleportation_immunity", 0.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, false);
+
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
         return getSkyBoost(pos, level) * (time < 12000L ? 1.0f : 0.0f);

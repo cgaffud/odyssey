@@ -181,7 +181,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_HOE = ITEMS.register("sterling_silver_hoe", () -> new AspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.HOE, 4.0f, List.of(), List.of()));
     public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.STERLING_SILVER));
 
-    public static final RegistryObject<Item> COVEN_HUT_KEY = ITEMS.register("coven_hut_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), LockableDoorType.COVEN_HUT));
+    public static final RegistryObject<Item> COVEN_HUT_KEY = ITEMS.register("coven_hut_key", () -> new AspectKeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), LockableDoorType.COVEN_HUT, List.of(new AspectInstance(Aspects.TELEPORTATION_IMMUNITY, 1))));
 
     public static final List<AspectInstance> MARINE_TOOL_INNATE_MODIFIER_LIST = List.of(new AspectInstance(Aspects.AQUA_AFFINITY));
     public static final RegistryObject<Item> MARINE_SHOVEL = ITEMS.register("marine_shovel", () -> new AspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.SHOVEL.withBetterAttackSpeed(), 3.5f, List.of(), MARINE_TOOL_INNATE_MODIFIER_LIST));

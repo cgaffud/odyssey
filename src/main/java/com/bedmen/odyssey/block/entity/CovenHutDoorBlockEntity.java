@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.block.entity;
 
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.potions.FireEffect;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
@@ -52,8 +54,7 @@ public class CovenHutDoorBlockEntity extends BlockEntity {
                     .filter(entity -> !(entity instanceof Player player)
                             || (!player.isCreative()
                             && !player.isSpectator()
-                            && !player.getItemInHand(InteractionHand.MAIN_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())
-                            && !player.getItemInHand(InteractionHand.OFF_HAND).is(ItemRegistry.COVEN_HUT_KEY.get())))
+                            && AspectUtil.getIntegerAspectStrengthAllSlots(player, Aspects.TELEPORTATION_IMMUNITY) <= 0))
                     .forEach(livingEntity -> {
                         livingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));
                         teleportRandomlyOutsideBoundingBox(livingEntity, covenHutDoorBlockEntity.boundingBox);
