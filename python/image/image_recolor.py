@@ -272,10 +272,10 @@ def redistributeRedAndGreenImage(image, redStrength):
 # Hex Fire: redistributeRedAndGreenImage(image, 0.75) (on soul fire)
 # Leather to Parka Hide: recolorImage(image, [0.40,0.475,0.55], [0,0,0])
 
-openPath1 = r"C:\Users\18029\Documents\1.18.2\assets\minecraft\textures\item\leather.png"
+openPath1 = r"C:\Users\18029\Documents\1.18.2\assets\minecraft\textures\item\diamond.png"
 image = openImage(openPath1)
-savePath = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\item\parka_hide.png"
-recolorImage(image, [0.40,0.475,0.55], [0,0,0])
+savePath = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\item\unobtainable.png"
+grayscaleImage(image, 1)
 saveImage(image, savePath)
 
 print("Done")

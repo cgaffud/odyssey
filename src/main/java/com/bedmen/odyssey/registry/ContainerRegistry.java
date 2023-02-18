@@ -23,7 +23,7 @@ public class ContainerRegistry {
     public static final RegistryObject<MenuType<RecyclingFurnaceMenu>> RECYCLING_FURNACE = CONTAINER.register("recycling_furnace", () -> new MenuType<RecyclingFurnaceMenu>(RecyclingFurnaceMenu::new));
     public static final RegistryObject<MenuType<StitchingMenu>> STITCHING_TABLE = CONTAINER.register("stitching_table", () -> new MenuType<StitchingMenu>(StitchingMenu::new));
     public static final RegistryObject<MenuType<AlloyFurnaceMenu>> ALLOY_FURNACE = CONTAINER.register("alloy_furnace", () -> new MenuType<AlloyFurnaceMenu>(AlloyFurnaceMenu::new));
-    public static final RegistryObject<MenuType<OdysseyGrindstoneMenu>> ODYSSEY_GRINDSTONE = CONTAINER.register("odyssey_grindstone", () -> new MenuType<OdysseyGrindstoneMenu>(OdysseyGrindstoneMenu::new));
+    public static final RegistryObject<MenuType<OdysseyGrindstoneMenu>> GRINDSTONE = CONTAINER.register("grindstone", () -> new MenuType<OdysseyGrindstoneMenu>(OdysseyGrindstoneMenu::new));
 //    public static final RegistryObject<MenuType<OdysseyBeaconContainer>> BEACON = CONTAINER.register("beacon", () -> new MenuType<OdysseyBeaconContainer>(OdysseyBeaconContainer::new));
 //    public static final RegistryObject<MenuType<OdysseySmithingTableContainer>> SMITHING_TABLE = CONTAINER.register("smithing_table", () -> new MenuType<OdysseySmithingTableContainer>(OdysseySmithingTableContainer::new));
 //    public static final RegistryObject<MenuType<OdysseyEnchantmentContainer>> ENCHANTMENT = CONTAINER.register("enchantment", () -> new MenuType<OdysseyEnchantmentContainer>(OdysseyEnchantmentContainer::new));

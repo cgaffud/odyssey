@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XAX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:scute"
+    },
+    "A": {
+      "item": "oddc:unobtainable"
+    }
+  },
+  "result": {
+    "item": "minecraft:turtle_helmet"
+  }
+}

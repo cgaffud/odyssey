@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WoW",
+    "WWW",
+    "AWA"
+  ],
+  "key": {
+    "W": {
+      "tag": "minecraft:planks"
+    },
+    "o": {
+      "item": "minecraft:iron_ingot"
+    },
+    "A": {
+      "item": "oddc:unobtainable"
+    }
+  },
+  "result": {
+    "item": "minecraft:shield"
+  }
+}

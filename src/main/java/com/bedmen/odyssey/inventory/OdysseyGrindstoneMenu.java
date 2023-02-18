@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.inventory.slot.BetterResultContainer;
 import com.bedmen.odyssey.items.PurificationTabletItem;
 import com.bedmen.odyssey.registry.BlockRegistry;
@@ -52,7 +51,7 @@ public class OdysseyGrindstoneMenu extends AbstractContainerMenu {
     }
 
     public OdysseyGrindstoneMenu(int id, Inventory inventory, ContainerData containerData, final ContainerLevelAccess containerLevelAccess) {
-        super(ContainerRegistry.ODYSSEY_GRINDSTONE.get(), id);
+        super(ContainerRegistry.GRINDSTONE.get(), id);
         checkContainerDataCount(containerData, CONTAINER_DATA_SIZE);
         this.containerData = containerData;
         this.addDataSlots(containerData);
@@ -136,7 +135,7 @@ public class OdysseyGrindstoneMenu extends AbstractContainerMenu {
     }
 
     public boolean stillValid(Player player) {
-        return stillValid(this.access, player, BlockRegistry.ODYSSEY_GRINDSTONE.get());
+        return stillValid(this.access, player, BlockRegistry.GRINDSTONE.get());
     }
 
     public ItemStack quickMoveStack(Player player, int slotID) {

@@ -2,7 +2,6 @@ package com.bedmen.odyssey.client.gui.screens;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.inventory.OdysseyGrindstoneMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,7 +20,7 @@ import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public class OdysseyGrindstoneScreen extends AbstractContainerScreen<OdysseyGrindstoneMenu> {
-    private static final ResourceLocation ODYSSEY_GRINDSTONE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/odyssey_grindstone.png");
+    private static final ResourceLocation GRINDSTONE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/grindstone.png");
     private PageButton forwardButton;
     private PageButton backButton;
     private static final float ASPECT_TEXT_SCALE = 0.75f;
@@ -35,25 +34,25 @@ public class OdysseyGrindstoneScreen extends AbstractContainerScreen<OdysseyGrin
         super(odysseyGrindstoneMenu, inventory, component);
     }
 
-    public void render(PoseStack poseStack, int p_98792_, int p_98793_, float p_98794_) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(poseStack);
-        this.renderBg(poseStack, p_98794_, p_98792_, p_98793_);
-        super.render(poseStack, p_98792_, p_98793_, p_98794_);
-        this.renderTooltip(poseStack, p_98792_, p_98793_);
+        this.renderBg(poseStack, partialTicks, mouseX, mouseY);
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+        this.renderTooltip(poseStack, mouseX, mouseY);
     }
 
-    protected void renderBg(PoseStack poseStack, float p_98787_, int p_98788_, int p_98789_) {
+    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ODYSSEY_GRINDSTONE_LOCATION);
+        RenderSystem.setShaderTexture(0, GRINDSTONE_LOCATION);
         this.blit(poseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         if (this.menu.showBigRedX()) {
             this.blit(poseStack, this.leftPos + 81, this.topPos + 29, this.imageWidth, 0, 22, 15);
         }
     }
 
-    protected void renderLabels(PoseStack poseStack, int p_97809_, int p_97810_) {
-        super.renderLabels(poseStack, p_97809_, p_97810_);
+    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+        super.renderLabels(poseStack, mouseX, mouseY);
         Optional<AspectInstance> optionalAspectInstance = this.menu.getSelectedAddedModifierAspect();
         poseStack.pushPose();
         poseStack.scale(ASPECT_TEXT_SCALE, ASPECT_TEXT_SCALE, 1.0f);
