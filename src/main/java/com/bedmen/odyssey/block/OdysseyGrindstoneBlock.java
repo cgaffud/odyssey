@@ -1,19 +1,17 @@
 package com.bedmen.odyssey.block;
 
-import com.bedmen.odyssey.inventory.ArcaneGrindstoneMenu;
+import com.bedmen.odyssey.inventory.OdysseyGrindstoneMenu;
 import com.bedmen.odyssey.util.OdysseyStats;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.GrindstoneMenu;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -29,7 +27,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ArcaneGrindstoneBlock extends FaceAttachedHorizontalDirectionalBlock {
+public class OdysseyGrindstoneBlock extends FaceAttachedHorizontalDirectionalBlock {
     public static final VoxelShape FLOOR_NORTH_SOUTH_LEFT_POST = Block.box(2.0D, 0.0D, 6.0D, 4.0D, 7.0D, 10.0D);
     public static final VoxelShape FLOOR_NORTH_SOUTH_RIGHT_POST = Block.box(12.0D, 0.0D, 6.0D, 14.0D, 7.0D, 10.0D);
     public static final VoxelShape FLOOR_NORTH_SOUTH_LEFT_PIVOT = Block.box(2.0D, 7.0D, 5.0D, 4.0D, 13.0D, 11.0D);
@@ -96,7 +94,7 @@ public class ArcaneGrindstoneBlock extends FaceAttachedHorizontalDirectionalBloc
     public static final VoxelShape CEILING_EAST_WEST_GRINDSTONE = Shapes.or(CEILING_EAST_WEST_ALL_LEGS, Block.box(2.0D, 0.0D, 4.0D, 14.0D, 12.0D, 12.0D));
     private static final Component CONTAINER_TITLE = new TranslatableComponent("container.oddc.modifier_removal");
 
-    public ArcaneGrindstoneBlock(BlockBehaviour.Properties properties) {
+    public OdysseyGrindstoneBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FACE, AttachFace.WALL));
     }
@@ -154,13 +152,13 @@ public class ArcaneGrindstoneBlock extends FaceAttachedHorizontalDirectionalBloc
             return InteractionResult.SUCCESS;
         } else {
             player.openMenu(blockState.getMenuProvider(level, blockPos));
-            player.awardStat(OdysseyStats.INTERACT_WITH_ARCANE_GRINDSTONE);
+            player.awardStat(OdysseyStats.INTERACT_WITH_ODYSSEY_GRINDSTONE);
             return InteractionResult.CONSUME;
         }
     }
 
     public MenuProvider getMenuProvider(BlockState blockState, Level level, BlockPos blockPos) {
-        return new SimpleMenuProvider((id, inventory, player) -> new ArcaneGrindstoneMenu(id, inventory, new SimpleContainerData(ArcaneGrindstoneMenu.CONTAINER_DATA_SIZE), ContainerLevelAccess.create(level, blockPos)), CONTAINER_TITLE);
+        return new SimpleMenuProvider((id, inventory, player) -> new OdysseyGrindstoneMenu(id, inventory, new SimpleContainerData(OdysseyGrindstoneMenu.CONTAINER_DATA_SIZE), ContainerLevelAccess.create(level, blockPos)), CONTAINER_TITLE);
     }
 
     public BlockState rotate(BlockState blockState, Rotation rotation) {

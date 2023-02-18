@@ -3,7 +3,6 @@ package com.bedmen.odyssey.registry;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.combat.QuiverType;
 import com.bedmen.odyssey.inventory.*;
-import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -24,7 +23,7 @@ public class ContainerRegistry {
     public static final RegistryObject<MenuType<RecyclingFurnaceMenu>> RECYCLING_FURNACE = CONTAINER.register("recycling_furnace", () -> new MenuType<RecyclingFurnaceMenu>(RecyclingFurnaceMenu::new));
     public static final RegistryObject<MenuType<StitchingMenu>> STITCHING_TABLE = CONTAINER.register("stitching_table", () -> new MenuType<StitchingMenu>(StitchingMenu::new));
     public static final RegistryObject<MenuType<AlloyFurnaceMenu>> ALLOY_FURNACE = CONTAINER.register("alloy_furnace", () -> new MenuType<AlloyFurnaceMenu>(AlloyFurnaceMenu::new));
-    public static final RegistryObject<MenuType<ArcaneGrindstoneMenu>> ARCANE_GRINDSTONE = CONTAINER.register("arcane_grindstone", () -> new MenuType<ArcaneGrindstoneMenu>(ArcaneGrindstoneMenu::new));
+    public static final RegistryObject<MenuType<OdysseyGrindstoneMenu>> ODYSSEY_GRINDSTONE = CONTAINER.register("odyssey_grindstone", () -> new MenuType<OdysseyGrindstoneMenu>(OdysseyGrindstoneMenu::new));
 //    public static final RegistryObject<MenuType<OdysseyBeaconContainer>> BEACON = CONTAINER.register("beacon", () -> new MenuType<OdysseyBeaconContainer>(OdysseyBeaconContainer::new));
 //    public static final RegistryObject<MenuType<OdysseySmithingTableContainer>> SMITHING_TABLE = CONTAINER.register("smithing_table", () -> new MenuType<OdysseySmithingTableContainer>(OdysseySmithingTableContainer::new));
 //    public static final RegistryObject<MenuType<OdysseyEnchantmentContainer>> ENCHANTMENT = CONTAINER.register("enchantment", () -> new MenuType<OdysseyEnchantmentContainer>(OdysseyEnchantmentContainer::new));

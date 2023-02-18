@@ -2,7 +2,7 @@ package com.bedmen.odyssey.client.gui.screens;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.object.Aspect;
-import com.bedmen.odyssey.inventory.ArcaneGrindstoneMenu;
+import com.bedmen.odyssey.inventory.OdysseyGrindstoneMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
-public class ArcaneGrindstoneScreen extends AbstractContainerScreen<ArcaneGrindstoneMenu> {
-    private static final ResourceLocation ARCANE_GRINDSTONE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/arcane_grindstone.png");
+public class OdysseyGrindstoneScreen extends AbstractContainerScreen<OdysseyGrindstoneMenu> {
+    private static final ResourceLocation ODYSSEY_GRINDSTONE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/odyssey_grindstone.png");
     private PageButton forwardButton;
     private PageButton backButton;
     private static final float ASPECT_TEXT_SCALE = 0.75f;
@@ -30,8 +30,8 @@ public class ArcaneGrindstoneScreen extends AbstractContainerScreen<ArcaneGrinds
     private static final int ASPECT_TEXT_BOTTOM_Y = 63;
     private static final int ASPECT_TEXT_BOX_WIDTH = ASPECT_TEXT_RIGHT_X - ASPECT_TEXT_LEFT_X + 1;
 
-    public ArcaneGrindstoneScreen(ArcaneGrindstoneMenu arcaneGrindstoneMenu, Inventory inventory, Component component) {
-        super(arcaneGrindstoneMenu, inventory, component);
+    public OdysseyGrindstoneScreen(OdysseyGrindstoneMenu odysseyGrindstoneMenu, Inventory inventory, Component component) {
+        super(odysseyGrindstoneMenu, inventory, component);
     }
 
     public void render(PoseStack poseStack, int p_98792_, int p_98793_, float p_98794_) {
@@ -44,7 +44,7 @@ public class ArcaneGrindstoneScreen extends AbstractContainerScreen<ArcaneGrinds
     protected void renderBg(PoseStack poseStack, float p_98787_, int p_98788_, int p_98789_) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ARCANE_GRINDSTONE_LOCATION);
+        RenderSystem.setShaderTexture(0, ODYSSEY_GRINDSTONE_LOCATION);
         this.blit(poseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         if (this.menu.showBigRedX()) {
             this.blit(poseStack, this.leftPos + 81, this.topPos + 29, this.imageWidth, 0, 22, 15);

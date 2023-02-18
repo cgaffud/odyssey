@@ -63,7 +63,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> MOONROCK_WALL = BLOCKS.register("moonrock_wall", () -> new LightEmitterWallBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(10.0F).randomTicks().lightLevel(litBlockEmission(moonrockLightAmount)), BlockRegistry::atNightSkyEmission));
     public static final RegistryObject<Block> TRANSCENDENTAL_OBSIDIAN = BLOCKS.register("transcendental_obsidian", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
     public static final RegistryObject<Block> TRANSCENDENTAL_TRANSMUTER = BLOCKS.register("transcendental_transmuter", () -> new WallBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
-    public static final RegistryObject<Block> ARCANE_GRINDSTONE = BLOCKS.register("arcane_grindstone", () -> new ArcaneGrindstoneBlock(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).requiresCorrectToolForDrops().strength(2.0F, 6.0F).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> ODYSSEY_GRINDSTONE = BLOCKS.register("odyssey_grindstone", () -> new OdysseyGrindstoneBlock(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).requiresCorrectToolForDrops().strength(2.0F, 6.0F).sound(SoundType.STONE)));
 
     public static final RegistryObject<Block> PRAIRIE_GRASS = BLOCKS.register("prairie_grass", () -> new TriplePlantBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
 
