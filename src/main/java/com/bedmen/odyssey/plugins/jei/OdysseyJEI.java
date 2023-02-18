@@ -78,7 +78,7 @@ public class OdysseyJEI implements IModPlugin {
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
         registration.addRecipeTransferHandler(AlloyFurnaceMenu.class, AlloyingCategory.UID, 0, 2, 4, 36);
         registration.addRecipeTransferHandler(AlloyFurnaceMenu.class, VanillaRecipeCategoryUid.FUEL, 2, 1, 4, 36);
-        registration.addRecipeTransferHandler(StitchingMenu.class, StitchingCategory.UID, 0, 6, 7, 36);
+        registration.addRecipeTransferHandler(StitchingMenu.class, StitchingCategory.UID, 0, 4, 4, 36);
         registration.addRecipeTransferHandler(RecyclingFurnaceMenu.class, RecyclingCategory.UID, 0, 1, 11, 36);
     }
 

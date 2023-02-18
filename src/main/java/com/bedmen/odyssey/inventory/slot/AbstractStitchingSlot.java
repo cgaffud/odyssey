@@ -10,6 +10,4 @@ public abstract class AbstractStitchingSlot extends Slot {
         super(container, id, x, y);
         this.stitchingMenu = stitchingMenu;
     }
-
-    public abstract boolean canUse();
 }
