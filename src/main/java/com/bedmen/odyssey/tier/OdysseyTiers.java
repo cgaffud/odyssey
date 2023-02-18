@@ -20,48 +20,49 @@ public class OdysseyTiers {
     // # Has diggers
 
     // ## Tier 1
-    public static final OdysseyTier NO_TIER = new OdysseyTier(0,() -> Ingredient.EMPTY);
+    public static final OdysseyTier NO_TIER = new OdysseyTier(0, () -> Ingredient.EMPTY);
     public static final OdysseyTier CACTUS = new OdysseyTier(3, () -> Ingredient.of(Items.CACTUS));
     public static final OdysseyTier WOOD = new OdysseyTier(3,59,2.0F, Tags.Blocks.NEEDS_WOOD_TOOL, () -> Ingredient.of(ItemTags.PLANKS));
     public static final OdysseyTier STONE = new OdysseyTier(1,131,4.0F, BlockTags.NEEDS_STONE_TOOL, () -> Ingredient.of(ItemTags.STONE_TOOL_MATERIALS));
     public static final OdysseyTier FLINT = new OdysseyTier(2,150, () -> Ingredient.of(Items.FLINT));
     public static final OdysseyTier BONE = new OdysseyTier(2,175, () -> Ingredient.of(Items.BONE));
-    public static final OdysseyTier LEATHER = new OdysseyTier(3,() -> Ingredient.of(Items.LEATHER));
-    public static final OdysseyTier CHICKEN = new OdysseyTier(3,() -> Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get()));
-    public static final OdysseyTier FUR = new OdysseyTier(3,() -> Ingredient.of(ItemRegistry.POLAR_BEAR_FUR.get()));
+    public static final OdysseyTier LEATHER = new OdysseyTier(3, () -> Ingredient.of(Items.LEATHER));
+    public static final OdysseyTier CHICKEN = new OdysseyTier(3, () -> Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get()));
+    public static final OdysseyTier FUR = new OdysseyTier(3, () -> Ingredient.of(ItemRegistry.POLAR_BEAR_FUR.get()));
     public static final OdysseyTier COPPER = new OdysseyTier(2,200, () -> Ingredient.of(Items.COPPER_INGOT));
     public static final OdysseyTier SPIDER_FANG = new OdysseyTier(2,225, () -> Ingredient.of(ItemRegistry.SPIDER_FANG.get()));
     public static final OdysseyTier RUSTY_IRON = new OdysseyTier(2,240, () -> Ingredient.EMPTY);
+    public static final OdysseyTier CHAINMAIL = new OdysseyTier(2, () -> Ingredient.of(ItemRegistry.CHAINMAIL.get()));
     public static final OdysseyTier IRON = new OdysseyTier(2,250,6.0F, BlockTags.NEEDS_IRON_TOOL, () -> Ingredient.of(Items.IRON_INGOT));
     public static final OdysseyTier GOLD = new OdysseyTier(5,32,8.0F, Tags.Blocks.NEEDS_GOLD_TOOL, () -> Ingredient.of(Items.GOLD_INGOT));
     public static final OdysseyTier WEAVER_FANG = new OdysseyTier(2,225, () -> Ingredient.of(ItemRegistry.WEAVER_FANG.get()));
-    public static final OdysseyTier TURTLE = new OdysseyTier(2,() -> Ingredient.of(Items.SCUTE));
+    public static final OdysseyTier TURTLE = new OdysseyTier(2, () -> Ingredient.of(Items.SCUTE));
     public static final OdysseyTier UNCRAFTABLE_1 = new OdysseyTier(2,350, 6.0F, () -> Ingredient.EMPTY);
     public static final OdysseyTier ULTRA_1 = new OdysseyTier(2,500, () -> Ingredient.EMPTY);
     // ## Tier 2
-    public static final OdysseyTier GLIDER = new OdysseyTier(3,() -> Ingredient.of(Items.PHANTOM_MEMBRANE));
-    public static final OdysseyTier THORNMAIL = new OdysseyTier(3,() -> Ingredient.EMPTY);
-    public static final OdysseyTier PARKA = new OdysseyTier(3,() -> Ingredient.EMPTY);
+    public static final OdysseyTier GLIDER = new OdysseyTier(3, () -> Ingredient.of(Items.PHANTOM_MEMBRANE));
+    public static final OdysseyTier THORNMAIL = new OdysseyTier(3, () -> Ingredient.of(ItemRegistry.THORNMAIL.get()));
+    public static final OdysseyTier PARKA = new OdysseyTier(3, () -> Ingredient.of(ItemRegistry.PARKA_HIDE.get()));
     public static final OdysseyTier STERLING_SILVER = new OdysseyTier(3,500,7.0F, OdysseyBlockTags.STERLING_SILVER_TAG, () -> Ingredient.of(ItemRegistry.STERLING_SILVER_INGOT.get()));
     public static final OdysseyTier AMETHYST = new OdysseyTier(2,450, () -> Ingredient.of(Items.AMETHYST_SHARD));
     public static final OdysseyTier OBSIDIAN = new OdysseyTier(2,800, () -> Ingredient.of(Items.OBSIDIAN));
     public static final OdysseyTier CLOVER_STONE = new OdysseyTier(1,131,9.0F, () -> Ingredient.of(ItemRegistry.CLOVER_STONE.get()));
-    public static final OdysseyTier REINFORCED = new OdysseyTier(2,() -> Ingredient.EMPTY);
+    public static final OdysseyTier REINFORCED = new OdysseyTier(2, () -> Ingredient.EMPTY);
     public static final OdysseyTier DIAMOND = new OdysseyTier(4,500,8.0F, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(Items.DIAMOND));
     public static final OdysseyTier GREATROOT = new OdysseyTier(4,750, () -> Ingredient.of(ItemRegistry.GREATROOT.get()));
-    public static final OdysseyTier ARCTIC = new OdysseyTier(4,() -> Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()));
+    public static final OdysseyTier ARCTIC = new OdysseyTier(4, () -> Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()));
     public static final OdysseyTier MARINE = new OdysseyTier(4,1000,10.0F, () -> Ingredient.of(ItemRegistry.PEARL.get()));
     public static final OdysseyTier UNCRAFTABLE_2 = new OdysseyTier(2,700, 9.0F, () -> Ingredient.EMPTY);
     public static final OdysseyTier ULTRA_2 = new OdysseyTier(2,750, () -> Ingredient.EMPTY);
     // ## Tier 3
-    public static final OdysseyTier ZEPHYR = new OdysseyTier(3,() -> Ingredient.EMPTY);
+    public static final OdysseyTier ZEPHYR = new OdysseyTier(3, () -> Ingredient.of(ItemRegistry.ZEPHYR_FABRIC.get()));
     public static final OdysseyTier NETHERITE = new OdysseyTier(4,1000,9.0F, Tags.Blocks.NEEDS_NETHERITE_TOOL, () -> Ingredient.of(Items.NETHERITE_INGOT));
     public static final OdysseyTier ULTRA_3 = new OdysseyTier(3,1000, () -> Ingredient.EMPTY);
 
     // # No Diggers
 
     public static void init(){
-        TierSortingRegistry.registerTier(NO_TIER, new ResourceLocation(Odyssey.MOD_ID,"coconut"), List.of(), List.of(Tiers.WOOD));
+        TierSortingRegistry.registerTier(NO_TIER, new ResourceLocation(Odyssey.MOD_ID,"no_tier"), List.of(), List.of(Tiers.WOOD));
         TierSortingRegistry.registerTier(CACTUS, new ResourceLocation(Odyssey.MOD_ID,"cactus"), List.of(NO_TIER), List.of(Tiers.WOOD));
         TierSortingRegistry.registerTier(WOOD, new ResourceLocation(Odyssey.MOD_ID,"wood"), List.of(Tiers.WOOD), List.of(Tiers.STONE));
         TierSortingRegistry.registerTier(STONE, new ResourceLocation(Odyssey.MOD_ID,"stone"), List.of(Tiers.STONE), List.of(Tiers.IRON));
@@ -73,6 +74,7 @@ public class OdysseyTiers {
         TierSortingRegistry.registerTier(COPPER, new ResourceLocation(Odyssey.MOD_ID,"copper"), List.of(FUR), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(SPIDER_FANG, new ResourceLocation(Odyssey.MOD_ID,"spider_fang"), List.of(COPPER), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(RUSTY_IRON, new ResourceLocation(Odyssey.MOD_ID,"rusty_iron"), List.of(SPIDER_FANG), List.of(Tiers.IRON));
+        TierSortingRegistry.registerTier(CHAINMAIL, new ResourceLocation(Odyssey.MOD_ID,"chainmail"), List.of(RUSTY_IRON), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(IRON, new ResourceLocation(Odyssey.MOD_ID,"iron"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));
         TierSortingRegistry.registerTier(GOLD, new ResourceLocation(Odyssey.MOD_ID,"gold"), List.of(IRON), List.of(Tiers.DIAMOND));
         TierSortingRegistry.registerTier(WEAVER_FANG, new ResourceLocation(Odyssey.MOD_ID,"weaver_fang"), List.of(GOLD), List.of(Tiers.DIAMOND));

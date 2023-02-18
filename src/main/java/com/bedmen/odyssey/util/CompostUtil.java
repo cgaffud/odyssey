@@ -20,7 +20,7 @@ public class CompostUtil {
         add(0.3f, ItemRegistry.GREATWOOD_SAPLING.get());
 
         add(0.65f, ItemRegistry.PRAIRIE_GRASS.get());
-        add(0.65f, ItemRegistry.COCONUT_FLOWER.get());
+        add(0.65f, ItemRegistry.COCONUT_WHITE.get());
         add(0.65f, ItemRegistry.HOLLOW_COCONUT.get());
 
         add(0.85f, ItemRegistry.COCONUT_COOKIE.get());

@@ -4,7 +4,7 @@ import com.bedmen.odyssey.inventory.StitchingMenu;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
-import com.google.gson.JsonElement;
+import com.bedmen.odyssey.util.JsonUtil;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
@@ -17,44 +17,52 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
+import java.util.Arrays;
+
 public class StitchingRecipe implements Recipe<Container> {
     protected final ResourceLocation id;
     protected final Ingredient ingredient1;
     protected final Ingredient ingredient2;
     protected final Ingredient fiber;
+    public final int fiberCount;
+    public final ItemStack[] fiberStackArray;
     protected final ItemStack result;
 
-    public StitchingRecipe(ResourceLocation idIn, Ingredient ingredient1In, Ingredient ingredient2In, Ingredient fiber, ItemStack resultIn) {
+    public StitchingRecipe(ResourceLocation idIn, Ingredient ingredient1In, Ingredient ingredient2In, Ingredient fiber, int fiberCount, ItemStack resultIn) {
         this.id = idIn;
         this.ingredient1 = ingredient1In;
         this.ingredient2 = ingredient2In;
         this.fiber = fiber;
+        this.fiberCount = fiberCount;
+        this.fiberStackArray = fiber.getItems();
+        Arrays.stream(this.fiberStackArray).forEach(itemStack -> itemStack.setCount(fiberCount));
         this.result = resultIn;
     }
 
-    /**
-     * Used to check if a recipe matches current crafting inventory
-     */
-    public boolean matches(Container inv, Level worldIn) {
-        boolean match1 = this.ingredient1.test(inv.getItem(0)) && this.ingredient2.test(inv.getItem(1));
-        boolean match2 = this.ingredient1.test(inv.getItem(1)) && this.ingredient2.test(inv.getItem(0));
-        boolean match3 = this.fiber.test(inv.getItem(3)) && this.fiber.test(inv.getItem(4));
-        if(StitchingMenu.isQuadFiber(this.ingredient1.getItems()[0])){
-            match3 &= this.fiber.test(inv.getItem(2)) && this.fiber.test(inv.getItem(5));
+    public boolean matches(Container container, Level level) {
+        ItemStack itemStack1 = container.getItem(StitchingMenu.INPUT_SLOT_0);
+        ItemStack itemStack2 = container.getItem(StitchingMenu.INPUT_SLOT_1);
+        if(!((this.ingredient1.test(itemStack1) && this.ingredient2.test(itemStack2))
+                || (this.ingredient1.test(itemStack2) && this.ingredient2.test(itemStack1)))){
+            return false;
         }
-        return (match1 || match2) && match3;
+        ItemStack fiberStack = container.getItem(StitchingMenu.FIBER_SLOT);
+        if(!this.fiber.test(fiberStack)){
+            return false;
+        }
+        return fiberStack.getCount() >= this.fiberCount;
     }
 
     public ItemStack assemble(Container inv) {
-        ItemStack itemStack0 = inv.getItem(0);
-        ItemStack itemStack1 = inv.getItem(1);
+        ItemStack itemStack1 = inv.getItem(0);
+        ItemStack itemStack2 = inv.getItem(1);
         ItemStack result = this.result.copy();
-        CompoundTag compoundTag = itemStack0.getOrCreateTag().copy().merge(itemStack1.getOrCreateTag().copy());
+        CompoundTag compoundTag = itemStack1.getOrCreateTag().copy().merge(itemStack2.getOrCreateTag().copy());
         result.setTag(compoundTag);
-        int maxDamage0 = itemStack0.getMaxDamage();
-        int currentDamage0 = itemStack0.getDamageValue();
-        int maxDamage1 = itemStack1.getMaxDamage();
-        int currentDamage1 = itemStack1.getDamageValue();
+        int maxDamage0 = itemStack1.getMaxDamage();
+        int currentDamage0 = itemStack1.getDamageValue();
+        int maxDamage1 = itemStack2.getMaxDamage();
+        int currentDamage1 = itemStack2.getDamageValue();
         int maxDamage2 = result.getMaxDamage();
         int damage = Math.round(((float)(currentDamage0 + currentDamage1) / (float)(maxDamage0 + maxDamage1)) * maxDamage2);
         result.setDamageValue(damage);
@@ -91,17 +99,8 @@ public class StitchingRecipe implements Recipe<Container> {
         NonNullList<Ingredient> nonnulllist = NonNullList.create();
         nonnulllist.add(this.ingredient1);
         nonnulllist.add(this.ingredient2);
-        nonnulllist.add(this.fiber);
-        nonnulllist.add(this.fiber);
-        if(isQuadFiber()){
-            nonnulllist.add(this.fiber);
-            nonnulllist.add(this.fiber);
-        }
+        nonnulllist.add(Ingredient.of(this.fiberStackArray));
         return nonnulllist;
-    }
-
-    public boolean isQuadFiber(){
-        return StitchingMenu.isQuadFiber(this.ingredient1.getItems()[0]);
     }
 
     public ResourceLocation getId() {
@@ -124,12 +123,10 @@ public class StitchingRecipe implements Recipe<Container> {
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<StitchingRecipe> {
 
         public StitchingRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
-            JsonElement jsonelement1 = (JsonElement)(GsonHelper.isArrayNode(jsonObject, "ingredient1") ? GsonHelper.getAsJsonArray(jsonObject, "ingredient1") : GsonHelper.getAsJsonObject(jsonObject, "ingredient1"));
-            Ingredient ingredient1 = Ingredient.fromJson(jsonelement1);
-            JsonElement jsonelement2 = (JsonElement)(GsonHelper.isArrayNode(jsonObject, "ingredient2") ? GsonHelper.getAsJsonArray(jsonObject, "ingredient2") : GsonHelper.getAsJsonObject(jsonObject, "ingredient2"));
-            Ingredient ingredient2 = Ingredient.fromJson(jsonelement2);
-            JsonElement jsonelementFiber = (JsonElement)(GsonHelper.isArrayNode(jsonObject, "fiber") ? GsonHelper.getAsJsonArray(jsonObject, "fiber") : GsonHelper.getAsJsonObject(jsonObject, "fiber"));
-            Ingredient fiber = Ingredient.fromJson(jsonelementFiber);
+            Ingredient ingredient1 = JsonUtil.getIngredient(jsonObject, "ingredient1");
+            Ingredient ingredient2 = JsonUtil.getIngredient(jsonObject, "ingredient2");
+            Ingredient fiber = JsonUtil.getIngredient(jsonObject, "fiber");
+            int fiberCount = jsonObject.getAsJsonPrimitive("fiberCount").getAsInt();
             //Forge: Check if primitive string to keep vanilla or a object which can contain a count field.
             if (!jsonObject.has("result")) throw new com.google.gson.JsonSyntaxException("Missing result, expected to find a string or object");
             ItemStack itemstack;
@@ -141,22 +138,24 @@ public class StitchingRecipe implements Recipe<Container> {
                     return new IllegalStateException("Item: " + s1 + " does not exist");
                 }));
             }
-            return new StitchingRecipe(resourceLocation, ingredient1, ingredient2, fiber, itemstack);
+            return new StitchingRecipe(resourceLocation, ingredient1, ingredient2, fiber, fiberCount, itemstack);
         }
 
-        public StitchingRecipe fromNetwork(ResourceLocation resourceLocation, FriendlyByteBuf byteBuf) {
-            Ingredient ingredient1 = Ingredient.fromNetwork(byteBuf);
-            Ingredient ingredient2 = Ingredient.fromNetwork(byteBuf);
-            Ingredient fiber = Ingredient.fromNetwork(byteBuf);
-            ItemStack itemstack = byteBuf.readItem();
-            return new StitchingRecipe(resourceLocation, ingredient1, ingredient2, fiber, itemstack);
+        public StitchingRecipe fromNetwork(ResourceLocation resourceLocation, FriendlyByteBuf buf) {
+            Ingredient ingredient1 = Ingredient.fromNetwork(buf);
+            Ingredient ingredient2 = Ingredient.fromNetwork(buf);
+            Ingredient fiber = Ingredient.fromNetwork(buf);
+            int fiberCount = buf.readVarInt();
+            ItemStack itemstack = buf.readItem();
+            return new StitchingRecipe(resourceLocation, ingredient1, ingredient2, fiber, fiberCount, itemstack);
         }
 
-        public void toNetwork(FriendlyByteBuf p_44335_, StitchingRecipe stitchingRecipe) {
-            stitchingRecipe.ingredient1.toNetwork(p_44335_);
-            stitchingRecipe.ingredient2.toNetwork(p_44335_);
-            stitchingRecipe.fiber.toNetwork(p_44335_);
-            p_44335_.writeItem(stitchingRecipe.result);
+        public void toNetwork(FriendlyByteBuf buf, StitchingRecipe stitchingRecipe) {
+            stitchingRecipe.ingredient1.toNetwork(buf);
+            stitchingRecipe.ingredient2.toNetwork(buf);
+            stitchingRecipe.fiber.toNetwork(buf);
+            buf.writeVarInt(stitchingRecipe.fiberCount);
+            buf.writeItem(stitchingRecipe.result);
         }
     }
 }

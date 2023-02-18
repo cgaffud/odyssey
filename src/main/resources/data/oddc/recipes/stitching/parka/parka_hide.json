@@ -2,16 +2,16 @@
   "type": "oddc:stitching",
   "ingredient1":
   {
-    "item": "minecraft:leather_leggings"
+    "item": "minecraft:leather"
   },
   "ingredient2":
   {
-    "item": "oddc:fur_leggings"
+    "item": "oddc:polar_bear_fur"
   },
   "fiber":
   {
     "item": "oddc:golden_fiber"
   },
-  "fiberCount": 4,
-  "result": "oddc:parka_leggings"
+  "fiberCount": 1,
+  "result": "oddc:parka_hide"
 }

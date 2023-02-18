@@ -12,5 +12,6 @@
   {
     "item": "oddc:copper_fiber"
   },
+  "fiberCount": 4,
   "result": "oddc:thornmail_chestplate"
 }

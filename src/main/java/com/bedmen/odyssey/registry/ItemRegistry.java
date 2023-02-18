@@ -124,13 +124,14 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATROOT = ITEMS.register("greatroot", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
 
     // # Materials
-    public static final RegistryObject<Item> COCONUT_FLOWER = ITEMS.register("coconut_flower", () -> new ItemNameBlockItem(BlockRegistry.COCONUT.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> COCONUT_WHITE = ITEMS.register("coconut_white", () -> new ItemNameBlockItem(BlockRegistry.COCONUT.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> FEATHER_BUNDLE = ITEMS.register("feather_bundle", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> POLAR_BEAR_FUR = ITEMS.register("polar_bear_fur", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> COPPER_NUGGET = ITEMS.register("copper_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> COPPER_FIBER = ITEMS.register("copper_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> SPIDER_FANG = ITEMS.register("spider_fang", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> WEAVER_FANG = ITEMS.register("weaver_fang", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> CHAINMAIL = ITEMS.register("chainmail", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> IRON_FIBER = ITEMS.register("iron_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> RUSTY_ARM = ITEMS.register("rusty_arm", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> RAW_SILVER = ITEMS.register("raw_silver", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
@@ -140,6 +141,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GOLDEN_FIBER = ITEMS.register("golden_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> TRIWEAVE_FIBER = ITEMS.register("triweave_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> RUBY = ITEMS.register("ruby", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> THORNMAIL = ITEMS.register("thornmail", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> PARKA_HIDE = ITEMS.register("parka_hide", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_NUGGET = ITEMS.register("sterling_silver_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_INGOT = ITEMS.register("sterling_silver_ingot", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_FIBER = ITEMS.register("sterling_silver_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
@@ -156,6 +159,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MOONSTONE = ITEMS.register("moonstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new BurnToSummonItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), EntityTypeRegistry.COVEN_MASTER::get));
     public static final RegistryObject<Item> AERIAL_FABRIC = ITEMS.register("aerial_fabric", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> ZEPHYR_FABRIC = ITEMS.register("zephyr_fabric", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
     public static final RegistryObject<Item> MINERAL_FRUIT = ITEMS.register("mineral_fruit", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1)), player -> AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) < 1));

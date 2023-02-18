@@ -25,18 +25,18 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 public class StitchingMenu extends AbstractContainerMenu {
     public static final int INPUT_SLOT_0 = 0;
     public static final int INPUT_SLOT_1 = 1;
-    public static final int[] FIBER_SLOTS = new int[]{2,3,4,5};
-    public static final int RESULT_SLOT = 6;
-    private static final int INV_SLOT_START = 7;
-    private static final int INV_SLOT_END = 34;
-    private static final int USE_ROW_SLOT_START = 34;
-    private static final int USE_ROW_SLOT_END = 43;
+    public static final int FIBER_SLOT = 2;
+    public static final int RESULT_SLOT = 3;
+    private static final int INV_SLOT_START = 4;
+    private static final int INV_SLOT_END = INV_SLOT_START + 27;
+    private static final int USE_ROW_SLOT_END = INV_SLOT_END + 9;
     protected final ResultContainer resultSlots = new ResultContainer();
-    protected final Container inputSlots = new SimpleContainer(6) {
+    protected final Container inputSlots = new SimpleContainer(3) {
         public void setChanged() {
             super.setChanged();
             StitchingMenu.this.slotsChanged(this);
@@ -56,31 +56,20 @@ public class StitchingMenu extends AbstractContainerMenu {
     protected void onTake(Player player, ItemStack itemStack) {
         itemStack.onCraftedBy(player.level, player, itemStack.getCount());
         this.resultSlots.awardUsedRecipes(player);
-        if(this.isQuadFiber()){
-            this.shrinkStackInSlot(FIBER_SLOTS[0]);
-            this.shrinkStackInSlot(FIBER_SLOTS[3]);
-        }
         this.shrinkStackInSlot(INPUT_SLOT_0);
         this.shrinkStackInSlot(INPUT_SLOT_1);
-        this.shrinkStackInSlot(FIBER_SLOTS[1]);
-        this.shrinkStackInSlot(FIBER_SLOTS[2]);
+        this.shrinkStackInSlot(FIBER_SLOT, this.selectedRecipe.fiberCount);
         this.level.playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1.0F, this.level.random.nextFloat() * 0.1F + 0.9F, false);
     }
 
     private void shrinkStackInSlot(int id) {
+        this.shrinkStackInSlot(id, 1);
+    }
+
+    private void shrinkStackInSlot(int id, int amount) {
         ItemStack itemstack = this.inputSlots.getItem(id);
-        itemstack.shrink(1);
+        itemstack.shrink(amount);
         this.inputSlots.setItem(id, itemstack);
-    }
-
-    public boolean isQuadFiber(){
-        ItemStack itemStack = this.inputSlots.getItem(INPUT_SLOT_0);
-        return isQuadFiber(itemStack);
-    }
-
-    public static boolean isQuadFiber(ItemStack itemStack){
-        EquipmentSlot equipmentSlot = LivingEntity.getEquipmentSlotForItem(itemStack);
-        return equipmentSlot == EquipmentSlot.CHEST || equipmentSlot == EquipmentSlot.LEGS;
     }
 
     protected boolean isValidBlock(BlockState blockState) {
@@ -96,11 +85,8 @@ public class StitchingMenu extends AbstractContainerMenu {
         this.access = containerLevelAccess;
         this.player = inventory.player;
         this.addSlot(new StitchingIngredientSlot(this, this.inputSlots, INPUT_SLOT_0, 26, 40));
-        this.addSlot(new StitchingIngredientSlot(this, this.inputSlots, INPUT_SLOT_1, 89, 40));
-        this.addSlot(new StitchingFiberSlot(this, this.inputSlots, FIBER_SLOTS[0], 47, 31));
-        this.addSlot(new StitchingFiberSlot(this, this.inputSlots, FIBER_SLOTS[1], 68, 31));
-        this.addSlot(new StitchingFiberSlot(this, this.inputSlots, FIBER_SLOTS[2], 47, 49));
-        this.addSlot(new StitchingFiberSlot(this, this.inputSlots, FIBER_SLOTS[3], 68, 49));
+        this.addSlot(new StitchingIngredientSlot(this, this.inputSlots, INPUT_SLOT_1, 90, 40));
+        this.addSlot(new StitchingFiberSlot(this, this.inputSlots, FIBER_SLOT, 58, 40));
         this.addSlot(new Slot(this.resultSlots, RESULT_SLOT, 134, 40) {
             public boolean mayPlace(ItemStack itemStack) {
                 return false;
@@ -124,16 +110,17 @@ public class StitchingMenu extends AbstractContainerMenu {
         for(int k = 0; k < 9; ++k) {
             this.addSlot(new Slot(inventory, k, 8 + k * 18, 142));
         }
+
         this.level = inventory.player.level;
         this.recipes = this.level.getRecipeManager().getAllRecipesFor(RecipeTypeRegistry.STITCHING.get());
     }
 
     public void createResult() {
-        List<StitchingRecipe> list = this.level.getRecipeManager().getRecipesFor(RecipeTypeRegistry.STITCHING.get(), this.inputSlots, this.level);
-        if (list.isEmpty()) {
+        Optional<StitchingRecipe> optionalStitchingRecipe = this.level.getRecipeManager().getRecipesFor(RecipeTypeRegistry.STITCHING.get(), this.inputSlots, this.level).stream().findFirst();
+        if (optionalStitchingRecipe.isEmpty()) {
             this.resultSlots.setItem(0, ItemStack.EMPTY);
         } else {
-            this.selectedRecipe = list.get(0);
+            this.selectedRecipe = optionalStitchingRecipe.get();
             ItemStack itemstack = this.selectedRecipe.assemble(this.inputSlots);
             this.resultSlots.setRecipeUsed(this.selectedRecipe);
             this.resultSlots.setItem(0, itemstack);
@@ -149,14 +136,14 @@ public class StitchingMenu extends AbstractContainerMenu {
 
     public void removed(Player player) {
         super.removed(player);
-        this.access.execute((p_39796_, p_39797_) -> {
+        this.access.execute((level, blockPos) -> {
             this.clearContainer(player, this.inputSlots);
         });
     }
 
     public boolean stillValid(Player player) {
-        return this.access.evaluate((p_39785_, p_39786_) -> {
-            return this.isValidBlock(p_39785_.getBlockState(p_39786_)) && player.distanceToSqr((double) p_39786_.getX() + 0.5D, (double) p_39786_.getY() + 0.5D, (double) p_39786_.getZ() + 0.5D) <= 64.0D;
+        return this.access.evaluate((level, blockPos) -> {
+            return this.isValidBlock(level.getBlockState(blockPos)) && player.distanceToSqr((double) blockPos.getX() + 0.5D, (double) blockPos.getY() + 0.5D, (double) blockPos.getZ() + 0.5D) <= 64.0D;
         }, true);
     }
 
@@ -205,11 +192,11 @@ public class StitchingMenu extends AbstractContainerMenu {
             } else if (id >= RESULT_SLOT) {
                 if (id < USE_ROW_SLOT_END) {
                     if(isFiber(itemstack)){
-                        if (!this.moveItemStackTo(itemstack1, FIBER_SLOTS[0], RESULT_SLOT, false)) {
+                        if (!this.moveItemStackTo(itemstack1, FIBER_SLOT, RESULT_SLOT, false)) {
                             return ItemStack.EMPTY;
                         }
                     } else if(isIngredient(itemstack)){
-                        if (!this.moveItemStackTo(itemstack1, INPUT_SLOT_0, FIBER_SLOTS[0], false)) {
+                        if (!this.moveItemStackTo(itemstack1, INPUT_SLOT_0, FIBER_SLOT, false)) {
                             return ItemStack.EMPTY;
                         }
                     }
