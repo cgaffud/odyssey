@@ -185,11 +185,25 @@ public class AspectUtil {
         return getAspectStrength(itemStack, booleanAspect) > 0.0f;
     }
 
-    public static int getPermabuffAspectStrength(Player player, PermabuffAspect permabuffAspect){
+    public static float getPermabuffFloatAspectStrength(Player player, PermabuffFloatAspect permabuffAspect){
         if(player instanceof OdysseyPlayer odysseyPlayer){
             return odysseyPlayer.getPermabuffHolder().permabuffMap.get(permabuffAspect);
         }
+        return 0.0f;
+    }
+
+    public static int getPermabuffIntegerAspectStrength(Player player, PermabuffIntegerAspect permabuffIntegerAspect){
+        if(player instanceof OdysseyPlayer odysseyPlayer){
+            return (int)odysseyPlayer.getPermabuffHolder().permabuffMap.get(permabuffIntegerAspect).floatValue();
+        }
         return 0;
+    }
+
+    public static boolean hasPermabuffAspect(Player player, PermabuffAspect permabuffAspect){
+        if(player instanceof OdysseyPlayer odysseyPlayer){
+            return odysseyPlayer.getPermabuffHolder().permabuffMap.get(permabuffAspect) > 0.0f;
+        }
+        return false;
     }
 
     // Special totals over multiple aspects on single item

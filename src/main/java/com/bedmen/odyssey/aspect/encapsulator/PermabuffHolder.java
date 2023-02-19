@@ -51,7 +51,9 @@ public class PermabuffHolder implements AspectHolder {
             for(Tag tag: listTag){
                 if(tag instanceof CompoundTag aspectInstanceTag){
                     AspectInstance aspectInstance = AspectInstance.fromCompoundTag(aspectInstanceTag);
-                    aspectInstanceList.add(aspectInstance);
+                    if(aspectInstance != null){
+                        aspectInstanceList.add(aspectInstance);
+                    }
                 }
             }
         }

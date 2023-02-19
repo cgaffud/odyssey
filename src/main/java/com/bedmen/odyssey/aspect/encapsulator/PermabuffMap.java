@@ -1,32 +1,33 @@
 package com.bedmen.odyssey.aspect.encapsulator;
 
+import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.object.PermabuffAspect;
 import com.bedmen.odyssey.util.NonNullMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.Tag;
 
 import java.util.List;
 
-public class PermabuffMap extends NonNullMap<PermabuffAspect, Integer> {
+public class PermabuffMap extends NonNullMap<PermabuffAspect, Float> {
     public PermabuffMap(){
         super();
     }
 
     public PermabuffMap(List<AspectInstance> permabuffList){
         super();
-        permabuffList.forEach(aspectInstance -> this.put((PermabuffAspect)aspectInstance.aspect, (int)aspectInstance.strength));
+        permabuffList.forEach(aspectInstance -> this.put((PermabuffAspect)aspectInstance.aspect, aspectInstance.strength));
     }
 
     @Override
-    protected Integer defaultValue() {
-        return 0;
+    protected Float defaultValue() {
+        return 0.0f;
     }
 
     @Override
     protected String keyToString(PermabuffAspect permabuffAspect) {
-        return permabuffAspect.id;
+        return ((Aspect)permabuffAspect).id;
     }
 
     @Override
@@ -35,18 +36,18 @@ public class PermabuffMap extends NonNullMap<PermabuffAspect, Integer> {
     }
 
     @Override
-    protected Tag valueToTag(Integer integer) {
-        return IntTag.valueOf(integer);
+    protected Tag valueToTag(Float f) {
+        return FloatTag.valueOf(f);
     }
 
     @Override
-    protected Integer tagToValue(Tag tag) {
-        return ((IntTag)tag).getAsInt();
+    protected Float tagToValue(Tag tag) {
+        return ((FloatTag)tag).getAsFloat();
     }
 
     @Override
-    protected Integer combineValues(Integer v1, Integer v2) {
-        return v1 + v2;
+    protected Float combineValues(Float f1, Float f2) {
+        return f1 + f2;
     }
 
     public PermabuffMap copy(){

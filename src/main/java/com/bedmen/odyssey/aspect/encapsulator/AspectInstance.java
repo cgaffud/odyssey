@@ -10,10 +10,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import org.checkerframework.checker.units.qual.A;
 
+import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public class AspectInstance {
 
@@ -76,6 +75,7 @@ public class AspectInstance {
         return  compoundTag;
     }
 
+    @Nullable
     public static AspectInstance fromCompoundTag(CompoundTag compoundTag){
         String id = compoundTag.getString(ID_TAG);
         Aspect aspect = Aspects.ASPECT_REGISTER.get(id);
@@ -107,6 +107,7 @@ public class AspectInstance {
 
     public static BiConsumer<FriendlyByteBuf, AspectInstance> toNetworkStatic = (friendlyByteBuf, aspectInstance) -> aspectInstance.toNetwork(friendlyByteBuf);
 
+    @Nullable
     public static AspectInstance fromNetwork(FriendlyByteBuf friendlyByteBuf){
         return fromCompoundTag(friendlyByteBuf.readNbt());
     }

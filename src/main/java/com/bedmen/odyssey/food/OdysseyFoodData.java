@@ -14,7 +14,7 @@ public class OdysseyFoodData extends FoodData {
    }
 
    public void eat(int nutrition, float saturationMultiplier) {
-      float hungerAspectMultiplier = 1.0f / (1.0f + (float)AspectUtil.getPermabuffAspectStrength(this.player, Aspects.APPETITE)/20.0f);
+      float hungerAspectMultiplier = 1.0f / (1.0f + AspectUtil.getPermabuffFloatAspectStrength(this.player, Aspects.APPETITE));
       int additionalFoodLevel = Integer.max(1, (int)(hungerAspectMultiplier * nutrition));
       this.setFoodLevel(Math.min(this.getFoodLevel() + additionalFoodLevel, 20));
       float additionalSaturation = nutrition * saturationMultiplier * 2.0f * hungerAspectMultiplier;
