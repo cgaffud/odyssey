@@ -1,0 +1,17 @@
+{
+  "type": "oddc:stitching",
+  "ingredient1":
+  {
+    "item": "minecraft:cactus"
+  },
+  "ingredient2":
+  {
+    "item": "oddc:chainmail"
+  },
+  "fiber":
+  {
+    "item": "oddc:copper_fiber"
+  },
+  "fiberCount": 1,
+  "result": "oddc:thornmail"
+}

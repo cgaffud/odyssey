@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.world.gen.feature;
 
 import com.bedmen.odyssey.block.TreasureChestBlock;
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.util.WorldGenUtil;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
@@ -22,13 +22,13 @@ import java.util.stream.IntStream;
 
 public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
     private static final int RARITY = 1;
-    public final TreasureChestMaterial treasureChestMaterial;
+    public final TreasureChestType treasureChestType;
     private final int minY;
     private final int maxY;
 
-    public TreasureChestFeature(Codec<NoneFeatureConfiguration> codec, TreasureChestMaterial treasureChestMaterial, int minY, int maxY) {
+    public TreasureChestFeature(Codec<NoneFeatureConfiguration> codec, TreasureChestType treasureChestType, int minY, int maxY) {
         super(codec);
-        this.treasureChestMaterial = treasureChestMaterial;
+        this.treasureChestType = treasureChestType;
         this.minY = minY + 8;
         this.maxY = maxY;
     }
@@ -53,9 +53,9 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
                         blockpos$mutableblockpos.move(0, -1, 0);
                         BlockPos blockPosBelow = blockpos$mutableblockpos.below();
                         if (WorldGenUtil.isEmpty(worldgenlevel, blockpos$mutableblockpos) && WorldGenUtil.isSolid(worldgenlevel, blockPosBelow)) {
-                            BlockState blockState = this.treasureChestMaterial.getBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
+                            BlockState blockState = this.treasureChestType.getBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
                             worldgenlevel.setBlock(blockpos$mutableblockpos, blockState, 2);
-                            RandomizableContainerBlockEntity.setLootTable(worldgenlevel, random, blockpos$mutableblockpos, this.treasureChestMaterial.lootTable);
+                            RandomizableContainerBlockEntity.setLootTable(worldgenlevel, random, blockpos$mutableblockpos, this.treasureChestType.lootTable);
                             return true;
                         }
                     }

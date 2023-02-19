@@ -14,7 +14,8 @@ import com.bedmen.odyssey.items.odyssey_versions.OdysseyBoatItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyFood;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.lock.LockableDoorType;
+import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
@@ -75,7 +76,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MOONROCK_WALL = ITEMS.register("moonrock_wall", () -> new BlockItem(BlockRegistry.MOONROCK_WALL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> TRANSCENDENTAL_OBSIDIAN = ITEMS.register("transcendental_obsidian", () -> new BlockItem(BlockRegistry.TRANSCENDENTAL_OBSIDIAN.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> TRANSCENDENTAL_TRANSMUTER = ITEMS.register("transcendental_transmuter", () -> new BlockItem(BlockRegistry.TRANSCENDENTAL_TRANSMUTER.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> ARCANE_GRINDSTONE = ITEMS.register("arcane_grindstone", () -> new BlockItem(BlockRegistry.ARCANE_GRINDSTONE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> GRINDSTONE = ITEMS.register("grindstone", () -> new BlockItem(BlockRegistry.GRINDSTONE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> ANVIl = ITEMS.register("anvil", () -> new BlockItem(BlockRegistry.ANVIL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> CHIPPED_ANVIL = ITEMS.register("chipped_anvil", () -> new BlockItem(BlockRegistry.CHIPPED_ANVIL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> DAMAGED_ANVIL = ITEMS.register("damaged_anvil", () -> new BlockItem(BlockRegistry.DAMAGED_ANVIL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
 
     // # Wood and Plants
     public static final RegistryObject<Item> PRAIRIE_GRASS = ITEMS.register("prairie_grass", () -> new TripleHighBlockItem(BlockRegistry.PRAIRIE_GRASS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
@@ -93,12 +97,13 @@ public class ItemRegistry {
     public static final RegistryObject<Item> PALM_STAIRS = ITEMS.register("palm_stairs", () -> new BlockItem(BlockRegistry.PALM_STAIRS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_BUTTON = ITEMS.register("palm_button", () -> new BlockItem(BlockRegistry.PALM_BUTTON.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_PRESSURE_PLATE = ITEMS.register("palm_pressure_plate", () -> new BlockItem(BlockRegistry.PALM_PRESSURE_PLATE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
-    public static final RegistryObject<Item> PALM_DOOR = ITEMS.register("palm_door", () -> new BlockItem(BlockRegistry.PALM_DOOR.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
+    public static final RegistryObject<Item> PALM_DOOR = ITEMS.register("palm_door", () -> new DoubleHighBlockItem(BlockRegistry.PALM_DOOR.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_TRAPDOOR = ITEMS.register("palm_trapdoor", () -> new BlockItem(BlockRegistry.PALM_TRAPDOOR.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_FENCE_GATE = ITEMS.register("palm_fence_gate", () -> new BurnableFenceItem(BlockRegistry.PALM_FENCE_GATE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_BOAT = ITEMS.register("palm_boat", () -> new OdysseyBoatItem(OdysseyBoat.Type.PALM, (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> PALM_SIGN = ITEMS.register("palm_sign", () -> new SignItem((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD), BlockRegistry.PALM_SIGN.get(), BlockRegistry.PALM_WALL_SIGN.get()));
 
+    public static final RegistryObject<Item> COVEN_DOOR = ITEMS.register("coven_door", () -> new DoubleHighBlockItem(BlockRegistry.COVEN_DOOR.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> COVEN_ROOTS = ITEMS.register("coven_roots", () -> new BlockItem(BlockRegistry.COVEN_ROOTS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
 
     public static final RegistryObject<Item> GREATWOOD_PLANKS = ITEMS.register("greatwood_planks", () -> new BlockItem(BlockRegistry.GREATWOOD_PLANKS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
@@ -114,7 +119,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATWOOD_STAIRS = ITEMS.register("greatwood_stairs", () -> new BlockItem(BlockRegistry.GREATWOOD_STAIRS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_BUTTON = ITEMS.register("greatwood_button", () -> new BlockItem(BlockRegistry.GREATWOOD_BUTTON.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_PRESSURE_PLATE = ITEMS.register("greatwood_pressure_plate", () -> new BlockItem(BlockRegistry.GREATWOOD_PRESSURE_PLATE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
-    public static final RegistryObject<Item> GREATWOOD_DOOR = ITEMS.register("greatwood_door", () -> new BlockItem(BlockRegistry.GREATWOOD_DOOR.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
+    public static final RegistryObject<Item> GREATWOOD_DOOR = ITEMS.register("greatwood_door", () -> new DoubleHighBlockItem(BlockRegistry.GREATWOOD_DOOR.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_TRAPDOOR = ITEMS.register("greatwood_trapdoor", () -> new BlockItem(BlockRegistry.GREATWOOD_TRAPDOOR.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_FENCE_GATE = ITEMS.register("greatwood_fence_gate", () -> new BurnableFenceItem(BlockRegistry.GREATWOOD_FENCE_GATE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATWOOD_BOAT = ITEMS.register("greatwood_boat", () -> new OdysseyBoatItem(OdysseyBoat.Type.GREATWOOD, (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.WOOD)));
@@ -122,13 +127,14 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATROOT = ITEMS.register("greatroot", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
 
     // # Materials
-    public static final RegistryObject<Item> COCONUT_FLOWER = ITEMS.register("coconut_flower", () -> new ItemNameBlockItem(BlockRegistry.COCONUT.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> COCONUT_WHITE = ITEMS.register("coconut_white", () -> new ItemNameBlockItem(BlockRegistry.COCONUT.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> FEATHER_BUNDLE = ITEMS.register("feather_bundle", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> POLAR_BEAR_FUR = ITEMS.register("polar_bear_fur", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> COPPER_NUGGET = ITEMS.register("copper_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> COPPER_FIBER = ITEMS.register("copper_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> SPIDER_FANG = ITEMS.register("spider_fang", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> WEAVER_FANG = ITEMS.register("weaver_fang", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> CHAINMAIL = ITEMS.register("chainmail", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> IRON_FIBER = ITEMS.register("iron_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> RUSTY_ARM = ITEMS.register("rusty_arm", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> RAW_SILVER = ITEMS.register("raw_silver", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
@@ -138,6 +144,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GOLDEN_FIBER = ITEMS.register("golden_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> TRIWEAVE_FIBER = ITEMS.register("triweave_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> RUBY = ITEMS.register("ruby", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> THORNMAIL = ITEMS.register("thornmail", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> PARKA_HIDE = ITEMS.register("parka_hide", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_NUGGET = ITEMS.register("sterling_silver_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_INGOT = ITEMS.register("sterling_silver_ingot", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> STERLING_SILVER_FIBER = ITEMS.register("sterling_silver_fiber", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
@@ -153,13 +161,15 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SUNSTONE = ITEMS.register("sunstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> MOONSTONE = ITEMS.register("moonstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new BurnToSummonItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), EntityTypeRegistry.COVEN_MASTER::get));
+    public static final RegistryObject<Item> AERIAL_FABRIC = ITEMS.register("aerial_fabric", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
+    public static final RegistryObject<Item> ZEPHYR_FABRIC = ITEMS.register("zephyr_fabric", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
 
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
     public static final RegistryObject<Item> MINERAL_FRUIT = ITEMS.register("mineral_fruit", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1)), player -> AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) < 1));
 
     // # Tools
-    public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestMaterial.COPPER));
+    public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.COPPER));
 
     public static final RegistryObject<Item> CLOVER_STONE_SHOVEL = ITEMS.register("clover_stone_shovel", () -> new AspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.SHOVEL, 4.5f, List.of(), List.of(new AspectInstance(Aspects.FORTUNE, 1))));
     public static final RegistryObject<Item> CLOVER_STONE_PICKAXE = ITEMS.register("clover_stone_pickaxe", () -> new AspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.CLOVER_STONE, MeleeWeaponClass.PICKAXE, 5.0f, List.of(), List.of(new AspectInstance(Aspects.FORTUNE, 1))));
@@ -170,7 +180,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_PICKAXE = ITEMS.register("sterling_silver_pickaxe", () -> new AspectPickaxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.PICKAXE, 5.0f, List.of(), List.of()));
     public static final RegistryObject<Item> STERLING_SILVER_AXE = ITEMS.register("sterling_silver_axe", () -> new AspectAxeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.AXE, 6.0f, List.of(), List.of()));
     public static final RegistryObject<Item> STERLING_SILVER_HOE = ITEMS.register("sterling_silver_hoe", () -> new AspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.HOE, 4.0f, List.of(), List.of()));
-    public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestMaterial.STERLING_SILVER));
+    public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.STERLING_SILVER));
+
+    public static final RegistryObject<Item> COVEN_HUT_KEY = ITEMS.register("coven_hut_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), LockableDoorType.COVEN_HUT));
 
     public static final List<AspectInstance> MARINE_TOOL_INNATE_MODIFIER_LIST = List.of(new AspectInstance(Aspects.AQUA_AFFINITY));
     public static final RegistryObject<Item> MARINE_SHOVEL = ITEMS.register("marine_shovel", () -> new AspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.SHOVEL.withBetterAttackSpeed(), 3.5f, List.of(), MARINE_TOOL_INNATE_MODIFIER_LIST));
@@ -179,14 +191,14 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MARINE_HOE = ITEMS.register("marine_hoe", () -> new AspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.HOE.withBetterAttackSpeed(), 2.0f, List.of(), MARINE_TOOL_INNATE_MODIFIER_LIST));
 
     // # Magic
+    public static final RegistryObject<Item> WARP_TOTEM = ITEMS.register("warp_totem", () -> new WarpTotemItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), false));
+    public static final RegistryObject<Item> CRACKED_WARP_TOTEM = ITEMS.register("cracked_warp_totem", () -> new WarpTotemItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).durability(5), true));
     public static final RegistryObject<Item> PURIFICATION_TABLET = ITEMS.register("purification_tablet", () -> new PurificationTabletItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC)));
 
     // # Miscellaneous
     public static final RegistryObject<Item> GREATWOOD_MINERAL_WATER_BOTTLE = ITEMS.register("greatwood_mineral_water_bottle", () -> new GreatSaplingHelperItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC), BlockRegistry.GREATWOOD_SAPLING::get, true));
     public static final RegistryObject<Item> GREATWOOD_FERTILIZER = ITEMS.register("greatwood_fertilizer", () -> new GreatSaplingHelperItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC), BlockRegistry.GREATWOOD_SAPLING::get, false));
     public static final RegistryObject<Item> MUSIC_DISC_MESA = ITEMS.register("music_disc_mesa", () -> new RecordItem(14, SoundEventRegistry.MUSIC_DISC_MESA, (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.MISC).rarity(Rarity.RARE)));
-    public static final RegistryObject<Item> WARP_TOTEM = ITEMS.register("warp_totem", () -> new WarpTotem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC), false));
-    public static final RegistryObject<Item> CRACKED_WARP_TOTEM = ITEMS.register("cracked_warp_totem", () -> new WarpTotem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC).durability(5), true));
 
 
     // # Melee Weapons
@@ -214,7 +226,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> MINI_HAMMER = ITEMS.register("mini_hammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_1, MeleeWeaponClass.HATCHET, 5f, List.of(), List.of(new AspectInstance(Aspects.DAMAGE_ON_ARTHROPOD, 0.75f))));
     public static final RegistryObject<Item> SLEDGEHAMMER = ITEMS.register("sledgehammer", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_1, MeleeWeaponClass.HAMMER, 8f, List.of(), List.of(new AspectInstance(Aspects.SMITE_DAMAGE, 0.75f))));
     public static final RegistryObject<Item> SWIFT_SABRE = ITEMS.register("swift_sabre", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_1, MeleeWeaponClass.SABRE, 6.0f, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, 0.2f)), List.of(new AspectInstance(Aspects.ADDITIONAL_SWEEP_DAMAGE, 1.0f))));
-    public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.SWORD,  5f, List.of(), List.of(new AspectInstance(Aspects.SOLAR_STRENGTH, 1.0f)), 2));
+    public static final RegistryObject<Item> SUN_SWORD = ITEMS.register("sun_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.SWORD,  6f, List.of(), List.of(new AspectInstance(Aspects.SOLAR_STRENGTH, 0.5f)), 2));
 
     // ## Tier 2
     public static final RegistryObject<Item> BANDIT_DAGGER = ITEMS.register("bandit_dagger", () -> new AspectMeleeItem(new Item.Properties().rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.UNCRAFTABLE_2, MeleeWeaponClass.DAGGER, 6.5f, List.of(), List.of(new AspectInstance(Aspects.LARCENY_CHANCE, 0.1f))));
@@ -253,6 +265,7 @@ public class ItemRegistry {
 
     // ## Tier 3
     public static final RegistryObject<Item> NETHERITE_MACE = ITEMS.register("netherite_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.NETHERITE, MeleeWeaponClass.MACE, 11f, List.of(), List.of(new AspectInstance(Aspects.BURN_PROOF))));
+    public static final RegistryObject<Item> SKY_SWORD = ITEMS.register("sky_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_3, MeleeWeaponClass.SWORD,  9f, List.of(), List.of(new AspectInstance(Aspects.SKY_STRENGTH, 1.5f)), 2));
 
     // # Ranged Weapons
 
@@ -288,7 +301,7 @@ public class ItemRegistry {
 
     // ## Tier 3
 
-    public static final RegistryObject<Item> MARINE_TRIDENT = ITEMS.register("marine_trident", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.MARINE, MeleeWeaponClass.SPEAR, ThrowableTypes.MARINE_TRIDENT));
+    public static final RegistryObject<Item> MARINE_TRIDENT = ITEMS.register("marine_trident", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.MARINE, MeleeWeaponClass.TRIDENT, ThrowableTypes.MARINE_TRIDENT));
 
     // ## Quivers
     public static final RegistryObject<Item> RABBIT_HIDE_QUIVER = ITEMS.register("rabbit_hide_quiver", () -> new QuiverItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), QuiverType.RABBIT_HIDE_QUIVER));
@@ -311,20 +324,20 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CACTUS_LEGGINGS = ITEMS.register("cactus_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CACTUS, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.THORNS, 1.0f))));
     public static final RegistryObject<Item> CACTUS_BOOTS = ITEMS.register("cactus_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CACTUS, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.THORNS, 1.0f))));
 
-    public static final RegistryObject<Item> CHICKEN_HELMET = ITEMS.register("chicken_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CHICKEN, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 1.0f))));
-    public static final RegistryObject<Item> CHICKEN_CHESTPLATE = ITEMS.register("chicken_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CHICKEN, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 1.0f))));
-    public static final RegistryObject<Item> CHICKEN_LEGGINGS = ITEMS.register("chicken_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CHICKEN, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 1.0f))));
-    public static final RegistryObject<Item> CHICKEN_BOOTS = ITEMS.register("chicken_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CHICKEN, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 1.0f))));
+    public static final RegistryObject<Item> CHICKEN_HELMET = ITEMS.register("chicken_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CHICKEN, EquipmentSlot.HEAD, List.of(), List.of()));
+    public static final RegistryObject<Item> CHICKEN_CHESTPLATE = ITEMS.register("chicken_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CHICKEN, EquipmentSlot.CHEST, List.of(), List.of()));
+    public static final RegistryObject<Item> CHICKEN_LEGGINGS = ITEMS.register("chicken_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CHICKEN, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 2.0f))));
+    public static final RegistryObject<Item> CHICKEN_BOOTS = ITEMS.register("chicken_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CHICKEN, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 2.0f))));
 
     public static final RegistryObject<Item> FUR_HELMET = ITEMS.register("fur_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
     public static final RegistryObject<Item> FUR_CHESTPLATE = ITEMS.register("fur_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
     public static final RegistryObject<Item> FUR_LEGGINGS = ITEMS.register("fur_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
     public static final RegistryObject<Item> FUR_BOOTS = ITEMS.register("fur_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
 
-    public static final RegistryObject<Item> GLIDER_HELMET = ITEMS.register("glider_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.GLIDER, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 1.5f))));
-    public static final RegistryObject<Item> GLIDER_CHESTPLATE = ITEMS.register("glider_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.GLIDER, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 1.5f))));
-    public static final RegistryObject<Item> GLIDER_LEGGINGS = ITEMS.register("glider_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.GLIDER, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 1.5f))));
-    public static final RegistryObject<Item> GLIDER_BOOTS = ITEMS.register("glider_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.GLIDER, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 1.5f))));
+    public static final RegistryObject<Item> GLIDER_HELMET = ITEMS.register("glider_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.GLIDER, EquipmentSlot.HEAD, List.of(), List.of()));
+    public static final RegistryObject<Item> GLIDER_CHESTPLATE = ITEMS.register("glider_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.GLIDER, EquipmentSlot.CHEST, List.of(), List.of()));
+    public static final RegistryObject<Item> GLIDER_LEGGINGS = ITEMS.register("glider_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.GLIDER, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 3.0f))));
+    public static final RegistryObject<Item> GLIDER_BOOTS = ITEMS.register("glider_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.GLIDER, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 3.0f))));
 
     public static final RegistryObject<Item> TURTLE_HELMET = ITEMS.register("turtle_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.TURTLE, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.RESPIRATION, 1.0f))));
     public static final RegistryObject<Item> TURTLE_CHESTPLATE = ITEMS.register("turtle_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.TURTLE, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.RESPIRATION, 1.0f), new AspectInstance(Aspects.SWIM_SPEED, 0.25f))));
@@ -342,10 +355,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> PARKA_LEGGINGS = ITEMS.register("parka_leggings", () -> new DyeableAspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.PARKA, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.5f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
     public static final RegistryObject<Item> PARKA_BOOTS = ITEMS.register("parka_boots", () -> new DyeableAspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.PARKA, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.5f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1), new AspectInstance(Aspects.SNOWSHOE))));
     
-    public static final RegistryObject<Item> ZEPHYR_HELMET = ITEMS.register("zephyr_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.ZEPHYR, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 2.0f))));
-    public static final RegistryObject<Item> ZEPHYR_CHESTPLATE = ITEMS.register("zephyr_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.ZEPHYR, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 2.0f))));
-    public static final RegistryObject<Item> ZEPHYR_LEGGINGS = ITEMS.register("zephyr_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.ZEPHYR, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 2.0f))));
-    public static final RegistryObject<Item> ZEPHYR_BOOTS = ITEMS.register("zephyr_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.ZEPHYR, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 2.0f))));
+    public static final RegistryObject<Item> ZEPHYR_HELMET = ITEMS.register("zephyr_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.ZEPHYR, EquipmentSlot.HEAD, List.of(), List.of()));
+    public static final RegistryObject<Item> ZEPHYR_CHESTPLATE = ITEMS.register("zephyr_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.ZEPHYR, EquipmentSlot.CHEST, List.of(), List.of()));
+    public static final RegistryObject<Item> ZEPHYR_LEGGINGS = ITEMS.register("zephyr_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.ZEPHYR, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 4.0f))));
+    public static final RegistryObject<Item> ZEPHYR_BOOTS = ITEMS.register("zephyr_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.ZEPHYR, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 4.0f))));
     
     public static final RegistryObject<Item> STERLING_SILVER_HELMET = ITEMS.register("sterling_silver_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.STERLING_SILVER, EquipmentSlot.HEAD, List.of(), List.of()));
     public static final RegistryObject<Item> STERLING_SILVER_CHESTPLATE = ITEMS.register("sterling_silver_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.STERLING_SILVER, EquipmentSlot.CHEST, List.of(), List.of()));
@@ -501,5 +514,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREEN_BANNER = ITEMS_VANILLA.register("green_banner", () -> new BannerItem(Blocks.GREEN_BANNER, Blocks.GREEN_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
     public static final RegistryObject<Item> RED_BANNER = ITEMS_VANILLA.register("red_banner", () -> new BannerItem(Blocks.RED_BANNER, Blocks.RED_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
     public static final RegistryObject<Item> BLACK_BANNER = ITEMS_VANILLA.register("black_banner", () -> new BannerItem(Blocks.BLACK_BANNER, Blocks.BLACK_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
+
+    // Epic Unobtainable Crystal
+    public static final RegistryObject<Item> UNOBTAINABLE = ITEMS.register("unobtainable", ()-> new Item((new Item.Properties())));
 
 }

@@ -1,0 +1,17 @@
+{
+  "type": "oddc:stitching",
+  "ingredient1":
+  {
+    "item": "oddc:aerial_fabric"
+  },
+  "ingredient2":
+  {
+    "item": "oddc:feather_bundle"
+  },
+  "fiber":
+  {
+    "item": "oddc:electrum_fiber"
+  },
+  "fiberCount": 1,
+  "result": "oddc:zephyr_fabric"
+}

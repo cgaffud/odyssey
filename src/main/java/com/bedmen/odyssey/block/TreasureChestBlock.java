@@ -2,7 +2,7 @@ package com.bedmen.odyssey.block;
 
 import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.items.KeyItem;
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.SoundEventRegistry;
 import net.minecraft.core.BlockPos;
@@ -49,11 +49,11 @@ public class TreasureChestBlock extends AbstractChestBlock<TreasureChestBlockEnt
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     protected static final VoxelShape SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
     public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
-    public final TreasureChestMaterial treasureChestMaterial;
+    public final TreasureChestType treasureChestType;
 
-    public TreasureChestBlock(TreasureChestMaterial chestMaterial, BlockBehaviour.Properties properties) {
+    public TreasureChestBlock(TreasureChestType chestMaterial, BlockBehaviour.Properties properties) {
         super(properties, BlockEntityTypeRegistry.TREASURE_CHEST::get);
-        this.treasureChestMaterial = chestMaterial;
+        this.treasureChestType = chestMaterial;
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, Boolean.FALSE).setValue(LOCKED, false));
     }
 
@@ -77,7 +77,7 @@ public class TreasureChestBlock extends AbstractChestBlock<TreasureChestBlockEnt
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         if(blockState.getValue(LOCKED)){
             ItemStack itemStack = player.getItemInHand(hand);
-            if(itemStack.getItem() instanceof KeyItem keyItem && keyItem.getChestMaterial() == this.treasureChestMaterial){
+            if(itemStack.getItem() instanceof KeyItem keyItem && keyItem.lockType == this.treasureChestType){
                 level.setBlock(blockPos, blockState.setValue(LOCKED, Boolean.FALSE), 3);
                 level.playSound(player, blockPos, SoundEventRegistry.KEY_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
                 if(!player.getAbilities().instabuild){
@@ -98,7 +98,7 @@ public class TreasureChestBlock extends AbstractChestBlock<TreasureChestBlockEnt
                 MenuProvider menuprovider = this.getMenuProvider(blockState, level, blockPos);
                 if (menuprovider != null) {
                     player.openMenu(menuprovider);
-                    player.awardStat(this.treasureChestMaterial.stat);
+                    player.awardStat(this.treasureChestType.stat);
                     PiglinAi.angerNearbyPiglins(player, true);
                 }
 

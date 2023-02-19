@@ -10,10 +10,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
@@ -36,8 +38,8 @@ public class HollowCoconutBlock extends FallingBlock implements EntityBlock, INe
     public static final VoxelShape SHAPE_FLOOR = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
     public static final VoxelShape SHAPE_HANGING = Block.box(2.0D, 2.0D, 2.0D, 14.0D, 14.0D, 14.0D);
 
-    public HollowCoconutBlock(Properties p_i48440_1_) {
-        super(p_i48440_1_);
+    public HollowCoconutBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(HANGING, Boolean.FALSE));
     }
 
@@ -48,18 +50,14 @@ public class HollowCoconutBlock extends FallingBlock implements EntityBlock, INe
 
     @Nullable
     protected static <T extends BlockEntity> BlockEntityTicker<T> createCoconutTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<? extends HollowCoconutBlockEntity> blockEntityType2) {
-        return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntityType2, HollowCoconutBlockEntity::serverTick);
-    }
-
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> blockEntityType, BlockEntityType<E> blockEntityType2, BlockEntityTicker<? super E> blockEntityTicker) {
-        return blockEntityType == blockEntityType2 ? (BlockEntityTicker<A>)blockEntityTicker : null;
+        return level.isClientSide ? null : BaseEntityBlock.createTickerHelper(blockEntityType, blockEntityType2, HollowCoconutBlockEntity::serverTick);
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(HANGING, context.getClickedFace() == Direction.DOWN);
     }
 
-    public VoxelShape getShape(BlockState blockState, BlockGetter iBlockReader, BlockPos blockPos, CollisionContext selectionContext) {
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext selectionContext) {
         return blockState.getValue(HANGING) ? SHAPE_HANGING : SHAPE_FLOOR;
     }
 
@@ -77,16 +75,20 @@ public class HollowCoconutBlock extends FallingBlock implements EntityBlock, INe
         }
     }
 
-    public void animateTick(BlockState p_180655_1_, Level p_180655_2_, BlockPos p_180655_3_, Random p_180655_4_) {
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, Random random) {
     }
 
-    public int getDustColor(BlockState p_189876_1_, BlockGetter p_189876_2_, BlockPos p_189876_3_) {
+    public int getDustColor(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return 0x000000;
     }
 
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player)
     {
         return ItemRegistry.HOLLOW_COCONUT.get().getDefaultInstance();
+    }
+
+    public Item asItem() {
+        return ItemRegistry.HOLLOW_COCONUT.get();
     }
 
     public RenderType getRenderType() {

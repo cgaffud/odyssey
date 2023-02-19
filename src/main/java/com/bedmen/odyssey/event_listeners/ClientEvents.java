@@ -7,25 +7,23 @@ import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.*;
 import com.bedmen.odyssey.client.model.*;
 import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.OdysseySignRenderer;
-import com.bedmen.odyssey.client.renderer.blockentity.TreasureChestRenderer;
+import com.bedmen.odyssey.client.renderer.blockentity.*;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.combat.ShieldType;
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.particle.ThrustParticle;
+import com.bedmen.odyssey.potions.FireType;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
-import com.bedmen.odyssey.util.RenderUtil;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.CritParticle;
-import net.minecraft.client.particle.HugeExplosionParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -106,21 +104,24 @@ public class ClientEvents {
 
             //Block Entity Renderings
             BlockEntityRenderers.register(BlockEntityTypeRegistry.SIGN.get(), OdysseySignRenderer::new);
+            BlockEntityRenderers.register(BlockEntityTypeRegistry.COVEN_HUT_DOOR.get(), CovenHutDoorRenderer::new);
+            BlockEntityRenderers.register(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), InfusionPedestalRenderer::new);
+            BlockEntityRenderers.register(BlockEntityTypeRegistry.INFUSER.get(), InfuserRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
-            BlockEntityRenderers.register(BlockEntityTypeRegistry.TREASURE_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestMaterial.STERLING_SILVER, context));
+            BlockEntityRenderers.register(BlockEntityTypeRegistry.TREASURE_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestType.STERLING_SILVER, context));
 
             //Screens
             MenuScreens.register(ContainerRegistry.RECYCLING_FURNACE.get(), RecyclingFurnaceScreen::new);
             MenuScreens.register(ContainerRegistry.STITCHING_TABLE.get(), StitchingTableScreen::new);
             MenuScreens.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
-            MenuScreens.register(ContainerRegistry.ARCANE_GRINDSTONE.get(), ArcaneGrindstoneScreen::new);
+            MenuScreens.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
+            MenuScreens.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
 //        ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
 //        ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), OdysseySmithingTableScreen::new);
 //        ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), OdysseyEnchantmentScreen::new);
 //        ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
 //        ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
-//        ScreenManager.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
             for(MenuType<QuiverMenu> containerType : ContainerRegistry.QUIVER_MAP.values()){
                 MenuScreens.register(containerType, QuiverScreen::new);
             }
@@ -182,12 +183,16 @@ public class ClientEvents {
             event.addSprite(shieldType.getRenderMaterial(true).texture());
         }
         //Treasure Chest Textures
-        for(TreasureChestMaterial treasureChestMaterial : TreasureChestMaterial.values()){
-            event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestMaterial, false).texture());
-            event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestMaterial, true).texture());
+        for(TreasureChestType treasureChestType : TreasureChestType.values()){
+            event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestType, false).texture());
+            event.addSprite(TreasureChestRenderer.getRenderMaterial(treasureChestType, true).texture());
         }
         // Modded fire variants
-        event.addSprite(RenderUtil.HEX_FIRE.texture());
+        for(FireType fireType : FireType.values()){
+            event.addSprite(fireType.material0.texture());
+            event.addSprite(fireType.material1.texture());
+        }
+        event.addSprite(InfuserRenderer.ENCHANTMENT_TEXT_LOCATION);
 //        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
 //        event.addSprite(PermafrostRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
 //        event.addSprite(PermafrostRenderer.WIND_RESOURCE_LOCATION);

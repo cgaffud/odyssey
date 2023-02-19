@@ -21,10 +21,10 @@ public enum OdysseyArmorMaterial implements ArmorMaterial {
     // Tier 1
     CACTUS("oddc:cactus", OdysseyTiers.CACTUS, 5, new int[]{2,3,3,2}, SoundEvents.WOOL_BREAK, 0.0f, List.of()),
     LEATHER("leather", OdysseyTiers.LEATHER, 5, new int[]{2,3,4,3}, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, List.of()),
-    COCONUT("oddc:coconut", OdysseyTiers.COCONUT, 0, new int[]{0,0,0,3}, SoundEvents.WOOD_BREAK, 0.0f, List.of()),
+    COCONUT("oddc:coconut", OdysseyTiers.NO_TIER, 0, new int[]{0,0,0,3}, SoundEvents.WOOD_BREAK, 0.0f, List.of()),
     CHICKEN("oddc:chicken", OdysseyTiers.CHICKEN, 10, new int[]{3,5,5,3}, SoundEvents.CHICKEN_HURT, 0.0f, List.of(new AspectInstance(Aspects.SLOW_FALL))),
     FUR("oddc:fur", OdysseyTiers.FUR, 10, new int[]{3,5,5,3}, SoundEvents.WOOL_FALL, 0.0f, List.of()),
-    CHAIN("chainmail", OdysseyTiers.IRON, 15, new int[]{3,5,6, 4}, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, List.of()),
+    CHAIN("chainmail", OdysseyTiers.CHAINMAIL, 15, new int[]{3,5,6, 4}, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, List.of()),
     IRON("iron", OdysseyTiers.IRON, 15, new int[]{3,6,7,4}, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, List.of()),
     TURTLE("oddc:turtle", OdysseyTiers.TURTLE, 25, new int[]{3,6,7,4}, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, List.of(new AspectInstance(Aspects.TURTLE_MASTERY))),
     GOLD("gold", OdysseyTiers.GOLD, 7, new int[]{4,7,8,5}, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, List.of()),

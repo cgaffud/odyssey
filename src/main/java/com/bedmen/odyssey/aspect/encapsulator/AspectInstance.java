@@ -6,11 +6,18 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctionInput;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import org.checkerframework.checker.units.qual.A;
+
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class AspectInstance {
 
+    public static final float INFUSION_PENALTY = 0.5f;
     public static final String ID_TAG = "id";
     private static final String STRENGTH_TAG = "strength";
     private static final String DISPLAY_TAG = "display";
@@ -31,6 +38,10 @@ public class AspectInstance {
 
     public AspectInstance(BooleanAspect booleanAspect){
         this(booleanAspect, 1.0f);
+    }
+
+    public AspectInstance(String aspectID, float strength){
+        this(Aspects.ASPECT_REGISTER.get(aspectID), strength);
     }
 
     public AspectInstance(Aspect aspect, float strength){
@@ -90,14 +101,35 @@ public class AspectInstance {
         }
     }
 
-    public AspectInstance addAspectInstance(AspectInstance aspectInstance){
-        if(aspectInstance.aspect == this.aspect){
-            return new AspectInstance(this.aspect, this.strength + aspectInstance.strength, this.aspectTooltipDisplaySetting, this.obfuscated);
-        }
-        return this;
+    public void toNetwork(FriendlyByteBuf friendlyByteBuf){
+        friendlyByteBuf.writeNbt(this.toCompoundTag());
+    }
+
+    public static BiConsumer<FriendlyByteBuf, AspectInstance> toNetworkStatic = (friendlyByteBuf, aspectInstance) -> aspectInstance.toNetwork(friendlyByteBuf);
+
+    public static AspectInstance fromNetwork(FriendlyByteBuf friendlyByteBuf){
+        return fromCompoundTag(friendlyByteBuf.readNbt());
     }
 
     public float getModifiability(ItemStack itemStack){
         return this.aspect.getWeight(itemStack.getItem()) * this.strength;
+    }
+
+    public AspectInstance applyInfusionPenalty(){
+        if(this.aspect instanceof BooleanAspect){
+            return this;
+        }
+        if(this.aspect instanceof IntegerAspect integerAspect){
+            if(integerAspect.hasInfusionPenalty){
+                return new AspectInstance(this.aspect, Mth.floor(this.strength * INFUSION_PENALTY), this.aspectTooltipDisplaySetting, this.obfuscated);
+            } else {
+                return this;
+            }
+        }
+        return new AspectInstance(this.aspect, this.strength * INFUSION_PENALTY, this.aspectTooltipDisplaySetting, this.obfuscated);
+    }
+
+    public AspectInstance withAddedStrength(float bonusStrength){
+        return new AspectInstance(this.aspect, this.strength + bonusStrength, this.aspectTooltipDisplaySetting, this.obfuscated);
     }
 }

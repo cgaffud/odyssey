@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "oddc:anvil",
+    "oddc:chipped_anvil",
+    "oddc:damaged_anvil"
+  ]
+}

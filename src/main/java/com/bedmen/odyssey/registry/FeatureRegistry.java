@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.loot.TreasureChestMaterial;
+import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.world.gen.feature.AbandonedIronGolemFeature;
 import com.bedmen.odyssey.world.gen.feature.TreasureChestFeature;
 import com.bedmen.odyssey.world.gen.feature.TriplePlantBlockFeature;
@@ -31,12 +31,12 @@ public class FeatureRegistry {
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> ABANDONED_IRON_GOLEM = FEATURES.register("abandoned_iron_golem", () -> new AbandonedIronGolemFeature(NoneFeatureConfiguration.CODEC));
 
     //Treasure Chests
-    public static final RegistryObject<Feature<NoneFeatureConfiguration>> COPPER_TREASURE_CHEST = FEATURES.register("copper_treasure_chest", () -> new TreasureChestFeature(NoneFeatureConfiguration.CODEC, TreasureChestMaterial.COPPER, 0, 56));
-    public static final RegistryObject<Feature<NoneFeatureConfiguration>> STERLING_SILVER_TREASURE_CHEST = FEATURES.register("sterling_silver_treasure_chest", () -> new TreasureChestFeature(NoneFeatureConfiguration.CODEC, TreasureChestMaterial.STERLING_SILVER, -64, 0));
-    public static final Map<TreasureChestMaterial, Feature<NoneFeatureConfiguration>> TREASURE_CHEST_MAP = new HashMap<>();
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> COPPER_TREASURE_CHEST = FEATURES.register("copper_treasure_chest", () -> new TreasureChestFeature(NoneFeatureConfiguration.CODEC, TreasureChestType.COPPER, 0, 56));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> STERLING_SILVER_TREASURE_CHEST = FEATURES.register("sterling_silver_treasure_chest", () -> new TreasureChestFeature(NoneFeatureConfiguration.CODEC, TreasureChestType.STERLING_SILVER, -64, 0));
+    public static final Map<TreasureChestType, Feature<NoneFeatureConfiguration>> TREASURE_CHEST_MAP = new HashMap<>();
 
     public static void initTreasureChests(){
-        TREASURE_CHEST_MAP.put(TreasureChestMaterial.COPPER, COPPER_TREASURE_CHEST.get());
-        TREASURE_CHEST_MAP.put(TreasureChestMaterial.STERLING_SILVER, STERLING_SILVER_TREASURE_CHEST.get());
+        TREASURE_CHEST_MAP.put(TreasureChestType.COPPER, COPPER_TREASURE_CHEST.get());
+        TREASURE_CHEST_MAP.put(TreasureChestType.STERLING_SILVER, STERLING_SILVER_TREASURE_CHEST.get());
     }
 }

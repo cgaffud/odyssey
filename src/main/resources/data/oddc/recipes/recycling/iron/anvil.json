@@ -1,8 +1,13 @@
 {
   "type": "oddc:recycling",
-  "ingredient": {
-    "item": "minecraft:anvil"
-  },
+  "ingredient": [
+    {
+      "item": "minecraft:anvil"
+    },
+    {
+      "item": "oddc:anvil"
+    }
+  ],
   "metalCounts": [
     {
       "metal": "iron",

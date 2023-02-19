@@ -1,13 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "  A",
-    "AAA",
-    "A A"
+    "XAX",
+    "XXX",
+    "XAX"
   ],
   "key": {
+    "X": {
+      "item": "minecraft:leather"
+    },
     "A": {
-      "item": "oddc:leather_bundle"
+      "item": "oddc:unobtainable"
     }
   },
   "result": {

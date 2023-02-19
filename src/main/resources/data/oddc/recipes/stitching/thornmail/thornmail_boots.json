@@ -12,5 +12,6 @@
   {
     "item": "oddc:copper_fiber"
   },
+  "fiberCount": 2,
   "result": "oddc:thornmail_boots"
 }

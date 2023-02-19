@@ -10,22 +10,7 @@ public class StitchingFiberSlot extends AbstractStitchingSlot {
         super(stitchingMenu, container, id, x, y);
     }
 
-    public boolean canUse(){
-        if(container.getItem(0).isEmpty()){
-            return false;
-        }
-        int id = this.getContainerSlot();
-        if(!stitchingMenu.isQuadFiber() && (id == 2 || id == 5)){
-            return false;
-        }
-        return true;
-    }
-
     public boolean mayPlace(ItemStack itemStack) {
-        return this.stitchingMenu.isFiber(itemStack) && this.canUse();
-    }
-
-    public int getMaxStackSize() {
-        return 1;
+        return this.stitchingMenu.isFiber(itemStack);
     }
 }

@@ -32,9 +32,8 @@ public class AspectItemPredicates {
     public static final Predicate<Item> BOW = item -> item instanceof BowItem;
     public static final Predicate<Item> CROSSBOW = item -> item instanceof CrossbowItem;
     public static final Predicate<Item> RANGED_AMMO_WEAPON = item -> BOW.test(item) || CROSSBOW.test(item);
-    public static final Predicate<Item> MELEE_AND_RANGED_AMMO_WEAPON = item -> MELEE.test(item) || RANGED_AMMO_WEAPON.test(item);
     public static final Predicate<Item> THROWABLE = item -> item instanceof ThrowableWeaponItem;
-    public static final Predicate<Item> ALL_WEAPON = item -> MELEE_AND_RANGED_AMMO_WEAPON.test(item) || THROWABLE.test(item);
+    public static final Predicate<Item> ALL_WEAPON = item -> MELEE.test(item) || RANGED_AMMO_WEAPON.test(item) || THROWABLE.test(item);
     public static final Predicate<Item> THROWABLE_AND_RANGED_AMMO_WEAPON = item -> RANGED_AMMO_WEAPON.test(item) || THROWABLE.test(item);
     public static final Predicate<Item> PROJECTILE = item -> THROWABLE_AND_RANGED_AMMO_WEAPON.test(item) || item instanceof QuiverItem || item instanceof ArrowItem;
 

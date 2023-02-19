@@ -254,13 +254,28 @@ def printRGBInfo(image1, image2):
     maxMin2 = getMinMaxRGB(image2)
     print("MaxMin 2: "+str(maxMin2))
 
+def redistributeRedAndGreenPixel(pixel, redStrength):
+    r,g,b,a = pixel
+    redGreenTotal = r + g
+    greenStrength = 1.0 - redStrength
+    newR = clamp(g * redStrength + r * greenStrength)
+    newG = clamp(r * redStrength + g * greenStrength)
+    return (newR,newG,b,a)
+
+def redistributeRedAndGreenImage(image, redStrength):
+     atEveryPixel(image, lambda pos, pixel : redistributeRedAndGreenPixel(pixel, redStrength))
+     return image
+    
+
 # Notes on how to do certain effects:
 # Clover Stone: recolorImageRandomly(image1, [0.9,1.0,0.9],[0.85,1.0,0.85])
+# Hex Fire: redistributeRedAndGreenImage(image, 0.75) (on soul fire)
+# Leather to Parka Hide: recolorImage(image, [0.40,0.475,0.55], [0,0,0])
 
-openPath1 = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\depreciated\stone_spear_projectile.png"
-savePath = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\depreciated\clover_stone_spear.png"
-image1 = openImage(openPath1)
-recolorImageRandomly(image1, [0.9,1.0,0.9],[0.85,1.0,0.85])
-saveImage(image1, savePath)
+openPath1 = r"C:\Users\18029\Documents\1.18.2\assets\minecraft\textures\item\diamond.png"
+image = openImage(openPath1)
+savePath = r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\item\unobtainable.png"
+grayscaleImage(image, 1)
+saveImage(image, savePath)
 
 print("Done")
