@@ -12,7 +12,7 @@ import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.aspect_items.*;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBoatItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyFood;
+import com.bedmen.odyssey.food.OdysseyFood;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
 import com.bedmen.odyssey.lock.LockableDoorType;
 import com.bedmen.odyssey.lock.TreasureChestType;
@@ -165,7 +165,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ZEPHYR_FABRIC = ITEMS.register("zephyr_fabric", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
-    public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1)), player -> AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) < 1));
+    public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1), new AspectInstance(Aspects.APPETITE, 20)), player -> AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) < 1));
 
     // # Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.COPPER));

@@ -9,6 +9,7 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.food.OdysseyFoodData;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
@@ -49,7 +50,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -192,20 +192,6 @@ public class EntityEvents {
         }
     }
 
-    public static final Set<Integer> IDS = ConcurrentHashMap.newKeySet();
-
-    @SubscribeEvent
-    public static void onEntityJoinWorldEvent(final EntityJoinWorldEvent event){
-        if(!event.getWorld().isClientSide){
-            Entity entity = event.getEntity();
-            if(!event.loadedFromDisk()){
-                if(entity.getType() == EntityType.SKELETON){
-                    IDS.add(entity.getId());
-                }
-            }
-        }
-    }
-
     private interface EntityReplacementFunction {
         Optional<EntityType<?>> call(Mob mob, Random random);
     }
@@ -235,9 +221,9 @@ public class EntityEvents {
 
         if(ENTITY_REPLACEMENT_MAP.containsKey(entityType) && entity instanceof Mob mob){
             EntityReplacementFunction entityReplacementFunction = ENTITY_REPLACEMENT_MAP.get(entityType);
-            Optional<EntityType<?>> oEntityType = entityReplacementFunction.call(mob, random);
-            if(oEntityType.isPresent()){
-                EntityType<?> entityType1 = oEntityType.get();
+            Optional<EntityType<?>> optionalEntityType = entityReplacementFunction.call(mob, random);
+            if(optionalEntityType.isPresent()){
+                EntityType<?> entityType1 = optionalEntityType.get();
                 if(entityType1 != entityType){
                     entityType1.spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), mobSpawnType, true, true);
                     event.setResult(Event.Result.DENY);
@@ -404,6 +390,14 @@ public class EntityEvents {
             for(ItemEntity itemEntity: itemEntityToRemove){
                 itemEntityCollection.remove(itemEntity);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityJoinWorldEvent(final EntityJoinWorldEvent event){
+        Entity entity = event.getEntity();
+        if(entity instanceof Player player){
+            player.foodData = OdysseyFoodData.fromFoodData(player, player.foodData);
         }
     }
 }

@@ -5,7 +5,7 @@ import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyFood;
+import com.bedmen.odyssey.food.OdysseyFood;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
