@@ -8,11 +8,12 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.combat.*;
 import com.bedmen.odyssey.entity.projectile.SonicBoom;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
+import com.bedmen.odyssey.food.OdysseyFood;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.aspect_items.*;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBoatItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
-import com.bedmen.odyssey.food.OdysseyFood;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyMapItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
 import com.bedmen.odyssey.lock.LockableDoorType;
 import com.bedmen.odyssey.lock.TreasureChestType;
@@ -402,6 +403,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BANDIT_SPAWN_EGG = ITEMS.register("bandit_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BANDIT, 0x503213, 0x282828, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> WRAITH_SPAWN_EGG = ITEMS.register("wraith_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WRAITH, 0xF3F4F5, 0xA8ACAE, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
 
+    // # No Creative Tab
+    public static final RegistryObject<Item> UNOBTAINABLE = ITEMS.register("unobtainable", ()-> new Item((new Item.Properties())));
+    public static final RegistryObject<Item> FILLED_MAP = ITEMS.register("filled_map", () -> new OdysseyMapItem(new Item.Properties()));
+
     /////////////////////////////////////////////////////////////////////////
 
     //Vanilla Overrides
@@ -511,8 +516,5 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREEN_BANNER = ITEMS_VANILLA.register("green_banner", () -> new BannerItem(Blocks.GREEN_BANNER, Blocks.GREEN_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
     public static final RegistryObject<Item> RED_BANNER = ITEMS_VANILLA.register("red_banner", () -> new BannerItem(Blocks.RED_BANNER, Blocks.RED_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
     public static final RegistryObject<Item> BLACK_BANNER = ITEMS_VANILLA.register("black_banner", () -> new BannerItem(Blocks.BLACK_BANNER, Blocks.BLACK_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
-
-    // Epic Unobtainable Crystal
-    public static final RegistryObject<Item> UNOBTAINABLE = ITEMS.register("unobtainable", ()-> new Item((new Item.Properties())));
 
 }

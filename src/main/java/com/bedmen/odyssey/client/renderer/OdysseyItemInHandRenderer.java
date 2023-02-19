@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.client.renderer;
 
-import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import com.google.common.base.MoreObjects;
@@ -44,11 +43,11 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
     private final EntityRenderDispatcher entityRenderDispatcher;
     private final ItemRenderer itemRenderer;
 
-    public OdysseyItemInHandRenderer(Minecraft p_109310_) {
-        super(p_109310_);
-        this.minecraft = p_109310_;
-        this.entityRenderDispatcher = p_109310_.getEntityRenderDispatcher();
-        this.itemRenderer = p_109310_.getItemRenderer();
+    public OdysseyItemInHandRenderer(Minecraft minecraft) {
+        super(minecraft);
+        this.minecraft = minecraft;
+        this.entityRenderDispatcher = minecraft.getEntityRenderDispatcher();
+        this.itemRenderer = minecraft.getItemRenderer();
     }
 
     public void renderItem(LivingEntity p_109323_, ItemStack p_109324_, ItemTransforms.TransformType p_109325_, boolean p_109326_, PoseStack p_109327_, MultiBufferSource p_109328_, int p_109329_) {
@@ -63,49 +62,7 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
         return -Mth.cos(f * (float)Math.PI) * 0.5F + 0.5F;
     }
 
-    private void renderMapHand(PoseStack p_109362_, MultiBufferSource p_109363_, int p_109364_, HumanoidArm p_109365_) {
-        RenderSystem.setShaderTexture(0, this.minecraft.player.getSkinTextureLocation());
-        PlayerRenderer playerrenderer = (PlayerRenderer)this.entityRenderDispatcher.<AbstractClientPlayer>getRenderer(this.minecraft.player);
-        p_109362_.pushPose();
-        float f = p_109365_ == HumanoidArm.RIGHT ? 1.0F : -1.0F;
-        p_109362_.mulPose(Vector3f.YP.rotationDegrees(92.0F));
-        p_109362_.mulPose(Vector3f.XP.rotationDegrees(45.0F));
-        p_109362_.mulPose(Vector3f.ZP.rotationDegrees(f * -41.0F));
-        p_109362_.translate((double)(f * 0.3F), (double)-1.1F, (double)0.45F);
-        if (p_109365_ == HumanoidArm.RIGHT) {
-            playerrenderer.renderRightHand(p_109362_, p_109363_, p_109364_, this.minecraft.player);
-        } else {
-            playerrenderer.renderLeftHand(p_109362_, p_109363_, p_109364_, this.minecraft.player);
-        }
-
-        p_109362_.popPose();
-    }
-
-    private void renderOneHandedMap(PoseStack p_109354_, MultiBufferSource p_109355_, int p_109356_, float p_109357_, HumanoidArm p_109358_, float p_109359_, ItemStack p_109360_) {
-        float f = p_109358_ == HumanoidArm.RIGHT ? 1.0F : -1.0F;
-        p_109354_.translate((double)(f * 0.125F), -0.125D, 0.0D);
-        if (!this.minecraft.player.isInvisible()) {
-            p_109354_.pushPose();
-            p_109354_.mulPose(Vector3f.ZP.rotationDegrees(f * 10.0F));
-            this.renderPlayerArm(p_109354_, p_109355_, p_109356_, p_109357_, p_109359_, p_109358_);
-            p_109354_.popPose();
-        }
-
-        p_109354_.pushPose();
-        p_109354_.translate((double)(f * 0.51F), (double)(-0.08F + p_109357_ * -1.2F), -0.75D);
-        float f1 = Mth.sqrt(p_109359_);
-        float f2 = Mth.sin(f1 * (float)Math.PI);
-        float f3 = -0.5F * f2;
-        float f4 = 0.4F * Mth.sin(f1 * ((float)Math.PI * 2F));
-        float f5 = -0.3F * Mth.sin(p_109359_ * (float)Math.PI);
-        p_109354_.translate((double)(f * f3), (double)(f4 - 0.3F * f2), (double)f5);
-        p_109354_.mulPose(Vector3f.XP.rotationDegrees(f2 * -45.0F));
-        p_109354_.mulPose(Vector3f.YP.rotationDegrees(f * f2 * -30.0F));
-        this.renderMap(p_109354_, p_109355_, p_109356_, p_109360_);
-        p_109354_.popPose();
-    }
-
-    private void renderTwoHandedMap(PoseStack p_109340_, MultiBufferSource p_109341_, int p_109342_, float p_109343_, float p_109344_, float p_109345_) {
+    public void renderTwoHandedMap(PoseStack p_109340_, MultiBufferSource p_109341_, int p_109342_, float p_109343_, float p_109344_, float p_109345_) {
         float f = Mth.sqrt(p_109345_);
         float f1 = -0.2F * Mth.sin(p_109345_ * (float)Math.PI);
         float f2 = -0.4F * Mth.sin(f * (float)Math.PI);
@@ -127,22 +84,40 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
         this.renderMap(p_109340_, p_109341_, p_109342_, this.mainHandItem);
     }
 
-    private void renderMap(PoseStack p_109367_, MultiBufferSource p_109368_, int p_109369_, ItemStack p_109370_) {
-        p_109367_.mulPose(Vector3f.YP.rotationDegrees(180.0F));
-        p_109367_.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
-        p_109367_.scale(0.38F, 0.38F, 0.38F);
-        p_109367_.translate(-0.5D, -0.5D, 0.0D);
-        p_109367_.scale(0.0078125F, 0.0078125F, 0.0078125F);
-        Integer integer = MapItem.getMapId(p_109370_);
+    private void renderMapHand(PoseStack p_109362_, MultiBufferSource p_109363_, int p_109364_, HumanoidArm p_109365_) {
+        RenderSystem.setShaderTexture(0, this.minecraft.player.getSkinTextureLocation());
+        PlayerRenderer playerrenderer = (PlayerRenderer)this.entityRenderDispatcher.<AbstractClientPlayer>getRenderer(this.minecraft.player);
+        p_109362_.pushPose();
+        float f = p_109365_ == HumanoidArm.RIGHT ? 1.0F : -1.0F;
+        p_109362_.mulPose(Vector3f.YP.rotationDegrees(92.0F));
+        p_109362_.mulPose(Vector3f.XP.rotationDegrees(45.0F));
+        p_109362_.mulPose(Vector3f.ZP.rotationDegrees(f * -41.0F));
+        p_109362_.translate((double)(f * 0.3F), (double)-1.1F, (double)0.45F);
+        if (p_109365_ == HumanoidArm.RIGHT) {
+            playerrenderer.renderRightHand(p_109362_, p_109363_, p_109364_, this.minecraft.player);
+        } else {
+            playerrenderer.renderLeftHand(p_109362_, p_109363_, p_109364_, this.minecraft.player);
+        }
+
+        p_109362_.popPose();
+    }
+
+    private void renderMap(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, ItemStack itemStack) {
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
+        poseStack.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
+        poseStack.scale(0.38F, 0.38F, 0.38F);
+        poseStack.translate(-0.5D, -0.5D, 0.0D);
+        poseStack.scale(0.0078125F, 0.0078125F, 0.0078125F);
+        Integer integer = MapItem.getMapId(itemStack);
         MapItemSavedData mapitemsaveddata = MapItem.getSavedData(integer, this.minecraft.level);
-        VertexConsumer vertexconsumer = p_109368_.getBuffer(mapitemsaveddata == null ? MAP_BACKGROUND : MAP_BACKGROUND_CHECKERBOARD);
-        Matrix4f matrix4f = p_109367_.last().pose();
-        vertexconsumer.vertex(matrix4f, -7.0F, 135.0F, 0.0F).color(255, 255, 255, 255).uv(0.0F, 1.0F).uv2(p_109369_).endVertex();
-        vertexconsumer.vertex(matrix4f, 135.0F, 135.0F, 0.0F).color(255, 255, 255, 255).uv(1.0F, 1.0F).uv2(p_109369_).endVertex();
-        vertexconsumer.vertex(matrix4f, 135.0F, -7.0F, 0.0F).color(255, 255, 255, 255).uv(1.0F, 0.0F).uv2(p_109369_).endVertex();
-        vertexconsumer.vertex(matrix4f, -7.0F, -7.0F, 0.0F).color(255, 255, 255, 255).uv(0.0F, 0.0F).uv2(p_109369_).endVertex();
+        VertexConsumer vertexconsumer = multiBufferSource.getBuffer(mapitemsaveddata == null ? MAP_BACKGROUND : MAP_BACKGROUND_CHECKERBOARD);
+        Matrix4f matrix4f = poseStack.last().pose();
+        vertexconsumer.vertex(matrix4f, -7.0F, 135.0F, 0.0F).color(255, 255, 255, 255).uv(0.0F, 1.0F).uv2(packedLight).endVertex();
+        vertexconsumer.vertex(matrix4f, 135.0F, 135.0F, 0.0F).color(255, 255, 255, 255).uv(1.0F, 1.0F).uv2(packedLight).endVertex();
+        vertexconsumer.vertex(matrix4f, 135.0F, -7.0F, 0.0F).color(255, 255, 255, 255).uv(1.0F, 0.0F).uv2(packedLight).endVertex();
+        vertexconsumer.vertex(matrix4f, -7.0F, -7.0F, 0.0F).color(255, 255, 255, 255).uv(0.0F, 0.0F).uv2(packedLight).endVertex();
         if (mapitemsaveddata != null) {
-            this.minecraft.gameRenderer.getMapRenderer().render(p_109367_, p_109368_, integer, mapitemsaveddata, false, p_109369_);
+            this.minecraft.gameRenderer.getMapRenderer().render(poseStack, multiBufferSource, integer, mapitemsaveddata, false, packedLight);
         }
 
     }

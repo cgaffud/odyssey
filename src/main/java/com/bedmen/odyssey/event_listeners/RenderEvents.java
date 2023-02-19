@@ -7,11 +7,17 @@ import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.RenderUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -59,10 +65,27 @@ public class RenderEvents {
      */
     @SubscribeEvent
     public static void onRenderHandEvent(final RenderHandEvent event){
-        Item item = event.getItemStack().getItem();
+        ItemStack itemStack = event.getItemStack();
+        Item item = itemStack.getItem();
         InteractionHand hand = event.getHand();
-        if(item instanceof QuiverItem && hand == InteractionHand.OFF_HAND){
+        boolean isMainHand = hand == InteractionHand.MAIN_HAND;
+        ItemInHandRenderer itemInHandRenderer = Minecraft.getInstance().itemInHandRenderer;
+        LocalPlayer localPlayer = Minecraft.getInstance().player;
+        if(item instanceof QuiverItem && !isMainHand){
             event.setCanceled(true);
+        } else if(itemStack.is(ItemRegistry.FILLED_MAP.get()) && localPlayer != null){
+            PoseStack poseStack = event.getPoseStack();
+            MultiBufferSource multiBufferSource = event.getMultiBufferSource();
+            int packedLight = event.getPackedLight();
+            float interpolatedPitch = event.getInterpolatedPitch();
+            float equipProgress = event.getEquipProgress();
+            float swingProgress = event.getSwingProgress();
+            HumanoidArm humanoidarm = isMainHand ? localPlayer.getMainArm() : localPlayer.getMainArm().getOpposite();
+            if (isMainHand && itemInHandRenderer.offHandItem.isEmpty()) {
+                itemInHandRenderer.renderTwoHandedMap(poseStack, multiBufferSource, packedLight, interpolatedPitch, equipProgress, swingProgress);
+            } else {
+                itemInHandRenderer.renderOneHandedMap(poseStack, multiBufferSource, packedLight, interpolatedPitch, humanoidarm, swingProgress, itemStack);
+            }
         }
     }
 
