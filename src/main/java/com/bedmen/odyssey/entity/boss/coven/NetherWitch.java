@@ -2,9 +2,11 @@ package com.bedmen.odyssey.entity.boss.coven;
 
 import com.bedmen.odyssey.entity.ai.CovenReturnToMasterGoal;
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -76,6 +78,15 @@ public class NetherWitch extends CovenWitch {
         }
 
         super.aiStep();
+    }
+
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean b) {
+        super.dropCustomDeathLoot(damageSource, looting, b);
+
+        if ((this.isEnraged() && (this.random.nextDouble() < ENRAGED_SPECIAL_DROP_CHANCE))
+                || (!this.isEnraged() && (this.random.nextDouble() < SPECIAL_DROP_CHANCE))) {
+            this.spawnLoot(ItemRegistry.HEXFLAME_DAGGER.get(), 2);
+        }
     }
 
     static class NetherWitchAttackGoal extends Goal {

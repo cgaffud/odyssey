@@ -47,6 +47,7 @@ public class Aspects {
     public static final FloatAspect FATAL_HIT = new FloatAspect("fatal_hit", 0.2f, AspectTooltipFunctions.HP_THRESHHOLD, AspectItemPredicates.MELEE);
     public static final FloatAspect ADDITIONAL_SWEEP_DAMAGE = new FloatAspect("additional_sweep_damage", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.HAS_SWEEP);
     public static final IntegerAspect POISON_DAMAGE = new IntegerAspect("poison_damage", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.MELEE, true);
+    public static final IntegerAspect HEXFLAME_DAMAGE = new IntegerAspect("hexflame_damage", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.MELEE, true);
     public static final FloatAspect COBWEB_CHANCE = new FloatAspect("cobweb_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE);
     public static final FloatAspect LARCENY_CHANCE = new FloatAspect("larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE);
 
@@ -64,6 +65,7 @@ public class Aspects {
     public static final FloatAspect PIERCING = new FloatAspect("piercing", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE);
     public static final IntegerAspect PROJECTILE_LOOTING_LUCK = new IntegerAspect("projectile_looting_luck", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE, false);
     public static final IntegerAspect PROJECTILE_POISON_DAMAGE = new IntegerAspect("projectile_poison_damage", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.PROJECTILE, true);
+    public static final FloatAspect PROJECTILE_HEXED_EARTH = new FloatAspect("projectile_hexed_earth", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
     public static final FloatAspect PROJECTILE_COBWEB_CHANCE = new FloatAspect("projectile_cobweb_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
     public static final FloatAspect PROJECTILE_LARCENY_CHANCE = new FloatAspect("projectile_larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
     public static final FloatAspect PROJECTILE_KNOCKBACK = new FloatAspect("projectile_knockback", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.PROJECTILE);

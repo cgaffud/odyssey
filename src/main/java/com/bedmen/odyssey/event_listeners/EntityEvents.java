@@ -6,6 +6,8 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.entity.boss.coven.CovenRootEntity;
+import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
@@ -24,6 +26,7 @@ import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Difficulty;
@@ -33,6 +36,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
@@ -40,6 +44,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -115,10 +121,21 @@ public class EntityEvents {
             if(poisonStrength > 0){
                 AspectUtil.applyPoisonDamage(hurtLivingEntity, poisonStrength);
             }
+
+            int hexflameStrength = AspectUtil.getIntegerAspectStrength(mainHandItemStack, Aspects.HEXFLAME_DAMAGE);
+            if(hexflameStrength > 0) {
+                if (hurtLivingEntity.hasEffect(EffectRegistry.HEXFLAME.get())) {
+                    MobEffectInstance mobEffectInstance = hurtLivingEntity.getEffect(EffectRegistry.HEXFLAME.get());
+                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (int)(80 * hexflameStrength);
+                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), hexflameDuration > (160 * hexflameStrength) ? (160 * hexflameStrength) : hexflameDuration, 1));
+                }
+                else
+                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(80 * hexflameStrength), 1));
+            }
             // Cobweb Chance
             float cobwebChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.COBWEB_CHANCE);
             if(!(damageSourceLivingEntity instanceof OdysseyPlayer odysseyPlayer)
-                    || odysseyPlayer.getAttackStrengthScaleO() > 0.9f){
+                    || odysseyPlayer.getAttackStrengthScaleO() > 0.9f) {
                 Weaver.tryPlaceCobwebOnTarget(cobwebChance, hurtLivingEntity);
             }
             // Melee Larceny
@@ -146,6 +163,11 @@ public class EntityEvents {
             odysseyLivingEntity.pushKnockbackAspectQueue(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_KNOCKBACK));
             // Ranged Larceny
             WeaponUtil.tryLarceny(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), odysseyAbstractArrow.getOwner(), hurtLivingEntity);
+            // Hexed Earth
+            if (hurtLivingEntity.getRandom().nextDouble() < odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_HEXED_EARTH)) {
+                CovenRootEntity.createRootBlock(hurtLivingEntity.blockPosition(), hurtLivingEntity.getLevel());
+                OverworldWitch.summonDripstoneAboveEntity(hurtLivingEntity.getPosition(1.0f), hurtLivingEntity.getLevel(), 1.5f,7, 5);
+            }
         }
 
         // Break Coconut

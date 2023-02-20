@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
 import com.bedmen.odyssey.entity.ai.CovenReturnToMasterGoal;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.*;
@@ -143,6 +145,31 @@ public class OverworldWitch extends CovenWitch {
     protected void doWhenReturnToMaster() {
         super.doWhenReturnToMaster();
         setRootGoal();
+    }
+
+    public static void summonDripstoneAboveEntity(Vec3 position, Level level, float fallDamagePerDistance, int fallDamageMax, int dropHeight) {
+        BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos(position.x, position.y, position.z);
+        double initialY = position.y;
+        BlockState blockstate;
+
+        do {
+            mutableBlockPos.move(Direction.UP);
+            blockstate = level.getBlockState(mutableBlockPos);
+        } while (blockstate.isAir() && (mutableBlockPos.getY() < initialY+dropHeight));
+
+        if (mutableBlockPos.getY() != initialY) {
+            FallingBlockEntity dripstone = new FallingBlockEntity(level, position.x, mutableBlockPos.getY(), position.z, Blocks.POINTED_DRIPSTONE.defaultBlockState().setValue(PointedDripstoneBlock.TIP_DIRECTION, Direction.DOWN));
+            dripstone.setHurtsEntities(fallDamagePerDistance, fallDamageMax);
+            level.addFreshEntity(dripstone);
+        }
+    }
+
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean b) {
+        super.dropCustomDeathLoot(damageSource, looting, b);
+        if ((this.isEnraged() && (this.random.nextDouble() < ENRAGED_SPECIAL_DROP_CHANCE))
+                || (!this.isEnraged() && (this.random.nextDouble() < SPECIAL_DROP_CHANCE))) {
+            this.spawnLoot(ItemRegistry.HEXED_EARTH_ARROW.get(), 32);
+        }
     }
 
     private class OverworldWitchRootGoal extends Goal {
@@ -373,21 +400,7 @@ public class OverworldWitch extends CovenWitch {
         }
 
         private void createSpellEntity(Vec3 playerPosition) {
-            BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos(playerPosition.x, playerPosition.y, playerPosition.z);
-            double initialY = playerPosition.y;
-            BlockState blockstate;
-
-            do {
-                mutableBlockPos.move(Direction.UP);
-                blockstate = overworldWitch.level.getBlockState(mutableBlockPos);
-            } while (blockstate.isAir() && (mutableBlockPos.getY() < initialY+10));
-
-            if (mutableBlockPos.getY() != initialY) {
-                FallingBlockEntity dripstone = new FallingBlockEntity(overworldWitch.level, playerPosition.x, mutableBlockPos.getY(), playerPosition.z, Blocks.POINTED_DRIPSTONE.defaultBlockState().setValue(PointedDripstoneBlock.TIP_DIRECTION, Direction.DOWN));
-                System.out.println(dripstone.position());
-                dripstone.setHurtsEntities(6, 40);
-                overworldWitch.level.addFreshEntity(dripstone);
-            }
+            OverworldWitch.summonDripstoneAboveEntity(playerPosition, overworldWitch.level, 6, 40, 10);
         }
 
         protected SoundEvent getSpellPrepareSound() {
