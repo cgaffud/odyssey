@@ -9,11 +9,11 @@ import com.bedmen.odyssey.client.model.*;
 import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.*;
 import com.bedmen.odyssey.client.renderer.entity.*;
+import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
-import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.particle.ThrustParticle;
 import com.bedmen.odyssey.potions.FireType;
@@ -22,6 +22,7 @@ import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.CritParticle;
 import net.minecraft.client.renderer.BiomeColors;
@@ -30,9 +31,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
@@ -236,22 +235,18 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onColorHandlerEvent$Item(final ColorHandlerEvent.Item event) {
-        event.getItemColors().register((itemStack, i) -> {
+        ItemColors itemColors = event.getItemColors();
+        itemColors.register((itemStack, i) -> {
             BlockState blockstate = ((BlockItem)(itemStack).getItem()).getBlock().defaultBlockState();
             return event.getBlockColors().getColor(blockstate, null, null, i);
         }, BlockRegistry.PALM_LEAVES.get(), BlockRegistry.PALM_CORNER_LEAVES.get());
-        event.getItemColors().register((itemStack, i) ->
+        itemColors.register((itemStack, i) ->
                 GrassColor.get(0.5D, 1.0D),
                 BlockRegistry.PRAIRIE_GRASS.get());
-        event.getItemColors().register((itemStack, i) -> {
-            return i > 0 ? -1 : ((DyeableLeatherItem)itemStack.getItem()).getColor(itemStack);
-        }, ItemRegistry.PARKA_HELMET.get(), ItemRegistry.PARKA_CHESTPLATE.get(), ItemRegistry.PARKA_LEGGINGS.get(), ItemRegistry.PARKA_BOOTS.get());
-        event.getItemColors().register((itemStack, i) -> {
-            return i <= 0 ? -1 : ConditionalAmpUtil.getColorTag(itemStack);
-        }, ItemRegistry.RAIN_SWORD.get(), ItemRegistry.ARID_MACE.get());
-        event.getItemColors().register((itemStack, i) -> {
-            return ConditionalAmpUtil.getColorTag(itemStack);
-        }, ItemRegistry.ICE_DAGGER.get());
+        itemColors.register((itemStack, i) -> i > 0 ? -1 : ((DyeableLeatherItem)itemStack.getItem()).getColor(itemStack), ItemRegistry.PARKA_HELMET.get(), ItemRegistry.PARKA_CHESTPLATE.get(), ItemRegistry.PARKA_LEGGINGS.get(), ItemRegistry.PARKA_BOOTS.get());
+        itemColors.register((itemStack, i) -> i <= 0 ? -1 : ConditionalAmpUtil.getColorTag(itemStack), ItemRegistry.RAIN_SWORD.get(), ItemRegistry.ARID_MACE.get());
+        itemColors.register((itemStack, i) -> ConditionalAmpUtil.getColorTag(itemStack), ItemRegistry.ICE_DAGGER.get());
+        itemColors.register((itemStack, i) -> i == 0 ? -1 : MapItem.getColor(itemStack), ItemRegistry.FILLED_MAP.get());
     }
 
     @SubscribeEvent
