@@ -171,7 +171,7 @@ public class EntityEvents {
             WeaponUtil.tryLarceny(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), odysseyAbstractArrow.getOwner(), hurtLivingEntity);
             // Hexed Earth
             if (hurtLivingEntity.getRandom().nextDouble() < odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_HEXED_EARTH)) {
-                CovenRootEntity.createRootBlock(hurtLivingEntity.blockPosition(), hurtLivingEntity.getLevel());
+                CovenRootEntity.createRootBlock(hurtLivingEntity.blockPosition(), hurtLivingEntity.getLevel(), 12);
                 OverworldWitch.summonDripstoneAboveEntity(hurtLivingEntity.getPosition(1.0f), hurtLivingEntity.getLevel(), 1.5f,7, 5);
             }
         }

@@ -316,7 +316,7 @@ public class OverworldWitch extends CovenWitch {
         }
     }
 
-    private class OverworldWitchSpikeGoal extends Goal {
+    private static class OverworldWitchSpikeGoal extends Goal {
         private final OverworldWitch overworldWitch;
 
         private int attackWarmupDelay;
