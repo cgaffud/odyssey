@@ -32,8 +32,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.Optional;
-
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RenderEvents {
 
@@ -137,7 +135,7 @@ public class RenderEvents {
     @SubscribeEvent
     public static void onRenderLivingEvent(final RenderLivingEvent event){
         LivingEntity livingEntity = event.getEntity();
-        Optional<FireType> optionalFireType = RenderUtil.getStrongestFire(livingEntity);
-        optionalFireType.ifPresent(fireType -> RenderUtil.renderExternalViewModdedFire(livingEntity, fireType, event.getPoseStack(), event.getMultiBufferSource()));
+        FireType fireType = RenderUtil.getStrongestFireType(livingEntity);
+        RenderUtil.renderFireTypeExternalView(livingEntity, fireType, event.getPoseStack(), event.getMultiBufferSource());
     }
 }

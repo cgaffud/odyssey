@@ -189,8 +189,10 @@ public class ClientEvents {
         }
         // Modded fire variants
         for(FireType fireType : FireType.values()){
-            event.addSprite(fireType.material0.texture());
-            event.addSprite(fireType.material1.texture());
+            if(fireType.isNotNone()){
+                event.addSprite(fireType.material0.texture());
+                event.addSprite(fireType.material1.texture());
+            }
         }
         event.addSprite(InfuserRenderer.ENCHANTMENT_TEXT_LOCATION);
 //        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);

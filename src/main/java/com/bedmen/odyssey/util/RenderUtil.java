@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.util;
 
-import com.bedmen.odyssey.potions.FireEffect;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.potions.FireType;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -15,18 +15,19 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.util.Comparator;
-import java.util.Optional;
-
 public class RenderUtil {
 
-    public static Optional<FireType> getStrongestFire(LivingEntity livingEntity){
-        return livingEntity.getActiveEffects().stream()
-                .filter(mobEffectInstance -> mobEffectInstance.getEffect() instanceof FireEffect)
-                .map(mobEffectInstance -> ((FireEffect) mobEffectInstance.getEffect()).fireType).min(Comparator.comparingInt(Enum::ordinal));
+    public static FireType getStrongestFireType(LivingEntity livingEntity){
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
+            return odysseyLivingEntity.getFireType();
+        }
+        return FireType.NONE;
     }
 
-    public static void renderBlockOverlayModdedFire(PoseStack poseStack, FireType fireType) {
+    public static void renderFireTypeBlockOverlay(PoseStack poseStack, FireType fireType) {
+        if(fireType.isNone()){
+            return;
+        }
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.depthFunc(519);
@@ -69,7 +70,10 @@ public class RenderUtil {
         RenderSystem.depthFunc(515);
     }
 
-    public static void renderExternalViewModdedFire(LivingEntity livingEntity, FireType fireType, PoseStack poseStack, MultiBufferSource multiBufferSource){
+    public static void renderFireTypeExternalView(LivingEntity livingEntity, FireType fireType, PoseStack poseStack, MultiBufferSource multiBufferSource){
+        if(fireType.isNone()){
+            return;
+        }
         TextureAtlasSprite sprite0 = fireType.material0.sprite();
         TextureAtlasSprite sprite1 = fireType.material1.sprite();
         poseStack.pushPose();

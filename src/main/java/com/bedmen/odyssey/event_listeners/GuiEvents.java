@@ -6,9 +6,7 @@ import com.bedmen.odyssey.client.gui.screens.OdysseyCreativeModeInventoryScreen;
 import com.bedmen.odyssey.client.gui.screens.OdysseyInventoryScreen;
 import com.bedmen.odyssey.client.gui.screens.OdysseySignEditScreen;
 import com.bedmen.odyssey.potions.FireType;
-import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.RenderUtil;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -20,8 +18,6 @@ import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.Optional;
 
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GuiEvents {
@@ -49,13 +45,13 @@ public class GuiEvents {
         Player player = event.getPlayer();
         if ((event.getOverlayType() == RenderBlockOverlayEvent.OverlayType.FIRE)) {
             // Check if the player has a strong fire type
-            Optional<FireType> optionalFireType = RenderUtil.getStrongestFire(player);
-            optionalFireType.ifPresent(fireType -> {
+            FireType fireType = RenderUtil.getStrongestFireType(player);
+            if(fireType.isNotNone()){
                 // Cancel the event
                 event.setCanceled(true);
                 // Send a new one with the right info
-                RenderUtil.renderBlockOverlayModdedFire(event.getPoseStack(), fireType);
-            });
+                RenderUtil.renderFireTypeBlockOverlay(event.getPoseStack(), fireType);
+            }
         }
     }
 

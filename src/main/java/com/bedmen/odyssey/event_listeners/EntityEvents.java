@@ -18,6 +18,8 @@ import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
+import com.bedmen.odyssey.potions.FireEffect;
+import com.bedmen.odyssey.potions.FireType;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -26,7 +28,6 @@ import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Difficulty;
@@ -36,7 +37,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
@@ -44,8 +44,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -103,6 +101,11 @@ public class EntityEvents {
         if(AspectUtil.hasBooleanAspectOnArmor(livingEntity, Aspects.FROST_WALKER) && !blockPos.equals(livingEntity.lastPos)){
             FrostWalkerEnchantment.onEntityMoved(livingEntity, livingEntity.level, blockPos, 1);
         }
+
+        // Set Fire Type
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity && !livingEntity.level.isClientSide){
+            odysseyLivingEntity.setFireType(FireType.getStrongestFireEffectType(livingEntity));
+        }
     }
 
     @SubscribeEvent
@@ -124,13 +127,16 @@ public class EntityEvents {
 
             int hexflameStrength = AspectUtil.getIntegerAspectStrength(mainHandItemStack, Aspects.HEXFLAME_DAMAGE);
             if(hexflameStrength > 0) {
+                int additionalDuration = 10 + (80 * hexflameStrength);
                 if (hurtLivingEntity.hasEffect(EffectRegistry.HEXFLAME.get())) {
                     MobEffectInstance mobEffectInstance = hurtLivingEntity.getEffect(EffectRegistry.HEXFLAME.get());
-                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (int)(80 * hexflameStrength);
-                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), hexflameDuration > (160 * hexflameStrength) ? (160 * hexflameStrength) : hexflameDuration, 1));
+                    int currentHexflameDuration = mobEffectInstance.getDuration() / 2 + additionalDuration ;
+                    int newHexflameDuration = Math.min(currentHexflameDuration, (160 * hexflameStrength));
+                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), newHexflameDuration, 1));
                 }
-                else
-                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(80 * hexflameStrength), 1));
+                else {
+                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), additionalDuration, 1));
+                }
             }
             // Cobweb Chance
             float cobwebChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.COBWEB_CHANCE);
