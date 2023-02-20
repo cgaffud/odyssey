@@ -17,6 +17,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -56,8 +57,7 @@ public class OdysseyTrades {
                 if (blockpos != null) {
                     ItemStack itemstack = OdysseyMapItem.create(serverlevel, blockpos.getX(), blockpos.getZ(), (byte)2, true, true);
                     MapItem.renderBiomePreviewMap(serverlevel, itemstack);
-                    // todo make map items that can take new destination types
-                    //MapItemSavedData.addTargetDecoration(itemstack, blockpos, "+", this.destinationType);
+                    MapItemSavedData.addTargetDecoration(itemstack, blockpos, "+", OdysseyMapItem.DecorationType.COVEN_HUT);
                     itemstack.setHoverName(new TranslatableComponent(this.displayName));
                     return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(Items.COMPASS), itemstack, this.maxUses, this.villagerXp, 0.2F);
                 } else {
