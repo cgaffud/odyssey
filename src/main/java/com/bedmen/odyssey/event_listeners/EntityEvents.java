@@ -11,7 +11,6 @@ import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
-import com.bedmen.odyssey.food.OdysseyFoodData;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
@@ -46,7 +45,6 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -127,16 +125,13 @@ public class EntityEvents {
 
             int hexflameStrength = AspectUtil.getIntegerAspectStrength(mainHandItemStack, Aspects.HEXFLAME_DAMAGE);
             if(hexflameStrength > 0) {
-                int additionalDuration = 10 + (80 * hexflameStrength);
                 if (hurtLivingEntity.hasEffect(EffectRegistry.HEXFLAME.get())) {
                     MobEffectInstance mobEffectInstance = hurtLivingEntity.getEffect(EffectRegistry.HEXFLAME.get());
-                    int currentHexflameDuration = mobEffectInstance.getDuration() / 2 + additionalDuration ;
-                    int newHexflameDuration = Math.min(currentHexflameDuration, (160 * hexflameStrength));
-                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), newHexflameDuration, 1));
+                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (int)(40 * hexflameStrength);
+                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), hexflameDuration > (80 * hexflameStrength) ? (80 * hexflameStrength) : hexflameDuration, 0));
                 }
-                else {
-                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), additionalDuration, 1));
-                }
+                else
+                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(40 * hexflameStrength), 0));
             }
             // Cobweb Chance
             float cobwebChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.COBWEB_CHANCE);
