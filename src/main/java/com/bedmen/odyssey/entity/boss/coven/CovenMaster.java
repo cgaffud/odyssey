@@ -269,7 +269,7 @@ public class CovenMaster extends BossMaster {
 
         float originalWitchHealth = this.getWitchHealth(covenWitch);
         float bossReducedAmount = amount * this.getDamageReduction();
-        damageSource = OdysseyDamageSource.withInvulnerabilityMultiplier(damageSource, 2.0f);
+        damageSource = OdysseyDamageSource.withInvulnerabilityMultiplier(damageSource, 1.0f / Integer.max(1, this.getNearbyPlayerNumber()));
 
         if (originalWitchHealth > 0.0f) {
             float newWitchHealth = Float.max(originalWitchHealth - bossReducedAmount, 0.0f);
