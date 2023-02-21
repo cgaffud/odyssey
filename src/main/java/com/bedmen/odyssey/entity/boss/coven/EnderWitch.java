@@ -182,7 +182,7 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
 
     protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean b) {
         super.dropCustomDeathLoot(damageSource, looting, b);
-        if (this.isEnraged()) {
+        if (this.isEnraged) {
             if (this.random.nextDouble() < SPECIAL_DROP_CHANCE)
                 this.spawnLoot( ItemRegistry.WARP_TOTEM.get(), 1);
             else if (this.random.nextDouble() < ENRAGED_SPECIAL_DROP_CHANCE)
@@ -300,7 +300,7 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
                 Optional<CovenMaster> master = this.enderWitch.getMaster();
                 if (master.isPresent())
                     g = this.enderWitch.attackTimeMultiplier(master.get().getNearbyPlayerNumber());
-                if (this.enderWitch.isEnraged())
+                if (this.enderWitch.isEnraged)
                     g *= 0.5;
 
                 float f1 = Mth.clamp(f, 0.1F, 1.0F);

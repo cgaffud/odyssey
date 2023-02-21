@@ -29,9 +29,10 @@ import net.minecraft.world.phys.Vec3;
 
 public abstract class CovenWitch extends BossSubEntity<CovenMaster> {
     private static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Boolean> DATA_ENRAGED = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.BOOLEAN);
+    private static final String PHASE_TAG = "WitchPhase";
     protected static final float SPECIAL_DROP_CHANCE = 0.25f;
     protected static final float ENRAGED_SPECIAL_DROP_CHANCE = 0.5f;
+    public boolean isEnraged = false;
 
     public enum Phase {
         IDLE,
@@ -46,6 +47,13 @@ public abstract class CovenWitch extends BossSubEntity<CovenMaster> {
         this.xpReward = 50;
     }
 
+    public void tick(){
+        super.tick();
+        if(this.level.isClientSide){
+            this.isEnraged = this.getHealth() <= CovenMaster.ENRAGED_WITCH_HEALTH;
+        }
+    }
+
     public abstract CovenType getCovenType();
 
     protected SoundEvent getCastingSoundEvent() {
@@ -55,7 +63,6 @@ public abstract class CovenWitch extends BossSubEntity<CovenMaster> {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_PHASE, 0);
-        this.entityData.define(DATA_ENRAGED, false);
     }
 
 
@@ -91,20 +98,17 @@ public abstract class CovenWitch extends BossSubEntity<CovenMaster> {
         return Phase.values()[(this.entityData.get(DATA_PHASE))];
     }
 
-    public void setEnraged(boolean enraged) { this.entityData.set(DATA_ENRAGED, enraged);}
-    public boolean isEnraged() { return this.entityData.get(DATA_ENRAGED); }
-
     // Triggered by CovenMaster when this witch reaches 0 health
     // Server-side
     public void becomeEnraged() {
-        if(!this.isEnraged()){
+        if(!this.isEnraged){
             if(this.level.canSeeSky(this.eyeBlockPosition())){
                 LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(this.level);
                 lightningBolt.moveTo(this.position());
                 lightningBolt.setVisualOnly(true);
                 this.level.addFreshEntity(lightningBolt);
             }
-            this.setEnraged(true);
+            this.isEnraged = true;
         }
     }
 
@@ -115,16 +119,16 @@ public abstract class CovenWitch extends BossSubEntity<CovenMaster> {
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.putInt("WitchPhase", this.getPhase().ordinal());
-        compoundNBT.putBoolean("WitchEnraged", this.isEnraged());
+        compoundNBT.putInt(PHASE_TAG, this.getPhase().ordinal());
     }
 
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
-        if(compoundNBT.contains("WitchPhase"))
-            this.setPhase(Phase.values()[compoundNBT.getInt("WitchPhase")]);
-        if(compoundNBT.contains("WitchEnraged"))
-            this.setEnraged(compoundNBT.getBoolean("WitchEnraged"));
+        if(compoundNBT.contains(PHASE_TAG))
+            this.setPhase(Phase.values()[compoundNBT.getInt(PHASE_TAG)]);
+        if(this.getHealth() <= CovenMaster.ENRAGED_WITCH_HEALTH){
+            this.isEnraged = true;
+        }
     }
 
     public boolean hurt(DamageSource damageSource, float amount) {
