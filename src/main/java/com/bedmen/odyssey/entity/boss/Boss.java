@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.boss;
 
+import com.bedmen.odyssey.combat.OdysseyDamageSource;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -101,6 +102,7 @@ public abstract class Boss extends Monster {
 
     public boolean hurt(DamageSource damageSource, float amount) {
         amount *= this.damageReduction;
+        damageSource = OdysseyDamageSource.withInvulnerabilityMultiplier(damageSource, 1.0f / Integer.max(1, this.getNearbyPlayerNumber()));
         return super.hurt(damageSource, amount);
     }
 

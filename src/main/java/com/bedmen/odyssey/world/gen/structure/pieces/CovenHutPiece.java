@@ -71,11 +71,7 @@ public class CovenHutPiece extends TemplateStructurePiece {
         int height = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, entrance.getX(), entrance.getZ());
         BlockPos blockpos2 = this.templatePosition;
         int dy = height - CovenHutFeature.INITIAL_HEIGHT + 1;
-        System.out.println("postProcess CovenHutPiece");
-        System.out.println("y: "+dy);
-        System.out.println(this.boundingBox);
         this.boundingBox.move(0, dy, 0);
-        System.out.println(this.boundingBox);
 
         this.templatePosition = this.templatePosition.offset(0, dy, 0);
 //        BlockPos.MutableBlockPos mutable = BlockPos.ZERO.mutable();

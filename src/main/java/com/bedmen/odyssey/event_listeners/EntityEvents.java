@@ -3,6 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.OdysseyDamageSource;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
@@ -113,6 +114,7 @@ public class EntityEvents {
         float amount = event.getAmount();
         LivingEntity hurtLivingEntity = event.getEntityLiving();
         DamageSource damageSource = event.getSource();
+        float invulnerabilityMultiplier = OdysseyDamageSource.getInvulnerabilityMultiplier(damageSource);
         Entity damageSourceEntity = damageSource.getDirectEntity();
 
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
@@ -158,9 +160,8 @@ public class EntityEvents {
 
             // Dual Wield reduced invulnerability
             if(WeaponUtil.isDualWielding(damageSourceLivingEntity)){
-                WeaponUtil.setInvulnerability(hurtLivingEntity, hurtLivingEntity.hurtDuration/2);
+                invulnerabilityMultiplier *= 0.5f;
             }
-
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
             odysseyLivingEntity.pushKnockbackAspectQueue(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_KNOCKBACK));
@@ -187,7 +188,9 @@ public class EntityEvents {
                 player.awardStat(Stats.ITEM_BROKEN.get(item));
             }
         }
+
         event.setAmount(amount);
+        WeaponUtil.setInvulnerability(hurtLivingEntity, Integer.max(1, (int)(10.0f * invulnerabilityMultiplier)));
 
         if (hurtLivingEntity instanceof Player player) {
             if (player.isUsingItem() && (player.getUseItem().getItem() instanceof WarpTotemItem))

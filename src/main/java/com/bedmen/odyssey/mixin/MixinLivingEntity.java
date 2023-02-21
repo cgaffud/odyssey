@@ -2,8 +2,8 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.OdysseyDamageSource;
 import com.bedmen.odyssey.combat.SmackPush;
-import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.potions.FireType;
@@ -93,6 +93,8 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     @Shadow public float yHeadRot;
     @Shadow public float yHeadRotO;
 
+    @Shadow protected abstract void dropAllDeathLoot(DamageSource p_21192_);
+
     @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
     public void onDefineSynchedData(CallbackInfo ci) {
         this.entityData.define(DATA_FIRE_TYPE, FireType.NONE);
@@ -152,8 +154,9 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
                             this.level.addParticle(ParticleTypes.BUBBLE, this.getX() + d2, this.getY() + d3, this.getZ() + d4, vec3.x, vec3.y, vec3.z);
                         }
 
-                        int invulnerabilityFrames = drowningAmount > 2 ? 20 / drowningAmount : 10;
-                        WeaponUtil.hurtWithReducedInvulnerability(livingEntity, DamageSource.DROWN, 2.0f, invulnerabilityFrames);
+                        float invulnerabilityMultiplier = Float.min(1.0f, 2.0f / (float)drowningAmount);
+                        DamageSource damageSource = OdysseyDamageSource.withInvulnerabilityMultiplier(DamageSource.DROWN, invulnerabilityMultiplier);
+                        livingEntity.hurt(damageSource, 2.0f);
                     }
                 }
 

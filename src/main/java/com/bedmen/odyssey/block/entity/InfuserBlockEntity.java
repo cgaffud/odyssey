@@ -339,9 +339,6 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
     private void updatePathParticles(){
         this.pathParticleList.stream().filter(pathParticle -> {
             int ticks = Integer.max(this.infuserCraftingTicks, this.getInfusingTicks(pathParticle.direction));
-            if(this.level != null){
-                System.out.println("Client? "+this.level.isClientSide+" Ticks: "+ticks);
-            }
             return pathParticle.updatePosition((float)ticks / (float)TOTAL_INFUSION_TIME);
         }).forEach(pathParticle -> {
                 if(this.level != null){

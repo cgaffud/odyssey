@@ -1,11 +1,10 @@
 package com.bedmen.odyssey.entity.boss.mineralLeviathan;
 
-import com.bedmen.odyssey.entity.boss.SubEntity;
 import com.bedmen.odyssey.entity.boss.Boss;
+import com.bedmen.odyssey.entity.boss.BossSubEntity;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -17,7 +16,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,14 +28,11 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.network.NetworkHooks;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
-public abstract class MineralLeviathanSegment extends Monster implements SubEntity<MineralLeviathanMaster> {
-    private static final EntityDataAccessor<Integer> DATA_MASTER_ID = SynchedEntityData.defineId(MineralLeviathanSegment.class, EntityDataSerializers.INT);
+public abstract class MineralLeviathanSegment extends BossSubEntity<MineralLeviathanMaster> {
     protected static final EntityDataAccessor<Float> DATA_SHELL_HEALTH = SynchedEntityData.defineId(MineralLeviathanSegment.class, EntityDataSerializers.FLOAT);
     protected ShellType shellType;
 
@@ -53,7 +48,6 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_MASTER_ID, -1);
         this.entityData.define(DATA_SHELL_HEALTH, 0.0f);
     }
 
@@ -129,10 +123,6 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
         }
     }
 
-    public boolean hurtDirectly(DamageSource damageSource, float amount) {
-        return super.hurt(damageSource, amount);
-    }
-
     public boolean hurt(DamageSource damageSource, float amount) {
         Entity entity = damageSource.getEntity();
         if(damageSource.isExplosion()){
@@ -204,54 +194,14 @@ public abstract class MineralLeviathanSegment extends Monster implements SubEnti
         }
     }
 
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
     public void writeSpawnData(FriendlyByteBuf friendlyByteBuf) {
-        SubEntity.super.writeSpawnData(friendlyByteBuf);
+        super.writeSpawnData(friendlyByteBuf);
         friendlyByteBuf.writeInt(this.getShellType().ordinal());
     }
 
     public void readSpawnData(FriendlyByteBuf friendlyByteBuf) {
-        SubEntity.super.readSpawnData(friendlyByteBuf);
+        super.readSpawnData(friendlyByteBuf);
         this.setShellType(ShellType.values()[friendlyByteBuf.readInt()]);
-    }
-
-    public Optional<MineralLeviathanMaster> getMaster() {
-        int headId = this.entityData.get(DATA_MASTER_ID);
-        Entity entity = this.level.getEntity(headId);
-        // instanceof also checks if it is null
-        if(entity instanceof MineralLeviathanMaster mineralLeviathanMaster) {
-            return Optional.of(mineralLeviathanMaster);
-        }
-        return Optional.empty();
-    }
-
-    public void setMasterId(int masterId) {
-        this.entityData.set(DATA_MASTER_ID, masterId);
-    }
-
-    public void kill() {
-        this.hurtDirectly(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
-    }
-
-    public void remove(RemovalReason removalReason) {
-        if(removalReason == RemovalReason.DISCARDED || removalReason == RemovalReason.KILLED || this.getMaster().isEmpty()) {
-            super.remove(removalReason);
-        } else {
-            this.getMaster().ifPresent(master -> master.handleSubEntity(this));
-        }
-    }
-
-    public boolean save(CompoundTag compoundTag) {
-        return false;
-    }
-
-    public void checkDespawn() {
-        if (this.getMaster().isEmpty())
-            this.discard();
     }
 
     public enum ShellType{

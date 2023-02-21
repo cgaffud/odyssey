@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.loot.functions;
 
 import com.bedmen.odyssey.aspect.AspectTierManager;
-import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -40,14 +39,8 @@ public class ModifyWithTierFunction extends LootItemConditionalFunction {
     public ItemStack run(ItemStack itemStack, LootContext lootContext) {
         Random random = lootContext.getRandom();
         int tier = this.tier.getInt(lootContext);
-        try{
-            AspectTierManager.itemStackModifyByTier(itemStack, random, tier, BUFF_CHANCE, false);
-            AspectTierManager.itemStackModifyByTier(itemStack, random, tier, CURSE_CHANCE, true);
-        } catch(Exception exception){
-            for(StackTraceElement stackTraceElement: exception.getStackTrace()){
-                System.out.println(stackTraceElement.toString());
-            }
-        }
+        AspectTierManager.itemStackModifyByTier(itemStack, random, tier, BUFF_CHANCE, false);
+        AspectTierManager.itemStackModifyByTier(itemStack, random, tier, CURSE_CHANCE, true);
         return itemStack;
     }
 
