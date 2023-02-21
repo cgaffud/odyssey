@@ -3,7 +3,6 @@ package com.bedmen.odyssey.entity.boss.coven;
 import com.bedmen.odyssey.entity.ai.CovenReturnToMasterGoal;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
-import com.bedmen.odyssey.items.WarpTotem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.core.BlockPos;

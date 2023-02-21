@@ -126,11 +126,11 @@ public class EntityEvents {
             if(hexflameStrength > 0) {
                 if (hurtLivingEntity.hasEffect(EffectRegistry.HEXFLAME.get())) {
                     MobEffectInstance mobEffectInstance = hurtLivingEntity.getEffect(EffectRegistry.HEXFLAME.get());
-                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (int)(80 * hexflameStrength);
-                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), hexflameDuration > (160 * hexflameStrength) ? (160 * hexflameStrength) : hexflameDuration, 1));
+                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (int)(40 * hexflameStrength);
+                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), hexflameDuration > (80 * hexflameStrength) ? (80 * hexflameStrength) : hexflameDuration, 0));
                 }
                 else
-                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(80 * hexflameStrength), 1));
+                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(40 * hexflameStrength), 0));
             }
             // Cobweb Chance
             float cobwebChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.COBWEB_CHANCE);
