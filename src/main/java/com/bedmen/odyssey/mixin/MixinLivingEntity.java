@@ -2,7 +2,7 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
-import com.bedmen.odyssey.combat.OdysseyDamageSource;
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;

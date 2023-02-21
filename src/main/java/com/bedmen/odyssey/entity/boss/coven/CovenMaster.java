@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.entity.boss.SubEntity;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
@@ -268,6 +269,7 @@ public class CovenMaster extends BossMaster {
 
         float originalWitchHealth = this.getWitchHealth(covenWitch);
         float bossReducedAmount = amount * this.getDamageReduction();
+        damageSource = OdysseyDamageSource.withInvulnerabilityMultiplier(damageSource, 2.0f);
 
         if (originalWitchHealth > 0.0f) {
             float newWitchHealth = Float.max(originalWitchHealth - bossReducedAmount, 0.0f);

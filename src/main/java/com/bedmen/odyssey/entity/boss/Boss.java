@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.entity.boss;
 
-import com.bedmen.odyssey.combat.OdysseyDamageSource;
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
