@@ -84,7 +84,8 @@ public class NetherWitch extends CovenWitch {
 
         if ((this.isEnraged && (this.random.nextDouble() < ENRAGED_SPECIAL_DROP_CHANCE))
                 || (!this.isEnraged && (this.random.nextDouble() < SPECIAL_DROP_CHANCE))) {
-            this.spawnLoot(ItemRegistry.HEXFLAME_DAGGER.get(), 2);
+            this.spawnLoot(ItemRegistry.HEXFLAME_DAGGER.get(), 1);
+            this.spawnLoot(ItemRegistry.HEXFLAME_DAGGER.get(), 1);
         }
     }
 

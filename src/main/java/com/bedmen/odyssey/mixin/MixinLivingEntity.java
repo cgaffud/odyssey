@@ -337,7 +337,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     }
 
     public boolean displayFireAnimation() {
-        return this.isOnFire() && !this.isSpectator() && RenderUtil.getStrongestFireType(this.getLivingEntity()).isNotNone();
+        return this.isOnFire() && !this.isSpectator() && RenderUtil.getStrongestFireType(this.getLivingEntity()).isNone();
     }
 
     public FireType getFireType(){
