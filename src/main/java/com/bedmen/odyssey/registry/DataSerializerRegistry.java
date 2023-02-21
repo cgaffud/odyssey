@@ -21,6 +21,4 @@ public class DataSerializerRegistry {
     public static final RegistryObject<DataSerializerEntry> PERMABUFF_HOLDER = DATA_SERIALIZERS.register("permabuff_holder", () -> new DataSerializerEntry(OdysseyDataSerializers.PERMABUFF_HOLDER));
     public static final RegistryObject<DataSerializerEntry> FIRE_TYPE = DATA_SERIALIZERS.register("fire_type", () -> new DataSerializerEntry(OdysseyDataSerializers.FIRE_TYPE));
     public static final RegistryObject<DataSerializerEntry> COVENTYPE_INT_MAP = DATA_SERIALIZERS.register("coventype_int_map", () -> new DataSerializerEntry(OdysseyDataSerializers.COVENTYPE_INT_MAP));
-    public static final RegistryObject<DataSerializerEntry> COVENTYPE_FLOAT_MAP = DATA_SERIALIZERS.register("coventype_float_map", () -> new DataSerializerEntry(OdysseyDataSerializers.COVENTYPE_FLOAT_MAP));
-
 }

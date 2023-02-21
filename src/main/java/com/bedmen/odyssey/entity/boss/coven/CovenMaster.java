@@ -8,8 +8,6 @@ import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.FloatTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
@@ -31,15 +29,14 @@ import java.util.stream.Collectors;
 
 public class CovenMaster extends BossMaster {
     private static final EntityDataAccessor<Map<CovenType, Integer>> DATA_WITCH_ID_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_INT_MAP);
-    private static final EntityDataAccessor<Map<CovenType, Float>> DATA_WITCH_HEALTH_MAP = SynchedEntityData.defineId(CovenMaster.class, OdysseyDataSerializers.COVENTYPE_FLOAT_MAP);
     public static final int NUM_WITCHES = CovenType.values().length;
+    public static final float ENRAGED_WITCH_HEALTH = 1.0f;
     public static final float HEALTH_PER_WITCH = 50.0f;
     public static final double MAX_HEALTH = HEALTH_PER_WITCH * NUM_WITCHES;
     public static final double DAMAGE = 8.0d;
     public static final double FOLLOW_RANGE = 75d;
     public static final double CENTER_RANGE = 40d;
     private static final String WITCH_TAG = "CovenWitch";
-    private static final String WITCH_HEALTH_TAG = WITCH_TAG+"Health";
 
     // These sub entities may only be referenced directly in a server side method
     // Otherwise use the 'get' method
@@ -86,48 +83,24 @@ public class CovenMaster extends BossMaster {
        return covenWitch == null ? Optional.empty() : Optional.of(covenWitch);
     }
 
-    private void addBaseHealthToHealthMap(CovenType covenType){
-        Map<CovenType, Float> healthMap = this.getTypeToHealthMap();
-        healthMap.put(covenType, HEALTH_PER_WITCH);
-        this.entityData.set(DATA_WITCH_HEALTH_MAP, healthMap);
-    }
-
-    // Must use this method to access coven synched data because it makes a copy and protects the synched data object from outside changes
-    private Map<CovenType, Float> getTypeToHealthMap() {
-        return new HashMap<>(this.entityData.get(DATA_WITCH_HEALTH_MAP));
-    }
-
-    private float healthWithDefault(Float f){
-        return f == null ? HEALTH_PER_WITCH : f;
-    }
-
     private float getHealthFromType(CovenType covenType){
-        Float f = this.getTypeToHealthMap().get(covenType);
-        return healthWithDefault(f);
+        Optional<CovenWitch> optionalCovenWitch = this.getWitchFromType(covenType);
+        return optionalCovenWitch.map(this::getWitchHealth).orElse(HEALTH_PER_WITCH);
     }
 
     private float getWitchHealth(CovenWitch covenWitch){
-        Map<CovenType, Float> healthMap = this.getTypeToHealthMap();
-        Float f = healthMap.get(covenWitch.getCovenType());
-        return healthWithDefault(f);
-    }
-
-    private void setWitchHealth(CovenType covenType, float newHealth){
-        Map<CovenType, Float> healthMap = this.getTypeToHealthMap();
-        healthMap.put(covenType, newHealth);
-        this.entityData.set(DATA_WITCH_HEALTH_MAP, healthMap);
+        return Float.max(0.0f, covenWitch.getHealth() - ENRAGED_WITCH_HEALTH);
     }
 
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_WITCH_ID_MAP, new HashMap<>());
-        this.entityData.define(DATA_WITCH_HEALTH_MAP, new HashMap<>());
     }
 
     private void updateMasterHealth(){
         if(this.getHealth() > 0.0f) {
-            float totalHealth = this.getTypeToHealthMap().entrySet().stream()
-                    .reduce(0.0f, (aFloat, covenTypeFloatEntry) -> aFloat + covenTypeFloatEntry.getValue(), Float::sum);
+            float totalHealth = this.getWitchCollection().stream()
+                    .reduce(0.0f, (health, covenWitch) -> health + covenWitch.getHealth(), Float::sum);
             this.setHealth(totalHealth);
         }
     }
@@ -199,7 +172,6 @@ public class CovenMaster extends BossMaster {
             if (witch != null) {
                 this.witchMap.put(covenType, witch);
                 this.addIdToMap(covenType, witch.getId());
-                this.addBaseHealthToHealthMap(covenType);
 
                 float phi = Mth.PI * 2/NUM_WITCHES * covenType.ordinal();
                 BlockPos.MutableBlockPos blockpos$mutableblockpos = (this.blockPosition().offset(Mth.cos(phi), 60, Mth.sin(phi))).mutable();
@@ -307,7 +279,7 @@ public class CovenMaster extends BossMaster {
                         this.die(damageSource);
                     }
                 }
-                this.setWitchHealth(covenWitch.getCovenType(), newWitchHealth);
+                covenWitch.hurtDirectly(damageSource, originalWitchHealth - newWitchHealth);
                 this.updateMasterHealth();
             } else {
                 covenWitch.animateHurt();
@@ -317,32 +289,11 @@ public class CovenMaster extends BossMaster {
         return false;
     }
 
-    private static String getCovenTypeHealthTagString(CovenType covenType){
-        return WITCH_HEALTH_TAG + covenType.name();
-    }
-
     public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        CompoundTag healthTag = new CompoundTag();
-        for(CovenType covenType: CovenType.values()){
-            float f = this.getHealthFromType(covenType);
-            healthTag.put(getCovenTypeHealthTagString(covenType), FloatTag.valueOf(f));
-        }
-        compoundTag.put(WITCH_HEALTH_TAG, healthTag);
     }
 
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        if(compoundTag.contains(WITCH_HEALTH_TAG, Tag.TAG_COMPOUND)){
-            CompoundTag healthTag = compoundTag.getCompound(WITCH_HEALTH_TAG);
-            for(CovenType covenType: CovenType.values()){
-                String witchHealthTagString = getCovenTypeHealthTagString(covenType);
-                if(healthTag.contains(witchHealthTagString)){
-                    this.setWitchHealth(covenType, healthTag.getFloat(witchHealthTagString));
-                } else {
-                    this.setWitchHealth(covenType, HEALTH_PER_WITCH);
-                }
-            }
-        }
     }
 }

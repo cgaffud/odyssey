@@ -109,7 +109,7 @@ public abstract class CovenWitch extends BossSubEntity<CovenMaster> {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.MAX_HEALTH, 1.0d).add(Attributes.ATTACK_DAMAGE, CovenMaster.DAMAGE * 0.5d);
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.MAX_HEALTH, CovenMaster.HEALTH_PER_WITCH + CovenMaster.ENRAGED_WITCH_HEALTH).add(Attributes.ATTACK_DAMAGE, CovenMaster.DAMAGE * 0.5d);
     }
 
 

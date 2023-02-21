@@ -109,5 +109,4 @@ public class OdysseyDataSerializers {
     );
     public static final EntityDataSerializer<FireType>  FIRE_TYPE = getEnumSerializer(FireType.class);
     public static final EntityDataSerializer<Map<CovenType, Integer>> COVENTYPE_INT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeVarInt, FriendlyByteBuf::readVarInt);
-    public static final EntityDataSerializer<Map<CovenType, Float>> COVENTYPE_FLOAT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeFloat, FriendlyByteBuf::readFloat);
 }
