@@ -63,6 +63,9 @@ public class CovenHutDoorBlockEntity extends BlockEntity {
     }
 
     protected static void teleportRandomlyOutsideBoundingBox(LivingEntity livingEntity, AABB boundingBox) {
+        if(livingEntity.isPassenger()){
+            livingEntity.stopRiding();
+        }
         if (!livingEntity.level.isClientSide() && livingEntity.isAlive()) {
             double x = livingEntity.getX();
             double y = livingEntity.getY();
