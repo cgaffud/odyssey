@@ -70,8 +70,6 @@ public class CovenHutPiece extends TemplateStructurePiece {
     @Override
     public void postProcess(WorldGenLevel worldGenLevel, StructureFeatureManager manager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos pos) {
         if(updateHeightPositionToHighestGroundHeight(worldGenLevel)){
-            this.templatePosition = this.templatePosition.atY(this.boundingBox.minY());
-
             super.postProcess(worldGenLevel, manager, chunkGenerator, random, chunkBoundingBox, chunkPos, pos);
 
             for(Pair<Integer,Integer> pair : RELATIVE_POSTS) {
@@ -102,6 +100,8 @@ public class CovenHutPiece extends TemplateStructurePiece {
                 return false;
             } else {
                 this.boundingBox.move(0, height - this.boundingBox.minY(), 0);
+                this.templatePosition = this.templatePosition.atY(this.boundingBox.minY());
+                this.hasCalculatedHeightPosition = true;
                 return true;
             }
         }
