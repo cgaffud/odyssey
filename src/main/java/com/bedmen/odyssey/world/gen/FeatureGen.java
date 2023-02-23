@@ -9,7 +9,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -32,11 +34,11 @@ import java.util.Map;
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class FeatureGen {
 
-//    public static ConfiguredFeature<?, ?> PERMAFROST_TOWER;
-//    public static ConfiguredFeature<?, ?> FOG;
     public static Holder<ConfiguredFeature<RandomPatchConfiguration, ?>> PATCH_PRAIRIE_GRASS;
     public static Holder<PlacedFeature> PLACED_PATCH_TALL_GRASS;
     public static Holder<PlacedFeature> PLACED_PATCH_PRAIRIE_GRASS;
+    public static Holder<ConfiguredFeature<RandomPatchConfiguration, ?>> PATCH_CLOVER;
+    public static Holder<PlacedFeature> PLACED_PATCH_CLOVER;
 
     public static Map<TreasureChestType, Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>>> TREASURE_CHESTS = new HashMap<>();
     public static Map<TreasureChestType, Holder<PlacedFeature>> PLACED_TREASURE_CHESTS = new HashMap<>();
@@ -44,11 +46,12 @@ public class FeatureGen {
     public static Holder<PlacedFeature> PLACED_ABANDONED_IRON_GOLEM;
 
     public static void registerFeatures() {
-//        PERMAFROST_TOWER = featureGen(FeatureRegistry.PERMAFROST_TOWER, 1);
-//        FOG = FeatureRegistry.FOG.get().configured(FeatureConfiguration.NONE);
         PATCH_PRAIRIE_GRASS = FeatureUtils.register("patch_prairie_grass", Feature.RANDOM_PATCH, FeatureUtils.simplePatchConfiguration(FeatureRegistry.TRIPLE_PLANT_BLOCK.get(), new SimpleBlockConfiguration(BlockStateProvider.simple(BlockRegistry.PRAIRIE_GRASS.get()))));
         PLACED_PATCH_TALL_GRASS = PlacementUtils.register("placed_patch_tall_grass", VegetationFeatures.PATCH_TALL_GRASS, NoiseThresholdCountPlacement.of(-0.8D, 5, 10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
         PLACED_PATCH_PRAIRIE_GRASS = PlacementUtils.register("placed_patch_prairie_grass", PATCH_PRAIRIE_GRASS, NoiseThresholdCountPlacement.of(-0.8D, 5, 10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
+        PATCH_CLOVER = FeatureUtils.register("patch_clover", Feature.RANDOM_PATCH, grassPatch(BlockStateProvider.simple(BlockRegistry.CLOVER.get()), 1));
+        PLACED_PATCH_CLOVER = PlacementUtils.register("placed_patch_clover", PATCH_CLOVER, RarityFilter.onAverageOnceEvery(5), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
+
 
         for(TreasureChestType treasureChestType : TreasureChestType.values()){
             TREASURE_CHESTS.put(treasureChestType, FeatureUtils.register(treasureChestType.name().toLowerCase(Locale.ROOT) + "_treasure_chest", FeatureRegistry.TREASURE_CHEST_MAP.get(treasureChestType), FeatureConfiguration.NONE));
@@ -61,10 +64,11 @@ public class FeatureGen {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void generation(BiomeLoadingEvent event) {
         BiomeGenerationSettingsBuilder gen = event.getGeneration();
+        Biome.BiomeCategory biomeCategory = event.getCategory();
 
-        if(event.getCategory() == Biome.BiomeCategory.NETHER) {
+        if(biomeCategory == Biome.BiomeCategory.NETHER) {
 
-        } else if (event.getCategory() == Biome.BiomeCategory.THEEND) {
+        } else if (biomeCategory == Biome.BiomeCategory.THEEND) {
 
         } else {
             for(TreasureChestType treasureChestType : TreasureChestType.values()){
@@ -76,10 +80,23 @@ public class FeatureGen {
                 gen.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PLACED_PATCH_TALL_GRASS);
                 gen.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PLACED_PATCH_PRAIRIE_GRASS);
             }
-//            gen.addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, FOG);
-//            if(event.getName().toString().equals("minecraft:ice_spikes")) {
-//                gen.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, PERMAFROST_TOWER);
-//            }
+
+            if(greenEnoughForClover(biomeCategory, event.getClimate())){
+                gen.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PLACED_PATCH_CLOVER);
+            }
         }
+    }
+
+    private static RandomPatchConfiguration grassPatch(BlockStateProvider blockStateProvider, int count) {
+        return FeatureUtils.simpleRandomPatchConfiguration(count, PlacementUtils.onlyWhenEmpty(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(blockStateProvider)));
+    }
+
+    private static boolean greenEnoughForClover(Biome.BiomeCategory biomeCategory, Biome.ClimateSettings climateSettings){
+        boolean correctBiomeCategory = switch (biomeCategory){
+            case TAIGA, EXTREME_HILLS, JUNGLE, PLAINS, FOREST, SWAMP -> true;
+            default -> false;
+        };
+        boolean correctClimate = climateSettings.precipitation == Biome.Precipitation.RAIN && climateSettings.temperature > 0.0f && climateSettings.temperature < 1.0f;
+        return correctBiomeCategory && correctClimate;
     }
 }
