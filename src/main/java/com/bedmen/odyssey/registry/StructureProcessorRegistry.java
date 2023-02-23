@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.world.gen.block_processor.BarnFloorProcessor;
 import com.bedmen.odyssey.world.gen.block_processor.MossyBlockProcessor;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
@@ -17,5 +18,6 @@ public class StructureProcessorRegistry {
     }
 
     public static final RegistryObject<StructureProcessorType<MossyBlockProcessor>> MOSSY = STRUCTURE_PROCESSOR.register("mossy", () -> (StructureProcessorType<MossyBlockProcessor>) () -> MossyBlockProcessor.CODEC);
+    public static final RegistryObject<StructureProcessorType<BarnFloorProcessor>> BARN_FLOOR = STRUCTURE_PROCESSOR.register("barn_floor", () -> (StructureProcessorType<BarnFloorProcessor>) () -> BarnFloorProcessor.CODEC);
 
 }

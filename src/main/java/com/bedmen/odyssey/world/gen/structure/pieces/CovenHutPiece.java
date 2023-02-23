@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -28,11 +29,9 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 
 import java.util.*;
 
-public class CovenHutPiece extends TemplateStructurePiece {
+public class CovenHutPiece extends HeightAdjustingPiece {
 
     private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"coven_hut");
-    protected boolean hasCalculatedHeightPosition = false;
-    private static final String HAS_CALCULATED_HEIGHT_POSITION_TAG = "HasCalculatedHeightPosition";
 
     private static final List<Pair<Integer, Integer>> RELATIVE_POSTS = List.of(
             new Pair<>(5, 1),
@@ -57,7 +56,6 @@ public class CovenHutPiece extends TemplateStructurePiece {
 
     public CovenHutPiece(StructureManager structureManager, CompoundTag compoundTag) {
         super(StructurePieceTypeRegistry.COVEN_HUT.get(), compoundTag, structureManager, (resourceLocation) -> makeSettings(Rotation.valueOf(compoundTag.getString("Rot"))));
-        this.hasCalculatedHeightPosition = compoundTag.getBoolean(HAS_CALCULATED_HEIGHT_POSITION_TAG);
     }
 
     private static StructurePlaceSettings makeSettings(Rotation rotation) {
@@ -67,23 +65,13 @@ public class CovenHutPiece extends TemplateStructurePiece {
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag compoundTag) {
         super.addAdditionalSaveData(context, compoundTag);
         compoundTag.putString("Rot", this.placeSettings.getRotation().name());
-        compoundTag.putBoolean(HAS_CALCULATED_HEIGHT_POSITION_TAG, this.hasCalculatedHeightPosition);
     }
 
-    @Override
-    public void postProcess(WorldGenLevel worldGenLevel, StructureFeatureManager manager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos pos) {
-        if(updateHeightPositionToHighestGroundHeight(worldGenLevel)){
-            super.postProcess(worldGenLevel, manager, chunkGenerator, random, chunkBoundingBox, chunkPos, pos);
-
-            for(Pair<Integer,Integer> pair : RELATIVE_POSTS) {
-                // RELATIVE_POSTS (x,z) pairs were measured from the minimum x-z corner of the unrotated structure bounding box, where the relative block position is (0,0).
-                BlockPos postPos = this.templatePosition.offset(new BlockPos(pair.getFirst(), -1, pair.getSecond()).rotate(this.placeSettings.getRotation()));
-                WorldGenUtil.fillColumnDown(worldGenLevel, Blocks.OAK_LOG.defaultBlockState(), postPos, chunkBoundingBox);
-            }
-        }
+    protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
+        WorldGenUtil.fillColumnDownOnAllPosts(worldGenLevel, Blocks.OAK_LOG.defaultBlockState(), RELATIVE_POSTS, chunkBoundingBox, this.templatePosition, this.placeSettings);
     }
 
-    protected boolean updateHeightPositionToHighestGroundHeight(LevelAccessor levelAccessor) {
+    protected boolean updateHeightPosition(LevelAccessor levelAccessor) {
         if (this.hasCalculatedHeightPosition) {
             return true;
         } else {
@@ -112,9 +100,9 @@ public class CovenHutPiece extends TemplateStructurePiece {
 
     protected void handleDataMarker(String dataMarker, BlockPos blockPos, ServerLevelAccessor serverLevelAccessor, Random random, BoundingBox chunkBoundingBox) {
         // todo adjust chest loot
-        WorldGenUtil.fillChestBelowDataMarker("chest", dataMarker, serverLevelAccessor, blockPos, random, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
-        WorldGenUtil.fillChestBelowDataMarker("secret_chest", dataMarker, serverLevelAccessor, blockPos, random, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
-        WorldGenUtil.fillChestBelowDataMarker("ingredients", dataMarker, serverLevelAccessor, blockPos, random, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
-        WorldGenUtil.fillChestBelowDataMarker("tomes", dataMarker, serverLevelAccessor, blockPos, random, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
+        WorldGenUtil.fillChestBelowDataMarker("chest", dataMarker, serverLevelAccessor, blockPos, random, this.placeSettings, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
+        WorldGenUtil.fillChestBelowDataMarker("secret_chest", dataMarker, serverLevelAccessor, blockPos, random, this.placeSettings, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
+        WorldGenUtil.fillChestBelowDataMarker("ingredients", dataMarker, serverLevelAccessor, blockPos, random, this.placeSettings, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
+        WorldGenUtil.fillChestBelowDataMarker("tomes", dataMarker, serverLevelAccessor, blockPos, random, this.placeSettings, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
     }
 }
