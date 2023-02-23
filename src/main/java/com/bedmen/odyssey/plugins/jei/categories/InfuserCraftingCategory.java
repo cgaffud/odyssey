@@ -6,7 +6,7 @@ import com.bedmen.odyssey.block.entity.InfuserBlockEntity;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.magic.MagicUtil;
-import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
+import com.bedmen.odyssey.recipes.object.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.util.Union;
 import com.google.common.cache.CacheBuilder;

@@ -2,7 +2,7 @@ package com.bedmen.odyssey.inventory;
 
 import com.bedmen.odyssey.inventory.slot.StitchingFiberSlot;
 import com.bedmen.odyssey.inventory.slot.StitchingIngredientSlot;
-import com.bedmen.odyssey.recipes.StitchingRecipe;
+import com.bedmen.odyssey.recipes.object.StitchingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
@@ -10,8 +10,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

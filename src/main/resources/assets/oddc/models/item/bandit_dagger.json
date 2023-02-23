@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:item/handheld",
+  "parent": "oddc:item/dagger",
   "textures": {
     "layer0": "oddc:item/bandit_dagger"
   }

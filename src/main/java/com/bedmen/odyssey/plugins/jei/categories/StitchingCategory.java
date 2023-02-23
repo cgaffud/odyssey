@@ -2,7 +2,7 @@ package com.bedmen.odyssey.plugins.jei.categories;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.gui.screens.StitchingTableScreen;
-import com.bedmen.odyssey.recipes.StitchingRecipe;
+import com.bedmen.odyssey.recipes.object.StitchingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;

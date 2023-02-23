@@ -20,7 +20,7 @@ import java.util.Optional;
 public class InfuserRenderer extends AbstractInfusionPedestalRenderer<InfuserBlockEntity> {
 
     private static final ResourceLocation EXPERIENCE_ORB_LOCATION = new ResourceLocation("textures/entity/experience_orb.png");
-    public static final ResourceLocation ENCHANTMENT_TEXT_LOCATION = new ResourceLocation("textures/font/asciillager.png");
+    public static final ResourceLocation ENCHANTMENT_TEXT_LOCATION = new ResourceLocation("font/asciillager");
     private static final RenderType EXPERIENCE_ORB_RENDER_TYPE = RenderType.itemEntityTranslucentCull(EXPERIENCE_ORB_LOCATION);
     private static final RenderType ENCHANTMENT_TEXT_RENDER_TYPE = RenderType.itemEntityTranslucentCull(ENCHANTMENT_TEXT_LOCATION);
 

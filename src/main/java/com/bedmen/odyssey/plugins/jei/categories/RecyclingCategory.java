@@ -3,7 +3,7 @@ package com.bedmen.odyssey.plugins.jei.categories;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.entity.RecyclingFurnaceBlockEntity;
 import com.bedmen.odyssey.client.gui.screens.RecyclingFurnaceScreen;
-import com.bedmen.odyssey.recipes.RecyclingRecipe;
+import com.bedmen.odyssey.recipes.object.RecyclingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

@@ -3,6 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
@@ -11,12 +12,15 @@ import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
+import com.bedmen.odyssey.food.OdysseyFoodData;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
+import com.bedmen.odyssey.potions.FireEffect;
+import com.bedmen.odyssey.potions.FireType;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -25,7 +29,6 @@ import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Difficulty;
@@ -35,7 +38,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
@@ -43,8 +45,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -55,7 +55,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -103,6 +102,11 @@ public class EntityEvents {
         if(AspectUtil.hasBooleanAspectOnArmor(livingEntity, Aspects.FROST_WALKER) && !blockPos.equals(livingEntity.lastPos)){
             FrostWalkerEnchantment.onEntityMoved(livingEntity, livingEntity.level, blockPos, 1);
         }
+
+        // Set Fire Type
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity && !livingEntity.level.isClientSide){
+            odysseyLivingEntity.setFireType(FireType.getStrongestFireEffectType(livingEntity));
+        }
     }
 
     @SubscribeEvent
@@ -110,6 +114,7 @@ public class EntityEvents {
         float amount = event.getAmount();
         LivingEntity hurtLivingEntity = event.getEntityLiving();
         DamageSource damageSource = event.getSource();
+        float invulnerabilityMultiplier = OdysseyDamageSource.getInvulnerabilityMultiplier(damageSource);
         Entity damageSourceEntity = damageSource.getDirectEntity();
 
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
@@ -126,11 +131,11 @@ public class EntityEvents {
             if(hexflameStrength > 0) {
                 if (hurtLivingEntity.hasEffect(EffectRegistry.HEXFLAME.get())) {
                     MobEffectInstance mobEffectInstance = hurtLivingEntity.getEffect(EffectRegistry.HEXFLAME.get());
-                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (int)(80 * hexflameStrength);
-                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), hexflameDuration > (160 * hexflameStrength) ? (160 * hexflameStrength) : hexflameDuration, 1));
+                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (int)(40 * hexflameStrength);
+                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), hexflameDuration > (80 * hexflameStrength) ? (80 * hexflameStrength) : hexflameDuration, 0));
                 }
                 else
-                    hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(80 * hexflameStrength), 1));
+                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(40 * hexflameStrength), 0));
             }
             // Cobweb Chance
             float cobwebChance = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.COBWEB_CHANCE);
@@ -155,9 +160,8 @@ public class EntityEvents {
 
             // Dual Wield reduced invulnerability
             if(WeaponUtil.isDualWielding(damageSourceLivingEntity)){
-                WeaponUtil.setInvulnerability(hurtLivingEntity, hurtLivingEntity.hurtDuration/2);
+                invulnerabilityMultiplier *= 0.5f;
             }
-
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
             odysseyLivingEntity.pushKnockbackAspectQueue(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_KNOCKBACK));
@@ -165,7 +169,7 @@ public class EntityEvents {
             WeaponUtil.tryLarceny(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), odysseyAbstractArrow.getOwner(), hurtLivingEntity);
             // Hexed Earth
             if (hurtLivingEntity.getRandom().nextDouble() < odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_HEXED_EARTH)) {
-                CovenRootEntity.createRootBlock(hurtLivingEntity.blockPosition(), hurtLivingEntity.getLevel());
+                CovenRootEntity.createRootBlock(hurtLivingEntity.blockPosition(), hurtLivingEntity.getLevel(), 12);
                 OverworldWitch.summonDripstoneAboveEntity(hurtLivingEntity.getPosition(1.0f), hurtLivingEntity.getLevel(), 1.5f,7, 5);
             }
         }
@@ -184,7 +188,9 @@ public class EntityEvents {
                 player.awardStat(Stats.ITEM_BROKEN.get(item));
             }
         }
+
         event.setAmount(amount);
+        WeaponUtil.setInvulnerability(hurtLivingEntity, Integer.max(1, (int)(10.0f * invulnerabilityMultiplier)));
 
         if (hurtLivingEntity instanceof Player player) {
             if (player.isUsingItem() && (player.getUseItem().getItem() instanceof WarpTotemItem))
@@ -209,20 +215,6 @@ public class EntityEvents {
                 if(deathChance > hurtLivingEntity.getRandom().nextFloat()) {
                     event.setAmount(currentHealth);
                     OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> hurtLivingEntity), new FatalHitAnimatePacket(hurtLivingEntity));
-                }
-            }
-        }
-    }
-
-    public static final Set<Integer> IDS = ConcurrentHashMap.newKeySet();
-
-    @SubscribeEvent
-    public static void onEntityJoinWorldEvent(final EntityJoinWorldEvent event){
-        if(!event.getWorld().isClientSide){
-            Entity entity = event.getEntity();
-            if(!event.loadedFromDisk()){
-                if(entity.getType() == EntityType.SKELETON){
-                    IDS.add(entity.getId());
                 }
             }
         }
@@ -257,9 +249,9 @@ public class EntityEvents {
 
         if(ENTITY_REPLACEMENT_MAP.containsKey(entityType) && entity instanceof Mob mob){
             EntityReplacementFunction entityReplacementFunction = ENTITY_REPLACEMENT_MAP.get(entityType);
-            Optional<EntityType<?>> oEntityType = entityReplacementFunction.call(mob, random);
-            if(oEntityType.isPresent()){
-                EntityType<?> entityType1 = oEntityType.get();
+            Optional<EntityType<?>> optionalEntityType = entityReplacementFunction.call(mob, random);
+            if(optionalEntityType.isPresent()){
+                EntityType<?> entityType1 = optionalEntityType.get();
                 if(entityType1 != entityType){
                     entityType1.spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), mobSpawnType, true, true);
                     event.setResult(Event.Result.DENY);
@@ -406,7 +398,7 @@ public class EntityEvents {
             Tier tier;
             if(damageSource != null){
                 Entity entity = damageSource.getEntity();
-                int mobHarvestLevel = entity instanceof Player player ? AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 0;
+                int mobHarvestLevel = entity instanceof Player player ? AspectUtil.getPermabuffIntegerAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 0;
                 mobHarvestLevel = Integer.min(TIER_ARRAY.length-1, mobHarvestLevel);
                 tier = TIER_ARRAY[mobHarvestLevel];
             } else {
@@ -426,6 +418,14 @@ public class EntityEvents {
             for(ItemEntity itemEntity: itemEntityToRemove){
                 itemEntityCollection.remove(itemEntity);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityJoinWorldEvent(final EntityJoinWorldEvent event){
+        Entity entity = event.getEntity();
+        if(entity instanceof Player player){
+            player.foodData = OdysseyFoodData.fromFoodData(player, player.foodData);
         }
     }
 }

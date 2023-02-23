@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity;
 
 import com.bedmen.odyssey.combat.SmackPush;
+import com.bedmen.odyssey.potions.FireType;
 
 import java.util.Optional;
 
@@ -16,4 +17,6 @@ public interface OdysseyLivingEntity {
     void pushKnockbackAspectQueue(float nextKnockbackAspect);
     void setTrueHurtTime(Optional<Integer> trueHurtTime);
     Optional<Integer> getTrueHurtTime();
+    FireType getFireType();
+    void setFireType(FireType fireType);
 }

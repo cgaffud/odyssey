@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.items.odyssey_versions;
+package com.bedmen.odyssey.food;
 
 import net.minecraft.world.food.FoodProperties;
 

@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.recipes;
+package com.bedmen.odyssey.recipes.object;
 
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
@@ -11,8 +11,8 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
-public class OdysseyShieldDecorationRecipes extends CustomRecipe {
-    public OdysseyShieldDecorationRecipes(ResourceLocation resourceLocation) {
+public class OdysseyShieldDecorationRecipe extends CustomRecipe {
+    public OdysseyShieldDecorationRecipe(ResourceLocation resourceLocation) {
         super(resourceLocation);
     }
 

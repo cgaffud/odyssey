@@ -3,9 +3,9 @@ package com.bedmen.odyssey.network.datasync;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
-import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
+import com.bedmen.odyssey.potions.FireType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -107,6 +107,6 @@ public class OdysseyDataSerializers {
             AspectStrengthMap::new,
             AspectStrengthMap::copy
     );
+    public static final EntityDataSerializer<FireType>  FIRE_TYPE = getEnumSerializer(FireType.class);
     public static final EntityDataSerializer<Map<CovenType, Integer>> COVENTYPE_INT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeVarInt, FriendlyByteBuf::readVarInt);
-    public static final EntityDataSerializer<Map<CovenType, Float>> COVENTYPE_FLOAT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeFloat, FriendlyByteBuf::readFloat);
 }

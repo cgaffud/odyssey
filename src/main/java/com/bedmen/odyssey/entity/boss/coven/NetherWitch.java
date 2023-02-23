@@ -17,7 +17,6 @@ import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -83,9 +82,10 @@ public class NetherWitch extends CovenWitch {
     protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean b) {
         super.dropCustomDeathLoot(damageSource, looting, b);
 
-        if ((this.isEnraged() && (this.random.nextDouble() < ENRAGED_SPECIAL_DROP_CHANCE))
-                || (!this.isEnraged() && (this.random.nextDouble() < SPECIAL_DROP_CHANCE))) {
-            this.spawnLoot(ItemRegistry.HEXFLAME_DAGGER.get(), 2);
+        if ((this.isEnraged && (this.random.nextDouble() < ENRAGED_SPECIAL_DROP_CHANCE))
+                || (!this.isEnraged && (this.random.nextDouble() < SPECIAL_DROP_CHANCE))) {
+            this.spawnLoot(ItemRegistry.HEXFLAME_DAGGER.get(), 1);
+            this.spawnLoot(ItemRegistry.HEXFLAME_DAGGER.get(), 1);
         }
     }
 
@@ -183,7 +183,7 @@ public class NetherWitch extends CovenWitch {
 
                             int playerNumber = covenMaster.getNearbyPlayerNumber();
                             float largeFireProbLim = (playerNumber < 3) ? (covenMaster.getNearbyPlayerNumber() * 0.25f) : 0.75f;
-                            boolean fireLargeFireballs = (this.netherWitch.isEnraged() && (this.netherWitch.level.random.nextFloat() < largeFireProbLim));
+                            boolean fireLargeFireballs = (this.netherWitch.isEnraged && (this.netherWitch.level.random.nextFloat() < largeFireProbLim));
 
                             handleAttackCounter(this.netherWitch.attackTimeMultiplier(covenMaster.getNearbyPlayerNumber()), fireLargeFireballs);
 

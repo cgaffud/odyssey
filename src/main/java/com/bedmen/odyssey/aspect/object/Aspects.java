@@ -124,7 +124,16 @@ public class Aspects {
     public static final FloatAspect VOLATILITY = new FloatAspect("volatility", 0.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.DAMAGEABLE);
 
     // # Permabuffs
-    public static final PermabuffAspect ADDITIONAL_MOB_HARVEST_LEVEL = new PermabuffAspect("additional_mob_harvest_level", AspectTooltipFunctions.NUMBER_ADDITION);
+
+    // ## Eaten Markers
+    public static final PermabuffBooleanAspect HAS_EATEN_ROCK_CANDY = new PermabuffBooleanAspect("has_eaten_rock_candy");
+
+    // ## Buffs
+    public static final PermabuffIntegerAspect ADDITIONAL_MOB_HARVEST_LEVEL = new PermabuffIntegerAspect("additional_mob_harvest_level", AspectTooltipFunctions.NUMBER_ADDITION);
+    public static final PermabuffFloatAspect APPETITE = new PermabuffFloatAspect("appetite", AspectTooltipFunctions.PERCENTAGE_ADDITION);
+
+    // # Other
+    public static final IntegerAspect TELEPORTATION_IMMUNITY = new IntegerAspect("teleportation_immunity", 0.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, false);
 
     private static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

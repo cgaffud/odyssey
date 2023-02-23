@@ -42,10 +42,10 @@ public interface SubEntity<T extends BossMaster> extends IEntityAdditionalSpawnD
     // Copy and paste
     /*
     public void remove(RemovalReason removalReason) {
-        if(removalReason == RemovalReason.DISCARDED || removalReason == RemovalReason.KILLED || this.getMasterEntity().isEmpty()) {
+        if(removalReason == RemovalReason.DISCARDED || removalReason == RemovalReason.KILLED || this.getMaster().isEmpty()) {
             super.remove(removalReason);
         } else {
-            this.getMasterEntity().ifPresent(master -> master.handleSubEntity(this));
+            this.getMaster().ifPresent(master -> master.handleSubEntity(this));
         }
     }
 

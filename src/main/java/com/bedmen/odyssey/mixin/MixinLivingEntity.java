@@ -2,15 +2,19 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
-import com.bedmen.odyssey.combat.WeaponUtil;
-import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.combat.SmackPush;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
+import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.RenderUtil;
 import com.google.common.base.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
@@ -44,6 +48,7 @@ import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements OdysseyLivingEntity {
+    private static final EntityDataAccessor<FireType> DATA_FIRE_TYPE = SynchedEntityData.defineId(LivingEntity.class, OdysseyDataSerializers.FIRE_TYPE);
     private static final String FLIGHT_VALUE_TAG = "FlightValue";
     private static final String GLIDING_LEVEL_TAG = "GlidingLevel";
     private static final String SLOW_FALL_TAG = "HasSlowFall";
@@ -88,7 +93,12 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     @Shadow public float yHeadRot;
     @Shadow public float yHeadRotO;
 
-    @Shadow @Nullable public abstract LivingEntity getKillCredit();
+    @Shadow protected abstract void dropAllDeathLoot(DamageSource p_21192_);
+
+    @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
+    public void onDefineSynchedData(CallbackInfo ci) {
+        this.entityData.define(DATA_FIRE_TYPE, FireType.NONE);
+    }
 
     public void baseTick() {
         LivingEntity livingEntity = this.getLivingEntity();
@@ -144,8 +154,9 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
                             this.level.addParticle(ParticleTypes.BUBBLE, this.getX() + d2, this.getY() + d3, this.getZ() + d4, vec3.x, vec3.y, vec3.z);
                         }
 
-                        int invulnerabilityFrames = drowningAmount > 2 ? 20 / drowningAmount : 10;
-                        WeaponUtil.hurtWithReducedInvulnerability(livingEntity, DamageSource.DROWN, 2.0f, invulnerabilityFrames);
+                        float invulnerabilityMultiplier = Float.min(1.0f, 2.0f / (float)drowningAmount);
+                        DamageSource damageSource = OdysseyDamageSource.withInvulnerabilityMultiplier(DamageSource.DROWN, invulnerabilityMultiplier);
+                        livingEntity.hurt(damageSource, 2.0f);
                     }
                 }
 
@@ -326,7 +337,15 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     }
 
     public boolean displayFireAnimation() {
-        return this.isOnFire() && !this.isSpectator() && RenderUtil.getStrongestFire(this.getLivingEntity()).isEmpty();
+        return this.isOnFire() && !this.isSpectator() && RenderUtil.getStrongestFireType(this.getLivingEntity()).isNone();
+    }
+
+    public FireType getFireType(){
+        return this.entityData.get(DATA_FIRE_TYPE);
+    }
+
+    public void setFireType(FireType fireType){
+        this.entityData.set(DATA_FIRE_TYPE, fireType);
     }
 
     private LivingEntity getLivingEntity(){

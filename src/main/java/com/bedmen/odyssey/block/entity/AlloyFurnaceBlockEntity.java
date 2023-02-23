@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.block.entity;
 
 import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;
-import com.bedmen.odyssey.recipes.AlloyRecipe;
+import com.bedmen.odyssey.recipes.object.AlloyRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "oddc:item/mineral_fruit"
+    "layer0": "oddc:item/rock_candy"
   }
 }

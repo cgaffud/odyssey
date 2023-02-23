@@ -1,17 +1,11 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
 import com.bedmen.odyssey.entity.ai.CovenReturnToMasterGoal;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
-import com.bedmen.odyssey.items.WarpTotem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
@@ -20,26 +14,24 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -190,7 +182,7 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
 
     protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean b) {
         super.dropCustomDeathLoot(damageSource, looting, b);
-        if (this.isEnraged()) {
+        if (this.isEnraged) {
             if (this.random.nextDouble() < SPECIAL_DROP_CHANCE)
                 this.spawnLoot( ItemRegistry.WARP_TOTEM.get(), 1);
             else if (this.random.nextDouble() < ENRAGED_SPECIAL_DROP_CHANCE)
@@ -308,7 +300,7 @@ public class EnderWitch extends CovenWitch implements RangedAttackMob {
                 Optional<CovenMaster> master = this.enderWitch.getMaster();
                 if (master.isPresent())
                     g = this.enderWitch.attackTimeMultiplier(master.get().getNearbyPlayerNumber());
-                if (this.enderWitch.isEnraged())
+                if (this.enderWitch.isEnraged)
                     g *= 0.5;
 
                 float f1 = Mth.clamp(f, 0.1F, 1.0F);

@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.block.entity;
 
 import com.bedmen.odyssey.inventory.RecyclingFurnaceMenu;
-import com.bedmen.odyssey.recipes.RecyclingRecipe;
+import com.bedmen.odyssey.recipes.object.RecyclingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;

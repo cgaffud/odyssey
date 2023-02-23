@@ -11,7 +11,7 @@ import com.bedmen.odyssey.items.aspect_items.SpearItem;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.magic.MagicUtil;
-import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
+import com.bedmen.odyssey.recipes.object.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.bedmen.odyssey.util.StringUtil;
@@ -339,9 +339,6 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
     private void updatePathParticles(){
         this.pathParticleList.stream().filter(pathParticle -> {
             int ticks = Integer.max(this.infuserCraftingTicks, this.getInfusingTicks(pathParticle.direction));
-            if(this.level != null){
-                System.out.println("Client? "+this.level.isClientSide+" Ticks: "+ticks);
-            }
             return pathParticle.updatePosition((float)ticks / (float)TOTAL_INFUSION_TIME);
         }).forEach(pathParticle -> {
                 if(this.level != null){

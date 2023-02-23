@@ -8,7 +8,7 @@ import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;
 import com.bedmen.odyssey.inventory.RecyclingFurnaceMenu;
 import com.bedmen.odyssey.inventory.StitchingMenu;
 import com.bedmen.odyssey.plugins.jei.categories.*;
-import com.bedmen.odyssey.recipes.*;
+import com.bedmen.odyssey.recipes.object.*;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;

@@ -166,8 +166,8 @@ public class OverworldWitch extends CovenWitch {
 
     protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean b) {
         super.dropCustomDeathLoot(damageSource, looting, b);
-        if ((this.isEnraged() && (this.random.nextDouble() < ENRAGED_SPECIAL_DROP_CHANCE))
-                || (!this.isEnraged() && (this.random.nextDouble() < SPECIAL_DROP_CHANCE))) {
+        if ((this.isEnraged && (this.random.nextDouble() < ENRAGED_SPECIAL_DROP_CHANCE))
+                || (!this.isEnraged && (this.random.nextDouble() < SPECIAL_DROP_CHANCE))) {
             this.spawnLoot(ItemRegistry.HEXED_EARTH_ARROW.get(), 32);
         }
     }
@@ -214,7 +214,7 @@ public class OverworldWitch extends CovenWitch {
             overworldWitch.setPhase(Phase.CHASING);
 
             float adjCastingInterval = this.castingInterval;
-            if (overworldWitch.isEnraged())
+            if (overworldWitch.isEnraged)
                 adjCastingInterval *= 0.5;
 
             Optional<CovenMaster> master = overworldWitch.getMaster();
@@ -316,7 +316,7 @@ public class OverworldWitch extends CovenWitch {
         }
     }
 
-    private class OverworldWitchSpikeGoal extends Goal {
+    private static class OverworldWitchSpikeGoal extends Goal {
         private final OverworldWitch overworldWitch;
 
         private int attackWarmupDelay;
@@ -357,7 +357,7 @@ public class OverworldWitch extends CovenWitch {
             overworldWitch.setPhase(Phase.CHASING);
 
             float adjCastingInterval = this.castingInterval;
-            if (overworldWitch.isEnraged())
+            if (overworldWitch.isEnraged)
                 adjCastingInterval *= 0.25;
             Optional<CovenMaster> master = overworldWitch.getMaster();
             if (master.isPresent()) {

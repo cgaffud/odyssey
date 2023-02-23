@@ -8,11 +8,12 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.combat.*;
 import com.bedmen.odyssey.entity.projectile.SonicBoom;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
+import com.bedmen.odyssey.food.OdysseyFood;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.aspect_items.*;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyBoatItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyFood;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyMapItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
 import com.bedmen.odyssey.lock.LockableDoorType;
 import com.bedmen.odyssey.lock.TreasureChestType;
@@ -166,7 +167,7 @@ public class ItemRegistry {
 
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
-    public static final RegistryObject<Item> MINERAL_FRUIT = ITEMS.register("mineral_fruit", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1)), player -> AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) < 1));
+    public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1), new AspectInstance(Aspects.APPETITE, 0.25f), new AspectInstance(Aspects.HAS_EATEN_ROCK_CANDY).withDisplaySetting(AspectTooltipDisplaySetting.NEVER)), player -> !AspectUtil.hasPermabuffAspect(player, Aspects.HAS_EATEN_ROCK_CANDY)));
 
     // # Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.COPPER));
@@ -182,7 +183,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> STERLING_SILVER_HOE = ITEMS.register("sterling_silver_hoe", () -> new AspectHoeItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.STERLING_SILVER, MeleeWeaponClass.HOE, 4.0f, List.of(), List.of()));
     public static final RegistryObject<Item> STERLING_SILVER_KEY = ITEMS.register("sterling_silver_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.STERLING_SILVER));
 
-    public static final RegistryObject<Item> COVEN_HUT_KEY = ITEMS.register("coven_hut_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), LockableDoorType.COVEN_HUT));
+    public static final RegistryObject<Item> COVEN_HUT_KEY = ITEMS.register("coven_hut_key", () -> new AspectKeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), LockableDoorType.COVEN_HUT, List.of(new AspectInstance(Aspects.TELEPORTATION_IMMUNITY, 1))));
 
     public static final List<AspectInstance> MARINE_TOOL_INNATE_MODIFIER_LIST = List.of(new AspectInstance(Aspects.AQUA_AFFINITY));
     public static final RegistryObject<Item> MARINE_SHOVEL = ITEMS.register("marine_shovel", () -> new AspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.TOOLS), OdysseyTiers.MARINE, MeleeWeaponClass.SHOVEL.withBetterAttackSpeed(), 3.5f, List.of(), MARINE_TOOL_INNATE_MODIFIER_LIST));
@@ -260,7 +261,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ARID_MACE = ITEMS.register("arid_mace", () -> new ConditionalAmpMeleeItem.GradientItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.MACE, 9f, List.of(), List.of(new AspectInstance(Aspects.SCORCHED_STRENGTH, 1.0f)), BiomeUtil::getAridColor, 0xFF8B33));
     public static final RegistryObject<Item> ICE_DAGGER = ITEMS.register("ice_dagger", () -> new ConditionalAmpMeleeItem.GradientItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.DAGGER, 6f, List.of(), List.of(new AspectInstance(Aspects.WINTERY_STRENGTH, 1.0f)), BiomeUtil::getColdColor, 0x66A6FF));
     public static final RegistryObject<Item> VOID_SWORD = ITEMS.register("void_sword", () -> new ConditionalAmpMeleeItem.NumericalItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_2, MeleeWeaponClass.SWORD, 7f, List.of(), List.of(new AspectInstance(Aspects.VOID_STRENGTH, 1.0f)), 9));
-    public static final RegistryObject<Item> HEXFLAME_DAGGER = ITEMS.register("hexflame_dagger", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_2, MeleeWeaponClass.DAGGER, 7f, List.of(), List.of(new AspectInstance(Aspects.HEXFLAME_DAMAGE, 1))));
+    public static final RegistryObject<Item> HEXFLAME_DAGGER = ITEMS.register("hexflame_dagger", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_2, MeleeWeaponClass.DAGGER, 7f, List.of(), List.of(new AspectInstance(Aspects.HEXFLAME_DAMAGE, 2))));
     public static final RegistryObject<Item> BROKEN_SEA_SWORD = ITEMS.register("broken_sea_sword", () -> new AspectMeleeItem(new Item.Properties().rarity(OdysseyRarity.ULTRA_EQUIPMENT).tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ULTRA_1, MeleeWeaponClass.DAGGER, 7f, List.of(), List.of(new AspectInstance(Aspects.HYDRO_DAMAGE, 3.0f))));
 
     // ## Tier 3
@@ -405,6 +406,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BANDIT_SPAWN_EGG = ITEMS.register("bandit_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BANDIT, 0x503213, 0x282828, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> WRAITH_SPAWN_EGG = ITEMS.register("wraith_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WRAITH, 0xF3F4F5, 0xA8ACAE, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
 
+    // # No Creative Tab
+    public static final RegistryObject<Item> UNOBTAINABLE = ITEMS.register("unobtainable", ()-> new Item((new Item.Properties())));
+    public static final RegistryObject<Item> FILLED_MAP = ITEMS.register("filled_map", () -> new OdysseyMapItem(new Item.Properties()));
+
     /////////////////////////////////////////////////////////////////////////
 
     //Vanilla Overrides
@@ -514,8 +519,5 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREEN_BANNER = ITEMS_VANILLA.register("green_banner", () -> new BannerItem(Blocks.GREEN_BANNER, Blocks.GREEN_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
     public static final RegistryObject<Item> RED_BANNER = ITEMS_VANILLA.register("red_banner", () -> new BannerItem(Blocks.RED_BANNER, Blocks.RED_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
     public static final RegistryObject<Item> BLACK_BANNER = ITEMS_VANILLA.register("black_banner", () -> new BannerItem(Blocks.BLACK_BANNER, Blocks.BLACK_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
-
-    // Epic Unobtainable Crystal
-    public static final RegistryObject<Item> UNOBTAINABLE = ITEMS.register("unobtainable", ()-> new Item((new Item.Properties())));
 
 }

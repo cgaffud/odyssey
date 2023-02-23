@@ -12,6 +12,6 @@ public class MixinScreenEffectRenderer {
 
     @Redirect(method = "renderScreenEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isOnFire()Z"))
     private static boolean renderScreenEffect$isOnFire(LocalPlayer localPlayer){
-        return localPlayer.isOnFire() || RenderUtil.getStrongestFire(localPlayer).isPresent();
+        return localPlayer.isOnFire() || RenderUtil.getStrongestFireType(localPlayer).isNotNone();
     }
 }

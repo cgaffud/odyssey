@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.entity.animal;
 
-import com.bedmen.odyssey.recipes.WeavingRecipe;
+import com.bedmen.odyssey.recipes.object.WeavingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;

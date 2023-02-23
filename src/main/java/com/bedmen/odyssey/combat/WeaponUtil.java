@@ -12,7 +12,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -309,12 +308,6 @@ public class WeaponUtil {
             return Optional.of(offHandItemStack);
         }
         return Optional.empty();
-    }
-
-    public static void hurtWithReducedInvulnerability(LivingEntity livingEntity, DamageSource damageSource, float damageAmount, int invulnerabilityTicks){
-        if(livingEntity.hurt(damageSource, damageAmount)){
-            setInvulnerability(livingEntity, invulnerabilityTicks);
-        }
     }
 
     public static void setInvulnerability(LivingEntity livingEntity, int invulnerabilityTicks){

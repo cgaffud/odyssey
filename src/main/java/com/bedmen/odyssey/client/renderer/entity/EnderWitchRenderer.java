@@ -22,9 +22,7 @@ public class EnderWitchRenderer extends MobRenderer<EnderWitch, WitchModel<Ender
     }
 
     public ResourceLocation getTextureLocation(EnderWitch enderWitch) {
-        if (enderWitch.isEnraged())
-            return ENRAGED_LOCATION;
-        return WITCH_LOCATION;
+        return enderWitch.isEnraged ? ENRAGED_LOCATION : WITCH_LOCATION;
     }
 
     public void render(EnderWitch enderWitch, float yRot, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {

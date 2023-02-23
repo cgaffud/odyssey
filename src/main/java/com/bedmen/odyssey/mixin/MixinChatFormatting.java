@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import javax.annotation.Nullable;
 
 @Mixin(ChatFormatting.class)
-public class MixinChatFormatting implements IExtensibleEnum {
+public abstract class MixinChatFormatting implements IExtensibleEnum {
     private static ChatFormatting[] VALUES = null;
     private static ChatFormatting create(String name, String p_i49745_3_, char p_i49745_4_, int p_i49745_5_, @Nullable Integer p_i49745_6_) {
         throw new IllegalStateException("Enum not extended");

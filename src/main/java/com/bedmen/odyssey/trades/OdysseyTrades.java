@@ -1,116 +1,69 @@
 package com.bedmen.odyssey.trades;
 
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyMapItem;
+import com.bedmen.odyssey.tags.OdysseyConfiguredStructureTags;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public class OdysseyTrades {
 
     public static void addTrades() {
         VillagerTrades.TRADES.clear();
-
-        //VillagerTrades.TRADES.put(VillagerProfession.FARMER, gatAsIntMap(ImmutableMap.of(1, new VillagerTrades.ItemListing[]{new ItemsForEmeraldsTrade(Items.GOLDEN_APPLE, 50, 1, 2), new EmeraldForItemsTrade(Items.GOLDEN_APPLE, 40, 1, 2)})));
+        VillagerTrades.TRADES.put(VillagerProfession.CARTOGRAPHER, toIntMap(ImmutableMap.of(1, new VillagerTrades.ItemListing[]{new OdysseyTreasureMapForEmeralds(13, OdysseyConfiguredStructureTags.ON_COVEN_HUT_MAPS, "filled_map.coven_hut", 12, 5)})));
     }
 
-    private static Int2ObjectMap<VillagerTrades.ItemListing[]> gatAsIntMap(ImmutableMap<Integer, VillagerTrades.ItemListing[]> p_221238_0_) {
-        return new Int2ObjectOpenHashMap<>(p_221238_0_);
+    private static Int2ObjectMap<VillagerTrades.ItemListing[]> toIntMap(ImmutableMap<Integer, VillagerTrades.ItemListing[]> immutableMap) {
+        return new Int2ObjectOpenHashMap<>(immutableMap);
     }
 
-    static class EmeraldForItemsTrade implements VillagerTrades.ItemListing {
-        private final Item tradeItem;
-        private final int count;
+    static class OdysseyTreasureMapForEmeralds implements VillagerTrades.ItemListing {
+        private final int emeraldCost;
+        private final TagKey<ConfiguredStructureFeature<?, ?>> destination;
+        private final String displayName;
         private final int maxUses;
-        private final int xpValue;
-        private final float priceMultiplier;
+        private final int villagerXp;
 
-        public EmeraldForItemsTrade(ItemLike tradeItemIn, int countOut, int maxUsesIn, int xpValueIn) {
-            this.tradeItem = tradeItemIn.asItem();
-            this.count = countOut;
-            this.maxUses = maxUsesIn;
-            this.xpValue = xpValueIn;
-            this.priceMultiplier = 0.00F;
-        }
-
-        public MerchantOffer getOffer(Entity trader, Random rand) {
-            ItemStack itemstack = new ItemStack(this.tradeItem, 1);
-            return new MerchantOffer(itemstack, new ItemStack(Items.EMERALD, this.count), this.maxUses, this.xpValue, this.priceMultiplier);
-        }
-    }
-
-    static class ItemsForEmeraldsTrade implements VillagerTrades.ItemListing {
-        private final ItemStack sellingItem;
-        private final int emeraldCount;
-        private final int sellingItemCount;
-        private final int maxUses;
-        private final int xpValue;
-        private final float priceMultiplier;
-
-        public ItemsForEmeraldsTrade(Block sellingItem, int emeraldCount, int sellingItemCount, int maxUses, int xpValue) {
-            this(new ItemStack(sellingItem), emeraldCount, sellingItemCount, maxUses, xpValue);
-        }
-
-        public ItemsForEmeraldsTrade(Item sellingItem, int emeraldCount, int sellingItemCount, int xpValue) {
-            this(new ItemStack(sellingItem), emeraldCount, sellingItemCount, 12, xpValue);
-        }
-
-        public ItemsForEmeraldsTrade(Item sellingItem, int emeraldCount, int sellingItemCount, int maxUses, int xpValue) {
-            this(new ItemStack(sellingItem), emeraldCount, sellingItemCount, maxUses, xpValue);
-        }
-
-        public ItemsForEmeraldsTrade(ItemStack sellingItem, int emeraldCount, int sellingItemCount, int maxUses, int xpValue) {
-            this(sellingItem, emeraldCount, sellingItemCount, maxUses, xpValue, 0.05F);
-        }
-
-        public ItemsForEmeraldsTrade(ItemStack sellingItem, int emeraldCount, int sellingItemCount, int maxUses, int xpValue, float priceMultiplier) {
-            this.sellingItem = sellingItem;
-            this.emeraldCount = emeraldCount;
-            this.sellingItemCount = sellingItemCount;
+        public OdysseyTreasureMapForEmeralds(int emeraldCost, TagKey<ConfiguredStructureFeature<?, ?>> destination, String displayName, int maxUses, int villagerXp) {
+            this.emeraldCost = emeraldCost;
+            this.destination = destination;
+            this.displayName = displayName;
             this.maxUses = maxUses;
-            this.xpValue = xpValue;
-            this.priceMultiplier = priceMultiplier;
+            this.villagerXp = villagerXp;
         }
 
-        public MerchantOffer getOffer(Entity trader, Random rand) {
-            return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCount), new ItemStack(this.sellingItem.getItem(), this.sellingItemCount), this.maxUses, this.xpValue, this.priceMultiplier);
-        }
-    }
-
-    static class EnchantedItemForEmeraldsTrade implements VillagerTrades.ItemListing {
-        private final ItemStack sellingStack;
-        private final int emeraldCount;
-        private final int maxUses;
-        private final int xpValue;
-        private final float priceMultiplier;
-
-        public EnchantedItemForEmeraldsTrade(Item p_i50535_1_, int emeraldCount, int maxUses, int xpValue) {
-            this(p_i50535_1_, emeraldCount, maxUses, xpValue, 0.05F);
-        }
-
-        public EnchantedItemForEmeraldsTrade(Item sellItem, int emeraldCount, int maxUses, int xpValue, float priceMultiplier) {
-            this.sellingStack = new ItemStack(sellItem);
-            this.emeraldCount = emeraldCount;
-            this.maxUses = maxUses;
-            this.xpValue = xpValue;
-            this.priceMultiplier = priceMultiplier;
-        }
-
-        public MerchantOffer getOffer(Entity trader, Random rand) {
-            int i = 5 + rand.nextInt(15);
-            ItemStack itemstack = EnchantmentHelper.enchantItem(rand, new ItemStack(this.sellingStack.getItem()), i, false);
-            int j = Math.min(this.emeraldCount + i, 64);
-            ItemStack itemstack1 = new ItemStack(Items.EMERALD, j);
-            return new MerchantOffer(itemstack1, itemstack, this.maxUses, this.xpValue, this.priceMultiplier);
+        @Nullable
+        public MerchantOffer getOffer(Entity entity, Random random) {
+            if (!(entity.level instanceof ServerLevel serverlevel)) {
+                return null;
+            } else {
+                BlockPos blockpos = serverlevel.findNearestMapFeature(this.destination, entity.blockPosition(), 100, true);
+                if (blockpos != null) {
+                    ItemStack itemstack = OdysseyMapItem.create(serverlevel, blockpos.getX(), blockpos.getZ(), (byte)2, true, true);
+                    MapItem.renderBiomePreviewMap(serverlevel, itemstack);
+                    MapItemSavedData.addTargetDecoration(itemstack, blockpos, "+", OdysseyMapItem.DecorationType.COVEN_HUT);
+                    itemstack.setHoverName(new TranslatableComponent(this.displayName));
+                    return new MerchantOffer(new ItemStack(Items.EMERALD, this.emeraldCost), new ItemStack(Items.COMPASS), itemstack, this.maxUses, this.villagerXp, 0.2F);
+                } else {
+                    return null;
+                }
+            }
         }
     }
 

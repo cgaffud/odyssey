@@ -2,15 +2,11 @@ package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.model.ArmedCovenWitchModel;
-import com.bedmen.odyssey.entity.boss.coven.EnderWitch;
 import com.bedmen.odyssey.entity.boss.coven.NetherWitch;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.WitchModel;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.WitchItemLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class NetherWitchRenderer extends MobRenderer<NetherWitch, ArmedCovenWitchModel<NetherWitch>> {
@@ -23,9 +19,7 @@ public class NetherWitchRenderer extends MobRenderer<NetherWitch, ArmedCovenWitc
     }
 
     public ResourceLocation getTextureLocation(NetherWitch netherWitch) {
-        if (netherWitch.isEnraged())
-            return ENRAGED_LOCATION;
-        return WITCH_LOCATION;
+        return netherWitch.isEnraged ? ENRAGED_LOCATION : WITCH_LOCATION;
     }
 
     public void render(NetherWitch netherWitch, float yRot, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {

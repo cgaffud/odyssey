@@ -14,6 +14,7 @@ import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.recipes.OdysseyRecipeBook;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.trades.OdysseyTrades;
@@ -73,6 +74,7 @@ public class Odyssey
         SoundEventRegistry.init();
         StructureFeatureRegistry.init();
         StructurePieceTypeRegistry.init();
+        StructureProcessorRegistry.init();
         WorldTypeRegistry.init();
     }
 
@@ -88,6 +90,7 @@ public class Odyssey
             EntityEvents.initEntityMap();
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
             PoiType.WEAPONSMITH.matchingStates = ImmutableSet.copyOf(BlockRegistry.GRINDSTONE.get().getStateDefinition().getPossibleStates());
+            OdysseyRecipeBook.init();
 
             //Generation
             BiomeUtil.init();
@@ -106,7 +109,6 @@ public class Odyssey
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
 
 //        OdysseyPotions.addBrewingRecipes();
-//        OdysseyTrades.addTrades();
         });
     }
 
