@@ -70,25 +70,15 @@ public class CovenHutPiece extends TemplateStructurePiece {
     @Override
     public void postProcess(WorldGenLevel worldGenLevel, StructureFeatureManager manager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos pos) {
         if(updateHeightPositionToHighestGroundHeight(worldGenLevel)){
-            //BlockPos entrance = new BlockPos(17, 0, 16).rotate(getRotation()).offset(pos);
-
-            //int height = worldGenLevel.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, entrance).getY();
-            //BlockPos blockpos2 = this.templatePosition;
-            //int dy = height - CovenHutFeature.INITIAL_HEIGHT + 1;
-            //System.out.println("postProcess run, dy: "+dy+" height: "+height+" ex: "+entrance.getX()+" ez: "+entrance.getZ());
-            //this.boundingBox.move(0, dy, 0);
-
-            this.templatePosition = this.templatePosition.offset(0, this.boundingBox.minY() - this.templatePosition.getY(), 0);
+            this.templatePosition = this.templatePosition.atY(this.boundingBox.minY());
 
             super.postProcess(worldGenLevel, manager, chunkGenerator, random, chunkBoundingBox, chunkPos, pos);
 
             for(Pair<Integer,Integer> pair : RELATIVE_POSTS) {
                 // RELATIVE_POSTS (x,z) pairs were measured from the minimum x-z corner of the unrotated structure bounding box, where the relative block position is (0,0).
-                BlockPos postPos = (new BlockPos(pair.getFirst(), 0, pair.getSecond()).rotate(this.placeSettings.getRotation()));
+                BlockPos postPos = this.templatePosition.offset(new BlockPos(pair.getFirst(), -1, pair.getSecond()).rotate(this.placeSettings.getRotation()));
                 WorldGenUtil.fillColumnDown(worldGenLevel, Blocks.OAK_LOG.defaultBlockState(), postPos, chunkBoundingBox);
             }
-
-            //this.templatePosition = blockpos2;
         }
     }
 
@@ -103,7 +93,7 @@ public class CovenHutPiece extends TemplateStructurePiece {
             for(int z = this.boundingBox.minZ(); z <= this.boundingBox.maxZ(); ++z) {
                 for(int x = this.boundingBox.minX(); x <= this.boundingBox.maxX(); ++x) {
                     mutableBlockPos.set(x, 0, z);
-                    height = Math.max(height, levelAccessor.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, mutableBlockPos).getY());
+                    height = Math.max(height, levelAccessor.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, mutableBlockPos).getY());
                     heightHasBeenSet = true;
                 }
             }
