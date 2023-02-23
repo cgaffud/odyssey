@@ -3,7 +3,7 @@ package com.bedmen.odyssey.world.gen.structure.pieces;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
-import com.bedmen.odyssey.util.WorldGenUtil;
+import com.bedmen.odyssey.world.WorldGenUtil;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

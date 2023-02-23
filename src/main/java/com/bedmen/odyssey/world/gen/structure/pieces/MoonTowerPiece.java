@@ -8,7 +8,7 @@ import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
-import com.bedmen.odyssey.util.WorldGenUtil;
+import com.bedmen.odyssey.world.WorldGenUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

@@ -2,7 +2,7 @@ package com.bedmen.odyssey.world.gen.feature;
 
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.lock.TreasureChestType;
-import com.bedmen.odyssey.util.WorldGenUtil;
+import com.bedmen.odyssey.world.WorldGenUtil;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

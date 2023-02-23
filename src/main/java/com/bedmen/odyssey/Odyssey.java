@@ -73,6 +73,7 @@ public class Odyssey
         SoundEventRegistry.init();
         StructureFeatureRegistry.init();
         StructurePieceTypeRegistry.init();
+        StructureProcessorRegistry.init();
         WorldTypeRegistry.init();
     }
 
