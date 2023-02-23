@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.world.WorldGenUtil;
 import com.bedmen.odyssey.world.gen.block_processor.MossyBlockProcessor;
@@ -14,6 +15,8 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -107,9 +110,11 @@ public class CovenHutPiece extends TemplateStructurePiece {
         }
     }
 
-
-    @Override
-    protected void handleDataMarker(String p_73683_, BlockPos p_73684_, ServerLevelAccessor p_73685_, Random p_73686_, BoundingBox p_73687_) {
-
+    protected void handleDataMarker(String dataMarker, BlockPos blockPos, ServerLevelAccessor serverLevelAccessor, Random random, BoundingBox chunkBoundingBox) {
+        // todo adjust chest loot
+        WorldGenUtil.fillChestBelowDataMarker("chest", dataMarker, serverLevelAccessor, blockPos, random, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
+        WorldGenUtil.fillChestBelowDataMarker("secret_chest", dataMarker, serverLevelAccessor, blockPos, random, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
+        WorldGenUtil.fillChestBelowDataMarker("ingredients", dataMarker, serverLevelAccessor, blockPos, random, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
+        WorldGenUtil.fillChestBelowDataMarker("tomes", dataMarker, serverLevelAccessor, blockPos, random, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
     }
 }

@@ -1,13 +1,21 @@
 package com.bedmen.odyssey.world;
 
+import com.bedmen.odyssey.loot.OdysseyLootTables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
+
+import java.util.Random;
 
 public class WorldGenUtil {
 
@@ -34,6 +42,16 @@ public class WorldGenUtil {
             while(isReplaceableByStructures(worldGenLevel.getBlockState(mutableBlockPos)) && mutableBlockPos.getY() > worldGenLevel.getMinBuildHeight() + 1) {
                 worldGenLevel.setBlock(mutableBlockPos, blockState, 2);
                 mutableBlockPos.move(Direction.DOWN);
+            }
+        }
+    }
+
+    public static void fillChestBelowDataMarker(String dataKey, String dataMarker, ServerLevelAccessor serverLevelAccessor, BlockPos blockPos, Random random, ResourceLocation lootTable){
+        if (dataKey.equals(dataMarker)) {
+            serverLevelAccessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
+            BlockEntity blockentity = serverLevelAccessor.getBlockEntity(blockPos.below());
+            if (blockentity instanceof RandomizableContainerBlockEntity) {
+                ((RandomizableContainerBlockEntity)blockentity).setLootTable(lootTable, random.nextLong());
             }
         }
     }
