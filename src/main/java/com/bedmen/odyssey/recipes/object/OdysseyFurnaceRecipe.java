@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.recipes;
+package com.bedmen.odyssey.recipes.object;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;

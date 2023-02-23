@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.recipes;
+package com.bedmen.odyssey.recipes.object;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;

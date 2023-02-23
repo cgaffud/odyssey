@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.block.entity;
 
-import com.bedmen.odyssey.recipes.OdysseyFurnaceRecipe;
+import com.bedmen.odyssey.recipes.object.OdysseyFurnaceRecipe;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;

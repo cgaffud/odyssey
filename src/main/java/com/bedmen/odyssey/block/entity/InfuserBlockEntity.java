@@ -11,7 +11,7 @@ import com.bedmen.odyssey.items.aspect_items.SpearItem;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.magic.MagicUtil;
-import com.bedmen.odyssey.recipes.InfuserCraftingRecipe;
+import com.bedmen.odyssey.recipes.object.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.bedmen.odyssey.util.StringUtil;

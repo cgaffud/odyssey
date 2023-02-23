@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.plugins.jei.categories;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.recipes.WeavingRecipe;
+import com.bedmen.odyssey.recipes.object.WeavingRecipe;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

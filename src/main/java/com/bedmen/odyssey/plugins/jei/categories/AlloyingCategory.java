@@ -2,7 +2,7 @@ package com.bedmen.odyssey.plugins.jei.categories;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.gui.screens.AlloyFurnaceScreen;
-import com.bedmen.odyssey.recipes.AlloyRecipe;
+import com.bedmen.odyssey.recipes.object.AlloyRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
