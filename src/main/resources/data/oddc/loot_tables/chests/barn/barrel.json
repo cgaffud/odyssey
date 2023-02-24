@@ -3,16 +3,11 @@
   "pools": [
     {
       "conditions": [],
-      "functions": [
-        {
-          "function": "oddc:modify_with_tier",
-          "tier": 1
-        }
-      ],
+      "functions": [],
       "rolls": {
-        "type": "minecraft:uniform",
-        "min": 0,
-        "max": 1
+        "type": "minecraft:binomial",
+        "n": 1,
+        "p": 0.3
       },
       "bonus_rolls": 0,
       "entries": [
@@ -22,25 +17,8 @@
           "functions": [],
           "weight": 1,
           "quality": 0,
-          "name": "oddc:swift_sabre"
-        }
-      ]
-    },
-    {
-      "conditions": [],
-      "functions": [
-        {
-          "function": "oddc:modify_with_tier",
-          "tier": 1
-        }
-      ],
-      "rolls": {
-        "type": "minecraft:uniform",
-        "min": 0,
-        "max": 1
-      },
-      "bonus_rolls": 0,
-      "entries": [
+          "name": "minecraft:wooden_hoe"
+        },
         {
           "type": "minecraft:item",
           "condtions": [],
@@ -63,33 +41,8 @@
           "functions": [],
           "weight": 1,
           "quality": 0,
-          "name": "minecraft:golden_hoe"
+          "name": "minecraft:wooden_shovel"
         },
-        {
-          "type": "minecraft:item",
-          "condtions": [],
-          "functions": [],
-          "weight": 1,
-          "quality": 0,
-          "name": "oddc:clover_stone_hoe"
-        }
-      ]
-    },
-    {
-      "conditions": [],
-      "functions": [
-        {
-          "function": "oddc:modify_with_tier",
-          "tier": 1
-        }
-      ],
-      "rolls": {
-        "type": "minecraft:uniform",
-        "min": 0,
-        "max": 1
-      },
-      "bonus_rolls": 0,
-      "entries": [
         {
           "type": "minecraft:item",
           "condtions": [],
@@ -105,22 +58,6 @@
           "weight": 1,
           "quality": 0,
           "name": "minecraft:iron_shovel"
-        },
-        {
-          "type": "minecraft:item",
-          "condtions": [],
-          "functions": [],
-          "weight": 1,
-          "quality": 0,
-          "name": "minecraft:golden_shovel"
-        },
-        {
-          "type": "minecraft:item",
-          "condtions": [],
-          "functions": [],
-          "weight": 1,
-          "quality": 0,
-          "name": "oddc:clover_stone_shovel"
         }
       ]
     },
@@ -129,8 +66,8 @@
       "functions": [],
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 5,
-        "max": 8
+        "min": 1,
+        "max": 5
       },
       "bonus_rolls": 0,
       "entries": [
@@ -142,8 +79,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 5,
-                "max": 10
+                "min": 0,
+                "max": 1
               },
               "add": false
             }
@@ -160,8 +97,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 5,
-                "max": 10
+                "min": 0,
+                "max": 1
               },
               "add": false
             }
@@ -178,8 +115,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 5,
-                "max": 10
+                "min": 0,
+                "max": 1
               },
               "add": false
             }
@@ -196,26 +133,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              },
-              "add": false
-            }
-          ],
-          "weight": 1,
-          "quality": 0,
-          "name": "minecraft:golden_carrot"
-        },
-        {
-          "type": "minecraft:item",
-          "condtions": [],
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 5,
-                "max": 10
+                "min": 0,
+                "max": 1
               },
               "add": false
             }
@@ -233,12 +152,12 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 3
+                "max": 1
               },
               "add": false
             }
           ],
-          "weight": 1,
+          "weight": 10,
           "quality": 0,
           "name": "minecraft:poisonous_potato"
         },
@@ -250,8 +169,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 5,
-                "max": 10
+                "min": 0,
+                "max": 1
               },
               "add": false
             }
@@ -268,8 +187,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 5,
-                "max": 10
+                "min": 0,
+                "max": 1
               },
               "add": false
             }
@@ -286,26 +205,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              },
-              "add": false
-            }
-          ],
-          "weight": 1,
-          "quality": 0,
-          "name": "minecraft:melon"
-        },
-        {
-          "type": "minecraft:item",
-          "condtions": [],
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 5,
-                "max": 10
+                "min": 0,
+                "max": 1
               },
               "add": false
             }
@@ -323,25 +224,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 2
-              },
-              "add": false
-            }
-          ],
-          "weight": 1,
-          "quality": 0,
-          "name": "minecraft:pumpkin"
-        },
-        {
-          "type": "minecraft:item",
-          "condtions": [],
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 5,
-                "max": 10
+                "max": 1
               },
               "add": false
             }

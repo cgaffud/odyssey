@@ -42,4 +42,4 @@ def generate():
         ]
     cropPool = Pool(createUniformNumberProvider(5, 8)).withEntries(cropEntries)
 
-    createTable([swiftSabrePool, hoePool, shovelPool, cropPool], "barn")
+    createTable([swiftSabrePool, hoePool, shovelPool, cropPool], "barn/treasure")
