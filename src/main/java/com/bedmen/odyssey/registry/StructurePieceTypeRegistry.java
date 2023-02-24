@@ -20,5 +20,8 @@ public class StructurePieceTypeRegistry {
     public static final RegistryObject<StructurePieceType> UNDERGROUND_RUIN = STRUCTURE_PIECE_TYPES.register("underground_ruin", () -> (StructurePieceType.StructureTemplateType)(UndergroundRuinPieces.UndergroundRuinPiece::new));
     public static final RegistryObject<StructurePieceType> MOON_TOWER = STRUCTURE_PIECE_TYPES.register("moon_tower", ()->(StructurePieceType.StructureTemplateType)(MoonTowerPiece::new));
     public static final RegistryObject<StructurePieceType> COVEN_HUT = STRUCTURE_PIECE_TYPES.register("coven_hut", () -> (StructurePieceType.StructureTemplateType)(CovenHutPiece::new));
-    public static final RegistryObject<StructurePieceType> BARN = STRUCTURE_PIECE_TYPES.register("bran", () -> (StructurePieceType.StructureTemplateType)(BarnPiece::new));
+
+    // Barn
+    public static final RegistryObject<StructurePieceType> BARN = STRUCTURE_PIECE_TYPES.register("barn", () -> (StructurePieceType.StructureTemplateType)(BarnPiece::new));
+    public static final RegistryObject<StructurePieceType> BARN_SPAWNER = STRUCTURE_PIECE_TYPES.register("barn_spawner", () -> (StructurePieceType.StructureTemplateType)(BarnSpawnerPiece::new));
 }

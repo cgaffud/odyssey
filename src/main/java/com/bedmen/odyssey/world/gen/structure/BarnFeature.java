@@ -12,6 +12,8 @@ import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
+import java.util.Random;
+
 public class BarnFeature extends StructureFeature<NoneFeatureConfiguration> {
 
     public BarnFeature(Codec<NoneFeatureConfiguration> codec) {
@@ -24,8 +26,9 @@ public class BarnFeature extends StructureFeature<NoneFeatureConfiguration> {
 
     private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {
         BlockPos blockpos = new BlockPos(context.chunkPos().getMinBlockX(), 90, context.chunkPos().getMinBlockZ());
+        Random random = context.random();
         Rotation rotation = Rotation.getRandom(context.random());
-        BarnPiece barnPiece = new BarnPiece(context.structureManager(), blockpos, rotation);
+        BarnPiece barnPiece = new BarnPiece(context.structureManager(), blockpos, rotation, random);
         structurePiecesBuilder.addPiece(barnPiece);
     }
 }

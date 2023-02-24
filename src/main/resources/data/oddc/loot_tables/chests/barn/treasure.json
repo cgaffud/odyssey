@@ -1,0 +1,356 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "conditions": [],
+      "functions": [
+        {
+          "function": "oddc:modify_with_tier",
+          "tier": 1
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 0,
+        "max": 1
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:swift_sabre"
+        }
+      ]
+    },
+    {
+      "conditions": [],
+      "functions": [
+        {
+          "function": "oddc:modify_with_tier",
+          "tier": 1
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 0,
+        "max": 1
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:stone_hoe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:iron_hoe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:golden_hoe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:clover_stone_hoe"
+        }
+      ]
+    },
+    {
+      "conditions": [],
+      "functions": [
+        {
+          "function": "oddc:modify_with_tier",
+          "tier": 1
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 0,
+        "max": 1
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:stone_shovel"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:iron_shovel"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:golden_shovel"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "oddc:clover_stone_shovel"
+        }
+      ]
+    },
+    {
+      "conditions": [],
+      "functions": [],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 5,
+        "max": 8
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 10
+              },
+              "add": false
+            }
+          ],
+          "weight": 4,
+          "quality": 0,
+          "name": "minecraft:wheat_seeds"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 10
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:wheat"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 10
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:carrot"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:golden_carrot"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 10
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:potato"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:poisonous_potato"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 10
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:beetroot"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 10
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:beetroot_seeds"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:melon"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 10
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:melon_seeds"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:pumpkin"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 10
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:pumpkin_seeds"
+        }
+      ]
+    }
+  ]
+}

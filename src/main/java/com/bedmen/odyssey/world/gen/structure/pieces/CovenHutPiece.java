@@ -34,37 +34,32 @@ public class CovenHutPiece extends HeightAdjustingPiece {
     private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"coven_hut");
 
     private static final List<Pair<Integer, Integer>> RELATIVE_POSTS = List.of(
-            new Pair<>(5, 1),
-            new Pair<>(8, 7),
-            new Pair<>(14, 1),
-            new Pair<>(16, 7),
-            new Pair<>(17, 13),
-            new Pair<>(17, 17),
-            new Pair<>(12, 13),
-            new Pair<>(12, 17),
-            new Pair<>(15, 19),
-            new Pair<>(5,9),
-            new Pair<>(1,10),
-            new Pair<>(8,15),
-            new Pair<>(1,20),
-            new Pair<>(8,20)
+            Pair.of(5, 1),
+            Pair.of(8, 7),
+            Pair.of(14, 1),
+            Pair.of(16, 7),
+            Pair.of(17, 13),
+            Pair.of(17, 17),
+            Pair.of(12, 13),
+            Pair.of(12, 17),
+            Pair.of(15, 19),
+            Pair.of(5,9),
+            Pair.of(1,10),
+            Pair.of(8,15),
+            Pair.of(1,20),
+            Pair.of(8,20)
     );
 
     public CovenHutPiece(StructureManager structureManager, BlockPos blockPos, Rotation rotation) {
-        super(StructurePieceTypeRegistry.COVEN_HUT.get(), 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(rotation), blockPos);
+        super(StructurePieceTypeRegistry.COVEN_HUT.get(), 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(), blockPos, rotation);
     }
 
     public CovenHutPiece(StructureManager structureManager, CompoundTag compoundTag) {
-        super(StructurePieceTypeRegistry.COVEN_HUT.get(), compoundTag, structureManager, (resourceLocation) -> makeSettings(Rotation.valueOf(compoundTag.getString("Rot"))));
+        super(StructurePieceTypeRegistry.COVEN_HUT.get(), compoundTag, structureManager, (resourceLocation) -> makeSettings());
     }
 
-    private static StructurePlaceSettings makeSettings(Rotation rotation) {
-        return (new StructurePlaceSettings()).setRotation(rotation).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(MossyBlockProcessor.INSTANCE);
-    }
-
-    protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag compoundTag) {
-        super.addAdditionalSaveData(context, compoundTag);
-        compoundTag.putString("Rot", this.placeSettings.getRotation().name());
+    private static StructurePlaceSettings makeSettings() {
+        return (new StructurePlaceSettings()).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(MossyBlockProcessor.INSTANCE);
     }
 
     protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {

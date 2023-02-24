@@ -7,10 +7,14 @@ import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.registry.StructureProcessorRegistry;
 import com.bedmen.odyssey.world.WorldGenUtil;
 import com.bedmen.odyssey.world.gen.block_processor.BarnFloorProcessor;
+import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -25,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.OceanMonumentPieces;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
@@ -33,83 +38,67 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import org.lwjgl.system.CallbackI;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class BarnPiece extends HeightAdjustingPiece {
 
-    private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"barn");
+    private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"barn/barn");
     private static final BlockPos RELATIVE_ENTRANCE = new BlockPos(7,0,0);
     private static final List<Pair<Integer, Integer>> RELATIVE_POSTS = List.of(
-            new Pair<>(1, 1),
-            new Pair<>(14, 1),
-            new Pair<>(1, 22),
-            new Pair<>(14, 22)
+            Pair.of(1, 1),
+            Pair.of(14, 1),
+            Pair.of(1, 22),
+            Pair.of(14, 22)
     );
-    private static final int TOTAL_SPAWNER_LOCATIONS = 6;
+    private static final int TOTAL_SPAWNER_LOCATIONS = BarnSpawnerPiece.PIECE_INFOS.length;
     private static final int TOTAL_SPAWNERS = 3;
-    protected int spawnersMade = 0;
-    private static final String SPAWNERS_MADE_TAG = "SpawnersMade";
-    protected int possibleSpawnersChecked = 0;
-    private static final String POSSIBLE_SPAWNERS_CHECKED_TAG = "PossibleSpawnersChecked";
+    private final List<BarnSpawnerPiece> childPieces = new ArrayList<>();
+    private static final String ID_LIST_TAG = "IdList";
 
-    public BarnPiece(StructureManager structureManager, BlockPos blockPos, Rotation rotation) {
-        super(StructurePieceTypeRegistry.BARN.get(), 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(rotation), blockPos);
+    public BarnPiece(StructureManager structureManager, BlockPos blockPos, Rotation rotation, Random random) {
+        super(StructurePieceTypeRegistry.BARN.get(), 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(), blockPos, rotation);
+        for(int id: generateSpawnerIds(random)){
+            this.childPieces.add(new BarnSpawnerPiece(structureManager, blockPos, rotation, id));
+        }
     }
 
     public BarnPiece(StructureManager structureManager, CompoundTag compoundTag) {
-        super(StructurePieceTypeRegistry.BARN.get(), compoundTag, structureManager, (resourceLocation) -> makeSettings(Rotation.valueOf(compoundTag.getString("Rot"))));
-        this.spawnersMade = compoundTag.getInt(SPAWNERS_MADE_TAG);
-        this.possibleSpawnersChecked = compoundTag.getInt(POSSIBLE_SPAWNERS_CHECKED_TAG);
+        super(StructurePieceTypeRegistry.BARN.get(), compoundTag, structureManager, (resourceLocation) -> makeSettings());
+        if(compoundTag.contains(ID_LIST_TAG)){
+            for(Tag tag: compoundTag.getList(ID_LIST_TAG, Tag.TAG_INT)){
+                int id = ((IntTag)tag).getAsInt();
+                System.out.println(id);
+                this.childPieces.add(new BarnSpawnerPiece(structureManager, this.templatePosition, this.placeSettings.getRotation(), id));
+            }
+        }
     }
 
-    private static StructurePlaceSettings makeSettings(Rotation rotation) {
-        return (new StructurePlaceSettings()).setRotation(rotation).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(BarnFloorProcessor.INSTANCE);
+    private static StructurePlaceSettings makeSettings() {
+        return (new StructurePlaceSettings()).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(BarnFloorProcessor.INSTANCE);
     }
 
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag compoundTag) {
         super.addAdditionalSaveData(context, compoundTag);
-        compoundTag.putString("Rot", this.placeSettings.getRotation().name());
-        compoundTag.putInt(SPAWNERS_MADE_TAG, this.spawnersMade);
-        compoundTag.putInt(POSSIBLE_SPAWNERS_CHECKED_TAG, this.possibleSpawnersChecked);
+        ListTag idListTag = new ListTag();
+        for(BarnSpawnerPiece barnSpawnerPiece: this.childPieces){
+            idListTag.add(IntTag.valueOf(barnSpawnerPiece.id));
+        }
+        compoundTag.put(ID_LIST_TAG, idListTag);
     }
 
     protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
         WorldGenUtil.fillColumnDownOnAllPosts(worldGenLevel, Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState(), RELATIVE_POSTS, chunkBoundingBox, this.templatePosition, this.placeSettings);
+        for(BarnSpawnerPiece barnSpawnerPiece : this.childPieces) {
+            if (barnSpawnerPiece.getBoundingBox().intersects(chunkBoundingBox)) {
+                barnSpawnerPiece.postProcess(worldGenLevel, structureFeatureManager, chunkGenerator, random, chunkBoundingBox, chunkPos, blockPos);
+            }
+        }
     }
 
     protected void handleDataMarker(String dataMarker, BlockPos blockPos, ServerLevelAccessor serverLevelAccessor, Random random, BoundingBox boundingBox) {
-        if(dataMarker.startsWith("spawner")){
-            boolean isHaySpawner = dataMarker.substring(dataMarker.indexOf(":")+1).equals("hay");
-            boolean replaceWithSpawner = random.nextFloat() < ((float)(TOTAL_SPAWNERS - this.spawnersMade)/(float)(TOTAL_SPAWNER_LOCATIONS - this.possibleSpawnersChecked));
-            this.possibleSpawnersChecked++;
-            if(replaceWithSpawner){
-                this.spawnersMade++;
-                serverLevelAccessor.setBlock(blockPos, Blocks.SPAWNER.defaultBlockState(), 2);
-                BlockEntity blockEntity = serverLevelAccessor.getBlockEntity(blockPos);
-                if(blockEntity instanceof SpawnerBlockEntity spawnerBlockEntity){
-                    BaseSpawner basespawner = spawnerBlockEntity.getSpawner();
-                    basespawner.setEntityId(EntityTypeRegistry.BARN_SPIDER.get());
-                    blockEntity.setChanged();
-                }
-            } else {
-                BlockState replacementBlockState = (isHaySpawner ? Blocks.HAY_BLOCK : Blocks.STRIPPED_ACACIA_LOG).defaultBlockState();
-                serverLevelAccessor.setBlock(blockPos, replacementBlockState, 2);
-            }
-            // If we place a spawner, leave half the cobwebs. Else get rid of them
-            float cobwebReplacementChance = replaceWithSpawner ? 0.5f : 1.0f;
-            int cobwebReplacementRadius = isHaySpawner ? 3 : 1;
-            for(int x = -cobwebReplacementRadius; x <= cobwebReplacementRadius; x++){
-                for(int y = -cobwebReplacementRadius; y <= cobwebReplacementRadius; y++){
-                    for(int z = -cobwebReplacementRadius; z <= cobwebReplacementRadius; z++){
-                        BlockPos cobwebBlockPos = blockPos.offset(x,y,z);
-                        if(serverLevelAccessor.getBlockState(cobwebBlockPos).is(Blocks.COBWEB) && random.nextFloat() < cobwebReplacementChance){
-                            serverLevelAccessor.setBlock(cobwebBlockPos, Blocks.AIR.defaultBlockState(), 2);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     protected boolean updateHeightPosition(LevelAccessor levelAccessor) {
@@ -121,11 +110,30 @@ public class BarnPiece extends HeightAdjustingPiece {
             if (height == levelAccessor.getMinBuildHeight()) {
                 return false;
             } else {
-                this.boundingBox.move(0, height - this.boundingBox.minY(), 0);
-                this.templatePosition = this.templatePosition.atY(this.boundingBox.minY());
+                int heightChange = height - this.boundingBox.minY();
+                this.move(0, heightChange, 0);
+                for(BarnSpawnerPiece barnSpawnerPiece: this.childPieces){
+                    barnSpawnerPiece.move(0, heightChange, 0);
+                }
                 this.hasCalculatedHeightPosition = true;
                 return true;
             }
         }
+    }
+
+    private static int[] generateSpawnerIds(Random random){
+        int[] idArray = new int[3];
+        int idsSet = 0;
+        for(int i = 0; i < TOTAL_SPAWNER_LOCATIONS; i++){
+            float chance = ((float)(TOTAL_SPAWNERS - idsSet)/(float)(TOTAL_SPAWNER_LOCATIONS - i));
+            if(random.nextFloat() < chance){
+                idArray[idsSet] = i;
+                idsSet++;
+            }
+            if(idsSet == TOTAL_SPAWNERS){
+                break;
+            }
+        }
+        return idArray;
     }
 }

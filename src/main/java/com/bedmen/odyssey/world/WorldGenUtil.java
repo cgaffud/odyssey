@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
@@ -38,7 +39,7 @@ public class WorldGenUtil {
     }
 
     public static boolean isReplaceableByStructures(BlockState blockState) {
-        return blockState.isAir() || blockState.getMaterial().isLiquid() || blockState.is(Blocks.GLOW_LICHEN) || blockState.is(Blocks.SEAGRASS) || blockState.is(Blocks.TALL_SEAGRASS) || blockState.is(Blocks.LILY_PAD);
+        return blockState.isAir() || blockState.getMaterial().isLiquid() || blockState.getBlock() instanceof BushBlock || blockState.is(Blocks.GLOW_LICHEN);
     }
 
     public static void fillColumnDown(WorldGenLevel worldGenLevel, BlockState blockState, BlockPos blockPos, BoundingBox chunkBoundingBox) {
