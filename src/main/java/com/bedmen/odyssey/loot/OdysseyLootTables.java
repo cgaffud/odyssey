@@ -15,4 +15,9 @@ public class OdysseyLootTables {
     public static final ResourceLocation BARN_BARREL = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/barn/barrel"));
     public static final ResourceLocation BARN_TREASURE = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/barn/treasure"));
 
+    // Coven Hut
+    public static final ResourceLocation COVEN_HUT_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/coven_hut/chest"));
+    public static final ResourceLocation COVEN_HUT_SECRET_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/coven_hut/secret_chest"));
+    public static final ResourceLocation COVEN_HUT_INGREDIENTS = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/coven_hut/ingredients"));
+    public static final ResourceLocation COVEN_HUT_TOMES = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/coven_hut/tomes"));
 }
