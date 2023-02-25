@@ -1,10 +1,10 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.world.gen.block_processor.BarnFloorProcessor;
-import com.bedmen.odyssey.world.gen.block_processor.CobwebProcessor;
-import com.bedmen.odyssey.world.gen.block_processor.CrackedBlockProcessor;
-import com.bedmen.odyssey.world.gen.block_processor.MossyBlockProcessor;
+import com.bedmen.odyssey.world.gen.processor.BarnFloorProcessor;
+import com.bedmen.odyssey.world.gen.processor.CobwebProcessor;
+import com.bedmen.odyssey.world.gen.processor.CrackedBlockProcessor;
+import com.bedmen.odyssey.world.gen.processor.MossyBlockProcessor;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;

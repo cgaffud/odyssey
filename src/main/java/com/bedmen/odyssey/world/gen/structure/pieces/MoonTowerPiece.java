@@ -7,13 +7,10 @@ import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.world.WorldGenUtil;
-import com.bedmen.odyssey.world.gen.block_processor.CrackedBlockProcessor;
+import com.bedmen.odyssey.world.gen.processor.CrackedBlockProcessor;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
@@ -140,11 +137,8 @@ public class MoonTowerPiece extends HeightAdjustingPiece {
                     MoonTowerEnemyType moonTowerEnemyType = pair.getSecond();
                     Mob dungeonMonster = moonTowerEnemyType.entityType.create(serverLevelAccessor.getLevel());
                     if(dungeonMonster != null){
-                        dungeonMonster.setPersistenceRequired();
-                        dungeonMonster.moveTo((double)blockPos.getX() + 0.5D, blockPos.getY(), (double)blockPos.getZ() + 0.5D, 0.0F, 0.0F);
-                        dungeonMonster.finalizeSpawn(serverLevelAccessor, serverLevelAccessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, null, null);
                         moonTowerEnemyType.equipper.accept(dungeonMonster, serverLevelAccessor.getRandom());
-                        serverLevelAccessor.addFreshEntityWithPassengers(dungeonMonster);
+                        WorldGenUtil.addEntityToStructure(dungeonMonster, blockPos, serverLevelAccessor);
                     }
                 }
             }

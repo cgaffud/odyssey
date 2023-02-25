@@ -3,7 +3,7 @@ package com.bedmen.odyssey.world.gen.structure.pieces;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.world.WorldGenUtil;
-import com.bedmen.odyssey.world.gen.block_processor.MossyBlockProcessor;
+import com.bedmen.odyssey.world.gen.processor.MossyBlockProcessor;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
