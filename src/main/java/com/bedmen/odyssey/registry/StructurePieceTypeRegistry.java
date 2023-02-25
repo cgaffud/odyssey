@@ -19,7 +19,6 @@ public class StructurePieceTypeRegistry {
 
     public static final RegistryObject<StructurePieceType> BASIC_RUINS = STRUCTURE_PIECE_TYPES.register("basic_ruins", () -> (StructurePieceType.StructureTemplateType)(BasicRuinsPiece::new));
     public static final RegistryObject<StructurePieceType> WEAVER_COLONY = STRUCTURE_PIECE_TYPES.register("weaver_colony", () -> (StructurePieceType.ContextlessType)(WeaverColonySpherePiece::new));
-    public static final RegistryObject<StructurePieceType> UNDERGROUND_RUIN = STRUCTURE_PIECE_TYPES.register("underground_ruin", () -> (StructurePieceType.StructureTemplateType)(UndergroundRuinPieces.UndergroundRuinPiece::new));
     public static final RegistryObject<StructurePieceType> MOON_TOWER = STRUCTURE_PIECE_TYPES.register("moon_tower", ()->(StructurePieceType.StructureTemplateType)(MoonTowerPiece::new));
     public static final RegistryObject<StructurePieceType> COVEN_HUT = STRUCTURE_PIECE_TYPES.register("coven_hut", () -> (StructurePieceType.StructureTemplateType)(CovenHutPiece::new));
 
