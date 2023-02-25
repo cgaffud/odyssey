@@ -26,19 +26,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 public class OdysseyAnvilMenu extends ItemCombinerMenu {
-    private static final Logger LOGGER = LogUtils.getLogger();
-    private static final boolean DEBUG_COST = false;
-    public static final int MAX_NAME_LENGTH = 50;
     public int repairItemCount;
     private String itemName;
     private final DataSlot cost = DataSlot.standalone();
-    private static final int COST_FAIL = 0;
-    private static final int COST_BASE = 1;
-    private static final int COST_ADDED_BASE = 1;
-    private static final int COST_REPAIR_MATERIAL = 1;
-    private static final int COST_REPAIR_SACRIFICE = 2;
-    private static final int COST_INCOMPATIBLE_PENALTY = 1;
-    private static final int COST_RENAME = 1;
 
     public OdysseyAnvilMenu(int id, Inventory inventory) {
         this(id, inventory, ContainerLevelAccess.NULL);
@@ -145,8 +135,8 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
                             resultDurabilityDamage = 0;
                         }
                         if (resultDurabilityDamage < resultStack.getDamageValue()) {
-                            int damageDifference = resultStack.getDamageValue() - resultDurabilityDamage;
-                            int numberOfRepairItemsWorth = Mth.ceil((double)damageDifference/(double)repairAmountPerRepairItem);
+                            int averageRepairAmount = resultRemainingDurability - (input0RemainingDurability + input1RemainingDurability)/2;
+                            int numberOfRepairItemsWorth = Mth.ceil((double)averageRepairAmount/(double)repairAmountPerRepairItem);
                             resultStack.setDamageValue(resultDurabilityDamage);
                             levelCost += numberOfRepairItemsWorth;
                         }
@@ -172,8 +162,14 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
                         }
                         if(AspectUtil.getModifiabilityRemaining(resultStack) >= additionalModifiability){
                             AspectUtil.replaceModifier(resultStack, input1Modifier);
-                            levelCost += additionalModifiability * MagicUtil.MODIFIABILITY_TO_LEVEL_COST_FACTOR;
                         }
+                    }
+                    float input0Modifiability = AspectUtil.getUsedModifiability(inputStack0);
+                    float input1Modifiability = AspectUtil.getUsedModifiability(inputStack1);
+                    float resultModifiability = AspectUtil.getUsedModifiability(resultStack);
+                    float averageModifiabilityIncrease = resultModifiability - (input0Modifiability + input1Modifiability)/2.0f;
+                    if(averageModifiabilityIncrease > 0.0f){
+                        levelCost += Mth.ceil(averageModifiabilityIncrease * MagicUtil.MODIFIABILITY_TO_LEVEL_COST_FACTOR);
                     }
                 }
             }
