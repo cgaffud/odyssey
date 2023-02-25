@@ -50,7 +50,7 @@ public class FeatureGen {
         PLACED_PATCH_TALL_GRASS = PlacementUtils.register("placed_patch_tall_grass", VegetationFeatures.PATCH_TALL_GRASS, NoiseThresholdCountPlacement.of(-0.8D, 5, 10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
         PLACED_PATCH_PRAIRIE_GRASS = PlacementUtils.register("placed_patch_prairie_grass", PATCH_PRAIRIE_GRASS, NoiseThresholdCountPlacement.of(-0.8D, 5, 10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
         PATCH_CLOVER = FeatureUtils.register("patch_clover", Feature.RANDOM_PATCH, grassPatch(BlockStateProvider.simple(BlockRegistry.CLOVER.get()), 1));
-        PLACED_PATCH_CLOVER = PlacementUtils.register("placed_patch_clover", PATCH_CLOVER, RarityFilter.onAverageOnceEvery(5), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
+        PLACED_PATCH_CLOVER = PlacementUtils.register("placed_patch_clover", PATCH_CLOVER, RarityFilter.onAverageOnceEvery(10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
 
 
         for(TreasureChestType treasureChestType : TreasureChestType.values()){

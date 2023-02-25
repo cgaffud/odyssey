@@ -92,12 +92,4 @@ public class CovenHutPiece extends HeightAdjustingPiece {
             }
         }
     }
-
-    protected void handleDataMarker(String dataMarker, BlockPos blockPos, ServerLevelAccessor serverLevelAccessor, Random random, BoundingBox chunkBoundingBox) {
-        // todo adjust chest loot
-        WorldGenUtil.fillChestBelowDataMarker("chest", dataMarker, serverLevelAccessor, blockPos, random, this.placeSettings, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
-        WorldGenUtil.fillChestBelowDataMarker("secret_chest", dataMarker, serverLevelAccessor, blockPos, random, this.placeSettings, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
-        WorldGenUtil.fillChestBelowDataMarker("ingredients", dataMarker, serverLevelAccessor, blockPos, random, this.placeSettings, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
-        WorldGenUtil.fillChestBelowDataMarker("tomes", dataMarker, serverLevelAccessor, blockPos, random, this.placeSettings, OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST);
-    }
 }

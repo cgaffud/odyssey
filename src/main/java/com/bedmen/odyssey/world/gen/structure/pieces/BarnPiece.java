@@ -98,9 +98,6 @@ public class BarnPiece extends HeightAdjustingPiece {
         }
     }
 
-    protected void handleDataMarker(String dataMarker, BlockPos blockPos, ServerLevelAccessor serverLevelAccessor, Random random, BoundingBox boundingBox) {
-    }
-
     protected boolean updateHeightPosition(LevelAccessor levelAccessor) {
         if (this.hasCalculatedHeightPosition) {
             return true;
