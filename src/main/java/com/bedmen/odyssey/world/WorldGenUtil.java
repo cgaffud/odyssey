@@ -22,6 +22,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class WorldGenUtil {
 
@@ -42,40 +43,38 @@ public class WorldGenUtil {
         return blockState.isAir() || blockState.getMaterial().isLiquid() || blockState.getBlock() instanceof BushBlock || blockState.is(Blocks.GLOW_LICHEN);
     }
 
-    public static void fillColumnDown(WorldGenLevel worldGenLevel, BlockState blockState, BlockPos blockPos, BoundingBox chunkBoundingBox) {
+    public static void fillColumnDownOnAllPosts(WorldGenLevel worldGenLevel, BlockState blockState, List<Pair<Integer, Integer>> relativePostList, BoundingBox chunkBoundingBox, BlockPos templateBlockPos, StructurePlaceSettings structurePlaceSettings){
+        fillColumnDownOnAllPosts(worldGenLevel, new BlockState[]{blockState}, relativePostList, chunkBoundingBox, templateBlockPos, structurePlaceSettings);
+    }
+
+    public static void fillColumnDownOnAllPosts(WorldGenLevel worldGenLevel, BlockState[] blockStateArray, List<Pair<Integer, Integer>> relativePostList, BoundingBox chunkBoundingBox, BlockPos templateBlockPos, StructurePlaceSettings structurePlaceSettings){
+        List<BlockPos> relativePostBlockPosList = relativePostList.stream().map(pair -> new BlockPos(pair.getFirst(), -1, pair.getSecond())).collect(Collectors.toList());
+        fillColumnDownOnAllPostBlockPos(worldGenLevel, blockStateArray, relativePostBlockPosList, chunkBoundingBox, templateBlockPos, structurePlaceSettings);
+    }
+
+    public static void fillColumnDownOnAllPostBlockPos(WorldGenLevel worldGenLevel, BlockState[] blockStateArray, List<BlockPos> relativePostBlockPosList, BoundingBox chunkBoundingBox, BlockPos templateBlockPos, StructurePlaceSettings structurePlaceSettings){
+        for(BlockPos relativePostBlockPos : relativePostBlockPosList) {
+            BlockPos postPos = getWorldPosition(relativePostBlockPos, templateBlockPos, structurePlaceSettings);
+            fillColumnDown(worldGenLevel, blockStateArray, postPos, chunkBoundingBox);
+        }
+    }
+
+    public static void fillColumnDown(WorldGenLevel worldGenLevel, BlockState[] blockStateArray, BlockPos blockPos, BoundingBox chunkBoundingBox) {
         BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
         if (chunkBoundingBox.isInside(mutableBlockPos)) {
             while(isReplaceableByStructures(worldGenLevel.getBlockState(mutableBlockPos)) && mutableBlockPos.getY() > worldGenLevel.getMinBuildHeight() + 1) {
-                worldGenLevel.setBlock(mutableBlockPos, blockState, 2);
+                worldGenLevel.setBlock(mutableBlockPos, blockStateArray[worldGenLevel.getRandom().nextInt(blockStateArray.length)], 2);
                 mutableBlockPos.move(Direction.DOWN);
             }
         }
     }
 
-    public static void fillColumnDownOnAllPosts(WorldGenLevel worldGenLevel, BlockState blockState, List<Pair<Integer, Integer>> relativePosts, BoundingBox chunkBoundingBox, BlockPos templateBlockPos, StructurePlaceSettings structurePlaceSettings){
-        for(Pair<Integer,Integer> pair : relativePosts) {
-            BlockPos postPos = templateBlockPos.offset(new BlockPos(pair.getFirst(), -1, pair.getSecond()).rotate(structurePlaceSettings.getRotation()));
-            fillColumnDown(worldGenLevel, blockState, postPos, chunkBoundingBox);
-        }
+    public static void fillColumnDown(WorldGenLevel worldGenLevel, BlockState blockState, BlockPos blockPos, BoundingBox chunkBoundingBox) {
+        fillColumnDown(worldGenLevel, new BlockState[]{blockState}, blockPos, chunkBoundingBox);
     }
 
-    public static void fillChestBelowDataMarker(String dataKey, String dataMarker, ServerLevelAccessor serverLevelAccessor, BlockPos blockPos, Random random, StructurePlaceSettings structurePlaceSettings, ResourceLocation lootTable){
-        if (dataKey.startsWith(dataMarker)) {
-            int colonIndex = dataKey.indexOf(":");
-            Direction direction = Direction.DOWN;
-            if(colonIndex > -1){
-                String directionName = dataMarker.substring(colonIndex+1);
-                direction = Direction.valueOf(directionName);
-            }
-            System.out.println(direction);
-            BlockPos directionBlockPos = new BlockPos(direction.getNormal()).rotate(structurePlaceSettings.getRotation());
-            BlockPos containerBlockPos = blockPos.offset(directionBlockPos);
-            serverLevelAccessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
-            BlockEntity blockentity = serverLevelAccessor.getBlockEntity(containerBlockPos);
-            if (blockentity instanceof RandomizableContainerBlockEntity) {
-                System.out.println("Found container");
-                ((RandomizableContainerBlockEntity)blockentity).setLootTable(lootTable, random.nextLong());
-            }
-        }
+    public static BlockPos getWorldPosition(BlockPos blockPos, BlockPos templateBlockPos, StructurePlaceSettings structurePlaceSettings){
+        return templateBlockPos.offset(blockPos.rotate(structurePlaceSettings.getRotation()));
     }
+
 }

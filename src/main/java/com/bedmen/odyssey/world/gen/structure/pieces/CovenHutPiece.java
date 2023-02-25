@@ -1,28 +1,20 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.world.WorldGenUtil;
 import com.bedmen.odyssey.world.gen.block_processor.MossyBlockProcessor;
-import com.bedmen.odyssey.world.gen.structure.CovenHutFeature;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
-import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
@@ -59,7 +51,7 @@ public class CovenHutPiece extends HeightAdjustingPiece {
     }
 
     private static StructurePlaceSettings makeSettings() {
-        return (new StructurePlaceSettings()).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(MossyBlockProcessor.INSTANCE);
+        return (new StructurePlaceSettings()).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(new MossyBlockProcessor(0.5f));
     }
 
     protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
@@ -85,8 +77,8 @@ public class CovenHutPiece extends HeightAdjustingPiece {
             if (!heightHasBeenSet) {
                 return false;
             } else {
-                this.boundingBox.move(0, height - this.boundingBox.minY(), 0);
-                this.templatePosition = this.templatePosition.atY(this.boundingBox.minY());
+                int heightChange = height - this.boundingBox.minY();
+                this.move(0, heightChange, 0);
                 this.hasCalculatedHeightPosition = true;
                 return true;
             }
