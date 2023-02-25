@@ -54,7 +54,6 @@ public class BarnPiece extends HeightAdjustingPiece {
         if(compoundTag.contains(ID_LIST_TAG)){
             for(Tag tag: compoundTag.getList(ID_LIST_TAG, Tag.TAG_INT)){
                 int id = ((IntTag)tag).getAsInt();
-                System.out.println(id);
                 this.childPieces.add(new BarnSpawnerPiece(structureManager, this.templatePosition, this.placeSettings.getRotation(), id));
             }
         }

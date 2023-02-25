@@ -17,6 +17,7 @@ public class StructureFeatureRegistry {
         STRUCTURE_FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
+    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> BASIC_RUINS = STRUCTURE_FEATURES.register("basic_ruins", () -> new BasicRuinsFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> WEAVER_COLONY = STRUCTURE_FEATURES.register("weaver_colony", () -> new WeaverColonyFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> UNDERGROUND_RUIN = STRUCTURE_FEATURES.register("underground_ruin", () -> new UndergroundRuinFeature(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> BARN = STRUCTURE_FEATURES.register("barn", () -> new BarnFeature(NoneFeatureConfiguration.CODEC));
