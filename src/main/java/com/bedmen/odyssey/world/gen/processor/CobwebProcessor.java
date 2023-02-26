@@ -36,7 +36,7 @@ public class CobwebProcessor extends StructureProcessor {
     }
 
     protected StructureProcessorType<?> getType() {
-        return StructureProcessorRegistry.MOSSY.get();
+        return StructureProcessorRegistry.COBWEB.get();
     }
 
 }

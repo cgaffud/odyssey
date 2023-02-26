@@ -1,10 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.world.gen.processor.BarnFloorProcessor;
-import com.bedmen.odyssey.world.gen.processor.CobwebProcessor;
-import com.bedmen.odyssey.world.gen.processor.CrackedBlockProcessor;
-import com.bedmen.odyssey.world.gen.processor.MossyBlockProcessor;
+import com.bedmen.odyssey.world.gen.processor.*;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -23,4 +20,5 @@ public class StructureProcessorRegistry {
     public static final RegistryObject<StructureProcessorType<CrackedBlockProcessor>> CRACKED = STRUCTURE_PROCESSOR.register("cracked", () -> (StructureProcessorType<CrackedBlockProcessor>) () -> CrackedBlockProcessor.CODEC);
     public static final RegistryObject<StructureProcessorType<BarnFloorProcessor>> BARN_FLOOR = STRUCTURE_PROCESSOR.register("barn_floor", () -> (StructureProcessorType<BarnFloorProcessor>) () -> BarnFloorProcessor.CODEC);
     public static final RegistryObject<StructureProcessorType<CobwebProcessor>> COBWEB = STRUCTURE_PROCESSOR.register("cobweb", () -> (StructureProcessorType<CobwebProcessor>) () -> CobwebProcessor.CODEC);
+    public static final RegistryObject<StructureProcessorType<WoodProcessor>> WOOD = STRUCTURE_PROCESSOR.register("wood", () -> (StructureProcessorType<WoodProcessor>) () -> WoodProcessor.CODEC);
 }

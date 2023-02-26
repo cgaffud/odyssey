@@ -48,6 +48,6 @@ public class CrackedBlockProcessor extends StructureProcessor {
     }
 
     protected StructureProcessorType<?> getType() {
-        return StructureProcessorRegistry.MOSSY.get();
+        return StructureProcessorRegistry.CRACKED.get();
     }
 }

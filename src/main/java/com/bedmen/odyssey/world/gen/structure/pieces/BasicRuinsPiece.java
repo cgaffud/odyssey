@@ -2,7 +2,9 @@ package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
-import com.bedmen.odyssey.world.gen.processor.BarnFloorProcessor;
+import com.bedmen.odyssey.world.gen.processor.CrackedBlockProcessor;
+import com.bedmen.odyssey.world.gen.processor.MossyBlockProcessor;
+import com.bedmen.odyssey.world.gen.processor.WoodProcessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -42,7 +44,7 @@ public class BasicRuinsPiece extends HeightAdjustingPiece {
     }
 
     private static StructurePlaceSettings makeSettings() {
-        return (new StructurePlaceSettings()).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(BarnFloorProcessor.INSTANCE);
+        return (new StructurePlaceSettings()).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(new MossyBlockProcessor(0.33f)).addProcessor(new CrackedBlockProcessor(0.5f)).addProcessor(new WoodProcessor());
     }
 
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag compoundTag) {

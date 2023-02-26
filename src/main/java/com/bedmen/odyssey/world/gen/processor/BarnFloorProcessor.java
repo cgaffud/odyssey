@@ -41,7 +41,7 @@ public class BarnFloorProcessor extends StructureProcessor {
     }
 
     protected StructureProcessorType<?> getType() {
-        return StructureProcessorRegistry.MOSSY.get();
+        return StructureProcessorRegistry.BARN_FLOOR.get();
     }
 
 }
