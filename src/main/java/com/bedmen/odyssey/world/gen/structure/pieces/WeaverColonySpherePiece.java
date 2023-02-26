@@ -82,9 +82,10 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
         }
 
         // Make a tunnel from the colony to the surface
-        Optional<BlockPos> endOfTunnelPos = this.makeTunnel(worldGenLevel, center.above(Mth.ceil(outerRadius)), random, chunkBoundingBox);
-
-        this.spawnWeavers(worldGenLevel, center.below(2), endOfTunnelPos, chunkBoundingBox);
+        if(chunkBoundingBox.isInside(center)){
+            Optional<BlockPos> endOfTunnelPos = this.makeTunnel(worldGenLevel, center.above(Mth.ceil(outerRadius)), random, chunkBoundingBox);
+            this.spawnWeavers(worldGenLevel, center.below(2), endOfTunnelPos, chunkBoundingBox);
+        }
     }
 
     private Optional<BlockPos> makeTunnel(WorldGenLevel worldGenLevel, BlockPos startingPos, Random random, BoundingBox chunkBoundingBox){
@@ -97,6 +98,7 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
                     BlockPos newBlockPos;
                     do{
                         newBlockPos = mutableBlockPos.relative(getRandomHorizontalDirection(random));
+                        System.out.println("hanging: "+chunkBoundingBox+" "+newBlockPos);
                     } while(!chunkBoundingBox.isInside(newBlockPos));
                     mutableBlockPos = newBlockPos.mutable();
                 }
