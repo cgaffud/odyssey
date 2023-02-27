@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.effect;
 
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
@@ -25,21 +26,40 @@ public class OdysseyEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity livingEntity, int amplifier) {
-        if ((this == EffectRegistry.BLEEDING.get()) && (livingEntity.tickCount % (100 / (amplifier+3)) == 0)) {
+        if ((this == EffectRegistry.BLEEDING.get())) {
             livingEntity.hurt(DamageSource.MAGIC, 1.0F);
-        } else if (this == EffectRegistry.HEXFLAME.get()){
+        } else if (this instanceof FireEffect){
             livingEntity.clearFire();
-            if (livingEntity.tickCount % (120 / (amplifier+3)) == 0)
+            if(this == EffectRegistry.HEXFLAME.get()){
                 livingEntity.hurt(DamageSource.ON_FIRE, 1.0F);
+            }
+        } else if(this == EffectRegistry.FREEZING.get()){
+            TemperatureSource.getEffectTemperatureSource(false, amplifier).tick(livingEntity);
+        } else if (this == EffectRegistry.SEARING.get()){
+            TemperatureSource.getEffectTemperatureSource(true, amplifier).tick(livingEntity);
         } else {
             super.applyEffectTick(livingEntity, amplifier);
         }
-
     }
 
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
-        if ((this == EffectRegistry.BLEEDING.get()) || this instanceof FireEffect) {
+        if(this == EffectRegistry.BLEEDING.get()){
+            int tickRate = 100 / (amplifier+3);
+            if(tickRate > 1){
+                return duration % tickRate == 0;
+            } else {
+                return true;
+            }
+            // TODO soulflame
+        } else if(this == EffectRegistry.HEXFLAME.get()){
+            int tickRate = 120 / (amplifier+3);
+            if(tickRate > 1){
+                return duration % tickRate == 0;
+            } else {
+                return true;
+            }
+        } else if(this == EffectRegistry.FREEZING.get() || this == EffectRegistry.SEARING.get()){
             return true;
         }
         return super.isDurationEffectTick(duration, amplifier);

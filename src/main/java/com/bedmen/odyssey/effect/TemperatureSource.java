@@ -6,8 +6,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
-public enum TemperatureSource {
-    POWDERED_SNOW(false, 1f/160f, 0.5f);
+public class TemperatureSource {
+    public static final TemperatureSource POWDERED_SNOW = new TemperatureSource(false, 1f/160f, 0.5f);
 
     public static final float TEMPERATURE_PER_DAMAGE = 0.25f;
 
@@ -15,7 +15,7 @@ public enum TemperatureSource {
     public final float temperaturePerTick;
     public final float protectionForImmunity;
 
-    TemperatureSource(boolean isHot, float temperaturePerTick, float protectionForImmunity){
+    public TemperatureSource(boolean isHot, float temperaturePerTick, float protectionForImmunity){
         this.isHot = isHot;
         this.temperaturePerTick = temperaturePerTick;
         this.protectionForImmunity = protectionForImmunity;
@@ -56,6 +56,10 @@ public enum TemperatureSource {
         float newAbsoluteTemperature = Mth.clamp(Mth.abs(temperature) - amount, 0.0f, 1.0f);
         float newTemperature = newAbsoluteTemperature * getHotFactor(isHot);
         odysseyLivingEntity.setTemperature(newTemperature);
+    }
+
+    public static TemperatureSource getEffectTemperatureSource(boolean isHot, int amplifier){
+        return new TemperatureSource(isHot, 1/160f * (float)(1 << amplifier), 4f * (amplifier + 1));
     }
 
 }
