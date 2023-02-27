@@ -78,7 +78,6 @@ public class Aspects {
     public static final DamageSourcePredicateAspect BLAST_PROTECTION = new DamageSourcePredicateAspect("blast_protection", 2.0f, AspectItemPredicates.ARMOR, DamageSource::isExplosion);
     public static final FloatAspect RESPIRATION = new FloatAspect("respiration", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.UPPER_ARMOR);
     public static final BooleanAspect SNOWSHOE = new BooleanAspect("snowshoe", AspectItemPredicates.BOOTS);
-    public static final IntegerAspect FREEZE_IMMUNITY = new IntegerAspect("freeze_immunity", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR, false);
     public static final FloatAspect THORNS = new FloatAspect("thorns", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR);
 
     // # Shields
