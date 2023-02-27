@@ -2,6 +2,7 @@ package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
+import com.bedmen.odyssey.world.gen.processor.VineProcessor;
 import com.bedmen.odyssey.world.gen.processor.CrackedBlockProcessor;
 import com.bedmen.odyssey.world.gen.processor.MossyBlockProcessor;
 import com.bedmen.odyssey.world.gen.processor.WoodProcessor;
@@ -44,7 +45,7 @@ public class BasicRuinsPiece extends HeightAdjustingPiece {
     }
 
     private static StructurePlaceSettings makeSettings() {
-        return (new StructurePlaceSettings()).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(new MossyBlockProcessor(0.33f)).addProcessor(new CrackedBlockProcessor(0.5f)).addProcessor(new WoodProcessor());
+        return (new StructurePlaceSettings()).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(new MossyBlockProcessor(0.33f)).addProcessor(new CrackedBlockProcessor(0.5f)).addProcessor(new WoodProcessor()).addProcessor(new VineProcessor(0.1f));
     }
 
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag compoundTag) {

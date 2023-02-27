@@ -21,4 +21,5 @@ public class StructureProcessorRegistry {
     public static final RegistryObject<StructureProcessorType<BarnFloorProcessor>> BARN_FLOOR = STRUCTURE_PROCESSOR.register("barn_floor", () -> (StructureProcessorType<BarnFloorProcessor>) () -> BarnFloorProcessor.CODEC);
     public static final RegistryObject<StructureProcessorType<CobwebProcessor>> COBWEB = STRUCTURE_PROCESSOR.register("cobweb", () -> (StructureProcessorType<CobwebProcessor>) () -> CobwebProcessor.CODEC);
     public static final RegistryObject<StructureProcessorType<WoodProcessor>> WOOD = STRUCTURE_PROCESSOR.register("wood", () -> (StructureProcessorType<WoodProcessor>) () -> WoodProcessor.CODEC);
+    public static final RegistryObject<StructureProcessorType<VineProcessor>> VINE = STRUCTURE_PROCESSOR.register("vine", () -> (StructureProcessorType<VineProcessor>) () -> VineProcessor.CODEC);
 }
