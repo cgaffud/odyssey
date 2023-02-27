@@ -11,6 +11,7 @@ import com.bedmen.odyssey.client.renderer.blockentity.*;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.combat.SpearType;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
@@ -72,11 +73,22 @@ public class ClientEvents {
                 }
             });
 
-            //For hollow coconut vision overlay
+            //For flight icon overlay
             OverlayRegistry.registerOverlayAbove(ForgeIngameGui.AIR_LEVEL_ELEMENT,"Odyssey Flight", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
                 if(gui instanceof OdysseyIngameGui odysseyIngameGui && !odysseyIngameGui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()){
                     gui.setupOverlayRenderState(true, false, OdysseyIngameGui.ODYSSEY_GUI_ICONS_LOCATION);
                     odysseyIngameGui.renderFlight(screenWidth, screenHeight, mStack);
+                }
+            });
+
+            //For Searing heat overlay
+            OverlayRegistry.registerOverlayAbove(ForgeIngameGui.PORTAL_ELEMENT,"Odyssey Searing", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+                if(gui instanceof OdysseyIngameGui odysseyIngameGui && Minecraft.getInstance().player instanceof OdysseyLivingEntity odysseyLivingEntity){
+                    float temperature = odysseyLivingEntity.getTemperature();
+                    if(temperature > 0){
+                        gui.setupOverlayRenderState(true, false);
+                        odysseyIngameGui.renderSearingOverlay(temperature);
+                    }
                 }
             });
 

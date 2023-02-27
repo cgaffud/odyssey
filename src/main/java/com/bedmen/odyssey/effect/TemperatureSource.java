@@ -53,7 +53,7 @@ public class TemperatureSource {
     public static void reduceTemperature(OdysseyLivingEntity odysseyLivingEntity, float amount){
         float temperature = odysseyLivingEntity.getTemperature();
         boolean isHot = temperature > 0f;
-        float newAbsoluteTemperature = Mth.clamp(Mth.abs(temperature) - amount, 0.0f, 1.0f);
+        float newAbsoluteTemperature = Float.max(0.0f, Mth.abs(temperature) - amount);
         float newTemperature = newAbsoluteTemperature * getHotFactor(isHot);
         odysseyLivingEntity.setTemperature(newTemperature);
     }
