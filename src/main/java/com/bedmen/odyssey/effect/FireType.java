@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.potions;
+package com.bedmen.odyssey.effect;
 
 import com.bedmen.odyssey.Odyssey;
 import net.minecraft.client.renderer.texture.TextureAtlas;

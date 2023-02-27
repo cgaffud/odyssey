@@ -6,7 +6,7 @@ import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
-import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;

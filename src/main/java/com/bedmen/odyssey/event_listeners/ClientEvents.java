@@ -16,7 +16,7 @@ import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.particle.ThrustParticle;
-import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.google.common.collect.ImmutableMap;

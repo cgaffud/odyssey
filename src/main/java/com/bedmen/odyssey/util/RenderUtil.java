@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.effect.FireType;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;

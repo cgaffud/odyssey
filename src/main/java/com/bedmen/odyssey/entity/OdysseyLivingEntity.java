@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.entity;
 
 import com.bedmen.odyssey.combat.SmackPush;
-import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.effect.FireType;
 
 import java.util.Optional;
 
@@ -19,4 +19,8 @@ public interface OdysseyLivingEntity {
     Optional<Integer> getTrueHurtTime();
     FireType getFireType();
     void setFireType(FireType fireType);
+    float getTemperature();
+    void setTemperature(float temperature);
+    boolean getTemperatureAffected();
+    void setTemperatureAffected(boolean temperatureAffected);
 }

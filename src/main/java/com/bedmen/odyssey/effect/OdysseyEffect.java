@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.potions;
+package com.bedmen.odyssey.effect;
 
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -10,10 +10,8 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.client.EffectRenderer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OdysseyEffect extends MobEffect {

@@ -1,6 +1,5 @@
-package com.bedmen.odyssey.potions;
+package com.bedmen.odyssey.effect;
 
-import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;

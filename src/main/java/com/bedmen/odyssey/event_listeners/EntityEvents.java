@@ -6,6 +6,7 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.boss.coven.CovenRootEntity;
 import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
@@ -19,8 +20,8 @@ import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
-import com.bedmen.odyssey.potions.FireEffect;
-import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.effect.FireEffect;
+import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -31,6 +32,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -103,9 +105,39 @@ public class EntityEvents {
             FrostWalkerEnchantment.onEntityMoved(livingEntity, livingEntity.level, blockPos, 1);
         }
 
-        // Set Fire Type
-        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity && !livingEntity.level.isClientSide){
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity && !livingEntity.level.isClientSide && !livingEntity.isDeadOrDying()){
+            // Set Fire Type
             odysseyLivingEntity.setFireType(FireType.getStrongestFireEffectType(livingEntity));
+
+            // Temperature Sources
+            if(livingEntity.isInPowderSnow){
+                TemperatureSource.POWDERED_SNOW.tick(livingEntity);
+            }
+
+            // If no temperature changes, move toward normal
+            if(!odysseyLivingEntity.getTemperatureAffected()){
+                TemperatureSource.reduceTemperature(odysseyLivingEntity, 1f/80f);
+            } else {
+                odysseyLivingEntity.setTemperatureAffected(false);
+            }
+
+            // Temperature Damage
+            if(livingEntity.tickCount % 10 == 0){
+                int damageCount = 0;
+                while(Mth.abs(odysseyLivingEntity.getTemperature()) >= 1.0f + TemperatureSource.TEMPERATURE_PER_DAMAGE){
+                    TemperatureSource.reduceTemperature(odysseyLivingEntity, TemperatureSource.TEMPERATURE_PER_DAMAGE);
+                    damageCount++;
+                }
+                if(damageCount > 0){
+                    livingEntity.hurt(TemperatureSource.damageSource(odysseyLivingEntity.getTemperature() > 0f), damageCount);
+                }
+
+            }
+
+            // Set ticks frozen since it's needed for other logic
+            if(odysseyLivingEntity.getTemperature() < 0){
+                livingEntity.setTicksFrozen(100);
+            }
         }
     }
 

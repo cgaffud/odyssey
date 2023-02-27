@@ -5,7 +5,7 @@ import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
-import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.effect.FireType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.FriendlyByteBuf;

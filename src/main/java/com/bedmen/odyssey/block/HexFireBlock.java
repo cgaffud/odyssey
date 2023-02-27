@@ -1,13 +1,10 @@
 package com.bedmen.odyssey.block;
 
-import com.bedmen.odyssey.potions.FireEffect;
+import com.bedmen.odyssey.effect.FireEffect;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;

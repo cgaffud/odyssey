@@ -6,7 +6,7 @@ import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
-import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.RenderUtil;
 import com.google.common.base.Objects;
@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -30,6 +31,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -49,6 +53,7 @@ import java.util.Optional;
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements OdysseyLivingEntity {
     private static final EntityDataAccessor<FireType> DATA_FIRE_TYPE = SynchedEntityData.defineId(LivingEntity.class, OdysseyDataSerializers.FIRE_TYPE);
+    private static final EntityDataAccessor<Float> DATA_TEMPERATURE = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
     private static final String FLIGHT_VALUE_TAG = "FlightValue";
     private static final String GLIDING_LEVEL_TAG = "GlidingLevel";
     private static final String SLOW_FALL_TAG = "HasSlowFall";
@@ -58,6 +63,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private SmackPush smackPush = new SmackPush();
     private final List<Float> knockbackQueue = new ArrayList<>();
     private Optional<Integer> trueHurtTime = Optional.empty();
+    private boolean temperatureAffected = false;
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -98,6 +104,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
     public void onDefineSynchedData(CallbackInfo ci) {
         this.entityData.define(DATA_FIRE_TYPE, FireType.NONE);
+        this.entityData.define(DATA_TEMPERATURE, 0.0f);
     }
 
     public void baseTick() {
@@ -323,17 +330,47 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     }
 
     public boolean canFreeze() {
-        if (this.isSpectator()) {
-            return false;
-        } else {
-            LivingEntity livingEntity = this.getLivingEntity();
-            boolean itemTagNotFreezeImmune = !livingEntity.getItemBySlot(EquipmentSlot.HEAD).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
-                    && !livingEntity.getItemBySlot(EquipmentSlot.CHEST).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
-                    && !livingEntity.getItemBySlot(EquipmentSlot.LEGS).is(ItemTags.FREEZE_IMMUNE_WEARABLES)
-                    && !livingEntity.getItemBySlot(EquipmentSlot.FEET).is(ItemTags.FREEZE_IMMUNE_WEARABLES);
-            boolean modifierNotFreezeImmune = AspectUtil.getIntegerAspectValueFromArmor(livingEntity, Aspects.FREEZE_IMMUNITY) <= 0;
-            return itemTagNotFreezeImmune && modifierNotFreezeImmune && super.canFreeze();
+        return false;
+    }
+
+    public boolean isFreezing() {
+        return this.getTemperature() < 0.0f;
+    }
+
+    public float getPercentFrozen() {
+        return Mth.clamp(-this.getTemperature(), 0.0f, 1.0f);
+    }
+
+    public boolean isFullyFrozen() {
+        return this.getTemperature() <= -1.0f;
+    }
+
+    protected void tryAddFrost() {
+        if (!this.getBlockStateOn().isAir() && this.isFreezing()) {
+            AttributeInstance attributeinstance = this.getLivingEntity().getAttribute(Attributes.MOVEMENT_SPEED);
+            if (attributeinstance == null) {
+                return;
+            }
+            float slowAmount = -0.05F * this.getPercentFrozen();
+            attributeinstance.addTransientModifier(new AttributeModifier(LivingEntity.SPEED_MODIFIER_POWDER_SNOW_UUID, "Powder snow slow", (double)slowAmount, AttributeModifier.Operation.ADDITION));
         }
+
+    }
+
+    public float getTemperature(){
+        return this.entityData.get(DATA_TEMPERATURE);
+    }
+
+    public void setTemperature(float temperature){
+        this.entityData.set(DATA_TEMPERATURE, temperature);
+    }
+
+    public boolean getTemperatureAffected(){
+        return this.temperatureAffected;
+    }
+
+    public void setTemperatureAffected(boolean temperatureAffected){
+        this.temperatureAffected = temperatureAffected;
     }
 
     public boolean displayFireAnimation() {
