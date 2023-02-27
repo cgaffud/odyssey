@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.world.gen.structure;
 
-import com.bedmen.odyssey.world.gen.structure.pieces.UndergroundRuinPieces;
+import com.bedmen.odyssey.world.gen.structure.pieces.BasicRuinsPiece;
+import com.bedmen.odyssey.world.gen.structure.pieces.CovenHutPiece;
+import com.bedmen.odyssey.world.gen.structure.pieces.MoonTowerPiece;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Rotation;
@@ -12,23 +14,23 @@ import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
-public class UndergroundRuinFeature extends StructureFeature<NoneFeatureConfiguration> {
+import java.util.Random;
 
-    public UndergroundRuinFeature(Codec<NoneFeatureConfiguration> codec) {
-        super(codec, PieceGeneratorSupplier.simple(PieceGeneratorSupplier.checkForBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG), UndergroundRuinFeature::generatePieces));
+public class BasicRuinsFeature extends StructureFeature<NoneFeatureConfiguration> {
+
+    public BasicRuinsFeature(Codec<NoneFeatureConfiguration> codec) {
+        super(codec, PieceGeneratorSupplier.simple(PieceGeneratorSupplier.checkForBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG), BasicRuinsFeature::generatePieces));
     }
 
     public GenerationStep.Decoration step() {
-        return GenerationStep.Decoration.UNDERGROUND_DECORATION;
+        return GenerationStep.Decoration.SURFACE_STRUCTURES;
     }
 
     private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {
         BlockPos blockpos = new BlockPos(context.chunkPos().getMinBlockX(), 90, context.chunkPos().getMinBlockZ());
-        Rotation rotation = Rotation.getRandom(context.random());
-        UndergroundRuinPieces.addPiece(context.structureManager(), blockpos, rotation, structurePiecesBuilder, context.random());
+        Random random = context.random();
+        Rotation rotation = Rotation.getRandom(random);
+        BasicRuinsPiece basicRuinsPiece = new BasicRuinsPiece(context.structureManager(), blockpos, rotation, random.nextInt(BasicRuinsPiece.STRUCTURE_LOCATIONS.length));
+        structurePiecesBuilder.addPiece(basicRuinsPiece);
     }
-
-
-
-
 }

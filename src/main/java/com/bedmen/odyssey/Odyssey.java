@@ -24,6 +24,7 @@ import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OdysseyGeneration;
 import com.bedmen.odyssey.world.gen.OreGen;
 import com.bedmen.odyssey.world.gen.TreeGen;
+import com.bedmen.odyssey.world.gen.processor.WoodProcessor;
 import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -98,6 +99,7 @@ public class Odyssey
             FeatureGen.registerFeatures();
             TreeGen.registerTrees();
             NoiseGeneratorSettings.register(WorldTypeRegistry.ODYSSEY_RESOURCE_KEY, OdysseyGeneration.odysseyOverworld(false, false));
+            WoodProcessor.init();
 
             //Spawning
             OdysseyBiomeEntitySpawn.registerSpawners();

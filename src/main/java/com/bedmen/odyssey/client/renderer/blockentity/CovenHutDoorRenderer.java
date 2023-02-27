@@ -38,32 +38,28 @@ public class CovenHutDoorRenderer implements BlockEntityRenderer<CovenHutDoorBlo
                 float u1 = sprite.getU1();
                 float v1 = sprite.getV1();
                 PoseStack.Pose posestack$pose = poseStack.last();
-                switch (direction){
-                    case WEST -> {
-                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 0, u1, v1);
-                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 1, u0, v1);
-                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 1, u0, v0);
-                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 0, u1, v0);
-                    }
-                    case EAST -> {
-                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 1, u1, v1);
-                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 0, u0, v1);
-                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 0, u0, v0);
-                        fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 1, u1, v0);
-                    }
-                    case NORTH -> {
-                        fireVertex(posestack$pose, vertexconsumer, 1, 0, 0.5f, u1, v1);
-                        fireVertex(posestack$pose, vertexconsumer, 0, 0, 0.5f, u0, v1);
-                        fireVertex(posestack$pose, vertexconsumer, 0, 2, 0.5f, u0, v0);
-                        fireVertex(posestack$pose, vertexconsumer, 1, 2, 0.5f, u1, v0);
-                    }
-                    case SOUTH -> {
-                        fireVertex(posestack$pose, vertexconsumer, 0, 0, 0.5f, u1, v1);
-                        fireVertex(posestack$pose, vertexconsumer, 1, 0, 0.5f, u0, v1);
-                        fireVertex(posestack$pose, vertexconsumer, 1, 2, 0.5f, u0, v0);
-                        fireVertex(posestack$pose, vertexconsumer, 0, 2, 0.5f, u1, v0);
-                    }
-
+                if(direction.getAxis() == Direction.Axis.X){
+                    // West
+                    fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 0, u1, v1);
+                    fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 1, u0, v1);
+                    fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 1, u0, v0);
+                    fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 0, u1, v0);
+                    // East
+                    fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 1, u1, v1);
+                    fireVertex(posestack$pose, vertexconsumer, 0.5f, 0, 0, u0, v1);
+                    fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 0, u0, v0);
+                    fireVertex(posestack$pose, vertexconsumer, 0.5f, 2, 1, u1, v0);
+                } else {
+                    // North
+                    fireVertex(posestack$pose, vertexconsumer, 1, 0, 0.5f, u1, v1);
+                    fireVertex(posestack$pose, vertexconsumer, 0, 0, 0.5f, u0, v1);
+                    fireVertex(posestack$pose, vertexconsumer, 0, 2, 0.5f, u0, v0);
+                    fireVertex(posestack$pose, vertexconsumer, 1, 2, 0.5f, u1, v0);
+                    // South
+                    fireVertex(posestack$pose, vertexconsumer, 0, 0, 0.5f, u1, v1);
+                    fireVertex(posestack$pose, vertexconsumer, 1, 0, 0.5f, u0, v1);
+                    fireVertex(posestack$pose, vertexconsumer, 1, 2, 0.5f, u0, v0);
+                    fireVertex(posestack$pose, vertexconsumer, 0, 2, 0.5f, u1, v0);
                 }
                 poseStack.popPose();
             }

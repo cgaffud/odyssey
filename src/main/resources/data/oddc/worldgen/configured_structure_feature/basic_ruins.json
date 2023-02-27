@@ -1,7 +1,7 @@
 {
-  "type": "oddc:clover_stone_sanctuary",
+  "type": "oddc:basic_ruins",
 
-  "biomes": "#oddc:has_structure/clover_stone_sanctuary",
+  "biomes": "#oddc:has_structure/basic_ruins",
 
   "config": {
   },

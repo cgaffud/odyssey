@@ -16,10 +16,13 @@ public class StructurePieceTypeRegistry {
         STRUCTURE_PIECE_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
+
+    public static final RegistryObject<StructurePieceType> BASIC_RUINS = STRUCTURE_PIECE_TYPES.register("basic_ruins", () -> (StructurePieceType.StructureTemplateType)(BasicRuinsPiece::new));
     public static final RegistryObject<StructurePieceType> WEAVER_COLONY = STRUCTURE_PIECE_TYPES.register("weaver_colony", () -> (StructurePieceType.ContextlessType)(WeaverColonySpherePiece::new));
-    public static final RegistryObject<StructurePieceType> UNDERGROUND_RUIN = STRUCTURE_PIECE_TYPES.register("underground_ruin", () -> (StructurePieceType.StructureTemplateType)(UndergroundRuinPieces.UndergroundRuinPiece::new));
-    public static final RegistryObject<StructurePieceType> CLOVER_STONE_SANCTUARY = STRUCTURE_PIECE_TYPES.register("clover_stone_sanctuary", () -> (StructurePieceType.StructureTemplateType)(CloverStoneSanctuaryPiece::new));
     public static final RegistryObject<StructurePieceType> MOON_TOWER = STRUCTURE_PIECE_TYPES.register("moon_tower", ()->(StructurePieceType.StructureTemplateType)(MoonTowerPiece::new));
     public static final RegistryObject<StructurePieceType> COVEN_HUT = STRUCTURE_PIECE_TYPES.register("coven_hut", () -> (StructurePieceType.StructureTemplateType)(CovenHutPiece::new));
-    public static final RegistryObject<StructurePieceType> BARN = STRUCTURE_PIECE_TYPES.register("bran", () -> (StructurePieceType.StructureTemplateType)(BarnPiece::new));
+
+    // Barn
+    public static final RegistryObject<StructurePieceType> BARN = STRUCTURE_PIECE_TYPES.register("barn", () -> (StructurePieceType.StructureTemplateType)(BarnPiece::new));
+    public static final RegistryObject<StructurePieceType> BARN_SPAWNER = STRUCTURE_PIECE_TYPES.register("barn_spawner", () -> (StructurePieceType.StructureTemplateType)(BarnSpawnerPiece::new));
 }

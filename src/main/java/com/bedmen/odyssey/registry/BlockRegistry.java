@@ -69,6 +69,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> DAMAGED_ANVIL = BLOCKS.register("damaged_anvil", () -> new OdysseyAnvilBlock(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL).requiresCorrectToolForDrops().strength(5.0F, 1200.0F).sound(SoundType.ANVIL)));
 
     public static final RegistryObject<Block> PRAIRIE_GRASS = BLOCKS.register("prairie_grass", () -> new TriplePlantBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> CLOVER = BLOCKS.register("clover", () -> new CloverBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
 
     public static final RegistryObject<Block> PALM_PLANKS = BLOCKS.register("palm_planks", () -> new FlammablePlanksBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_LIGHT_GRAY).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> PALM_BUTTON = BLOCKS.register("palm_button", () -> new WoodButtonBlock(BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD)));
@@ -115,7 +116,6 @@ public class BlockRegistry {
     public static final RegistryObject<Block> POTTED_GREATWOOD_SAPLING = BLOCKS.register("potted_greatwood_sapling", () -> new OdysseyFlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, GREATWOOD_SAPLING, BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
     public static final RegistryObject<Block> GREATROOTS = BLOCKS.register("greatroots", () -> new RootBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).noOcclusion().requiresCorrectToolForDrops().strength(5.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> GREATWOOD_SEED = BLOCKS.register("greatwood_seed", () -> new GreatSeedBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().requiresCorrectToolForDrops().strength(1.0F, 3.0F).sound(SoundType.WOOD).noOcclusion(), GREATWOOD_LOG::get));
-
 
     public static final RegistryObject<Block> WEAVER_EGG_COBWEB = BLOCKS.register("weaver_egg_cobweb", () ->  new WeaverEggWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().requiresCorrectToolForDrops().strength(4.0F)));
     public static final RegistryObject<Block> TEMPORARY_COBWEB = BLOCKS.register("temporary_cobweb", () ->  new TemporaryWebBlock(BlockBehaviour.Properties.of(Material.WEB).noCollission().strength(4.0F)));
