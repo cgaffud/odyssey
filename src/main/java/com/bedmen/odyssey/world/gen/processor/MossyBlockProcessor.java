@@ -6,9 +6,12 @@ import java.util.Map;
 import java.util.Random;
 import javax.annotation.Nullable;
 
+import com.bedmen.odyssey.util.BiomeUtil;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,8 +45,12 @@ public class MossyBlockProcessor extends StructureProcessor {
         BlockPos blockpos = structureBlockInfo1.pos;
         BlockState newBlockState = null;
 
+        Biome biome = levelReader.getBiome(blockpos).value();
+
         Block block = blockState.getBlock();
-        if(MOSSY_MAP.containsKey(block) && random.nextFloat() < this.mossyPercent){
+        if(BiomeUtil.hasGoodPlantClimate(biome.getBiomeCategory(), biome.getPrecipitation(), biome.getBaseTemperature())
+                && MOSSY_MAP.containsKey(block)
+                && random.nextFloat() < this.mossyPercent){
             newBlockState = MOSSY_MAP.get(block).withPropertiesOf(blockState);
         }
 

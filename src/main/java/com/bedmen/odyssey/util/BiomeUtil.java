@@ -88,4 +88,13 @@ public class BiomeUtil {
         COLD_COLOR_MAP.put(coldFactor, color);
         return color;
     }
+
+    public static boolean hasGoodPlantClimate(Biome.BiomeCategory biomeCategory, Biome.Precipitation precipitation, float temperature){
+        boolean correctBiomeCategory = switch (biomeCategory){
+            case TAIGA, EXTREME_HILLS, JUNGLE, PLAINS, FOREST, SWAMP -> true;
+            default -> false;
+        };
+        boolean correctClimate = precipitation == Biome.Precipitation.RAIN && temperature > 0.1f && temperature < 1.0f;
+        return correctBiomeCategory && correctClimate;
+    }
 }

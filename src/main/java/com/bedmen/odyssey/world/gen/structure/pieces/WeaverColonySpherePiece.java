@@ -98,7 +98,6 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
                     BlockPos newBlockPos;
                     do{
                         newBlockPos = mutableBlockPos.relative(getRandomHorizontalDirection(random));
-                        System.out.println("hanging: "+chunkBoundingBox+" "+newBlockPos);
                     } while(!chunkBoundingBox.isInside(newBlockPos));
                     mutableBlockPos = newBlockPos.mutable();
                 }

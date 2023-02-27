@@ -5,6 +5,7 @@ import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.FeatureRegistry;
+import com.bedmen.odyssey.util.BiomeUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
@@ -65,6 +66,7 @@ public class FeatureGen {
     public static void generation(BiomeLoadingEvent event) {
         BiomeGenerationSettingsBuilder gen = event.getGeneration();
         Biome.BiomeCategory biomeCategory = event.getCategory();
+        Biome.ClimateSettings climateSettings = event.getClimate();
 
         if(biomeCategory == Biome.BiomeCategory.NETHER) {
 
@@ -81,7 +83,7 @@ public class FeatureGen {
                 gen.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PLACED_PATCH_PRAIRIE_GRASS);
             }
 
-            if(greenEnoughForClover(biomeCategory, event.getClimate())){
+            if(BiomeUtil.hasGoodPlantClimate(biomeCategory, climateSettings.precipitation, climateSettings.temperature)){
                 gen.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PLACED_PATCH_CLOVER);
             }
         }
@@ -89,14 +91,5 @@ public class FeatureGen {
 
     private static RandomPatchConfiguration grassPatch(BlockStateProvider blockStateProvider, int count) {
         return FeatureUtils.simpleRandomPatchConfiguration(count, PlacementUtils.onlyWhenEmpty(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(blockStateProvider)));
-    }
-
-    private static boolean greenEnoughForClover(Biome.BiomeCategory biomeCategory, Biome.ClimateSettings climateSettings){
-        boolean correctBiomeCategory = switch (biomeCategory){
-            case TAIGA, EXTREME_HILLS, JUNGLE, PLAINS, FOREST, SWAMP -> true;
-            default -> false;
-        };
-        boolean correctClimate = climateSettings.precipitation == Biome.Precipitation.RAIN && climateSettings.temperature > 0.0f && climateSettings.temperature < 1.0f;
-        return correctBiomeCategory && correctClimate;
     }
 }
