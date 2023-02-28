@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.util;
+package com.bedmen.odyssey.world;
 
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.effect.TemperatureSource;
@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -102,9 +103,12 @@ public class BiomeUtil {
         return correctBiomeCategory && correctClimate;
     }
 
-    public static List<TemperatureSource> getTemperatureSourceList(LivingEntity livingEntity){
-        BlockPos blockPos = livingEntity.blockPosition();
-        Holder<Biome> biomeHolder = livingEntity.level.getBiome(blockPos);
+    public static List<TemperatureSource> getTemperatureSourceList(Player player){
+        if(player.isCreative() || player.isSpectator()){
+            return List.of();
+        }
+        BlockPos blockPos = player.blockPosition();
+        Holder<Biome> biomeHolder = player.level.getBiome(blockPos);
         Biome.BiomeCategory biomeCategory = biomeHolder.value().getBiomeCategory();
         if(biomeCategory == Biome.BiomeCategory.NETHER){
             return TemperatureSource.NETHER;
@@ -113,9 +117,9 @@ public class BiomeUtil {
             return List.of();
         }
         List<TemperatureSource> temperatureSourceList = new ArrayList<>();
-        if(livingEntity.getY() > 48){
-            temperatureSourceList.add(TemperatureSource.SUN.withMultiplier(sunLightMultiplier(livingEntity)));
-            if(isSnowingAtLivingEntity(livingEntity)){
+        if(player.getY() > 48){
+            temperatureSourceList.add(TemperatureSource.SUN.withMultiplier(sunLightMultiplier(player)));
+            if(isSnowingAtLivingEntity(player)){
                 temperatureSourceList.add(TemperatureSource.SNOW_WEATHER);
             }
             if(biomeCategory == Biome.BiomeCategory.DESERT){

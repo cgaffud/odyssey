@@ -16,6 +16,11 @@ public class OdysseyFood {
     public static final FoodProperties SNOW_CONE = (new FoodProperties.Builder()).nutrition(1).saturationMod(0.2F).alwaysEat().effect(() -> TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.COOLING.get(), 300, 1, false), 1.0f).build();
     public static final FoodProperties NOODLES = (new FoodProperties.Builder()).nutrition(1).saturationMod(0.6F).build();
     public static final FoodProperties CHICKEN_NOODLE_SOUP = (new FoodProperties.Builder()).nutrition(10).saturationMod(0.6F).alwaysEat().effect(() -> TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.WARMING.get(), 300, 1, false), 1.0f).build();
+    public static final FoodProperties BEEF_STEW = (new FoodProperties.Builder()).nutrition(16).saturationMod(0.7F).build();
+    public static final FoodProperties RABBIT_STEW = (new FoodProperties.Builder()).nutrition(16).saturationMod(0.6F).build();
+    public static final FoodProperties MUSHROOM_STEW = (new FoodProperties.Builder()).nutrition(2).saturationMod(0.6F).build();
+    public static final FoodProperties VEGETABLE_STEW = (new FoodProperties.Builder()).nutrition(11).saturationMod(0.6F).build();
+    public static final FoodProperties FISH_CHOWDER = (new FoodProperties.Builder()).nutrition(14).saturationMod(0.7F).build();
     public static final FoodProperties PERMABUFF = (new FoodProperties.Builder()).nutrition(4).saturationMod(0.3F).alwaysEat().build();
 
 

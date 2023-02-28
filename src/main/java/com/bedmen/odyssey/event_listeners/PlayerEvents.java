@@ -12,7 +12,7 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
-import com.bedmen.odyssey.util.BiomeUtil;
+import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;

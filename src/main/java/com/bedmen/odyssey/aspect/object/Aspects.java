@@ -3,7 +3,7 @@ package com.bedmen.odyssey.aspect.object;
 import com.bedmen.odyssey.aspect.AspectItemPredicates;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
-import com.bedmen.odyssey.util.BiomeUtil;
+import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;

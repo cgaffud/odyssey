@@ -6,10 +6,9 @@ import java.util.Map;
 import java.util.Random;
 import javax.annotation.Nullable;
 
-import com.bedmen.odyssey.util.BiomeUtil;
+import com.bedmen.odyssey.world.BiomeUtil;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;

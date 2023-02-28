@@ -21,7 +21,7 @@ import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
 import com.bedmen.odyssey.lock.LockableDoorType;
 import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.tier.OdysseyTiers;
-import com.bedmen.odyssey.util.BiomeUtil;
+import com.bedmen.odyssey.world.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -172,11 +172,11 @@ public class ItemRegistry {
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
     public static final RegistryObject<Item> SNOW_CONE = ITEMS.register("snow_cone", () -> new TemperatureFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SNOW_CONE), -0.2f, false));
-    public static final RegistryObject<Item> BEEF_STEW = ITEMS.register("beef_stew", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.CHICKEN_NOODLE_SOUP)));
-    public static final RegistryObject<Item> VEGETABLE_STEW = ITEMS.register("vegetable_stew", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.CHICKEN_NOODLE_SOUP)));
+    public static final RegistryObject<Item> BEEF_STEW = ITEMS.register("beef_stew", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.BEEF_STEW)));
+    public static final RegistryObject<Item> VEGETABLE_STEW = ITEMS.register("vegetable_stew", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.VEGETABLE_STEW)));
     public static final RegistryObject<Item> NOODLES = ITEMS.register("noodles", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.NOODLES)));
     public static final RegistryObject<Item> CHICKEN_NOODLE_SOUP = ITEMS.register("chicken_noodle_soup", () -> new TemperatureFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.CHICKEN_NOODLE_SOUP), 0.2f, true));
-    public static final RegistryObject<Item> FISH_CHOWDER = ITEMS.register("fish_chowder", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.CHICKEN_NOODLE_SOUP)));
+    public static final RegistryObject<Item> FISH_CHOWDER = ITEMS.register("fish_chowder", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.FISH_CHOWDER)));
     public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1), new AspectInstance(Aspects.APPETITE, 0.25f), new AspectInstance(Aspects.HAS_EATEN_ROCK_CANDY).withDisplaySetting(AspectTooltipDisplaySetting.NEVER)), player -> !AspectUtil.hasPermabuffAspect(player, Aspects.HAS_EATEN_ROCK_CANDY)));
 
     // # Tools
@@ -532,7 +532,7 @@ public class ItemRegistry {
 
     // Bowl overrides
     public static final RegistryObject<Item> BEETROOT_SOUP = ITEMS_VANILLA.register("beetroot_soup", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(Foods.BEETROOT_SOUP)));
-    public static final RegistryObject<Item> RABBIT_STEW = ITEMS_VANILLA.register("rabbit_stew", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(Foods.RABBIT_STEW)));
-    public static final RegistryObject<Item> MUSHROOM_STEW = ITEMS_VANILLA.register("mushroom_stew", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(Foods.MUSHROOM_STEW)));
+    public static final RegistryObject<Item> RABBIT_STEW = ITEMS_VANILLA.register("rabbit_stew", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(OdysseyFood.RABBIT_STEW)));
+    public static final RegistryObject<Item> MUSHROOM_STEW = ITEMS_VANILLA.register("mushroom_stew", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(OdysseyFood.MUSHROOM_STEW)));
 }
 
