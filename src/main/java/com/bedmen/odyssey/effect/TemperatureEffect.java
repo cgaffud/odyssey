@@ -1,7 +1,9 @@
 package com.bedmen.odyssey.effect;
 
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 public class TemperatureEffect extends OdysseyEffect {
@@ -25,5 +27,9 @@ public class TemperatureEffect extends OdysseyEffect {
                 TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, (amplifier + 1) * 0.0005f * TemperatureSource.getHotFactor(this.isHot));
             }
         }
+    }
+
+    public static MobEffectInstance getTemperatureEffectInstance(MobEffect mobEffect, int duration, int amp, boolean ambient){
+        return new MobEffectInstance(mobEffect, duration, amp, ambient, false, true);
     }
 }
