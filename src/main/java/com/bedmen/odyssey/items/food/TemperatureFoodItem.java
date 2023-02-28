@@ -1,12 +1,11 @@
-package com.bedmen.odyssey.items;
+package com.bedmen.odyssey.items.food;
 
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.food.OdysseyFood;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 public class TemperatureFoodItem extends Item {
@@ -24,8 +23,10 @@ public class TemperatureFoodItem extends Item {
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, this.temperatureChange);
         }
-        ItemStack itemstack = super.finishUsingItem(itemStack, level, livingEntity);
-        // todo figure out bowls
-        return !this.hasBowl || (livingEntity instanceof Player player && player.getAbilities().instabuild) ? itemstack : new ItemStack(Items.BOWL);
+        if(this.hasBowl){
+            return OdysseyFood.finishingUsingBowlItem(() -> super.finishUsingItem(itemStack, level, livingEntity), livingEntity);
+        } else {
+            return super.finishUsingItem(itemStack, level, livingEntity);
+        }
     }
 }

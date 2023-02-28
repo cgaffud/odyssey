@@ -1,4 +1,4 @@
-package com.bedmen.odyssey.items;
+package com.bedmen.odyssey.items.food;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;

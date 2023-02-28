@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "oddc:item/warm_soup"
+    "layer0": "oddc:item/beef_stew"
   }
 }
