@@ -131,9 +131,6 @@ public class EntityEvents {
                 }
 
             }
-            if(odysseyLivingEntity instanceof Player){
-                System.out.println(odysseyLivingEntity.getTemperature());
-            }
 
             // Set ticks frozen since it's needed for other logic
             if(odysseyLivingEntity.getTemperature() < 0){

@@ -61,6 +61,14 @@ public class PlayerEvents {
                 for(TemperatureSource temperatureSource: BiomeUtil.getTemperatureSourceList(player)){
                     temperatureSource.tick(player);
                 }
+
+                // Heat Exhaustion
+                if(player instanceof OdysseyLivingEntity odysseyLivingEntity){
+                    float temperature = Mth.clamp(odysseyLivingEntity.getTemperature(), 0.0f, 1.0f);
+                    if(temperature > 0){
+                        player.causeFoodExhaustion(temperature * 0.02f);
+                    }
+                }
             } else { //Client Side
 
             }
