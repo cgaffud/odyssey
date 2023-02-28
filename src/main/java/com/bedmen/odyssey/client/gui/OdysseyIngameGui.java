@@ -6,15 +6,23 @@ import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.datafixers.util.Either;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.client.gui.ForgeIngameGui;
+
+import java.util.Optional;
 
 public class OdysseyIngameGui extends ForgeIngameGui
 {
@@ -27,6 +35,91 @@ public class OdysseyIngameGui extends ForgeIngameGui
 
     public Minecraft getMinecraft(){
         return this.minecraft;
+    }
+
+    protected void renderHearts(PoseStack poseStack, Player player, int left, int top, int rowHeight, int regen, float healthMax, int health, int healthLast, int absorb, boolean highlight) {
+        HeartType heartType = Gui.HeartType.forPlayer(player);
+        Optional<OdysseyHeartType> optionalOdysseyHeartType = OdysseyHeartType.forPlayer(player);
+        Either<HeartType, OdysseyHeartType> eitherHeartType = heartType == HeartType.NORMAL && optionalOdysseyHeartType.isPresent() ? Either.right(optionalOdysseyHeartType.get()) : Either.left(heartType);
+        int yTexturePosVanilla = 9 * (player.level.getLevelData().isHardcore() ? 5 : 0);
+        int yTexturePosOdyssey = 9 * (player.level.getLevelData().isHardcore() ? 1 : 0);
+        int j = Mth.ceil((double)healthMax / 2.0D);
+        int k = Mth.ceil((double)absorb / 2.0D);
+        int l = j * 2;
+
+        for(int i1 = j + k - 1; i1 >= 0; --i1) {
+            int j1 = i1 / 10;
+            int k1 = i1 % 10;
+            int xScreenPos = left + k1 * 8;
+            int yScreenPos = top - j1 * rowHeight;
+            if (health + absorb <= 4) {
+                yScreenPos += this.random.nextInt(2);
+            }
+
+            if (i1 < j && i1 == regen) {
+                yScreenPos -= 2;
+            }
+
+            this.renderHeart(poseStack, Either.left(Gui.HeartType.CONTAINER), xScreenPos, yScreenPos, yTexturePosVanilla, yTexturePosOdyssey, highlight, false);
+            int j2 = i1 * 2;
+            boolean flag = i1 >= j;
+            if (flag) {
+                int k2 = j2 - l;
+                if (k2 < absorb) {
+                    boolean flag1 = k2 + 1 == absorb;
+                    this.renderHeart(poseStack, heartType == Gui.HeartType.WITHERED ? eitherHeartType : Either.left(Gui.HeartType.ABSORBING), xScreenPos, yScreenPos, yTexturePosVanilla, yTexturePosOdyssey, false, flag1);
+                }
+            }
+
+            if (highlight && j2 < healthLast) {
+                boolean flag2 = j2 + 1 == healthLast;
+                this.renderHeart(poseStack, eitherHeartType, xScreenPos, yScreenPos, yTexturePosVanilla, yTexturePosOdyssey, true, flag2);
+            }
+
+            if (j2 < health) {
+                boolean flag3 = j2 + 1 == health;
+                this.renderHeart(poseStack, eitherHeartType, xScreenPos, yScreenPos, yTexturePosVanilla, yTexturePosOdyssey, false, flag3);
+            }
+        }
+
+    }
+
+    public void renderHeart(PoseStack poseStack, Either<HeartType, OdysseyHeartType> heartType, int xScreenPos, int yScreenPos, int yTexturePosVanilla, int yTexturePosOdyssey, boolean blink, boolean half) {
+        heartType.ifLeft(heartType1 -> {
+            RenderSystem.setShaderTexture(0, GUI_ICONS_LOCATION);
+            this.blit(poseStack, xScreenPos, yScreenPos, heartType1.getX(half, blink), yTexturePosVanilla, 9, 9);
+        });
+        heartType.ifRight(odysseyHeartType -> {
+            RenderSystem.setShaderTexture(0, ODYSSEY_GUI_ICONS_LOCATION);
+            this.blit(poseStack, xScreenPos, yScreenPos, odysseyHeartType.getX(half, blink), yTexturePosOdyssey, 9, 9);
+        });
+    }
+
+    public enum OdysseyHeartType {
+        HOT(0, false);
+
+        private final int index;
+        private final boolean canBlink;
+
+        OdysseyHeartType(int index, boolean canBlink) {
+            this.index = index;
+            this.canBlink = canBlink;
+        }
+
+        public int getX(boolean half, boolean blink) {
+            int i;
+            int j = half ? 1 : 0;
+            int k = this.canBlink && blink ? 2 : 0;
+            i = j + k;
+            return 45 + (this.index * 2 + i) * 9;
+        }
+
+        static Optional<OdysseyHeartType> forPlayer(Player player) {
+            if(player instanceof OdysseyLivingEntity odysseyLivingEntity && odysseyLivingEntity.getTemperature() >= 1.0f){
+                return Optional.of(HOT);
+            }
+            return Optional.empty();
+        }
     }
 
     public void renderArmor(PoseStack mStack, int width, int height)
