@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public class TemperatureSource {
     public static final float STABILIZATION_RATE = 0.002f;
+    public static final float ONE_PERCENT_PER_SECOND = 0.0005f;
     public static final TemperatureSource POWDERED_SNOW = new TemperatureSource(-0.18f / 20f, Optional.of(0.5f));
     public static final TemperatureSource SNOW_WEATHER = new TemperatureSource(-0.02f / 20f);
     public static final TemperatureSource COLD_BIOME = new TemperatureSource(-0.06f / 20f);
@@ -106,7 +107,7 @@ public class TemperatureSource {
     }
 
     public static TemperatureSource getHarmfulTemperatureEffectSource(boolean isHot, int amplifier){
-        return new TemperatureSource(1/160f * (float)(1 << amplifier) * getHotFactor(isHot), Optional.of(4f * (amplifier + 1)));
+        return new TemperatureSource(TemperatureSource.ONE_PERCENT_PER_SECOND * (amplifier + 1) * getHotFactor(isHot), Optional.of(4f * (amplifier + 1)));
     }
 
 }

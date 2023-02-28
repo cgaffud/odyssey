@@ -118,7 +118,7 @@ public class EntityEvents {
             TemperatureSource.stabilizeTemperatureNaturally(odysseyLivingEntity);
             for(boolean isHot: new boolean[]{true, false}){
                 float protectionStrength = AspectUtil.getProtectionAspectStrength(livingEntity, TemperatureSource.damageSource(isHot));
-                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, protectionStrength * -0.0005f * TemperatureSource.getHotFactor(isHot));
+                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, protectionStrength * -TemperatureSource.ONE_PERCENT_PER_SECOND * TemperatureSource.getHotFactor(isHot));
             }
 
             // Temperature Damage
@@ -263,6 +263,7 @@ public class EntityEvents {
                 EntityType.SKELETON, EntityEvents::skeletonReplace,
                 EntityType.CREEPER, EntityEvents::creeperReplace,
                 EntityType.ZOMBIE, EntityEvents::zombieReplace,
+                EntityType.HUSK, EntityEvents::huskReplace,
                 EntityType.SPIDER, EntityEvents::spiderReplace,
                 EntityType.DROWNED, EntityEvents::zombieReplace,
                 EntityType.POLAR_BEAR, EntityEvents::polarBearReplace);
@@ -315,6 +316,10 @@ public class EntityEvents {
             return Optional.of(EntityTypeRegistry.ZOMBIE_BRUTE.get());
         }
         return Optional.empty();
+    }
+
+    private static Optional<EntityType<?>> huskReplace(Mob mob, Random random){
+        return Optional.of(EntityTypeRegistry.HUSK.get());
     }
 
     private static Optional<EntityType<?>> spiderReplace(Mob mob, Random random){

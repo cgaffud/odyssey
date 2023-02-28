@@ -49,4 +49,8 @@ public class ZombieBrute extends Zombie {
         super.populateDefaultEquipmentSlots(difficultyInstance);
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.SLEDGEAXE.get()));
     }
+
+    public boolean isBaby() {
+        return false;
+    }
 }

@@ -24,7 +24,7 @@ public class TemperatureEffect extends OdysseyEffect {
             TemperatureSource.getHarmfulTemperatureEffectSource(this.isHot, amplifier).tick(livingEntity);
         } else {
             if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, (amplifier + 1) * 0.0005f * TemperatureSource.getHotFactor(this.isHot));
+                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, TemperatureSource.ONE_PERCENT_PER_SECOND * (amplifier + 1) * TemperatureSource.getHotFactor(this.isHot));
             }
         }
     }
