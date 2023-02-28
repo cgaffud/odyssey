@@ -218,7 +218,7 @@ public class OdysseyIngameGui extends ForgeIngameGui
         }
     }
 
-    public void renderSearingOverlay(float temperature)
+    public void renderRoastingOverlay(float temperature)
     {
         int i = this.minecraft.getWindow().getGuiScaledWidth();
         int j = this.minecraft.getWindow().getGuiScaledHeight();

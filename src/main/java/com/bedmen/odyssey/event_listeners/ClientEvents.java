@@ -81,13 +81,13 @@ public class ClientEvents {
                 }
             });
 
-            //For Searing heat overlay
-            OverlayRegistry.registerOverlayAbove(ForgeIngameGui.PORTAL_ELEMENT,"Odyssey Searing", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            //For Roasting heat overlay
+            OverlayRegistry.registerOverlayAbove(ForgeIngameGui.PORTAL_ELEMENT,"Odyssey Roasting", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
                 if(gui instanceof OdysseyIngameGui odysseyIngameGui && Minecraft.getInstance().player instanceof OdysseyLivingEntity odysseyLivingEntity){
                     float temperature = odysseyLivingEntity.getTemperature();
                     if(temperature > 0){
                         gui.setupOverlayRenderState(true, false);
-                        odysseyIngameGui.renderSearingOverlay(temperature);
+                        odysseyIngameGui.renderRoastingOverlay(temperature);
                     }
                 }
             });
