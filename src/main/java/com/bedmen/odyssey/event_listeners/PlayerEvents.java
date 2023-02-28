@@ -7,10 +7,12 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
+import com.bedmen.odyssey.util.BiomeUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -29,7 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -41,7 +42,6 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
@@ -57,9 +57,9 @@ public class PlayerEvents {
             }
             //Server Side
             if(event.side == LogicalSide.SERVER){
-                if(!(player.isCreative() || player.isSpectator()) && player.level.dimensionType().ultraWarm()){
-                    if(!AspectUtil.hasFireProtectionOrResistance(player))
-                        player.setSecondsOnFire(1);
+                // Temperature
+                for(TemperatureSource temperatureSource: BiomeUtil.getTemperatureSourceList(player)){
+                    temperatureSource.tick(player);
                 }
             } else { //Client Side
 

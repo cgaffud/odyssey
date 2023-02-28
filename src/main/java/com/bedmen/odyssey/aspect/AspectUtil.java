@@ -352,11 +352,6 @@ public class AspectUtil {
         }
     }
 
-    // For seeing if resistant to nether flame
-    public static boolean hasFireProtectionOrResistance(LivingEntity livingEntity) {
-        return getFloatAspectValueFromArmor(livingEntity, Aspects.FIRE_PROTECTION) > 0 || livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE);
-    }
-
     // Add/Remove added modifiers
 
     public static float getUsedModifiability(ItemStack itemStack){

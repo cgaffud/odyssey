@@ -114,12 +114,10 @@ public class EntityEvents {
                 TemperatureSource.POWDERED_SNOW.tick(livingEntity);
             }
 
-            // If no temperature changes, move toward normal
-            if(!odysseyLivingEntity.getTemperatureAffected()){
-                TemperatureSource.reduceTemperature(odysseyLivingEntity, 1f/80f);
-            } else {
-                odysseyLivingEntity.setTemperatureAffected(false);
-            }
+            // Move own temperature toward 0
+            TemperatureSource.reduceTemperature(odysseyLivingEntity, 0.002f);
+            float protectionStrength = AspectUtil.getProtectionAspectStrength(livingEntity, TemperatureSource.damageSource(odysseyLivingEntity.getTemperature() > 0));
+            TemperatureSource.reduceTemperature(odysseyLivingEntity, protectionStrength * 0.0005f);
 
             // Temperature Damage
             if(livingEntity.tickCount % 10 == 0){
@@ -132,6 +130,9 @@ public class EntityEvents {
                     livingEntity.hurt(TemperatureSource.damageSource(odysseyLivingEntity.getTemperature() > 0f), damageCount);
                 }
 
+            }
+            if(odysseyLivingEntity instanceof Player){
+                System.out.println(odysseyLivingEntity.getTemperature());
             }
 
             // Set ticks frozen since it's needed for other logic

@@ -1,20 +1,23 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.effect.TemperatureSource;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BiomeUtil {
@@ -96,5 +99,29 @@ public class BiomeUtil {
         };
         boolean correctClimate = precipitation == Biome.Precipitation.RAIN && temperature > 0.1f && temperature < 1.0f;
         return correctBiomeCategory && correctClimate;
+    }
+
+    public static List<TemperatureSource> getTemperatureSourceList(LivingEntity livingEntity){
+        Holder<Biome> biomeHolder = livingEntity.level.getBiome(livingEntity.blockPosition());
+        Biome.BiomeCategory biomeCategory = biomeHolder.value().getBiomeCategory();
+        if(biomeCategory == Biome.BiomeCategory.NETHER){
+            return TemperatureSource.NETHER;
+        }
+        if(biomeCategory == Biome.BiomeCategory.THEEND){
+            return List.of();
+        }
+        List<TemperatureSource> temperatureSourceList = new ArrayList<>();
+        temperatureSourceList.add(TemperatureSource.SUN.withMultiplier(sunLight(livingEntity)));
+        if(biomeCategory == Biome.BiomeCategory.DESERT){
+            temperatureSourceList.add(TemperatureSource.DESERT);
+        } else if(biomeCategory == Biome.BiomeCategory.MESA){
+            temperatureSourceList.add(TemperatureSource.MESA);
+        }
+        return temperatureSourceList;
+    }
+
+    private static float sunLight(LivingEntity livingEntity){
+        BlockPos blockPos = livingEntity.blockPosition();
+        return Aspects.getSunBoost(blockPos, livingEntity.level) * livingEntity.level.getBrightness(LightLayer.SKY, blockPos) / 15f;
     }
 }

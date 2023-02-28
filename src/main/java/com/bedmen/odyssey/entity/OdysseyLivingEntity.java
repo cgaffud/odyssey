@@ -21,6 +21,4 @@ public interface OdysseyLivingEntity {
     void setFireType(FireType fireType);
     float getTemperature();
     void setTemperature(float temperature);
-    boolean getTemperatureAffected();
-    void setTemperatureAffected(boolean temperatureAffected);
 }

@@ -63,7 +63,6 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private SmackPush smackPush = new SmackPush();
     private final List<Float> knockbackQueue = new ArrayList<>();
     private Optional<Integer> trueHurtTime = Optional.empty();
-    private boolean temperatureAffected = false;
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -363,14 +362,6 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
 
     public void setTemperature(float temperature){
         this.entityData.set(DATA_TEMPERATURE, temperature);
-    }
-
-    public boolean getTemperatureAffected(){
-        return this.temperatureAffected;
-    }
-
-    public void setTemperatureAffected(boolean temperatureAffected){
-        this.temperatureAffected = temperatureAffected;
     }
 
     public boolean displayFireAnimation() {

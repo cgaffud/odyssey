@@ -1,4 +1,6 @@
 {
+  "death.attack.heatExhaustion": "%1$s got too sweaty",
+  "death.attack.heatExhaustion.player": "%1$s got too sweaty while fighting %2$s",
   "aspect.oddc.accuracy": "Accuracy",
   "aspect.oddc.activation_key": " [%s Key]",
   "aspect.oddc.additional_mob_harvest_level": "Mob Harvest Level",
