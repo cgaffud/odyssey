@@ -21,7 +21,7 @@ public class OdysseyFood {
     public static final FoodProperties MUSHROOM_STEW = (new FoodProperties.Builder()).nutrition(2).saturationMod(0.6F).build();
     public static final FoodProperties VEGETABLE_STEW = (new FoodProperties.Builder()).nutrition(11).saturationMod(0.6F).build();
     public static final FoodProperties FISH_CHOWDER = (new FoodProperties.Builder()).nutrition(14).saturationMod(0.7F).build();
-    public static final FoodProperties PERMABUFF = (new FoodProperties.Builder()).nutrition(4).saturationMod(0.3F).alwaysEat().build();
+    public static final FoodProperties PERMABUFF = (new FoodProperties.Builder()).nutrition(0).saturationMod(0.0F).alwaysEat().build();
 
 
     public static ItemStack finishingUsingBowlItem(Supplier<ItemStack> finishedItemSupplier, LivingEntity livingEntity){
