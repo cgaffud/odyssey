@@ -73,7 +73,7 @@ public class TemperatureSource {
         return isHot ? 1f : -1f;
     }
 
-    public static void reduceTemperature(OdysseyLivingEntity odysseyLivingEntity, float amount){
+    public static void normalizeTemperature(OdysseyLivingEntity odysseyLivingEntity, float amount){
         float temperature = odysseyLivingEntity.getTemperature();
         boolean isHot = temperature > 0f;
         float newAbsoluteTemperature = Float.max(0.0f, Mth.abs(temperature) - amount);
@@ -81,7 +81,7 @@ public class TemperatureSource {
         odysseyLivingEntity.setTemperature(newTemperature);
     }
 
-    public static TemperatureSource getEffectTemperatureSource(boolean isHot, int amplifier){
+    public static TemperatureSource getHarmfulEffectTemperatureSource(boolean isHot, int amplifier){
         return new TemperatureSource(1/160f * (float)(1 << amplifier) * getHotFactor(isHot), Optional.of(4f * (amplifier + 1)));
     }
 

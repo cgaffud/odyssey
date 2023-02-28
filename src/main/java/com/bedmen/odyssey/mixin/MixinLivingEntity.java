@@ -341,7 +341,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     }
 
     public boolean isFreezing() {
-        return this.getTemperature() < 0.0f;
+        return this.isCold();
     }
 
     public float getPercentFrozen() {

@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.effect.FireEffect;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.effect.OdysseyEffect;
+import com.bedmen.odyssey.effect.TemperatureEffect;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -35,6 +36,8 @@ public class EffectRegistry {
     public static final RegistryObject<MobEffect> HEXFLAME = EFFECTS.register("hexflame", () -> new FireEffect(MobEffectCategory.HARMFUL, 0x6b2494, false, FireType.HEX));
     // TODO make soulfire blocks apply soulflame
     public static final RegistryObject<MobEffect> SOULFLAME = EFFECTS.register("soulflame", () -> new FireEffect(MobEffectCategory.HARMFUL, 0x4ff1f6, false, FireType.SOUL));
-    public static final RegistryObject<MobEffect> FREEZING = EFFECTS.register("freezing",() -> (new OdysseyEffect(MobEffectCategory.HARMFUL, 0xd0f1f0, true)));
-    public static final RegistryObject<MobEffect> SEARING = EFFECTS.register("searing",() -> (new OdysseyEffect(MobEffectCategory.HARMFUL, 0xff9f5a, true)));
+    public static final RegistryObject<MobEffect> FREEZING = EFFECTS.register("freezing",() -> (new TemperatureEffect(MobEffectCategory.HARMFUL, 0xd0f1f0, false)));
+    public static final RegistryObject<MobEffect> SEARING = EFFECTS.register("searing",() -> (new TemperatureEffect(MobEffectCategory.HARMFUL, 0xff9f5a, true)));
+    public static final RegistryObject<MobEffect> COOLING = EFFECTS.register("cooling",() -> (new TemperatureEffect(MobEffectCategory.BENEFICIAL, 0x565fff, false)));
+    public static final RegistryObject<MobEffect> WARMING = EFFECTS.register("warming",() -> (new TemperatureEffect(MobEffectCategory.BENEFICIAL, 0xcf7200, true)));
 }

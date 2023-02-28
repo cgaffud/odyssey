@@ -115,25 +115,25 @@ public class EntityEvents {
             }
 
             // Move own temperature toward 0
-            TemperatureSource.reduceTemperature(odysseyLivingEntity, 0.002f);
-            float protectionStrength = AspectUtil.getProtectionAspectStrength(livingEntity, TemperatureSource.damageSource(odysseyLivingEntity.getTemperature() > 0));
-            TemperatureSource.reduceTemperature(odysseyLivingEntity, protectionStrength * 0.0005f);
+            TemperatureSource.normalizeTemperature(odysseyLivingEntity, 0.002f);
+            float protectionStrength = AspectUtil.getProtectionAspectStrength(livingEntity, TemperatureSource.damageSource(odysseyLivingEntity.isHot()));
+            TemperatureSource.normalizeTemperature(odysseyLivingEntity, protectionStrength * 0.0005f);
 
             // Temperature Damage
             if(livingEntity.tickCount % 10 == 0){
                 int damageCount = 0;
                 while(Mth.abs(odysseyLivingEntity.getTemperature()) >= 1.0f + TemperatureSource.TEMPERATURE_PER_DAMAGE){
-                    TemperatureSource.reduceTemperature(odysseyLivingEntity, TemperatureSource.TEMPERATURE_PER_DAMAGE);
+                    TemperatureSource.normalizeTemperature(odysseyLivingEntity, TemperatureSource.TEMPERATURE_PER_DAMAGE);
                     damageCount++;
                 }
                 if(damageCount > 0){
-                    livingEntity.hurt(TemperatureSource.damageSource(odysseyLivingEntity.getTemperature() > 0f), damageCount);
+                    livingEntity.hurt(TemperatureSource.damageSource(odysseyLivingEntity.isHot()), damageCount);
                 }
 
             }
 
             // Set ticks frozen since it's needed for other logic
-            if(odysseyLivingEntity.getTemperature() < 0){
+            if(odysseyLivingEntity.isCold()){
                 livingEntity.setTicksFrozen(100);
             }
         }

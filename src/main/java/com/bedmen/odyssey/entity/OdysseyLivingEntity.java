@@ -21,4 +21,16 @@ public interface OdysseyLivingEntity {
     void setFireType(FireType fireType);
     float getTemperature();
     void setTemperature(float temperature);
+
+    default boolean isHot(){
+        return this.getTemperature() > 0f;
+    }
+
+    default boolean isOverheating(){
+        return this.getTemperature() >= 1f;
+    }
+
+    default boolean isCold(){
+        return this.getTemperature() < 0f;
+    }
 }

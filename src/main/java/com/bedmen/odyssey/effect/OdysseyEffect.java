@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.effect;
 
-import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
@@ -24,25 +23,14 @@ public class OdysseyEffect extends MobEffect {
         this.displayEffect = displayEffect;
     }
 
-    @Override
     public void applyEffectTick(LivingEntity livingEntity, int amplifier) {
         if ((this == EffectRegistry.BLEEDING.get())) {
             livingEntity.hurt(DamageSource.MAGIC, 1.0F);
-        } else if (this instanceof FireEffect){
-            livingEntity.clearFire();
-            if(this == EffectRegistry.HEXFLAME.get()){
-                livingEntity.hurt(DamageSource.ON_FIRE, 1.0F);
-            }
-        } else if(this == EffectRegistry.FREEZING.get()){
-            TemperatureSource.getEffectTemperatureSource(false, amplifier).tick(livingEntity);
-        } else if (this == EffectRegistry.SEARING.get()){
-            TemperatureSource.getEffectTemperatureSource(true, amplifier).tick(livingEntity);
         } else {
             super.applyEffectTick(livingEntity, amplifier);
         }
     }
 
-    @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
         if(this == EffectRegistry.BLEEDING.get()){
             int tickRate = 100 / (amplifier+3);
@@ -51,22 +39,8 @@ public class OdysseyEffect extends MobEffect {
             } else {
                 return true;
             }
-            // TODO soulflame
-        } else if(this == EffectRegistry.HEXFLAME.get()){
-            int tickRate = 120 / (amplifier+3);
-            if(tickRate > 1){
-                return duration % tickRate == 0;
-            } else {
-                return true;
-            }
-        } else if(this == EffectRegistry.FREEZING.get() || this == EffectRegistry.SEARING.get()){
-            return true;
         }
         return super.isDurationEffectTick(duration, amplifier);
-    }
-
-    public List<ItemStack> getCurativeItems() {
-        return this instanceof FireEffect ? List.of() : super.getCurativeItems();
     }
 
     public static final EffectRenderer ODYSSEY_EFFECT_RENDERER = new EffectRenderer()

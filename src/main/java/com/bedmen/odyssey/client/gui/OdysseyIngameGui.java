@@ -115,7 +115,7 @@ public class OdysseyIngameGui extends ForgeIngameGui
         }
 
         static Optional<OdysseyHeartType> forPlayer(Player player) {
-            if(player instanceof OdysseyLivingEntity odysseyLivingEntity && odysseyLivingEntity.getTemperature() >= 1.0f){
+            if(player instanceof OdysseyLivingEntity odysseyLivingEntity && odysseyLivingEntity.isOverheating()){
                 return Optional.of(HOT);
             }
             return Optional.empty();
