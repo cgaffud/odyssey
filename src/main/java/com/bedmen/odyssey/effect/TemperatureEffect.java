@@ -19,10 +19,10 @@ public class TemperatureEffect extends OdysseyEffect {
 
     public void applyEffectTick(LivingEntity livingEntity, int amplifier) {
         if(this.getCategory() == MobEffectCategory.HARMFUL){
-            TemperatureSource.getHarmfulEffectTemperatureSource(this.isHot, amplifier).tick(livingEntity);
+            TemperatureSource.getHarmfulTemperatureEffectSource(this.isHot, amplifier).tick(livingEntity);
         } else {
-            if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity && (odysseyLivingEntity.isHot() != this.isHot)){
-                TemperatureSource.normalizeTemperature(odysseyLivingEntity, amplifier * 0.0005f);
+            if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
+                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, (amplifier + 1) * 0.0005f * TemperatureSource.getHotFactor(this.isHot));
             }
         }
     }

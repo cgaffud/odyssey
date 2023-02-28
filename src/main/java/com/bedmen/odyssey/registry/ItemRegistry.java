@@ -168,6 +168,8 @@ public class ItemRegistry {
 
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
+    public static final RegistryObject<Item> SNOW_CONE = ITEMS.register("snow_cone", () -> new TemperatureFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SNOW_CONE), -0.2f, false));
+    public static final RegistryObject<Item> WARM_SOUP = ITEMS.register("warm_soup", () -> new TemperatureFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.WARM_SOUP), 0.2f, true));
     public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1), new AspectInstance(Aspects.APPETITE, 0.25f), new AspectInstance(Aspects.HAS_EATEN_ROCK_CANDY).withDisplaySetting(AspectTooltipDisplaySetting.NEVER)), player -> !AspectUtil.hasPermabuffAspect(player, Aspects.HAS_EATEN_ROCK_CANDY)));
 
     // # Tools

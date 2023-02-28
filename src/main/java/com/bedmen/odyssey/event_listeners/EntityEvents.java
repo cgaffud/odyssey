@@ -115,15 +115,17 @@ public class EntityEvents {
             }
 
             // Move own temperature toward 0
-            TemperatureSource.normalizeTemperature(odysseyLivingEntity, 0.002f);
-            float protectionStrength = AspectUtil.getProtectionAspectStrength(livingEntity, TemperatureSource.damageSource(odysseyLivingEntity.isHot()));
-            TemperatureSource.normalizeTemperature(odysseyLivingEntity, protectionStrength * 0.0005f);
+            TemperatureSource.stabilizeTemperatureNaturally(odysseyLivingEntity);
+            for(boolean isHot: new boolean[]{true, false}){
+                float protectionStrength = AspectUtil.getProtectionAspectStrength(livingEntity, TemperatureSource.damageSource(isHot));
+                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, protectionStrength * -0.0005f * TemperatureSource.getHotFactor(isHot));
+            }
 
             // Temperature Damage
             if(livingEntity.tickCount % 10 == 0){
                 int damageCount = 0;
                 while(Mth.abs(odysseyLivingEntity.getTemperature()) >= 1.0f + TemperatureSource.TEMPERATURE_PER_DAMAGE){
-                    TemperatureSource.normalizeTemperature(odysseyLivingEntity, TemperatureSource.TEMPERATURE_PER_DAMAGE);
+                    TemperatureSource.stabilizeTemperature(odysseyLivingEntity, TemperatureSource.TEMPERATURE_PER_DAMAGE);
                     damageCount++;
                 }
                 if(damageCount > 0){

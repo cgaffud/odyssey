@@ -3,7 +3,6 @@ package com.bedmen.odyssey.effect;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class TemperatureSource {
+    public static final float STABILIZATION_RATE = 0.002f;
     public static final TemperatureSource POWDERED_SNOW = new TemperatureSource(-0.18f / 20f, Optional.of(0.5f));
     public static final TemperatureSource SNOW_WEATHER = new TemperatureSource(-0.02f / 20f);
     public static final TemperatureSource COLD_BIOME = new TemperatureSource(-0.06f / 20f);
@@ -73,15 +73,39 @@ public class TemperatureSource {
         return isHot ? 1f : -1f;
     }
 
-    public static void normalizeTemperature(OdysseyLivingEntity odysseyLivingEntity, float amount){
-        float temperature = odysseyLivingEntity.getTemperature();
-        boolean isHot = temperature > 0f;
-        float newAbsoluteTemperature = Float.max(0.0f, Mth.abs(temperature) - amount);
-        float newTemperature = newAbsoluteTemperature * getHotFactor(isHot);
+    public static void stabilizeTemperatureNaturally(OdysseyLivingEntity odysseyLivingEntity){
+        stabilizeTemperature(odysseyLivingEntity, STABILIZATION_RATE);
+    }
+
+    public static void stabilizeTemperature(OdysseyLivingEntity odysseyLivingEntity, float temperatureChange){
+        if(odysseyLivingEntity.isHot()){
+            addHelpfulTemperature(odysseyLivingEntity, -temperatureChange);
+        } else {
+            addHelpfulTemperature(odysseyLivingEntity, temperatureChange);
+        }
+    }
+
+    public static void addHelpfulTemperature(OdysseyLivingEntity odysseyLivingEntity, float temperatureChange){
+        if(!odysseyLivingEntity.isCold() && !odysseyLivingEntity.isHot()){
+            return;
+        }
+        if(odysseyLivingEntity.isHot() && temperatureChange > 0){
+            return;
+        }
+        if(odysseyLivingEntity.isCold() && temperatureChange < 0){
+            return;
+        }
+        float oldTemperature = odysseyLivingEntity.getTemperature();
+        float newTemperature = oldTemperature + temperatureChange;
+        boolean oldIsHot = oldTemperature > 0;
+        boolean newIsHot = newTemperature > 0;
+        if(oldIsHot != newIsHot){
+            newTemperature = 0.0f;
+        }
         odysseyLivingEntity.setTemperature(newTemperature);
     }
 
-    public static TemperatureSource getHarmfulEffectTemperatureSource(boolean isHot, int amplifier){
+    public static TemperatureSource getHarmfulTemperatureEffectSource(boolean isHot, int amplifier){
         return new TemperatureSource(1/160f * (float)(1 << amplifier) * getHotFactor(isHot), Optional.of(4f * (amplifier + 1)));
     }
 
