@@ -57,6 +57,8 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private static final String FLIGHT_VALUE_TAG = "FlightValue";
     private static final String GLIDING_LEVEL_TAG = "GlidingLevel";
     private static final String SLOW_FALL_TAG = "HasSlowFall";
+    private static final String FIRE_TYPE_TAG = "FireType";
+    private static final String TEMPERATURE_TAG = "Temperature";
     private int glidingLevel = 0;
     private boolean hasSlowFall = false;
     private int flightValue = 0;
@@ -234,6 +236,8 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         compoundTag.putInt(FLIGHT_VALUE_TAG, this.flightValue);
         compoundTag.putBoolean(SLOW_FALL_TAG, this.hasSlowFall);
         compoundTag.putInt(GLIDING_LEVEL_TAG, this.glidingLevel);
+        compoundTag.putString(FIRE_TYPE_TAG, this.getFireType().name());
+        compoundTag.putFloat(TEMPERATURE_TAG, this.getTemperature());
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
@@ -241,6 +245,10 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         this.flightValue = compoundTag.getInt(FLIGHT_VALUE_TAG);
         this.hasSlowFall = compoundTag.getBoolean(SLOW_FALL_TAG);
         this.glidingLevel = compoundTag.getInt(GLIDING_LEVEL_TAG);
+        if(compoundTag.contains(FIRE_TYPE_TAG)){
+            this.setFireType(FireType.valueOf(compoundTag.getString(FIRE_TYPE_TAG)));
+        }
+        this.setTemperature(compoundTag.getFloat(TEMPERATURE_TAG));
     }
 
     public void setFlightLevels(boolean hasSlowFall, int glidingLevel){

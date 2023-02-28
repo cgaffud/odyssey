@@ -33,8 +33,8 @@ public class OdysseySkeleton extends OdysseyAbstractSkeleton {
         return this.getEntityData().get(DATA_STRAY_CONVERSION_ID);
     }
 
-    public void setFreezeConverting(boolean p_149843_) {
-        this.entityData.set(DATA_STRAY_CONVERSION_ID, p_149843_);
+    public void setFreezeConverting(boolean freezeConverting) {
+        this.entityData.set(DATA_STRAY_CONVERSION_ID, freezeConverting);
     }
 
     public boolean isShaking() {

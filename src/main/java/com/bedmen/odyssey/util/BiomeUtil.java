@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.awt.*;
@@ -97,12 +98,13 @@ public class BiomeUtil {
             case TAIGA, EXTREME_HILLS, JUNGLE, PLAINS, FOREST, SWAMP -> true;
             default -> false;
         };
-        boolean correctClimate = precipitation == Biome.Precipitation.RAIN && temperature > 0.1f && temperature < 1.0f;
+        boolean correctClimate = precipitation == Biome.Precipitation.RAIN && temperature > 0.15f && temperature < 1.0f;
         return correctBiomeCategory && correctClimate;
     }
 
     public static List<TemperatureSource> getTemperatureSourceList(LivingEntity livingEntity){
-        Holder<Biome> biomeHolder = livingEntity.level.getBiome(livingEntity.blockPosition());
+        BlockPos blockPos = livingEntity.blockPosition();
+        Holder<Biome> biomeHolder = livingEntity.level.getBiome(blockPos);
         Biome.BiomeCategory biomeCategory = biomeHolder.value().getBiomeCategory();
         if(biomeCategory == Biome.BiomeCategory.NETHER){
             return TemperatureSource.NETHER;
@@ -111,17 +113,46 @@ public class BiomeUtil {
             return List.of();
         }
         List<TemperatureSource> temperatureSourceList = new ArrayList<>();
-        temperatureSourceList.add(TemperatureSource.SUN.withMultiplier(sunLight(livingEntity)));
-        if(biomeCategory == Biome.BiomeCategory.DESERT){
-            temperatureSourceList.add(TemperatureSource.DESERT);
-        } else if(biomeCategory == Biome.BiomeCategory.MESA){
-            temperatureSourceList.add(TemperatureSource.MESA);
+        if(livingEntity.getY() > 48){
+            temperatureSourceList.add(TemperatureSource.SUN.withMultiplier(sunLightMultiplier(livingEntity)));
+            if(isSnowingAtLivingEntity(livingEntity)){
+                temperatureSourceList.add(TemperatureSource.SNOW_WEATHER);
+            }
+            if(biomeCategory == Biome.BiomeCategory.DESERT){
+                temperatureSourceList.add(TemperatureSource.DESERT);
+            } else if(biomeCategory == Biome.BiomeCategory.MESA){
+                temperatureSourceList.add(TemperatureSource.MESA);
+            }
+            if(biomeHolder.value().coldEnoughToSnow(blockPos)){
+                temperatureSourceList.add(TemperatureSource.COLD_BIOME);
+            }
         }
         return temperatureSourceList;
     }
 
-    private static float sunLight(LivingEntity livingEntity){
+    private static float sunLightMultiplier(LivingEntity livingEntity){
         BlockPos blockPos = livingEntity.blockPosition();
-        return Aspects.getSunBoost(blockPos, livingEntity.level) * livingEntity.level.getBrightness(LightLayer.SKY, blockPos) / 15f;
+        return Aspects.getSunBoost(blockPos, livingEntity.level) * skyLightMultiplier(livingEntity);
     }
+
+    private static float skyLightMultiplier(LivingEntity livingEntity){
+        BlockPos blockPos = livingEntity.blockPosition();
+        return livingEntity.level.getBrightness(LightLayer.SKY, blockPos) / 15f;
+    }
+
+    private static boolean isSnowingAtLivingEntity(LivingEntity livingEntity){
+        BlockPos blockPos = livingEntity.blockPosition();
+        Level level = livingEntity.level;
+        if (!level.isRaining()) {
+            return false;
+        } else if (!level.canSeeSky(blockPos)) {
+            return false;
+        } else if (level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).getY() > blockPos.getY()) {
+            return false;
+        } else {
+            Biome biome = level.getBiome(blockPos).value();
+            return biome.getPrecipitation() == Biome.Precipitation.SNOW && biome.coldEnoughToSnow(blockPos);
+        }
+    }
+
 }
