@@ -54,10 +54,11 @@ public class PlayerEvents {
             //Both Sides
             if(player instanceof OdysseyPlayer odysseyPlayer) {
                 odysseyPlayer.updateSniperScoping();
+                odysseyPlayer.updateBlizzardFogScaleO();
                 if(BiomeUtil.isInBlizzard(player)){
-                    odysseyPlayer.incrementBlizzardTicks();
+                    odysseyPlayer.decrementBlizzardFogScale();
                 } else {
-                    odysseyPlayer.decrementBlizzardTicks();
+                    odysseyPlayer.incrementBlizzardFogScale();
                 }
             }
             //Server Side

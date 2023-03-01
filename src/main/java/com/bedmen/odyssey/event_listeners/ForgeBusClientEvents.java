@@ -7,9 +7,7 @@ import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
-import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.RenderUtil;
-import com.bedmen.odyssey.world.gen.biome.weather.OdysseyPrecipitation;
 import com.bedmen.odyssey.world.gen.biome.weather.OdysseyWeatherRenderHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -17,7 +15,6 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,15 +47,15 @@ public class ForgeBusClientEvents {
             ClientLevel level = minecraft.level;
             LocalPlayer localPlayer = minecraft.player;
             if(level != null && localPlayer instanceof OdysseyPlayer odysseyPlayer){
-                float blizzardFogScale = 1f - odysseyPlayer.getBlizzardTicks() / 20f;
+                float blizzardFogScale = odysseyPlayer.getBlizzardFogScale((float) event.getPartialTicks());
                 if(blizzardFogScale < 1f){
+                    blizzardFogScale = Mth.clamp(blizzardFogScale, 0, 1);
                     float nearDistance = Mth.lerp(blizzardFogScale, 0f, event.getNearPlaneDistance());
                     float farDistance = Mth.lerp(blizzardFogScale, 16f, event.getFarPlaneDistance());
                     event.setNearPlaneDistance(nearDistance);
                     event.setFarPlaneDistance(farDistance);
                     event.setCanceled(true);
                 }
-
             }
         }
     }
