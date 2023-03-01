@@ -28,22 +28,22 @@ public class OdysseyOverworldBiomeBuilder {
     public static final float EROSION_INDEX_2_START = -0.375F;
     private final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
     private final Climate.Parameter[] temperatures = new Climate.Parameter[]{Climate.Parameter.span(-1.0F, -0.45F), Climate.Parameter.span(-0.45F, -0.15F), Climate.Parameter.span(-0.15F, 0.2F), Climate.Parameter.span(0.2F, 0.55F), Climate.Parameter.span(0.55F, 1.0F)};
-    private final Climate.Parameter[] humidities = new Climate.Parameter[]{Climate.Parameter.span(-1.0F, -0.35F), Climate.Parameter.span(-0.35F, -0.1F), Climate.Parameter.span(-0.1F, 0.1F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(0.3F, 1.0F)};
-    private final Climate.Parameter[] erosions = new Climate.Parameter[]{Climate.Parameter.span(-1.0F, -0.78F), Climate.Parameter.span(-0.78F, -0.375F), Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.span(-0.2225F, 0.05F), Climate.Parameter.span(0.05F, 0.45F), Climate.Parameter.span(0.45F, 0.55F), Climate.Parameter.span(0.55F, 1.0F)};
+    private final Climate.Parameter[] humidities = new Climate.Parameter[]{Climate.Parameter.span(-1.0F, -0.35F), Climate.Parameter.span(-0.35F, -PEAK_SIZE), Climate.Parameter.span(-PEAK_SIZE, PEAK_SIZE), Climate.Parameter.span(PEAK_SIZE, FAR_INLAND_START), Climate.Parameter.span(FAR_INLAND_START, 1.0F)};
+    private final Climate.Parameter[] erosions = new Climate.Parameter[]{Climate.Parameter.span(-1.0F, EROSION_INDEX_1_START), Climate.Parameter.span(EROSION_INDEX_1_START, EROSION_INDEX_2_START), Climate.Parameter.span(EROSION_INDEX_2_START, -0.2225F), Climate.Parameter.span(-0.2225F, VALLEY_SIZE), Climate.Parameter.span(VALLEY_SIZE, 0.45F), Climate.Parameter.span(0.45F, 0.55F), Climate.Parameter.span(0.55F, 1.0F)};
     private final Climate.Parameter FROZEN_RANGE = this.temperatures[0];
     private final Climate.Parameter UNFROZEN_RANGE = Climate.Parameter.span(this.temperatures[1], this.temperatures[4]);
     private final Climate.Parameter mushroomFieldsContinentalness = Climate.Parameter.span(-1.2F, -1.05F);
     private final Climate.Parameter deepOceanContinentalness = Climate.Parameter.span(-1.05F, -0.455F);
     private final Climate.Parameter oceanContinentalness = Climate.Parameter.span(-0.455F, -0.19F);
-    private final Climate.Parameter coastContinentalness = Climate.Parameter.span(-0.19F, -0.11F);
-    private final Climate.Parameter inlandContinentalness = Climate.Parameter.span(-0.11F, 0.55F);
-    private final Climate.Parameter nearInlandContinentalness = Climate.Parameter.span(-0.11F, 0.03F);
-    private final Climate.Parameter midInlandContinentalness = Climate.Parameter.span(0.03F, 0.3F);
-    private final Climate.Parameter farInlandContinentalness = Climate.Parameter.span(0.3F, 1.0F);
+    private final Climate.Parameter coastContinentalness = Climate.Parameter.span(-0.19F, NEAR_INLAND_START);
+    private final Climate.Parameter inlandContinentalness = Climate.Parameter.span(NEAR_INLAND_START, 0.55F);
+    private final Climate.Parameter nearInlandContinentalness = Climate.Parameter.span(NEAR_INLAND_START, MID_INLAND_START);
+    private final Climate.Parameter midInlandContinentalness = Climate.Parameter.span(MID_INLAND_START, FAR_INLAND_START);
+    private final Climate.Parameter farInlandContinentalness = Climate.Parameter.span(FAR_INLAND_START, 1.0F);
     private final ResourceKey<Biome>[][] OCEANS = new ResourceKey[][]{{Biomes.DEEP_FROZEN_OCEAN, Biomes.DEEP_COLD_OCEAN, Biomes.DEEP_OCEAN, Biomes.DEEP_LUKEWARM_OCEAN, Biomes.WARM_OCEAN}, {Biomes.FROZEN_OCEAN, Biomes.COLD_OCEAN, Biomes.OCEAN, Biomes.LUKEWARM_OCEAN, Biomes.WARM_OCEAN}};
-    private final ResourceKey<Biome>[][] MIDDLE_BIOMES = new ResourceKey[][]{{Biomes.SNOWY_PLAINS, Biomes.SNOWY_PLAINS, Biomes.SNOWY_PLAINS, Biomes.SNOWY_TAIGA, Biomes.TAIGA}, {Biomes.PLAINS, Biomes.PLAINS, Biomes.FOREST, Biomes.TAIGA, Biomes.OLD_GROWTH_SPRUCE_TAIGA}, {Biomes.FLOWER_FOREST, Biomes.PLAINS, Biomes.FOREST, Biomes.BIRCH_FOREST, Biomes.DARK_FOREST}, {Biomes.SAVANNA, Biomes.SAVANNA, Biomes.FOREST, Biomes.JUNGLE, Biomes.JUNGLE}, {Biomes.DESERT, Biomes.DESERT, Biomes.DESERT, Biomes.DESERT, Biomes.DESERT}};
+    private final ResourceKey<Biome>[][] MIDDLE_BIOMES = new ResourceKey[][]{{Biomes.SNOWY_PLAINS, Biomes.SNOWY_PLAINS, Biomes.SNOWY_PLAINS, Biomes.SNOWY_TAIGA, BiomeRegistry.ARCTIC_RESOURCE_KEY}, {Biomes.PLAINS, Biomes.PLAINS, Biomes.FOREST, Biomes.TAIGA, Biomes.OLD_GROWTH_SPRUCE_TAIGA}, {Biomes.FLOWER_FOREST, Biomes.PLAINS, Biomes.FOREST, Biomes.BIRCH_FOREST, Biomes.DARK_FOREST}, {Biomes.SAVANNA, Biomes.SAVANNA, Biomes.FOREST, Biomes.JUNGLE, Biomes.JUNGLE}, {Biomes.DESERT, Biomes.DESERT, Biomes.DESERT, Biomes.DESERT, Biomes.DESERT}};
     private final ResourceKey<Biome>[][] MIDDLE_BIOMES_VARIANT = new ResourceKey[][]{{Biomes.ICE_SPIKES, null, Biomes.SNOWY_TAIGA, null, null}, {null, null, null, null, Biomes.OLD_GROWTH_PINE_TAIGA}, {Biomes.SUNFLOWER_PLAINS, null, null, Biomes.OLD_GROWTH_BIRCH_FOREST, null}, {BiomeRegistry.PRAIRIE_RESOURCE_KEY, BiomeRegistry.PRAIRIE_RESOURCE_KEY, Biomes.PLAINS, Biomes.SPARSE_JUNGLE, Biomes.BAMBOO_JUNGLE}, {null, null, null, null, null}};
-    private final ResourceKey<Biome>[][] PLATEAU_BIOMES = new ResourceKey[][]{{Biomes.SNOWY_PLAINS, Biomes.SNOWY_PLAINS, Biomes.SNOWY_PLAINS, Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA}, {Biomes.MEADOW, Biomes.MEADOW, Biomes.FOREST, Biomes.TAIGA, Biomes.OLD_GROWTH_SPRUCE_TAIGA}, {Biomes.MEADOW, Biomes.MEADOW, Biomes.MEADOW, Biomes.MEADOW, Biomes.DARK_FOREST}, {Biomes.SAVANNA_PLATEAU, Biomes.SAVANNA_PLATEAU, Biomes.FOREST, Biomes.FOREST, Biomes.JUNGLE}, {Biomes.BADLANDS, Biomes.BADLANDS, Biomes.BADLANDS, Biomes.WOODED_BADLANDS, Biomes.WOODED_BADLANDS}};
+    private final ResourceKey<Biome>[][] PLATEAU_BIOMES = new ResourceKey[][]{{Biomes.SNOWY_PLAINS, Biomes.SNOWY_PLAINS, Biomes.SNOWY_PLAINS, Biomes.SNOWY_TAIGA, BiomeRegistry.ARCTIC_RESOURCE_KEY}, {Biomes.MEADOW, Biomes.MEADOW, Biomes.FOREST, Biomes.TAIGA, Biomes.OLD_GROWTH_SPRUCE_TAIGA}, {Biomes.MEADOW, Biomes.MEADOW, Biomes.MEADOW, Biomes.MEADOW, Biomes.DARK_FOREST}, {Biomes.SAVANNA_PLATEAU, Biomes.SAVANNA_PLATEAU, Biomes.FOREST, Biomes.FOREST, Biomes.JUNGLE}, {Biomes.BADLANDS, Biomes.BADLANDS, Biomes.BADLANDS, Biomes.WOODED_BADLANDS, Biomes.WOODED_BADLANDS}};
     private final ResourceKey<Biome>[][] PLATEAU_BIOMES_VARIANT = new ResourceKey[][]{{Biomes.ICE_SPIKES, null, null, null, null}, {null, null, Biomes.MEADOW, Biomes.MEADOW, Biomes.OLD_GROWTH_PINE_TAIGA}, {null, null, Biomes.FOREST, Biomes.BIRCH_FOREST, null}, {null, null, null, null, null}, {Biomes.ERODED_BADLANDS, Biomes.ERODED_BADLANDS, null, null, null}};
     private final ResourceKey<Biome>[][] EXTREME_HILLS = new ResourceKey[][]{{Biomes.WINDSWEPT_GRAVELLY_HILLS, Biomes.WINDSWEPT_GRAVELLY_HILLS, Biomes.WINDSWEPT_HILLS, Biomes.WINDSWEPT_FOREST, Biomes.WINDSWEPT_FOREST}, {Biomes.WINDSWEPT_GRAVELLY_HILLS, Biomes.WINDSWEPT_GRAVELLY_HILLS, Biomes.WINDSWEPT_HILLS, Biomes.WINDSWEPT_FOREST, Biomes.WINDSWEPT_FOREST}, {Biomes.WINDSWEPT_HILLS, Biomes.WINDSWEPT_HILLS, Biomes.WINDSWEPT_HILLS, Biomes.WINDSWEPT_FOREST, Biomes.WINDSWEPT_FOREST}, {null, null, null, null, null}, {null, null, null, null, null}};
 
@@ -76,19 +76,19 @@ public class OdysseyOverworldBiomeBuilder {
     }
 
     private void addInlandBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> p_187216_) {
-        this.addMidSlice(p_187216_, Climate.Parameter.span(-1.0F, -0.93333334F));
-        this.addHighSlice(p_187216_, Climate.Parameter.span(-0.93333334F, -0.7666667F));
-        this.addPeaks(p_187216_, Climate.Parameter.span(-0.7666667F, -0.56666666F));
-        this.addHighSlice(p_187216_, Climate.Parameter.span(-0.56666666F, -0.4F));
-        this.addMidSlice(p_187216_, Climate.Parameter.span(-0.4F, -0.26666668F));
-        this.addLowSlice(p_187216_, Climate.Parameter.span(-0.26666668F, -0.05F));
-        this.addValleys(p_187216_, Climate.Parameter.span(-0.05F, 0.05F));
-        this.addLowSlice(p_187216_, Climate.Parameter.span(0.05F, 0.26666668F));
-        this.addMidSlice(p_187216_, Climate.Parameter.span(0.26666668F, 0.4F));
-        this.addHighSlice(p_187216_, Climate.Parameter.span(0.4F, 0.56666666F));
-        this.addPeaks(p_187216_, Climate.Parameter.span(0.56666666F, 0.7666667F));
-        this.addHighSlice(p_187216_, Climate.Parameter.span(0.7666667F, 0.93333334F));
-        this.addMidSlice(p_187216_, Climate.Parameter.span(0.93333334F, 1.0F));
+        this.addMidSlice(p_187216_, Climate.Parameter.span(-1.0F, -HIGH_END));
+        this.addHighSlice(p_187216_, Climate.Parameter.span(-HIGH_END, -PEAK_END));
+        this.addPeaks(p_187216_, Climate.Parameter.span(-PEAK_END, -PEAK_START));
+        this.addHighSlice(p_187216_, Climate.Parameter.span(-PEAK_START, -HIGH_START));
+        this.addMidSlice(p_187216_, Climate.Parameter.span(-HIGH_START, -LOW_START));
+        this.addLowSlice(p_187216_, Climate.Parameter.span(-LOW_START, -VALLEY_SIZE));
+        this.addValleys(p_187216_, Climate.Parameter.span(-VALLEY_SIZE, VALLEY_SIZE));
+        this.addLowSlice(p_187216_, Climate.Parameter.span(VALLEY_SIZE, LOW_START));
+        this.addMidSlice(p_187216_, Climate.Parameter.span(LOW_START, HIGH_START));
+        this.addHighSlice(p_187216_, Climate.Parameter.span(HIGH_START, PEAK_START));
+        this.addPeaks(p_187216_, Climate.Parameter.span(PEAK_START, PEAK_END));
+        this.addHighSlice(p_187216_, Climate.Parameter.span(PEAK_END, HIGH_END));
+        this.addMidSlice(p_187216_, Climate.Parameter.span(HIGH_END, 1.0F));
     }
 
     private void addPeaks(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> p_187178_, Climate.Parameter p_187179_) {
@@ -347,14 +347,14 @@ public class OdysseyOverworldBiomeBuilder {
     }
 
     public static String getDebugStringForPeaksAndValleys(double p_187156_) {
-        if (p_187156_ < (double) TerrainShaper.peaksAndValleys(0.05F)) {
+        if (p_187156_ < (double) TerrainShaper.peaksAndValleys(VALLEY_SIZE)) {
             return "Valley";
-        } else if (p_187156_ < (double)TerrainShaper.peaksAndValleys(0.26666668F)) {
+        } else if (p_187156_ < (double)TerrainShaper.peaksAndValleys(LOW_START)) {
             return "Low";
-        } else if (p_187156_ < (double)TerrainShaper.peaksAndValleys(0.4F)) {
+        } else if (p_187156_ < (double)TerrainShaper.peaksAndValleys(HIGH_START)) {
             return "Mid";
         } else {
-            return p_187156_ < (double)TerrainShaper.peaksAndValleys(0.56666666F) ? "High" : "Peak";
+            return p_187156_ < (double)TerrainShaper.peaksAndValleys(PEAK_START) ? "High" : "Peak";
         }
     }
 
