@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.monster.Husk;
+import net.minecraft.world.entity.monster.Stray;
 import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -44,6 +45,7 @@ public class EntityTypeRegistry {
 
     // ## Skeletons
     public static final RegistryObject<EntityType<OdysseySkeleton>> SKELETON = ENTITY_TYPE.register("skeleton", () -> EntityType.Builder.of(OdysseySkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "skeleton").toString()));
+    public static final RegistryObject<EntityType<OdysseyStray>> STRAY = ENTITY_TYPE.register("stray", () -> EntityType.Builder.<OdysseyStray>of(OdysseyStray::new, MobCategory.MONSTER).sized(0.6F, 1.99F).immuneTo(Blocks.POWDER_SNOW).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "stray").toString()));
     public static final RegistryObject<EntityType<DungeonSkeleton>> MOON_TOWER_SKELETON = ENTITY_TYPE.register("moon_tower_skeleton", () -> EntityType.Builder.<DungeonSkeleton>of(DungeonSkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "moon_tower_skeleton").toString()));
 
     // ## Creepers

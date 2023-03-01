@@ -324,6 +324,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CLOVER_STONE_ARROW = ITEMS.register("clover_stone_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.CLOVER_STONE));
     public static final RegistryObject<Item> AMETHYST_ARROW = ITEMS.register("amethyst_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.AMETHYST));
     public static final RegistryObject<Item> HEXED_EARTH_ARROW = ITEMS.register("hexed_earth_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.HEXED_EARTH));
+    public static final RegistryObject<Item> FROST_ARROW = ITEMS.register("frost_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.FROST));
 
     // # Armors
 
@@ -402,6 +403,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> HUSK_SPAWN_EGG = ITEMS.register("husk_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.HUSK, 7958625, 15125652, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> MOON_TOWER_ZOMBIE_SPAWN_EGG = ITEMS.register("moon_tower_zombie_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.MOON_TOWER_ZOMBIE, 0x4C7289, 0x394140, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> SKELETON_SPAWN_EGG = ITEMS.register("skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.SKELETON, 12698049, 4802889, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> STRAY_SPAWN_EGG = ITEMS.register("stray_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.STRAY, 6387319, 14543594, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> MOON_TOWER_SKELETON_SPAWN_EGG = ITEMS.register("moon_tower_skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.MOON_TOWER_SKELETON, 0x9E9EBD, 0x565664, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> BABY_CREEPER_SPAWN_EGG = ITEMS.register("baby_creeper_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BABY_CREEPER, 894731, 0, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> CAMO_CREEPER_SPAWN_EGG = ITEMS.register("camo_creeper_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.CAMO_CREEPER, 0x50692c, 0x79553a, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));

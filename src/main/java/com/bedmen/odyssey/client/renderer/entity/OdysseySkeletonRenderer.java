@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
+import com.bedmen.odyssey.client.model.OdysseyAbstractSkeletonModel;
 import com.bedmen.odyssey.client.model.OdysseySkeletonModel;
+import com.bedmen.odyssey.entity.monster.OdysseyAbstractSkeleton;
 import com.bedmen.odyssey.entity.monster.OdysseySkeleton;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -12,7 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class OdysseySkeletonRenderer extends HumanoidMobRenderer<OdysseySkeleton, OdysseySkeletonModel<OdysseySkeleton>> {
+public class OdysseySkeletonRenderer extends HumanoidMobRenderer<OdysseyAbstractSkeleton, OdysseyAbstractSkeletonModel<OdysseyAbstractSkeleton>> {
     private static final ResourceLocation SKELETON_LOCATION = new ResourceLocation("textures/entity/skeleton/skeleton.png");
 
     public OdysseySkeletonRenderer(Context context) {
@@ -20,15 +22,15 @@ public class OdysseySkeletonRenderer extends HumanoidMobRenderer<OdysseySkeleton
     }
 
     public OdysseySkeletonRenderer(Context context, ModelLayerLocation modelLayerLocation, ModelLayerLocation modelLayerLocation1, ModelLayerLocation modelLayerLocation2) {
-        super(context, new OdysseySkeletonModel(context.bakeLayer(modelLayerLocation)), 0.5F);
-        this.addLayer(new HumanoidArmorLayer(this, new OdysseySkeletonModel(context.bakeLayer(modelLayerLocation1)), new OdysseySkeletonModel(context.bakeLayer(modelLayerLocation2))));
+        super(context, new OdysseyAbstractSkeletonModel(context.bakeLayer(modelLayerLocation)), 0.5F);
+        this.addLayer(new HumanoidArmorLayer(this, new OdysseyAbstractSkeletonModel(context.bakeLayer(modelLayerLocation1)), new OdysseyAbstractSkeletonModel(context.bakeLayer(modelLayerLocation2))));
     }
 
-    public ResourceLocation getTextureLocation(OdysseySkeleton OdysseySkeleton) {
+    public ResourceLocation getTextureLocation(OdysseyAbstractSkeleton odysseyAbstractSkeleton) {
         return SKELETON_LOCATION;
     }
 
-    protected boolean isShaking(OdysseySkeleton OdysseySkeleton) {
-        return OdysseySkeleton.isShaking();
+    protected boolean isShaking(OdysseyAbstractSkeleton odysseyAbstractSkeleton) {
+        return odysseyAbstractSkeleton.isShaking();
     }
 }

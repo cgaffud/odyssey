@@ -33,6 +33,7 @@ import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.monster.Husk;
+import net.minecraft.world.entity.monster.Stray;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraftforge.common.MinecraftForge;
@@ -128,6 +129,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.HUSK.get(), Husk.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_ZOMBIE.get(), DungeonZombie.createAttributes().build());
         event.put(EntityTypeRegistry.SKELETON.get(), OdysseySkeleton.createAttributes().build());
+        event.put(EntityTypeRegistry.STRAY.get(), Stray.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());

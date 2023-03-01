@@ -197,13 +197,6 @@ public class EntityEvents {
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
             odysseyLivingEntity.pushKnockbackAspectQueue(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_KNOCKBACK));
-            // Ranged Larceny
-            WeaponUtil.tryLarceny(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), odysseyAbstractArrow.getOwner(), hurtLivingEntity);
-            // Hexed Earth
-            if (hurtLivingEntity.getRandom().nextDouble() < odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_HEXED_EARTH)) {
-                CovenRootEntity.createRootBlock(hurtLivingEntity.blockPosition(), hurtLivingEntity.getLevel(), 12);
-                OverworldWitch.summonDripstoneAboveEntity(hurtLivingEntity.getPosition(1.0f), hurtLivingEntity.getLevel(), 1.5f,7, 5);
-            }
         }
 
         // Break Coconut
@@ -261,6 +254,7 @@ public class EntityEvents {
     public static void initEntityMap(){
         ENTITY_REPLACEMENT_MAP = Map.of(
                 EntityType.SKELETON, EntityEvents::skeletonReplace,
+                EntityType.STRAY, EntityEvents::strayReplace,
                 EntityType.CREEPER, EntityEvents::creeperReplace,
                 EntityType.ZOMBIE, EntityEvents::zombieReplace,
                 EntityType.HUSK, EntityEvents::huskReplace,
@@ -295,6 +289,10 @@ public class EntityEvents {
 
     private static Optional<EntityType<?>> skeletonReplace(Mob mob, Random random){
         return Optional.of(EntityTypeRegistry.SKELETON.get());
+    }
+
+    private static Optional<EntityType<?>> strayReplace(Mob mob, Random random){
+        return Optional.of(EntityTypeRegistry.STRAY.get());
     }
 
     private static Optional<EntityType<?>> creeperReplace(Mob mob, Random random){

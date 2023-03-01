@@ -5,8 +5,13 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.effect.TemperatureEffect;
+import com.bedmen.odyssey.entity.boss.coven.CovenRootEntity;
+import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -166,6 +171,18 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 float cobwebChance = this.getAspectStrength(Aspects.PROJECTILE_COBWEB_CHANCE);
                 if(!(this instanceof OdysseyArrow) || this.isCritArrow()){
                     Weaver.tryPlaceCobwebOnTarget(cobwebChance, livingEntity);
+                }
+                // Hexed Earth
+                if (livingEntity.getRandom().nextDouble() < this.getAspectStrength(Aspects.PROJECTILE_HEXED_EARTH)) {
+                    CovenRootEntity.createRootBlock(livingEntity.blockPosition(), livingEntity.level, 12);
+                    OverworldWitch.summonDripstoneAboveEntity(livingEntity.getPosition(1.0f), livingEntity.level, 1.5f,7, 5);
+                }
+                // Ranged Larceny
+                WeaponUtil.tryLarceny(this.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), this.getOwner(), livingEntity);
+                // Ranged Freezing
+                int freezingStrength = (int) this.getAspectStrength(Aspects.PROJECTILE_FREEZING);
+                if(freezingStrength > 0){
+                    livingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), freezingStrength, 1, false));
                 }
             }
 
