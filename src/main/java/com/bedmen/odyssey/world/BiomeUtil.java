@@ -109,10 +109,10 @@ public class BiomeUtil {
             return List.of();
         }
         BlockPos blockPos = player.blockPosition();
-        Holder<Biome> biomeHolder = player.level.getBiome(blockPos);
-        Biome.BiomeCategory biomeCategory = biomeHolder.value().getBiomeCategory();
+        Biome biome =  player.level.getBiome(blockPos).value();
+        Biome.BiomeCategory biomeCategory = biome.getBiomeCategory();
         if(biomeCategory == Biome.BiomeCategory.NETHER){
-            return TemperatureSource.NETHER;
+            return TemperatureSource.NETHER_LIST;
         }
         if(biomeCategory == Biome.BiomeCategory.THEEND){
             return List.of();
@@ -128,7 +128,9 @@ public class BiomeUtil {
             } else if(biomeCategory == Biome.BiomeCategory.MESA){
                 temperatureSourceList.add(TemperatureSource.MESA);
             }
-            if(biomeHolder.value().coldEnoughToSnow(blockPos)){
+            if(biome.getPrecipitation() == OdysseyPrecipitation.BLIZZARD){
+                temperatureSourceList.add(TemperatureSource.BLIZZARD);
+            } else if(biome.coldEnoughToSnow(blockPos)){
                 temperatureSourceList.add(TemperatureSource.COLD_BIOME);
             }
         }
