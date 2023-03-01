@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/boomerang_throwing",
+  "textures": {
+    "layer0": "oddc:item/glacierang"
+  }
+}

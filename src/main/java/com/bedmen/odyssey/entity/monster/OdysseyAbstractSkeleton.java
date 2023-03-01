@@ -50,7 +50,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     public final BoomerangAttackGoal<OdysseyAbstractSkeleton> boomerangGoal = new BoomerangAttackGoal<>(this, 0.0D, 50, 15.0F);
     private boolean crossbowMode = false;
     private int noBoomerangTick;
-    private Item boomerangItem = null;
+    protected Item boomerangItem = null;
     protected OdysseyAbstractSkeleton(EntityType<? extends AbstractSkeleton> entityType, Level level) {
         super(entityType, level);
     }

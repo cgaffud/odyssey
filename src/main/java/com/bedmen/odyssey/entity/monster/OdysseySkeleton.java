@@ -1,10 +1,12 @@
 package com.bedmen.odyssey.entity.monster;
 
+import com.bedmen.odyssey.loot.OdysseyLootTables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -14,6 +16,7 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 public class OdysseySkeleton extends OdysseyAbstractSkeleton {
     private static final EntityDataAccessor<Boolean> DATA_STRAY_CONVERSION_ID = SynchedEntityData.defineId(OdysseySkeleton.class, EntityDataSerializers.BOOLEAN);
@@ -118,5 +121,12 @@ public class OdysseySkeleton extends OdysseyAbstractSkeleton {
             }
         }
 
+    }
+
+    public ResourceLocation getDefaultLootTable() {
+        if(this.isBaby()){
+            return OdysseyLootTables.BABY_SKELETON;
+        }
+        return super.getDefaultLootTable();
     }
 }

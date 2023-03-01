@@ -309,6 +309,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATROOT_SLUG_BOW = ITEMS.register("greatroot_slug_bow", () -> new AspectCrossbowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.GREATROOT,1.85f, 25, List.of(), List.of(new AspectInstance(Aspects.PROJECTILE_KNOCKBACK, 1.0f))));
     public static final RegistryObject<Item> GREATROOT_SHOT_BOW = ITEMS.register("greatroot_shot_bow", () -> new AspectCrossbowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.GREATROOT,1.65f, 22, List.of(), List.of(new AspectInstance(Aspects.MULTISHOT, 2.0f))));
     public static final RegistryObject<Item> GREATROOT_CROSSBOW = ITEMS.register("greatroot_crossbow", () -> new AspectCrossbowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.GREATROOT,1.9f, 25, List.of(), List.of(new AspectInstance(Aspects.DURABILITY, 2.0f))));
+    public static final RegistryObject<Item> GLACIERANG = ITEMS.register("glacierang", () -> new BoomerangItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.ARCTIC, ThrowableTypes.GLACIERANG));
 
     // ## Tier 3
 
