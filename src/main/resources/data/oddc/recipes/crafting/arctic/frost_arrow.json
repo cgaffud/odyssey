@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A",
+    "B",
+    "C"
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:permafrost_shard"
+    },
+    "B": {
+      "tag": "minecraft:logs"
+    },
+    "C": {
+      "item": "oddc:feather_bundle"
+    }
+  },
+  "result": {
+    "item": "oddc:frost_arrow",
+    "count": 32
+  }
+}
