@@ -18,6 +18,7 @@
     "MixinMapDecorationType",
     "MixinPlayer",
     "MixinPowderSnowBlock",
+    "MixinPrecipitation",
     "MixinScreenEffectRenderer"
   ],
   "injectors": {

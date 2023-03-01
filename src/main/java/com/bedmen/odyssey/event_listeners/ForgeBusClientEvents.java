@@ -2,15 +2,23 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
+import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
-import com.bedmen.odyssey.effect.FireType;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.RenderUtil;
+import com.bedmen.odyssey.world.gen.biome.weather.OdysseyPrecipitation;
+import com.bedmen.odyssey.world.gen.biome.weather.OdysseyWeatherRenderHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -18,39 +26,42 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpyglassItem;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.FOVModifierEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class RenderEvents {
+public class ForgeBusClientEvents {
+    @SubscribeEvent
+    public static void onWorldEvent$Load(final WorldEvent.Load event){
+        LevelAccessor levelAccessor = event.getWorld();
+        if(levelAccessor instanceof ClientLevel clientLevel){
+            clientLevel.effects().setWeatherRenderHandler(new OdysseyWeatherRenderHandler());
+        }
+    }
 
-//    /**
-//     * Custom Fog rendering
-//     */
-//    @SubscribeEvent
-//    public static void EntityViewRenderEvent$RenderFogEventListener(final EntityViewRenderEvent.FogDensity event){
-//        Entity entity = event.getInfo().getEntity();
-//        if(entity instanceof LivingEntity){
-//            LivingEntity livingEntity = (LivingEntity)entity;
-//            if(livingEntity.hasEffect(EffectRegistry.LAVA_VISION.get()) && event.getInfo().getFluidInCamera().is(FluidTags.LAVA)){
-//                event.setDensity(0.05f);
-//                event.setCanceled(true);
-//            } else {
-//                int i = FogUtil.inFog(livingEntity);
-//                if(i > 0){
-//                    float f = 0.1f;
-//                    i = 9-i;
-//                    event.setDensity(0.2f / (f*i*i + (1-f)*i));
-//                    event.setCanceled(true);
-//                }
-//            }
-//        }
-//    }
+    @SubscribeEvent
+    public static void EntityViewRenderEvent$RenderFogEventListener(final EntityViewRenderEvent.RenderFogEvent event){
+        if(event.getMode() == FogRenderer.FogMode.FOG_TERRAIN){
+            Minecraft minecraft = Minecraft.getInstance();
+            ClientLevel level = minecraft.level;
+            LocalPlayer localPlayer = minecraft.player;
+            if(level != null && localPlayer instanceof OdysseyPlayer odysseyPlayer){
+                float blizzardFogScale = 1f - odysseyPlayer.getBlizzardTicks() / 20f;
+                if(blizzardFogScale < 1f){
+                    float nearDistance = Mth.lerp(blizzardFogScale, 0f, event.getNearPlaneDistance());
+                    float farDistance = Mth.lerp(blizzardFogScale, 16f, event.getFarPlaneDistance());
+                    event.setNearPlaneDistance(nearDistance);
+                    event.setFarPlaneDistance(farDistance);
+                    event.setCanceled(true);
+                }
+
+            }
+        }
+    }
 
     /**
      * Prevents Quiver from being rendered in hand

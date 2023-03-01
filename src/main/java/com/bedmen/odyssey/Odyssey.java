@@ -94,6 +94,8 @@ public class Odyssey
             PoiType.WEAPONSMITH.matchingStates = ImmutableSet.copyOf(BlockRegistry.GRINDSTONE.get().getStateDefinition().getPossibleStates());
             OdysseyRecipeBook.init();
 
+
+
             //Generation
             BiomeUtil.init();
             OreGen.registerOres();

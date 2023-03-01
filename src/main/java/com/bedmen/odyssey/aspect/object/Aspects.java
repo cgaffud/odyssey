@@ -166,9 +166,7 @@ public class Aspects {
     }
 
     public static float getHumidBoost(BlockPos pos, Level level) {
-        Holder<Biome> biomeHolder = level.getBiome(pos);
-        Biome biome = level.getBiome(pos).value();
-        return level.isRaining() && biome.getPrecipitation() == Biome.Precipitation.RAIN ? 1.0f : Mth.clamp(BiomeUtil.getClimate(biomeHolder).downfall, 0.0f, 1.0f);
+        return level.isRainingAt(pos) ? 1.0f : Mth.clamp(BiomeUtil.getClimate(level.getBiome(pos)).downfall, 0.0f, 1.0f);
     }
 
     public static float getDryBoost(BlockPos pos, Level level) {

@@ -68,6 +68,8 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
     private static final String PERMABUFF_HOLDER_TAG = Odyssey.MOD_ID + ":PermabuffHolder";
     private float partialExperiencePoint;
     private static final String PARTIAL_EXPERIENCE_POINT_TAG = Odyssey.MOD_ID + ":PartialExperiencePoint";
+    private int blizzardTicks;
+    private static final String BLIZZARD_TICKS_TAG = Odyssey.MOD_ID + ":BlizzardTicks";
 
     protected MixinPlayer(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
@@ -85,6 +87,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         CompoundTag permabuffHolderTag = this.getPermabuffHolder().toCompoundTag();
         compoundTag.put(PERMABUFF_HOLDER_TAG, permabuffHolderTag);
         compoundTag.putFloat(PARTIAL_EXPERIENCE_POINT_TAG, this.partialExperiencePoint);
+        compoundTag.putInt(BLIZZARD_TICKS_TAG, this.blizzardTicks);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
@@ -95,6 +98,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
             this.setPermabuffHolder(PermabuffHolder.fromCompoundTag(compoundTag.getCompound(PERMABUFF_HOLDER_TAG)));
         }
         this.partialExperiencePoint = compoundTag.getFloat(PARTIAL_EXPERIENCE_POINT_TAG);
+        this.blizzardTicks = compoundTag.getInt(BLIZZARD_TICKS_TAG);
     }
 
     @Inject(method = "getCurrentItemAttackStrengthDelay", at = @At("HEAD"), cancellable = true)
@@ -219,6 +223,18 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
 
     public void setPartialExperiencePoint(float partialExperiencePoint){
         this.partialExperiencePoint = partialExperiencePoint;
+    }
+
+    public int getBlizzardTicks(){
+        return this.blizzardTicks;
+    }
+
+    public void incrementBlizzardTicks(){
+        this.blizzardTicks = Mth.clamp(this.blizzardTicks+1, 0, 20);
+    }
+
+    public void decrementBlizzardTicks(){
+        this.blizzardTicks = Mth.clamp(this.blizzardTicks-1, 0, 20);
     }
 
     private Player getPlayer(){

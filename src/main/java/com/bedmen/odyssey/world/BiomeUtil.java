@@ -2,6 +2,7 @@ package com.bedmen.odyssey.world;
 
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.effect.TemperatureSource;
+import com.bedmen.odyssey.world.gen.biome.weather.OdysseyPrecipitation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -157,6 +158,10 @@ public class BiomeUtil {
             Biome biome = level.getBiome(blockPos).value();
             return biome.getPrecipitation() == Biome.Precipitation.SNOW && biome.coldEnoughToSnow(blockPos);
         }
+    }
+
+    public static boolean isInBlizzard(Player player){
+        return player.level.getBiome(player.blockPosition()).value().getPrecipitation() == OdysseyPrecipitation.BLIZZARD;
     }
 
 }

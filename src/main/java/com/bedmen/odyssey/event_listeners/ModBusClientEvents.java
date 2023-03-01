@@ -20,13 +20,16 @@ import com.bedmen.odyssey.particle.ThrustParticle;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
+import com.bedmen.odyssey.world.gen.biome.weather.OdysseyWeatherRenderHandler;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.CritParticle;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -37,6 +40,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.GrassColor;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -44,13 +48,14 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.client.model.ForgeModelBakery;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class ClientEvents {
+public class ModBusClientEvents {
 
     @SubscribeEvent
     public static void onFMLClientSetupEvent(final FMLClientSetupEvent event)
@@ -181,12 +186,12 @@ public class ClientEvents {
             //Boat Renderings
             EntityRenderers.register(EntityTypeRegistry.BOAT.get(), OdysseyBoatRenderer::new);
 
+            // Other import render settings
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.gui = new OdysseyIngameGui(minecraft);
             OdysseyItemInHandRenderer odysseyItemInHandRenderer = new OdysseyItemInHandRenderer(minecraft);
             minecraft.itemInHandRenderer = odysseyItemInHandRenderer;
             minecraft.gameRenderer.itemInHandRenderer = odysseyItemInHandRenderer;
-//        minecraft.itemRenderer = new OdysseyItemRenderer(minecraft.getTextureManager(), minecraft.getModelManager(), minecraft.getItemColors());
         });
     }
 
