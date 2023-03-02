@@ -162,8 +162,8 @@ public class BiomeUtil {
         }
     }
 
-    public static boolean isInBlizzard(Player player){
-        return player.level.getBiome(player.blockPosition()).value().getPrecipitation() == OdysseyPrecipitation.BLIZZARD;
+    public static boolean isInBlizzard(LivingEntity livingEntity){
+        return livingEntity.level.getBiome(livingEntity.blockPosition()).value().getPrecipitation() == OdysseyPrecipitation.BLIZZARD;
     }
 
 }

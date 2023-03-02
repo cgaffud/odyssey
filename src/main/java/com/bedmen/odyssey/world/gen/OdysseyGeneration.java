@@ -192,8 +192,6 @@ public class OdysseyGeneration {
                 snowNotUnderWaterRule
         );
 
-        
-
         // Biome Rules
         SurfaceRules.RuleSource stonyPeaksRule = SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.STONY_PEAKS), SurfaceRules.sequence(calciteRule, STONE));
         SurfaceRules.RuleSource stonyShoreRule = SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.STONY_SHORE), SurfaceRules.sequence(stonyShoreGravelRule, STONE));
