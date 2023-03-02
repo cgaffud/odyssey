@@ -52,9 +52,10 @@ public class OdysseyGeneration {
 
     public static final MultiNoiseBiomeSource.Preset ODYSSEY_OVERWORLD = new MultiNoiseBiomeSource.Preset(new ResourceLocation(Odyssey.MOD_ID+"overworld"), (p_204281_) -> {
         ImmutableList.Builder<Pair<Climate.ParameterPoint, Holder<Biome>>> builder = ImmutableList.builder();
-        (new OdysseyOverworldBiomeBuilder()).addBiomes((p_204279_) -> {
-            builder.add(p_204279_.mapSecond(p_204281_::getOrCreateHolder));
-        });
+        (new OdysseyOverworldBiomeBuilder())
+                .addBiomes(
+                        (parameterPointResourceKeyPair) -> builder.add(parameterPointResourceKeyPair.mapSecond(p_204281_::getOrCreateHolder))
+                );
         return new Climate.ParameterList<>(builder.build());
     });
 

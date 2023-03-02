@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
 public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer {
 
     private static final EntityDataAccessor<PermabuffHolder> DATA_PERMABUFF_HOLDER = SynchedEntityData.defineId(Player.class, OdysseyDataSerializers.PERMABUFF_HOLDER);
-    private static final int BLIZZARD_FOG_TICKS = 80;
+    private static final int BLIZZARD_FOG_TICKS = 50;
 
     @Shadow
     public void awardStat(Stat<?> p_36247_) {}

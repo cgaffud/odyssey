@@ -71,6 +71,6 @@ public class OdysseyOverworldBiomes {
         biomeBuilder.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, MiscOverworldPlacements.ICE_PATCH);
         BiomeDefaultFeatures.addDefaultOres(biomeBuilder);
         BiomeDefaultFeatures.addDefaultSoftDisks(biomeBuilder);
-        return OverworldBiomes.biome(OdysseyPrecipitation.BLIZZARD, Biome.BiomeCategory.ICY, -1.0f, 1.0F, mobSpawnBuilder, biomeBuilder, NORMAL_MUSIC);
+        return OverworldBiomes.biome(OdysseyPrecipitation.BLIZZARD, Biome.BiomeCategory.ICY, -1.0f, 0.0F, mobSpawnBuilder, biomeBuilder, NORMAL_MUSIC);
     }
 }
