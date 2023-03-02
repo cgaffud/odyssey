@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.boss;
 
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerBossEvent;
@@ -114,7 +115,7 @@ public abstract class Boss extends Monster {
 
     public boolean validTargetPredicate(ServerPlayer serverPlayer){
         double followRange = this.getAttributeValue(Attributes.FOLLOW_RANGE);
-        return serverPlayer.isAlive() && !serverPlayer.isInvulnerable() && !serverPlayer.isCreative() && !serverPlayer.isSpectator() && this.distanceToSqr(serverPlayer) <= followRange * followRange;
+        return serverPlayer.isAlive() && !serverPlayer.isInvulnerable() && GeneralUtil.isSurvival(serverPlayer) && this.distanceToSqr(serverPlayer) <= followRange * followRange;
     }
 
     public int getNearbyPlayerNumber(){

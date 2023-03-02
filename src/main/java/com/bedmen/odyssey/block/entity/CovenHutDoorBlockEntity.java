@@ -5,6 +5,7 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.effect.FireEffect;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.world.gen.StructureResourceKeys;
 import com.bedmen.odyssey.world.gen.structure.CovenHutFeature;
 import net.minecraft.core.BlockPos;
@@ -50,8 +51,7 @@ public class CovenHutDoorBlockEntity extends BlockEntity {
             level.getEntitiesOfClass(LivingEntity.class, covenHutDoorBlockEntity.boundingBox)
                     .stream()
                     .filter(entity -> !(entity instanceof Player player)
-                            || (!player.isCreative()
-                            && !player.isSpectator()
+                            || (GeneralUtil.isSurvival(player)
                             && AspectUtil.getIntegerAspectStrengthAllSlots(player, Aspects.TELEPORTATION_IMMUNITY) <= 0))
                     .forEach(livingEntity -> {
                         livingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));

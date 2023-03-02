@@ -12,6 +12,7 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -55,7 +56,7 @@ public class PlayerEvents {
             if(player instanceof OdysseyPlayer odysseyPlayer) {
                 odysseyPlayer.updateSniperScoping();
                 odysseyPlayer.updateBlizzardFogScaleO();
-                if(BiomeUtil.isInBlizzard(player)){
+                if(BiomeUtil.isInBlizzard(player) && GeneralUtil.isSurvival(player)){
                     odysseyPlayer.decrementBlizzardFogScale();
                 } else {
                     odysseyPlayer.incrementBlizzardFogScale();
