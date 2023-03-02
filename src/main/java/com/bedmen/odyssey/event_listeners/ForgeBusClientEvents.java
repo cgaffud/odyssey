@@ -48,18 +48,30 @@ public class ForgeBusClientEvents {
     public static void EntityViewRenderEvent$RenderFogEventListener(final EntityViewRenderEvent.RenderFogEvent event){
         if(event.getMode() == FogRenderer.FogMode.FOG_TERRAIN){
             Minecraft minecraft = Minecraft.getInstance();
-            ClientLevel level = minecraft.level;
             LocalPlayer localPlayer = minecraft.player;
-            if(level != null && localPlayer instanceof OdysseyPlayer odysseyPlayer){
+            if(localPlayer instanceof OdysseyPlayer odysseyPlayer){
                 float blizzardFogScale = odysseyPlayer.getBlizzardFogScale((float) event.getPartialTicks());
                 if(blizzardFogScale < 1f){
-                    blizzardFogScale = Mth.clamp(blizzardFogScale, 0, 1);
                     float nearDistance = Mth.lerp(blizzardFogScale, 0f, event.getNearPlaneDistance());
                     float farDistance = Mth.lerp(blizzardFogScale, 16f, event.getFarPlaneDistance());
                     event.setNearPlaneDistance(nearDistance);
                     event.setFarPlaneDistance(farDistance);
                     event.setCanceled(true);
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void EntityViewRenderEvent$FogColors(final EntityViewRenderEvent.FogColors event){
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer localPlayer = minecraft.player;
+        if(localPlayer instanceof OdysseyPlayer odysseyPlayer){
+            float blizzardFogScale = odysseyPlayer.getBlizzardFogScale((float) event.getPartialTicks());
+            if(blizzardFogScale < 1f){
+                event.setRed(event.getRed() * Mth.lerp(blizzardFogScale, 0.6f, 1.0f));
+                event.setGreen(event.getGreen() * Mth.lerp(blizzardFogScale, 0.6f, 1.0f));
+                event.setBlue(event.getBlue() * Mth.lerp(blizzardFogScale, 0.7f, 1.0f));
             }
         }
     }
