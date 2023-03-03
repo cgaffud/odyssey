@@ -27,6 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BiomeUtil {
 
+    public static float COLD_TEMPERATURE_CUTOFF = 0.15f;
+
     public static class Climate {
         public float temperature;
         public float downfall;
@@ -102,7 +104,7 @@ public class BiomeUtil {
             case TAIGA, EXTREME_HILLS, JUNGLE, PLAINS, FOREST, SWAMP -> true;
             default -> false;
         };
-        boolean correctClimate = precipitation == Biome.Precipitation.RAIN && temperature > 0.15f && temperature < 1.0f;
+        boolean correctClimate = precipitation == Biome.Precipitation.RAIN && temperature > COLD_TEMPERATURE_CUTOFF && temperature < 1.0f;
         return correctBiomeCategory && correctClimate;
     }
 
@@ -114,7 +116,8 @@ public class BiomeUtil {
     }
 
     public static List<TemperatureSource> getTemperatureSourceList(Level level, BlockPos blockPos){
-        Biome biome =  level.getBiome(blockPos).value();
+        Holder<Biome> biomeHolder = level.getBiome(blockPos);
+        Biome biome = biomeHolder.value();
         Biome.BiomeCategory biomeCategory = biome.getBiomeCategory();
         if(biomeCategory == Biome.BiomeCategory.NETHER){
             return TemperatureSource.NETHER_LIST;
@@ -137,7 +140,7 @@ public class BiomeUtil {
             } else if(biomeCategory == Biome.BiomeCategory.MESA){
                 temperatureSourceList.add(TemperatureSource.MESA);
             }
-            else if(biome.coldEnoughToSnow(blockPos)){
+            else if(getClimate(biomeHolder).temperature < COLD_TEMPERATURE_CUTOFF){
                 temperatureSourceList.add(TemperatureSource.COLD_BIOME);
             }
         }
