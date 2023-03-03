@@ -2,9 +2,7 @@ package com.bedmen.odyssey.world;
 
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.effect.TemperatureSource;
-import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.world.gen.biome.weather.OdysseyPrecipitation;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -112,8 +110,11 @@ public class BiomeUtil {
         if(player.isCreative() || player.isSpectator()){
             return List.of();
         }
-        BlockPos blockPos = player.blockPosition();
-        Biome biome =  player.level.getBiome(blockPos).value();
+        return getTemperatureSourceList(player.level, player.blockPosition());
+    }
+
+    public static List<TemperatureSource> getTemperatureSourceList(Level level, BlockPos blockPos){
+        Biome biome =  level.getBiome(blockPos).value();
         Biome.BiomeCategory biomeCategory = biome.getBiomeCategory();
         if(biomeCategory == Biome.BiomeCategory.NETHER){
             return TemperatureSource.NETHER_LIST;
@@ -122,13 +123,13 @@ public class BiomeUtil {
             return List.of();
         }
         List<TemperatureSource> temperatureSourceList = new ArrayList<>();
-        if(player.getY() > 48){
+        if(blockPos.getY() > 48){
             if(biome.getPrecipitation() == OdysseyPrecipitation.BLIZZARD){
                 temperatureSourceList.add(TemperatureSource.BLIZZARD);
                 return temperatureSourceList;
             }
-            temperatureSourceList.add(TemperatureSource.SUN.withMultiplier(sunLightMultiplier(player)));
-            if(isSnowingAtLivingEntity(player)){
+            temperatureSourceList.add(TemperatureSource.SUN.withMultiplier(sunLightMultiplier(level, blockPos)));
+            if(isSnowingAt(level, blockPos)){
                 temperatureSourceList.add(TemperatureSource.SNOW_WEATHER);
             }
             if(biomeCategory == Biome.BiomeCategory.DESERT){
@@ -143,19 +144,15 @@ public class BiomeUtil {
         return temperatureSourceList;
     }
 
-    private static float sunLightMultiplier(LivingEntity livingEntity){
-        BlockPos blockPos = livingEntity.blockPosition();
-        return Aspects.getSunBoost(blockPos, livingEntity.level) * skyLightMultiplier(livingEntity);
+    private static float sunLightMultiplier(Level level, BlockPos blockPos){
+        return Aspects.getSunBoost(blockPos, level) * skyLightMultiplier(level, blockPos);
     }
 
-    private static float skyLightMultiplier(LivingEntity livingEntity){
-        BlockPos blockPos = livingEntity.blockPosition();
-        return livingEntity.level.getBrightness(LightLayer.SKY, blockPos) / 15f;
+    private static float skyLightMultiplier(Level level, BlockPos blockPos){
+        return level.getBrightness(LightLayer.SKY, blockPos) / 15f;
     }
 
-    private static boolean isSnowingAtLivingEntity(LivingEntity livingEntity){
-        BlockPos blockPos = livingEntity.blockPosition();
-        Level level = livingEntity.level;
+    private static boolean isSnowingAt(Level level, BlockPos blockPos){
         if (!level.isRaining()) {
             return false;
         } else if (!level.canSeeSky(blockPos)) {
@@ -178,6 +175,14 @@ public class BiomeUtil {
 
     public static boolean isBiome(ResourceLocation resourceLocation, Biome biome){
         return resourceLocation.equals(biome.getRegistryName());
+    }
+
+    public static boolean isTooHotForPowderSnow(Level level, BlockPos blockPos){
+        List<TemperatureSource> temperatureSourceList = getTemperatureSourceList(level, blockPos);
+        if(temperatureSourceList.isEmpty()){
+            return false;
+        }
+        return temperatureSourceList.stream().map(temperatureSource -> temperatureSource.temperaturePerTick).reduce(Float::sum).get() > 0f;
     }
 
 }

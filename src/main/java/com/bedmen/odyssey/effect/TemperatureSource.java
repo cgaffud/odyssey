@@ -11,18 +11,21 @@ import java.util.List;
 import java.util.Optional;
 
 public class TemperatureSource {
-    public static final float STABILIZATION_RATE = 0.002f;
     public static final float ONE_PERCENT_PER_SECOND = 0.0005f;
-    public static final TemperatureSource POWDERED_SNOW = new TemperatureSource(-0.18f / 20f, Optional.of(0.5f));
-    public static final TemperatureSource SNOW_WEATHER = new TemperatureSource(-0.02f / 20f);
-    public static final TemperatureSource COLD_BIOME = new TemperatureSource(-0.06f / 20f);
-    public static final TemperatureSource BLIZZARD = new TemperatureSource(-0.08f / 20f);
-    public static final TemperatureSource SUN = new TemperatureSource(0.02f / 20f);
-    public static final TemperatureSource DESERT = new TemperatureSource(0.03f / 20f);
-    public static final TemperatureSource MESA = new TemperatureSource(0.04f / 20f);
+    public static final float STABILIZATION_RATE = 4f * ONE_PERCENT_PER_SECOND;
+
+    public static final TemperatureSource POWDERED_SNOW = temperaturePercentPerSecondSource(-14f, Optional.of(0.5f));
+    public static final TemperatureSource SNOW_WEATHER = temperaturePercentPerSecondSource(-2f);
+    public static final TemperatureSource COLD_BIOME = temperaturePercentPerSecondSource(-6f);
+    public static final TemperatureSource BLIZZARD = temperaturePercentPerSecondSource(-8f);
+
+    public static final TemperatureSource ON_FIRE = temperaturePercentPerSecondSource(10f);
+    public static final TemperatureSource SUN = temperaturePercentPerSecondSource(2f);
+    public static final TemperatureSource DESERT = temperaturePercentPerSecondSource(3f);
+    public static final TemperatureSource MESA = temperaturePercentPerSecondSource(4f);
     public static final List<TemperatureSource> NETHER_LIST = List.of(
-            new TemperatureSource(0.5f / 20f, Optional.of(1.0f)),
-            new TemperatureSource(0.08f / 20f)
+            temperaturePercentPerSecondSource(50f, Optional.of(1.0f)),
+            temperaturePercentPerSecondSource(8f)
     );
 
     public static final float TEMPERATURE_PER_DAMAGE = 0.25f;
@@ -30,14 +33,19 @@ public class TemperatureSource {
     public final float temperaturePerTick;
     public final Optional<Float> protectionForImmunity;
 
-    public TemperatureSource(float temperaturePerTick){
-        this(temperaturePerTick, Optional.empty());
-    }
-
     public TemperatureSource(float temperaturePerTick, Optional<Float> protectionForImmunity){
         this.temperaturePerTick = temperaturePerTick;
         this.protectionForImmunity = protectionForImmunity;
     }
+
+    public static TemperatureSource temperaturePercentPerSecondSource(float temperaturePercentPerSecond){
+        return temperaturePercentPerSecondSource(temperaturePercentPerSecond, Optional.empty());
+    }
+
+    public static TemperatureSource temperaturePercentPerSecondSource(float temperaturePercentPerSecond, Optional<Float> protectionForImmunity){
+        return new TemperatureSource(temperaturePercentPerSecond * ONE_PERCENT_PER_SECOND, protectionForImmunity);
+    }
+
 
     public boolean isHot(){
         return this.temperaturePerTick > 0f;
@@ -108,7 +116,7 @@ public class TemperatureSource {
     }
 
     public static TemperatureSource getHarmfulTemperatureEffectSource(boolean isHot, int amplifier){
-        return new TemperatureSource(TemperatureSource.ONE_PERCENT_PER_SECOND * (amplifier + 1) * getHotFactor(isHot), Optional.of(4f * (amplifier + 1)));
+        return temperaturePercentPerSecondSource((amplifier + 1) * getHotFactor(isHot), Optional.of(4f * (amplifier + 1)));
     }
 
 }

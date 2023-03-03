@@ -27,6 +27,7 @@ import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tier.OdysseyTiers;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
@@ -47,6 +48,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -110,8 +112,13 @@ public class EntityEvents {
             odysseyLivingEntity.setFireType(FireType.getStrongestFireEffectType(livingEntity));
 
             // Temperature Sources
-            if(livingEntity.isInPowderSnow){
-                TemperatureSource.POWDERED_SNOW.tick(livingEntity);
+            if(!(livingEntity instanceof Player player) || GeneralUtil.isSurvival(player)){
+                if(livingEntity.isInPowderSnow){
+                    TemperatureSource.POWDERED_SNOW.tick(livingEntity);
+                }
+                if(odysseyLivingEntity.getFireType().isNotNone() || livingEntity.isOnFire()){
+                    TemperatureSource.ON_FIRE.tick(livingEntity);
+                }
             }
 
             // Move own temperature toward 0

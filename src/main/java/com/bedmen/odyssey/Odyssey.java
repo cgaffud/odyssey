@@ -12,6 +12,7 @@ import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyPowderSnowBucketItem;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.recipes.OdysseyRecipeBook;
@@ -93,8 +94,7 @@ public class Odyssey
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
             PoiType.WEAPONSMITH.matchingStates = ImmutableSet.copyOf(BlockRegistry.GRINDSTONE.get().getStateDefinition().getPossibleStates());
             OdysseyRecipeBook.init();
-
-
+            OdysseyPowderSnowBucketItem.registerDispenseBehavior();
 
             //Generation
             BiomeUtil.init();

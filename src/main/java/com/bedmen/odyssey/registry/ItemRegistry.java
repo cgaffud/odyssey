@@ -14,10 +14,7 @@ import com.bedmen.odyssey.items.aspect_items.*;
 import com.bedmen.odyssey.items.food.PermabuffFoodItem;
 import com.bedmen.odyssey.items.food.StackableBowlItem;
 import com.bedmen.odyssey.items.food.TemperatureFoodItem;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyBoatItem;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyMapItem;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
+import com.bedmen.odyssey.items.odyssey_versions.*;
 import com.bedmen.odyssey.lock.LockableDoorType;
 import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.tier.OdysseyTiers;
@@ -538,5 +535,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BEETROOT_SOUP = ITEMS_VANILLA.register("beetroot_soup", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(Foods.BEETROOT_SOUP)));
     public static final RegistryObject<Item> RABBIT_STEW = ITEMS_VANILLA.register("rabbit_stew", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(OdysseyFood.RABBIT_STEW)));
     public static final RegistryObject<Item> MUSHROOM_STEW = ITEMS_VANILLA.register("mushroom_stew", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(OdysseyFood.MUSHROOM_STEW)));
+
+    // Bucket of powder snow override
+    public static final RegistryObject<Item> POWDER_SNOW_BUCKET = ITEMS_VANILLA.register("powder_snow_bucket", () -> new OdysseyPowderSnowBucketItem((new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_MISC)));
 }
 
