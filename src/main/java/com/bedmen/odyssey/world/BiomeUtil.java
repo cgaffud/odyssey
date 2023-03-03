@@ -3,6 +3,7 @@ package com.bedmen.odyssey.world;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.world.gen.biome.weather.OdysseyPrecipitation;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
@@ -119,6 +121,10 @@ public class BiomeUtil {
         }
         List<TemperatureSource> temperatureSourceList = new ArrayList<>();
         if(player.getY() > 48){
+            if(biome.getPrecipitation() == OdysseyPrecipitation.BLIZZARD){
+                temperatureSourceList.add(TemperatureSource.BLIZZARD);
+                return temperatureSourceList;
+            }
             temperatureSourceList.add(TemperatureSource.SUN.withMultiplier(sunLightMultiplier(player)));
             if(isSnowingAtLivingEntity(player)){
                 temperatureSourceList.add(TemperatureSource.SNOW_WEATHER);
@@ -128,9 +134,7 @@ public class BiomeUtil {
             } else if(biomeCategory == Biome.BiomeCategory.MESA){
                 temperatureSourceList.add(TemperatureSource.MESA);
             }
-            if(biome.getPrecipitation() == OdysseyPrecipitation.BLIZZARD){
-                temperatureSourceList.add(TemperatureSource.BLIZZARD);
-            } else if(biome.coldEnoughToSnow(blockPos)){
+            else if(biome.coldEnoughToSnow(blockPos)){
                 temperatureSourceList.add(TemperatureSource.COLD_BIOME);
             }
         }
@@ -163,7 +167,11 @@ public class BiomeUtil {
     }
 
     public static boolean isInBlizzard(LivingEntity livingEntity){
-        return livingEntity.level.getBiome(livingEntity.blockPosition()).value().getPrecipitation() == OdysseyPrecipitation.BLIZZARD;
+        return isBlizzard(livingEntity.level, livingEntity.blockPosition());
+    }
+
+    public static boolean isBlizzard(LevelReader levelReader, BlockPos blockPos){
+        return levelReader.getBiome(blockPos).value().getPrecipitation() == OdysseyPrecipitation.BLIZZARD;
     }
 
 }

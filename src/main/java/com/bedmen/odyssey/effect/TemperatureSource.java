@@ -16,7 +16,7 @@ public class TemperatureSource {
     public static final TemperatureSource POWDERED_SNOW = new TemperatureSource(-0.18f / 20f, Optional.of(0.5f));
     public static final TemperatureSource SNOW_WEATHER = new TemperatureSource(-0.02f / 20f);
     public static final TemperatureSource COLD_BIOME = new TemperatureSource(-0.06f / 20f);
-    public static final TemperatureSource BLIZZARD = new TemperatureSource(-0.09f / 20f);
+    public static final TemperatureSource BLIZZARD = new TemperatureSource(-0.08f / 20f);
     public static final TemperatureSource SUN = new TemperatureSource(0.02f / 20f);
     public static final TemperatureSource DESERT = new TemperatureSource(0.03f / 20f);
     public static final TemperatureSource MESA = new TemperatureSource(0.04f / 20f);
