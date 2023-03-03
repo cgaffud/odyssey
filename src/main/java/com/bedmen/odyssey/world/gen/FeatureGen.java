@@ -76,7 +76,7 @@ public class FeatureGen {
             }
             gen.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, PLACED_ABANDONED_IRON_GOLEM);
 
-            if(event.getName().equals(BiomeRegistry.PRAIRIE.get().getRegistryName())) {
+            if(BiomeUtil.isBiome(event.getName(), BiomeRegistry.PRAIRIE.get())) {
                 gen.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PLACED_PATCH_TALL_GRASS);
                 gen.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PLACED_PATCH_PRAIRIE_GRASS);
             }

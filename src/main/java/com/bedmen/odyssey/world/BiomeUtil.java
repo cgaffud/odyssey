@@ -2,11 +2,13 @@ package com.bedmen.odyssey.world;
 
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.effect.TemperatureSource;
+import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.world.gen.biome.weather.OdysseyPrecipitation;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -172,6 +174,10 @@ public class BiomeUtil {
 
     public static boolean isBlizzard(LevelReader levelReader, BlockPos blockPos){
         return levelReader.getBiome(blockPos).value().getPrecipitation() == OdysseyPrecipitation.BLIZZARD;
+    }
+
+    public static boolean isBiome(ResourceLocation resourceLocation, Biome biome){
+        return resourceLocation.equals(biome.getRegistryName());
     }
 
 }
