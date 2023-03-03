@@ -11,7 +11,6 @@ import com.bedmen.odyssey.client.renderer.blockentity.*;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.combat.SpearType;
-import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
@@ -20,35 +19,30 @@ import com.bedmen.odyssey.particle.ThrustParticle;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
-import com.bedmen.odyssey.world.gen.biome.weather.OdysseyWeatherRenderHandler;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.CritParticle;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.HuskRenderer;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
-import net.minecraft.client.renderer.entity.StrayRenderer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.GrassColor;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.client.model.ForgeModelBakery;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -89,13 +83,18 @@ public class ModBusClientEvents {
             });
 
             //For Roasting heat overlay
-            OverlayRegistry.registerOverlayAbove(ForgeIngameGui.PORTAL_ELEMENT,"Odyssey Roasting", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-                if(gui instanceof OdysseyIngameGui odysseyIngameGui && Minecraft.getInstance().player instanceof OdysseyLivingEntity odysseyLivingEntity){
-                    float temperature = odysseyLivingEntity.getTemperature();
-                    if(temperature > 0){
-                        gui.setupOverlayRenderState(true, false);
-                        odysseyIngameGui.renderRoastingOverlay(temperature);
-                    }
+            IIngameOverlay odysseyFrostbite = OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FROSTBITE_ELEMENT,"Odyssey Frostbite", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+                if(gui instanceof OdysseyIngameGui odysseyIngameGui){
+                    gui.setupOverlayRenderState(true, false);
+                    odysseyIngameGui.renderFrostbite();
+                }
+            });
+
+            //For Roasting heat overlay
+            OverlayRegistry.registerOverlayAbove(odysseyFrostbite,"Odyssey Overheating", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+                if(gui instanceof OdysseyIngameGui odysseyIngameGui){
+                    gui.setupOverlayRenderState(true, false);
+                    odysseyIngameGui.renderRoastingOverlay();
                 }
             });
 

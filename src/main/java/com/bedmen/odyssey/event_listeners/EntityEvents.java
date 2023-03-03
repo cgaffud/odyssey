@@ -133,11 +133,6 @@ public class EntityEvents {
                 }
 
             }
-
-            // Set ticks frozen since it's needed for other logic
-            if(odysseyLivingEntity.isCold()){
-                livingEntity.setTicksFrozen(100);
-            }
         }
     }
 

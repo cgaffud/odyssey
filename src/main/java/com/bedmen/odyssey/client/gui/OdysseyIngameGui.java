@@ -7,15 +7,11 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.datafixers.util.Either;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -218,38 +214,51 @@ public class OdysseyIngameGui extends ForgeIngameGui
         }
     }
 
-    public void renderRoastingOverlay(float temperature)
+    public void renderFrostbite()
     {
-        int i = this.minecraft.getWindow().getGuiScaledWidth();
-        int j = this.minecraft.getWindow().getGuiScaledHeight();
-        temperature = Mth.clamp(temperature, 0.0f, 1.0f);
-        double d0 = Mth.lerp(temperature, 2.0D, 1.0D);
-        float f = 0.4F * temperature;
-        float f1 = 0.2F * temperature;
-        float f2 = 0.2F * temperature;
-        double d1 = (double)i * d0;
-        double d2 = (double)j * d0;
-        double d3 = ((double)i - d1) / 2.0D;
-        double d4 = ((double)j - d2) / 2.0D;
-        RenderSystem.disableDepthTest();
-        RenderSystem.depthMask(false);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
-        RenderSystem.setShaderColor(f, f1, f2, 1.0F);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, GameRenderer.NAUSEA_LOCATION);
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tesselator.getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferbuilder.vertex(d3, d4 + d2, -90.0D).uv(0.0F, 1.0F).endVertex();
-        bufferbuilder.vertex(d3 + d1, d4 + d2, -90.0D).uv(1.0F, 1.0F).endVertex();
-        bufferbuilder.vertex(d3 + d1, d4, -90.0D).uv(1.0F, 0.0F).endVertex();
-        bufferbuilder.vertex(d3, d4, -90.0D).uv(0.0F, 0.0F).endVertex();
-        tesselator.end();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableBlend();
-        RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
+        if(this.minecraft.player instanceof OdysseyLivingEntity odysseyLivingEntity){
+            if(odysseyLivingEntity.isCold()){
+                this.renderTextureOverlay(POWDER_SNOW_OUTLINE_LOCATION, this.minecraft.player.getPercentFrozen());
+            }
+        }
+    }
+
+    public void renderRoastingOverlay()
+    {
+        if(this.minecraft.player instanceof OdysseyLivingEntity odysseyLivingEntity){
+            if(odysseyLivingEntity.isHot()){
+                float temperature = odysseyLivingEntity.getPercentOverheated();
+                int i = this.minecraft.getWindow().getGuiScaledWidth();
+                int j = this.minecraft.getWindow().getGuiScaledHeight();
+                double d0 = Mth.lerp(temperature, 2.0D, 1.0D);
+                float f = 0.4F * temperature;
+                float f1 = 0.2F * temperature;
+                float f2 = 0.2F * temperature;
+                double d1 = (double)i * d0;
+                double d2 = (double)j * d0;
+                double d3 = ((double)i - d1) / 2.0D;
+                double d4 = ((double)j - d2) / 2.0D;
+                RenderSystem.disableDepthTest();
+                RenderSystem.depthMask(false);
+                RenderSystem.enableBlend();
+                RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
+                RenderSystem.setShaderColor(f, f1, f2, 1.0F);
+                RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                RenderSystem.setShaderTexture(0, GameRenderer.NAUSEA_LOCATION);
+                Tesselator tesselator = Tesselator.getInstance();
+                BufferBuilder bufferbuilder = tesselator.getBuilder();
+                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.vertex(d3, d4 + d2, -90.0D).uv(0.0F, 1.0F).endVertex();
+                bufferbuilder.vertex(d3 + d1, d4 + d2, -90.0D).uv(1.0F, 1.0F).endVertex();
+                bufferbuilder.vertex(d3 + d1, d4, -90.0D).uv(1.0F, 0.0F).endVertex();
+                bufferbuilder.vertex(d3, d4, -90.0D).uv(0.0F, 0.0F).endVertex();
+                tesselator.end();
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                RenderSystem.defaultBlendFunc();
+                RenderSystem.disableBlend();
+                RenderSystem.depthMask(true);
+                RenderSystem.enableDepthTest();
+            }
+        }
     }
 }

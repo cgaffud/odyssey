@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity;
 
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.effect.FireType;
+import net.minecraft.util.Mth;
 
 import java.util.Optional;
 
@@ -32,5 +33,9 @@ public interface OdysseyLivingEntity {
 
     default boolean isCold(){
         return this.getTemperature() < 0f;
+    }
+
+    default float getPercentOverheated(){
+        return Mth.clamp(this.getTemperature(), 0f, 1f);
     }
 }
