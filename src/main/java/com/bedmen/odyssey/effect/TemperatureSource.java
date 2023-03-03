@@ -15,6 +15,7 @@ public class TemperatureSource {
     public static final float STABILIZATION_RATE = 4f * ONE_PERCENT_PER_SECOND;
 
     public static final TemperatureSource POWDERED_SNOW = temperaturePercentPerSecondSource(-14f, Optional.of(0.5f));
+    public static final TemperatureSource WATER_OR_RAIN = temperaturePercentPerSecondSource(-1f);
     public static final TemperatureSource SNOW_WEATHER = temperaturePercentPerSecondSource(-2f);
     public static final TemperatureSource COLD_BIOME = temperaturePercentPerSecondSource(-6f);
     public static final TemperatureSource BLIZZARD = temperaturePercentPerSecondSource(-8f);
@@ -22,7 +23,7 @@ public class TemperatureSource {
     public static final TemperatureSource ON_FIRE = temperaturePercentPerSecondSource(10f);
     public static final TemperatureSource SUN = temperaturePercentPerSecondSource(2f);
     public static final TemperatureSource DESERT = temperaturePercentPerSecondSource(3f);
-    public static final TemperatureSource MESA = temperaturePercentPerSecondSource(4f);
+    public static final TemperatureSource MESA = temperaturePercentPerSecondSource(5f);
     public static final List<TemperatureSource> NETHER_LIST = List.of(
             temperaturePercentPerSecondSource(50f, Optional.of(1.0f)),
             temperaturePercentPerSecondSource(8f)

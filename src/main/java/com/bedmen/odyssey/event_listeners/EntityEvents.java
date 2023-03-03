@@ -8,8 +8,6 @@ import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.entity.boss.coven.CovenRootEntity;
-import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
@@ -48,7 +46,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -115,6 +112,9 @@ public class EntityEvents {
             if(!(livingEntity instanceof Player player) || GeneralUtil.isSurvival(player)){
                 if(livingEntity.isInPowderSnow){
                     TemperatureSource.POWDERED_SNOW.tick(livingEntity);
+                }
+                if(livingEntity.isInWaterRainOrBubble()){
+                    TemperatureSource.WATER_OR_RAIN.tick(livingEntity);
                 }
                 if(odysseyLivingEntity.getFireType().isNotNone() || livingEntity.isOnFire()){
                     TemperatureSource.ON_FIRE.tick(livingEntity);
