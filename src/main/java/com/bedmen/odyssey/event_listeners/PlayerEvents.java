@@ -13,19 +13,29 @@ import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
+import com.bedmen.odyssey.util.StringUtil;
 import com.bedmen.odyssey.world.BiomeUtil;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -42,6 +52,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -183,8 +194,10 @@ public class PlayerEvents {
         Item item = itemStack.getItem();
         TooltipFlag tooltipFlag = event.getFlags();
         Player player = event.getPlayer();
-        Optional<Level> optionalLevel = player == null ? Optional.empty() : Optional.of(player.level);
         List<Component> componentList = new ArrayList<>();
+        
+        // Aspect Tooltips
+        Optional<Level> optionalLevel = player == null ? Optional.empty() : Optional.of(player.level);
         AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(optionalLevel, Optional.of(itemStack));
         if(item instanceof AspectItem aspectItem){
             List<AspectHolder> aspectHolderList = aspectItem.getAspectHolderList();
@@ -193,6 +206,35 @@ public class PlayerEvents {
             }
         }
         AspectUtil.addAddedModifierTooltip(itemStack, componentList, tooltipFlag, aspectTooltipContext);
+
+        // Food Item Tooltips
+        FoodProperties foodProperties = itemStack.getFoodProperties(player);
+        if(foodProperties != null){
+            List<Pair<MobEffectInstance, Float>> effectList = foodProperties.getEffects();
+            if(!effectList.isEmpty()){
+                for(Pair<MobEffectInstance, Float> pair: effectList){
+                    MobEffectInstance mobEffectInstance = pair.getFirst();
+                    float probability = pair.getSecond();
+                    MutableComponent mutablecomponent = new TranslatableComponent(mobEffectInstance.getDescriptionId());
+                    MobEffect mobeffect = mobEffectInstance.getEffect();
+
+                    if (mobEffectInstance.getAmplifier() > 0) {
+                        mutablecomponent = new TranslatableComponent("potion.withAmplifier", mutablecomponent, new TranslatableComponent("potion.potency." + mobEffectInstance.getAmplifier()));
+                    }
+
+                    if (mobEffectInstance.getDuration() > 20) {
+                        mutablecomponent = new TranslatableComponent("potion.withDuration", mutablecomponent, MobEffectUtil.formatDuration(mobEffectInstance, 1.0f));
+                    }
+
+                    if(probability < 1f){
+                        Style style = mutablecomponent.getStyle();
+                        mutablecomponent = mutablecomponent.append(new TranslatableComponent("potion.withChance", StringUtil.percentFormat(probability)).withStyle(style));
+                    }
+
+                    componentList.add(mutablecomponent.withStyle(mobeffect.getCategory().getTooltipFormatting()));
+                }
+            }
+        }
 
         List<Component> tooltip = event.getToolTip();
         tooltip.addAll(1, componentList);
