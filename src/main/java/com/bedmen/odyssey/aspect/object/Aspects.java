@@ -70,7 +70,7 @@ public class Aspects {
     public static final FloatAspect PROJECTILE_LARCENY_CHANCE = new FloatAspect("projectile_larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
     public static final FloatAspect PROJECTILE_KNOCKBACK = new FloatAspect("projectile_knockback", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.PROJECTILE);
     public static final BooleanAspect HYDRODYNAMIC = new BooleanAspect("hydrodynamic", AspectItemPredicates.PROJECTILE);
-    public static final IntegerAspect PROJECTILE_FREEZING = new IntegerAspect("projectile_freezing", 0.01f, AspectTooltipFunctions.TIME, AspectItemPredicates.PROJECTILE, true);
+    public static final BooleanAspect SNOW_STORM = new BooleanAspect("snow_storm", 2.0f, AspectItemPredicates.PROJECTILE);
 
     // # Armor
     public static final DamageSourcePredicateAspect FEATHER_FALLING = new DamageSourcePredicateAspect("feather_falling", 1.0f, AspectItemPredicates.LOWER_ARMOR, damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);

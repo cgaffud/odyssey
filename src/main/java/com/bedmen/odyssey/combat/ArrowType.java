@@ -21,7 +21,7 @@ public enum ArrowType{
     AMETHYST("amethyst", ItemRegistry.AMETHYST_ARROW::get, OdysseyTiers.AMETHYST, 6.0d, List.of()),
     CLOVER_STONE("clover_stone", ItemRegistry.CLOVER_STONE_ARROW::get, OdysseyTiers.CLOVER_STONE, 6.0d, List.of(new AspectInstance(Aspects.PROJECTILE_LOOTING_LUCK, 1))),
     HEXED_EARTH("hexed_earth", ItemRegistry.HEXED_EARTH_ARROW::get, OdysseyTiers.ULTRA_2, 6.0d, List.of(new AspectInstance(Aspects.PROJECTILE_HEXED_EARTH, 0.2f))),
-    FROST("frost", ItemRegistry.FROST_ARROW::get, OdysseyTiers.ARCTIC, 6.0d, List.of(new AspectInstance(Aspects.PROJECTILE_FREEZING, 100)));
+    FROST("frost", ItemRegistry.FROST_ARROW::get, OdysseyTiers.ARCTIC, 6.5d, List.of(new AspectInstance(Aspects.SNOW_STORM)));
 
     private final Lazy<Item> lazyItem;
     public final Tier tier;

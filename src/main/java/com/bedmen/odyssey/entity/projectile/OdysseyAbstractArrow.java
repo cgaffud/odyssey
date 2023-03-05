@@ -1,38 +1,36 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
-import com.bedmen.odyssey.effect.TemperatureEffect;
+import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.boss.coven.CovenRootEntity;
 import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
-import com.bedmen.odyssey.registry.EffectRegistry;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
 import java.util.Arrays;
@@ -100,6 +98,36 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     protected abstract SoundEvent getEntityHitSoundEvent();
 
+    public void tick() {
+        super.tick();
+        if(this.hasAspect(Aspects.SNOW_STORM) && !this.inGround){
+            AABB boundingBox = this.getBoundingBox().inflate(2.0d);
+            if(!this.level.isClientSide){
+                this.level.getEntitiesOfClass(LivingEntity.class, boundingBox, livingEntity -> livingEntity != this.getOwner())
+                        .forEach(TemperatureSource.SNOW_STORM_PROJECTILE::tick);
+            } else {
+                for(int x = -1; x <= 1; x++){
+                    for(int y = -1; y <= 1; y++){
+                        for(int z = -1; z <= 1; z++){
+                            if(!(x == 0 && y == 0 && z == 0) && this.random.nextBoolean()){
+                                Vec3 velocity  = new Vec3(x, y, z).add(this.getRandomSnowflakeVector()).normalize().scale(0.3d);
+                                this.level.addParticle(ParticleTypes.SNOWFLAKE, this.getX(), this.getY(), this.getZ(), velocity.x, velocity.y, velocity.z);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private Vec3 getRandomSnowflakeVector(){
+        return new Vec3(this.getRandomSnowflakeSpeed(), this.getRandomSnowflakeSpeed(), this.getRandomSnowflakeSpeed());
+    }
+
+    private double getRandomSnowflakeSpeed(){
+        return this.random.nextDouble() * 0.4d - 0.2d;
+    }
+
     protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity target = entityHitResult.getEntity();
 
@@ -141,7 +169,6 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 return;
             }
             if (target instanceof LivingEntity livingEntity) {
-
                 if (!this.level.isClientSide && owner instanceof LivingEntity) {
                     EnchantmentHelper.doPostHurtEffects(livingEntity, owner);
                     EnchantmentHelper.doPostDamageEffects((LivingEntity)owner, livingEntity);
@@ -179,10 +206,9 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 }
                 // Ranged Larceny
                 WeaponUtil.tryLarceny(this.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), this.getOwner(), livingEntity);
-                // Ranged Freezing
-                int freezingStrength = (int) this.getAspectStrength(Aspects.PROJECTILE_FREEZING);
-                if(freezingStrength > 0){
-                    livingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), freezingStrength, 1, false));
+                // Snow Storm Hit
+                if(this.hasAspect(Aspects.SNOW_STORM)){
+                    TemperatureSource.SNOW_STORM_PROJECTILE_HIT.tick(livingEntity);
                 }
             }
 

@@ -3,9 +3,12 @@ package com.bedmen.odyssey.effect;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,8 @@ public class TemperatureSource {
     public static final TemperatureSource SNOW_WEATHER = temperaturePercentPerSecondSource(-2f);
     public static final TemperatureSource COLD_BIOME = temperaturePercentPerSecondSource(-6f);
     public static final TemperatureSource BLIZZARD = temperaturePercentPerSecondSource(-8f);
+    public static final TemperatureSource SNOW_STORM_PROJECTILE = temperaturePercentPerSecondSource(-50f, Optional.of(8f));
+    public static final TemperatureSource SNOW_STORM_PROJECTILE_HIT = temperaturePercentPerSecondSource(-500f, Optional.of(8f));
 
     public static final TemperatureSource ON_FIRE = temperaturePercentPerSecondSource(10f);
     public static final TemperatureSource SUN = temperaturePercentPerSecondSource(2f);
@@ -68,6 +73,19 @@ public class TemperatureSource {
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             float temperature = odysseyLivingEntity.getTemperature();
             float changeInTemperature = this.temperaturePerTick * protectionFactor;
+            if(this.isHot()){
+                if(livingEntity.fireImmune()){
+                    return;
+                }
+            } else {
+                EntityType<?> entityType = livingEntity.getType();
+                if(entityType.is(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES)){
+                    return;
+                }
+                if(entityType.is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)){
+                    changeInTemperature *= 2.0f;
+                }
+            }
             odysseyLivingEntity.setTemperature(temperature + changeInTemperature);
         }
     }

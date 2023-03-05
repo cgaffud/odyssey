@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " BA",
+    " CB",
+    "C  "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:permafrost_shard"
+    },
+    "B": {
+      "item": "oddc:diamond_fiber"
+    },
+    "C": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "oddc:frost_spear"
+  }
+}

@@ -258,6 +258,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> AMETHYST_HATCHET = ITEMS.register("amethyst_hatchet", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, MeleeWeaponClass.HATCHET, 6f, List.of(), List.of(new AspectInstance(Aspects.SMITE_DAMAGE, 1.0f))));
     public static final RegistryObject<Item> AMETHYST_SPEAR = ITEMS.register("amethyst_spear", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, MeleeWeaponClass.SPEAR, ThrowableTypes.AMETHYST_SPEAR));
 
+    public static final RegistryObject<Item> FROST_MACE = ITEMS.register("frost_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ARCTIC, MeleeWeaponClass.MACE, 10f, List.of(), List.of(new AspectInstance(Aspects.SNOW_STORM))));
+    public static final RegistryObject<Item> FROST_SPEAR = ITEMS.register("frost_spear", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, MeleeWeaponClass.SPEAR, ThrowableTypes.FROST_SPEAR));
+
     public static final RegistryObject<Item> DIAMOND_MACE = ITEMS.register("diamond_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.DIAMOND, MeleeWeaponClass.MACE, 10f, List.of(), List.of(new AspectInstance(Aspects.DURABILITY, 2.0f))));
 
     public static final RegistryObject<Item> SMACKIN_SHOVEL = ITEMS.register("smackin_shovel", () -> new AspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_2, MeleeWeaponClass.BAT, 7f, List.of(new AspectInstance(Aspects.SMACK)), List.of(new AspectInstance(Aspects.KNOCKBACK, 2.0f))));

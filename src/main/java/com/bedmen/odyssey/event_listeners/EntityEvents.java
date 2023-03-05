@@ -121,8 +121,10 @@ public class EntityEvents {
                 }
             }
 
-            // Move own temperature toward 0
-            TemperatureSource.stabilizeTemperatureNaturally(odysseyLivingEntity);
+            // Move own temperature toward 0 if not undead
+            if(!(livingEntity instanceof Mob mob) || mob.getMobType() != MobType.UNDEAD){
+                TemperatureSource.stabilizeTemperatureNaturally(odysseyLivingEntity);
+            }
             for(boolean isHot: new boolean[]{true, false}){
                 float protectionStrength = AspectUtil.getProtectionAspectStrength(livingEntity, TemperatureSource.damageSource(isHot));
                 TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, protectionStrength * -TemperatureSource.ONE_PERCENT_PER_SECOND * TemperatureSource.getHotFactor(isHot));
