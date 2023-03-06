@@ -405,6 +405,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BARN_SPIDER_SPAWN_EGG = ITEMS.register("barn_spider_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BARN_SPIDER, 0x8A8A45, 11013646, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> BANDIT_SPAWN_EGG = ITEMS.register("bandit_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BANDIT, 0x503213, 0x282828, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> WRAITH_SPAWN_EGG = ITEMS.register("wraith_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WRAITH, 0xF3F4F5, 0xA8ACAE, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> BLADE_SPIDER_SPAWN_EGG = ITEMS.register("blade_spider_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BLADE_SPIDER, 0x3C3C44, 0xA80E0E, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
 
     // # No Creative Tab
     public static final RegistryObject<Item> UNOBTAINABLE = ITEMS.register("unobtainable", ()-> new Item((new Item.Properties())));

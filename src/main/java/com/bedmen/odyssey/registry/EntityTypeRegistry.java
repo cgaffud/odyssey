@@ -52,6 +52,8 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<BarnSpider>> BARN_SPIDER = ENTITY_TYPE.register("barn_spider", () -> EntityType.Builder.of(BarnSpider::new, MobCategory.MONSTER).sized(0.7F, 0.5F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "barn_spider").toString()));
     public static final RegistryObject<EntityType<Weaver>> WEAVER = ENTITY_TYPE.register("weaver", () -> EntityType.Builder.of(Weaver::new, MobCategory.MONSTER).sized(1.4F, 0.8F).clientTrackingRange(10).build(new ResourceLocation(Odyssey.MOD_ID, "weaver").toString()));
     public static final RegistryObject<EntityType<BabyLeviathan>> BABY_LEVIATHAN = ENTITY_TYPE.register("baby_leviathan", () -> EntityType.Builder.of(BabyLeviathan::new, MobCategory.MONSTER).sized(0.75F, 0.2F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "baby_leviathan").toString()));
+    public static final RegistryObject<EntityType<BladeSpider>> BLADE_SPIDER = ENTITY_TYPE.register("blade_spider", () -> EntityType.Builder.of(BladeSpider::new, MobCategory.MONSTER).sized(1.7F, 1.3F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "blade_spider").toString()));
+
 
     // ## Wrait
     public static final RegistryObject<EntityType<Wraith>> WRAITH = ENTITY_TYPE.register("wraith", () -> EntityType.Builder.of(Wraith::new, MobCategory.MONSTER).sized(0.55F, 1.85F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith").toString()));
