@@ -135,7 +135,7 @@ public class TemperatureSource {
     }
 
     public static TemperatureSource getHarmfulTemperatureEffectSource(boolean isHot, int amplifier){
-        return temperaturePercentPerSecondSource((amplifier + 1) * getHotFactor(isHot), Optional.of(4f * (amplifier + 1)));
+        return temperaturePercentPerSecondSource(6.25f * (1 << amplifier) * getHotFactor(isHot), Optional.of(4f * (amplifier + 1)));
     }
 
 }

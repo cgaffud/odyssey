@@ -21,7 +21,7 @@ public class OdysseyHusk extends Zombie {
         boolean doHurtTargetResult = super.doHurtTarget(target);
         if (doHurtTargetResult && this.getMainHandItem().isEmpty() && target instanceof LivingEntity livingTarget) {
             float effectiveDifficulty = this.level.getCurrentDifficultyAt(this.blockPosition()).getEffectiveDifficulty();
-            livingTarget.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.ROASTING.get(), 140 * (int)effectiveDifficulty, 1, false), this);
+            livingTarget.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.ROASTING.get(), 140 * (int)effectiveDifficulty, 0, false), this);
         }
         return doHurtTargetResult;
     }

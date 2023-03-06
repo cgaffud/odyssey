@@ -106,26 +106,9 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 this.level.getEntitiesOfClass(LivingEntity.class, boundingBox, livingEntity -> livingEntity != this.getOwner())
                         .forEach(TemperatureSource.SNOW_STORM_PROJECTILE::tick);
             } else {
-                for(int x = -1; x <= 1; x++){
-                    for(int y = -1; y <= 1; y++){
-                        for(int z = -1; z <= 1; z++){
-                            if(!(x == 0 && y == 0 && z == 0) && this.random.nextBoolean()){
-                                Vec3 velocity  = new Vec3(x, y, z).add(this.getRandomSnowflakeVector()).normalize().scale(0.3d);
-                                this.level.addParticle(ParticleTypes.SNOWFLAKE, this.getX(), this.getY(), this.getZ(), velocity.x, velocity.y, velocity.z);
-                            }
-                        }
-                    }
-                }
+                AspectUtil.doFrostAspectParticles(this, 1);
             }
         }
-    }
-
-    private Vec3 getRandomSnowflakeVector(){
-        return new Vec3(this.getRandomSnowflakeSpeed(), this.getRandomSnowflakeSpeed(), this.getRandomSnowflakeSpeed());
-    }
-
-    private double getRandomSnowflakeSpeed(){
-        return this.random.nextDouble() * 0.4d - 0.2d;
     }
 
     protected void onHitEntity(EntityHitResult entityHitResult) {
