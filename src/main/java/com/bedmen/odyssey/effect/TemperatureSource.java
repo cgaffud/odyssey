@@ -3,12 +3,12 @@ package com.bedmen.odyssey.effect;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 import java.util.Optional;
@@ -73,12 +73,12 @@ public class TemperatureSource {
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             float temperature = odysseyLivingEntity.getTemperature();
             float changeInTemperature = this.temperaturePerTick * protectionFactor;
+            EntityType<?> entityType = livingEntity.getType();
             if(this.isHot()){
-                if(livingEntity.fireImmune()){
+                if(livingEntity.fireImmune() || entityType.is(OdysseyEntityTags.OVERHEATING_IMMUNE)){
                     return;
                 }
             } else {
-                EntityType<?> entityType = livingEntity.getType();
                 if(entityType.is(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES)){
                     return;
                 }

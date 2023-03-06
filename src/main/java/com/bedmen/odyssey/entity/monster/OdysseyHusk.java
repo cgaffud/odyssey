@@ -2,15 +2,21 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.effect.TemperatureEffect;
 import com.bedmen.odyssey.registry.EffectRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ServerLevelAccessor;
+
+import java.util.Random;
 
 public class OdysseyHusk extends Zombie {
     public OdysseyHusk(EntityType<? extends OdysseyHusk> entityType,  Level level) {
@@ -60,5 +66,13 @@ public class OdysseyHusk extends Zombie {
 
     protected ItemStack getSkull() {
         return ItemStack.EMPTY;
+    }
+
+    public float getWalkTargetValue(BlockPos blockPos, LevelReader levelReader) {
+        return 0.5F;
+    }
+
+    public static boolean spawnPredicate(EntityType<OdysseyHusk> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, Random random) {
+        return checkAnyLightMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, random) && (mobSpawnType == MobSpawnType.SPAWNER || serverLevelAccessor.canSeeSky(blockPos));
     }
 }
