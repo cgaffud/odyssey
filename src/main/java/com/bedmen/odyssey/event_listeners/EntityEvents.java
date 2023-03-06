@@ -406,6 +406,11 @@ public class EntityEvents {
                     }
                 }
             }
+            if(damageSource.msgId.equals("mob")
+                    && AspectUtil.hasBooleanAspect(shield, Aspects.COLD_TO_THE_TOUCH)
+                    && damageSource.getDirectEntity() instanceof LivingEntity damageSourceLivingEntity){
+                damageSourceLivingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false));
+            }
             event.setBlockedDamage(damageBlockMultiplier * aspectShieldItem.getDamageBlock(shield, livingEntity.level.getDifficulty(), damageSource));
         }
     }

@@ -399,6 +399,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GOLDEN_SHIELD = ITEMS.register("golden_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.GOLDEN));
     public static final RegistryObject<Item> REINFORCED_SHIELD = ITEMS.register("reinforced_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.REINFORCED));
     public static final RegistryObject<Item> DIAMOND_SHIELD = ITEMS.register("diamond_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.DIAMOND));
+    public static final RegistryObject<Item> FROST_SHIELD = ITEMS.register("frost_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.FROST));
 
     // # Spawning
     public static final RegistryObject<Item> HUSK_SPAWN_EGG = ITEMS.register("husk_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.HUSK, 7958625, 15125652, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));

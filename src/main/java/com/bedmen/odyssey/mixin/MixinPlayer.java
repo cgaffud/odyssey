@@ -69,8 +69,6 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
 
     @Shadow public abstract void awardStat(Stat<?> p_36145_, int p_36146_);
 
-    @Shadow public abstract boolean blockActionRestricted(Level p_36188_, BlockPos p_36189_, GameType p_36190_);
-
     private int attackStrengthTickerO;
     private boolean isSniperScoping;
     private static final String PERMABUFF_HOLDER_TAG = Odyssey.MOD_ID + ":PermabuffHolder";

@@ -50,7 +50,7 @@ public class OdysseyTiers {
     public static final OdysseyTier REINFORCED = new OdysseyTier(2, () -> Ingredient.EMPTY);
     public static final OdysseyTier DIAMOND = new OdysseyTier(4,500,8.0F, BlockTags.NEEDS_DIAMOND_TOOL, () -> Ingredient.of(Items.DIAMOND));
     public static final OdysseyTier GREATROOT = new OdysseyTier(4,750, () -> Ingredient.of(ItemRegistry.GREATROOT.get()));
-    public static final OdysseyTier ARCTIC = new OdysseyTier(4, 900, () -> Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()));
+    public static final OdysseyTier ARCTIC = new OdysseyTier(4, 800, () -> Ingredient.of(ItemRegistry.PERMAFROST_SHARD.get()));
     public static final OdysseyTier MARINE = new OdysseyTier(4,1000,10.0F, () -> Ingredient.of(ItemRegistry.PEARL.get()));
     public static final OdysseyTier UNCRAFTABLE_2 = new OdysseyTier(2,700, 9.0F, () -> Ingredient.EMPTY);
     public static final OdysseyTier ULTRA_2 = new OdysseyTier(2,750, () -> Ingredient.EMPTY);
