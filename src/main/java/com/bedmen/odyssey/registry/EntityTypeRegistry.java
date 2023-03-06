@@ -46,6 +46,7 @@ public class EntityTypeRegistry {
     // ## Skeletons
     public static final RegistryObject<EntityType<OdysseySkeleton>> SKELETON = ENTITY_TYPE.register("skeleton", () -> EntityType.Builder.of(OdysseySkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "skeleton").toString()));
     public static final RegistryObject<EntityType<OdysseyStray>> STRAY = ENTITY_TYPE.register("stray", () -> EntityType.Builder.<OdysseyStray>of(OdysseyStray::new, MobCategory.MONSTER).sized(0.6F, 1.99F).immuneTo(Blocks.POWDER_SNOW).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "stray").toString()));
+    public static final RegistryObject<EntityType<StrayBrute>> STRAY_BRUTE = ENTITY_TYPE.register("stray_brute", () -> EntityType.Builder.<StrayBrute>of(StrayBrute::new, MobCategory.MONSTER).sized(0.9F, 2.99F).immuneTo(Blocks.POWDER_SNOW).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "stray_brute").toString()));
     public static final RegistryObject<EntityType<DungeonSkeleton>> MOON_TOWER_SKELETON = ENTITY_TYPE.register("moon_tower_skeleton", () -> EntityType.Builder.<DungeonSkeleton>of(DungeonSkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "moon_tower_skeleton").toString()));
 
     // ## Creepers

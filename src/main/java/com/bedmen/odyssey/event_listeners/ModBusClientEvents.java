@@ -7,6 +7,7 @@ import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.*;
 import com.bedmen.odyssey.client.model.*;
 import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
+import com.bedmen.odyssey.client.renderer.StrayBruteRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.*;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.combat.ShieldType;
@@ -158,6 +159,7 @@ public class ModBusClientEvents {
             EntityRenderers.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.POLAR_BEAR.get(), PolarBearRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBruteRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.STRAY_BRUTE.get(), StrayBruteRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpiderRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WRAITH.get(), WraithRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BANDIT.get(), BanditRenderer::new);
