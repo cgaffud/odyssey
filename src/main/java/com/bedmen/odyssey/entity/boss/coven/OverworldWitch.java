@@ -177,6 +177,7 @@ public class OverworldWitch extends CovenWitch {
         private final OverworldWitch overworldWitch;
 
         private int attackWarmupDelay;
+        private int attackLength;
         private int nextAttackTickCount;
 
         private final float attackRadius = 45.0F;
@@ -206,11 +207,13 @@ public class OverworldWitch extends CovenWitch {
         public boolean canContinueToUse() {
             LivingEntity livingentity = overworldWitch.getTarget();
             Optional<CovenMaster> master = overworldWitch.getMaster();
-            return (master.isPresent()) && isValidTarget(livingentity, master.get()) && this.attackWarmupDelay > 0;
+            return (master.isPresent()) && isValidTarget(livingentity, master.get()) && this.attackWarmupDelay >= 0;
         }
 
         public void start() {
             this.attackWarmupDelay = this.adjustedTickDelay(this.castWarmupTime);
+            this.attackLength = 0;
+
             overworldWitch.spellCastingTickCount = this.castingTime;
             overworldWitch.setPhase(Phase.CHASING);
 
@@ -245,9 +248,13 @@ public class OverworldWitch extends CovenWitch {
                     double d0 = this.overworldWitch.distanceToSqr(target);
                     if (d0 < this.rangedRadius * this.rangedRadius) {
                         overworldWitch.setPhase(Phase.CASTING);
-                        --this.attackWarmupDelay;
+                        if (this.attackWarmupDelay > 0)
+                            --this.attackWarmupDelay;
                         if (this.attackWarmupDelay == 0) {
                             this.performSpellCasting();
+                            overworldWitch.setPhase(Phase.SHOOTING);
+                            if (--this.attackLength == 0)
+                                --this.attackWarmupDelay;
                             overworldWitch.playSound(overworldWitch.getCastingSoundEvent(), 1.0F, 1.0F);
                         }
                     } else if (d0 < this.attackRadius * this.attackRadius) {
@@ -266,21 +273,26 @@ public class OverworldWitch extends CovenWitch {
             double d1 = Math.max(target.getY(), overworldWitch.getY()) + 1.0D;
             float f = (float) Mth.atan2(target.getZ() - overworldWitch.getZ(), target.getX() - overworldWitch.getX());
             if (overworldWitch.distanceToSqr(target) < 9.0D) {
-                for(int i = 0; i < 5; ++i) {
-                    float f1 = f + (float)i * (float)Math.PI * 0.4F;
-                    this.createSpellEntity(overworldWitch.getX() + (double)Mth.cos(f1) * 1.5D, overworldWitch.getZ() + (double)Mth.sin(f1) * 1.5D, d0, d1, f1, 0);
+                if (this.attackLength < 0) {
+                    this.attackLength = 3;
+                    for (int i = 0; i < 5; ++i) {
+                        float f1 = f + (float) i * (float) Math.PI * 0.4F;
+                        this.createSpellEntity(overworldWitch.getX() + (double) Mth.cos(f1) * 1.5D, overworldWitch.getZ() + (double) Mth.sin(f1) * 1.5D, d0, d1, f1, 0);
+                    }
                 }
-
-                for(int k = 0; k < 8; ++k) {
-                    float f2 = f + (float)k * (float)Math.PI * 2.0F / 8.0F + 1.2566371F;
-                    this.createSpellEntity(overworldWitch.getX() + (double)Mth.cos(f2) * 2.5D, overworldWitch.getZ() + (double)Mth.sin(f2) * 2.5D, d0, d1, f2, 3);
+                if (this.attackLength == 0) {
+                    for(int k = 0; k < 8; ++k) {
+                        float f2 = f + (float)k * (float)Math.PI * 2.0F / 8.0F + 1.2566371F;
+                        this.createSpellEntity(overworldWitch.getX() + (double)Mth.cos(f2) * 2.5D, overworldWitch.getZ() + (double)Mth.sin(f2) * 2.5D, d0, d1, f2, 0);
+                    }
                 }
             } else {
-                for(int l = 0; l < 16; ++l) {
-                    double d2 = 1.25D * (double)(l + 1);
-                    int j = l;
-                    this.createSpellEntity(overworldWitch.getX() + (double)Mth.cos(f) * d2, overworldWitch.getZ() + (double)Mth.sin(f) * d2, d0, d1, f, j);
+                if (this.attackLength < 0) {
+                    this.attackLength = 15;
                 }
+                int l = 15-this.attackLength;
+                double d2 = 1.25D * (double)(l + 1);
+                this.createSpellEntity(overworldWitch.getX() + (double)Mth.cos(f) * d2, overworldWitch.getZ() + (double)Mth.sin(f) * d2, d0, d1, f, 0);
             }
         }
 
