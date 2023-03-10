@@ -37,7 +37,8 @@ public abstract class CovenWitch extends BossSubEntity<CovenMaster> {
     public enum Phase {
         IDLE,
         CHASING,
-        CASTING
+        CASTING,
+        SHOOTING
     }
 
     public CovenWitch(EntityType<? extends CovenWitch> entityType, Level level) {

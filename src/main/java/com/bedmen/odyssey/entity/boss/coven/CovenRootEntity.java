@@ -25,6 +25,7 @@ public class CovenRootEntity extends Entity {
     private boolean sentSpikeEvent;
     private int lifeTicks = 22;
     private boolean clientSideAttackStarted;
+    private boolean finalRoot;
     @Nullable
     private LivingEntity owner;
     @Nullable

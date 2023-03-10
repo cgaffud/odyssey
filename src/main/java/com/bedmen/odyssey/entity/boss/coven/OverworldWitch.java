@@ -53,6 +53,7 @@ public class OverworldWitch extends CovenWitch {
         super.registerGoals();
         this.goalSelector.addGoal(0, new CovenReturnToMasterGoal(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(3, new OverworldWitchLookAtTargetGoal(this));
 //        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 0.6D, 1.0D));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
@@ -81,14 +82,14 @@ public class OverworldWitch extends CovenWitch {
             if (!this.level.isClientSide) {
                 // Target
                 switch (this.getPhase()) {
-                    case CHASING, CASTING:
+                    case CHASING, CASTING, SHOOTING:
                         if (!this.isValidTarget(this.getTarget(), covenMaster))
                             this.setPhase(Phase.IDLE);
                     case IDLE:
                         if (GeneralUtil.isHashTick(this, this.level, 50)) {
                             if (this.goalSelector.getAvailableGoals().stream()
                                     .noneMatch(wrappedGoal -> (wrappedGoal.getGoal() == this.rootGoal) || (wrappedGoal.getGoal() == this.spikeGoal))) {
-                                this.goalSelector.addGoal(3, this.rootGoal);
+                                this.goalSelector.addGoal(2, this.rootGoal);
                             }
 
                             Collection<ServerPlayer> serverPlayerEntities = covenMaster.bossEvent.getPlayers();
@@ -128,12 +129,12 @@ public class OverworldWitch extends CovenWitch {
 
     public void setSpikeGoal() {
         this.goalSelector.removeGoal(this.rootGoal);
-        this.goalSelector.addGoal(3, this.spikeGoal);
+        this.goalSelector.addGoal(2, this.spikeGoal);
     }
 
     public void setRootGoal() {
         this.goalSelector.removeGoal(this.spikeGoal);
-        this.goalSelector.addGoal(3, this.rootGoal);
+        this.goalSelector.addGoal(2, this.rootGoal);
     }
 
 //    public void setIsCastingSpell(SpellcasterIllager.IllagerSpell p_33728_) {
@@ -186,7 +187,7 @@ public class OverworldWitch extends CovenWitch {
 
         public OverworldWitchRootGoal(OverworldWitch witch) {
             this.overworldWitch = witch;
-            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
         public boolean canUse() {
@@ -328,7 +329,7 @@ public class OverworldWitch extends CovenWitch {
 
         public OverworldWitchSpikeGoal(OverworldWitch witch) {
             this.overworldWitch = witch;
-            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
         public boolean canUse() {
@@ -408,4 +409,33 @@ public class OverworldWitch extends CovenWitch {
         }
 
     }
+
+    private static class OverworldWitchLookAtTargetGoal extends Goal {
+        private final OverworldWitch overworldWitch;
+
+        public OverworldWitchLookAtTargetGoal(OverworldWitch witch) {
+            this.overworldWitch = witch;
+            this.setFlags(EnumSet.of(Goal.Flag.LOOK));
+        }
+
+        public boolean canUse() {
+            LivingEntity livingentity = overworldWitch.getTarget();
+            if (livingentity != null && livingentity.isAlive())
+                return true;
+            return false;
+        }
+
+        public void tick() {
+            Optional<CovenMaster> master = overworldWitch.getMaster();
+            if (master.isPresent()) {
+                CovenMaster covenMaster = master.get();
+                LivingEntity target = overworldWitch.getTarget();
+                if (overworldWitch.isValidTarget(target, covenMaster)) {
+                    overworldWitch.getLookControl().setLookAt(target, 30.0F, 30.0F);
+                }
+            }
+
+        }
+    }
+
 }
