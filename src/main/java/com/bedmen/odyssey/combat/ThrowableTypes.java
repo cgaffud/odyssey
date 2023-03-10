@@ -24,6 +24,6 @@ public class ThrowableTypes {
     public static final SpearType FLINT_SPEAR = new SpearType("flint_spear", 4.0d, 1.2f, ThrowableType.SoundProfile.WOODEN, List.of(), List.of(new AspectInstance(Aspects.VELOCITY, 0.25f)));
     public static final SpearType AMETHYST_SPEAR = new SpearType("amethyst_spear", 6.0d, 1.2f, ThrowableType.SoundProfile.WOODEN, List.of(), List.of(new AspectInstance(Aspects.VELOCITY, 0.5f)));
     public static final SpearType CLOVER_STONE_SPEAR = new SpearType("clover_stone_spear", 5.0d, 1.2f, ThrowableType.SoundProfile.WOODEN, List.of(), List.of(new AspectInstance(Aspects.LOOTING_LUCK, 1), new AspectInstance(Aspects.PROJECTILE_LOOTING_LUCK, 1), new AspectInstance(Aspects.VELOCITY, 0.25f)));
-    public static final SpearType FROST_SPEAR = new SpearType("frost_spear", 7.0d, 1.2f, ThrowableType.SoundProfile.WOODEN, List.of(), List.of(new AspectInstance(Aspects.SNOW_STORM), new AspectInstance(Aspects.FROSTBITE), new AspectInstance(Aspects.VELOCITY, 0.5f)));
+    public static final SpearType FROST_SPEAR = new SpearType("frost_spear", 7.0d, 1.2f, ThrowableType.SoundProfile.WOODEN, List.of(), List.of(new AspectInstance(Aspects.SNOW_STORM), new AspectInstance(Aspects.COLD_SNAP), new AspectInstance(Aspects.VELOCITY, 0.5f)));
     public static final SpearType MARINE_TRIDENT = new SpearType("marine_trident", 8.0d, 2.0f, ThrowableType.SoundProfile.METAL, List.of(), List.of(new AspectInstance(Aspects.HYDRODYNAMIC)));
 }

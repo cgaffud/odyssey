@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.network.packet;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.registry.ParticleTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -9,46 +8,46 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class FrostbitePacket {
+public class ColdSnapAnimatePacket {
 
     public int id;
 
-    public FrostbitePacket(){
+    public ColdSnapAnimatePacket(){
     }
 
-    public FrostbitePacket(int id){
+    public ColdSnapAnimatePacket(int id){
         this.id = id;
     }
 
-    public FrostbitePacket(Entity entity){
+    public ColdSnapAnimatePacket(Entity entity){
         this.id = entity.getId();
     }
 
     /**
      * Writes the raw packet data to the data stream.
      */
-    public static void encode(FrostbitePacket FrostbitePacket, FriendlyByteBuf buf){
-        buf.writeVarInt(FrostbitePacket.id);
+    public static void encode(ColdSnapAnimatePacket ColdSnapAnimatePacket, FriendlyByteBuf buf){
+        buf.writeVarInt(ColdSnapAnimatePacket.id);
     }
 
     /**
      * Reads the raw packet data from the data stream.
      */
-    public static FrostbitePacket decode(FriendlyByteBuf buf){
-        return new FrostbitePacket(buf.readVarInt());
+    public static ColdSnapAnimatePacket decode(FriendlyByteBuf buf){
+        return new ColdSnapAnimatePacket(buf.readVarInt());
     }
 
     /**
      * Passes this Packet on to the NetHandler for processing.
      */
-    public static void handle(FrostbitePacket FrostbitePacket, Supplier<NetworkEvent.Context> supplier) {
+    public static void handle(ColdSnapAnimatePacket ColdSnapAnimatePacket, Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             Minecraft minecraft = Minecraft.getInstance();
             if(minecraft.level != null){
-                Entity entity = minecraft.level.getEntity(FrostbitePacket.id);
+                Entity entity = minecraft.level.getEntity(ColdSnapAnimatePacket.id);
                 if(entity != null){
-                    AspectUtil.doFrostAspectParticles(entity, 3);
+                    AspectUtil.doFrostAspectParticles(entity, 5);
                 }
             }
         });

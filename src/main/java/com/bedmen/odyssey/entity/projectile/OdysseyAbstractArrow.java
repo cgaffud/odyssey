@@ -5,11 +5,13 @@ import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.effect.TemperatureEffect;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.boss.coven.CovenRootEntity;
 import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -104,7 +106,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
             AABB boundingBox = this.getBoundingBox().inflate(2.0d);
             if(!this.level.isClientSide){
                 this.level.getEntitiesOfClass(LivingEntity.class, boundingBox, livingEntity -> livingEntity != this.getOwner())
-                        .forEach(TemperatureSource.SNOW_STORM_PROJECTILE::tick);
+                        .forEach(livingEntity -> livingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 20, 2, true)));
             } else {
                 AspectUtil.doFrostAspectParticles(this, 1);
             }
@@ -189,10 +191,6 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 }
                 // Ranged Larceny
                 WeaponUtil.tryLarceny(this.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), this.getOwner(), livingEntity);
-                // Snow Storm Hit
-                if(this.hasAspect(Aspects.SNOW_STORM)){
-                    TemperatureSource.SNOW_STORM_PROJECTILE_HIT.tick(livingEntity);
-                }
             }
 
             this.onHurt(target, true);

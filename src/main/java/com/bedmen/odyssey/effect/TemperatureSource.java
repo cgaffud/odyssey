@@ -22,8 +22,6 @@ public class TemperatureSource {
     public static final TemperatureSource SNOW_WEATHER = temperaturePercentPerSecondSource(-2f);
     public static final TemperatureSource COLD_BIOME = temperaturePercentPerSecondSource(-6f);
     public static final TemperatureSource BLIZZARD = temperaturePercentPerSecondSource(-8f);
-    public static final TemperatureSource SNOW_STORM_PROJECTILE = temperaturePercentPerSecondSource(-50f, Optional.of(8f));
-    public static final TemperatureSource SNOW_STORM_PROJECTILE_HIT = temperaturePercentPerSecondSource(-500f, Optional.of(8f));
 
     public static final TemperatureSource ON_FIRE = temperaturePercentPerSecondSource(10f);
     public static final TemperatureSource SUN = temperaturePercentPerSecondSource(2f);

@@ -21,7 +21,7 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
 import com.bedmen.odyssey.effect.FireEffect;
 import com.bedmen.odyssey.effect.FireType;
-import com.bedmen.odyssey.network.packet.FrostbitePacket;
+import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -190,10 +190,11 @@ public class EntityEvents {
                 odysseyLivingEntity.pushKnockbackAspectQueue(AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
             }
 
-            // Frostbite
-            if(AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.FROSTBITE)){
-                hurtLivingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false));
-                OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> hurtLivingEntity), new FrostbitePacket(hurtLivingEntity));
+            // Cold Snap
+            if(AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.COLD_SNAP)){
+                WeaponUtil.getSweepLivingEntities(damageSourceLivingEntity, hurtLivingEntity, true)
+                                .forEach(livingEntity -> livingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false)));
+                OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> hurtLivingEntity), new ColdSnapAnimatePacket(hurtLivingEntity));
             }
 
             // Thorns
@@ -406,10 +407,10 @@ public class EntityEvents {
                     }
                 }
             }
-            if(damageSource.msgId.equals("mob")
-                    && AspectUtil.hasBooleanAspect(shield, Aspects.COLD_TO_THE_TOUCH)
-                    && damageSource.getDirectEntity() instanceof LivingEntity damageSourceLivingEntity){
-                damageSourceLivingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false));
+            if(AspectUtil.hasBooleanAspect(shield, Aspects.COLD_TO_THE_TOUCH)){
+                WeaponUtil.getSweepLivingEntities(livingEntity, livingEntity, false)
+                        .forEach(livingEntity1 -> livingEntity1.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false)));
+                OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> livingEntity), new ColdSnapAnimatePacket(livingEntity));
             }
             event.setBlockedDamage(damageBlockMultiplier * aspectShieldItem.getDamageBlock(shield, livingEntity.level.getDifficulty(), damageSource));
         }

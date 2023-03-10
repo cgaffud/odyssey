@@ -152,13 +152,7 @@ public class PlayerEvents {
         // Sweep
         if(canSweep){
             // Unchanging variables are needed to use in the below lambda expressions
-            player.level.getEntitiesOfClass(LivingEntity.class, mainHandItemStack.getSweepHitBox(player, target)).stream()
-                    .filter(livingEntity ->
-                            livingEntity != player
-                                    && livingEntity != target
-                                    && !player.isAlliedTo(livingEntity)
-                                    && (!(livingEntity instanceof ArmorStand) || !((ArmorStand)livingEntity).isMarker())
-                                    && player.distanceToSqr(livingEntity) < 9.0D)
+            WeaponUtil.getSweepLivingEntities(player, target, false)
                     .forEach(livingEntity -> livingEntity.hurt(DamageSource.playerAttack(player), sweepDamage));
 
             player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.0F);
