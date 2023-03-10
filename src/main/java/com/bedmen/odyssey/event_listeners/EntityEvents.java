@@ -63,6 +63,8 @@ import java.util.function.Consumer;
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
 
+    private static final float BRUTE_CHANCE = 0.05f;
+
     @SubscribeEvent
     public static void onLivingUpdateEvent(final LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
@@ -265,15 +267,16 @@ public class EntityEvents {
     private static Map<EntityType<?>, EntityReplacementFunction> ENTITY_REPLACEMENT_MAP;
 
     public static void initEntityMap(){
-        ENTITY_REPLACEMENT_MAP = Map.of(
-                EntityType.SKELETON, EntityEvents::skeletonReplace,
-                EntityType.STRAY, EntityEvents::strayReplace,
-                EntityType.CREEPER, EntityEvents::creeperReplace,
-                EntityType.ZOMBIE, EntityEvents::zombieReplace,
-                EntityType.HUSK, EntityEvents::huskReplace,
-                EntityType.SPIDER, EntityEvents::spiderReplace,
-                EntityType.DROWNED, EntityEvents::zombieReplace,
-                EntityType.POLAR_BEAR, EntityEvents::polarBearReplace);
+        ENTITY_REPLACEMENT_MAP = new HashMap<>();
+        ENTITY_REPLACEMENT_MAP.put(EntityType.SKELETON, EntityEvents::skeletonReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.STRAY, EntityEvents::vanillaStrayReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityTypeRegistry.STRAY.get(), EntityEvents::odysseyStrayReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.CREEPER, EntityEvents::creeperReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.ZOMBIE, EntityEvents::zombieReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.HUSK, EntityEvents::huskReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.SPIDER, EntityEvents::spiderReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.DROWNED, EntityEvents::zombieReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.POLAR_BEAR, EntityEvents::polarBearReplace);
     }
 
     @SubscribeEvent
@@ -304,8 +307,15 @@ public class EntityEvents {
         return Optional.of(EntityTypeRegistry.SKELETON.get());
     }
 
-    private static Optional<EntityType<?>> strayReplace(Mob mob, Random random){
+    private static Optional<EntityType<?>> vanillaStrayReplace(Mob mob, Random random){
         return Optional.of(EntityTypeRegistry.STRAY.get());
+    }
+
+    private static Optional<EntityType<?>> odysseyStrayReplace(Mob mob, Random random){
+        if(random.nextFloat() < BRUTE_CHANCE){
+            return Optional.of(EntityTypeRegistry.STRAY_BRUTE.get());
+        }
+        return Optional.empty();
     }
 
     private static Optional<EntityType<?>> creeperReplace(Mob mob, Random random){
@@ -323,7 +333,7 @@ public class EntityEvents {
             mob.setBaby(true);
             return Optional.empty();
         }
-        if(random.nextFloat() < 0.05f){
+        if(random.nextFloat() < BRUTE_CHANCE){
             return Optional.of(EntityTypeRegistry.ZOMBIE_BRUTE.get());
         }
         return Optional.empty();
