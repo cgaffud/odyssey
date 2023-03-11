@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,6 +28,11 @@ public class StrawHexdollItem extends BurnToSummonItem {
         if (!itemEntity.level.isClientSide()) {
             ServerLevel serverLevel = (ServerLevel) itemEntity.level;
             Vec3 summonBlockPos = itemEntity.getPosition(0);
+
+            LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(serverLevel);
+            lightningBolt.moveTo(summonBlockPos);
+            lightningBolt.setVisualOnly(true);
+            serverLevel.addFreshEntity(lightningBolt);
 
             BlockState hexflameBlockState = ((HexFireBlock) BlockRegistry.HEX_FIRE.get()).getStateForPlacement(serverLevel, new BlockPos(summonBlockPos));
             serverLevel.setBlockAndUpdate(new BlockPos(summonBlockPos), hexflameBlockState);

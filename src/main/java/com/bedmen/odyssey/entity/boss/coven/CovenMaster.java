@@ -8,9 +8,11 @@ import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -175,7 +177,7 @@ public class CovenMaster extends BossMaster {
                 this.addIdToMap(covenType, witch.getId());
 
                 float phi = Mth.PI * 2/NUM_WITCHES * covenType.ordinal();
-                BlockPos.MutableBlockPos blockpos$mutableblockpos = (this.blockPosition().offset(Mth.cos(phi), 60, Mth.sin(phi))).mutable();
+                BlockPos.MutableBlockPos blockpos$mutableblockpos = (this.blockPosition().offset(2*Mth.cos(phi), 60, 2*Mth.sin(phi))).mutable();
 
                 while(blockpos$mutableblockpos.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(blockpos$mutableblockpos).getMaterial().blocksMotion()) {
                     blockpos$mutableblockpos.move(Direction.DOWN);
@@ -183,6 +185,9 @@ public class CovenMaster extends BossMaster {
                 BlockPos blockPos = blockpos$mutableblockpos.above().immutable();
 
                 witch.moveTo(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+                if (this.level instanceof ServerLevel serverLevel)
+                    for (int i = 0; i <25; i++)
+                     serverLevel.sendParticles(ParticleTypes.PORTAL, witch.getRandomX(2), witch.getRandomY(), witch.getRandomZ(2), 0,0, -2,0, 0);
                 witch.setMasterId(this.getId());
             } else {
                 Odyssey.LOGGER.error("Witch type " + covenType.name() + " failed to spawn in initializeWitches");
@@ -190,7 +195,6 @@ public class CovenMaster extends BossMaster {
             }
         }
     }
-
 
     public void handleSubEntity(SubEntity<?> subEntity) {
         Entity entity = subEntity.asEntity();

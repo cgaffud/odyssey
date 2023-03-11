@@ -55,8 +55,9 @@ public class HexFireBlock extends BaseFireBlock implements INeedsToRegisterRende
         return p_53455_.getBlockState(blockpos).isFaceSturdy(p_53455_, blockpos, Direction.UP) || this.isValidFireLocation(p_53455_, p_53456_);
     }
 
+    // Not sure if we should keep this here, but this would have handled hexflame spawning on other surfaces
     public BlockState getStateForPlacement(BlockGetter p_53471_, BlockPos p_53472_) {
-        BlockPos blockpos = p_53472_.below();
+//        BlockPos blockpos = p_53472_.below();
 //        BlockState blockstate = p_53471_.getBlockState(blockpos);
 //        if (!this.canCatchFire(p_53471_, p_53472_, Direction.UP) && !blockstate.isFaceSturdy(p_53471_, blockpos, Direction.UP)) {
 //            BlockState blockstate1 = this.defaultBlockState();

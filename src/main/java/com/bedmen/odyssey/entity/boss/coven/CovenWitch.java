@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.boss.coven;
 
 import com.bedmen.odyssey.entity.boss.BossSubEntity;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
@@ -193,5 +195,15 @@ public abstract class CovenWitch extends BossSubEntity<CovenMaster> {
             return Mth.fastInvSqrt(Mth.sqrt(((float )playerNumber)/3));
         else
             return 1.0f;
+    }
+
+    @Override
+    public boolean canBeAffected(MobEffectInstance p_33809_) {
+        if (p_33809_.getEffect() == EffectRegistry.HEXFLAME.get()) {
+            net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent event = new net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent(this, p_33809_);
+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
+            return event.getResult() == net.minecraftforge.eventbus.api.Event.Result.ALLOW;
+        }
+        return super.canBeAffected(p_33809_);
     }
 }
