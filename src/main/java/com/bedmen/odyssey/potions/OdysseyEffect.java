@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.potions;
 
+import com.bedmen.odyssey.entity.boss.coven.CovenWitch;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
@@ -29,7 +30,7 @@ public class OdysseyEffect extends MobEffect {
     public void applyEffectTick(LivingEntity livingEntity, int amplifier) {
         if ((this == EffectRegistry.BLEEDING.get()) && (livingEntity.tickCount % (100 / (amplifier+3)) == 0)) {
             livingEntity.hurt(DamageSource.MAGIC, 1.0F);
-        } else if (this == EffectRegistry.HEXFLAME.get()){
+        } else if (this == EffectRegistry.HEXFLAME.get() && !(livingEntity instanceof CovenWitch)){
             livingEntity.clearFire();
             if (livingEntity.tickCount % (120 / (amplifier+3)) == 0)
                 livingEntity.hurt(DamageSource.ON_FIRE, 1.0F);

@@ -161,7 +161,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_NUGGET = ITEMS.register("netherite_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> SUNSTONE = ITEMS.register("sunstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> MOONSTONE = ITEMS.register("moonstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
-    public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new BurnToSummonItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), EntityTypeRegistry.COVEN_MASTER::get));
+    public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new StrawHexdollItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), EntityTypeRegistry.COVEN_MASTER::get));
     public static final RegistryObject<Item> AERIAL_FABRIC = ITEMS.register("aerial_fabric", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> ZEPHYR_FABRIC = ITEMS.register("zephyr_fabric", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
 
