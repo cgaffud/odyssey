@@ -17,10 +17,12 @@ import com.bedmen.odyssey.items.odyssey_versions.OdysseyMapItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
 import com.bedmen.odyssey.lock.LockableDoorType;
 import com.bedmen.odyssey.lock.TreasureChestType;
+import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.*;
@@ -194,6 +196,7 @@ public class ItemRegistry {
     // # Magic
     public static final RegistryObject<Item> WARP_TOTEM = ITEMS.register("warp_totem", () -> new WarpTotemItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), false));
     public static final RegistryObject<Item> CRACKED_WARP_TOTEM = ITEMS.register("cracked_warp_totem", () -> new WarpTotemItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).durability(5), true));
+    public static final RegistryObject<Item> STRENGTH_GAMBIT = ITEMS.register("strength_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), () -> MobEffects.DAMAGE_BOOST, () -> MobEffects.WEAKNESS));
     public static final RegistryObject<Item> PURIFICATION_TABLET = ITEMS.register("purification_tablet", () -> new PurificationTabletItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC)));
 
     // # Miscellaneous
