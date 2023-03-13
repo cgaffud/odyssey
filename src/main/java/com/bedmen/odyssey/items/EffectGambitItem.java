@@ -2,6 +2,7 @@ package com.bedmen.odyssey.items;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.magic.ExperienceCost;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -68,41 +69,19 @@ public class EffectGambitItem extends MagicItem{
                 status.putBoolean(IS_DRAINING_TAG, false);
                 if (status.contains(ACTIVATOR_UUID_TAG)) {
                     ServerPlayer activator = (ServerPlayer) level.getPlayerByUUID(status.getUUID(ACTIVATOR_UUID_TAG));
-                    activator.setHealth(1.0f);
+                    // Just for safety I'm having this hit you really hard instead of just setting health to 1.0f
+                    activator.hurt(DamageSource.MAGIC, activator.getHealth()-1.0f);
+                    activator.removeEffect(EffectRegistry.GAMBIT_DRAIN.get());
                     activator.removeEffect(this.buff.get());
                     activator.addEffect(new MobEffectInstance(this.nerf.get(), 999999));
                 }
             } else {
                 serverPlayer.addEffect(new MobEffectInstance(this.buff.get(), 999999));
+                serverPlayer.addEffect(new MobEffectInstance(EffectRegistry.GAMBIT_DRAIN.get(), 9999999));
                 status.putBoolean(IS_DRAINING_TAG, true);
                 status.putUUID(ACTIVATOR_UUID_TAG, serverPlayer.getUUID());
             }
-
         }
         return itemStack;
-    }
-
-
-    @Override
-    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
-        super.inventoryTick(itemStack, level, entity, compartments, selected);
-        CompoundTag status = itemStack.getOrCreateTag();
-
-        if (level instanceof ServerLevel serverLevel && status.contains(IS_DRAINING_TAG) && status.getBoolean(IS_DRAINING_TAG)) {
-            if (status.contains(ACTIVATOR_UUID_TAG)) {
-                ServerPlayer activator = (ServerPlayer) serverLevel.getPlayerByUUID(status.getUUID(ACTIVATOR_UUID_TAG));
-                if (activator.isAlive() && GeneralUtil.isHashTick(this, level, 20)) {
-                    if (this.experienceCost.canPay(activator))
-                        this.experienceCost.pay(activator);
-                    else
-                        activator.hurt(DamageSource.MAGIC, Float.MAX_VALUE);
-                }
-
-                if (!activator.isAlive())
-                    status.remove(ACTIVATOR_UUID_TAG);
-            } else {
-                status.putBoolean(IS_DRAINING_TAG, false);
-            }
-        }
     }
 }

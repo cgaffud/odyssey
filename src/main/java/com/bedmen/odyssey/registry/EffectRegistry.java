@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.potions.FireEffect;
 import com.bedmen.odyssey.potions.FireType;
 import com.bedmen.odyssey.potions.OdysseyEffect;
+import com.bedmen.odyssey.potions.XPDrainerEffect;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -36,4 +37,5 @@ public class EffectRegistry {
     // TODO make soulfire blocks apply soulflame
     public static final RegistryObject<MobEffect> SOULFLAME = EFFECTS.register("soulflame", () -> new FireEffect(MobEffectCategory.HARMFUL, 0x4ff1f6, false, FireType.SOUL));
 
+    public static final RegistryObject<MobEffect> GAMBIT_DRAIN = EFFECTS.register("gambit_drain", () -> new XPDrainerEffect(MobEffectCategory.HARMFUL, 0x00000, false, 0.2f));
 }
