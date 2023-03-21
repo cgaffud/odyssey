@@ -1,6 +1,14 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "oddc:item/strength_gambit"
-  }
+    "layer0": "oddc:item/strength_gambit/inactive"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "active": 1
+      },
+      "model": "oddc:item/strength_gambit_active"
+    }
+  ]
 }

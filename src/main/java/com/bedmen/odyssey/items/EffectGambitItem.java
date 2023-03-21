@@ -3,11 +3,10 @@ package com.bedmen.odyssey.items;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.registry.EffectRegistry;
-import com.bedmen.odyssey.util.GeneralUtil;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,24 +15,19 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import org.lwjgl.system.CallbackI;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
-public class EffectGambitItem extends MagicItem{
+public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemModelProperty{
 
     private final Supplier<MobEffect> buff;
     private final Supplier<MobEffect> nerf;
-    private final String IS_DRAINING_TAG = Odyssey.MOD_ID + ":Draining";
-    private final String ACTIVATOR_UUID_TAG = Odyssey.MOD_ID + ":ActivatorUUID";
+    public static final String IS_DRAINING_TAG = Odyssey.MOD_ID + ":Draining";
+    public static final String ACTIVATOR_UUID_TAG = Odyssey.MOD_ID + ":ActivatorUUID";
 
     public EffectGambitItem(Properties properties, ExperienceCost experienceCost, Supplier<MobEffect> buff, Supplier<MobEffect> nerf) {
         super(properties, experienceCost);
@@ -53,6 +47,25 @@ public class EffectGambitItem extends MagicItem{
             return InteractionResultHolder.consume(itemStack);
         }
         return InteractionResultHolder.pass(itemStack);
+    }
+
+    public static ItemPropertyFunction getEffectGambitPropertyFunction() {
+        return (itemStack, clientLevel, livingEntity, i) -> {
+            if (itemStack.getItem() instanceof EffectGambitItem) {
+                CompoundTag status = itemStack.getOrCreateTag();
+                float active = 0.0f;
+                if (status.contains(IS_DRAINING_TAG))
+                    active = status.getBoolean(IS_DRAINING_TAG) ? 1.0f : 0.0f;
+                return active;
+            }
+            return 0.0f;
+        };
+    }
+
+    // Todo: when you die the model doesn't seem to update? we may have to also force the activaiton to stop on the
+    // item when the effect kills you
+    public void registerItemModelProperties() {
+        ItemProperties.register(this, new ResourceLocation("active"), EffectGambitItem.getEffectGambitPropertyFunction());
     }
 
     public int getUseDuration(ItemStack itemStack) {
