@@ -174,6 +174,9 @@ public class EntityEvents {
             }
         }
 
+        if (hurtLivingEntity.hasEffect(EffectRegistry.VULNERABLE.get()))
+            amount *= 1f + (hurtLivingEntity.getEffect(EffectRegistry.VULNERABLE.get()).getAmplifier()+1)*0.2f;
+
         // Break Coconut
         if(amount >= 10.0f && hurtLivingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() == ItemRegistry.HOLLOW_COCONUT.get() && damageSource != DamageSource.FALL){
             Consumer<LivingEntity> consumer = (p_233653_0_) -> {

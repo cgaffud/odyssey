@@ -90,7 +90,7 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
                 }
             } else {
                 serverPlayer.addEffect(new MobEffectInstance(this.buff.get(), 999999));
-                serverPlayer.addEffect(new MobEffectInstance(EffectRegistry.GAMBIT_DRAIN.get(), 9999999));
+                serverPlayer.addEffect(new MobEffectInstance(EffectRegistry.GAMBIT_DRAIN.get(), 6000));
                 status.putBoolean(IS_DRAINING_TAG, true);
                 status.putUUID(ACTIVATOR_UUID_TAG, serverPlayer.getUUID());
             }
