@@ -35,8 +35,8 @@ public class OdysseyEffect extends MobEffect {
             if (livingEntity.tickCount % (120 / (amplifier + 3)) == 0)
                 livingEntity.hurt(DamageSource.ON_FIRE, 1.0F);
         } else if ((this instanceof XPDrainerEffect xpDrainerEffect) && (livingEntity instanceof ServerPlayer serverPlayer)) {
-            if (xpDrainerEffect.experienceCost.canPay(serverPlayer))
-                xpDrainerEffect.experienceCost.pay(serverPlayer);
+            if (xpDrainerEffect.experienceCost.canPay(serverPlayer, amplifier+1))
+                xpDrainerEffect.experienceCost.pay(serverPlayer, amplifier+1);
             else
                 serverPlayer.hurt(DamageSource.MAGIC, Float.MAX_VALUE);
         } else {

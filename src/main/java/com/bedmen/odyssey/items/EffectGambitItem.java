@@ -16,10 +16,15 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemModelProperty{
@@ -84,13 +89,24 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
                     ServerPlayer activator = (ServerPlayer) level.getPlayerByUUID(status.getUUID(ACTIVATOR_UUID_TAG));
                     // Just for safety I'm having this hit you really hard instead of just setting health to 1.0f
                     activator.hurt(DamageSource.MAGIC, activator.getHealth()-1.0f);
+                    int amplifier = -1;
+                    if (serverPlayer.hasEffect(EffectRegistry.GAMBIT_DRAIN.get()))
+                        amplifier = serverPlayer.getEffect(EffectRegistry.GAMBIT_DRAIN.get()).getAmplifier() - 1;
+
                     activator.removeEffect(EffectRegistry.GAMBIT_DRAIN.get());
+                    if (amplifier != -1)
+                        serverPlayer.addEffect(new MobEffectInstance(EffectRegistry.GAMBIT_DRAIN.get(), 999999, amplifier));
+
                     activator.removeEffect(this.buff.get());
                     activator.addEffect(new MobEffectInstance(this.nerf.get(), 6000));
                 }
             } else {
                 serverPlayer.addEffect(new MobEffectInstance(this.buff.get(), 999999));
-                serverPlayer.addEffect(new MobEffectInstance(EffectRegistry.GAMBIT_DRAIN.get(), 999999));
+                int amplifier = 0;
+                if (serverPlayer.hasEffect(EffectRegistry.GAMBIT_DRAIN.get()))
+                    amplifier = serverPlayer.getEffect(EffectRegistry.GAMBIT_DRAIN.get()).getAmplifier()+1;
+                serverPlayer.addEffect(new MobEffectInstance(EffectRegistry.GAMBIT_DRAIN.get(), 999999, amplifier));
+
                 status.putBoolean(IS_DRAINING_TAG, true);
                 status.putUUID(ACTIVATOR_UUID_TAG, serverPlayer.getUUID());
             }
