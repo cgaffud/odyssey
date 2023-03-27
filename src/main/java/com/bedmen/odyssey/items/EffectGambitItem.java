@@ -86,11 +86,11 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
                     activator.hurt(DamageSource.MAGIC, activator.getHealth()-1.0f);
                     activator.removeEffect(EffectRegistry.GAMBIT_DRAIN.get());
                     activator.removeEffect(this.buff.get());
-                    activator.addEffect(new MobEffectInstance(this.nerf.get(), 999999));
+                    activator.addEffect(new MobEffectInstance(this.nerf.get(), 6000));
                 }
             } else {
                 serverPlayer.addEffect(new MobEffectInstance(this.buff.get(), 999999));
-                serverPlayer.addEffect(new MobEffectInstance(EffectRegistry.GAMBIT_DRAIN.get(), 6000));
+                serverPlayer.addEffect(new MobEffectInstance(EffectRegistry.GAMBIT_DRAIN.get(), 999999));
                 status.putBoolean(IS_DRAINING_TAG, true);
                 status.putUUID(ACTIVATOR_UUID_TAG, serverPlayer.getUUID());
             }

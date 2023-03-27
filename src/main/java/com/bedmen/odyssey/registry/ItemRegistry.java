@@ -197,6 +197,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> WARP_TOTEM = ITEMS.register("warp_totem", () -> new WarpTotemItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), false));
     public static final RegistryObject<Item> CRACKED_WARP_TOTEM = ITEMS.register("cracked_warp_totem", () -> new WarpTotemItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).durability(5), true));
     public static final RegistryObject<Item> STRENGTH_GAMBIT = ITEMS.register("strength_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), () -> MobEffects.DAMAGE_BOOST, () -> MobEffects.WEAKNESS));
+    public static final RegistryObject<Item> RESISTANCE_GAMBIT = ITEMS.register("resistance_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), () -> MobEffects.DAMAGE_RESISTANCE, () -> EffectRegistry.VULNERABLE.get()));
     public static final RegistryObject<Item> PURIFICATION_TABLET = ITEMS.register("purification_tablet", () -> new PurificationTabletItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC)));
 
     // # Miscellaneous
