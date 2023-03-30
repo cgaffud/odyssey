@@ -87,8 +87,8 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
                 status.putBoolean(IS_DRAINING_TAG, false);
                 if (status.contains(ACTIVATOR_UUID_TAG)) {
                     ServerPlayer activator = (ServerPlayer) level.getPlayerByUUID(status.getUUID(ACTIVATOR_UUID_TAG));
-                    // Just for safety I'm having this hit you really hard instead of just setting health to 1.0f
-                    activator.hurt(DamageSource.MAGIC, activator.getHealth()-1.0f);
+                    // This sets your health to 1.0f since if we do damage and you have vulnerability you just die
+                    activator.setHealth(1.0f);
                     int amplifier = -1;
                     if (serverPlayer.hasEffect(EffectRegistry.GAMBIT_DRAIN.get()))
                         amplifier = serverPlayer.getEffect(EffectRegistry.GAMBIT_DRAIN.get()).getAmplifier() - 1;
