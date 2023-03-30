@@ -7,9 +7,17 @@ import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 public class OdysseyLootTables {
 
     public static final ResourceLocation COPPER_TREASURE_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/copper_treasure"));
-    public static final ResourceLocation BARN_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/barn"));
     public static final ResourceLocation STERLING_SILVER_TREASURE_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/sterling_silver_treasure"));
     public static final ResourceLocation HIDDEN_JUNGLE_TEMPLE_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/hidden_jungle_temple"));
     public static final ResourceLocation MOON_TOWER_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/moon_tower"));
 
+    // Barn
+    public static final ResourceLocation BARN_BARREL = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/barn/barrel"));
+    public static final ResourceLocation BARN_TREASURE = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/barn/treasure"));
+
+    // Coven Hut
+    public static final ResourceLocation COVEN_HUT_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/coven_hut/chest"));
+    public static final ResourceLocation COVEN_HUT_SECRET_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/coven_hut/secret_chest"));
+    public static final ResourceLocation COVEN_HUT_INGREDIENTS = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/coven_hut/ingredients"));
+    public static final ResourceLocation COVEN_HUT_TOMES = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/coven_hut/tomes"));
 }

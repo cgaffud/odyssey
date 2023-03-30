@@ -27,11 +27,12 @@ public class WeaverColonyFeature extends StructureFeature<NoneFeatureConfigurati
     private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {
         Random random = context.random();
         ChunkPos chunkPos = context.chunkPos();
-        double r0 = random.nextDouble()*4+6d;
+        double radius = random.nextDouble() * 4.0d + 6.0d;
         int x = chunkPos.getMinBlockX();
+        int y = -32 + random.nextInt(64);
         int z = chunkPos.getMinBlockZ();
-        int boundingLength = Mth.ceil(2d*r0);
-        WeaverColonySpherePiece weaverColonySpherePiece = new WeaverColonySpherePiece(random, x, z, r0, boundingLength);
+        int width = Mth.ceil(radius) * 2 + 1;
+        WeaverColonySpherePiece weaverColonySpherePiece = new WeaverColonySpherePiece(x, y, z, radius, width);
         structurePiecesBuilder.addPiece(weaverColonySpherePiece);
     }
 }

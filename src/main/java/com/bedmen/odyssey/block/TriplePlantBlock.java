@@ -27,7 +27,7 @@ import net.minecraftforge.common.PlantType;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class TriplePlantBlock extends BushBlock implements INeedsToRegisterRenderType {
+public class TriplePlantBlock extends TransparentBushBlock {
     public static final EnumProperty<TripleBlockThird> THIRD = OdysseyBlockStateProperties.TRIPLE_BLOCK_THIRD;
 
     public TriplePlantBlock(BlockBehaviour.Properties properties) {
@@ -124,11 +124,6 @@ public class TriplePlantBlock extends BushBlock implements INeedsToRegisterRende
     public long getSeed(BlockState blockState, BlockPos blockPos) {
         TripleBlockThird tripleBlockThird = blockState.getValue(THIRD);
         return Mth.getSeed(blockPos.getX(), blockPos.below(tripleBlockThird == TripleBlockThird.LOWER ? 0 : (tripleBlockThird == TripleBlockThird.MIDDLE ? 1 : 2)).getY(), blockPos.getZ());
-    }
-
-    @Override
-    public RenderType getRenderType() {
-        return RenderType.cutout();
     }
 
     public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face)

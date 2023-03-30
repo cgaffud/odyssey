@@ -1,7 +1,14 @@
-import copper_treasure, barn, sterling_silver_treasure, moon_tower, hidden_jungle_temple
+import os, sys
+tablesRelativePath = "./tables"
+dir_path = os.path.dirname(os.path.realpath(__file__))
+tables_path = os.path.abspath(os.path.join(dir_path, tablesRelativePath))
+sys.path.append(tables_path)
 
-copper_treasure.generate()
-barn.generate()
-sterling_silver_treasure.generate()
-moon_tower.generate()
-hidden_jungle_temple.generate()
+from os import listdir
+from os.path import isfile, join
+files = [file for file in os.listdir(tablesRelativePath) if os.path.isfile(os.path.join(tablesRelativePath, file)) and file != "chest_loot_table_helper.py"]
+print(files)
+
+for file in files:
+    fileName = file[:len(file) - 3]
+    exec("import "+fileName+"\n"+fileName+".generate()")
