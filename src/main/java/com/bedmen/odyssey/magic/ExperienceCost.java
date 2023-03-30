@@ -36,12 +36,16 @@ public class ExperienceCost {
     }
 
     public boolean canPay(Player player){
-        return getTotalExperienceLevel(player) >= this.levelCost && player.experienceLevel >= this.levelRequirement;
+        return canPay(player, 1.0f);
     }
 
-    public void pay(ServerPlayer serverPlayer){
+    public boolean canPay(Player player, float costMultiplier){
+        return getTotalExperienceLevel(player) >= (this.levelCost * costMultiplier) && player.experienceLevel >= this.levelRequirement;
+    }
+
+    public void pay(ServerPlayer serverPlayer, float costMultiplier){
         float totalExperienceLevel = getTotalExperienceLevel(serverPlayer);
-        float newTotalExperienceLevel = totalExperienceLevel - this.levelCost;
+        float newTotalExperienceLevel = totalExperienceLevel - (this.levelCost * costMultiplier);
         int newExperienceLevel = (int)newTotalExperienceLevel;
         serverPlayer.setExperienceLevels(newExperienceLevel);
         float fractionLevel = newTotalExperienceLevel - newExperienceLevel;
@@ -52,6 +56,10 @@ public class ExperienceCost {
         if(serverPlayer instanceof OdysseyPlayer odysseyPlayer){
             odysseyPlayer.setPartialExperiencePoint(partialExperiencePoint);
         }
+    }
+
+    public void pay(ServerPlayer serverPlayer) {
+        pay(serverPlayer, 1.0f);
     }
 
     public ExperienceCost multiplyCost(int count){

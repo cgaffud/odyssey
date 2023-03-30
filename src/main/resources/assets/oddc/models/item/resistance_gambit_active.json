@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/resistance_gambit",
+  "textures": {
+    "layer0": "oddc:item/resistance_gambit/active"
+  }
+}

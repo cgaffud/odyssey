@@ -18,6 +18,7 @@ public class BurnToSummonItem extends Item {
 
     private final List<Block> BURN_SOURCES = Arrays.asList(Blocks.FIRE, Blocks.SOUL_FIRE, Blocks.LAVA);
     private Supplier<EntityType> entityTypeSupplier;
+    // If you want to summon not on top of the flame
     private double dx;
     private double dy;
     private double dz;
@@ -34,10 +35,14 @@ public class BurnToSummonItem extends Item {
         this(properties, entityTypeSupplier, 0, 0, 0);
     }
 
+    protected void doOnBurn(ItemEntity itemEntity) {
+        BlockPos pos = itemEntity.blockPosition();
+        entityTypeSupplier.get().spawn((ServerLevel) itemEntity.level, null, null, pos.offset(this.dx, this.dy, this.dz), MobSpawnType.TRIGGERED, true, true);
+    }
+
     public void onDestroyed(ItemEntity itemEntity, DamageSource damageSource) {
-        if (BURN_SOURCES.contains(itemEntity.getFeetBlockState().getBlock()) && !itemEntity.level.isClientSide){
-            BlockPos pos = itemEntity.blockPosition();
-            entityTypeSupplier.get().spawn((ServerLevel) itemEntity.level, null, null, pos.offset(this.dx, this.dy, this.dz), MobSpawnType.TRIGGERED, true, true);
+        if (BURN_SOURCES.contains(itemEntity.getFeetBlockState().getBlock()) && !itemEntity.level.isClientSide) {
+            doOnBurn(itemEntity);
         }
     }
 }

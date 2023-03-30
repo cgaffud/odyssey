@@ -17,10 +17,12 @@ import com.bedmen.odyssey.items.odyssey_versions.OdysseyMapItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
 import com.bedmen.odyssey.lock.LockableDoorType;
 import com.bedmen.odyssey.lock.TreasureChestType;
+import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.*;
@@ -162,7 +164,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_NUGGET = ITEMS.register("netherite_nugget", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> SUNSTONE = ITEMS.register("sunstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> MOONSTONE = ITEMS.register("moonstone", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
-    public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new BurnToSummonItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), EntityTypeRegistry.COVEN_MASTER::get));
+    public static final RegistryObject<Item> STRAW_HEXDOLL = ITEMS.register("straw_hexdoll", () -> new StrawHexdollItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS), EntityTypeRegistry.COVEN_MASTER::get));
     public static final RegistryObject<Item> AERIAL_FABRIC = ITEMS.register("aerial_fabric", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> ZEPHYR_FABRIC = ITEMS.register("zephyr_fabric", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
 
@@ -195,6 +197,9 @@ public class ItemRegistry {
     // # Magic
     public static final RegistryObject<Item> WARP_TOTEM = ITEMS.register("warp_totem", () -> new WarpTotemItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), false));
     public static final RegistryObject<Item> CRACKED_WARP_TOTEM = ITEMS.register("cracked_warp_totem", () -> new WarpTotemItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).durability(5), true));
+    public static final RegistryObject<Item> STRENGTH_GAMBIT = ITEMS.register("strength_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), () -> MobEffects.DAMAGE_BOOST, () -> MobEffects.WEAKNESS));
+    public static final RegistryObject<Item> RESISTANCE_GAMBIT = ITEMS.register("resistance_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), () -> MobEffects.DAMAGE_RESISTANCE, () -> EffectRegistry.VULNERABLE.get()));
+    public static final RegistryObject<Item> SPEED_GAMBIT = ITEMS.register("speed_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), () -> MobEffects.MOVEMENT_SPEED, () -> MobEffects.MOVEMENT_SLOWDOWN));
     public static final RegistryObject<Item> PURIFICATION_TABLET = ITEMS.register("purification_tablet", () -> new PurificationTabletItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC)));
 
     // # Miscellaneous
@@ -406,6 +411,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BARN_SPIDER_SPAWN_EGG = ITEMS.register("barn_spider_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BARN_SPIDER, 0x8A8A45, 11013646, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> BANDIT_SPAWN_EGG = ITEMS.register("bandit_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BANDIT, 0x503213, 0x282828, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> WRAITH_SPAWN_EGG = ITEMS.register("wraith_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WRAITH, 0xF3F4F5, 0xA8ACAE, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> BLADE_SPIDER_SPAWN_EGG = ITEMS.register("blade_spider_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BLADE_SPIDER, 0x3C3C44, 0xA80E0E, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
 
     // # No Creative Tab
     public static final RegistryObject<Item> UNOBTAINABLE = ITEMS.register("unobtainable", ()-> new Item((new Item.Properties())));

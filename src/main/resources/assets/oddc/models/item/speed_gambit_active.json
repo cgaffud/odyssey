@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/speed_gambit",
+  "textures": {
+    "layer0": "oddc:item/speed_gambit/active"
+  }
+}
