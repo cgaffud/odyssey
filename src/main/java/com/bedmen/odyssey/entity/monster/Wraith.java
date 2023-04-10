@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.entity.boss.coven.EnderWitch;
 import com.bedmen.odyssey.items.aspect_items.AspectArrowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.SoundEventRegistry;
@@ -10,15 +11,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -26,30 +31,24 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.monster.Vex;
+import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.Random;
 import java.util.UUID;
 
 public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     public final RangedBowAttackGoal<Wraith> bowGoal = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
-    public final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.2D, false) {
-        public void stop() {
-            super.stop();
-            Wraith.this.setAggressive(false);
-        }
-
-        public void start() {
-            super.start();
-            Wraith.this.setAggressive(true);
-        }
-    };
+    public final WraithMeleeAttackGoal meleeGoal = new WraithMeleeAttackGoal(this);
 
     private int remainingPersistentAngerTime;
     @javax.annotation.Nullable
@@ -58,7 +57,9 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
 
     public Wraith(EntityType<? extends Monster> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
+        this.moveControl = new WraithMoveControl(this);
         this.reassessWeaponGoal();
+        this.setNoGravity(true);
     }
 
     protected void registerGoals() {
@@ -69,11 +70,14 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 60.0D).add(Attributes.MOVEMENT_SPEED, 0.4).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.FOLLOW_RANGE, 64.0D);
+        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 60.0D).add(Attributes.MOVEMENT_SPEED, 1.2D).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
     public void tick() {
+        this.noPhysics = true;
         super.tick();
+        this.noPhysics = false;
+        this.setNoGravity(true);
         if ((random.nextDouble() < 0.001)) {
             Player player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 20, true);
             if (player != null) {
@@ -218,6 +222,147 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
 
     public static boolean spawnPredicate(EntityType<? extends Monster> pType, ServerLevelAccessor pLevel, MobSpawnType pReason, BlockPos pPos, Random pRandom) {
         return Monster.checkMonsterSpawnRules(pType, pLevel, pReason, pPos, pRandom) && pPos.getY() <= -16;
+    }
+
+    // Todo: Small possible bug? You can semi-tightly wind around the Wraith and something here delays its turning rate so it can't gety ou
+    public class WraithMeleeAttackGoal extends Goal {
+
+        private final Wraith wraith;
+        private int ticksUntilNextPathRecalculation;
+        private int ticksUntilNextAttack;
+
+        private final double SPEED = 0.3D;
+        private final double MELEE_SPEED_MULT = 2.5F;
+
+
+        public WraithMeleeAttackGoal(Wraith wraith) {
+            this.wraith = wraith;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        public boolean canUse() {
+            LivingEntity livingentity = wraith.getTarget();
+            return (livingentity != null) && (livingentity.isAlive());
+        }
+
+        public boolean canContinueToUse() {
+            LivingEntity livingentity = wraith.getTarget();
+            if ((livingentity != null) && (livingentity.isAlive()) && (wraith.isWithinRestriction(livingentity.blockPosition()))) {
+                return !(livingentity instanceof Player) || (!livingentity.isSpectator() && !((Player)livingentity).isCreative());
+            }
+            return true;
+        }
+
+        public void start() {
+            wraith.setAggressive(true);
+            LivingEntity livingentity = wraith.getTarget();
+            if (livingentity != null) {
+                Vec3 vec3 = livingentity.position();
+                wraith.moveControl.setWantedPosition(vec3.x, vec3.y, vec3.z, this.SPEED);
+            }
+            this.ticksUntilNextPathRecalculation = 0;
+            this.ticksUntilNextAttack = 0;
+        }
+
+        public void stop(){
+            LivingEntity livingentity = wraith.getTarget();
+            if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingentity)) {
+                wraith.setTarget(null);
+            }
+            wraith.setAggressive(false);
+            // Kill movement when stopping
+            wraith.moveControl.setWantedPosition(wraith.getX(), wraith.getY(), wraith.getZ(), this.SPEED);
+        }
+
+        public void tick() {
+            LivingEntity livingentity = wraith.getTarget();
+            if (livingentity != null) {
+                wraith.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
+                double d0 = wraith.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
+                this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
+                if (this.ticksUntilNextPathRecalculation <= 0 && (wraith.getRandom().nextFloat() < 0.05F)) {
+                    this.ticksUntilNextPathRecalculation = 4 + wraith.getRandom().nextInt(7);
+
+                    if (d0 > 1024.0D) {
+                        this.ticksUntilNextPathRecalculation += 10;
+                    } else if (d0 > 256.0D) {
+                        this.ticksUntilNextPathRecalculation += 5;
+                    }
+
+                    Vec3 vec3 = livingentity.position();
+
+                    wraith.moveControl.setWantedPosition(vec3.x, vec3.y, vec3.z, this.SPEED);
+
+                    this.ticksUntilNextPathRecalculation = this.adjustedTickDelay(this.ticksUntilNextPathRecalculation);
+                }
+                this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
+
+                if ((this.ticksUntilNextAttack <= 0) && (d0 < this.getAttackReachSqr(livingentity))) {
+                    this.ticksUntilNextAttack = this.adjustedTickDelay(20);
+                    wraith.swing(InteractionHand.MAIN_HAND);
+                    wraith.doHurtTarget(livingentity);
+                }
+            }
+        }
+
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        protected double getAttackReachSqr(LivingEntity p_25556_) {
+            return (wraith.getBbWidth() * this.MELEE_SPEED_MULT * wraith.getBbWidth() * this.MELEE_SPEED_MULT + p_25556_.getBbWidth());
+        }
+    }
+
+
+    public class WraithMoveControl extends MoveControl {
+
+        private final double MIN_CHASE_VELOCITY = 0.2D;
+        private final double MAX_VELOCITY = 0.65D;
+
+        public WraithMoveControl(Wraith p_34062_) {
+            super(p_34062_);
+        }
+
+        public void tick() {
+            if (this.operation == Operation.WAIT) {
+                Wraith.this.setNoGravity(true);
+            } else if (this.operation == Operation.MOVE_TO) {
+                Vec3 rVector = new Vec3(this.wantedX - Wraith.this.getX(), this.wantedY - Wraith.this.getY(), this.wantedZ - Wraith.this.getZ());
+                double r = rVector.length();
+                if (r < Wraith.this.getBoundingBox().getSize()) {
+                    this.operation = MoveControl.Operation.WAIT;
+                    Wraith.this.setDeltaMovement(Wraith.this.getDeltaMovement().scale(0.25D));
+                } else {
+                    // 0.05(Speed Modifier) is the constant acceleration
+                    Vec3 vVector;
+                    if ((r >= Wraith.this.getBoundingBox().getSize()*2) && (Wraith.this.getDeltaMovement().length() < this.MIN_CHASE_VELOCITY)) {
+                        // Divide by 80 so that Wraith can get to target in 4 seconds
+                        double vmin = r / 80;
+                        vmin = (vmin > this.MIN_CHASE_VELOCITY) ? vmin : this.MIN_CHASE_VELOCITY;
+                        vVector = rVector.scale(vmin/r);
+                    } else {
+                        vVector = Wraith.this.getDeltaMovement().add(rVector.scale(this.speedModifier * 0.05D / r));
+                    }
+
+                    System.out.printf("Dist: %f, Bounding Box Size * 2: %f, Velocity: %f", r, Wraith.this.getBoundingBox().getSize()*2, vVector.length());
+
+                    Wraith.this.setDeltaMovement((vVector.length() > this.MAX_VELOCITY) ? rVector.scale(this.MAX_VELOCITY/r) : vVector);
+
+                    if (Wraith.this.getTarget() == null) {
+                        Vec3 vec31 = Wraith.this.getDeltaMovement();
+                        Wraith.this.setYRot(-((float) Mth.atan2(vec31.x, vec31.z)) * (180F / (float)Math.PI));
+                        Wraith.this.yBodyRot = Wraith.this.getYRot();
+                    } else {
+                        double d2 = Wraith.this.getTarget().getX() - Wraith.this.getX();
+                        double d1 = Wraith.this.getTarget().getZ() - Wraith.this.getZ();
+                        Wraith.this.setYRot(-((float)Mth.atan2(d2, d1)) * (180F / (float)Math.PI));
+                        Wraith.this.yBodyRot = Wraith.this.getYRot();
+                    }
+                }
+
+            }
+        }
     }
 
 }
