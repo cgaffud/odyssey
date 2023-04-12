@@ -10,6 +10,8 @@ import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -24,10 +26,18 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 
 import java.util.Arrays;
@@ -38,6 +48,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     public static final String PIERCING_DAMAGE_PENALTY_TAG = "PiercingDamagePenalty";
     // Decreases damage of arrow on last piercing
     public float piercingDamagePenalty = 1.0f;
+    private boolean somePhysics;
 
     protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, Level level) {
         super(type, level);
@@ -85,6 +96,13 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     public boolean hasAspect(Aspect aspect){
         return getAspectStrength(aspect) > 0.0f;
+    }
+
+    public boolean hasSomePhysics() {return this.somePhysics;}
+
+    public void setSomePhysics(boolean somePhysics) {
+        this.setNoPhysics(somePhysics);
+        this.somePhysics = somePhysics;
     }
 
     protected abstract double getDamage();

@@ -47,7 +47,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
-    public final RangedBowAttackGoal<Wraith> bowGoal = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
+    public final WraithBowAttackGoal<Wraith> bowGoal = new WraithBowAttackGoal<>(this, 1.0D, 20, 10.0F);
     public final WraithMeleeAttackGoal meleeGoal = new WraithMeleeAttackGoal(this);
 
     private int remainingPersistentAngerTime;
@@ -150,7 +150,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     }
 
     protected AbstractArrow getOdysseyArrow(ItemStack ammo, float bowDamageMultiplier) {
-        AspectArrowItem aspectArrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
+        AspectArrowItem aspectArrowItem = (AspectArrowItem) ItemRegistry.ETHEREAL_ARROW.get();
         AbstractArrow abstractarrow = aspectArrowItem.createArrow(this.level, ammo, this);
         abstractarrow.setEnchantmentEffectsFromEntity(this, bowDamageMultiplier);
         return abstractarrow;
@@ -247,7 +247,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
 
         public boolean canContinueToUse() {
             LivingEntity livingentity = wraith.getTarget();
-            if ((livingentity != null) && (livingentity.isAlive()) && (wraith.isWithinRestriction(livingentity.blockPosition()))) {
+            if ((livingentity != null) && (livingentity.isAlive())) {
                 return !(livingentity instanceof Player) || (!livingentity.isSpectator() && !((Player)livingentity).isCreative());
             }
             return true;
@@ -258,7 +258,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
             LivingEntity livingentity = wraith.getTarget();
             if (livingentity != null) {
                 Vec3 vec3 = livingentity.position();
-                wraith.moveControl.setWantedPosition(vec3.x, vec3.y, vec3.z, this.SPEED);
+                wraith.getMoveControl().setWantedPosition(vec3.x, vec3.y, vec3.z, this.SPEED);
             }
             this.ticksUntilNextPathRecalculation = 0;
             this.ticksUntilNextAttack = 0;
@@ -271,7 +271,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
             }
             wraith.setAggressive(false);
             // Kill movement when stopping
-            wraith.moveControl.setWantedPosition(wraith.getX(), wraith.getY(), wraith.getZ(), this.SPEED);
+            wraith.getMoveControl().setWantedPosition(wraith.getX(), wraith.getY(), wraith.getZ(), this.SPEED);
         }
 
         public void tick() {
@@ -291,7 +291,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
 
                     Vec3 vec3 = livingentity.position();
 
-                    wraith.moveControl.setWantedPosition(vec3.x, vec3.y, vec3.z, this.SPEED);
+                    wraith.getMoveControl().setWantedPosition(vec3.x, vec3.y, vec3.z, this.SPEED);
 
                     this.ticksUntilNextPathRecalculation = this.adjustedTickDelay(this.ticksUntilNextPathRecalculation);
                 }
@@ -314,6 +314,125 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
         }
     }
 
+    public class WraithBowAttackGoal<T extends net.minecraft.world.entity.Mob & RangedAttackMob> extends Goal {
+        private final T mob;
+        private final double speedModifier;
+        private int attackIntervalMin;
+        private final float attackRadiusSqr;
+        private int attackTime = -1;
+        private int seeTime;
+        private boolean strafingClockwise;
+        private boolean strafingBackwards;
+        private int strafingTime = -1;
+        private final double SPEED = 0.3D;
+
+        public <M extends Monster & RangedAttackMob> WraithBowAttackGoal(M p_25792_, double p_25793_, int p_25794_, float p_25795_) {
+            this((T) p_25792_, p_25793_, p_25794_, p_25795_);
+        }
+
+        public WraithBowAttackGoal(T Mob, double speedModifier, int attackIntervalMin, float attackRadius) {
+            this.mob = Mob;
+            this.speedModifier = speedModifier;
+            this.attackIntervalMin = attackIntervalMin;
+            this.attackRadiusSqr = attackRadius * attackRadius;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        public void setMinAttackInterval(int p_25798_) {
+            this.attackIntervalMin = p_25798_;
+        }
+
+        public boolean canUse() {
+            return this.mob.getTarget() == null ? false : this.isHoldingBow();
+        }
+
+        protected boolean isHoldingBow() {
+            return this.mob.isHolding(is -> is.getItem() instanceof BowItem);
+        }
+
+        public boolean canContinueToUse() {
+            return this.canUse() && this.isHoldingBow();
+        }
+
+        public void start() {
+            super.start();
+            this.mob.setAggressive(true);
+        }
+
+        public void stop() {
+            super.stop();
+            this.mob.setAggressive(false);
+            this.seeTime = 0;
+            this.attackTime = -1;
+            this.mob.stopUsingItem();
+        }
+
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        public void tick() {
+            LivingEntity livingentity = this.mob.getTarget();
+            if (livingentity != null) {
+                System.out.println("[Tick] Nonnull");
+                double d0 = this.mob.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
+                boolean flag = this.mob.getSensing().hasLineOfSight(livingentity);
+                boolean flag1 = this.seeTime > 0;
+                if (flag != flag1)
+                    this.seeTime = 0;
+
+
+                if (flag) ++this.seeTime;
+                else --this.seeTime;
+
+                if (!(d0 > (double) this.attackRadiusSqr) && this.seeTime >= 20) {
+                    this.mob.getMoveControl().setWantedPosition(mob.getX(), mob.getY(), mob.getZ(), this.SPEED);
+                    ++this.strafingTime;
+                } else {
+                    Vec3 vec3 = livingentity.position();
+                    this.mob.getMoveControl().setWantedPosition(vec3.x(), vec3.y(), vec3.z(), this.SPEED);
+                    this.strafingTime = -1;
+                }
+
+                if (this.strafingTime >= 20) {
+                    if ((double) this.mob.getRandom().nextFloat() < 0.3D)
+                        this.strafingClockwise = !this.strafingClockwise;
+                    if ((double) this.mob.getRandom().nextFloat() < 0.3D)
+                        this.strafingBackwards = !this.strafingBackwards;
+                    this.strafingTime = 0;
+                }
+
+                if (this.strafingTime > -1) {
+                    if (d0 > (double) (this.attackRadiusSqr * 0.75F)) {
+                        this.strafingBackwards = false;
+                    } else if (d0 < (double) (this.attackRadiusSqr * 0.25F)) {
+                        this.strafingBackwards = true;
+                    }
+                    this.mob.getMoveControl().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
+                    this.mob.lookAt(livingentity, 30.0F, 30.0F);
+                } else {
+                    this.mob.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
+                }
+
+                if (this.mob.isUsingItem()) {
+                    if (!flag && this.seeTime < -60) {
+                        this.mob.stopUsingItem();
+                    } else if (flag) {
+                        int i = this.mob.getTicksUsingItem();
+                        if (i >= 20) {
+                            this.mob.stopUsingItem();
+                            this.mob.performRangedAttack(livingentity, BowItem.getPowerForTime(i));
+                            this.attackTime = this.attackIntervalMin;
+                        }
+                    }
+                } else if (--this.attackTime <= 0 && this.seeTime >= -60) {
+                    this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof BowItem));
+                }
+            }
+        }
+    }
+
+
 
     public class WraithMoveControl extends MoveControl {
 
@@ -325,8 +444,16 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
         }
 
         public void tick() {
-            if (this.operation == Operation.WAIT) {
+            if (this.operation == Operation.WAIT){
                 Wraith.this.setNoGravity(true);
+            } else if (this.operation == Operation.STRAFE) {
+                float f = (float) this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
+                float f1 = (float) this.speedModifier * f;
+
+                this.mob.setSpeed(f1);
+                this.mob.setZza(this.strafeForwards);
+                this.mob.setXxa(this.strafeRight);
+                this.operation = MoveControl.Operation.WAIT;
             } else if (this.operation == Operation.MOVE_TO) {
                 Vec3 rVector = new Vec3(this.wantedX - Wraith.this.getX(), this.wantedY - Wraith.this.getY(), this.wantedZ - Wraith.this.getZ());
                 double r = rVector.length();
@@ -336,31 +463,30 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
                 } else {
                     // 0.05(Speed Modifier) is the constant acceleration
                     Vec3 vVector;
-                    if ((r >= Wraith.this.getBoundingBox().getSize()*2) && (Wraith.this.getDeltaMovement().length() < this.MIN_CHASE_VELOCITY)) {
+                    if ((r >= Wraith.this.getBoundingBox().getSize() * 2) && (Wraith.this.getDeltaMovement().length() < this.MIN_CHASE_VELOCITY)) {
                         // Divide by 80 so that Wraith can get to target in 4 seconds
                         double vmin = r / 80;
                         vmin = (vmin > this.MIN_CHASE_VELOCITY) ? vmin : this.MIN_CHASE_VELOCITY;
-                        vVector = rVector.scale(vmin/r);
+                        vVector = rVector.scale(vmin / r);
                     } else {
                         vVector = Wraith.this.getDeltaMovement().add(rVector.scale(this.speedModifier * 0.05D / r));
                     }
 
-                    System.out.printf("Dist: %f, Bounding Box Size * 2: %f, Velocity: %f", r, Wraith.this.getBoundingBox().getSize()*2, vVector.length());
+                    // System.out.printf("Dist: %f, Bounding Box Size * 2: %f, Velocity: %f", r, Wraith.this.getBoundingBox().getSize()*2, vVector.length());
 
-                    Wraith.this.setDeltaMovement((vVector.length() > this.MAX_VELOCITY) ? rVector.scale(this.MAX_VELOCITY/r) : vVector);
+                    Wraith.this.setDeltaMovement((vVector.length() > this.MAX_VELOCITY) ? rVector.scale(this.MAX_VELOCITY / r) : vVector);
 
                     if (Wraith.this.getTarget() == null) {
                         Vec3 vec31 = Wraith.this.getDeltaMovement();
-                        Wraith.this.setYRot(-((float) Mth.atan2(vec31.x, vec31.z)) * (180F / (float)Math.PI));
+                        Wraith.this.setYRot(-((float) Mth.atan2(vec31.x, vec31.z)) * (180F / (float) Math.PI));
                         Wraith.this.yBodyRot = Wraith.this.getYRot();
                     } else {
                         double d2 = Wraith.this.getTarget().getX() - Wraith.this.getX();
                         double d1 = Wraith.this.getTarget().getZ() - Wraith.this.getZ();
-                        Wraith.this.setYRot(-((float)Mth.atan2(d2, d1)) * (180F / (float)Math.PI));
+                        Wraith.this.setYRot(-((float) Mth.atan2(d2, d1)) * (180F / (float) Math.PI));
                         Wraith.this.yBodyRot = Wraith.this.getYRot();
                     }
                 }
-
             }
         }
     }

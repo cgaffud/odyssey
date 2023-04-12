@@ -34,14 +34,16 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         super(entityType, level);
     }
 
-    public OdysseyArrow(Level level, LivingEntity livingEntity, ArrowType arrowType) {
+    public OdysseyArrow(Level level, LivingEntity livingEntity, ArrowType arrowType, boolean somePhysics) {
         super(EntityTypeRegistry.ARROW.get(), livingEntity, level);
         this.arrowType = arrowType;
         this.setBaseDamage(arrowType.damage);
+        this.setSomePhysics(somePhysics);
     }
 
-    public OdysseyArrow(Level level, double x, double y, double z) {
+    public OdysseyArrow(Level level, double x, double y, double z, boolean somePhysics) {
         super(EntityTypeRegistry.ARROW.get(), x, y, z, level);
+        this.setSomePhysics(somePhysics);
     }
 
     protected void defineSynchedData() {

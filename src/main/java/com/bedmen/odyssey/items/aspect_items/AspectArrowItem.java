@@ -25,20 +25,27 @@ import java.util.List;
 
 public class AspectArrowItem extends ArrowItem implements InnateAspectItem, OdysseyTierItem {
     private final ArrowType arrowType;
-    public AspectArrowItem(Item.Properties properties, ArrowType arrowType) {
+    private final boolean somePhysics;
+
+    public AspectArrowItem(Item.Properties properties, ArrowType arrowType, boolean somePhysics) {
         super(properties);
         this.arrowType = arrowType;
+        this.somePhysics = somePhysics;
         DispenserBlock.registerBehavior(this, new AbstractProjectileDispenseBehavior() {
             protected Projectile getProjectile(Level level, Position position, ItemStack itemStack) {
-                OdysseyArrow arrow = new OdysseyArrow(level, position.x(), position.y(), position.z());
+                OdysseyArrow arrow = new OdysseyArrow(level, position.x(), position.y(), position.z(), somePhysics);
                 arrow.pickup = AbstractArrow.Pickup.ALLOWED;
                 return arrow;
             }
         });
     }
 
+    public AspectArrowItem(Item.Properties properties, ArrowType arrowType) {
+        this(properties, arrowType, false);
+    }
+
     public AbstractArrow createArrow(Level level, ItemStack ammo, LivingEntity shooter) {
-        OdysseyArrow odysseyArrow = new OdysseyArrow(level, shooter, arrowType);
+        OdysseyArrow odysseyArrow = new OdysseyArrow(level, shooter, arrowType, somePhysics);
 
         odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(ammo));
         WeaponUtil.getProjectileWeapon(shooter).ifPresent(itemStack -> odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(itemStack)));
