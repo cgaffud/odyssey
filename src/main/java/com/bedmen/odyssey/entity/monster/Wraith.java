@@ -374,7 +374,6 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
         public void tick() {
             LivingEntity livingentity = this.mob.getTarget();
             if (livingentity != null) {
-                System.out.println("[Tick] Nonnull");
                 double d0 = this.mob.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
                 boolean flag = this.mob.getSensing().hasLineOfSight(livingentity);
                 boolean flag1 = this.seeTime > 0;

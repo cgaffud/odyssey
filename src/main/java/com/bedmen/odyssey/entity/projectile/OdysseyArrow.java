@@ -77,11 +77,13 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
 
     @Override
     public void writeSpawnData(FriendlyByteBuf buffer) {
+        buffer.writeBoolean(this.hasSomePhysics());
         buffer.writeInt(this.arrowType.ordinal());
     }
 
     @Override
     public void readSpawnData(FriendlyByteBuf additionalData) {
+        this.setSomePhysics(additionalData.readBoolean());
         this.arrowType = ArrowType.values()[additionalData.readInt()];
     }
 
