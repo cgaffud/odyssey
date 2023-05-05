@@ -280,7 +280,9 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
                 wraith.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
                 double d0 = wraith.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
                 this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
-                if (this.ticksUntilNextPathRecalculation <= 0 && (wraith.getRandom().nextFloat() < 0.05F)) {
+                Vec3 rVector = new Vec3(wraith.getMoveControl().getWantedX() - Wraith.this.getX(), wraith.getMoveControl().getWantedY()  - Wraith.this.getY(), wraith.getMoveControl().getWantedZ() - Wraith.this.getZ());
+                double r = rVector.length();
+                if ((this.ticksUntilNextPathRecalculation <= 0 && (wraith.getRandom().nextFloat() < 0.05F)) || (r < wraith.getBoundingBox().getSize())) {
                     this.ticksUntilNextPathRecalculation = 4 + wraith.getRandom().nextInt(7);
 
                     if (d0 > 1024.0D) {
@@ -295,6 +297,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
 
                     this.ticksUntilNextPathRecalculation = this.adjustedTickDelay(this.ticksUntilNextPathRecalculation);
                 }
+
                 this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
 
                 if ((this.ticksUntilNextAttack <= 0) && (d0 < this.getAttackReachSqr(livingentity))) {
@@ -457,8 +460,7 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
                 Vec3 rVector = new Vec3(this.wantedX - Wraith.this.getX(), this.wantedY - Wraith.this.getY(), this.wantedZ - Wraith.this.getZ());
                 double r = rVector.length();
                 if (r < Wraith.this.getBoundingBox().getSize()) {
-                    this.operation = MoveControl.Operation.WAIT;
-                    Wraith.this.setDeltaMovement(Wraith.this.getDeltaMovement().scale(0.25D));
+                    Wraith.this.setDeltaMovement(Wraith.this.getDeltaMovement().scale(0.7D));
                 } else {
                     // 0.05(Speed Modifier) is the constant acceleration
                     Vec3 vVector;

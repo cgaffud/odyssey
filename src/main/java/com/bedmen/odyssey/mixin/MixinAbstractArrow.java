@@ -49,7 +49,6 @@ public class MixinAbstractArrow extends Projectile {
         super.tick();
         boolean noPhysics = this.isNoPhysics();
         boolean somePhysics = ((((Object) this) instanceof OdysseyAbstractArrow odysseyAbstractArrow) && (odysseyAbstractArrow.hasSomePhysics()));
-        System.out.printf("Somephysics: %b, Client?: %b\n", somePhysics, this.level.isClientSide());
         boolean onlyNoPhysics = noPhysics && !somePhysics;
         Vec3 vec3 = this.getDeltaMovement();
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
@@ -148,12 +147,11 @@ public class MixinAbstractArrow extends Projectile {
                 System.out.println("Only no physics");
                 this.setYRot((float)(Mth.atan2(-d5, -d1) * (double)(180F / (float)Math.PI)));
             } else {
-                System.out.println("Physics");
                 this.setYRot((float)(Mth.atan2(d5, d1) * (double)(180F / (float)Math.PI)));
             }
 
             this.setXRot((float)(Mth.atan2(d6, d4) * (double)(180F / (float)Math.PI)));
-            System.out.printf("Spin? Start: %g, End: %g\n", this.yRotO, this.getYRot());
+//            System.out.printf("Spin? Start: %g, End: %g\n", this.yRotO, this.getYRot());
             this.setXRot(lerpRotation(this.xRotO, this.getXRot()));
             this.setYRot(lerpRotation(this.yRotO, this.getYRot()));
             float f = 0.99F;

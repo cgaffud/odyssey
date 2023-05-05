@@ -78,24 +78,21 @@ public class WraithModel<T extends Wraith> extends AgeableListModel<T> implement
 
         ItemStack itemstack = entity.getMainHandItem();
         if (entity.isAggressive()) {
-            if ((GeneralUtil.isHashTick(entity, entity.getLevel(), 10) && (entity.getRandom().nextFloat() < 0.05)) || (this.head.xRot == ALMOST_HALF_PI/2)) {
-                this.head.setRotation(entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2, this.head.yRot, entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2);
-            } else if (GeneralUtil.isHashTick(entity, entity.getLevel(), 5) && (entity.getRandom().nextFloat() < 0.45)) {
-                float jitter = Mth.PI/14;
-                float xprob = (Mth.abs(this.head.xRot) / (ALMOST_HALF_PI)) * 3/4 + 1/4;
-                float zprob = (Mth.abs(this.head.zRot) / (ALMOST_HALF_PI)) * 3/4 + 1/4;
-                this.head.setRotation(this.head.xRot + jitter * Mth.sign(this.head.xRot) * (entity.getRandom().nextFloat() < xprob ? -1 : 1),
+            if ((GeneralUtil.isHashTick(entity, entity.getLevel(), 8) && (entity.getRandom().nextFloat() < 0.10))) {
+                this.head.setRotation(entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2 + ALMOST_HALF_PI/4, this.head.yRot, entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2);
+            } else if (GeneralUtil.isHashTick(entity, entity.getLevel(), 4) && (entity.getRandom().nextFloat() < 0.8)) {
+                this.head.setRotation(entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2 + ALMOST_HALF_PI/4,
                         this.head.yRot,
-                        this.head.zRot + jitter * Mth.sign(this.head.zRot) * (entity.getRandom().nextFloat() < zprob ? -1 : 1));
+                        entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2);
+            } else {
+                this.head.xRot = ALMOST_HALF_PI/4;
+                this.head.zRot = 0;
             }
         } else {
             this.head.xRot = ALMOST_HALF_PI/2;
+            this.head.zRot = 0;
         }
 
-        if (Mth.abs(this.head.xRot) > ALMOST_HALF_PI)
-            this.head.xRot = 0;
-        if (Mth.abs(this.head.zRot) > ALMOST_HALF_PI)
-            this.head.zRot = 0;
 
 
         if (entity.isAggressive() && (itemstack.isEmpty() || !(itemstack.getItem() instanceof CrossbowItem))) {
