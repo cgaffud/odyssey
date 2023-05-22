@@ -55,8 +55,9 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<BladeSpider>> BLADE_SPIDER = ENTITY_TYPE.register("blade_spider", () -> EntityType.Builder.of(BladeSpider::new, MobCategory.MONSTER).sized(1.7F, 1.3F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "blade_spider").toString()));
 
 
-    // ## Wrait
+    // ## Wraith
     public static final RegistryObject<EntityType<Wraith>> WRAITH = ENTITY_TYPE.register("wraith", () -> EntityType.Builder.of(Wraith::new, MobCategory.MONSTER).sized(0.55F, 1.85F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith").toString()));
+    public static final RegistryObject<EntityType<WraithStalker>> WRAITH_STALKER = ENTITY_TYPE.register("wraith_stalker", () -> EntityType.Builder.of(WraithStalker::new, MobCategory.MONSTER).sized(0.6F, 2.9F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith_stalker").toString()));
 
     // ## Illager
     public static final RegistryObject<EntityType<Bandit>> BANDIT = ENTITY_TYPE.register("bandit", () -> EntityType.Builder.of(Bandit::new, MobCategory.MONSTER).sized(0.6F, 1.95F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "bandit").toString()));
