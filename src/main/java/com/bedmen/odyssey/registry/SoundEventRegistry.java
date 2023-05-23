@@ -30,6 +30,7 @@ public class SoundEventRegistry {
     // Wraith
     public static final RegistryObject<SoundEvent> WRAITH_HURT = SOUND_EVENTS.register("wraith_hurt", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.wraith.hurt")));
     public static final RegistryObject<SoundEvent> WRAITH_DEATH = SOUND_EVENTS.register("wraith_death", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.wraith.death")));
+    public static final RegistryObject<SoundEvent> WRAITH_LAUGH = SOUND_EVENTS.register("wraith_laugh", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "entity.wraith.laugh")));
 
     // Music Discs
     public static final RegistryObject<SoundEvent> MUSIC_DISC_MESA = SOUND_EVENTS.register("music_disc_mesa", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "music_disc.mesa")));

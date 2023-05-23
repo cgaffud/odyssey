@@ -137,7 +137,6 @@ public abstract class AbstractWraith extends Monster {
 
                     Vec3 vec3 = livingentity.position();
 
-                    System.out.println("We are getting here");
                     wraith.getMoveControl().setWantedPosition(vec3.x, vec3.y, vec3.z, wraith.INITIAL_VELOCITY);
 
                     this.ticksUntilNextPathRecalculation = this.adjustedTickDelay(this.ticksUntilNextPathRecalculation);

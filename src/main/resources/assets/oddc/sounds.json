@@ -81,6 +81,16 @@
       }
     ]
   },
+  "entity.wraith.laugh": {
+    "category": "hostile",
+    "subtitle": "entity.wraith.laugh.sub",
+    "sounds": [
+      {
+        "name": "oddc:entity/wraith/laugh",
+        "stream": true
+      }
+    ]
+  },
   "music_disc.mesa": {
     "category": "music",
     "sounds": [
