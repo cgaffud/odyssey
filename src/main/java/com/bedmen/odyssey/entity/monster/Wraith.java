@@ -86,7 +86,7 @@ public class Wraith extends AbstractWraith implements NeutralMob, RangedAttackMo
     }
 
     public void reassessWeaponGoal() {
-        if (this.level != null && !this.level.isClientSide) {
+        if (!this.level.isClientSide) {
             this.goalSelector.removeGoal(this.meleeGoal);
             this.goalSelector.removeGoal(this.bowGoal);
             ItemStack itemstack = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BowItem));
@@ -124,13 +124,6 @@ public class Wraith extends AbstractWraith implements NeutralMob, RangedAttackMo
         if (!this.level.isClientSide) {
             this.reassessWeaponGoal();
         }
-    }
-
-    protected AbstractArrow getOdysseyArrow(ItemStack ammo, float bowDamageMultiplier) {
-        AspectArrowItem aspectArrowItem = (AspectArrowItem) ItemRegistry.ETHEREAL_ARROW.get();
-        AbstractArrow abstractarrow = aspectArrowItem.createArrow(this.level, ammo, this);
-        abstractarrow.setEnchantmentEffectsFromEntity(this, bowDamageMultiplier);
-        return abstractarrow;
     }
 
     @Override

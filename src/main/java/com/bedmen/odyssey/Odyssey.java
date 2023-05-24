@@ -139,6 +139,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpider.createAttributes().build());
         event.put(EntityTypeRegistry.WRAITH.get(), Wraith.createAttributes().build());
         event.put(EntityTypeRegistry.WRAITH_STALKER.get(), WraithStalker.createAttributes().build());
+        event.put(EntityTypeRegistry.WRAITH_AMALGAM.get(), WraithAmalgam.createAttributes().build());
         event.put(EntityTypeRegistry.BANDIT.get(), Bandit.createAttributes().build());
         event.put(EntityTypeRegistry.BLADE_SPIDER.get(), BladeSpider.createAttributes().build());
 //

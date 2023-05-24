@@ -15,7 +15,6 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -58,6 +57,7 @@ public class EntityTypeRegistry {
     // ## Wraith
     public static final RegistryObject<EntityType<Wraith>> WRAITH = ENTITY_TYPE.register("wraith", () -> EntityType.Builder.of(Wraith::new, MobCategory.MONSTER).sized(0.55F, 1.85F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith").toString()));
     public static final RegistryObject<EntityType<WraithStalker>> WRAITH_STALKER = ENTITY_TYPE.register("wraith_stalker", () -> EntityType.Builder.of(WraithStalker::new, MobCategory.MONSTER).sized(0.6F, 2.9F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith_stalker").toString()));
+    public static final RegistryObject<EntityType<WraithAmalgam>> WRAITH_AMALGAM = ENTITY_TYPE.register("wraith_amalgam", () -> EntityType.Builder.of(WraithAmalgam::new, MobCategory.MONSTER).sized(0.8F, 2.3F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith_amalgam").toString()));
 
     // ## Illager
     public static final RegistryObject<EntityType<Bandit>> BANDIT = ENTITY_TYPE.register("bandit", () -> EntityType.Builder.of(Bandit::new, MobCategory.MONSTER).sized(0.6F, 1.95F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "bandit").toString()));

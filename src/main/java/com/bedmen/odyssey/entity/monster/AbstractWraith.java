@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.entity.monster;
 
+import com.bedmen.odyssey.items.aspect_items.AspectArrowItem;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.SoundEventRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -17,8 +19,10 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -42,6 +46,13 @@ public abstract class AbstractWraith extends Monster {
         this.MAX_VELOCITY = maxV;
         this.INITIAL_VELOCITY = initV;
         this.REACH = reach;
+    }
+
+    protected AbstractArrow getOdysseyArrow(ItemStack ammo, float bowDamageMultiplier) {
+        AspectArrowItem aspectArrowItem = (AspectArrowItem) ItemRegistry.ETHEREAL_ARROW.get();
+        AbstractArrow abstractarrow = aspectArrowItem.createArrow(this.level, ammo, this);
+        abstractarrow.setEnchantmentEffectsFromEntity(this, bowDamageMultiplier);
+        return abstractarrow;
     }
 
     protected SoundEvent getAmbientSound() {
@@ -162,7 +173,7 @@ public abstract class AbstractWraith extends Monster {
     }
 
     public class WraithBowAttackGoal<T extends net.minecraft.world.entity.Mob & RangedAttackMob> extends Goal {
-        private final T mob;
+        protected final T mob;
         private int attackIntervalMin;
         private final float attackRadiusSqr;
         private int attackTime = -1;
@@ -183,7 +194,7 @@ public abstract class AbstractWraith extends Monster {
         }
 
         public boolean canUse() {
-            return this.mob.getTarget() == null ? false : this.isHoldingBow();
+            return this.mob.getTarget() != null && this.isHoldingBow();
         }
 
         protected boolean isHoldingBow() {

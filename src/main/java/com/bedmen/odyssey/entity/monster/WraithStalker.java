@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.TimeUtil;
@@ -47,7 +48,7 @@ public class WraithStalker extends AbstractWraith implements NeutralMob {
 
 
     public WraithStalker(EntityType<? extends Monster> p_33002_, Level p_33003_) {
-        super(p_33002_, p_33003_, 0.2D, 0.65D, 0.3D, 2.5D);
+        super(p_33002_, p_33003_, 0.3D, 0.75D, 0.45D, 2.5D);
     }
 
     protected void registerGoals() {
@@ -126,6 +127,13 @@ public class WraithStalker extends AbstractWraith implements NeutralMob {
         }
 
         @Override
+        public void start() {
+            // TODO: Is this correct way to get this to trigger?
+            level.playSound(null, this.wraith.blockPosition(), SoundEvents.ELDER_GUARDIAN_CURSE, SoundSource.HOSTILE, 1, 1);
+            super.start();
+        }
+
+        @Override
         public void stop() {
             this.wraith.setInvulnerable(false);
             ((WraithStalker) this.wraith).stopBeingAngry();
@@ -134,7 +142,7 @@ public class WraithStalker extends AbstractWraith implements NeutralMob {
 
         @Override
         public void tick() {
-            if (this.wraith.level != null && !this.wraith.level.isClientSide) {
+            if (!this.wraith.level.isClientSide) {
                 WraithStalker stalker = (WraithStalker) this.wraith;
                 boolean freeze = false;
                 for (Player player : stalker.level.getNearbyPlayers(TargetingConditions.forCombat().range(FREEZE_RANGE), stalker, stalker.getBoundingBox().inflate(FREEZE_RANGE, FREEZE_RANGE, FREEZE_RANGE))) {
