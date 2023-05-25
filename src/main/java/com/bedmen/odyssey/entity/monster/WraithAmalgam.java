@@ -3,14 +3,13 @@ package com.bedmen.odyssey.entity.monster;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.entity.projectile.WraithAmalgamProjectile;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -19,7 +18,6 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
@@ -33,13 +31,13 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 
-import java.util.List;
 import java.util.UUID;
 
 public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedAttackMob {
 
 
     private int attackAnimationTick;
+    private int screamTick;
     private int remainingPersistentAngerTime;
     @javax.annotation.Nullable
     private UUID persistentAngerTarget;
@@ -69,6 +67,10 @@ public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedA
         super.aiStep();
         if (this.attackAnimationTick > 0) {
             --this.attackAnimationTick;
+        }
+
+        if (this.screamTick > 0) {
+            --this.screamTick;
         }
     }
 
@@ -155,13 +157,36 @@ public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedA
         return flag;
     }
 
+    public void startScreaming() {
+        this.screamTick = 80;
+        this.level.broadcastEntityEvent(this, (byte)5);
+    }
+
+    public void handleEntityEvent(byte b) {
+        if (b == 4) {
+            this.attackAnimationTick = 10;
+            this.playSound(SoundEvents.IRON_GOLEM_ATTACK, 1.0F, 1.0F);
+        } else if (b == 5) {
+            this.screamTick = 80;
+        } else super.handleEntityEvent(b);
+    }
+
     public int getAttackAnimationTick() {
         return this.attackAnimationTick;
+    }
+
+    public int getScreamTick() {
+        return this.screamTick;
+    }
+
+    public boolean isScreaming() {
+        return (this.screamTick > 0);
     }
 
     public class WraithAmalgamAttackGoal extends WraithBowAttackGoal {
 
         private int ticksUntilNextMeleeAttack;
+        private int ticksUntilNextRangedAttack;
 
         public WraithAmalgamAttackGoal(Mob Mob, int attackIntervalMin, float attackRadius) {
             super(Mob, attackIntervalMin, attackRadius);
@@ -171,29 +196,40 @@ public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedA
         public void start() {
             super.start();
             this.ticksUntilNextMeleeAttack = 0;
+            this.ticksUntilNextRangedAttack = 0;
         }
 
         @Override
         public void tick() {
             super.tick();
             LivingEntity target = this.mob.getTarget();
-            if (target != null) {
-                double d0 = this.mob.distanceToSqr(target.getX(), target.getY(), target.getZ());
-                this.ticksUntilNextMeleeAttack = Math.max(this.ticksUntilNextMeleeAttack - 1, 0);
-                this.checkAndPerformAttack(this.mob.getTarget(), d0);
+            if (target != null && (this.mob instanceof WraithAmalgam wraithAmalgam)) {
+                if (wraithAmalgam.isScreaming()) {
+                    wraithAmalgam.moveControlStop();
+                    if (wraithAmalgam.getScreamTick() % 20 == 0)
+                        WraithAmalgam.this.level.addFreshEntity(new WraithAmalgamProjectile(WraithAmalgam.this.level, WraithAmalgam.this, target));
+                } else {
+                    double d0 = wraithAmalgam.distanceToSqr(target.getX(), target.getY(), target.getZ());
+                    double reach = this.getAttackReachSqr(target);
+                    this.ticksUntilNextMeleeAttack = Math.max(this.ticksUntilNextMeleeAttack - 1, 0);
+                    this.ticksUntilNextRangedAttack = Math.max(this.ticksUntilNextRangedAttack - 1, 0);
+                    if (this.ticksUntilNextMeleeAttack <= 0 && d0 <= reach) {
+                        this.resetMeleeAttackCooldown();
+                        wraithAmalgam.doHurtTarget(target);
+                    } else if (this.ticksUntilNextRangedAttack <= 0) {
+                        this.resetRangedAttackCooldown();
+                        wraithAmalgam.startScreaming();
+                    }
+                }
             }
         }
 
-        protected void checkAndPerformAttack(LivingEntity target, double dist) {
-            double d0 = this.getAttackReachSqr(target);
-            if (dist <= d0 && this.ticksUntilNextMeleeAttack <= 0) {
-                this.resetAttackCooldown();
-                this.mob.doHurtTarget(target);
-            }
+        protected void resetMeleeAttackCooldown() {
+            this.ticksUntilNextMeleeAttack = this.adjustedTickDelay(40);
         }
 
-        protected void resetAttackCooldown() {
-            this.ticksUntilNextMeleeAttack = this.adjustedTickDelay(20);
+        protected void resetRangedAttackCooldown() {
+            this.ticksUntilNextRangedAttack = this.adjustedTickDelay(200);
         }
 
         protected double getAttackReachSqr(LivingEntity livingEntity) {

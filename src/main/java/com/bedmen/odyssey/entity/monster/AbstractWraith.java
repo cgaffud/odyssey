@@ -175,7 +175,7 @@ public abstract class AbstractWraith extends Monster {
     public class WraithBowAttackGoal<T extends net.minecraft.world.entity.Mob & RangedAttackMob> extends Goal {
         protected final T mob;
         private int attackIntervalMin;
-        private final float attackRadiusSqr;
+        protected final float attackRadiusSqr;
         private int attackTime = -1;
         private int seeTime;
         private boolean strafingClockwise;

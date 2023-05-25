@@ -7,10 +7,7 @@ import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
 import com.bedmen.odyssey.entity.boss.coven.*;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.*;
 import com.bedmen.odyssey.entity.monster.*;
-import com.bedmen.odyssey.entity.projectile.Boomerang;
-import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
-import com.bedmen.odyssey.entity.projectile.SonicBoom;
-import com.bedmen.odyssey.entity.projectile.ThrownSpear;
+import com.bedmen.odyssey.entity.projectile.*;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -88,7 +85,8 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<OdysseyArrow>> ARROW = ENTITY_TYPE.register("arrow", () -> EntityType.Builder.<OdysseyArrow>of(OdysseyArrow::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(Odyssey.MOD_ID, "arrow").toString()));
     public static final RegistryObject<EntityType<SonicBoom>> SONIC_BOOM = ENTITY_TYPE.register("sonic_boom", () -> EntityType.Builder.<SonicBoom>of(SonicBoom::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation(Odyssey.MOD_ID, "sonic_boom").toString()));
     public static final RegistryObject<EntityType<ThrownSpear>> THROWN_SPEAR = ENTITY_TYPE.register("thrown_spear", () -> EntityType.Builder.<ThrownSpear>of(ThrownSpear::new, MobCategory.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(Odyssey.MOD_ID, "thrown_spear").toString()));
-//    public static final RegistryObject<EntityType<OdysseyTrident>> TRIDENT = ENTITY_TYPE.register("trident", () -> EntityType.Builder.<OdysseyTrident>of(OdysseyTrident::new, MobCategory.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("trident").toString()));
+    public static final RegistryObject<EntityType<WraithAmalgamProjectile>> WRAITH_AMALGAM_PROJECTILE = ENTITY_TYPE.register("wraith_amalgam_projectile", () -> EntityType.Builder.<WraithAmalgamProjectile>of(WraithAmalgamProjectile::new, MobCategory.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(Odyssey.MOD_ID, "wraith_amalgam_projectile").toString()));
+    //    public static final RegistryObject<EntityType<OdysseyTrident>> TRIDENT = ENTITY_TYPE.register("trident", () -> EntityType.Builder.<OdysseyTrident>of(OdysseyTrident::new, MobCategory.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("trident").toString()));
 //    public static final RegistryObject<EntityType<PermafrostIcicle>> PERMAFROST_ICICLE = ENTITY_TYPE.register("permafrost_icicle", () -> EntityType.Builder.<PermafrostIcicle>of(PermafrostIcicle::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_icicle").toString()));
 
     // # Boat

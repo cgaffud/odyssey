@@ -5,6 +5,7 @@ package com.bedmen.odyssey.client.model;// Made with Blockbench 4.7.2
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.monster.WraithAmalgam;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -31,6 +32,8 @@ public class WraithAmalgamModel<T extends WraithAmalgam> extends AgeableListMode
 	private final ModelPart rhead;
 	private final ModelPart lhead;
 
+	private final float ALMOST_HALF_PI = Mth.HALF_PI * 3/4;
+
 	public WraithAmalgamModel(ModelPart root) {
 		this.body = root.getChild("body");
 		this.r_right_arm = root.getChild("r_right_arm");
@@ -48,9 +51,9 @@ public class WraithAmalgamModel<T extends WraithAmalgam> extends AgeableListMode
 
 		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, -15.0F, 0.0F));
 
-		PartDefinition lbody_r1 = body.addOrReplaceChild("lbody_r1", CubeListBuilder.create().texOffs(0, 16).addBox(3.0F, -40.0F, -14.0F, 8.0F, 15.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 48.0F, 0.0F, -0.4363F, 0.0F, -0.3054F));
+		PartDefinition lbody_r1 = body.addOrReplaceChild("lbody", CubeListBuilder.create().texOffs(0, 16).addBox(3.0F, -40.0F, -14.0F, 8.0F, 15.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 48.0F, 0.0F, -0.4363F, 0.0F, -0.3054F));
 
-		PartDefinition rbody_r1 = body.addOrReplaceChild("rbody_r1", CubeListBuilder.create().texOffs(24, 12).addBox(-7.0F, -37.0F, 4.0F, 7.0F, 11.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 48.0F, 0.0F, 0.2182F, 0.0F, 0.2182F));
+		PartDefinition rbody_r1 = body.addOrReplaceChild("rbody", CubeListBuilder.create().texOffs(24, 12).addBox(-7.0F, -37.0F, 4.0F, 7.0F, 11.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 48.0F, 0.0F, 0.2182F, 0.0F, 0.2182F));
 
 		PartDefinition r_right_arm = partdefinition.addOrReplaceChild("r_right_arm", CubeListBuilder.create().texOffs(0, 35).addBox(-1.0F, 0.0F, -2.0F, 2.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, -5.0F, -2.0F));
 
@@ -76,9 +79,11 @@ public class WraithAmalgamModel<T extends WraithAmalgam> extends AgeableListMode
 
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-//this.setupAttackAnimation(entity, ageInTicks);
-		this.l_right_arm.xRot = (float)(Math.atan(limbSwing * 0.6662F) * 0.1 * limbSwingAmount);
-		this.l_left_arm.xRot = (float)(Math.atan(limbSwing * 0.6662F) * 0.1 * limbSwingAmount);
+		// Am not moving the prepareMobModel down here since I want access to partialTicks
+		if (entity.getAttackAnimationTick() <= 0) {
+			this.l_right_arm.xRot = (float) (Math.atan(limbSwing * 0.6662F) * 0.1 * limbSwingAmount);
+			this.l_left_arm.xRot = (float) (Math.atan(limbSwing * 0.6662F) * 0.1 * limbSwingAmount);
+		}
 		this.r_right_arm.xRot = (float)(Math.atan(limbSwing * 0.6662F) * 0.1 * limbSwingAmount);
 		this.r_left_arm.xRot = (float)(Math.atan(limbSwing * 0.6662F) * 0.1 * limbSwingAmount);
 
@@ -91,21 +96,27 @@ public class WraithAmalgamModel<T extends WraithAmalgam> extends AgeableListMode
 		this.torso.zRot = 0.0F;
 
 		ItemStack itemstack = entity.getMainHandItem();
-//		if (entity.isAggressive()) {
-//			if ((GeneralUtil.isHashTick(entity, entity.getLevel(), 32) && (entity.getRandom().nextFloat() < 0.10))) {
-//				this.head.setRotation(entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2 + ALMOST_HALF_PI/4, this.head.yRot, entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2);
-//			} else if (GeneralUtil.isHashTick(entity, entity.getLevel(), 16) && (entity.getRandom().nextFloat() < 0.8)) {
-//				this.head.setRotation(entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2 + ALMOST_HALF_PI/4,
-//						this.head.yRot,
-//						entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2);
-//			} else {
-//				this.head.xRot = ALMOST_HALF_PI/4;
-//				this.head.zRot = 0;
-//			}
-//		} else {
-//			this.head.xRot = ALMOST_HALF_PI/2;
-//			this.head.zRot = 0;
-//		}
+		if (entity.isScreaming()) {
+
+			this.l_left_arm.xRot = Mth.HALF_PI/2;
+			this.l_right_arm.xRot = Mth.HALF_PI/2;
+
+			if ((GeneralUtil.isHashTick(entity, entity.getLevel(), 8) && (entity.getRandom().nextFloat() < 0.10))) {
+				this.lhead.setRotation(entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2 + ALMOST_HALF_PI/4, this.lhead.yRot, entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2);
+			} else if (GeneralUtil.isHashTick(entity, entity.getLevel(), 4) && (entity.getRandom().nextFloat() < 0.8)) {
+				this.lhead.setRotation(entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2 + ALMOST_HALF_PI/4,
+						this.lhead.yRot,
+						entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2);
+			} else {
+				this.lhead.xRot = 0;
+				this.lhead.zRot = 0;
+			}
+		} else {
+			this.lhead.xRot = 0;
+			this.lhead.zRot = 0;
+			this.l_left_arm.xRot = 0;
+			this.l_right_arm.xRot = 0;
+		}
 
 		if (entity.isAggressive() && (itemstack.isEmpty() || !(itemstack.getItem() instanceof CrossbowItem))) {
 			float f = Mth.sin(this.attackTime * (float)Math.PI);
@@ -127,6 +138,7 @@ public class WraithAmalgamModel<T extends WraithAmalgam> extends AgeableListMode
 		if (attackAnimationTick > 0) {
 			this.l_right_arm.xRot = -2.0F + 1.5F * Mth.triangleWave((float)attackAnimationTick - partialTicks, 10.0F);
 			this.l_left_arm.xRot = -2.0F + 1.5F * Mth.triangleWave((float)attackAnimationTick - partialTicks, 10.0F);
+
 		}
 	}
 

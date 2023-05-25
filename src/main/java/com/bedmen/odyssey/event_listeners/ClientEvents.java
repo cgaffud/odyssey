@@ -143,6 +143,7 @@ public class ClientEvents {
             EntityRenderers.register(EntityTypeRegistry.WRAITH.get(), WraithRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WRAITH_STALKER.get(), WraithStalkerRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WRAITH_AMALGAM.get(), WraithAmalgamRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.WRAITH_AMALGAM_PROJECTILE.get(), WraithAmalgamProjectileRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BANDIT.get(), BanditRenderer::new);
 
             //Boss Renderings
@@ -215,6 +216,7 @@ public class ClientEvents {
         event.registerLayerDefinition(WraithModel.LAYER_LOCATION, WraithModel::createBodyLayer);
         event.registerLayerDefinition(WraithStalkerModel.LAYER_LOCATION, WraithStalkerModel::createBodyLayer);
         event.registerLayerDefinition(WraithAmalgamModel.LAYER_LOCATION, WraithAmalgamModel::createBodyLayer);
+        event.registerLayerDefinition(WraithAmalgamProjectileModel.LAYER_LOCATION, WraithAmalgamProjectileModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanHeadModel.LAYER_LOCATION, MineralLeviathanHeadModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanBodyModel.LAYER_LOCATION, MineralLeviathanBodyModel::createBodyLayer);
         event.registerLayerDefinition(ArmedCovenWitchModel.LAYER_LOCATION, ArmedCovenWitchModel::createBodyLayer);

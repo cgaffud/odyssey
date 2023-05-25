@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class WraithAmalgamRenderer<T extends WraithAmalgam> extends MobRenderer<T, WraithAmalgamModel<T>> {
-    private static final ResourceLocation WRAITH_AMALGAMATE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/wraith/amalgam.png");
+    private static final ResourceLocation WRAITH_AMALGAM_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/wraith/amalgam.png");
 
     public WraithAmalgamRenderer(EntityRendererProvider.Context context) {
         super(context, new WraithAmalgamModel<>(context.bakeLayer(WraithAmalgamModel.LAYER_LOCATION)), 0.8F);
@@ -27,6 +27,6 @@ public class WraithAmalgamRenderer<T extends WraithAmalgam> extends MobRenderer<
     }
 
     public ResourceLocation getTextureLocation(T pEntity) {
-        return WRAITH_AMALGAMATE_LOCATION;
+        return WRAITH_AMALGAM_LOCATION;
     }
 }
