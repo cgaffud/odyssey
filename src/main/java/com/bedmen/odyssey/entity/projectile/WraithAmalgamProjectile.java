@@ -116,7 +116,7 @@ public class WraithAmalgamProjectile extends Projectile  {
 
             if (this.finalTarget == null || !this.finalTarget.isAlive() || this.finalTarget instanceof Player && this.finalTarget.isSpectator()) {
                 if (!this.isNoGravity()) {
-                    this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.04D, 0.0D));
+                    this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.0D, 0.0D));
                 }
             } else {
                 this.targetX = this.finalTarget.getX();

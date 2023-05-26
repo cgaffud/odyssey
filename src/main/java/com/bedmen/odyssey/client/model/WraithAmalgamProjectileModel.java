@@ -13,6 +13,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class WraithAmalgamProjectileModel<T extends WraithAmalgamProjectile> extends HierarchicalModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
@@ -41,7 +42,8 @@ public class WraithAmalgamProjectileModel<T extends WraithAmalgamProjectile> ext
 
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
+		this.top.xRot = (float) -Mth.atan2(ageInTicks, 1)/4;
+		this.bottom.xRot = (float) Mth.atan2(ageInTicks, 1)/4;
 	}
 
 	@Override

@@ -5,8 +5,10 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.projectile.WraithAmalgamProjectile;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.registry.SoundEventRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
@@ -18,6 +20,7 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +34,10 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedAttackMob {
 
@@ -158,7 +164,8 @@ public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedA
     }
 
     public void startScreaming() {
-        this.screamTick = 80;
+        this.screamTick = 60;
+        level.playSound(null, this.blockPosition(), SoundEventRegistry.WRAITH_SCREAM.get(), SoundSource.HOSTILE, 1.0f, 1.0f);
         this.level.broadcastEntityEvent(this, (byte)5);
     }
 
@@ -167,7 +174,7 @@ public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedA
             this.attackAnimationTick = 10;
             this.playSound(SoundEvents.IRON_GOLEM_ATTACK, 1.0F, 1.0F);
         } else if (b == 5) {
-            this.screamTick = 80;
+            this.screamTick = 60;
         } else super.handleEntityEvent(b);
     }
 
@@ -187,6 +194,7 @@ public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedA
 
         private int ticksUntilNextMeleeAttack;
         private int ticksUntilNextRangedAttack;
+        private int TARGET_SWITCHUP_RANGE = 20;
 
         public WraithAmalgamAttackGoal(Mob Mob, int attackIntervalMin, float attackRadius) {
             super(Mob, attackIntervalMin, attackRadius);
@@ -206,8 +214,15 @@ public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedA
             if (target != null && (this.mob instanceof WraithAmalgam wraithAmalgam)) {
                 if (wraithAmalgam.isScreaming()) {
                     wraithAmalgam.moveControlStop();
-                    if (wraithAmalgam.getScreamTick() % 20 == 0)
-                        WraithAmalgam.this.level.addFreshEntity(new WraithAmalgamProjectile(WraithAmalgam.this.level, WraithAmalgam.this, target));
+                    if (wraithAmalgam.getScreamTick() % 20 == 0) {
+                        // This awful one-line collects all players in range of TARGET_SWITCHUP_RANGE that have line of sight with the mob
+                        List<Player> nearbyPlayers = wraithAmalgam.level.getNearbyPlayers(TargetingConditions.forCombat().range(this.TARGET_SWITCHUP_RANGE), wraithAmalgam, wraithAmalgam.getBoundingBox().inflate(this.TARGET_SWITCHUP_RANGE)).stream().filter(player -> player.hasLineOfSight(wraithAmalgam)).collect(Collectors.toList());
+                        LivingEntity offshootTarget = target;
+                        if (!nearbyPlayers.isEmpty())
+                            offshootTarget = nearbyPlayers.get(wraithAmalgam.getRandom().nextInt(nearbyPlayers.size()));
+
+                        WraithAmalgam.this.level.addFreshEntity(new WraithAmalgamProjectile(WraithAmalgam.this.level, WraithAmalgam.this, offshootTarget));
+                    }
                 } else {
                     double d0 = wraithAmalgam.distanceToSqr(target.getX(), target.getY(), target.getZ());
                     double reach = this.getAttackReachSqr(target);

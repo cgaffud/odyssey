@@ -91,6 +91,16 @@
       }
     ]
   },
+  "entity.wraith.scream": {
+    "category": "hostile",
+    "subtitle": "entity.wraith.scream.sub",
+    "sounds": [
+      {
+        "name": "oddc:entity/wraith/scream",
+        "stream": true
+      }
+    ]
+  },
   "music_disc.mesa": {
     "category": "music",
     "sounds": [
