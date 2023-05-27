@@ -15,6 +15,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -38,17 +40,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class WraithStalker extends AbstractWraith implements NeutralMob {
+public class WraithStalker extends AbstractWraith {
 
-    private int remainingPersistentAngerTime;
-    @javax.annotation.Nullable
-    private UUID persistentAngerTarget;
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(40, 59);
-    private static final float FREEZE_RANGE = 32f;
+    private static final int FREEZE_RANGE = 32;
+    private static final int BLIND_RANGE = 10;
 
 
     public WraithStalker(EntityType<? extends Monster> p_33002_, Level p_33003_) {
-        super(p_33002_, p_33003_, 0.3D, 0.75D, 0.45D, 2.5D);
+        super(p_33002_, p_33003_, 0.3D, 0.75D, 0.45D, 2.5D,10);
     }
 
     protected void registerGoals() {
@@ -67,13 +67,6 @@ public class WraithStalker extends AbstractWraith implements NeutralMob {
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.setInvulnerable(false);
-    }
-
-    public void tick() {
-        this.noPhysics = true;
-        super.tick();
-        this.noPhysics = false;
-        this.setNoGravity(true);
     }
 
     public void aiStep() {
@@ -97,27 +90,6 @@ public class WraithStalker extends AbstractWraith implements NeutralMob {
     @Override
     public void startPersistentAngerTimer() {
         this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
-    }
-
-    @Override
-    public int getRemainingPersistentAngerTime() {
-        return this.remainingPersistentAngerTime;
-    }
-
-    @Override
-    public void setRemainingPersistentAngerTime(int remainingPersistentAngerTime) {
-        this.remainingPersistentAngerTime = remainingPersistentAngerTime;
-    }
-
-    @org.jetbrains.annotations.Nullable
-    @Override
-    public UUID getPersistentAngerTarget() {
-        return this.persistentAngerTarget;
-    }
-
-    @Override
-    public void setPersistentAngerTarget(@org.jetbrains.annotations.Nullable UUID persistentAngerTarget) {
-        this.persistentAngerTarget = persistentAngerTarget;
     }
 
     public class WraithStalkerMeleeGoal extends WraithMeleeAttackGoal {
@@ -146,6 +118,7 @@ public class WraithStalker extends AbstractWraith implements NeutralMob {
                 WraithStalker stalker = (WraithStalker) this.wraith;
                 boolean freeze = false;
                 for (Player player : stalker.level.getNearbyPlayers(TargetingConditions.forCombat().range(FREEZE_RANGE), stalker, stalker.getBoundingBox().inflate(FREEZE_RANGE, FREEZE_RANGE, FREEZE_RANGE))) {
+
                     if (stalker.isLookingAtMe(player) && !player.isInvisible()) {
                         stalker.moveControlStop();
                         stalker.lookControl.setLookAt(player);
@@ -156,6 +129,11 @@ public class WraithStalker extends AbstractWraith implements NeutralMob {
                         break;
                     }
                 }
+
+                for (Player player : stalker.level.getNearbyPlayers(TargetingConditions.forCombat().range(BLIND_RANGE), stalker, stalker.getBoundingBox().inflate(BLIND_RANGE, BLIND_RANGE/2, BLIND_RANGE))) {
+                    player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100));
+                }
+
 
                 if (!freeze) {
                     stalker.setInvulnerable(false);

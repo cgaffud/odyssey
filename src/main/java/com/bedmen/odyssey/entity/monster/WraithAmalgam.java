@@ -39,18 +39,16 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedAttackMob {
+public class WraithAmalgam extends AbstractWraith implements RangedAttackMob {
 
 
     private int attackAnimationTick;
     private int screamTick;
-    private int remainingPersistentAngerTime;
-    @javax.annotation.Nullable
-    private UUID persistentAngerTarget;
+
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(40, 59);
 
     public WraithAmalgam(EntityType<? extends Monster> p_33002_, Level p_33003_) {
-        super(p_33002_, p_33003_,0.2D, 0.65D, 0.3D, 2.5D);
+        super(p_33002_, p_33003_,0.2D, 0.65D, 0.3D, 2.5D,15);
     }
 
     protected void registerGoals() {
@@ -59,13 +57,6 @@ public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedA
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
         this.targetSelector.addGoal(3, new ResetUniversalAngerTargetGoal<>(this, false));
-    }
-
-    public void tick() {
-        this.noPhysics = true;
-        super.tick();
-        this.noPhysics = false;
-        this.setNoGravity(true);
     }
 
     @Override
@@ -106,27 +97,6 @@ public class WraithAmalgam extends AbstractWraith implements NeutralMob, RangedA
     @Override
     public void startPersistentAngerTimer() {
         this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
-    }
-
-    @Override
-    public int getRemainingPersistentAngerTime() {
-        return this.remainingPersistentAngerTime;
-    }
-
-    @Override
-    public void setRemainingPersistentAngerTime(int remainingPersistentAngerTime) {
-        this.remainingPersistentAngerTime = remainingPersistentAngerTime;
-    }
-
-    @org.jetbrains.annotations.Nullable
-    @Override
-    public UUID getPersistentAngerTarget() {
-        return this.persistentAngerTarget;
-    }
-
-    @Override
-    public void setPersistentAngerTarget(@org.jetbrains.annotations.Nullable UUID persistentAngerTarget) {
-        this.persistentAngerTarget = persistentAngerTarget;
     }
 
     @Override

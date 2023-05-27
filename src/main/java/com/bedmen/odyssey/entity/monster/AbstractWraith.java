@@ -9,10 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -26,19 +23,26 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.Random;
+import java.util.UUID;
 
-public abstract class AbstractWraith extends Monster {
+public abstract class AbstractWraith extends Monster implements NeutralMob {
 
     public final double MIN_CHASE_VELOCITY;
     public final double MAX_VELOCITY;
     public final double INITIAL_VELOCITY;
     public final double REACH;
 
+    private int remainingPersistentAngerTime;
+    @javax.annotation.Nullable
+    private UUID persistentAngerTarget;
 
-    protected AbstractWraith(EntityType<? extends Monster> p_33002_, Level p_33003_, double minV, double maxV, double initV, double reach) {
+    private final float AGGRO_RANGE;
+
+    protected AbstractWraith(EntityType<? extends Monster> p_33002_, Level p_33003_, double minV, double maxV, double initV, double reach, int aggroRange) {
         super(p_33002_, p_33003_);
         this.setNoGravity(true);
         this.moveControl = new WraithMoveControl(this);
@@ -46,6 +50,21 @@ public abstract class AbstractWraith extends Monster {
         this.MAX_VELOCITY = maxV;
         this.INITIAL_VELOCITY = initV;
         this.REACH = reach;
+        this.AGGRO_RANGE = aggroRange;
+    }
+
+    public void tick() {
+        this.noPhysics = true;
+        super.tick();
+        this.noPhysics = false;
+        this.setNoGravity(true);
+        if ((random.nextDouble() < 0.001)) {
+            Player player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), AGGRO_RANGE, true);
+            if (player != null) {
+                setPersistentAngerTarget(player.getUUID());
+                startPersistentAngerTimer();
+            }
+        }
     }
 
     protected AbstractArrow getOdysseyArrow(ItemStack ammo, float bowDamageMultiplier) {
@@ -81,6 +100,27 @@ public abstract class AbstractWraith extends Monster {
 
     public void moveControlStop() {
         this.getMoveControl().setWantedPosition(this.getX(), this.getY(), this.getZ(), this.INITIAL_VELOCITY);
+    }
+
+
+    @Override
+    public int getRemainingPersistentAngerTime() {
+        return this.remainingPersistentAngerTime;
+    }
+
+    @Override
+    public void setRemainingPersistentAngerTime(int remainingPersistentAngerTime) {
+        this.remainingPersistentAngerTime = remainingPersistentAngerTime;
+    }
+    @Nullable
+    @Override
+    public UUID getPersistentAngerTarget() {
+        return this.persistentAngerTarget;
+    }
+
+    @Override
+    public void setPersistentAngerTarget(@Nullable UUID persistentAngerTarget) {
+        this.persistentAngerTarget = persistentAngerTarget;
     }
 
     public class WraithMeleeAttackGoal extends Goal {

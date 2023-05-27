@@ -46,17 +46,14 @@ import java.util.EnumSet;
 import java.util.Random;
 import java.util.UUID;
 
-public class Wraith extends AbstractWraith implements NeutralMob, RangedAttackMob {
+public class Wraith extends AbstractWraith implements RangedAttackMob {
     public final WraithBowAttackGoal bowGoal = new WraithBowAttackGoal(this, 20, 10.0F);
     public final WraithMeleeAttackGoal meleeGoal = new WraithMeleeAttackGoal(this);
 
-    private int remainingPersistentAngerTime;
-    @javax.annotation.Nullable
-    private UUID persistentAngerTarget;
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(30, 49);
 
     public Wraith(EntityType<? extends Monster> p_33002_, Level p_33003_) {
-        super(p_33002_, p_33003_, 0.2D, 0.65D, 0.3D, 2.5D);
+        super(p_33002_, p_33003_, 0.2D, 0.65D, 0.3D, 2.5D, 20);
         this.reassessWeaponGoal();
     }
 
@@ -71,19 +68,6 @@ public class Wraith extends AbstractWraith implements NeutralMob, RangedAttackMo
         return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 60.0D).add(Attributes.MOVEMENT_SPEED, 1.2D).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
-    public void tick() {
-        this.noPhysics = true;
-        super.tick();
-        this.noPhysics = false;
-        this.setNoGravity(true);
-        if ((random.nextDouble() < 0.001)) {
-            Player player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 20, true);
-            if (player != null) {
-                setPersistentAngerTarget(player.getUUID());
-                startPersistentAngerTimer();
-            }
-        }
-    }
 
     public void reassessWeaponGoal() {
         if (!this.level.isClientSide) {
@@ -162,27 +146,6 @@ public class Wraith extends AbstractWraith implements NeutralMob, RangedAttackMo
     @Override
     public void startPersistentAngerTimer() {
         this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
-    }
-
-    @Override
-    public int getRemainingPersistentAngerTime() {
-        return this.remainingPersistentAngerTime;
-    }
-
-    @Override
-    public void setRemainingPersistentAngerTime(int remainingPersistentAngerTime) {
-        this.remainingPersistentAngerTime = remainingPersistentAngerTime;
-    }
-
-    @Nullable
-    @Override
-    public UUID getPersistentAngerTarget() {
-        return this.persistentAngerTarget;
-    }
-
-    @Override
-    public void setPersistentAngerTarget(@Nullable UUID persistentAngerTarget) {
-        this.persistentAngerTarget = persistentAngerTarget;
     }
 
     @Override
