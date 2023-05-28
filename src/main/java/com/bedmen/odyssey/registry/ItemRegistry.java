@@ -416,6 +416,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> WRAITH_STALKER_SPAWN_EGG = ITEMS.register("wraith_stalker_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WRAITH_STALKER, 0xF3F4F5, 0xA8ACAE, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> WRAITH_AMALGAM_SPAWN_EGG = ITEMS.register("wraith_amalgam_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WRAITH_AMALGAM, 0xF3F4F5, 0xA8ACAE, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> BLADE_SPIDER_SPAWN_EGG = ITEMS.register("blade_spider_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BLADE_SPIDER, 0x3C3C44, 0xA80E0E, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> FORGOTTEN_SPAWN_EGG = ITEMS.register("forgotten_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.FORGOTTEN, 0x4b4c49, 0x7b8d84, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
 
     // # No Creative Tab
     public static final RegistryObject<Item> UNOBTAINABLE = ITEMS.register("unobtainable", ()-> new Item((new Item.Properties())));

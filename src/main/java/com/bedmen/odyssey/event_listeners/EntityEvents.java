@@ -282,6 +282,12 @@ public class EntityEvents {
             mob.setBaby(true);
             return Optional.empty();
         }
+        float y = (float)mob.getY();
+        // Guaranteed false for y>=8, linear gradient for -48 <= y <= 8, guaranteed true for y<-48
+        if (random.nextFloat() < (-(y-8)/56)) {
+            return Optional.of(EntityTypeRegistry.FORGOTTEN.get());
+        }
+
         if(random.nextFloat() < 0.05f){
             return Optional.of(EntityTypeRegistry.ZOMBIE_BRUTE.get());
         }
@@ -295,7 +301,6 @@ public class EntityEvents {
         float y = (float)mob.getY();
         // Guaranteed false for y>=8, linear gradient for -48 <= y <= 8, guaranteed true for y<-48
         if (random.nextFloat() < (-(y-8)/56)) {
-            System.out.printf("Threshold passed:%f\n",(-(y-8)/56));
             return Optional.of(EntityTypeRegistry.BLADE_SPIDER.get());
         }
         return Optional.empty();
