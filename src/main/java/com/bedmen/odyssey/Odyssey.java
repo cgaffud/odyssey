@@ -32,7 +32,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.animal.PolarBear;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraftforge.common.MinecraftForge;
@@ -130,7 +129,8 @@ public class Odyssey
 //        event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_ZOMBIE.get(), DungeonZombie.createAttributes().build());
         event.put(EntityTypeRegistry.FORGOTTEN.get(), Forgotten.createAttributes().build());
-        event.put(EntityTypeRegistry.ENCASED.get(), Encased.createAttributes().build());
+        event.put(EntityTypeRegistry.ENCASED_ZOMBIE.get(), EncasedZombie.createAttributes().build());
+        event.put(EntityTypeRegistry.ENCASED_SKELETON.get(), EncasedSkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.SKELETON.get(), OdysseySkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
