@@ -1,7 +1,5 @@
 package com.bedmen.odyssey.entity.monster;
 
-import com.bedmen.odyssey.entity.boss.Boss;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -11,22 +9,23 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.Silverfish;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 
-public class Encased extends Zombie {
-    protected static final EntityDataAccessor<Float> DATA_ARMOR_HEALTH = SynchedEntityData.defineId(Encased.class, EntityDataSerializers.FLOAT);
+public class EncasedSkeleton extends OdysseySkeleton {
+    protected static final EntityDataAccessor<Float> DATA_ARMOR_HEALTH = SynchedEntityData.defineId(EncasedSkeleton.class, EntityDataSerializers.FLOAT);
     private static final float BASE_ARMOR_HEALTH = 5.0f;
 
-    public Encased(EntityType<? extends Zombie> entityType, Level level) {
-        super(entityType, level);
+    public EncasedSkeleton(EntityType<? extends OdysseySkeleton> p_33570_, Level p_33571_) {
+        super(p_33570_, p_33571_);
         this.setArmorHealth(this.BASE_ARMOR_HEALTH + 3*(level.getRandom().nextFloat()-0.5f));
     }
 
@@ -103,7 +102,7 @@ public class Encased extends Zombie {
                         ((ServerLevel)this.level).sendParticles(ParticleTypes.CRIT, this.getX() + this.random.nextFloat()-0.5f, this.getY() + this.random.nextFloat()*2, this.getZ() +this.random.nextFloat()-0.5f, 2, 0.2D, 0.2D, 0.2D, 0.0D);
                     }
                 }
-          }
+            }
             if (newArmorHealth != armorHealth && !this.isSilent()) {
                 if(newArmorHealth > 0f){
                     this.playSound(SoundEvents.STONE_BREAK, 1.0F, 1.0F);
@@ -120,6 +119,5 @@ public class Encased extends Zombie {
     protected boolean hurtWithoutArmor(DamageSource damageSource, float amount){
         return super.hurt(damageSource, amount);
     }
-
 
 }
