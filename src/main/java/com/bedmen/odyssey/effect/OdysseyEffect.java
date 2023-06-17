@@ -29,43 +29,9 @@ public class OdysseyEffect extends MobEffect {
         }
     }
 
-    /* TODO XPDrainerEffect code
-        @Override
-    public void applyEffectTick(LivingEntity livingEntity, int amplifier) {
-        if ((this == EffectRegistry.BLEEDING.get()) && (livingEntity.tickCount % (100 / (amplifier + 3)) == 0)) {
-            livingEntity.hurt(DamageSource.MAGIC, 1.0F);
-        } else if (this == EffectRegistry.HEXFLAME.get()) {
-            livingEntity.clearFire();
-            if (livingEntity.tickCount % (120 / (amplifier + 3)) == 0)
-                livingEntity.hurt(DamageSource.ON_FIRE, 1.0F);
-        } else if ((this instanceof XPDrainerEffect xpDrainerEffect) && (livingEntity instanceof ServerPlayer serverPlayer)) {
-            if (xpDrainerEffect.experienceCost.canPay(serverPlayer, amplifier+1))
-                xpDrainerEffect.experienceCost.pay(serverPlayer, amplifier+1);
-            else
-                serverPlayer.hurt(DamageSource.MAGIC, Float.MAX_VALUE);
-        } else {
-            super.applyEffectTick(livingEntity, amplifier);
-        }
-
-    }
-
-        @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
-        if ((this == EffectRegistry.BLEEDING.get()) || this instanceof FireEffect || this instanceof XPDrainerEffect) {
-            return true;
-        }
-        return super.isDurationEffectTick(duration, amplifier);
-    }
-    */
-
     public boolean isDurationEffectTick(int duration, int amplifier) {
         if(this == EffectRegistry.BLEEDING.get()){
-            int tickRate = 100 / (amplifier+3);
-            if(tickRate > 1){
-                return duration % tickRate == 0;
-            } else {
-                return true;
-            }
+            return OdysseyEffect.commonDurationEffectTick(duration, amplifier);
         }
         return super.isDurationEffectTick(duration, amplifier);
     }
@@ -89,5 +55,14 @@ public class OdysseyEffect extends MobEffect {
 
     public Object getEffectRendererInternal() {
         return ODYSSEY_EFFECT_RENDERER;
+    }
+
+    public static boolean commonDurationEffectTick(int duration, int amplifier) {
+        int tickRate = 120 / (amplifier+3);
+        if(tickRate > 1){
+            return duration % tickRate == 0;
+        } else {
+            return true;
+        }
     }
 }

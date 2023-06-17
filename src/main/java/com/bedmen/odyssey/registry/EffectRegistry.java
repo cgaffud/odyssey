@@ -1,14 +1,7 @@
 package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.effect.FireEffect;
-import com.bedmen.odyssey.effect.FireType;
-import com.bedmen.odyssey.effect.OdysseyEffect;
-import com.bedmen.odyssey.effect.TemperatureEffect;
-import com.bedmen.odyssey.potions.FireEffect;
-import com.bedmen.odyssey.potions.FireType;
-import com.bedmen.odyssey.potions.OdysseyEffect;
-import com.bedmen.odyssey.potions.XPDrainerEffect;
+import com.bedmen.odyssey.effect.*;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;

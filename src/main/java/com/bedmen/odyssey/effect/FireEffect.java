@@ -27,12 +27,7 @@ public class FireEffect extends OdysseyEffect {
     public boolean isDurationEffectTick(int duration, int amplifier) {
         // TODO soulflame
         if(this == EffectRegistry.HEXFLAME.get()){
-            int tickRate = 120 / (amplifier+3);
-            if(tickRate > 1){
-                return duration % tickRate == 0;
-            } else {
-                return true;
-            }
+            return OdysseyEffect.commonDurationEffectTick(duration, amplifier);
         }
         return super.isDurationEffectTick(duration, amplifier);
     }
