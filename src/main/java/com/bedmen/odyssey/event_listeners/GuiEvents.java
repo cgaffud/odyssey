@@ -5,7 +5,7 @@ import com.bedmen.odyssey.block.entity.OdysseySignBlockEntity;
 import com.bedmen.odyssey.client.gui.screens.OdysseyCreativeModeInventoryScreen;
 import com.bedmen.odyssey.client.gui.screens.OdysseyInventoryScreen;
 import com.bedmen.odyssey.client.gui.screens.OdysseySignEditScreen;
-import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;

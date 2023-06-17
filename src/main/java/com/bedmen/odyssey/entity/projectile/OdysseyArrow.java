@@ -1,12 +1,8 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
-import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
-import com.bedmen.odyssey.items.aspect_items.QuiverItem;
-import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.combat.ArrowType;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
@@ -19,12 +15,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-
-import java.util.Optional;
 
 public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
     public static final String ARROW_TYPE_TAG = "ArrowType";

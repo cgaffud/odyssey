@@ -11,6 +11,9 @@ import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +29,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -40,7 +42,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -49,6 +50,7 @@ import java.util.stream.Collectors;
 public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer {
 
     private static final EntityDataAccessor<PermabuffHolder> DATA_PERMABUFF_HOLDER = SynchedEntityData.defineId(Player.class, OdysseyDataSerializers.PERMABUFF_HOLDER);
+    private static final int BLIZZARD_FOG_TICKS = 50;
 
     @Shadow
     public void awardStat(Stat<?> p_36247_) {}
@@ -68,6 +70,9 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
     private static final String PERMABUFF_HOLDER_TAG = Odyssey.MOD_ID + ":PermabuffHolder";
     private float partialExperiencePoint;
     private static final String PARTIAL_EXPERIENCE_POINT_TAG = Odyssey.MOD_ID + ":PartialExperiencePoint";
+    private float blizzardFogScaleO;
+    private float blizzardFogScale;
+    private static final String BLIZZARD_FOG_SCALE_TAG = Odyssey.MOD_ID + ":BlizzardFogScale";
 
     protected MixinPlayer(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
@@ -85,6 +90,10 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         CompoundTag permabuffHolderTag = this.getPermabuffHolder().toCompoundTag();
         compoundTag.put(PERMABUFF_HOLDER_TAG, permabuffHolderTag);
         compoundTag.putFloat(PARTIAL_EXPERIENCE_POINT_TAG, this.partialExperiencePoint);
+        ListTag blizzardFogScaleListTag = new ListTag();
+        blizzardFogScaleListTag.add(FloatTag.valueOf(this.blizzardFogScaleO));
+        blizzardFogScaleListTag.add(FloatTag.valueOf(this.blizzardFogScale));
+        compoundTag.put(BLIZZARD_FOG_SCALE_TAG, blizzardFogScaleListTag);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
@@ -95,6 +104,14 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
             this.setPermabuffHolder(PermabuffHolder.fromCompoundTag(compoundTag.getCompound(PERMABUFF_HOLDER_TAG)));
         }
         this.partialExperiencePoint = compoundTag.getFloat(PARTIAL_EXPERIENCE_POINT_TAG);
+        if(compoundTag.contains(BLIZZARD_FOG_SCALE_TAG)){
+            ListTag blizzardFogScaleListTag = compoundTag.getList(BLIZZARD_FOG_SCALE_TAG, Tag.TAG_FLOAT);
+            this.blizzardFogScaleO = blizzardFogScaleListTag.getFloat(0);
+            this.blizzardFogScale = blizzardFogScaleListTag.getFloat(1);
+        } else {
+            this.blizzardFogScaleO = 1f;
+            this.blizzardFogScale = 1f;
+        }
     }
 
     @Inject(method = "getCurrentItemAttackStrengthDelay", at = @At("HEAD"), cancellable = true)
@@ -219,6 +236,22 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
 
     public void setPartialExperiencePoint(float partialExperiencePoint){
         this.partialExperiencePoint = partialExperiencePoint;
+    }
+
+    public float getBlizzardFogScale(float partialTicks){
+        return Mth.lerp(partialTicks, this.blizzardFogScaleO, this.blizzardFogScale);
+    }
+
+    public void updateBlizzardFogScaleO(){
+        this.blizzardFogScaleO = this.blizzardFogScale;
+    }
+
+    public void incrementBlizzardFogScale(){
+        this.blizzardFogScale = Mth.clamp(this.blizzardFogScale + 1f/((float)BLIZZARD_FOG_TICKS), 0f, 1f);
+    }
+
+    public void decrementBlizzardFogScale(){
+        this.blizzardFogScale = Mth.clamp(this.blizzardFogScale - 1f/((float)BLIZZARD_FOG_TICKS), 0f, 1f);
     }
 
     private Player getPlayer(){

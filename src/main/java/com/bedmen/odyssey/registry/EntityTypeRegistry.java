@@ -5,7 +5,9 @@ import com.bedmen.odyssey.entity.animal.OdysseyPolarBear;
 import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
 import com.bedmen.odyssey.entity.boss.coven.*;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.*;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
+import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.entity.projectile.Boomerang;
 import com.bedmen.odyssey.entity.projectile.OdysseyArrow;
@@ -15,7 +17,6 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -37,11 +38,14 @@ public class EntityTypeRegistry {
     // # Monsters
 
     // ## Zombies
+    public static final RegistryObject<EntityType<OdysseyHusk>> HUSK = ENTITY_TYPE.register("husk", () -> EntityType.Builder.<OdysseyHusk>of(OdysseyHusk::new, MobCategory.MONSTER).sized(0.6F, 1.95F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "husk").toString()));
     public static final RegistryObject<EntityType<ZombieBrute>> ZOMBIE_BRUTE = ENTITY_TYPE.register("zombie_brute", () -> EntityType.Builder.of(ZombieBrute::new, MobCategory.MONSTER).sized(0.9F, 2.85F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "zombie_brute").toString()));
     public static final RegistryObject<EntityType<DungeonZombie>> MOON_TOWER_ZOMBIE = ENTITY_TYPE.register("moon_tower_zombie", () -> EntityType.Builder.<DungeonZombie>of(DungeonZombie::new, MobCategory.MONSTER).sized(0.6F, 1.95F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "moon_tower_zombie").toString()));
 
     // ## Skeletons
     public static final RegistryObject<EntityType<OdysseySkeleton>> SKELETON = ENTITY_TYPE.register("skeleton", () -> EntityType.Builder.of(OdysseySkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "skeleton").toString()));
+    public static final RegistryObject<EntityType<OdysseyStray>> STRAY = ENTITY_TYPE.register("stray", () -> EntityType.Builder.<OdysseyStray>of(OdysseyStray::new, MobCategory.MONSTER).sized(0.6F, 1.99F).immuneTo(Blocks.POWDER_SNOW).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "stray").toString()));
+    public static final RegistryObject<EntityType<StrayBrute>> STRAY_BRUTE = ENTITY_TYPE.register("stray_brute", () -> EntityType.Builder.<StrayBrute>of(StrayBrute::new, MobCategory.MONSTER).sized(0.9F, 2.99F).immuneTo(Blocks.POWDER_SNOW).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "stray_brute").toString()));
     public static final RegistryObject<EntityType<DungeonSkeleton>> MOON_TOWER_SKELETON = ENTITY_TYPE.register("moon_tower_skeleton", () -> EntityType.Builder.<DungeonSkeleton>of(DungeonSkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "moon_tower_skeleton").toString()));
 
     // ## Creepers

@@ -14,6 +14,7 @@ public class AspectTooltipFunctions {
     public static final AspectTooltipFunction NAME = (input -> input.aspectInstance().aspect.getComponent());
     public static final AspectTooltipFunction PERCENTAGE_DELCARATION = (input -> new TextComponent(StringUtil.percentFormat(input.aspectInstance().strength)+" ").append(input.aspectInstance().aspect.getComponent()));
     public static final AspectTooltipFunction NUMBER_ADDITION = (input -> new TextComponent("+"+StringUtil.floatFormat(input.aspectInstance().strength)+" ").append(input.aspectInstance().aspect.getComponent()));
+    public static final AspectTooltipFunction TIME = (input -> new TextComponent(StringUtil.timeFormat((int)input.aspectInstance().strength)+" ").append(input.aspectInstance().aspect.getComponent()));
     public static final AspectTooltipFunction BONUS_DAMAGE = (input -> new TextComponent("+"+StringUtil.floatFormat( input.aspectInstance().strength * (input.optionalItemStack().isPresent() ? BonusDamageAspect.getStrengthAmplifier(input.optionalItemStack().get().getItem()) : 1.0f))+" ").append(input.aspectInstance().aspect.getComponent()));
     public static final AspectTooltipFunction PERCENTAGE_ADDITION = (input -> new TextComponent("+"+StringUtil.percentFormat(input.aspectInstance().strength)+" ").append(input.aspectInstance().aspect.getComponent()));
     public static final AspectTooltipFunction HP_THRESHHOLD = (input -> new TextComponent("+"+StringUtil.floatFormat(input.aspectInstance().strength)+"HP ").append(input.aspectInstance().aspect.getComponent()));

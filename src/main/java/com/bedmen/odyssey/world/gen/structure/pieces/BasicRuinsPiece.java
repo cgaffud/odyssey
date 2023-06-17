@@ -2,9 +2,9 @@ package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
-import com.bedmen.odyssey.world.gen.processor.VineProcessor;
 import com.bedmen.odyssey.world.gen.processor.CrackedBlockProcessor;
 import com.bedmen.odyssey.world.gen.processor.MossyBlockProcessor;
+import com.bedmen.odyssey.world.gen.processor.VineProcessor;
 import com.bedmen.odyssey.world.gen.processor.WoodProcessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

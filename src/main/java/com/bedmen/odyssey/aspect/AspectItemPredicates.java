@@ -2,7 +2,9 @@ package com.bedmen.odyssey.aspect;
 
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.MeleeWeaponClass;
-import com.bedmen.odyssey.items.aspect_items.*;
+import com.bedmen.odyssey.items.aspect_items.OdysseyMeleeItem;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
+import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 

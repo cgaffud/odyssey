@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AA",
+    "A "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:permafrost_shard"
+    }
+  },
+  "result": {
+    "item": "oddc:glacierang"
+  }
+}

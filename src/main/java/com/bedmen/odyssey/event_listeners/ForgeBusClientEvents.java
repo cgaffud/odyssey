@@ -1,0 +1,144 @@
+package com.bedmen.odyssey.event_listeners;
+
+import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
+import com.bedmen.odyssey.effect.FireType;
+import com.bedmen.odyssey.entity.player.OdysseyPlayer;
+import com.bedmen.odyssey.items.WarpTotemItem;
+import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
+import com.bedmen.odyssey.items.aspect_items.QuiverItem;
+import com.bedmen.odyssey.util.RenderUtil;
+import com.bedmen.odyssey.world.gen.biome.weather.OdysseySkyRenderHandler;
+import com.bedmen.odyssey.world.gen.biome.weather.OdysseyWeatherParticleRenderHandler;
+import com.bedmen.odyssey.world.gen.biome.weather.OdysseyWeatherRenderHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpyglassItem;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class ForgeBusClientEvents {
+    @SubscribeEvent
+    public static void onWorldEvent$Load(final WorldEvent.Load event){
+        LevelAccessor levelAccessor = event.getWorld();
+        if(levelAccessor instanceof ClientLevel clientLevel){
+            clientLevel.effects().setWeatherRenderHandler(new OdysseyWeatherRenderHandler());
+            clientLevel.effects().setWeatherParticleRenderHandler(new OdysseyWeatherParticleRenderHandler());
+            clientLevel.effects().setSkyRenderHandler(new OdysseySkyRenderHandler());
+        }
+    }
+
+    @SubscribeEvent
+    public static void EntityViewRenderEvent$RenderFogEventListener(final EntityViewRenderEvent.RenderFogEvent event){
+        if(event.getMode() == FogRenderer.FogMode.FOG_TERRAIN){
+            Minecraft minecraft = Minecraft.getInstance();
+            LocalPlayer localPlayer = minecraft.player;
+            if(localPlayer instanceof OdysseyPlayer odysseyPlayer){
+                float blizzardFogScale = odysseyPlayer.getBlizzardFogScale((float) event.getPartialTicks());
+                if(blizzardFogScale < 1f){
+                    float nearDistance = Mth.lerp(blizzardFogScale, 0f, event.getNearPlaneDistance());
+                    float farDistance = Mth.lerp(blizzardFogScale, 16f, event.getFarPlaneDistance());
+                    event.setNearPlaneDistance(nearDistance);
+                    event.setFarPlaneDistance(farDistance);
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void EntityViewRenderEvent$FogColors(final EntityViewRenderEvent.FogColors event){
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer localPlayer = minecraft.player;
+        if(localPlayer instanceof OdysseyPlayer odysseyPlayer){
+            float blizzardFogScale = odysseyPlayer.getBlizzardFogScale((float) event.getPartialTicks());
+            if(blizzardFogScale < 1f){
+                event.setRed(event.getRed() * Mth.lerp(blizzardFogScale, 0.6f, 1.0f));
+                event.setGreen(event.getGreen() * Mth.lerp(blizzardFogScale, 0.6f, 1.0f));
+                event.setBlue(event.getBlue() * Mth.lerp(blizzardFogScale, 0.7f, 1.0f));
+            }
+        }
+    }
+
+    /**
+     * Prevents Quiver from being rendered in hand
+     */
+    @SubscribeEvent
+    public static void onRenderHandEvent(final RenderHandEvent event){
+        ItemStack itemStack = event.getItemStack();
+        Item item = itemStack.getItem();
+        InteractionHand hand = event.getHand();
+        boolean isMainHand = hand == InteractionHand.MAIN_HAND;
+        if(item instanceof QuiverItem && !isMainHand){
+            event.setCanceled(true);
+        }
+    }
+
+    /**
+     * Adjusts PlayerRenderer Layers
+     */
+    @SubscribeEvent
+    public static void onRenderPlayerEvent$Pre(final RenderPlayerEvent.Pre event){
+        PlayerRenderer playerRenderer = event.getRenderer();
+        Player player = event.getPlayer();
+        if(playerRenderer instanceof OdysseyPlayerRenderer odysseyPlayerRenderer && player instanceof AbstractClientPlayer abstractClientPlayer){
+            odysseyPlayerRenderer.setModelProperties(abstractClientPlayer);
+        }
+    }
+
+    /**
+     * Adjusts FOV for sniper bow
+     */
+    @SubscribeEvent
+    public static void onFOVModifierEvent(final FOVModifierEvent event) {
+        Player player = event.getEntity();
+        if(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player instanceof OdysseyPlayer odysseyPlayer && odysseyPlayer.isSniperScoping()){
+            event.setNewfov(SpyglassItem.ZOOM_FOV_MODIFIER);
+        }
+        else if (player.isUsingItem()) {
+            ItemStack itemStack = player.getUseItem();
+            Item item = itemStack.getItem();
+            float maxFOVUseTime = -1.0f;
+            float maxFOVDecrease = 0.15f;
+            if(item instanceof AspectBowItem && !itemStack.is(Items.BOW)){
+                maxFOVUseTime = 20.0f;
+            } else if(item instanceof WarpTotemItem){
+                maxFOVUseTime = item.getUseDuration(itemStack);
+                maxFOVDecrease = 0.3f;
+            }
+            if(maxFOVUseTime > 0.0f){
+                int i = player.getTicksUsingItem();
+                float f1 = (float)i / maxFOVUseTime;
+                if (f1 > 1.0F) {
+                    f1 = 1.0F;
+                } else {
+                    f1 *= f1;
+                }
+                event.setNewfov(event.getFov() * (1.0F - f1 * maxFOVDecrease));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRenderLivingEvent(final RenderLivingEvent event){
+        LivingEntity livingEntity = event.getEntity();
+        FireType fireType = RenderUtil.getStrongestFireType(livingEntity);
+        RenderUtil.renderFireTypeExternalView(livingEntity, fireType, event.getPoseStack(), event.getMultiBufferSource());
+    }
+}

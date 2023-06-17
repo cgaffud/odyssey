@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.world.gen.structure;
 
 import com.bedmen.odyssey.world.gen.structure.pieces.CovenHutPiece;
-import com.bedmen.odyssey.world.gen.structure.pieces.MoonTowerPiece;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Rotation;

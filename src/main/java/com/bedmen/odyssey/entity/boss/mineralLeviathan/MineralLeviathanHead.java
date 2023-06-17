@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.boss.mineralLeviathan;
 
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.SoundEventRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -200,8 +202,19 @@ public class MineralLeviathanHead extends MineralLeviathanSegment {
         return SoundEventRegistry.MINERAL_LEVIATHAN_DEATH.get();
     }
 
+
     protected float getSoundVolume() {
         return 5.0F;
+    }
+
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean killedByPlayerFlag) {
+        super.dropCustomDeathLoot(damageSource, looting, killedByPlayerFlag);
+        if(!this.level.isClientSide){
+            ItemEntity itementity = this.spawnAtLocation(ItemRegistry.ROCK_CANDY.get());
+            if (itementity != null) {
+                itementity.setExtendedLifetime();
+            }
+        }
     }
 
     private static final String PHASE_TAG = "Phase";

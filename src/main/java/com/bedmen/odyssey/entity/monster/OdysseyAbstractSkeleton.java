@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.ai.BoomerangAttackGoal;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
@@ -10,7 +11,6 @@ import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
 import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -50,7 +50,7 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     public final BoomerangAttackGoal<OdysseyAbstractSkeleton> boomerangGoal = new BoomerangAttackGoal<>(this, 0.0D, 50, 15.0F);
     private boolean crossbowMode = false;
     private int noBoomerangTick;
-    private Item boomerangItem = null;
+    protected Item boomerangItem = null;
     protected OdysseyAbstractSkeleton(EntityType<? extends AbstractSkeleton> entityType, Level level) {
         super(entityType, level);
     }
@@ -197,9 +197,9 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
     }
 
     protected void populateBabyEquipmentSlots() {
-        Item item = switch(random.nextInt(10)){
+        Item item = switch(random.nextInt(5)){
             default -> ItemRegistry.WOODEN_BOOMERANG.get();
-            case 1, 2, 3 -> ItemRegistry.BONE_BOOMERANG.get();
+            case 1, 2 -> ItemRegistry.BONE_BOOMERANG.get();
             case 0 -> ItemRegistry.BONERANG.get();
         };
         this.boomerangItem = item;

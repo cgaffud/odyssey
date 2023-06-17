@@ -1,8 +1,7 @@
 package com.bedmen.odyssey.client.renderer.blockentity;
 
 import com.bedmen.odyssey.block.entity.CovenHutDoorBlockEntity;
-import com.bedmen.odyssey.block.wood.CovenHutDoorBlock;
-import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

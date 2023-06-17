@@ -21,6 +21,8 @@ public class OdysseyDamageSource extends DamageSource implements Invulnerability
         return (new IndirectEntityDamageSource("boomerang", boomerang, entity)).setProjectile();
     }
 
+    public static final DamageSource HEAT_EXHAUSTION = (new DamageSource("heatExhaustion")).bypassArmor().setIsFire();
+
     public static DamageSource withInvulnerabilityMultiplier(DamageSource damageSource, float invulnerabilityMultiplier){
         float originalInvulnerabilityMultiplier = getInvulnerabilityMultiplier(damageSource);
         DamageSource newDamageSource;

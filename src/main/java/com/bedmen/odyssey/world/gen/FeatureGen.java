@@ -5,14 +5,12 @@ import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.FeatureRegistry;
-import com.bedmen.odyssey.util.BiomeUtil;
+import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
-import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -78,7 +76,7 @@ public class FeatureGen {
             }
             gen.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, PLACED_ABANDONED_IRON_GOLEM);
 
-            if(event.getName().equals(BiomeRegistry.PRAIRIE.get().getRegistryName())) {
+            if(BiomeUtil.isBiome(event.getName(), BiomeRegistry.PRAIRIE.get())) {
                 gen.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PLACED_PATCH_TALL_GRASS);
                 gen.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PLACED_PATCH_PRAIRIE_GRASS);
             }

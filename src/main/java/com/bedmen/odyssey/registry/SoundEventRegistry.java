@@ -33,4 +33,7 @@ public class SoundEventRegistry {
 
     // Music Discs
     public static final RegistryObject<SoundEvent> MUSIC_DISC_MESA = SOUND_EVENTS.register("music_disc_mesa", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "music_disc.mesa")));
+
+    // Weather
+    public static final RegistryObject<SoundEvent> ARCTIC_WIND = SOUND_EVENTS.register("arctic_wind", () -> new SoundEvent(new ResourceLocation(Odyssey.MOD_ID, "weather.arctic_wind")));
 }

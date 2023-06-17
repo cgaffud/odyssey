@@ -12,7 +12,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class OdysseyBiomeEntitySpawn {
@@ -23,6 +25,8 @@ public class OdysseyBiomeEntitySpawn {
     public static MobSpawnSettings.SpawnerData WEAVER;
     public static MobSpawnSettings.SpawnerData WRAITH;
     public static MobSpawnSettings.SpawnerData BLADE_SPIDER;
+    public static MobSpawnSettings.SpawnerData HUSK;
+    public static Map<EntityType<?>, EntityType<?>> SPAWNER_REPLACEMENT_MAP = new HashMap<>();
 //    public static MobCategory HARD_BIOME =  MobCategory.create("hard_biome", "hard_biome", 35, false, false, 128);
 
     public static void registerSpawners() {
@@ -32,14 +36,13 @@ public class OdysseyBiomeEntitySpawn {
         WEAVER = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.WEAVER.get(), 50, 1, 4);
         WRAITH = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.WRAITH.get(), 40, 1, 2);
         BLADE_SPIDER = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.BLADE_SPIDER.get(), 60, 1, 3);
-
+        HUSK = new MobSpawnSettings.SpawnerData(EntityTypeRegistry.HUSK.get(), 200, 4, 4);
+        SPAWNER_REPLACEMENT_MAP.put(EntityType.POLAR_BEAR, EntityTypeRegistry.POLAR_BEAR.get());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void spawnMobs(BiomeLoadingEvent event){
         List<MobSpawnSettings.SpawnerData> monsterSpawns = event.getSpawns().getSpawner(MobCategory.MONSTER);
-        List<MobSpawnSettings.SpawnerData> creatureSpawns = event.getSpawns().getSpawner(MobCategory.CREATURE);
-        List<MobSpawnSettings.SpawnerData> polarBearSpawns = new ArrayList<>();
 //        List<MobSpawnSettings.SpawnerData> hardBiomeSpawns = event.getSpawns().getSpawner(HARD_BIOME);
 
         if(event.getCategory() == Biome.BiomeCategory.NETHER){
@@ -51,12 +54,19 @@ public class OdysseyBiomeEntitySpawn {
             monsterSpawns.add(WEAVER);
             monsterSpawns.add(WRAITH);
             monsterSpawns.add(BLADE_SPIDER);
-            for(MobSpawnSettings.SpawnerData spawnerData : creatureSpawns){
-                if(spawnerData.type == EntityType.POLAR_BEAR){
-                    polarBearSpawns.add(new MobSpawnSettings.SpawnerData(EntityTypeRegistry.POLAR_BEAR.get(), spawnerData.getWeight(), spawnerData.minCount, spawnerData.maxCount));
+            for(MobCategory mobCategory: MobCategory.values()){
+                List<MobSpawnSettings.SpawnerData> spawnerDataList = event.getSpawns().getSpawner(mobCategory);
+                List<MobSpawnSettings.SpawnerData> replacementSpawns = new ArrayList<>();
+                for(MobSpawnSettings.SpawnerData spawnerData : spawnerDataList){
+                    if(SPAWNER_REPLACEMENT_MAP.containsKey(spawnerData.type)){
+                        replacementSpawns.add(new MobSpawnSettings.SpawnerData(SPAWNER_REPLACEMENT_MAP.get(spawnerData.type), spawnerData.getWeight(), spawnerData.minCount, spawnerData.maxCount));
+                    }
                 }
+                spawnerDataList.addAll(replacementSpawns);
             }
-            creatureSpawns.addAll(polarBearSpawns);
+            if(event.getCategory() == Biome.BiomeCategory.MESA){
+                monsterSpawns.add(HUSK);
+            }
 //            if(event.getName().toString().equals("oddc:autumn_forest")){
 //                hardBiomeSpawns.add(LUPINE_SPANWER);
 //            }
@@ -72,6 +82,6 @@ public class OdysseyBiomeEntitySpawn {
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void removeMobs(BiomeLoadingEvent event){
         List<MobSpawnSettings.SpawnerData> creatureSpawns = event.getSpawns().getSpawner(MobCategory.CREATURE);
-        creatureSpawns.removeIf(spawnerData -> spawnerData.type == EntityType.POLAR_BEAR);
+        creatureSpawns.removeIf(spawnerData -> SPAWNER_REPLACEMENT_MAP.containsKey(spawnerData.type));
     }
 }

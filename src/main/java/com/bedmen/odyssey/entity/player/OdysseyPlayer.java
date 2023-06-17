@@ -15,4 +15,8 @@ public interface OdysseyPlayer {
     void addPermabuffs(List<AspectInstance> permabuffList);
     float getPartialExperiencePoint();
     void setPartialExperiencePoint(float partialExperiencePoint);
+    float getBlizzardFogScale(float partialTicks);
+    void updateBlizzardFogScaleO();
+    void incrementBlizzardFogScale();
+    void decrementBlizzardFogScale();
 }

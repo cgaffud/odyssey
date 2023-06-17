@@ -3,7 +3,6 @@ package com.bedmen.odyssey.client.model;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.boss.coven.CovenWitch;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.HeadedModel;
 import net.minecraft.client.model.HierarchicalModel;
@@ -14,7 +13,6 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.monster.AbstractIllager;
 
 public class ArmedCovenWitchModel<T extends CovenWitch> extends HierarchicalModel<T> implements ArmedModel, HeadedModel {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(Odyssey.MOD_ID, "armed_coven_witch_model"), "main");

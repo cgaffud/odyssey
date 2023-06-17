@@ -1,11 +1,7 @@
 package com.bedmen.odyssey.util;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-
-import java.util.Optional;
-import java.util.function.Function;
 
 public class GeneralUtil {
 
@@ -15,6 +11,10 @@ public class GeneralUtil {
 
     public static boolean isRandomHashTick(Object object, Level level, int tickRate, float successChance) {
         return isHashTick(object, level, tickRate) && level.random.nextFloat() <= successChance;
+    }
+
+    public static boolean isSurvival(Player player){
+        return !player.isCreative() && !player.isSpectator();
     }
 
 //    public static double toTargetWithMaxChange(double current, double target, double maxChange) {

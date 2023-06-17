@@ -1,7 +1,5 @@
 package com.bedmen.odyssey.plugins.jei;
 
-import com.bedmen.odyssey.recipes.*;
-import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.Container;

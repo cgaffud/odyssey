@@ -1,16 +1,14 @@
 package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.encapsulator.SetBonusAspectHolder;
-import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.tier.OdysseyTier;
 import com.bedmen.odyssey.tier.OdysseyTiers;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 

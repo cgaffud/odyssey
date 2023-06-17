@@ -187,8 +187,8 @@ public abstract class MineralLeviathanSegment extends BossSubEntity<MineralLevia
         return super.hurt(damageSource, amount);
     }
 
-    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean b) {
-        super.dropCustomDeathLoot(damageSource, looting, b);
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean killedByPlayerFlag) {
+        super.dropCustomDeathLoot(damageSource, looting, killedByPlayerFlag);
         if(this.hasShell() && !this.level.isClientSide){
             this.shellType.spawnLoot((ServerLevel)this.level, damageSource, this, ItemStack.EMPTY);
         }

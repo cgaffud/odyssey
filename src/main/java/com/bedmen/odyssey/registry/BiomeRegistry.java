@@ -23,5 +23,7 @@ public class BiomeRegistry {
     public static final RegistryObject<Biome> TROPICS = BIOME.register(TROPICS_RESOURCE_KEY.location().getPath(), OdysseyOverworldBiomes::tropics);
     public static final ResourceKey<Biome> PRAIRIE_RESOURCE_KEY = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Odyssey.MOD_ID, "prairie"));
     public static final RegistryObject<Biome> PRAIRIE = BIOME.register(PRAIRIE_RESOURCE_KEY.location().getPath(), OdysseyOverworldBiomes::prairie);
+    public static final ResourceKey<Biome> ARCTIC_RESOURCE_KEY = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(Odyssey.MOD_ID, "arctic"));
+    public static final RegistryObject<Biome> ARCTIC = BIOME.register(ARCTIC_RESOURCE_KEY.location().getPath(), OdysseyOverworldBiomes::arctic);
 
 }
