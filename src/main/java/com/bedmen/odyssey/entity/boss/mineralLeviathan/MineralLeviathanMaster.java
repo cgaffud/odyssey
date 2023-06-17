@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.entity.boss.mineralLeviathan;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.boss.SubEntity;
 import com.bedmen.odyssey.entity.boss.BossMaster;
+import com.bedmen.odyssey.entity.boss.SubEntity;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.util.NonNullListCollector;
@@ -24,9 +24,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.checkerframework.checker.units.qual.C;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class MineralLeviathanMaster extends BossMaster {

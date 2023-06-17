@@ -2,10 +2,7 @@ package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.client.model.OdysseyAbstractSkeletonModel;
 import com.bedmen.odyssey.entity.monster.OdysseyAbstractSkeleton;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.resources.ResourceLocation;

@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.ai.BoomerangAttackGoal;
 import com.bedmen.odyssey.entity.ai.OdysseyRangedBowAttackGoal;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
@@ -10,7 +11,6 @@ import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
 import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;

@@ -5,14 +5,12 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.ForgeMod;
 
 import java.util.HashMap;

@@ -4,9 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.monster.OdysseySkeleton;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.SkeletonRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
 
 public class DungeonSkeletonRenderer extends OdysseySkeletonRenderer {
     private static final ResourceLocation MOON_TOWER_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/skeleton/moon_tower.png");

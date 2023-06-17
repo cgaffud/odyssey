@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.items.aspect_items;
 
-import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.combat.MeleeWeaponClass;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.google.common.collect.Multimap;

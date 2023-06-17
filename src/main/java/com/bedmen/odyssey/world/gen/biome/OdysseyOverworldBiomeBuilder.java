@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.world.gen.biome;
 
 import com.bedmen.odyssey.registry.BiomeRegistry;
-import com.bedmen.odyssey.world.BiomeUtil;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.SharedConstants;
 import net.minecraft.data.worldgen.TerrainProvider;
@@ -9,9 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.Climate;
-import net.minecraft.world.level.biome.TerrainShaper;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class OdysseyOverworldBiomeBuilder {

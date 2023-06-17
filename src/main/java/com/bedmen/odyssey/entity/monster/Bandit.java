@@ -2,9 +2,9 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.combat.WeaponUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

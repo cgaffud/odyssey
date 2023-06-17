@@ -6,11 +6,6 @@ import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.items.aspect_items.OdysseyMeleeItem;
 import com.bedmen.odyssey.magic.MagicUtil;
 import com.bedmen.odyssey.registry.ContainerRegistry;
-import com.mojang.logging.LogUtils;
-
-import java.util.List;
-import java.util.Optional;
-
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -23,7 +18,9 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
+
+import java.util.List;
+import java.util.Optional;
 
 public class OdysseyAnvilMenu extends ItemCombinerMenu {
     public int repairItemCount;

@@ -4,10 +4,7 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
-import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 public class DamageSourcePredicateAspect extends FloatAspect {

@@ -16,7 +16,6 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 public class OdysseySkeleton extends OdysseyAbstractSkeleton {
     private static final EntityDataAccessor<Boolean> DATA_STRAY_CONVERSION_ID = SynchedEntityData.defineId(OdysseySkeleton.class, EntityDataSerializers.BOOLEAN);

@@ -1,15 +1,10 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
-import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.ThrowableType;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;

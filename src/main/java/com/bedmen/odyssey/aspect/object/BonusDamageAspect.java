@@ -6,7 +6,6 @@ import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.items.aspect_items.OdysseyMeleeItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Predicate;
 

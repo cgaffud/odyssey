@@ -1,12 +1,9 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.client.model.WeaverModel;
 import com.bedmen.odyssey.client.model.WraithModel;
-import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.monster.Wraith;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;

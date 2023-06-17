@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tier.OdysseyTier;

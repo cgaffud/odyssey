@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.client.model;
 
 import com.bedmen.odyssey.entity.monster.OdysseyAbstractSkeleton;
-import com.bedmen.odyssey.entity.monster.OdysseySkeleton;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
