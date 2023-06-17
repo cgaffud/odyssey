@@ -106,9 +106,10 @@ public class Odyssey
 
             //Spawning
             OdysseyBiomeEntitySpawn.registerSpawners();
-            SpawnPlacements.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BabyLeviathan::spawnPredicate);
-            SpawnPlacements.register(EntityTypeRegistry.WEAVER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Weaver::spawnPredicate);
-            SpawnPlacements.register(EntityTypeRegistry.WRAITH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Wraith::spawnPredicate);
+            SpawnPlacements.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BabyLeviathan::spawnPredicate);
+            SpawnPlacements.register(EntityTypeRegistry.WEAVER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Weaver::spawnPredicate);
+            SpawnPlacements.register(EntityTypeRegistry.WRAITH.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Wraith::spawnPredicate);
+            SpawnPlacements.register(EntityTypeRegistry.BLADE_SPIDER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BladeSpider::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.STRAY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OdysseyStray::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.HUSK.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OdysseyHusk::spawnPredicate);
 
@@ -146,6 +147,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpider.createAttributes().build());
         event.put(EntityTypeRegistry.WRAITH.get(), Wraith.createAttributes().build());
         event.put(EntityTypeRegistry.BANDIT.get(), Bandit.createAttributes().build());
+        event.put(EntityTypeRegistry.BLADE_SPIDER.get(), BladeSpider.createAttributes().build());
 //
 //        //Bosses
         event.put(EntityTypeRegistry.ABANDONED_IRON_GOLEM.get(), AbandonedIronGolem.createAttributes().build());

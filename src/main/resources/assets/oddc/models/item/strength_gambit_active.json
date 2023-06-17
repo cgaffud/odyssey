@@ -1,0 +1,6 @@
+{
+  "parent": "oddc:item/strength_gambit",
+  "textures": {
+    "layer0": "oddc:item/strength_gambit/active"
+  }
+}

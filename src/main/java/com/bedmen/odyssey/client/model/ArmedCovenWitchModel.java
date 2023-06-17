@@ -93,25 +93,47 @@ public class ArmedCovenWitchModel<T extends CovenWitch> extends HierarchicalMode
         this.leftLeg.yRot = 0.0F;
         this.leftLeg.zRot = 0.0F;
 
-        if (covenWitch.getPhase() == CovenWitch.Phase.CASTING) {
-            this.arms.visible = false;
-            this.leftArm.visible = true;
-            this.rightArm.visible = true;
-            this.rightArm.z = 0.0F;
-            this.rightArm.x = -5.0F;
-            this.leftArm.z = 0.0F;
-            this.leftArm.x = 5.0F;
-            this.rightArm.xRot = Mth.cos(p_102931_ * 0.6662F) * 0.25F;
-            this.leftArm.xRot = Mth.cos(p_102931_ * 0.6662F) * 0.25F;
-            this.rightArm.zRot = 2.3561945F;
-            this.leftArm.zRot = -2.3561945F;
-            this.rightArm.yRot = 0.0F;
-            this.leftArm.yRot = 0.0F;
-        } else {
+        switch(covenWitch.getPhase()) {
+            case CASTING:
+                this.arms.visible = false;
+                this.leftArm.visible = true;
+                this.rightArm.visible = true;
+                this.rightArm.z = 0.0F;
+                this.rightArm.x = -5.0F;
+                this.leftArm.z = 0.0F;
+                this.leftArm.x = 5.0F;
+                this.rightArm.xRot = Mth.cos(p_102931_ * 0.6662F) * 0.25F;
+                this.leftArm.xRot = Mth.cos(p_102931_ * 0.6662F) * 0.25F;
+                this.rightArm.zRot = 2.3561945F;
+                this.leftArm.zRot = -2.3561945F;
+                this.rightArm.yRot = 0.0F;
+                this.leftArm.yRot = 0.0F;
+                break;
+            case SHOOTING:
+                this.arms.visible = false;
+                this.leftArm.visible = true;
+                this.rightArm.visible = true;
+                this.rightArm.z = 0.0F;
+                this.rightArm.x = -5.0F;
+                this.leftArm.z = 0.0F;
+                this.leftArm.x = 5.0F;
+
+
+
+                this.rightArm.zRot = -Mth.PI/5;
+                this.leftArm.zRot = Mth.PI/5;
+                this.rightArm.yRot = -Mth.PI/8;
+                this.leftArm.yRot = Mth.PI/8;
+                this.rightArm.xRot = -Mth.PI/2;
+                this.leftArm.xRot = -Mth.PI/2;
+                break;
+            default:
                 this.arms.visible = true;
                 this.leftArm.visible = false;
                 this.rightArm.visible = false;
+                break;
         }
+
     }
 
     private ModelPart getArm(HumanoidArm p_102923_) {

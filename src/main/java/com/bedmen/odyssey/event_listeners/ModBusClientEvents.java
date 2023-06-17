@@ -158,6 +158,7 @@ public class ModBusClientEvents {
             EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.BLADE_SPIDER.get(), BladeSpiderRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaverRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathanRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.POLAR_BEAR.get(), PolarBearRenderer::new);
@@ -240,6 +241,7 @@ public class ModBusClientEvents {
         event.registerLayerDefinition(ArmedCovenWitchModel.LAYER_LOCATION, ArmedCovenWitchModel::createBodyLayer);
         event.registerLayerDefinition(CovenRootModel.LAYER_LOCATION, CovenRootModel::createBodyLayer);
         event.registerLayerDefinition(SpearModel.LAYER_LOCATION, SpearModel::createBodyLayer);
+        event.registerLayerDefinition(BladeSpiderModel.LAYER_LOCATION, BladeSpiderModel::createBodyLayer);
     }
 
     @SubscribeEvent

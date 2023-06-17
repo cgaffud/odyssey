@@ -56,7 +56,7 @@ public class NetherWitch extends CovenWitch {
             if (!this.level.isClientSide) {
                 // Target
                 switch (this.getPhase()){
-                    case CHASING, CASTING:
+                    case CHASING, CASTING, SHOOTING:
                         if (!this.isValidTarget(this.getTarget(), covenMaster)) {
                             this.setPhase(Phase.IDLE);
                         }
@@ -135,9 +135,11 @@ public class NetherWitch extends CovenWitch {
                 this.attackTime = 30;
             // Release small fireballs
             } else if (this.attackStep <= 6 && !fireLargeFireballs) {
+                this.netherWitch.setPhase(Phase.SHOOTING);
                 this.attackTime = 10;
             // Release big fireballs
             } else if (this.attackStep <= 3 && fireLargeFireballs) {
+                this.netherWitch.setPhase(Phase.SHOOTING);
                 this.attackTime = 10;
             // Recharge
             } else {
