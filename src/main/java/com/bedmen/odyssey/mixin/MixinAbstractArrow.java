@@ -144,14 +144,12 @@ public class MixinAbstractArrow extends Projectile {
             double d3 = this.getZ() + d1;
             double d4 = vec3.horizontalDistance();
             if (onlyNoPhysics) {
-//                System.out.println("Only no physics");
                 this.setYRot((float)(Mth.atan2(-d5, -d1) * (double)(180F / (float)Math.PI)));
             } else {
                 this.setYRot((float)(Mth.atan2(d5, d1) * (double)(180F / (float)Math.PI)));
             }
 
             this.setXRot((float)(Mth.atan2(d6, d4) * (double)(180F / (float)Math.PI)));
-//            System.out.printf("Spin? Start: %g, End: %g\n", this.yRotO, this.getYRot());
             this.setXRot(lerpRotation(this.xRotO, this.getXRot()));
             this.setYRot(lerpRotation(this.yRotO, this.getYRot()));
             float f = 0.99F;

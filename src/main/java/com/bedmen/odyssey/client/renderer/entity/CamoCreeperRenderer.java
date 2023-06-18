@@ -33,8 +33,6 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
    
     public static ResourceLocation getTexture(CamoCreeper camoCreeper) {
         Biome biome = camoCreeper.getBiome();
-        System.out.println(biome == null ? "null" : biome.getRegistryName());
-
 
         if(biome == null || Objects.equals(biome.getRegistryName(), Biomes.LUSH_CAVES.location())){
             return GRAY_CREEPER_LOCATION;
@@ -60,7 +58,6 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
 
         if(biome.getBiomeCategory() == Biome.BiomeCategory.DESERT
         || biome.getBiomeCategory() == Biome.BiomeCategory.BEACH){
-            System.out.println("returned desert");
             return DESERT_CREEPER_LOCATION;
         }
 

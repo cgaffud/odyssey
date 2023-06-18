@@ -97,8 +97,6 @@ public class WraithAmalgamProjectile extends Projectile  {
 
     public void checkDespawn() {
         if (this.level.getDifficulty() == Difficulty.PEACEFUL ) {
-            //|| this.targetId == null
-            System.out.println("Discarded");
             this.discard();
         }
     }
