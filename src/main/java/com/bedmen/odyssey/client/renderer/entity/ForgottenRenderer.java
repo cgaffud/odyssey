@@ -2,7 +2,6 @@ package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.model.ForgottenModel;
-import com.bedmen.odyssey.entity.monster.DungeonZombie;
 import com.bedmen.odyssey.entity.monster.Forgotten;
 import net.minecraft.client.model.ZombieModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;

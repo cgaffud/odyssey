@@ -1,9 +1,7 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.client.model.WraithModel;
 import com.bedmen.odyssey.client.model.WraithStalkerModel;
-import com.bedmen.odyssey.entity.monster.Wraith;
 import com.bedmen.odyssey.entity.monster.WraithStalker;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

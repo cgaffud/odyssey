@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.entity.projectile;
 
-import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.combat.ArrowType;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;

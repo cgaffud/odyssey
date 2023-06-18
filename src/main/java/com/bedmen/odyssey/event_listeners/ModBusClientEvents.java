@@ -13,8 +13,6 @@ import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.effect.FireType;
-import com.bedmen.odyssey.entity.monster.DripstoneCreeper;
-import com.bedmen.odyssey.entity.projectile.DripstoneShard;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;

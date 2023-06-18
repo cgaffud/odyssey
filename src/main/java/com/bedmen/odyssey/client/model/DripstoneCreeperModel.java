@@ -4,9 +4,7 @@ package com.bedmen.odyssey.client.model;// Made with Blockbench 4.7.3
 
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.client.model.OdysseyCreeperModel;
 import com.bedmen.odyssey.entity.monster.DripstoneCreeper;
-import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

@@ -5,9 +5,7 @@ import com.bedmen.odyssey.entity.monster.EncasedSkeleton;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.SkeletonRenderer;
-import net.minecraft.client.renderer.entity.layers.StrayClothingLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
 
 public class EncasedSkeletonRenderer extends SkeletonRenderer {
     private static final ResourceLocation ENCASED_LOCATION = new ResourceLocation("textures/entity/skeleton/skeleton.png");

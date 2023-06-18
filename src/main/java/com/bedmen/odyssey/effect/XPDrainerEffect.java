@@ -1,11 +1,6 @@
 package com.bedmen.odyssey.effect;
 
-import com.bedmen.odyssey.effect.FireEffect;
-import com.bedmen.odyssey.effect.OdysseyEffect;
-import com.bedmen.odyssey.effect.TemperatureSource;
-import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.magic.ExperienceCost;
-import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;

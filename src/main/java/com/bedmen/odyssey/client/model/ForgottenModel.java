@@ -5,7 +5,6 @@ package com.bedmen.odyssey.client.model;// Made with Blockbench 4.7.2
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.monster.Forgotten;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.ZombieModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

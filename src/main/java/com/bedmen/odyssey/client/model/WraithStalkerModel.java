@@ -4,7 +4,6 @@ package com.bedmen.odyssey.client.model;// Made with Blockbench 4.7.2
 
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.entity.monster.Wraith;
 import com.bedmen.odyssey.entity.monster.WraithStalker;
 import com.bedmen.odyssey.util.GeneralUtil;
 import com.google.common.collect.ImmutableList;
