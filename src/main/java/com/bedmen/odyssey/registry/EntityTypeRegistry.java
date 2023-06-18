@@ -46,6 +46,8 @@ public class EntityTypeRegistry {
     // ## Creepers
     public static final RegistryObject<EntityType<BabyCreeper>> BABY_CREEPER = ENTITY_TYPE.register("baby_creeper", () -> EntityType.Builder.of(BabyCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "baby_creeper").toString()));
     public static final RegistryObject<EntityType<CamoCreeper>> CAMO_CREEPER = ENTITY_TYPE.register("camo_creeper", () -> EntityType.Builder.of(CamoCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "camo_creeper").toString()));
+    public static final RegistryObject<EntityType<DripstoneCreeper>> DRIPSTONE_CREEPER = ENTITY_TYPE.register("dripstone_creeper", () -> EntityType.Builder.of(DripstoneCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "dripstone_creeper").toString()));
+
 
     // ## Arthropods
     public static final RegistryObject<EntityType<BarnSpider>> BARN_SPIDER = ENTITY_TYPE.register("barn_spider", () -> EntityType.Builder.of(BarnSpider::new, MobCategory.MONSTER).sized(0.7F, 0.5F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "barn_spider").toString()));
@@ -89,6 +91,8 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<SonicBoom>> SONIC_BOOM = ENTITY_TYPE.register("sonic_boom", () -> EntityType.Builder.<SonicBoom>of(SonicBoom::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation(Odyssey.MOD_ID, "sonic_boom").toString()));
     public static final RegistryObject<EntityType<ThrownSpear>> THROWN_SPEAR = ENTITY_TYPE.register("thrown_spear", () -> EntityType.Builder.<ThrownSpear>of(ThrownSpear::new, MobCategory.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(Odyssey.MOD_ID, "thrown_spear").toString()));
     public static final RegistryObject<EntityType<WraithAmalgamProjectile>> WRAITH_AMALGAM_PROJECTILE = ENTITY_TYPE.register("wraith_amalgam_projectile", () -> EntityType.Builder.<WraithAmalgamProjectile>of(WraithAmalgamProjectile::new, MobCategory.MISC).sized(0.4f,0.4f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(Odyssey.MOD_ID, "wraith_amalgam_projectile").toString()));
+    public static final RegistryObject<EntityType<DripstoneShard>> DRIPSTONE_SHARD = ENTITY_TYPE.register("dripstone_shard", () -> EntityType.Builder.<DripstoneShard>of(DripstoneShard::new, MobCategory.MISC).sized(0.25F, 0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(Odyssey.MOD_ID, "dripstone_shard").toString()));
+
     //    public static final RegistryObject<EntityType<OdysseyTrident>> TRIDENT = ENTITY_TYPE.register("trident", () -> EntityType.Builder.<OdysseyTrident>of(OdysseyTrident::new, MobCategory.MISC).sized(0.5f,0.5f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation("trident").toString()));
 //    public static final RegistryObject<EntityType<PermafrostIcicle>> PERMAFROST_ICICLE = ENTITY_TYPE.register("permafrost_icicle", () -> EntityType.Builder.<PermafrostIcicle>of(PermafrostIcicle::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_icicle").toString()));
 

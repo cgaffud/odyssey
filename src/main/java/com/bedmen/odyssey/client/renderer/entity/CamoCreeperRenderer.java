@@ -26,10 +26,7 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
         super(context, () -> new CamoCreeperModel<>(context.bakeLayer(ModelLayers.CREEPER)));
     }
 
-    public ResourceLocation getTextureLocation(OdysseyCreeper odysseyCreeper) {
-        return getTexture(odysseyCreeper);
-    }
-
+   
     public static ResourceLocation getTexture(OdysseyCreeper odysseyCreeper) {
         Biome biome = ((CamoCreeper)odysseyCreeper).getBiome();
 

@@ -11,6 +11,8 @@ import com.bedmen.odyssey.client.renderer.blockentity.*;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.combat.SpearType;
+import com.bedmen.odyssey.entity.monster.DripstoneCreeper;
+import com.bedmen.odyssey.entity.projectile.DripstoneShard;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
@@ -136,6 +138,7 @@ public class ClientEvents {
             EntityRenderers.register(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeletonRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BABY_CREEPER.get(), OdysseyCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeperRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.DRIPSTONE_CREEPER.get(), DripstoneCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WEAVER.get(), WeaverRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BLADE_SPIDER.get(), BladeSpiderRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaverRenderer::new);
@@ -167,6 +170,7 @@ public class ClientEvents {
             EntityRenderers.register(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.THROWN_SPEAR.get(), ThrownSpearRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.DRIPSTONE_SHARD.get(), DripstoneShardRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.SONIC_BOOM.get(), SonicBoomRenderer::new);
 
             //Boat Renderings
@@ -225,8 +229,10 @@ public class ClientEvents {
         event.registerLayerDefinition(ArmedCovenWitchModel.LAYER_LOCATION, ArmedCovenWitchModel::createBodyLayer);
         event.registerLayerDefinition(CovenRootModel.LAYER_LOCATION, CovenRootModel::createBodyLayer);
         event.registerLayerDefinition(SpearModel.LAYER_LOCATION, SpearModel::createBodyLayer);
+        event.registerLayerDefinition(DripstoneShardModel.LAYER_LOCATION, DripstoneShardModel::createBodyLayer);
         event.registerLayerDefinition(BladeSpiderModel.LAYER_LOCATION, BladeSpiderModel::createBodyLayer);
         event.registerLayerDefinition(ForgottenModel.LAYER_LOCATION, ForgottenModel::createBodyLayer);
+        event.registerLayerDefinition(DripstoneCreeperModel.LAYER_LOCATION, DripstoneCreeperModel::createBodyLayer);
     }
 
     @SubscribeEvent
