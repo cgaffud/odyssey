@@ -4,6 +4,7 @@ import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -116,6 +118,23 @@ public class RenderUtil {
 
     private static void fireVertex(PoseStack.Pose pose, VertexConsumer vertexConsumer, float x, float y, float z, float u, float v) {
         vertexConsumer.vertex(pose.pose(), x, y, z).color(255, 255, 255, 255).uv(u, v).overlayCoords(0, 10).uv2(240).normal(pose.normal(), 0.0F, 1.0F, 0.0F).endVertex();
+    }
+
+    public static void xShapeProjectileVertices(PoseStack poseStack, VertexConsumer vertexConsumer, float x, float y, float u, float v, float du, float dv, int packedLight){
+        PoseStack.Pose posestack$pose = poseStack.last();
+        Matrix4f matrix4f = posestack$pose.pose();
+        Matrix3f matrix3f = posestack$pose.normal();
+        for(int j = 0; j < 4; ++j) {
+            poseStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+            xShapeProjectileVertex(matrix4f, matrix3f, vertexConsumer, -x/2f, -y/2f, 0, u, v, packedLight);
+            xShapeProjectileVertex(matrix4f, matrix3f, vertexConsumer, x/2f, -y/2f, 0, u+du, v, packedLight);
+            xShapeProjectileVertex(matrix4f, matrix3f, vertexConsumer, x/2f, y/2f, 0, u+du, v+dv, packedLight);
+            xShapeProjectileVertex(matrix4f, matrix3f, vertexConsumer, -x/2f, y/2f, 0, u, v+dv, packedLight);
+        }
+    }
+
+    private static void xShapeProjectileVertex(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer vertexConsumer, float x, float y, float z, float u, float v, int packedLight) {
+        vertexConsumer.vertex(matrix4f, x, y, z).color(255, 255, 255, 255).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix3f, 0, 1, 0).endVertex();
     }
 
 }

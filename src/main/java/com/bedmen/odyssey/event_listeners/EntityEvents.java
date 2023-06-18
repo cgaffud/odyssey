@@ -34,7 +34,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -48,6 +47,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -307,6 +307,9 @@ public class EntityEvents {
     }
 
     private static Optional<EntityType<?>> skeletonReplace(Mob mob, Random random){
+        if(inDripstoneBiome(mob)){
+            return Optional.of(EntityTypeRegistry.ENCASED_SKELETON.get());
+        }
         return Optional.of(EntityTypeRegistry.SKELETON.get());
     }
 
@@ -322,8 +325,11 @@ public class EntityEvents {
     }
 
     private static Optional<EntityType<?>> creeperReplace(Mob mob, Random random){
-        if(isCamo(random, mob.level.getDifficulty())){
+        if(random.nextBoolean()){
             return Optional.of(EntityTypeRegistry.CAMO_CREEPER.get());
+        }
+        if(inDripstoneBiome(mob)){
+            return Optional.of(EntityTypeRegistry.DRIPSTONE_CREEPER.get());
         }
         else if(isBaby(mob)){
             return Optional.of(EntityTypeRegistry.BABY_CREEPER.get());
@@ -335,6 +341,14 @@ public class EntityEvents {
         if(inPrairieBiome(mob)){
             mob.setBaby(true);
             return Optional.empty();
+        }
+        if(inDripstoneBiome(mob)){
+            return Optional.of(EntityTypeRegistry.ENCASED_ZOMBIE.get());
+        }
+        float y = (float)mob.getY();
+        // Guaranteed false for y>=8, linear gradient for -48 <= y <= 8, guaranteed true for y<-48
+        if (random.nextFloat() < (-(y-8)/56)) {
+            return Optional.of(EntityTypeRegistry.FORGOTTEN.get());
         }
         if(random.nextFloat() < BRUTE_CHANCE){
             return Optional.of(EntityTypeRegistry.ZOMBIE_BRUTE.get());
@@ -349,6 +363,11 @@ public class EntityEvents {
     private static Optional<EntityType<?>> spiderReplace(Mob mob, Random random){
         if(inPrairieBiome(mob)){
             return Optional.of(EntityTypeRegistry.BARN_SPIDER.get());
+        }
+        float y = (float)mob.getY();
+        // Guaranteed false for y>=8, linear gradient for -48 <= y <= 8, guaranteed true for y<-48
+        if (random.nextFloat() < (-(y-8)/56)) {
+            return Optional.of(EntityTypeRegistry.BLADE_SPIDER.get());
         }
         return Optional.empty();
     }
@@ -365,14 +384,8 @@ public class EntityEvents {
         return entity.level.getBiome(entity.blockPosition()).is(BiomeRegistry.PRAIRIE_RESOURCE_KEY);
     }
 
-    public static final Map<Difficulty, Float> DIFFICULTY_MAP = Map.of(
-            Difficulty.HARD, 1f,
-            Difficulty.NORMAL, 0.5f,
-            Difficulty.EASY, 0.25f,
-            Difficulty.PEACEFUL, 0.0f);
-
-    public static boolean isCamo(Random random, Difficulty difficulty){
-        return random.nextFloat() < DIFFICULTY_MAP.get(difficulty);
+    public static boolean inDripstoneBiome(Entity entity){
+        return entity.level.getBiome(entity.blockPosition()).is(Biomes.DRIPSTONE_CAVES);
     }
 
     @SubscribeEvent

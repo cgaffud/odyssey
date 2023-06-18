@@ -5,6 +5,7 @@ package com.bedmen.odyssey.client.model;// Made with Blockbench 4.3.1
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.monster.Wraith;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -29,6 +30,7 @@ public class WraithModel<T extends Wraith> extends AgeableListModel<T> implement
     private final ModelPart left_arm;
     private final ModelPart right_arm;
     private final ModelPart torso;
+    private final float ALMOST_HALF_PI = Mth.HALF_PI * 3/4;
 
     public WraithModel(ModelPart root) {
         this.head = root.getChild("head");
@@ -69,6 +71,24 @@ public class WraithModel<T extends Wraith> extends AgeableListModel<T> implement
         this.torso.zRot = 0.0F;
 
         ItemStack itemstack = entity.getMainHandItem();
+        if (entity.isAggressive()) {
+            if ((GeneralUtil.isHashTick(entity, entity.getLevel(), 32) && (entity.getRandom().nextFloat() < 0.10))) {
+                this.head.setRotation(entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2 + ALMOST_HALF_PI/4, this.head.yRot, entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2);
+            } else if (GeneralUtil.isHashTick(entity, entity.getLevel(), 16) && (entity.getRandom().nextFloat() < 0.8)) {
+                this.head.setRotation(entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2 + ALMOST_HALF_PI/4,
+                        this.head.yRot,
+                        entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2);
+            } else {
+                this.head.xRot = ALMOST_HALF_PI/4;
+                this.head.zRot = 0;
+            }
+        } else {
+            this.head.xRot = ALMOST_HALF_PI/2;
+            this.head.zRot = 0;
+        }
+
+
+
         if (entity.isAggressive() && (itemstack.isEmpty() || !(itemstack.getItem() instanceof CrossbowItem))) {
             float f = Mth.sin(this.attackTime * (float)Math.PI);
             float f1 = Mth.sin((1.0F - (1.0F - this.attackTime) * (1.0F - this.attackTime)) * (float)Math.PI);

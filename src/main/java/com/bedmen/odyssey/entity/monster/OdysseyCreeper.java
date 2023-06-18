@@ -275,7 +275,7 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
         }
     }
 
-    private void explodeCreeper() {
+    protected void explodeCreeper() {
         if (!this.level.isClientSide) {
             Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
             float f = this.isPowered() ? 2.0F : 1.0F;

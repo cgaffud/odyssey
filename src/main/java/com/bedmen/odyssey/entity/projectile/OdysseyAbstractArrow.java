@@ -40,6 +40,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     public static final String PIERCING_DAMAGE_PENALTY_TAG = "PiercingDamagePenalty";
     // Decreases damage of arrow on last piercing
     public float piercingDamagePenalty = 1.0f;
+    private boolean somePhysics;
 
     protected OdysseyAbstractArrow(EntityType<? extends OdysseyAbstractArrow> type, Level level) {
         super(type, level);
@@ -89,6 +90,13 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         return getAspectStrength(aspect) > 0.0f;
     }
 
+    public boolean hasSomePhysics() {return this.somePhysics;}
+
+    public void setSomePhysics(boolean somePhysics) {
+        this.setNoPhysics(somePhysics);
+        this.somePhysics = somePhysics;
+    }
+
     protected abstract double getDamage();
 
     protected abstract void onFinalPierce();
@@ -108,6 +116,10 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 AspectUtil.doFrostAspectParticles(this, 1);
             }
         }
+    }
+
+    protected float getEntityHitVolume(){
+        return 1.0f;
     }
 
     protected void onHitEntity(EntityHitResult entityHitResult) {
@@ -192,7 +204,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
             this.onHurt(target, true);
 
-            this.playSound(this.getEntityHitSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+            this.playSound(this.getEntityHitSoundEvent(), this.getEntityHitVolume(), 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
             if (finalPierce) {
                 this.onFinalPierce();
             }

@@ -74,6 +74,26 @@
       }
     ]
   },
+  "entity.wraith.laugh": {
+    "category": "hostile",
+    "subtitle": "entity.wraith.laugh.sub",
+    "sounds": [
+      {
+        "name": "oddc:entity/wraith/laugh",
+        "stream": true
+      }
+    ]
+  },
+  "entity.wraith.scream": {
+    "category": "hostile",
+    "subtitle": "entity.wraith.scream.sub",
+    "sounds": [
+      {
+        "name": "oddc:entity/wraith/scream",
+        "stream": true
+      }
+    ]
+  },
   "music_disc.mesa": {
     "sounds": [
       {

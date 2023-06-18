@@ -8,9 +8,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Explosion;
@@ -177,5 +175,9 @@ public class SonicBoom extends AbstractHurtingProjectile implements SwungProject
 
     public void launch(Entity entity, float xRot, float yRot, float zRot, float inaccuracy) {
         shootFromRotation(entity, xRot, yRot, zRot, INITIAL_SPEED, inaccuracy);
+    }
+
+    protected float getEyeHeight(Pose pose, EntityDimensions entityDimensions) {
+        return 0.25F;
     }
 }

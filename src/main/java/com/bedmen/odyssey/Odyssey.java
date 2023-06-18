@@ -109,7 +109,8 @@ public class Odyssey
             SpawnPlacements.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BabyLeviathan::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.WEAVER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Weaver::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.WRAITH.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Wraith::spawnPredicate);
-            SpawnPlacements.register(EntityTypeRegistry.BLADE_SPIDER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BladeSpider::spawnPredicate);
+            SpawnPlacements.register(EntityTypeRegistry.WRAITH_STALKER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WraithStalker::spawnPredicate);
+            SpawnPlacements.register(EntityTypeRegistry.WRAITH_AMALGAM.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WraithAmalgam::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.STRAY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OdysseyStray::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.HUSK.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OdysseyHusk::spawnPredicate);
 
@@ -133,11 +134,15 @@ public class Odyssey
 //        event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
         event.put(EntityTypeRegistry.HUSK.get(), Husk.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_ZOMBIE.get(), DungeonZombie.createAttributes().build());
+        event.put(EntityTypeRegistry.FORGOTTEN.get(), Forgotten.createAttributes().build());
+        event.put(EntityTypeRegistry.ENCASED_ZOMBIE.get(), EncasedZombie.createAttributes().build());
+        event.put(EntityTypeRegistry.ENCASED_SKELETON.get(), EncasedSkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.SKELETON.get(), OdysseySkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.STRAY.get(), Stray.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());
+        event.put(EntityTypeRegistry.DRIPSTONE_CREEPER.get(), DripstoneCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.WEAVER.get(), Weaver.createAttributes().build());
         event.put(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaver.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathan.createAttributes().build());
@@ -146,6 +151,8 @@ public class Odyssey
         event.put(EntityTypeRegistry.STRAY_BRUTE.get(), StrayBrute.createAttributes().build());
         event.put(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpider.createAttributes().build());
         event.put(EntityTypeRegistry.WRAITH.get(), Wraith.createAttributes().build());
+        event.put(EntityTypeRegistry.WRAITH_STALKER.get(), WraithStalker.createAttributes().build());
+        event.put(EntityTypeRegistry.WRAITH_AMALGAM.get(), WraithAmalgam.createAttributes().build());
         event.put(EntityTypeRegistry.BANDIT.get(), Bandit.createAttributes().build());
         event.put(EntityTypeRegistry.BLADE_SPIDER.get(), BladeSpider.createAttributes().build());
 //

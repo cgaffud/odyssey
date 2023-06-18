@@ -3,24 +3,17 @@ package com.bedmen.odyssey.entity.monster;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
-import com.bedmen.odyssey.items.aspect_items.AspectArrowItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.registry.SoundEventRegistry;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
@@ -29,35 +22,21 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
-import java.util.UUID;
+public class Wraith extends AbstractWraith implements RangedAttackMob {
+    public final WraithBowAttackGoal bowGoal = new WraithBowAttackGoal(this, 20, 10.0F);
+    public final WraithMeleeAttackGoal meleeGoal = new WraithMeleeAttackGoal(this);
 
-public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
-    public final RangedBowAttackGoal<Wraith> bowGoal = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
-    public final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.2D, false) {
-        public void stop() {
-            super.stop();
-            Wraith.this.setAggressive(false);
-        }
-
-        public void start() {
-            super.start();
-            Wraith.this.setAggressive(true);
-        }
-    };
-
-    private int remainingPersistentAngerTime;
-    @javax.annotation.Nullable
-    private UUID persistentAngerTarget;
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(30, 49);
 
     public Wraith(EntityType<? extends Monster> p_33002_, Level p_33003_) {
-        super(p_33002_, p_33003_);
+        super(p_33002_, p_33003_, 0.2D, 0.65D, 0.3D, 2.5D, 20);
         this.reassessWeaponGoal();
     }
 
@@ -69,22 +48,12 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 60.0D).add(Attributes.MOVEMENT_SPEED, 0.4).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.FOLLOW_RANGE, 64.0D);
+        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 60.0D).add(Attributes.MOVEMENT_SPEED, 1.2D).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
-    public void tick() {
-        super.tick();
-        if ((random.nextDouble() < 0.001)) {
-            Player player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 20, true);
-            if (player != null) {
-                setPersistentAngerTarget(player.getUUID());
-                startPersistentAngerTimer();
-            }
-        }
-    }
 
     public void reassessWeaponGoal() {
-        if (this.level != null && !this.level.isClientSide) {
+        if (!this.level.isClientSide) {
             this.goalSelector.removeGoal(this.meleeGoal);
             this.goalSelector.removeGoal(this.bowGoal);
             ItemStack itemstack = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BowItem));
@@ -122,34 +91,6 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
         if (!this.level.isClientSide) {
             this.reassessWeaponGoal();
         }
-    }
-
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.AMBIENT_CAVE;
-    }
-
-    protected SoundEvent getHurtSound(DamageSource DamageSource) {
-        return SoundEventRegistry.WRAITH_HURT.get();
-    }
-
-    protected SoundEvent getDeathSound() {
-        return SoundEventRegistry.WRAITH_DEATH.get();
-    }
-
-    @Override
-    public void playAmbientSound() {
-        SoundEvent soundevent = this.getAmbientSound();
-        if (soundevent != null && (this.getRandom().nextBoolean() && this.getRandom().nextBoolean())) {
-            this.playSound(soundevent, this.getSoundVolume(), this.getVoicePitch());
-        }
-
-    }
-
-    protected AbstractArrow getOdysseyArrow(ItemStack ammo, float bowDamageMultiplier) {
-        AspectArrowItem aspectArrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
-        AbstractArrow abstractarrow = aspectArrowItem.createArrow(this.level, ammo, this);
-        abstractarrow.setEnchantmentEffectsFromEntity(this, bowDamageMultiplier);
-        return abstractarrow;
     }
 
     @Override
@@ -191,33 +132,8 @@ public class Wraith extends Monster implements NeutralMob, RangedAttackMob {
     }
 
     @Override
-    public int getRemainingPersistentAngerTime() {
-        return this.remainingPersistentAngerTime;
-    }
-
-    @Override
-    public void setRemainingPersistentAngerTime(int remainingPersistentAngerTime) {
-        this.remainingPersistentAngerTime = remainingPersistentAngerTime;
-    }
-
-    @Nullable
-    @Override
-    public UUID getPersistentAngerTarget() {
-        return this.persistentAngerTarget;
-    }
-
-    @Override
-    public void setPersistentAngerTarget(@Nullable UUID persistentAngerTarget) {
-        this.persistentAngerTarget = persistentAngerTarget;
-    }
-
-    @Override
     protected void dropEquipment() {
         super.dropEquipment();
-    }
-
-    public static boolean spawnPredicate(EntityType<? extends Monster> pType, ServerLevelAccessor pLevel, MobSpawnType pReason, BlockPos pPos, Random pRandom) {
-        return Monster.checkMonsterSpawnRules(pType, pLevel, pReason, pPos, pRandom) && pPos.getY() <= -16;
     }
 
 }
