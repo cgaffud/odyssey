@@ -16,8 +16,7 @@ public class ZombieBruteRenderer extends AbstractZombieRenderer<ZombieBrute, Zom
     }
 
     protected void scale(ZombieBrute zombieBrute, PoseStack poseStack, float partialTicks) {
-        float f = ZombieBrute.SCALE;
-        poseStack.scale(f,f,f);
+        poseStack.scale(ZombieBruteModel.BODY_SCALE, ZombieBruteModel.BODY_SCALE, ZombieBruteModel.BODY_SCALE);
     }
 
     public ResourceLocation getTextureLocation(ZombieBrute zombieBrute) {

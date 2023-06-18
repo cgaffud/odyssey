@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -28,9 +29,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -321,6 +324,22 @@ public class WeaponUtil {
             livingEntity.hurtTime = livingEntity.hurtDuration;
             OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> livingEntity), new ReduceInvulnerabilityPacket(livingEntity, invulnerabilityTicks));
         }
+    }
+
+    private static AABB getSweepHitBox(@Nonnull Entity target)
+    {
+        return target.getBoundingBox().inflate(1.0D, 0.25D, 1.0D);
+    }
+
+    public static Set<LivingEntity> getSweepLivingEntities(LivingEntity attacker, Entity target, boolean includeTarget){
+        return attacker.level.getEntitiesOfClass(LivingEntity.class, getSweepHitBox(target)).stream()
+                .filter(livingEntity ->
+                        livingEntity != attacker
+                                && (livingEntity != target || includeTarget)
+                                && !attacker.isAlliedTo(livingEntity)
+                                && (!(livingEntity instanceof ArmorStand) || !((ArmorStand)livingEntity).isMarker())
+                                && attacker.distanceToSqr(livingEntity) < 9.0D)
+                .collect(Collectors.toSet());
     }
 }
 

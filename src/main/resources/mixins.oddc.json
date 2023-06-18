@@ -6,6 +6,7 @@
   "refmap": "mixins.oddc.refmap.json",
   "mixins": [
     "MixinAbstractArrow",
+    "MixinCampfireBlockEntity",
     "MixinChatFormatting",
     "MixinClientboundSetEntityMotionPacket",
     "MixinCombatRules",
@@ -18,12 +19,14 @@
     "MixinMapDecorationType",
     "MixinPlayer",
     "MixinPowderSnowBlock",
+    "MixinPrecipitation",
     "MixinScreenEffectRenderer"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
+    "MixinLevelReader",
     "MixinLocalPlayer"
   ]
 }

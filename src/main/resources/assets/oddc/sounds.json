@@ -1,6 +1,5 @@
 {
   "block.key_unlock": {
-    "category": "block",
     "subtitle": "block.key_unlock.sub",
     "sounds": [
       {
@@ -10,7 +9,6 @@
     ]
   },
   "block.locked_chest": {
-    "category": "block",
     "subtitle": "block.locked_chest.sub",
     "sounds": [
       {
@@ -20,7 +18,6 @@
     ]
   },
   "entity.mineral_leviathan.roar": {
-    "category": "hostile",
     "subtitle": "entity.mineral_leviathan.roar.sub",
     "sounds": [
       {
@@ -38,7 +35,6 @@
     ]
   },
   "entity.mineral_leviathan.hurt": {
-    "category": "hostile",
     "subtitle": "entity.mineral_leviathan.hurt.sub",
     "sounds": [
       {
@@ -48,7 +44,6 @@
     ]
   },
   "entity.mineral_leviathan.death": {
-    "category": "hostile",
     "subtitle": "entity.mineral_leviathan.death.sub",
     "sounds": [
       {
@@ -58,7 +53,6 @@
     ]
   },
   "entity.wraith.hurt": {
-    "category": "hostile",
     "subtitle": "entity.wraith.hurt.sub",
     "sounds": [
       {
@@ -72,7 +66,6 @@
     ]
   },
   "entity.wraith.death": {
-    "category": "hostile",
     "subtitle": "entity.wraith.death.sub",
     "sounds": [
       {
@@ -102,10 +95,26 @@
     ]
   },
   "music_disc.mesa": {
-    "category": "music",
     "sounds": [
       {
         "name": "oddc:music_disc/mesa",
+        "stream": true
+      }
+    ]
+  },
+  "weather.arctic_wind": {
+    "subtitle": "subtitles.weather.wind",
+    "sounds": [
+      {
+        "name": "oddc:weather/arctic_wind_0",
+        "stream": true
+      },
+      {
+        "name": "oddc:weather/arctic_wind_1",
+        "stream": true
+      },
+      {
+        "name": "oddc:weather/arctic_wind_2",
         "stream": true
       }
     ]

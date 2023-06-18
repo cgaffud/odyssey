@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.entity.ai;
 
-import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.RangedAttackMob;

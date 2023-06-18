@@ -1,7 +1,9 @@
 package com.bedmen.odyssey.world.gen;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.features.OreFeatures;
@@ -26,18 +28,22 @@ import java.util.List;
 public class OreGen {
     
     public static List<OreConfiguration.TargetBlockState> ORE_SILVER_TARGET_LIST;
+    public static Holder<ConfiguredFeature<OreConfiguration, ?>> CONFIGURED_ORE_SILVER;
     public static Holder<ConfiguredFeature<OreConfiguration, ?>> CONFIGURED_ORE_SILVER_BURIED;
     public static Holder<PlacedFeature> PLACED_ORE_SILVER;
     public static Holder<PlacedFeature> PLACED_ORE_SILVER_LOWER;
+    public static Holder<PlacedFeature> PLACED_ORE_SILVER_EXTRA;
 
     public static Holder<ConfiguredFeature<OreConfiguration, ?>> CONFIGURED_ORE_MOONROCK_BURIED;
     public static Holder<PlacedFeature> PLACED_ORE_MOONROCK;
 
     public static void registerOres() {
         ORE_SILVER_TARGET_LIST = List.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, BlockRegistry.SILVER_ORE.get().defaultBlockState()), OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, BlockRegistry.DEEPSLATE_SILVER_ORE.get().defaultBlockState()));
+        CONFIGURED_ORE_SILVER = FeatureUtils.register("ore_silver", Feature.ORE, new OreConfiguration(ORE_SILVER_TARGET_LIST, 9));
         CONFIGURED_ORE_SILVER_BURIED = FeatureUtils.register("ore_silver_buried", Feature.ORE, new OreConfiguration(ORE_SILVER_TARGET_LIST, 9, 0.5F));
         PLACED_ORE_SILVER = PlacementUtils.register("ore_silver", CONFIGURED_ORE_SILVER_BURIED, commonOrePlacement(4, HeightRangePlacement.triangle(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(32))));
         PLACED_ORE_SILVER_LOWER = PlacementUtils.register("ore_silver_lower", CONFIGURED_ORE_SILVER_BURIED, orePlacement(CountPlacement.of(UniformInt.of(0, 1)), HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(-48))));
+        PLACED_ORE_SILVER_EXTRA = PlacementUtils.register("ore_silver_extra", CONFIGURED_ORE_SILVER, commonOrePlacement(50, HeightRangePlacement.uniform(VerticalAnchor.absolute(32), VerticalAnchor.absolute(256))));
 
         CONFIGURED_ORE_MOONROCK_BURIED = FeatureUtils.register("ore_moonrock_buried", Feature.ORE, new OreConfiguration(List.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, BlockRegistry.MOONROCK.get().defaultBlockState())), 25));
         PLACED_ORE_MOONROCK = PlacementUtils.register("ore_moonrock", CONFIGURED_ORE_MOONROCK_BURIED, commonOrePlacement(2,  HeightRangePlacement.triangle(VerticalAnchor.absolute(110), VerticalAnchor.absolute(160))));
@@ -58,6 +64,9 @@ public class OreGen {
             gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, PLACED_ORE_SILVER);
             gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, PLACED_ORE_SILVER_LOWER);
             gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, PLACED_ORE_MOONROCK);
+            if(BiomeUtil.isBiome(event.getName(), BiomeRegistry.ARCTIC.get())){
+                gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, PLACED_ORE_SILVER_EXTRA);
+            }
         }
     }
 

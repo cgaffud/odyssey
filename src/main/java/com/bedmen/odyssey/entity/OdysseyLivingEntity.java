@@ -1,7 +1,8 @@
 package com.bedmen.odyssey.entity;
 
 import com.bedmen.odyssey.combat.SmackPush;
-import com.bedmen.odyssey.potions.FireType;
+import com.bedmen.odyssey.effect.FireType;
+import net.minecraft.util.Mth;
 
 import java.util.Optional;
 
@@ -19,4 +20,22 @@ public interface OdysseyLivingEntity {
     Optional<Integer> getTrueHurtTime();
     FireType getFireType();
     void setFireType(FireType fireType);
+    float getTemperature();
+    void setTemperature(float temperature);
+
+    default boolean isHot(){
+        return this.getTemperature() > 0f;
+    }
+
+    default boolean isOverheating(){
+        return this.getTemperature() >= 1f;
+    }
+
+    default boolean isCold(){
+        return this.getTemperature() < 0f;
+    }
+
+    default float getPercentOverheated(){
+        return Mth.clamp(this.getTemperature(), 0f, 1f);
+    }
 }

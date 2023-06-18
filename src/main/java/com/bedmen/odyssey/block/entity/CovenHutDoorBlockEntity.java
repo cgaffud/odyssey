@@ -2,10 +2,10 @@ package com.bedmen.odyssey.block.entity;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
-import com.bedmen.odyssey.potions.FireEffect;
+import com.bedmen.odyssey.effect.FireEffect;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
-import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.world.gen.StructureResourceKeys;
 import com.bedmen.odyssey.world.gen.structure.CovenHutFeature;
 import net.minecraft.core.BlockPos;
@@ -13,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -52,8 +51,7 @@ public class CovenHutDoorBlockEntity extends BlockEntity {
             level.getEntitiesOfClass(LivingEntity.class, covenHutDoorBlockEntity.boundingBox)
                     .stream()
                     .filter(entity -> !(entity instanceof Player player)
-                            || (!player.isCreative()
-                            && !player.isSpectator()
+                            || (GeneralUtil.isSurvival(player)
                             && AspectUtil.getIntegerAspectStrengthAllSlots(player, Aspects.TELEPORTATION_IMMUNITY) <= 0))
                     .forEach(livingEntity -> {
                         livingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));

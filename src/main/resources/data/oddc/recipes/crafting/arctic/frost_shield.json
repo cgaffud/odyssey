@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BAB",
+    "BBB",
+    " B "
+  ],
+  "key": {
+    "A": {
+      "item": "oddc:sterling_silver_ingot"
+    },
+    "B": {
+      "item": "oddc:permafrost_shard"
+    }
+  },
+  "result": {
+    "item": "oddc:frost_shield"
+  }
+}

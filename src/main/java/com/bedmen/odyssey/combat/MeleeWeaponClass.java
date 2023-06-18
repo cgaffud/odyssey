@@ -1,8 +1,8 @@
 package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 
 import java.util.List;
 

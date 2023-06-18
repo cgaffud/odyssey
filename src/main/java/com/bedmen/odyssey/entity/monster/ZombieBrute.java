@@ -18,15 +18,9 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import javax.annotation.Nullable;
 
 public class ZombieBrute extends Zombie {
-    public static final float SCALE = 1.5f;
-
     public ZombieBrute(EntityType<? extends ZombieBrute> entityType, Level level) {
         super(entityType, level);
     }
-
-//    public float getScale(){
-//        return SCALE;
-//    }
 
     protected boolean convertsInWater() {
         return false;
@@ -48,5 +42,9 @@ public class ZombieBrute extends Zombie {
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
         super.populateDefaultEquipmentSlots(difficultyInstance);
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.SLEDGEAXE.get()));
+    }
+
+    public boolean isBaby() {
+        return false;
     }
 }

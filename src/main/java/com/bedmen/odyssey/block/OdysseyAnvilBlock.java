@@ -1,7 +1,5 @@
 package com.bedmen.odyssey.block;
 
-import javax.annotation.Nullable;
-
 import com.bedmen.odyssey.inventory.OdysseyAnvilMenu;
 import com.bedmen.odyssey.util.OdysseyStats;
 import net.minecraft.core.BlockPos;
@@ -29,6 +27,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nullable;
 
 public class OdysseyAnvilBlock extends FallingBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;

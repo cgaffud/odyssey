@@ -11,16 +11,16 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.food.OdysseyFood;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.aspect_items.*;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyBoatItem;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseyMapItem;
-import com.bedmen.odyssey.items.odyssey_versions.OdysseySpawnEggItem;
+import com.bedmen.odyssey.items.food.PermabuffFoodItem;
+import com.bedmen.odyssey.items.food.StackableBowlItem;
+import com.bedmen.odyssey.items.food.TemperatureFoodItem;
+import com.bedmen.odyssey.items.odyssey_versions.*;
 import com.bedmen.odyssey.lock.LockableDoorType;
 import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.tier.OdysseyTiers;
-import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.OdysseyRarity;
+import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -170,6 +170,12 @@ public class ItemRegistry {
 
     // # Food
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
+    public static final RegistryObject<Item> SNOW_CONE = ITEMS.register("snow_cone", () -> new TemperatureFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SNOW_CONE), -0.2f, false));
+    public static final RegistryObject<Item> BEEF_STEW = ITEMS.register("beef_stew", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.BEEF_STEW)));
+    public static final RegistryObject<Item> VEGETABLE_STEW = ITEMS.register("vegetable_stew", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.VEGETABLE_STEW)));
+    public static final RegistryObject<Item> NOODLES = ITEMS.register("noodles", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.NOODLES)));
+    public static final RegistryObject<Item> CHICKEN_NOODLE_SOUP = ITEMS.register("chicken_noodle_soup", () -> new TemperatureFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.CHICKEN_NOODLE_SOUP), 0.2f, true));
+    public static final RegistryObject<Item> FISH_CHOWDER = ITEMS.register("fish_chowder", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.FISH_CHOWDER)));
     public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1), new AspectInstance(Aspects.APPETITE, 0.25f), new AspectInstance(Aspects.HAS_EATEN_ROCK_CANDY).withDisplaySetting(AspectTooltipDisplaySetting.NEVER)), player -> !AspectUtil.hasPermabuffAspect(player, Aspects.HAS_EATEN_ROCK_CANDY)));
 
     // # Tools
@@ -257,6 +263,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> AMETHYST_HATCHET = ITEMS.register("amethyst_hatchet", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, MeleeWeaponClass.HATCHET, 6f, List.of(), List.of(new AspectInstance(Aspects.SMITE_DAMAGE, 1.0f))));
     public static final RegistryObject<Item> AMETHYST_SPEAR = ITEMS.register("amethyst_spear", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, MeleeWeaponClass.SPEAR, ThrowableTypes.AMETHYST_SPEAR));
 
+    public static final RegistryObject<Item> FROST_MACE = ITEMS.register("frost_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.ARCTIC, MeleeWeaponClass.MACE, 10f, List.of(), List.of(new AspectInstance(Aspects.COLD_SNAP))));
+    public static final RegistryObject<Item> FROST_SPEAR = ITEMS.register("frost_spear", () -> new SpearItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.AMETHYST, MeleeWeaponClass.SPEAR, ThrowableTypes.FROST_SPEAR));
+
     public static final RegistryObject<Item> DIAMOND_MACE = ITEMS.register("diamond_mace", () -> new AspectMeleeItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE), OdysseyTiers.DIAMOND, MeleeWeaponClass.MACE, 10f, List.of(), List.of(new AspectInstance(Aspects.DURABILITY, 2.0f))));
 
     public static final RegistryObject<Item> SMACKIN_SHOVEL = ITEMS.register("smackin_shovel", () -> new AspectShovelItem(new Item.Properties().tab(OdysseyCreativeModeTab.MELEE).rarity(OdysseyRarity.UNCRAFTABLE_EQUIPMENT), OdysseyTiers.UNCRAFTABLE_2, MeleeWeaponClass.BAT, 7f, List.of(new AspectInstance(Aspects.SMACK)), List.of(new AspectInstance(Aspects.KNOCKBACK, 2.0f))));
@@ -305,6 +314,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATROOT_SLUG_BOW = ITEMS.register("greatroot_slug_bow", () -> new AspectCrossbowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.GREATROOT,1.85f, 25, List.of(), List.of(new AspectInstance(Aspects.PROJECTILE_KNOCKBACK, 1.0f))));
     public static final RegistryObject<Item> GREATROOT_SHOT_BOW = ITEMS.register("greatroot_shot_bow", () -> new AspectCrossbowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.GREATROOT,1.65f, 22, List.of(), List.of(new AspectInstance(Aspects.MULTISHOT, 2.0f))));
     public static final RegistryObject<Item> GREATROOT_CROSSBOW = ITEMS.register("greatroot_crossbow", () -> new AspectCrossbowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.GREATROOT,1.9f, 25, List.of(), List.of(new AspectInstance(Aspects.DURABILITY, 2.0f))));
+    public static final RegistryObject<Item> GLACIERANG = ITEMS.register("glacierang", () -> new BoomerangItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), OdysseyTiers.ARCTIC, ThrowableTypes.GLACIERANG));
 
     // ## Tier 3
 
@@ -321,6 +331,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> AMETHYST_ARROW = ITEMS.register("amethyst_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.AMETHYST));
     public static final RegistryObject<Item> HEXED_EARTH_ARROW = ITEMS.register("hexed_earth_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.HEXED_EARTH));
     public static final RegistryObject<Item> ETHEREAL_ARROW = ITEMS.register("ethereal_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.AMETHYST, true));
+    public static final RegistryObject<Item> FROST_ARROW = ITEMS.register("frost_arrow", () -> new AspectArrowItem((new Item.Properties()).tab(OdysseyCreativeModeTab.RANGED), ArrowType.FROST));
 
     // # Armors
 
@@ -337,10 +348,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CHICKEN_LEGGINGS = ITEMS.register("chicken_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CHICKEN, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 2.0f))));
     public static final RegistryObject<Item> CHICKEN_BOOTS = ITEMS.register("chicken_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.CHICKEN, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.FEATHER_FALLING, 2.0f))));
 
-    public static final RegistryObject<Item> FUR_HELMET = ITEMS.register("fur_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
-    public static final RegistryObject<Item> FUR_CHESTPLATE = ITEMS.register("fur_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
-    public static final RegistryObject<Item> FUR_LEGGINGS = ITEMS.register("fur_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
-    public static final RegistryObject<Item> FUR_BOOTS = ITEMS.register("fur_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
+    public static final RegistryObject<Item> FUR_HELMET = ITEMS.register("fur_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f))));
+    public static final RegistryObject<Item> FUR_CHESTPLATE = ITEMS.register("fur_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f))));
+    public static final RegistryObject<Item> FUR_LEGGINGS = ITEMS.register("fur_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f))));
+    public static final RegistryObject<Item> FUR_BOOTS = ITEMS.register("fur_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.FUR, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.0f))));
 
     public static final RegistryObject<Item> GLIDER_HELMET = ITEMS.register("glider_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.GLIDER, EquipmentSlot.HEAD, List.of(), List.of()));
     public static final RegistryObject<Item> GLIDER_CHESTPLATE = ITEMS.register("glider_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.GLIDER, EquipmentSlot.CHEST, List.of(), List.of()));
@@ -358,10 +369,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> THORNMAIL_LEGGINGS = ITEMS.register("thornmail_leggings", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.THORNMAIL, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.THORNS, 1.5f))));
     public static final RegistryObject<Item> THORNMAIL_BOOTS = ITEMS.register("thornmail_boots", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.THORNMAIL, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.THORNS, 1.5f))));
     
-    public static final RegistryObject<Item> PARKA_HELMET = ITEMS.register("parka_helmet", () -> new DyeableAspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.PARKA, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.5f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
-    public static final RegistryObject<Item> PARKA_CHESTPLATE = ITEMS.register("parka_chestplate", () -> new DyeableAspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.PARKA, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.5f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
-    public static final RegistryObject<Item> PARKA_LEGGINGS = ITEMS.register("parka_leggings", () -> new DyeableAspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.PARKA, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.5f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
-    public static final RegistryObject<Item> PARKA_BOOTS = ITEMS.register("parka_boots", () -> new DyeableAspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.PARKA, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.5f), new AspectInstance(Aspects.FREEZE_IMMUNITY, 1), new AspectInstance(Aspects.SNOWSHOE))));
+    public static final RegistryObject<Item> PARKA_HELMET = ITEMS.register("parka_helmet", () -> new DyeableAspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.PARKA, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.5f))));
+    public static final RegistryObject<Item> PARKA_CHESTPLATE = ITEMS.register("parka_chestplate", () -> new DyeableAspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.PARKA, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.5f))));
+    public static final RegistryObject<Item> PARKA_LEGGINGS = ITEMS.register("parka_leggings", () -> new DyeableAspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.PARKA, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.5f))));
+    public static final RegistryObject<Item> PARKA_BOOTS = ITEMS.register("parka_boots", () -> new DyeableAspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.PARKA, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 1.5f), new AspectInstance(Aspects.SNOWSHOE))));
     
     public static final RegistryObject<Item> ZEPHYR_HELMET = ITEMS.register("zephyr_helmet", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.ZEPHYR, EquipmentSlot.HEAD, List.of(), List.of()));
     public static final RegistryObject<Item> ZEPHYR_CHESTPLATE = ITEMS.register("zephyr_chestplate", () -> new AspectArmorItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), OdysseyArmorMaterial.ZEPHYR, EquipmentSlot.CHEST, List.of(), List.of()));
@@ -394,10 +405,13 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GOLDEN_SHIELD = ITEMS.register("golden_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.GOLDEN));
     public static final RegistryObject<Item> REINFORCED_SHIELD = ITEMS.register("reinforced_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.REINFORCED));
     public static final RegistryObject<Item> DIAMOND_SHIELD = ITEMS.register("diamond_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.DIAMOND));
+    public static final RegistryObject<Item> FROST_SHIELD = ITEMS.register("frost_shield", () -> new AspectShieldItem(new Item.Properties().tab(OdysseyCreativeModeTab.ARMOR), ShieldType.FROST));
 
     // # Spawning
+    public static final RegistryObject<Item> HUSK_SPAWN_EGG = ITEMS.register("husk_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.HUSK, 7958625, 15125652, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> MOON_TOWER_ZOMBIE_SPAWN_EGG = ITEMS.register("moon_tower_zombie_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.MOON_TOWER_ZOMBIE, 0x4C7289, 0x394140, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
-    public static final RegistryObject<Item> ODYSSEY_SKELETON_SPAWN_EGG = ITEMS.register("odyssey_skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.SKELETON, 12698049, 4802889, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> SKELETON_SPAWN_EGG = ITEMS.register("skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.SKELETON, 12698049, 4802889, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> STRAY_SPAWN_EGG = ITEMS.register("stray_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.STRAY, 6387319, 14543594, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> MOON_TOWER_SKELETON_SPAWN_EGG = ITEMS.register("moon_tower_skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.MOON_TOWER_SKELETON, 0x9E9EBD, 0x565664, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> BABY_CREEPER_SPAWN_EGG = ITEMS.register("baby_creeper_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BABY_CREEPER, 894731, 0, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> CAMO_CREEPER_SPAWN_EGG = ITEMS.register("camo_creeper_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.CAMO_CREEPER, 0x50692c, 0x79553a, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
@@ -410,6 +424,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> WEAVER_EGG = ITEMS.register("weaver_egg", () -> new WeaverEggItem((new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> ODYSSEY_POLAR_BEAR_SPAWN_EGG = ITEMS.register("polar_bear_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.POLAR_BEAR, 15921906, 9803152, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> ZOMBIE_BRUTE_SPAWN_EGG = ITEMS.register("zombie_brute_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.ZOMBIE_BRUTE, 0x6464, 7969893, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> STRAY_BRUTE_SPAWN_EGG = ITEMS.register("stray_brute_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.STRAY_BRUTE, 0x4c5c5d, 0xb1bcbc, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> BARN_SPIDER_SPAWN_EGG = ITEMS.register("barn_spider_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BARN_SPIDER, 0x8A8A45, 11013646, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> BANDIT_SPAWN_EGG = ITEMS.register("bandit_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BANDIT, 0x503213, 0x282828, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> WRAITH_SPAWN_EGG = ITEMS.register("wraith_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.WRAITH, 0xF3F4F5, 0xA8ACAE, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
@@ -463,10 +478,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> DIAMOND_HOE = ITEMS_VANILLA.register("diamond_hoe", () -> new AspectHoeItem(new Item.Properties().tab(CreativeModeTab.TAB_TOOLS), OdysseyTiers.DIAMOND, MeleeWeaponClass.HOE, 5.0f, List.of(), List.of(new AspectInstance(Aspects.DURABILITY, 2.0f))));
     public static final RegistryObject<Item> NETHERITE_HOE = ITEMS_VANILLA.register("netherite_hoe", () -> new AspectHoeItem(new Item.Properties().tab(CreativeModeTab.TAB_TOOLS), OdysseyTiers.NETHERITE, MeleeWeaponClass.HOE, 6.0f, List.of(), List.of(new AspectInstance(Aspects.BURN_PROOF))));
 
-    public static final RegistryObject<Item> LEATHER_HELMET = ITEMS_VANILLA.register("leather_helmet", () -> new DyeableAspectArmorItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyArmorMaterial.LEATHER, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
-    public static final RegistryObject<Item> LEATHER_CHESTPLATE = ITEMS_VANILLA.register("leather_chestplate", () -> new DyeableAspectArmorItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyArmorMaterial.LEATHER, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
-    public static final RegistryObject<Item> LEATHER_LEGGINGS = ITEMS_VANILLA.register("leather_leggings", () -> new DyeableAspectArmorItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyArmorMaterial.LEATHER, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.FREEZE_IMMUNITY, 1))));
-    public static final RegistryObject<Item> LEATHER_BOOTS = ITEMS_VANILLA.register("leather_boots", () -> new DyeableAspectArmorItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyArmorMaterial.LEATHER, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.FREEZE_IMMUNITY, 1), new AspectInstance(Aspects.SNOWSHOE))));
+    public static final RegistryObject<Item> LEATHER_HELMET = ITEMS_VANILLA.register("leather_helmet", () -> new DyeableAspectArmorItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyArmorMaterial.LEATHER, EquipmentSlot.HEAD, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 0.5f))));
+    public static final RegistryObject<Item> LEATHER_CHESTPLATE = ITEMS_VANILLA.register("leather_chestplate", () -> new DyeableAspectArmorItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyArmorMaterial.LEATHER, EquipmentSlot.CHEST, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 0.5f))));
+    public static final RegistryObject<Item> LEATHER_LEGGINGS = ITEMS_VANILLA.register("leather_leggings", () -> new DyeableAspectArmorItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyArmorMaterial.LEATHER, EquipmentSlot.LEGS, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 0.5f))));
+    public static final RegistryObject<Item> LEATHER_BOOTS = ITEMS_VANILLA.register("leather_boots", () -> new DyeableAspectArmorItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyArmorMaterial.LEATHER, EquipmentSlot.FEET, List.of(), List.of(new AspectInstance(Aspects.ICE_PROTECTION, 0.5f), new AspectInstance(Aspects.SNOWSHOE))));
     public static final RegistryObject<Item> LEATHER_HORSE_ARMOR = ITEMS_VANILLA.register("leather_horse_armor", () -> new DyeableHorseArmorItem(OdysseyArmorMaterial.LEATHER.getTotalDefense(), "leather", (new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_MISC)));
 
     public static final RegistryObject<Item> CHAINMAIL_HELMET = ITEMS_VANILLA.register("chainmail_helmet", () -> new AspectArmorItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), OdysseyArmorMaterial.CHAIN, EquipmentSlot.HEAD, List.of(), List.of()));
@@ -534,4 +549,12 @@ public class ItemRegistry {
     public static final RegistryObject<Item> RED_BANNER = ITEMS_VANILLA.register("red_banner", () -> new BannerItem(Blocks.RED_BANNER, Blocks.RED_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
     public static final RegistryObject<Item> BLACK_BANNER = ITEMS_VANILLA.register("black_banner", () -> new BannerItem(Blocks.BLACK_BANNER, Blocks.BLACK_WALL_BANNER, (new Item.Properties()).tab(CreativeModeTab.TAB_DECORATIONS)));
 
+    // Bowl overrides
+    public static final RegistryObject<Item> BEETROOT_SOUP = ITEMS_VANILLA.register("beetroot_soup", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(Foods.BEETROOT_SOUP)));
+    public static final RegistryObject<Item> RABBIT_STEW = ITEMS_VANILLA.register("rabbit_stew", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(OdysseyFood.RABBIT_STEW)));
+    public static final RegistryObject<Item> MUSHROOM_STEW = ITEMS_VANILLA.register("mushroom_stew", () -> new StackableBowlItem((new Item.Properties()).tab(CreativeModeTab.TAB_FOOD).food(OdysseyFood.MUSHROOM_STEW)));
+
+    // Bucket of powder snow override
+    public static final RegistryObject<Item> POWDER_SNOW_BUCKET = ITEMS_VANILLA.register("powder_snow_bucket", () -> new OdysseyPowderSnowBucketItem((new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_MISC)));
 }
+

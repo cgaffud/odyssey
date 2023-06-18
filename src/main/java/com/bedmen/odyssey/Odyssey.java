@@ -12,14 +12,15 @@ import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyPowderSnowBucketItem;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.recipes.OdysseyRecipeBook;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.trades.OdysseyTrades;
-import com.bedmen.odyssey.util.BiomeUtil;
 import com.bedmen.odyssey.util.CompostUtil;
+import com.bedmen.odyssey.world.BiomeUtil;
 import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OdysseyGeneration;
 import com.bedmen.odyssey.world.gen.OreGen;
@@ -32,6 +33,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.animal.PolarBear;
+import net.minecraft.world.entity.monster.Husk;
+import net.minecraft.world.entity.monster.Stray;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraftforge.common.MinecraftForge;
@@ -91,6 +94,7 @@ public class Odyssey
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
             PoiType.WEAPONSMITH.matchingStates = ImmutableSet.copyOf(BlockRegistry.GRINDSTONE.get().getStateDefinition().getPossibleStates());
             OdysseyRecipeBook.init();
+            OdysseyPowderSnowBucketItem.registerDispenseBehavior();
 
             //Generation
             BiomeUtil.init();
@@ -107,7 +111,8 @@ public class Odyssey
             SpawnPlacements.register(EntityTypeRegistry.WRAITH.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Wraith::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.WRAITH_STALKER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WraithStalker::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.WRAITH_AMALGAM.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WraithAmalgam::spawnPredicate);
-//            SpawnPlacements.register(EntityTypeRegistry.BLADE_SPIDER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BladeSpider::spawnPredicate);
+            SpawnPlacements.register(EntityTypeRegistry.STRAY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OdysseyStray::spawnPredicate);
+            SpawnPlacements.register(EntityTypeRegistry.HUSK.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OdysseyHusk::spawnPredicate);
 
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
 //        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
@@ -127,11 +132,13 @@ public class Odyssey
     public static void onEntityAttributeCreation(final EntityAttributeCreationEvent event){
 //        event.put(EntityTypeRegistry.LUPINE.get(), LupineEntity.createAttributes().build());
 //        event.put(EntityTypeRegistry.ARCTIHORN.get(), ArctihornEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.HUSK.get(), Husk.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_ZOMBIE.get(), DungeonZombie.createAttributes().build());
         event.put(EntityTypeRegistry.FORGOTTEN.get(), Forgotten.createAttributes().build());
         event.put(EntityTypeRegistry.ENCASED_ZOMBIE.get(), EncasedZombie.createAttributes().build());
         event.put(EntityTypeRegistry.ENCASED_SKELETON.get(), EncasedSkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.SKELETON.get(), OdysseySkeleton.createAttributes().build());
+        event.put(EntityTypeRegistry.STRAY.get(), Stray.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());
@@ -141,6 +148,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathan.createAttributes().build());
         event.put(EntityTypeRegistry.POLAR_BEAR.get(), PolarBear.createAttributes().build());
         event.put(EntityTypeRegistry.ZOMBIE_BRUTE.get(), ZombieBrute.createAttributes().build());
+        event.put(EntityTypeRegistry.STRAY_BRUTE.get(), StrayBrute.createAttributes().build());
         event.put(EntityTypeRegistry.BARN_SPIDER.get(), BarnSpider.createAttributes().build());
         event.put(EntityTypeRegistry.WRAITH.get(), Wraith.createAttributes().build());
         event.put(EntityTypeRegistry.WRAITH_STALKER.get(), WraithStalker.createAttributes().build());

@@ -1,8 +1,10 @@
 package com.bedmen.odyssey.world.gen;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.FeatureRegistry;
+import com.bedmen.odyssey.world.BiomeUtil;
 import com.bedmen.odyssey.world.gen.feature.tree.GreatFoliagePlacer;
 import com.bedmen.odyssey.world.gen.feature.tree.GreatTrunkPlacer;
 import com.bedmen.odyssey.world.gen.feature.tree.LeaningTrunkPlacer;
@@ -73,7 +75,7 @@ public class TreeGen {
 //            if(event.getName().toString().equals("oddc:autumn_forest")) {
 //                gen.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, AUTUMN_FOREST);
 //            }
-            if(event.getName().toString().equals("oddc:tropics")) {
+            if(BiomeUtil.isBiome(event.getName(), BiomeRegistry.TROPICS.get())) {
                 gen.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PLACED_TREES_TROPICS);
             }
         }

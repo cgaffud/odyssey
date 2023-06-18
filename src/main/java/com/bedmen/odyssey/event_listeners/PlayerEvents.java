@@ -7,29 +7,38 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
+import com.bedmen.odyssey.util.GeneralUtil;
+import com.bedmen.odyssey.util.StringUtil;
+import com.bedmen.odyssey.world.BiomeUtil;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -41,7 +50,6 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents {
@@ -54,12 +62,26 @@ public class PlayerEvents {
             //Both Sides
             if(player instanceof OdysseyPlayer odysseyPlayer) {
                 odysseyPlayer.updateSniperScoping();
+                odysseyPlayer.updateBlizzardFogScaleO();
+                if(BiomeUtil.isInBlizzard(player) && GeneralUtil.isSurvival(player)){
+                    odysseyPlayer.decrementBlizzardFogScale();
+                } else {
+                    odysseyPlayer.incrementBlizzardFogScale();
+                }
             }
             //Server Side
             if(event.side == LogicalSide.SERVER){
-                if(!(player.isCreative() || player.isSpectator()) && player.level.dimensionType().ultraWarm()){
-                    if(!AspectUtil.hasFireProtectionOrResistance(player))
-                        player.setSecondsOnFire(1);
+                // Temperature
+                for(TemperatureSource temperatureSource: BiomeUtil.getTemperatureSourceList(player)){
+                    temperatureSource.tick(player);
+                }
+
+                // Heat Exhaustion
+                if(player instanceof OdysseyLivingEntity odysseyLivingEntity){
+                    float temperature = Mth.clamp(odysseyLivingEntity.getTemperature(), 0.0f, 1.0f);
+                    if(temperature > 0){
+                        player.causeFoodExhaustion(temperature * 0.02f);
+                    }
                 }
             } else { //Client Side
 
@@ -126,13 +148,7 @@ public class PlayerEvents {
         // Sweep
         if(canSweep){
             // Unchanging variables are needed to use in the below lambda expressions
-            player.level.getEntitiesOfClass(LivingEntity.class, mainHandItemStack.getSweepHitBox(player, target)).stream()
-                    .filter(livingEntity ->
-                            livingEntity != player
-                                    && livingEntity != target
-                                    && !player.isAlliedTo(livingEntity)
-                                    && (!(livingEntity instanceof ArmorStand) || !((ArmorStand)livingEntity).isMarker())
-                                    && player.distanceToSqr(livingEntity) < 9.0D)
+            WeaponUtil.getSweepLivingEntities(player, target, false)
                     .forEach(livingEntity -> livingEntity.hurt(DamageSource.playerAttack(player), sweepDamage));
 
             player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.0F);
@@ -168,8 +184,10 @@ public class PlayerEvents {
         Item item = itemStack.getItem();
         TooltipFlag tooltipFlag = event.getFlags();
         Player player = event.getPlayer();
-        Optional<Level> optionalLevel = player == null ? Optional.empty() : Optional.of(player.level);
         List<Component> componentList = new ArrayList<>();
+        
+        // Aspect Tooltips
+        Optional<Level> optionalLevel = player == null ? Optional.empty() : Optional.of(player.level);
         AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(optionalLevel, Optional.of(itemStack));
         if(item instanceof AspectItem aspectItem){
             List<AspectHolder> aspectHolderList = aspectItem.getAspectHolderList();
@@ -178,6 +196,35 @@ public class PlayerEvents {
             }
         }
         AspectUtil.addAddedModifierTooltip(itemStack, componentList, tooltipFlag, aspectTooltipContext);
+
+        // Food Item Tooltips
+        FoodProperties foodProperties = itemStack.getFoodProperties(player);
+        if(foodProperties != null){
+            List<Pair<MobEffectInstance, Float>> effectList = foodProperties.getEffects();
+            if(!effectList.isEmpty()){
+                for(Pair<MobEffectInstance, Float> pair: effectList){
+                    MobEffectInstance mobEffectInstance = pair.getFirst();
+                    float probability = pair.getSecond();
+                    MutableComponent mutablecomponent = new TranslatableComponent(mobEffectInstance.getDescriptionId());
+                    MobEffect mobeffect = mobEffectInstance.getEffect();
+
+                    if (mobEffectInstance.getAmplifier() > 0) {
+                        mutablecomponent = new TranslatableComponent("potion.withAmplifier", mutablecomponent, new TranslatableComponent("potion.potency." + mobEffectInstance.getAmplifier()));
+                    }
+
+                    if (mobEffectInstance.getDuration() > 20) {
+                        mutablecomponent = new TranslatableComponent("potion.withDuration", mutablecomponent, MobEffectUtil.formatDuration(mobEffectInstance, 1.0f));
+                    }
+
+                    if(probability < 1f){
+                        Style style = mutablecomponent.getStyle();
+                        mutablecomponent = mutablecomponent.append(new TranslatableComponent("potion.withChance", StringUtil.percentFormat(probability)).withStyle(style));
+                    }
+
+                    componentList.add(mutablecomponent.withStyle(mobeffect.getCategory().getTooltipFormatting()));
+                }
+            }
+        }
 
         List<Component> tooltip = event.getToolTip();
         tooltip.addAll(1, componentList);

@@ -3,16 +3,14 @@ package com.bedmen.odyssey.aspect.object;
 import com.bedmen.odyssey.aspect.AspectItemPredicates;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
-import com.bedmen.odyssey.util.BiomeUtil;
+import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.ForgeMod;
 
 import java.util.HashMap;
@@ -50,6 +48,7 @@ public class Aspects {
     public static final IntegerAspect HEXFLAME_DAMAGE = new IntegerAspect("hexflame_damage", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.MELEE, true);
     public static final FloatAspect COBWEB_CHANCE = new FloatAspect("cobweb_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE);
     public static final FloatAspect LARCENY_CHANCE = new FloatAspect("larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE);
+    public static final BooleanAspect COLD_SNAP = new BooleanAspect("cold_snap", 2.0f, AspectItemPredicates.MELEE);
 
     // # Ranged
 
@@ -70,6 +69,7 @@ public class Aspects {
     public static final FloatAspect PROJECTILE_LARCENY_CHANCE = new FloatAspect("projectile_larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE);
     public static final FloatAspect PROJECTILE_KNOCKBACK = new FloatAspect("projectile_knockback", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.PROJECTILE);
     public static final BooleanAspect HYDRODYNAMIC = new BooleanAspect("hydrodynamic", AspectItemPredicates.PROJECTILE);
+    public static final BooleanAspect SNOW_STORM = new BooleanAspect("snow_storm", 2.0f, AspectItemPredicates.PROJECTILE);
 
     // # Armor
     public static final DamageSourcePredicateAspect FEATHER_FALLING = new DamageSourcePredicateAspect("feather_falling", 1.0f, AspectItemPredicates.LOWER_ARMOR, damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);
@@ -78,13 +78,13 @@ public class Aspects {
     public static final DamageSourcePredicateAspect BLAST_PROTECTION = new DamageSourcePredicateAspect("blast_protection", 2.0f, AspectItemPredicates.ARMOR, DamageSource::isExplosion);
     public static final FloatAspect RESPIRATION = new FloatAspect("respiration", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.UPPER_ARMOR);
     public static final BooleanAspect SNOWSHOE = new BooleanAspect("snowshoe", AspectItemPredicates.BOOTS);
-    public static final IntegerAspect FREEZE_IMMUNITY = new IntegerAspect("freeze_immunity", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR, false);
     public static final FloatAspect THORNS = new FloatAspect("thorns", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR);
 
     // # Shields
     public static final ShieldDamageBlockAspect EXPLOSION_DAMAGE_BLOCK = new ShieldDamageBlockAspect("explosion_damage_block", DamageSource::isExplosion);
     public static final FloatAspect IMPENETRABILITY = new FloatAspect("impenetrability", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.SHIELD);
     public static final FloatAspect RECOVERY_SPEED = new FloatAspect("recovery_speed", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.SHIELD);
+    public static final BooleanAspect COLD_TO_THE_TOUCH = new BooleanAspect("cold_to_the_touch", 2.0f, AspectItemPredicates.SHIELD);
 
     // # Tools
     public static final FloatAspect EFFICIENCY = new FloatAspect("efficiency", 4.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.TOOL);
@@ -135,12 +135,12 @@ public class Aspects {
     // # Other
     public static final IntegerAspect TELEPORTATION_IMMUNITY = new IntegerAspect("teleportation_immunity", 0.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, false);
 
-    private static float getSunBoost(BlockPos pos, Level level) {
+    public static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
         return getSkyBoost(pos, level) * (time < 12000L ? 1.0f : 0.0f);
     }
 
-    private static float getMoonBoost(BlockPos pos, Level level) {
+    public static float getMoonBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
         return getSkyBoost(pos, level) * (time < 12000L ? 0.0f : 1.0f);
     }
@@ -166,9 +166,7 @@ public class Aspects {
     }
 
     public static float getHumidBoost(BlockPos pos, Level level) {
-        Holder<Biome> biomeHolder = level.getBiome(pos);
-        Biome biome = level.getBiome(pos).value();
-        return level.isRaining() && biome.getPrecipitation() == Biome.Precipitation.RAIN ? 1.0f : Mth.clamp(BiomeUtil.getClimate(biomeHolder).downfall, 0.0f, 1.0f);
+        return level.isRainingAt(pos) ? 1.0f : Mth.clamp(BiomeUtil.getClimate(level.getBiome(pos)).downfall, 0.0f, 1.0f);
     }
 
     public static float getDryBoost(BlockPos pos, Level level) {

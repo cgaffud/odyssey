@@ -4,8 +4,13 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.effect.TemperatureEffect;
+import com.bedmen.odyssey.entity.boss.coven.CovenRootEntity;
+import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -23,6 +28,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -99,6 +105,19 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
 
     protected abstract SoundEvent getEntityHitSoundEvent();
 
+    public void tick() {
+        super.tick();
+        if(this.hasAspect(Aspects.SNOW_STORM) && !this.inGround){
+            AABB boundingBox = this.getBoundingBox().inflate(2.0d);
+            if(!this.level.isClientSide){
+                this.level.getEntitiesOfClass(LivingEntity.class, boundingBox, livingEntity -> livingEntity != this.getOwner())
+                        .forEach(livingEntity -> livingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 20, 2, true)));
+            } else {
+                AspectUtil.doFrostAspectParticles(this, 1);
+            }
+        }
+    }
+
     protected float getEntityHitVolume(){
         return 1.0f;
     }
@@ -144,7 +163,6 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 return;
             }
             if (target instanceof LivingEntity livingEntity) {
-
                 if (!this.level.isClientSide && owner instanceof LivingEntity) {
                     EnchantmentHelper.doPostHurtEffects(livingEntity, owner);
                     EnchantmentHelper.doPostDamageEffects((LivingEntity)owner, livingEntity);
@@ -175,6 +193,13 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
                 if(!(this instanceof OdysseyArrow) || this.isCritArrow()){
                     Weaver.tryPlaceCobwebOnTarget(cobwebChance, livingEntity);
                 }
+                // Hexed Earth
+                if (livingEntity.getRandom().nextDouble() < this.getAspectStrength(Aspects.PROJECTILE_HEXED_EARTH)) {
+                    CovenRootEntity.createRootBlock(livingEntity.blockPosition(), livingEntity.level, 12);
+                    OverworldWitch.summonDripstoneAboveEntity(livingEntity.getPosition(1.0f), livingEntity.level, 1.5f,7, 5);
+                }
+                // Ranged Larceny
+                WeaponUtil.tryLarceny(this.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), this.getOwner(), livingEntity);
             }
 
             this.onHurt(target, true);

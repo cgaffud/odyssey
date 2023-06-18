@@ -3,12 +3,14 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
-import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
+import com.bedmen.odyssey.effect.FireEffect;
+import com.bedmen.odyssey.effect.FireType;
+import com.bedmen.odyssey.effect.TemperatureEffect;
+import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.entity.boss.coven.CovenRootEntity;
-import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
@@ -18,19 +20,20 @@ import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
-import com.bedmen.odyssey.potions.FireEffect;
-import com.bedmen.odyssey.potions.FireType;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tier.OdysseyTiers;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -60,6 +63,8 @@ import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents {
+
+    private static final float BRUTE_CHANCE = 0.05f;
 
     @SubscribeEvent
     public static void onLivingUpdateEvent(final LivingEvent.LivingUpdateEvent event) {
@@ -104,9 +109,44 @@ public class EntityEvents {
             FrostWalkerEnchantment.onEntityMoved(livingEntity, livingEntity.level, blockPos, 1);
         }
 
-        // Set Fire Type
-        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity && !livingEntity.level.isClientSide){
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity && !livingEntity.level.isClientSide && !livingEntity.isDeadOrDying()){
+            // Set Fire Type
             odysseyLivingEntity.setFireType(FireType.getStrongestFireEffectType(livingEntity));
+
+            // Temperature Sources
+            if(!(livingEntity instanceof Player player) || GeneralUtil.isSurvival(player)){
+                if(livingEntity.isInPowderSnow){
+                    TemperatureSource.POWDERED_SNOW.tick(livingEntity);
+                }
+                if(livingEntity.isInWaterRainOrBubble()){
+                    TemperatureSource.WATER_OR_RAIN.tick(livingEntity);
+                }
+                if(odysseyLivingEntity.getFireType().isNotNone() || livingEntity.isOnFire()){
+                    TemperatureSource.ON_FIRE.tick(livingEntity);
+                }
+            }
+
+            // Move own temperature toward 0 if not undead
+            if(!(livingEntity instanceof Mob mob) || mob.getMobType() != MobType.UNDEAD){
+                TemperatureSource.stabilizeTemperatureNaturally(odysseyLivingEntity);
+            }
+            for(boolean isHot: new boolean[]{true, false}){
+                float protectionStrength = AspectUtil.getProtectionAspectStrength(livingEntity, TemperatureSource.damageSource(isHot));
+                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, protectionStrength * -TemperatureSource.ONE_PERCENT_PER_SECOND * TemperatureSource.getHotFactor(isHot));
+            }
+
+            // Temperature Damage
+            if(livingEntity.tickCount % 10 == 0){
+                int damageCount = 0;
+                while(Mth.abs(odysseyLivingEntity.getTemperature()) >= 1.0f + TemperatureSource.TEMPERATURE_PER_DAMAGE){
+                    TemperatureSource.stabilizeTemperature(odysseyLivingEntity, TemperatureSource.TEMPERATURE_PER_DAMAGE);
+                    damageCount++;
+                }
+                if(damageCount > 0){
+                    livingEntity.hurt(TemperatureSource.damageSource(odysseyLivingEntity.isHot()), damageCount);
+                }
+
+            }
         }
     }
 
@@ -153,6 +193,13 @@ public class EntityEvents {
                 odysseyLivingEntity.pushKnockbackAspectQueue(AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
             }
 
+            // Cold Snap
+            if(AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.COLD_SNAP)){
+                WeaponUtil.getSweepLivingEntities(damageSourceLivingEntity, hurtLivingEntity, true)
+                                .forEach(livingEntity -> livingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false)));
+                OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> hurtLivingEntity), new ColdSnapAnimatePacket(hurtLivingEntity));
+            }
+
             // Thorns
             float thornsStrength = AspectUtil.getFloatAspectValueFromArmor(hurtLivingEntity, Aspects.THORNS);
             if(thornsStrength > 0.0f && 0.25f >= hurtLivingEntity.getRandom().nextFloat()){
@@ -166,13 +213,6 @@ public class EntityEvents {
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
             odysseyLivingEntity.pushKnockbackAspectQueue(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_KNOCKBACK));
-            // Ranged Larceny
-            WeaponUtil.tryLarceny(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), odysseyAbstractArrow.getOwner(), hurtLivingEntity);
-            // Hexed Earth
-            if (hurtLivingEntity.getRandom().nextDouble() < odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_HEXED_EARTH)) {
-                CovenRootEntity.createRootBlock(hurtLivingEntity.blockPosition(), hurtLivingEntity.getLevel(), 12);
-                OverworldWitch.summonDripstoneAboveEntity(hurtLivingEntity.getPosition(1.0f), hurtLivingEntity.getLevel(), 1.5f,7, 5);
-            }
         }
 
         if (hurtLivingEntity.hasEffect(EffectRegistry.VULNERABLE.get()))
@@ -231,13 +271,16 @@ public class EntityEvents {
     private static Map<EntityType<?>, EntityReplacementFunction> ENTITY_REPLACEMENT_MAP;
 
     public static void initEntityMap(){
-        ENTITY_REPLACEMENT_MAP = Map.of(
-                EntityType.SKELETON, EntityEvents::skeletonReplace,
-                EntityType.CREEPER, EntityEvents::creeperReplace,
-                EntityType.ZOMBIE, EntityEvents::zombieReplace,
-                EntityType.SPIDER, EntityEvents::spiderReplace,
-                EntityType.DROWNED, EntityEvents::zombieReplace,
-                EntityType.POLAR_BEAR, EntityEvents::polarBearReplace);
+        ENTITY_REPLACEMENT_MAP = new HashMap<>();
+        ENTITY_REPLACEMENT_MAP.put(EntityType.SKELETON, EntityEvents::skeletonReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.STRAY, EntityEvents::vanillaStrayReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityTypeRegistry.STRAY.get(), EntityEvents::odysseyStrayReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.CREEPER, EntityEvents::creeperReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.ZOMBIE, EntityEvents::zombieReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.HUSK, EntityEvents::huskReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.SPIDER, EntityEvents::spiderReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.DROWNED, EntityEvents::zombieReplace);
+        ENTITY_REPLACEMENT_MAP.put(EntityType.POLAR_BEAR, EntityEvents::polarBearReplace);
     }
 
     @SubscribeEvent
@@ -271,6 +314,17 @@ public class EntityEvents {
         return Optional.of(EntityTypeRegistry.SKELETON.get());
     }
 
+    private static Optional<EntityType<?>> vanillaStrayReplace(Mob mob, Random random){
+        return Optional.of(EntityTypeRegistry.STRAY.get());
+    }
+
+    private static Optional<EntityType<?>> odysseyStrayReplace(Mob mob, Random random){
+        if(random.nextFloat() < BRUTE_CHANCE){
+            return Optional.of(EntityTypeRegistry.STRAY_BRUTE.get());
+        }
+        return Optional.empty();
+    }
+
     private static Optional<EntityType<?>> creeperReplace(Mob mob, Random random){
         if(random.nextBoolean()){
             return Optional.of(EntityTypeRegistry.CAMO_CREEPER.get());
@@ -297,11 +351,14 @@ public class EntityEvents {
         if (random.nextFloat() < (-(y-8)/56)) {
             return Optional.of(EntityTypeRegistry.FORGOTTEN.get());
         }
-
-        if(random.nextFloat() < 0.05f){
+        if(random.nextFloat() < BRUTE_CHANCE){
             return Optional.of(EntityTypeRegistry.ZOMBIE_BRUTE.get());
         }
         return Optional.empty();
+    }
+
+    private static Optional<EntityType<?>> huskReplace(Mob mob, Random random){
+        return Optional.of(EntityTypeRegistry.HUSK.get());
     }
 
     private static Optional<EntityType<?>> spiderReplace(Mob mob, Random random){
@@ -376,6 +433,11 @@ public class EntityEvents {
                         damageBlockMultiplier = impenetrabilityAspect / piercingAspect;
                     }
                 }
+            }
+            if(AspectUtil.hasBooleanAspect(shield, Aspects.COLD_TO_THE_TOUCH)){
+                WeaponUtil.getSweepLivingEntities(livingEntity, livingEntity, false)
+                        .forEach(livingEntity1 -> livingEntity1.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false)));
+                OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> livingEntity), new ColdSnapAnimatePacket(livingEntity));
             }
             event.setBlockedDamage(damageBlockMultiplier * aspectShieldItem.getDamageBlock(shield, livingEntity.level.getDifficulty(), damageSource));
         }

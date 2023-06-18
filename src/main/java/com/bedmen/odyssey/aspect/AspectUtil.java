@@ -18,6 +18,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -28,6 +29,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -37,6 +39,7 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 import java.util.function.Function;
@@ -352,11 +355,6 @@ public class AspectUtil {
         }
     }
 
-    // For seeing if resistant to nether flame
-    public static boolean hasFireProtectionOrResistance(LivingEntity livingEntity) {
-        return getFloatAspectValueFromArmor(livingEntity, Aspects.FIRE_PROTECTION) > 0 || livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE);
-    }
-
     // Add/Remove added modifiers
 
     public static float getUsedModifiability(ItemStack itemStack){
@@ -420,8 +418,35 @@ public class AspectUtil {
     }
 
     // Apply poison damage
-
     public static void applyPoisonDamage(LivingEntity target, int poisonStrength){
         target.addEffect(new MobEffectInstance(MobEffects.POISON, 10 + (25 * poisonStrength), 0));
+    }
+
+    // Do frost snow particles
+    public static void doFrostAspectParticles(Entity entity, int count){
+        Random random = entity.level.random;
+        double x = entity.getX();
+        double y = entity.getY() + 0.5f * entity.getBbHeight();
+        double z = entity.getZ();
+        for(int i = 0; i < count; i++){
+            for(int xi = -1; xi <= 1; xi++){
+                for(int yi = -1; yi <= 1; yi++){
+                    for(int zi = -1; zi <= 1; zi++){
+                        if(!(xi == 0 && yi == 0 && zi == 0) && random.nextBoolean()){
+                            Vec3 velocity  = new Vec3(xi, yi, zi).add(getRandomSnowflakeVector(random)).normalize().scale(0.3d);
+                            entity.level.addParticle(ParticleTypes.SNOWFLAKE, x, y, z, velocity.x, velocity.y, velocity.z);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static Vec3 getRandomSnowflakeVector(Random random){
+        return new Vec3(getRandomSnowflakeSpeed(random), getRandomSnowflakeSpeed(random), getRandomSnowflakeSpeed(random));
+    }
+
+    private static double getRandomSnowflakeSpeed(Random random){
+        return random.nextDouble() * 0.4d - 0.2d;
     }
 }

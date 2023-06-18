@@ -272,12 +272,10 @@ def redistributeRedAndGreenImage(image, redStrength):
 # Hex Fire: redistributeRedAndGreenImage(image, 0.75) (on soul fire)
 # Leather to Parka Hide: recolorImage(image, [0.40,0.475,0.55], [0,0,0])
 
-openPath1 = r"/Users/cgaffud/Documents/modding/odyssey-new/python/image/creeper.png"
-image = openImage(openPath1)
-
-savePath = r"/Users/cgaffud/Documents/modding/odyssey-new/python/image/new.png"
-#recolorImage(image, [37/14, 54/43, 1], [-1499/14, -3865/43, 2])
-redistributeRedAndGreenImage(image, 0.75)
-saveImage(image, savePath)
+openPath1 = r"C:\Users\18029\Downloads\shield.png"
+image1 = openImage(openPath1)
+savePath = r"C:\Users\18029\Downloads\shield1.png"
+recolorImage(image1, [0.8,0.8,0.8], [0,0,0])
+saveImage(image1, savePath)
 
 print("Done")

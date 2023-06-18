@@ -95,10 +95,6 @@ public class PassiveWeaver extends Animal {
         return (double)(this.getBbHeight() * 0.5F);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-    }
-
     public void tick() {
         super.tick();
         if(this.random.nextFloat() < STRING_CHANCE && this.stringTimer < MAX_STRING_TIMER){

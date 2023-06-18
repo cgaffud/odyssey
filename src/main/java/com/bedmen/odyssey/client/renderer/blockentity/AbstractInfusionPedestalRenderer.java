@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.client.renderer.blockentity;
 
 import com.bedmen.odyssey.block.entity.AbstractInfusionPedestalBlockEntity;
-import com.bedmen.odyssey.block.entity.InfusionPedestalBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
