@@ -26,8 +26,8 @@ public class SkeletonOuterLayer<T extends Mob & RangedAttackMob, M extends Entit
         this.layerModel = new SkeletonModel<>(p_174545_.bakeLayer(ModelLayers.STRAY_OUTER_LAYER));
     }
 
-    public void render(PoseStack p_117553_, MultiBufferSource p_117554_, int p_117555_, T mob, float p_117557_, float p_117558_, float p_117559_, float p_117560_, float p_117561_, float p_117562_) {
-        if ((mob instanceof EncasedSkeleton encasedSkeleton) && (encasedSkeleton.getArmorHealth() > 0))
-            coloredCutoutModelCopyLayerRender(this.getParentModel(), this.layerModel, ENCASED_OUTER_LAYER, p_117553_, p_117554_, p_117555_, mob, p_117557_, p_117558_, p_117560_, p_117561_, p_117562_, p_117559_, 1.0F, 1.0F, 1.0F);
+    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int p_117555_, T mob, float p_117557_, float p_117558_, float p_117559_, float p_117560_, float p_117561_, float p_117562_) {
+        if ((mob instanceof EncasedSkeleton encasedSkeleton) && encasedSkeleton.hasStoneArmor())
+            coloredCutoutModelCopyLayerRender(this.getParentModel(), this.layerModel, ENCASED_OUTER_LAYER, poseStack, multiBufferSource, p_117555_, mob, p_117557_, p_117558_, p_117560_, p_117561_, p_117562_, p_117559_, 1.0F, 1.0F, 1.0F);
     }
 }

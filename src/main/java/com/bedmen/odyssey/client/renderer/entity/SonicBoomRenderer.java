@@ -2,6 +2,7 @@ package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.projectile.SonicBoom;
+import com.bedmen.odyssey.util.RenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -16,44 +17,26 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class SonicBoomRenderer<T extends SonicBoom> extends EntityRenderer<T> {
-    public static final ResourceLocation SONIC_BOOM_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/abandoned_iron_golem/sonic_boom.png");
+    public static final ResourceLocation SONIC_BOOM_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/sonic_boom.png");
     public SonicBoomRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
-    public void render(T sonicBoom, float p_113840_, float p_113841_, PoseStack poseStack, MultiBufferSource multiBufferSource, int p_113844_) {
+    public void render(T sonicBoom, float yRot, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
         poseStack.pushPose();
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(p_113841_, sonicBoom.yRotO, sonicBoom.getYRot()) - 90.0F));
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerp(p_113841_, sonicBoom.xRotO, sonicBoom.getXRot())));
-        int i = 0;
-        float f = 0.0F;
-        float f1 = 0.5F;
-        float f2 = 0.0F;
-        float f3 = 0.15625F;
-        float f4 = 0.0F;
-        float f5 = 0.15625F;
-        float f6 = 0.15625F;
-        float f7 = 0.3125F;
-        float f8 = 0.05625F;
-
+        float scale = 1f/16f;
+        poseStack.scale(scale, scale, scale);
+        poseStack.translate(0.0D, 4.0D, 0.0D);
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(partialTicks, sonicBoom.yRotO, sonicBoom.getYRot()) - 90.0F));
+        poseStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerp(partialTicks, sonicBoom.xRotO, sonicBoom.getXRot())));
         poseStack.mulPose(Vector3f.XP.rotationDegrees(45.0F));
-        poseStack.scale(0.05625F, 0.05625F, 0.05625F);
         poseStack.translate(-4.0D, 0.0D, 0.0D);
         VertexConsumer vertexconsumer = multiBufferSource.getBuffer(RenderType.entityCutout(this.getTextureLocation(sonicBoom)));
-        PoseStack.Pose posestack$pose = poseStack.last();
-        Matrix4f matrix4f = posestack$pose.pose();
-        Matrix3f matrix3f = posestack$pose.normal();
 
-        for(int j = 0; j < 4; ++j) {
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
-            this.vertex(matrix4f, matrix3f, vertexconsumer, -8, -8, 0, 0.0F, 0.0F, 0, 1, 0, p_113844_);
-            this.vertex(matrix4f, matrix3f, vertexconsumer, 8, -8, 0, 1F, 0.0F, 0, 1, 0, p_113844_);
-            this.vertex(matrix4f, matrix3f, vertexconsumer, 8, 8, 0, 1F, 1F, 0, 1, 0, p_113844_);
-            this.vertex(matrix4f, matrix3f, vertexconsumer, -8, 8, 0, 0.0F, 1F, 0, 1, 0, p_113844_);
-        }
+        RenderUtil.xShapeProjectileVertices(poseStack, vertexconsumer, 9, 14, 0, 0, 9f/32f, 14f/32f, packedLight);
 
         poseStack.popPose();
-        super.render(sonicBoom, p_113840_, p_113841_, poseStack, multiBufferSource, p_113844_);
+        super.render(sonicBoom, yRot, partialTicks, poseStack, multiBufferSource, packedLight);
     }
 
     @Override
@@ -61,7 +44,4 @@ public class SonicBoomRenderer<T extends SonicBoom> extends EntityRenderer<T> {
         return SONIC_BOOM_LOCATION;
     }
 
-    public void vertex(Matrix4f p_113826_, Matrix3f p_113827_, VertexConsumer p_113828_, int p_113829_, int p_113830_, int p_113831_, float p_113832_, float p_113833_, int p_113834_, int p_113835_, int p_113836_, int p_113837_) {
-        p_113828_.vertex(p_113826_, (float)p_113829_, (float)p_113830_, (float)p_113831_).color(255, 255, 255, 255).uv(p_113832_, p_113833_).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_113837_).normal(p_113827_, (float)p_113834_, (float)p_113836_, (float)p_113835_).endVertex();
-    }
 }

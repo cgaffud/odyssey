@@ -229,7 +229,6 @@ public class ClientEvents {
         event.registerLayerDefinition(ArmedCovenWitchModel.LAYER_LOCATION, ArmedCovenWitchModel::createBodyLayer);
         event.registerLayerDefinition(CovenRootModel.LAYER_LOCATION, CovenRootModel::createBodyLayer);
         event.registerLayerDefinition(SpearModel.LAYER_LOCATION, SpearModel::createBodyLayer);
-        event.registerLayerDefinition(DripstoneShardModel.LAYER_LOCATION, DripstoneShardModel::createBodyLayer);
         event.registerLayerDefinition(BladeSpiderModel.LAYER_LOCATION, BladeSpiderModel::createBodyLayer);
         event.registerLayerDefinition(ForgottenModel.LAYER_LOCATION, ForgottenModel::createBodyLayer);
         event.registerLayerDefinition(DripstoneCreeperModel.LAYER_LOCATION, DripstoneCreeperModel::createBodyLayer);

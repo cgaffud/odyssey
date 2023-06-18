@@ -25,6 +25,6 @@ public class EncasedZombieRenderer<T extends EncasedZombie> extends AbstractZomb
     }
 
     public ResourceLocation getTextureLocation(EncasedZombie encasedZombie) {
-        return (encasedZombie.getArmorHealth() > 0) ? this.ENCASED_LOCATION : ENCASED_BROKEN_LOCATION;
+        return encasedZombie.hasStoneArmor() ? ENCASED_LOCATION : ENCASED_BROKEN_LOCATION;
     }
 }

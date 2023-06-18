@@ -26,9 +26,13 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
         super(context, () -> new CamoCreeperModel<>(context.bakeLayer(ModelLayers.CREEPER)));
     }
 
+    public ResourceLocation getTextureLocation(CamoCreeper camoCreeper){
+        return getTexture(camoCreeper);
+    }
+
    
-    public static ResourceLocation getTexture(OdysseyCreeper odysseyCreeper) {
-        Biome biome = ((CamoCreeper)odysseyCreeper).getBiome();
+    public static ResourceLocation getTexture(CamoCreeper camoCreeper) {
+        Biome biome = camoCreeper.getBiome();
 
         if(biome == null || Objects.equals(biome.getRegistryName(), Biomes.LUSH_CAVES.location())){
             return GRAY_CREEPER_LOCATION;
@@ -38,17 +42,17 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
             return DRIPSTONE_CREEPER_LOCATION;
         }
 
-        if (odysseyCreeper.position().y < 0) {
+        if (camoCreeper.position().y < 0) {
             return DEEPSLATE_CREEPER_LOCATION;
         }
 
-        if (odysseyCreeper.position().y < 56
+        if (camoCreeper.position().y < 56
                 || Objects.equals(biome.getRegistryName(), Biomes.STONY_PEAKS.location())
                 || Objects.equals(biome.getRegistryName(), Biomes.STONY_SHORE.location())) {
             return STONE_CREEPER_LOCATION;
         }
 
-        if(biome.coldEnoughToSnow(odysseyCreeper.blockPosition())){
+        if(biome.coldEnoughToSnow(camoCreeper.blockPosition())){
             return SNOW_CREEPER_LOCATION;
         }
 
