@@ -24,11 +24,12 @@ public class SonicBoomRenderer<T extends SonicBoom> extends EntityRenderer<T> {
 
     public void render(T sonicBoom, float yRot, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
         poseStack.pushPose();
+        float scale = 1f/16f;
+        poseStack.scale(scale, scale, scale);
+        poseStack.translate(0.0D, 4.0D, 0.0D);
         poseStack.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(partialTicks, sonicBoom.yRotO, sonicBoom.getYRot()) - 90.0F));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerp(partialTicks, sonicBoom.xRotO, sonicBoom.getXRot())));
-
         poseStack.mulPose(Vector3f.XP.rotationDegrees(45.0F));
-        poseStack.scale(0.05625F, 0.05625F, 0.05625F);
         poseStack.translate(-4.0D, 0.0D, 0.0D);
         VertexConsumer vertexconsumer = multiBufferSource.getBuffer(RenderType.entityCutout(this.getTextureLocation(sonicBoom)));
 
