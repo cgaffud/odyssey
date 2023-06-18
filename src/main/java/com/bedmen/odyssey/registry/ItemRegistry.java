@@ -418,7 +418,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> BLADE_SPIDER_SPAWN_EGG = ITEMS.register("blade_spider_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.BLADE_SPIDER, 0x3C3C44, 0xA80E0E, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> FORGOTTEN_SPAWN_EGG = ITEMS.register("forgotten_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.FORGOTTEN, 0x4b4c49, 0x7b8d84, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> ENCASED_ZOMBIE_SPAWN_EGG = ITEMS.register("encased_zombie_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.ENCASED_ZOMBIE, 0x757774, 0x927965, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
-    public static final RegistryObject<Item> ENCASED_SKELETON_SPAWN_EGG = ITEMS.register("encased_skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.SKELETON, 0xa5a5a5, 0x927965, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> ENCASED_SKELETON_SPAWN_EGG = ITEMS.register("encased_skeleton_spawn_egg", () -> new OdysseySpawnEggItem(EntityTypeRegistry.ENCASED_SKELETON, 0xa5a5a5, 0x927965, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
 
     // # No Creative Tab
     public static final RegistryObject<Item> UNOBTAINABLE = ITEMS.register("unobtainable", ()-> new Item((new Item.Properties())));

@@ -25,6 +25,7 @@ public class OdysseyBiomeEntitySpawn {
     public static MobSpawnSettings.SpawnerData WRAITH_STALKER;
     public static MobSpawnSettings.SpawnerData WRAITH_AMALGAM;
     public static MobSpawnSettings.SpawnerData BLADE_SPIDER;
+
 //    public static MobCategory HARD_BIOME =  MobCategory.create("hard_biome", "hard_biome", 35, false, false, 128);
 
     public static void registerSpawners() {
