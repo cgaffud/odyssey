@@ -2,6 +2,8 @@ package com.bedmen.odyssey.client.renderer;
 
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
+import com.google.common.base.MoreObjects;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
@@ -83,7 +85,7 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
                 } else {
                     this.renderOneHandedMap(poseStack, multiBufferSource, packedLight, swingProgress, humanoidarm, p_109376_, itemStack);
                 }
-            } else if (itemStack.is(Items.CROSSBOW)) {
+            } else if (itemStack.is(OdysseyItemTags.CROSSBOWS)) {
                 boolean flag1 = CrossbowItem.isCharged(itemStack);
                 boolean flag2 = humanoidarm == HumanoidArm.RIGHT;
                 int i = flag2 ? 1 : -1;
@@ -198,5 +200,59 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
 
             poseStack.popPose();
         }
+    }
+
+    public void renderHandsWithItems(float p_109315_, PoseStack p_109316_, MultiBufferSource.BufferSource p_109317_, LocalPlayer p_109318_, int p_109319_) {
+        float f = p_109318_.getAttackAnim(p_109315_);
+        InteractionHand interactionhand = MoreObjects.firstNonNull(p_109318_.swingingArm, InteractionHand.MAIN_HAND);
+        float f1 = Mth.lerp(p_109315_, p_109318_.xRotO, p_109318_.getXRot());
+        ItemInHandRenderer.HandRenderSelection iteminhandrenderer$handrenderselection = evaluateWhichHandsToRender(p_109318_);
+        float f2 = Mth.lerp(p_109315_, p_109318_.xBobO, p_109318_.xBob);
+        float f3 = Mth.lerp(p_109315_, p_109318_.yBobO, p_109318_.yBob);
+        p_109316_.mulPose(Vector3f.XP.rotationDegrees((p_109318_.getViewXRot(p_109315_) - f2) * 0.1F));
+        p_109316_.mulPose(Vector3f.YP.rotationDegrees((p_109318_.getViewYRot(p_109315_) - f3) * 0.1F));
+        if (iteminhandrenderer$handrenderselection.renderMainHand) {
+            float f4 = interactionhand == InteractionHand.MAIN_HAND ? f : 0.0F;
+            float f5 = 1.0F - Mth.lerp(p_109315_, this.oMainHandHeight, this.mainHandHeight);
+            if(!net.minecraftforge.client.ForgeHooksClient.renderSpecificFirstPersonHand(InteractionHand.MAIN_HAND, p_109316_, p_109317_, p_109319_, p_109315_, f1, f4, f5, this.mainHandItem))
+                this.renderArmWithItem(p_109318_, p_109315_, f1, InteractionHand.MAIN_HAND, f4, this.mainHandItem, f5, p_109316_, p_109317_, p_109319_);
+        }
+
+        if (iteminhandrenderer$handrenderselection.renderOffHand) {
+            float f6 = interactionhand == InteractionHand.OFF_HAND ? f : 0.0F;
+            float f7 = 1.0F - Mth.lerp(p_109315_, this.oOffHandHeight, this.offHandHeight);
+            if(!net.minecraftforge.client.ForgeHooksClient.renderSpecificFirstPersonHand(InteractionHand.OFF_HAND, p_109316_, p_109317_, p_109319_, p_109315_, f1, f6, f7, this.offHandItem))
+                this.renderArmWithItem(p_109318_, p_109315_, f1, InteractionHand.OFF_HAND, f6, this.offHandItem, f7, p_109316_, p_109317_, p_109319_);
+        }
+
+        p_109317_.endBatch();
+    }
+
+    static ItemInHandRenderer.HandRenderSelection evaluateWhichHandsToRender(LocalPlayer localPlayer) {
+        ItemStack itemstack = localPlayer.getMainHandItem();
+        ItemStack itemstack1 = localPlayer.getOffhandItem();
+        boolean flag = itemstack.is(OdysseyItemTags.BOWS) || itemstack1.is(OdysseyItemTags.BOWS);
+        boolean flag1 = itemstack.is(OdysseyItemTags.CROSSBOWS) || itemstack1.is(OdysseyItemTags.CROSSBOWS);
+        if (!flag && !flag1) {
+            return ItemInHandRenderer.HandRenderSelection.RENDER_BOTH_HANDS;
+        } else if (localPlayer.isUsingItem()) {
+            return selectionUsingItemWhileHoldingBowLike(localPlayer);
+        } else {
+            return isChargedCrossbow(itemstack) ? ItemInHandRenderer.HandRenderSelection.RENDER_MAIN_HAND_ONLY : ItemInHandRenderer.HandRenderSelection.RENDER_BOTH_HANDS;
+        }
+    }
+
+    private static ItemInHandRenderer.HandRenderSelection selectionUsingItemWhileHoldingBowLike(LocalPlayer localPlayer) {
+        ItemStack itemstack = localPlayer.getUseItem();
+        InteractionHand interactionhand = localPlayer.getUsedItemHand();
+        if (!itemstack.is(OdysseyItemTags.BOWS) && !itemstack.is(OdysseyItemTags.CROSSBOWS)) {
+            return interactionhand == InteractionHand.MAIN_HAND && isChargedCrossbow(localPlayer.getOffhandItem()) ? ItemInHandRenderer.HandRenderSelection.RENDER_MAIN_HAND_ONLY : ItemInHandRenderer.HandRenderSelection.RENDER_BOTH_HANDS;
+        } else {
+            return ItemInHandRenderer.HandRenderSelection.onlyForHand(interactionhand);
+        }
+    }
+
+    private static boolean isChargedCrossbow(ItemStack itemStack) {
+        return itemStack.is(OdysseyItemTags.CROSSBOWS) && CrossbowItem.isCharged(itemStack);
     }
 }

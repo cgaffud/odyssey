@@ -14,6 +14,10 @@ public class OdysseyItemTags {
     public static final TagKey<Item> RAW_SILVERS = create("raw_silvers");
     public static final TagKey<Item> SHIELDS = create("shields");
     public static final TagKey<Item> SILVER_ORES = create("silver_ores");
+
+    public static final TagKey<Item> BOWS = create("bows");
+
+    public static final TagKey<Item> CROSSBOWS = create("crossbows");
     
     private static TagKey<Item> create(String name) {
         return ForgeRegistries.ITEMS.tags().createTagKey(new ResourceLocation(Odyssey.MOD_ID, name));

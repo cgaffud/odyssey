@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:bow",
+    "oddc:bone_long_bow",
+    "oddc:bone_repeater",
+    "oddc:bown",
+    "oddc:greatroot_long_bow",
+    "oddc:greatroot_repeater",
+    "oddc:greatroot_sniper_bow",
+    "oddc:void_bow"
+  ]
+}

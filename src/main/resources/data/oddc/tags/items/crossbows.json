@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:crossbow",
+    "oddc:bone_slug_bow",
+    "oddc:greatroot_slug_bow",
+    "oddc:greatroot_shot_bow",
+    "oddc:greatroot_crossbow"
+  ]
+}
