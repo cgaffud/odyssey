@@ -80,8 +80,8 @@ public class AlloyingCategory extends OdysseyFurnaceCategory<AlloyRecipe> {
         IDrawableAnimated arrow = getArrow(recipe);
         arrow.draw(poseStack, 33, 18);
 
-        drawExperience(recipe, poseStack, 0);
-        drawCookTime(recipe, poseStack, 45);
+        drawExperience(recipe, poseStack, getWidth(), 0, true);
+        drawCookTime(recipe, poseStack, getWidth(), 45, true);
     }
 
     @Override
@@ -91,12 +91,12 @@ public class AlloyingCategory extends OdysseyFurnaceCategory<AlloyRecipe> {
 
 
     public void setRecipe(IRecipeLayoutBuilder builder, AlloyRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(INPUT, 0, 0)
+        builder.addSlot(INPUT, 1, 1)
                 .addIngredients(recipe.getIngredients().get(inputSlot1));
-        builder.addSlot(INPUT, 18, 0)
+        builder.addSlot(INPUT, 19, 1)
                 .addIngredients(recipe.getIngredients().get(inputSlot2));
 
-        builder.addSlot(OUTPUT, 69, 18)
+        builder.addSlot(OUTPUT, 70, 19)
                 .addItemStack(recipe.getResultItem());
     }
 

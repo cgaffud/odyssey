@@ -5,15 +5,19 @@
   },
   "pedestalRequirementList": [
     {
-      "isIngredient": false,
-      "object": {
+      "ingredient": {
+        "item": "oddc:sun_sword"
+      },
+      "aspectInstance": {
         "aspect": "solar_strength",
         "strength": 0.5
       }
     },
     {
-      "isIngredient": false,
-      "object": {
+      "ingredient": {
+        "item": "oddc:moon_sword"
+      },
+      "aspectInstance": {
         "aspect": "lunar_strength",
         "strength": 1.0
       }

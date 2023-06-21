@@ -45,23 +45,20 @@ public class StitchingCategory implements IRecipeCategory<StitchingRecipe> {
         return icon;
     }
 
-    public void draw(StitchingRecipe recipe, PoseStack poseStack, double mouseX, double mouseY) {
-    }
-
     @Override
     public Component getTitle() {
         return localizedName;
     }
 
     public void setRecipe(IRecipeLayoutBuilder builder, StitchingRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(INPUT, 0, 9)
+        builder.addSlot(INPUT, 1, 10)
                 .addIngredients(recipe.getIngredients().get(inputSlot1));
-        builder.addSlot(INPUT, 64, 9)
+        builder.addSlot(INPUT, 65, 10)
                 .addIngredients(recipe.getIngredients().get(inputSlot2));
-        builder.addSlot(INPUT, 32, 9)
+        builder.addSlot(INPUT, 33, 10)
                 .addIngredients(recipe.getIngredients().get(fiberSlot));
 
-        builder.addSlot(OUTPUT, 108, 9)
+        builder.addSlot(OUTPUT, 109, 10)
                 .addItemStack(recipe.getResultItem());
     }
 

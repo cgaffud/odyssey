@@ -26,8 +26,6 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class WeavingCategory implements IRecipeCategory<WeavingRecipe> {
     protected static final int inputSlot = 0;
-    protected static final int outputSlot = 1;
-
     private final IDrawable background;
     private final IDrawable icon;
     private final Component localizedName;
@@ -46,7 +44,7 @@ public class WeavingCategory implements IRecipeCategory<WeavingRecipe> {
                 .build(new CacheLoader<>() {
                     @Override
                     public IDrawableAnimated load(Integer weaveTime) {
-                        return guiHelper.drawableBuilder(TEXTURE, 18, 28, 68, 28)
+                        return guiHelper.drawableBuilder(TEXTURE, 105, 0, 68, 28)
                                 .buildAnimated(weaveTime, IDrawableAnimated.StartDirection.LEFT, false);
                     }
                 });
@@ -69,7 +67,7 @@ public class WeavingCategory implements IRecipeCategory<WeavingRecipe> {
     @Override
     public void draw(WeavingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack poseStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = getArrow(recipe);
-        arrow.draw(poseStack, 33, 18);
+        arrow.draw(poseStack, 18, 0);
     }
 
     @Override
@@ -78,10 +76,10 @@ public class WeavingCategory implements IRecipeCategory<WeavingRecipe> {
     }
 
     public void setRecipe(IRecipeLayoutBuilder builder, WeavingRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(INPUT, 0, 5)
+        builder.addSlot(INPUT, 1, 6)
                 .addIngredients(recipe.getIngredients().get(inputSlot));
 
-        builder.addSlot(OUTPUT, 86, 5)
+        builder.addSlot(OUTPUT, 87, 6)
                 .addItemStack(recipe.getResultItem());
     }
 

@@ -92,7 +92,7 @@ public class PassiveWeaver extends Animal {
     }
 
     public double getPassengersRidingOffset() {
-        return (double)(this.getBbHeight() * 0.5F);
+        return this.getBbHeight() * 0.5F;
     }
 
     public void tick() {

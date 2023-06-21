@@ -34,17 +34,17 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 public class InfuserCraftingCategory implements IRecipeCategory<InfuserCraftingRecipe> {
 
     protected static final int inputCenter = 0;
-    protected static final int inputNorth = 1;
-    protected static final int inputWest = 2;
-    protected static final int inputSouth = 3;
-    protected static final int inputEast = 4;
+    protected static final int inputWest = 1;
+    protected static final int inputNorth = 2;
+    protected static final int inputEast = 3;
+    protected static final int inputSouth = 4;
 
     private final Component localizedName;
     private final IDrawable background;
     private final IDrawable icon;
     private final List<LoadingCache<Integer, IDrawableAnimated>> cachedArrowsList;
     private static final int[] xArrowOffsets = {19, 35, 56, 35};
-    private static final int[] yArrowOffsets = {35, 19, 35, 56};
+    private static final int[] yArrowOffsets = {34, 18, 34, 55};
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/infuser.png");
 
@@ -93,18 +93,18 @@ public class InfuserCraftingCategory implements IRecipeCategory<InfuserCraftingR
     }
 
     public void setRecipe(IRecipeLayoutBuilder builder, InfuserCraftingRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(INPUT, 36, 36)
+        builder.addSlot(INPUT, 37, 37)
                 .addIngredients(recipe.getIngredients().get(inputCenter));
-        builder.addSlot(INPUT, 36, 0)
+        builder.addSlot(INPUT, 37, 1)
                 .addIngredients(recipe.getIngredients().get(inputNorth));
-        builder.addSlot(INPUT, 0, 36)
+        builder.addSlot(INPUT, 1, 37)
                 .addIngredients(recipe.getIngredients().get(inputWest));
-        builder.addSlot(INPUT, 72, 36)
+        builder.addSlot(INPUT, 73, 37)
                 .addIngredients(recipe.getIngredients().get(inputSouth));
-        builder.addSlot(INPUT, 36, 72)
+        builder.addSlot(INPUT, 37, 73)
                 .addIngredients(recipe.getIngredients().get(inputEast));
 
-        builder.addSlot(OUTPUT, 117, 36)
+        builder.addSlot(OUTPUT, 118, 37)
                 .addItemStack(recipe.getResultItem());
     }
 

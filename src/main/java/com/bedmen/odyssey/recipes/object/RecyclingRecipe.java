@@ -23,27 +23,28 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.Lazy;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class RecyclingRecipe extends OdysseyFurnaceRecipe {
     protected final ResourceLocation id;
     protected final Ingredient ingredient;
+    protected final NonNullList<Ingredient> ingredientList = NonNullList.create();
     protected final Map<Metal, Integer> metalCounts;
     protected final int countTotal;
+    public final ItemStack[][] jeiOutput = new ItemStack[RecyclingFurnaceBlockEntity.NUM_ROWS][RecyclingFurnaceBlockEntity.NUM_COLUMNS];
     protected static final float PENALTY = 2.0f/3.0f;
     protected static final int MAX_METALS = 3;
     protected static final int DEFAULT_COOK_TIME= 100;
 
-    public RecyclingRecipe(ResourceLocation idIn, Ingredient ingredientIn, Map<Metal, Integer> metalCounts) {
-        this.id = idIn;
-        this.ingredient = ingredientIn;
+    public RecyclingRecipe(ResourceLocation resourceLocation, Ingredient ingredient, Map<Metal, Integer> metalCounts) {
+        this.id = resourceLocation;
+        this.ingredient = ingredient;
+        this.ingredientList.add(this.ingredient);
         this.metalCounts = metalCounts;
         this.countTotal = metalCounts.values().stream().reduce(0, Integer::sum);
+        this.setJEIOutput();
     }
 
     public boolean matches(Container container, Level level) {
@@ -83,32 +84,26 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
     }
 
     public NonNullList<Ingredient> getIngredients() {
-        NonNullList<Ingredient> nonnulllist = NonNullList.create();
-        nonnulllist.add(this.ingredient);
-        return nonnulllist;
+        return this.ingredientList;
     }
 
-    public ItemStack[][] getOutputForJEI() {
-        ItemStack[][] jeiOutput = new ItemStack[RecyclingFurnaceBlockEntity.NUM_ROWS][RecyclingFurnaceBlockEntity.NUM_COLUMNS];
+    public void setJEIOutput() {
         int i = 0;
         for(Map.Entry<Metal, Integer> metalCountEntry : this.metalCounts.entrySet()){
-            i++;
             Metal metal = metalCountEntry.getKey();
-            int count = metalCountEntry.getValue();
-            int blockCount = count / 81;
-            count -= blockCount * 81;
-            int ingotCount = count / 9;
-            count -= ingotCount * 9;
-            jeiOutput[i][0] = count > 0 ? new ItemStack(metal.getNugget(), count) : ItemStack.EMPTY;
-            jeiOutput[i][1] = count > 0 ? new ItemStack(metal.getBlock(), count) : ItemStack.EMPTY;
-            jeiOutput[i][2] = count > 0 ? new ItemStack(metal.getBlock(), count) : ItemStack.EMPTY;
+            int nuggetCount = metalCountEntry.getValue();
+            int blockCount = nuggetCount / 81;
+            nuggetCount -= blockCount * 81;
+            int ingotCount = nuggetCount / 9;
+            nuggetCount -= ingotCount * 9;
+            this.jeiOutput[i][0] = nuggetCount > 0 ? new ItemStack(metal.getNugget(), nuggetCount) : ItemStack.EMPTY;
+            this.jeiOutput[i][1] = ingotCount > 0 ? new ItemStack(metal.getIngot(), ingotCount) : ItemStack.EMPTY;
+            this.jeiOutput[i][2] = blockCount > 0 ? new ItemStack(metal.getBlock(), blockCount) : ItemStack.EMPTY;
+            i++;
         }
-        for(; i < 3; i++){
-            jeiOutput[i][0] = ItemStack.EMPTY;
-            jeiOutput[i][1] = ItemStack.EMPTY;
-            jeiOutput[i][2] = ItemStack.EMPTY;
+        for(; i < RecyclingFurnaceBlockEntity.NUM_ROWS; i++){
+            Arrays.fill(this.jeiOutput[i], ItemStack.EMPTY);
         }
-        return jeiOutput;
     }
 
     /**

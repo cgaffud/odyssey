@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.plugins.jei.categories;
 
-import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.block.entity.RecyclingFurnaceBlockEntity;
 import com.bedmen.odyssey.client.gui.screens.RecyclingFurnaceScreen;
 import com.bedmen.odyssey.plugins.jei.OdysseyRecipeTypes;
@@ -19,7 +18,6 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -82,8 +80,8 @@ public class RecyclingCategory extends OdysseyFurnaceCategory<RecyclingRecipe> {
         IDrawableAnimated arrow = getArrow(recipe);
         arrow.draw(poseStack, 24, 18);
 
-        drawExperience(recipe, poseStack, 0);
-        drawCookTime(recipe, poseStack, 45);
+        drawExperience(recipe, poseStack, 19, 0, false);
+        drawCookTime(recipe, poseStack, 19, 45, false);
     }
 
     @Override
@@ -93,14 +91,13 @@ public class RecyclingCategory extends OdysseyFurnaceCategory<RecyclingRecipe> {
 
 
     public void setRecipe(IRecipeLayoutBuilder builder, RecyclingRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(INPUT, 0, 0)
+        builder.addSlot(INPUT, 1, 1)
                 .addIngredients(recipe.getIngredients().get(inputSlot));
 
-        ItemStack[][] ouputStacks = recipe.getOutputForJEI();
         for(int row = 0; row < RecyclingFurnaceBlockEntity.NUM_ROWS; row++){
             for(int col = 0; col < RecyclingFurnaceBlockEntity.NUM_COLUMNS; col++){
-                builder.addSlot(OUTPUT, 56+18*col, 18*row)
-                        .addIngredients(Ingredient.of(ouputStacks[row][col]));
+                builder.addSlot(OUTPUT, 57+18*col, 1+18*row)
+                        .addIngredients(Ingredient.of(recipe.jeiOutput[row][col]));
             }
         }
     }
