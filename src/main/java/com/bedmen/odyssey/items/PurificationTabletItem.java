@@ -9,7 +9,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +17,8 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class PurificationTabletItem extends Item {
 
@@ -44,7 +45,7 @@ public class PurificationTabletItem extends Item {
 
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
         super.appendHoverText(itemStack, level, tooltip, tooltipFlag);
-        tooltip.add(new TranslatableComponent("item.oddc.purification_tablet.purifies", getAspect(itemStack).getComponent()).withStyle(ChatFormatting.AQUA));
+        tooltip.add(Component.translatable("item.oddc.purification_tablet.purifies", getAspect(itemStack).getComponent()).withStyle(ChatFormatting.AQUA));
     }
 
     public static ItemStack createForAspect(Aspect aspect) {

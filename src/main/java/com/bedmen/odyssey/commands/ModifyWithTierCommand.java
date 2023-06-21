@@ -12,7 +12,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -22,16 +22,16 @@ import java.util.Collection;
 public class ModifyWithTierCommand {
 
     private static final DynamicCommandExceptionType ERROR_TIER = new DynamicCommandExceptionType((object) -> {
-        return new TranslatableComponent("commands.modifywithtier.failed.tier", object, AspectTierManager.HIGHEST_TIER);
+        return Component.translatable("commands.modifywithtier.failed.tier", object, AspectTierManager.HIGHEST_TIER);
     });
 
     private static final DynamicCommandExceptionType ERROR_NOT_LIVING_ENTITY = new DynamicCommandExceptionType((object) -> {
-        return new TranslatableComponent("commands.enchant.failed.entity", object);
+        return Component.translatable("commands.enchant.failed.entity", object);
     });
     private static final DynamicCommandExceptionType ERROR_NO_ITEM = new DynamicCommandExceptionType((object) -> {
-        return new TranslatableComponent("commands.enchant.failed.itemless", object);
+        return Component.translatable("commands.enchant.failed.itemless", object);
     });
-    private static final SimpleCommandExceptionType ERROR_NOTHING_HAPPENED = new SimpleCommandExceptionType(new TranslatableComponent("commands.enchant.failed"));
+    private static final SimpleCommandExceptionType ERROR_NOTHING_HAPPENED = new SimpleCommandExceptionType(Component.translatable("commands.enchant.failed"));
 
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(Commands.literal("modifywithtier")
@@ -72,9 +72,9 @@ public class ModifyWithTierCommand {
             throw ERROR_NOTHING_HAPPENED.create();
         } else {
             if (isSingleEntity) {
-                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modifywithtier.success.single", entityCollection.iterator().next().getDisplayName()), true);
+                commandSourceStack.sendSuccess(Component.translatable("commands.modifywithtier.success.single", entityCollection.iterator().next().getDisplayName()), true);
             } else {
-                commandSourceStack.sendSuccess(new TranslatableComponent("commands.modifywithtier.success.multiple", entityCollection.size()), true);
+                commandSourceStack.sendSuccess(Component.translatable("commands.modifywithtier.success.multiple", entityCollection.size()), true);
             }
 
             return numSuccess;

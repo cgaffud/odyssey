@@ -105,7 +105,7 @@ public class AspectInstance {
         friendlyByteBuf.writeNbt(this.toCompoundTag());
     }
 
-    public static BiConsumer<FriendlyByteBuf, AspectInstance> toNetworkStatic = (friendlyByteBuf, aspectInstance) -> aspectInstance.toNetwork(friendlyByteBuf);
+    public static FriendlyByteBuf.Writer<AspectInstance> toNetworkStatic = (friendlyByteBuf, aspectInstance) -> aspectInstance.toNetwork(friendlyByteBuf);
 
     @Nullable
     public static AspectInstance fromNetwork(FriendlyByteBuf friendlyByteBuf){

@@ -18,6 +18,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class InfuserBlock extends InfusionPedestalBlock implements INeedsToRegisterRenderType {
 
     protected static final VoxelShape BASE_1 = Block.box(0.0d, 0.0d, 0.0d, 16.0d, 2.0d, 16.0d);

@@ -23,6 +23,8 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class CovenHutDoorBlock extends TransparentDoorBlock implements EntityBlock {
 
     public CovenHutDoorBlock(Properties properties) {

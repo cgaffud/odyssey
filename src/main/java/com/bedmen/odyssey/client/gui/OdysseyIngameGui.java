@@ -15,12 +15,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.RenderProperties;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 
 import java.util.Optional;
 
-public class OdysseyIngameGui extends ForgeIngameGui
+public class OdysseyIngameGui extends ForgeGui
 {
     private static final ResourceLocation COCONUT_BLUR_LOCATION = new ResourceLocation(Odyssey.MOD_ID , "textures/misc/coconutblur.png");
     public static final ResourceLocation ODYSSEY_GUI_ICONS_LOCATION = new ResourceLocation(Odyssey.MOD_ID ,"textures/gui/icons.png");
@@ -125,7 +125,7 @@ public class OdysseyIngameGui extends ForgeIngameGui
 
         RenderSystem.enableBlend();
         int left = width / 2 - 91;
-        int top = height - left_height;
+        int top = height - leftHeight;
 
         int level = minecraft.player == null ? 80 : minecraft.player.getArmorValue();
         int imageYOffset = 9;
@@ -161,7 +161,7 @@ public class OdysseyIngameGui extends ForgeIngameGui
             }
             left += 8;
         }
-        left_height += 10;
+        leftHeight += 10;
 
         RenderSystem.disableBlend();
         minecraft.getProfiler().pop();
@@ -174,7 +174,7 @@ public class OdysseyIngameGui extends ForgeIngameGui
         Player player = (Player)this.minecraft.getCameraEntity();
         RenderSystem.enableBlend();
         int left = width / 2 + 91;
-        int top = height - right_height;
+        int top = height - rightHeight;
 
         if (player instanceof OdysseyLivingEntity odysseyLivingEntity)
         {
@@ -189,7 +189,7 @@ public class OdysseyIngameGui extends ForgeIngameGui
                     int x = (i < full ? 0 : 9);
                     blit(mStack, left - i * 8 - 9, top, x, 27, 9, 9);
                 }
-                right_height += 10;
+                rightHeight += 10;
             }
         }
 
@@ -209,7 +209,7 @@ public class OdysseyIngameGui extends ForgeIngameGui
             }
             else
             {
-                RenderProperties.get(item).renderHelmetOverlay(itemstack, minecraft.player, this.screenWidth, this.screenHeight, partialTicks);
+                IClientItemExtensions.of(item).renderHelmetOverlay(itemstack, minecraft.player, this.screenWidth, this.screenHeight, partialTicks);
             }
         }
     }

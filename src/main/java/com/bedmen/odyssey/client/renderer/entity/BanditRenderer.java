@@ -17,7 +17,7 @@ public class BanditRenderer extends IllagerRenderer<Bandit> {
 
     public BanditRenderer(EntityRendererProvider.Context context) {
         super(context, new IllagerModel<>(context.bakeLayer(ModelLayers.PILLAGER)), 0.5F);
-        this.addLayer(new ItemInHandLayer<>(this));
+        this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));;
     }
 
     public ResourceLocation getTextureLocation(Bandit bandit) {

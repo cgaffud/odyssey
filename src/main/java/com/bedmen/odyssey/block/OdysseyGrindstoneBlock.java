@@ -5,7 +5,6 @@ import com.bedmen.odyssey.util.OdysseyStats;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -92,7 +91,7 @@ public class OdysseyGrindstoneBlock extends FaceAttachedHorizontalDirectionalBlo
     public static final VoxelShape CEILING_EAST_WEST_RIGHT_LEG = Shapes.or(CEILING_EAST_WEST_RIGHT_POST, CEILING_EAST_WEST_RIGHT_PIVOT);
     public static final VoxelShape CEILING_EAST_WEST_ALL_LEGS = Shapes.or(CEILING_EAST_WEST_LEFT_LEG, CEILING_EAST_WEST_RIGHT_LEG);
     public static final VoxelShape CEILING_EAST_WEST_GRINDSTONE = Shapes.or(CEILING_EAST_WEST_ALL_LEGS, Block.box(2.0D, 0.0D, 4.0D, 14.0D, 12.0D, 12.0D));
-    private static final Component CONTAINER_TITLE = new TranslatableComponent("container.oddc.modifier_removal");
+    private static final Component CONTAINER_TITLE = Component.translatable("container.oddc.modifier_removal");
 
     public OdysseyGrindstoneBlock(BlockBehaviour.Properties properties) {
         super(properties);

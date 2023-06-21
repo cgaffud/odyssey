@@ -1,0 +1,14 @@
+{
+  "feature": "oddc:palm_tree",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "would_survive",
+        "state": {
+          "Name": "oddc:palm_sapling"
+        }
+      }
+    }
+  ]
+}

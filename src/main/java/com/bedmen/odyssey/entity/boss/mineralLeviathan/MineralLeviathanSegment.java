@@ -11,6 +11,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -227,9 +228,9 @@ public abstract class MineralLeviathanSegment extends BossSubEntity<MineralLevia
             return this.maxHealth;
         }
 
-        public static ShellType getRandomShellType(Random random){
+        public static ShellType getRandomShellType(RandomSource randomSource){
             ShellType[] values = ShellType.values();
-            return values[random.nextInt(values.length-1)+1];
+            return values[randomSource.nextInt(values.length-1)+1];
         }
 
         public void spawnLoot(ServerLevel serverLevel, DamageSource damageSource, Entity entity, ItemStack itemStack){

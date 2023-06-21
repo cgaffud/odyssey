@@ -1,7 +1,6 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.block.INeedsToRegisterRenderType;
 import com.bedmen.odyssey.block.TriplePlantBlock;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.*;
@@ -18,20 +17,23 @@ import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.lock.TreasureChestType;
 import com.bedmen.odyssey.particle.ThrustParticle;
+import com.bedmen.odyssey.recipes.OdysseyRecipeBook;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
+import com.bedmen.odyssey.world.gen.biome.weather.OdysseyOverworldEffects;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.CritParticle;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.HuskRenderer;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -39,18 +41,19 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.GrassColor;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.RecipeBookManager;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
-import net.minecraftforge.client.gui.OverlayRegistry;
-import net.minecraftforge.client.model.ForgeModelBakery;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModBusClientEvents {
@@ -70,37 +73,7 @@ public class ModBusClientEvents {
 //            System.setOut(stream);
 //            System.out.println("From now on "+file.getAbsolutePath()+" will be your console");
 
-            //For hollow coconut vision overlay
-            OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HELMET_ELEMENT,"Odyssey Helmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-                if(gui instanceof OdysseyIngameGui odysseyIngameGui){
-                    gui.setupOverlayRenderState(true, false);
-                    odysseyIngameGui.renderOdysseyHelmet(partialTicks, mStack);
-                }
-            });
 
-            //For flight icon overlay
-            OverlayRegistry.registerOverlayAbove(ForgeIngameGui.AIR_LEVEL_ELEMENT,"Odyssey Flight", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-                if(gui instanceof OdysseyIngameGui odysseyIngameGui && !odysseyIngameGui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()){
-                    gui.setupOverlayRenderState(true, false, OdysseyIngameGui.ODYSSEY_GUI_ICONS_LOCATION);
-                    odysseyIngameGui.renderFlight(screenWidth, screenHeight, mStack);
-                }
-            });
-
-            //For Roasting heat overlay
-            IIngameOverlay odysseyFrostbite = OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FROSTBITE_ELEMENT,"Odyssey Frostbite", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-                if(gui instanceof OdysseyIngameGui odysseyIngameGui){
-                    gui.setupOverlayRenderState(true, false);
-                    odysseyIngameGui.renderFrostbite();
-                }
-            });
-
-            //For Roasting heat overlay
-            OverlayRegistry.registerOverlayAbove(odysseyFrostbite,"Odyssey Overheating", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-                if(gui instanceof OdysseyIngameGui odysseyIngameGui){
-                    gui.setupOverlayRenderState(true, false);
-                    odysseyIngameGui.renderRoastingOverlay();
-                }
-            });
 
             //Override PlayerRenderer with OdysseyPlayerRenderer
             EntityRenderers.PLAYER_PROVIDERS = ImmutableMap.of("default", (context) -> {
@@ -110,11 +83,12 @@ public class ModBusClientEvents {
             });
 
             //Block Render Types
-            for(Block block : ForgeRegistries.BLOCKS.getValues()) {
-                if (block instanceof INeedsToRegisterRenderType block1) {
-                    ItemBlockRenderTypes.setRenderLayer(block, block1.getRenderType());
-                }
-            }
+            // TODO put all block render types in jsons and remove unnecessary classes.
+//            for(Block block : ForgeRegistries.BLOCKS.getValues()) {
+//                if (block instanceof INeedsToRegisterRenderType block1) {
+//                    ItemBlockRenderTypes.setRenderLayer(block, block1.getRenderType());
+//                }
+//            }
 
             //Item Model Properties
             for(Item item : ForgeRegistries.ITEMS.getValues()){
@@ -202,9 +176,44 @@ public class ModBusClientEvents {
             // Other import render settings
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.gui = new OdysseyIngameGui(minecraft);
-            OdysseyItemInHandRenderer odysseyItemInHandRenderer = new OdysseyItemInHandRenderer(minecraft);
-            minecraft.itemInHandRenderer = odysseyItemInHandRenderer;
+            OdysseyItemInHandRenderer odysseyItemInHandRenderer = new OdysseyItemInHandRenderer(minecraft, minecraft.getEntityRenderDispatcher(), minecraft.getItemRenderer());
+            minecraft.getEntityRenderDispatcher().itemInHandRenderer = odysseyItemInHandRenderer;
             minecraft.gameRenderer.itemInHandRenderer = odysseyItemInHandRenderer;
+        });
+    }
+
+    @SubscribeEvent
+    public static void onRegisterGuiOverlaysEvent(final RegisterGuiOverlaysEvent event){
+        //Hollow coconut vision overlay
+        event.registerAbove(VanillaGuiOverlay.HELMET.id(), "helmet", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            if(gui instanceof OdysseyIngameGui odysseyIngameGui){
+                gui.setupOverlayRenderState(true, false);
+                odysseyIngameGui.renderOdysseyHelmet(partialTicks, mStack);
+            }
+        });
+
+        //Flight icon overlay
+        event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "flight", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            if(gui instanceof OdysseyIngameGui odysseyIngameGui && !odysseyIngameGui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()){
+                gui.setupOverlayRenderState(true, false, OdysseyIngameGui.ODYSSEY_GUI_ICONS_LOCATION);
+                odysseyIngameGui.renderFlight(screenWidth, screenHeight, mStack);
+            }
+        });
+
+        //Frostbite overlay
+        event.registerAbove(VanillaGuiOverlay.FROSTBITE.id(), "frostbite", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            if(gui instanceof OdysseyIngameGui odysseyIngameGui){
+                gui.setupOverlayRenderState(true, false);
+                odysseyIngameGui.renderFrostbite();
+            }
+        });
+
+        //Roasting heat overlay
+        event.registerAbove(new ResourceLocation(Odyssey.MOD_ID, "frostbite"),"overheating", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            if(gui instanceof OdysseyIngameGui odysseyIngameGui){
+                gui.setupOverlayRenderState(true, false);
+                odysseyIngameGui.renderRoastingOverlay();
+            }
         });
     }
 
@@ -258,7 +267,7 @@ public class ModBusClientEvents {
     }
 
     @SubscribeEvent
-    public static void onColorHandlerEvent$Block(final ColorHandlerEvent.Block event) {
+    public static void onColorHandlerEvent$Block(final RegisterColorHandlersEvent.Block event) {
         BlockColors blockColors = event.getBlockColors();
         blockColors.register(
                 (blockState, blockAndTintGetter, blockPos, i) ->
@@ -273,7 +282,7 @@ public class ModBusClientEvents {
     }
 
     @SubscribeEvent
-    public static void onColorHandlerEvent$Item(final ColorHandlerEvent.Item event) {
+    public static void onColorHandlerEvent$Item(final RegisterColorHandlersEvent.Item event) {
         ItemColors itemColors = event.getItemColors();
         itemColors.register((itemStack, i) -> {
             BlockState blockstate = ((BlockItem)(itemStack).getItem()).getBlock().defaultBlockState();
@@ -289,15 +298,34 @@ public class ModBusClientEvents {
     }
 
     @SubscribeEvent
-    public static void onParticleFactoryRegisterEvent(ParticleFactoryRegisterEvent event){
+    public static void onParticleFactoryRegisterEvent(RegisterParticleProvidersEvent event){
         Minecraft.getInstance().particleEngine.register(ParticleTypeRegistry.FATAL_HIT.get(), CritParticle.Provider::new);
         Minecraft.getInstance().particleEngine.register(ParticleTypeRegistry.THRUST.get(), ThrustParticle.Provider::new);
     }
 
     @SubscribeEvent
-    public static void onModelRegistryEvent(final ModelRegistryEvent event) {
+    public static void onModelEvent$RegisterAdditional(final ModelEvent.RegisterAdditional event) {
         for(SpearType spearType: SpearType.NEED_MODEL_REGISTERED_SET){
-            ForgeModelBakery.addSpecialModel(spearType.entityModelResourceLocation);
+            event.register(spearType.entityModelResourceLocation);
         }
+    }
+
+    @SubscribeEvent
+    public static void onRegisterDimensionSpecialEffectsEvent(final RegisterDimensionSpecialEffectsEvent event){
+        event.register(BuiltinDimensionTypes.OVERWORLD_EFFECTS, new OdysseyOverworldEffects(Minecraft.getInstance()));
+    }
+    
+    @SubscribeEvent
+    public static void onRegisterRecipeBookCategoriesEvent(final RegisterRecipeBookCategoriesEvent event){
+        // Add aggregate categories
+        event.registerAggregateCategory(OdysseyRecipeBook.ALLOYING_SEARCH, List.of(OdysseyRecipeBook.ALLOYING));
+        event.registerAggregateCategory(OdysseyRecipeBook.RECYCLING_SEARCH, List.of(OdysseyRecipeBook.RECYCLING));
+        event.registerAggregateCategory(OdysseyRecipeBook.STITCHING_SEARCH, List.of(OdysseyRecipeBook.STITCHING));
+        // Add category finders
+        event.registerRecipeCategoryFinder(RecipeTypeRegistry.ALLOYING.get(), recipe -> OdysseyRecipeBook.ALLOYING);
+        event.registerRecipeCategoryFinder(RecipeTypeRegistry.RECYCLING.get(), recipe -> OdysseyRecipeBook.RECYCLING);
+        event.registerRecipeCategoryFinder(RecipeTypeRegistry.WEAVING.get(), recipe -> OdysseyRecipeBook.WEAVING);
+        event.registerRecipeCategoryFinder(RecipeTypeRegistry.STITCHING.get(), recipe -> OdysseyRecipeBook.STITCHING);
+        event.registerRecipeCategoryFinder(RecipeTypeRegistry.INFUSER_CRAFTING.get(), recipe -> OdysseyRecipeBook.INFUSER_CRAFTING);
     }
 }

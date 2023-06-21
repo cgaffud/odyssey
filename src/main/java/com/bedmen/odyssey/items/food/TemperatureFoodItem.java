@@ -7,7 +7,6 @@ import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -17,6 +16,8 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class TemperatureFoodItem extends Item {
 
@@ -29,7 +30,7 @@ public class TemperatureFoodItem extends Item {
         this.temperatureChange = temperatureChange;
         this.hasBowl = hasBowl;
         boolean isHot = temperatureChange > 0;
-        this.mutableComponent = new TranslatableComponent("item.oddc.temperature."+(isHot ? "warm" : "cool"), StringUtil.percentFormat(Mth.abs(temperatureChange))).withStyle(isHot ? ChatFormatting.RED : ChatFormatting.AQUA);
+        this.mutableComponent = Component.translatable("item.oddc.temperature."+(isHot ? "warm" : "cool"), StringUtil.percentFormat(Mth.abs(temperatureChange))).withStyle(isHot ? ChatFormatting.RED : ChatFormatting.AQUA);
     }
 
     public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {

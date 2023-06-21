@@ -12,10 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class AlloyRecipe extends OdysseyFurnaceRecipe {
@@ -104,7 +101,7 @@ public class AlloyRecipe extends OdysseyFurnaceRecipe {
         return RecipeSerializerRegistry.ALLOYING.get();
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AlloyRecipe> {
+    public static class Serializer implements RecipeSerializer<AlloyRecipe> {
 
         public AlloyRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             JsonElement jsonelement1 = (JsonElement)(GsonHelper.isArrayNode(jsonObject, "ingredient1") ? GsonHelper.getAsJsonArray(jsonObject, "ingredient1") : GsonHelper.getAsJsonObject(jsonObject, "ingredient1"));

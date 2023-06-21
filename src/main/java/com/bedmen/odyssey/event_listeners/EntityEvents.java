@@ -34,6 +34,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -50,7 +51,7 @@ import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -66,8 +67,8 @@ public class EntityEvents {
     private static final float BRUTE_CHANCE = 0.05f;
 
     @SubscribeEvent
-    public static void onLivingUpdateEvent(final LivingEvent.LivingUpdateEvent event) {
-        LivingEntity livingEntity = event.getEntityLiving();
+    public static void onLivingUpdateEvent(final LivingEvent.LivingTickEvent event) {
+        LivingEntity livingEntity = event.getEntity();
 
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Perform Smack
@@ -152,7 +153,7 @@ public class EntityEvents {
     @SubscribeEvent
     public static void onLivingHurtEvent(final LivingHurtEvent event){
         float amount = event.getAmount();
-        LivingEntity hurtLivingEntity = event.getEntityLiving();
+        LivingEntity hurtLivingEntity = event.getEntity();
         DamageSource damageSource = event.getSource();
         float invulnerabilityMultiplier = OdysseyDamageSource.getInvulnerabilityMultiplier(damageSource);
         Entity damageSourceEntity = damageSource.getDirectEntity();
@@ -245,7 +246,7 @@ public class EntityEvents {
     @SubscribeEvent
     public static void onLivingDamageEvent(final LivingDamageEvent event){
         float amount = event.getAmount();
-        LivingEntity hurtLivingEntity = event.getEntityLiving();
+        LivingEntity hurtLivingEntity = event.getEntity();
         DamageSource damageSource = event.getSource();
         Entity damageSourceEntity = damageSource.getEntity();
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
@@ -264,7 +265,7 @@ public class EntityEvents {
     }
 
     private interface EntityReplacementFunction {
-        Optional<EntityType<?>> call(Mob mob, Random random);
+        Optional<EntityType<?>> call(Mob mob, RandomSource randomSource);
     }
 
     private static Map<EntityType<?>, EntityReplacementFunction> ENTITY_REPLACEMENT_MAP;
@@ -285,7 +286,7 @@ public class EntityEvents {
     @SubscribeEvent
     public static void onLivingSpawnEvent$CheckSpawn(final LivingSpawnEvent.CheckSpawn event){
         Entity entity = event.getEntity();
-        Random random = entity.level.random;
+        RandomSource randomSource = entity.level.random;
         EntityType<?> entityType = entity.getType();
         MobSpawnType mobSpawnType = event.getSpawnReason();
 
@@ -295,7 +296,7 @@ public class EntityEvents {
 
         if(ENTITY_REPLACEMENT_MAP.containsKey(entityType) && entity instanceof Mob mob){
             EntityReplacementFunction entityReplacementFunction = ENTITY_REPLACEMENT_MAP.get(entityType);
-            Optional<EntityType<?>> optionalEntityType = entityReplacementFunction.call(mob, random);
+            Optional<EntityType<?>> optionalEntityType = entityReplacementFunction.call(mob, randomSource);
             if(optionalEntityType.isPresent()){
                 EntityType<?> entityType1 = optionalEntityType.get();
                 if(entityType1 != entityType){
@@ -306,26 +307,26 @@ public class EntityEvents {
         }
     }
 
-    private static Optional<EntityType<?>> skeletonReplace(Mob mob, Random random){
+    private static Optional<EntityType<?>> skeletonReplace(Mob mob, RandomSource randomSource){
         if(inDripstoneBiome(mob)){
             return Optional.of(EntityTypeRegistry.ENCASED_SKELETON.get());
         }
         return Optional.of(EntityTypeRegistry.SKELETON.get());
     }
 
-    private static Optional<EntityType<?>> vanillaStrayReplace(Mob mob, Random random){
+    private static Optional<EntityType<?>> vanillaStrayReplace(Mob mob, RandomSource randomSource){
         return Optional.of(EntityTypeRegistry.STRAY.get());
     }
 
-    private static Optional<EntityType<?>> odysseyStrayReplace(Mob mob, Random random){
-        if(random.nextFloat() < BRUTE_CHANCE){
+    private static Optional<EntityType<?>> odysseyStrayReplace(Mob mob, RandomSource randomSource){
+        if(randomSource.nextFloat() < BRUTE_CHANCE){
             return Optional.of(EntityTypeRegistry.STRAY_BRUTE.get());
         }
         return Optional.empty();
     }
 
-    private static Optional<EntityType<?>> creeperReplace(Mob mob, Random random){
-        if(random.nextBoolean()){
+    private static Optional<EntityType<?>> creeperReplace(Mob mob, RandomSource randomSource){
+        if(randomSource.nextBoolean()){
             return Optional.of(EntityTypeRegistry.CAMO_CREEPER.get());
         }
         if(inDripstoneBiome(mob)){
@@ -337,7 +338,7 @@ public class EntityEvents {
         return Optional.empty();
     }
 
-    private static Optional<EntityType<?>> zombieReplace(Mob mob, Random random){
+    private static Optional<EntityType<?>> zombieReplace(Mob mob, RandomSource randomSource){
         if(inPrairieBiome(mob)){
             mob.setBaby(true);
             return Optional.empty();
@@ -347,32 +348,32 @@ public class EntityEvents {
         }
         float y = (float)mob.getY();
         // Guaranteed false for y>=8, linear gradient for -48 <= y <= 8, guaranteed true for y<-48
-        if (random.nextFloat() < (-(y-8)/56)) {
+        if (randomSource.nextFloat() < (-(y-8)/56)) {
             return Optional.of(EntityTypeRegistry.FORGOTTEN.get());
         }
-        if(random.nextFloat() < BRUTE_CHANCE){
+        if(randomSource.nextFloat() < BRUTE_CHANCE){
             return Optional.of(EntityTypeRegistry.ZOMBIE_BRUTE.get());
         }
         return Optional.empty();
     }
 
-    private static Optional<EntityType<?>> huskReplace(Mob mob, Random random){
+    private static Optional<EntityType<?>> huskReplace(Mob mob, RandomSource randomSource){
         return Optional.of(EntityTypeRegistry.HUSK.get());
     }
 
-    private static Optional<EntityType<?>> spiderReplace(Mob mob, Random random){
+    private static Optional<EntityType<?>> spiderReplace(Mob mob, RandomSource randomSource){
         if(inPrairieBiome(mob)){
             return Optional.of(EntityTypeRegistry.BARN_SPIDER.get());
         }
         float y = (float)mob.getY();
         // Guaranteed false for y>=8, linear gradient for -48 <= y <= 8, guaranteed true for y<-48
-        if (random.nextFloat() < (-(y-8)/56)) {
+        if (randomSource.nextFloat() < (-(y-8)/56)) {
             return Optional.of(EntityTypeRegistry.BLADE_SPIDER.get());
         }
         return Optional.empty();
     }
 
-    private static Optional<EntityType<?>> polarBearReplace(Mob mob, Random random){
+    private static Optional<EntityType<?>> polarBearReplace(Mob mob, RandomSource randomSource){
         return Optional.of(EntityTypeRegistry.POLAR_BEAR.get());
     }
 
@@ -391,9 +392,9 @@ public class EntityEvents {
     @SubscribeEvent
     public static void onLivingSpawnEvent$SpecialSpawn(final LivingSpawnEvent.SpecialSpawn event){
         Entity entity = event.getEntity();
-        Random random = entity.level.random;
+        RandomSource randomSource = entity.level.random;
         EntityType<?> entityType = entity.getType();
-        if(entity instanceof Zombie zombie && entityType == EntityType.ZOMBIE && zombie.getMainHandItem().isEmpty() && random.nextFloat() < 0.01){
+        if(entity instanceof Zombie zombie && entityType == EntityType.ZOMBIE && zombie.getMainHandItem().isEmpty() && randomSource.nextFloat() < 0.01){
             zombie.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.SLEDGEHAMMER.get()));
             zombie.setDropChance(EquipmentSlot.MAINHAND, 0.5f);
         }
@@ -418,7 +419,7 @@ public class EntityEvents {
 
     @SubscribeEvent
     public static void onShieldBlockEvent(final ShieldBlockEvent event){
-        LivingEntity livingEntity = event.getEntityLiving();
+        LivingEntity livingEntity = event.getEntity();
         ItemStack shield = livingEntity.getUseItem();
         if(shield.getItem() instanceof AspectShieldItem aspectShieldItem){
             DamageSource damageSource = event.getDamageSource();
@@ -444,7 +445,7 @@ public class EntityEvents {
 
     @SubscribeEvent
     public static void onLivingKnockBackEvent(final LivingKnockBackEvent event){
-        LivingEntity target = event.getEntityLiving();
+        LivingEntity target = event.getEntity();
         if(target instanceof OdysseyLivingEntity odysseyLivingEntity){
             event.setStrength(event.getOriginalStrength() * (1.0f + odysseyLivingEntity.popKnockbackAspectQueue()));
         }
@@ -452,7 +453,7 @@ public class EntityEvents {
 
     @SubscribeEvent
     public static void onLivingEquipmentChangeEvent(final LivingEquipmentChangeEvent event){
-        LivingEntity livingEntity = event.getEntityLiving();
+        LivingEntity livingEntity = event.getEntity();
         ItemStack oldItemStack = event.getFrom();
         ItemStack newItemStack = event.getTo();
         EquipmentSlot equipmentSlot = event.getSlot();
@@ -471,7 +472,7 @@ public class EntityEvents {
     private static final Tier[] TIER_ARRAY = {OdysseyTiers.ULTRA_1, OdysseyTiers.ULTRA_2, OdysseyTiers.NETHERITE};
     @SubscribeEvent
     public static void onLivingDropsEvent(final LivingDropsEvent event){
-        LivingEntity deadEntity = event.getEntityLiving();
+        LivingEntity deadEntity = event.getEntity();
         if(deadEntity instanceof Mob) {
             DamageSource damageSource = event.getSource();
             Tier tier;
@@ -501,7 +502,7 @@ public class EntityEvents {
     }
 
     @SubscribeEvent
-    public static void onEntityJoinWorldEvent(final EntityJoinWorldEvent event){
+    public static void onEntityJoinWorldEvent(final EntityJoinLevelEvent event){
         Entity entity = event.getEntity();
         if(entity instanceof Player player){
             player.foodData = OdysseyFoodData.fromFoodData(player, player.foodData);

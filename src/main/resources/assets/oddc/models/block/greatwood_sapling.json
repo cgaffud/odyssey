@@ -2,5 +2,6 @@
   "parent": "minecraft:block/cross",
   "textures": {
     "cross": "oddc:block/greatwood_sapling"
-  }
+  },
+  "render_type": "minecraft:cutout"
 }

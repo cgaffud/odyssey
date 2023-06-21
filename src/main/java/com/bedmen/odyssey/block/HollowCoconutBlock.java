@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -32,6 +33,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.Random;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class HollowCoconutBlock extends FallingBlock implements EntityBlock, INeedsToRegisterRenderType {
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
@@ -65,7 +68,7 @@ public class HollowCoconutBlock extends FallingBlock implements EntityBlock, INe
         blockStateBuilder.add(HANGING);
     }
 
-    public void tick(BlockState blockState, ServerLevel serverWorld, BlockPos blockPos, Random random) {
+    public void tick(BlockState blockState, ServerLevel serverWorld, BlockPos blockPos, RandomSource randomSource) {
         if(blockState.getValue(HANGING)){
             if (serverWorld.isEmptyBlock(blockPos.above()) || isFree(serverWorld.getBlockState(blockPos.above())) && blockPos.getY() >= 0) {
                 FallingBlockEntity fallingblockentity = new FallingHollowCoconut(serverWorld, (double)blockPos.getX() + 0.5D, (double)blockPos.getY(), (double)blockPos.getZ() + 0.5D, serverWorld.getBlockState(blockPos).setValue(HANGING, Boolean.FALSE));
@@ -75,7 +78,7 @@ public class HollowCoconutBlock extends FallingBlock implements EntityBlock, INe
         }
     }
 
-    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, Random random) {
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
     }
 
     public int getDustColor(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {

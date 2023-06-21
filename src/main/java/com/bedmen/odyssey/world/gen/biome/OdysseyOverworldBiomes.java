@@ -30,7 +30,8 @@ public class OdysseyOverworldBiomes {
         BiomeDefaultFeatures.addDefaultGrass(biomegenerationsettings$builder);
         BiomeDefaultFeatures.addDefaultMushrooms(biomegenerationsettings$builder);
         biomegenerationsettings$builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_SUGAR_CANE_DESERT);
-        return OverworldBiomes.biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.BEACH, 1.5F, 0.8F, 4445678, 270131, mobspawnsettings$builder, biomegenerationsettings$builder, NORMAL_MUSIC);
+
+        return OverworldBiomes.biome(Biome.Precipitation.RAIN, 1.5F, 0.8F, 4445678, 270131, mobspawnsettings$builder, biomegenerationsettings$builder, NORMAL_MUSIC);
     }
 
     public static Biome prairie() {
@@ -42,7 +43,7 @@ public class OdysseyOverworldBiomes {
         BiomeDefaultFeatures.addDefaultSoftDisks(biomegenerationsettings$builder);
         BiomeDefaultFeatures.addDefaultMushrooms(biomegenerationsettings$builder);
         biomegenerationsettings$builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_SUGAR_CANE);
-        return OverworldBiomes.biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.PLAINS, 0.8F, 0.0F, mobspawnsettings$builder, biomegenerationsettings$builder, NORMAL_MUSIC);
+        return OverworldBiomes.biome(Biome.Precipitation.RAIN, 0.8F, 0.0F, mobspawnsettings$builder, biomegenerationsettings$builder, NORMAL_MUSIC);
     }
 
     public static Biome arctic(){
@@ -68,6 +69,6 @@ public class OdysseyOverworldBiomes {
         mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityTypeRegistry.STRAY.get(), 200, 4, 4));
         BiomeDefaultFeatures.addDefaultOres(biomeBuilder);
         BiomeDefaultFeatures.addDefaultSoftDisks(biomeBuilder);
-        return OverworldBiomes.biome(OdysseyPrecipitation.BLIZZARD, Biome.BiomeCategory.ICY, -1.0f, 0.0F, mobSpawnBuilder, biomeBuilder, NORMAL_MUSIC);
+        return OverworldBiomes.biome(OdysseyPrecipitation.BLIZZARD, -1.0f, 0.0F, mobSpawnBuilder, biomeBuilder, NORMAL_MUSIC);
     }
 }

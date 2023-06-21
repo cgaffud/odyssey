@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -69,15 +70,15 @@ public class BiomeUtil {
     }
 
     public static int getFoliageColor(Level level, Entity entity) {
-        double temperatureFactor = Aspects.getHotBoost(entity.eyeBlockPosition(), level);
-        double downfallFactor = Aspects.getHumidBoost(entity.eyeBlockPosition(), level);
+        double temperatureFactor = Aspects.getHotBoost(entity.blockPosition(), level);
+        double downfallFactor = Aspects.getHumidBoost(entity.blockPosition(), level);
         return FoliageColor.get(temperatureFactor, downfallFactor);
     }
 
     private static final Map<Double, Integer> ARID_COLOR_MAP = new ConcurrentHashMap<>();
     public static int getAridColor(Level level, Entity entity) {
-        double temperatureFactor = Aspects.getHotBoost(entity.eyeBlockPosition(), level);
-        double downfallFactor = Aspects.getHumidBoost(entity.eyeBlockPosition(), level);
+        double temperatureFactor = Aspects.getHotBoost(entity.blockPosition(), level);
+        double downfallFactor = Aspects.getHumidBoost(entity.blockPosition(), level);
         double adjustedDownfallFactor = Mth.clamp(downfallFactor, 0, temperatureFactor);
         double key = 2 * temperatureFactor + adjustedDownfallFactor;
         if(ARID_COLOR_MAP.containsKey(key)){
@@ -90,22 +91,13 @@ public class BiomeUtil {
 
     private static final Map<Double, Integer> COLD_COLOR_MAP = new ConcurrentHashMap<>();
     public static int getColdColor(Level level, Entity entity) {
-        double coldFactor = Aspects.getColdBoost(entity.eyeBlockPosition(), level);
+        double coldFactor = Aspects.getColdBoost(entity.blockPosition(), level);
         if(COLD_COLOR_MAP.containsKey(coldFactor)){
             return COLD_COLOR_MAP.get(coldFactor);
         }
         int color = Color.getHSBColor((float) (0.67f - 0.07f * coldFactor), (float) (0.6f - 0.1f * coldFactor), (float) (0.6f + 0.4f * coldFactor)).getRGB();
         COLD_COLOR_MAP.put(coldFactor, color);
         return color;
-    }
-
-    public static boolean hasGoodPlantClimate(Biome.BiomeCategory biomeCategory, Biome.Precipitation precipitation, float temperature){
-        boolean correctBiomeCategory = switch (biomeCategory){
-            case TAIGA, EXTREME_HILLS, JUNGLE, PLAINS, FOREST, SWAMP -> true;
-            default -> false;
-        };
-        boolean correctClimate = precipitation == Biome.Precipitation.RAIN && temperature > COLD_TEMPERATURE_CUTOFF && temperature < 1.0f;
-        return correctBiomeCategory && correctClimate;
     }
 
     public static List<TemperatureSource> getTemperatureSourceList(Player player){
@@ -118,11 +110,10 @@ public class BiomeUtil {
     public static List<TemperatureSource> getTemperatureSourceList(Level level, BlockPos blockPos){
         Holder<Biome> biomeHolder = level.getBiome(blockPos);
         Biome biome = biomeHolder.value();
-        Biome.BiomeCategory biomeCategory = biome.getBiomeCategory();
-        if(biomeCategory == Biome.BiomeCategory.NETHER){
+        if(biomeHolder.is(BiomeTags.IS_NETHER)){
             return TemperatureSource.NETHER_LIST;
         }
-        if(biomeCategory == Biome.BiomeCategory.THEEND){
+        if(biomeHolder.is(BiomeTags.IS_END)){
             return List.of();
         }
         List<TemperatureSource> temperatureSourceList = new ArrayList<>();
@@ -135,9 +126,9 @@ public class BiomeUtil {
             if(isSnowingAt(level, blockPos)){
                 temperatureSourceList.add(TemperatureSource.SNOW_WEATHER);
             }
-            if(biomeCategory == Biome.BiomeCategory.DESERT){
+            if(biomeHolder.is(Biomes.DESERT)){
                 temperatureSourceList.add(TemperatureSource.DESERT);
-            } else if(biomeCategory == Biome.BiomeCategory.MESA){
+            } else if(biomeHolder.is(BiomeTags.IS_BADLANDS)){
                 temperatureSourceList.add(TemperatureSource.MESA);
             }
             else if(getClimate(biomeHolder).temperature < COLD_TEMPERATURE_CUTOFF){
@@ -174,10 +165,6 @@ public class BiomeUtil {
 
     public static boolean isBlizzard(LevelReader levelReader, BlockPos blockPos){
         return levelReader.getBiome(blockPos).value().getPrecipitation() == OdysseyPrecipitation.BLIZZARD;
-    }
-
-    public static boolean isBiome(ResourceLocation resourceLocation, Biome biome){
-        return resourceLocation.equals(biome.getRegistryName());
     }
 
     public static boolean isTooHotForPowderSnow(Level level, BlockPos blockPos){

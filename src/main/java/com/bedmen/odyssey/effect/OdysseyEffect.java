@@ -9,7 +9,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.client.EffectRenderer;
+import net.minecraftforge.client.extensions.common.IClientMobEffectExtensions;
 
 public class OdysseyEffect extends MobEffect {
 
@@ -35,7 +35,7 @@ public class OdysseyEffect extends MobEffect {
         return super.isDurationEffectTick(duration, amplifier);
     }
 
-    public static final EffectRenderer ODYSSEY_EFFECT_RENDERER = new EffectRenderer()
+    public static final IClientMobEffectExtensions ODYSSEY_EFFECT_RENDERER = new IClientMobEffectExtensions()
     {
         public void renderInventoryEffect(MobEffectInstance effectInstance, EffectRenderingInventoryScreen<?> gui, PoseStack poseStack, int x, int y, float z) {}
 

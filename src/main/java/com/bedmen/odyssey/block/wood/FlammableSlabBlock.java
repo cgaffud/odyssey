@@ -6,6 +6,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class FlammableSlabBlock extends SlabBlock {
 
     public FlammableSlabBlock(Properties p_i48331_1_) {

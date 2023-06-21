@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
+import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.world.WorldGenUtil;
 import com.bedmen.odyssey.world.gen.processor.BarnFloorProcessor;
 import com.mojang.datafixers.util.Pair;
@@ -11,9 +11,10 @@ import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
@@ -23,12 +24,11 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class BarnPiece extends HeightAdjustingPiece {
 
@@ -45,19 +45,19 @@ public class BarnPiece extends HeightAdjustingPiece {
     private final List<BarnSpawnerPiece> childPieces = new ArrayList<>();
     private static final String ID_LIST_TAG = "IdList";
 
-    public BarnPiece(StructureManager structureManager, BlockPos blockPos, Rotation rotation, Random random) {
-        super(StructurePieceTypeRegistry.BARN.get(), 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(), blockPos, rotation);
-        for(int id: generateSpawnerIds(random)){
-            this.childPieces.add(new BarnSpawnerPiece(structureManager, blockPos, rotation, id));
+    public BarnPiece(StructureTemplateManager structureTemplateManager, BlockPos blockPos, Rotation rotation, RandomSource randomSource) {
+        super(StructurePieceTypeRegistry.BARN.get(), 0, structureTemplateManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(), blockPos, rotation);
+        for(int id: generateSpawnerIds(randomSource)){
+            this.childPieces.add(new BarnSpawnerPiece(structureTemplateManager, blockPos, rotation, id));
         }
     }
 
-    public BarnPiece(StructureManager structureManager, CompoundTag compoundTag) {
-        super(StructurePieceTypeRegistry.BARN.get(), compoundTag, structureManager, (resourceLocation) -> makeSettings());
+    public BarnPiece(StructureTemplateManager structureTemplateManager, CompoundTag compoundTag) {
+        super(StructurePieceTypeRegistry.BARN.get(), compoundTag, structureTemplateManager, (resourceLocation) -> makeSettings());
         if(compoundTag.contains(ID_LIST_TAG)){
             for(Tag tag: compoundTag.getList(ID_LIST_TAG, Tag.TAG_INT)){
                 int id = ((IntTag)tag).getAsInt();
-                this.childPieces.add(new BarnSpawnerPiece(structureManager, this.templatePosition, this.placeSettings.getRotation(), id));
+                this.childPieces.add(new BarnSpawnerPiece(structureTemplateManager, this.templatePosition, this.placeSettings.getRotation(), id));
             }
         }
     }
@@ -75,11 +75,11 @@ public class BarnPiece extends HeightAdjustingPiece {
         compoundTag.put(ID_LIST_TAG, idListTag);
     }
 
-    protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
+    protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
         WorldGenUtil.fillColumnDownOnAllPosts(worldGenLevel, Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState(), RELATIVE_POSTS, chunkBoundingBox, this.templatePosition, this.placeSettings);
         for(BarnSpawnerPiece barnSpawnerPiece : this.childPieces) {
             if (barnSpawnerPiece.getBoundingBox().intersects(chunkBoundingBox)) {
-                barnSpawnerPiece.postProcess(worldGenLevel, structureFeatureManager, chunkGenerator, random, chunkBoundingBox, chunkPos, blockPos);
+                barnSpawnerPiece.postProcess(worldGenLevel, structureManager, chunkGenerator, randomSource, chunkBoundingBox, chunkPos, blockPos);
             }
         }
     }
@@ -104,12 +104,12 @@ public class BarnPiece extends HeightAdjustingPiece {
         }
     }
 
-    private static int[] generateSpawnerIds(Random random){
+    private static int[] generateSpawnerIds(RandomSource randomSource){
         int[] idArray = new int[3];
         int idsSet = 0;
         for(int i = 0; i < TOTAL_SPAWNER_LOCATIONS; i++){
             float chance = ((float)(TOTAL_SPAWNERS - idsSet)/(float)(TOTAL_SPAWNER_LOCATIONS - i));
-            if(random.nextFloat() < chance){
+            if(randomSource.nextFloat() < chance){
                 idArray[idsSet] = i;
                 idsSet++;
             }

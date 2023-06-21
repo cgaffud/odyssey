@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -55,11 +56,11 @@ public class OdysseyStray extends OdysseyAbstractSkeleton {
         return super.getDefaultLootTable();
     }
 
-    public static boolean spawnPredicate(EntityType<OdysseyStray> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, Random random) {
+    public static boolean spawnPredicate(EntityType<OdysseyStray> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, RandomSource randomSource) {
         BlockPos onTopOfPowderSnowBlockPos = blockPos;
         do {
             onTopOfPowderSnowBlockPos = onTopOfPowderSnowBlockPos.above();
         } while(serverLevelAccessor.getBlockState(onTopOfPowderSnowBlockPos).is(Blocks.POWDER_SNOW));
-        return checkMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, random) && (mobSpawnType == MobSpawnType.SPAWNER || serverLevelAccessor.canSeeSky(onTopOfPowderSnowBlockPos.below()));
+        return checkMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, randomSource) && (mobSpawnType == MobSpawnType.SPAWNER || serverLevelAccessor.canSeeSky(onTopOfPowderSnowBlockPos.below()));
     }
 }

@@ -15,6 +15,8 @@ import net.minecraftforge.network.NetworkHooks;
 
 import java.util.Optional;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public abstract class BossSubEntity<T extends BossMaster> extends Monster implements SubEntity<T> {
 
     private static final EntityDataAccessor<Integer> DATA_MASTER_ID = SynchedEntityData.defineId(BossSubEntity.class, EntityDataSerializers.INT);

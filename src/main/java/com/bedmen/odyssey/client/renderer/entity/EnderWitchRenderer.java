@@ -18,7 +18,7 @@ public class EnderWitchRenderer extends MobRenderer<EnderWitch, WitchModel<Ender
 
     public EnderWitchRenderer(EntityRendererProvider.Context context) {
         super(context, new WitchModel<>(context.bakeLayer(ModelLayers.WITCH)), 0.5F);
-        this.addLayer(new WitchItemLayer<>(this));
+        this.addLayer(new WitchItemLayer<>(this, context.getItemInHandRenderer()));
     }
 
     public ResourceLocation getTextureLocation(EnderWitch enderWitch) {

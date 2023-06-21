@@ -14,6 +14,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class ConditionalAmpMeleeItem extends AspectMeleeItem implements ConditionalAmpUtil.ConditionalAmpItem {
 
     public final Aspect aspect;

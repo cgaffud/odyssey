@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "oddc:silver_ore",
+    "oddc:silver_ore_lower",
+    "oddc:moonrock"
+  ],
+  "step": "underground_ores"
+}

@@ -5,6 +5,7 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.BooleanAspect;
 import com.bedmen.odyssey.aspect.object.IntegerAspect;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,9 +23,9 @@ public abstract class RandomAspectList {
         this.weightedAspectEntryList = weightedAspectEntryList;
     }
 
-    public void addAspectInstances(ItemStack itemStack, Random random, float chance){
+    public void addAspectInstances(ItemStack itemStack, RandomSource randomSource, float chance){
         this.filter(itemStack);
-        this.generateAndAdd(itemStack, random, chance);
+        this.generateAndAdd(itemStack, randomSource, chance);
     }
 
     protected void filter(ItemStack itemStack){
@@ -35,11 +36,11 @@ public abstract class RandomAspectList {
                 .collect(Collectors.toList());
     }
 
-    protected abstract void generateAndAdd(ItemStack itemStack, Random random, float chance);
+    protected abstract void generateAndAdd(ItemStack itemStack, RandomSource randomSource, float chance);
 
-    protected WeightedAspectEntry getRandomWeightedAspectEntry(Random random){
+    protected WeightedAspectEntry getRandomWeightedAspectEntry(RandomSource randomSource){
         int totalWeight = this.filteredList.stream().reduce(0, (accumulator, weightedAspectEntry) -> accumulator + weightedAspectEntry.weight, Integer::sum);
-        int randomInteger = random.nextInt(totalWeight);
+        int randomInteger = randomSource.nextInt(totalWeight);
         int counter = 0;
         for(WeightedAspectEntry weightedAspectEntry : this.filteredList){
             counter += weightedAspectEntry.weight;

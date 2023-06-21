@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -21,8 +22,8 @@ public class StrayBrute extends OdysseyStray {
         super(entityType, level);
     }
 
-    protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
-        super.populateDefaultEquipmentSlots(difficultyInstance);
+    protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance difficultyInstance) {
+        super.populateDefaultEquipmentSlots(randomSource, difficultyInstance);
         if(this.random.nextBoolean()){
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ItemRegistry.FROST_MACE.get()));
         } else {

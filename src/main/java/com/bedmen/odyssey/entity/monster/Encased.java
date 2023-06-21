@@ -4,6 +4,7 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
@@ -74,9 +75,9 @@ public interface Encased {
             if(!livingEntity.level.isClientSide){
                 this.setStoneArmorHealth(newArmorHealth);
                 if (armorHealthChanged) {
-                    Random random = livingEntity.getRandom();
+                    RandomSource randomSource = livingEntity.getRandom();
                     for(int i = 0; i < 8; ++i) {
-                        ((ServerLevel)livingEntity.level).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.DRIPSTONE_BLOCK.defaultBlockState()).setPos(livingEntity.blockPosition()), livingEntity.getX() + random.nextFloat()-0.5f, livingEntity.getY() + random.nextFloat()*2, livingEntity.getZ() + random.nextFloat()-0.5f, 2, 0.2D, 0.2D, 0.2D, 0.0D);
+                        ((ServerLevel)livingEntity.level).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.DRIPSTONE_BLOCK.defaultBlockState()).setPos(livingEntity.blockPosition()), livingEntity.getX() + randomSource.nextFloat()-0.5f, livingEntity.getY() + randomSource.nextFloat()*2, livingEntity.getZ() + randomSource.nextFloat()-0.5f, 2, 0.2D, 0.2D, 0.2D, 0.0D);
                     }
                 }
             }

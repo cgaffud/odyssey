@@ -7,6 +7,7 @@ import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -20,11 +21,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class OdysseyPlayerItemInHandLayer<T extends Player, M extends EntityModel<T> & ArmedModel & HeadedModel> extends ItemInHandLayer<T, M> {
+    private final ItemInHandRenderer itemInHandRenderer;
     private static final float X_ROT_MIN = (-(float)Math.PI / 6F);
     private static final float X_ROT_MAX = ((float)Math.PI / 2F);
 
-    public OdysseyPlayerItemInHandLayer(RenderLayerParent<T, M> p_174516_) {
-        super(p_174516_);
+    public OdysseyPlayerItemInHandLayer(RenderLayerParent<T, M> renderLayerParent, ItemInHandRenderer itemInHandRenderer) {
+        super(renderLayerParent, itemInHandRenderer);
+        this.itemInHandRenderer = itemInHandRenderer;
     }
 
     protected void renderArmWithItem(LivingEntity livingEntity, ItemStack itemStack, ItemTransforms.TransformType transformType, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int p_174531_) {
@@ -45,7 +48,7 @@ public class OdysseyPlayerItemInHandLayer<T extends Player, M extends EntityMode
         CustomHeadLayer.translateToHead(p_174521_, false);
         boolean flag = p_174520_ == HumanoidArm.LEFT;
         p_174521_.translate((double)((flag ? -2.5F : 2.5F) / 16.0F), -0.0625D, 0.0D);
-        Minecraft.getInstance().getItemInHandRenderer().renderItem(p_174518_, p_174519_, ItemTransforms.TransformType.HEAD, false, p_174521_, p_174522_, p_174523_);
+        this.itemInHandRenderer.renderItem(p_174518_, p_174519_, ItemTransforms.TransformType.HEAD, false, p_174521_, p_174522_, p_174523_);
         p_174521_.popPose();
     }
 }

@@ -14,7 +14,7 @@ public class WraithRenderer<T extends Wraith> extends MobRenderer<T, WraithModel
 
     public WraithRenderer(EntityRendererProvider.Context context) {
         super(context, new WraithModel<>(context.bakeLayer(WraithModel.LAYER_LOCATION)), 0.8F);
-        this.addLayer(new ItemInHandLayer<>(this));
+        this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
     }
 
     protected void scale(T entity, PoseStack poseStack, float partialTicks) {

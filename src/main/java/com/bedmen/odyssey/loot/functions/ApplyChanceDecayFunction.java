@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -27,12 +28,12 @@ public class ApplyChanceDecayFunction extends LootItemConditionalFunction {
    }
 
    public ItemStack run(ItemStack itemStack, LootContext lootContext) {
-      Random random = lootContext.getRandom();
+      RandomSource randomSource = lootContext.getRandom();
       int i = itemStack.getCount();
       int j = 0;
 
       for(int k = 0; k < i; ++k) {
-         if (random.nextFloat() <= probability) {
+         if (randomSource.nextFloat() <= probability) {
             ++j;
          }
       }

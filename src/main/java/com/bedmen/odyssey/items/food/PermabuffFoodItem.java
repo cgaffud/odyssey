@@ -17,6 +17,8 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 import java.util.function.Predicate;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class PermabuffFoodItem extends Item implements AspectItem {
 
     private final PermabuffHolder permabuffHolder;

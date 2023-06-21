@@ -24,8 +24,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -41,18 +40,20 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class AspectUtil {
 
-    private static final MutableComponent ADDED_MODIFIER_HEADER = new TranslatableComponent("aspect_tooltip.oddc.added_modifiers");
+    private static final MutableComponent ADDED_MODIFIER_HEADER = Component.translatable("aspect_tooltip.oddc.added_modifiers");
     private static final ChatFormatting ADDED_MODIFIER_COLOR = ChatFormatting.GRAY;
     private static final String ADDED_MODIFIERS_TAG = Odyssey.MOD_ID + ":AddedModifiers";
     private static final String SET_BONUS_STRING = "SET_BONUS";
     private static final List<EquipmentSlot> ARMOR_EQUIPMENT_SLOT_LIST = Arrays.stream(EquipmentSlot.values()).filter(equipmentSlot -> equipmentSlot.getType() == EquipmentSlot.Type.ARMOR).collect(Collectors.toList());
-    private static final MutableComponent OBFUSCATED_TOOLTIP = new TextComponent("AAAAAAAAAA").withStyle(ChatFormatting.OBFUSCATED).withStyle(ChatFormatting.DARK_RED);
+    private static final MutableComponent OBFUSCATED_TOOLTIP = Component.literal("AAAAAAAAAA").withStyle(ChatFormatting.OBFUSCATED).withStyle(ChatFormatting.DARK_RED);
 
     private static ListTag getAddedModifierListTag(ItemStack itemStack) {
         CompoundTag compoundTag = itemStack.getTag();
@@ -299,7 +300,7 @@ public class AspectUtil {
         tooltip.addAll(getTooltip(aspectTooltipContext.withOtherContextVariables(addedModifiers, tooltipFlag.isAdvanced(), optionalHeader, ADDED_MODIFIER_COLOR)));
         int totalModifiability =  getTotalModifiability(itemStack);
         if(tooltipFlag.isAdvanced() && totalModifiability > 0){
-            tooltip.add(new TranslatableComponent("aspect_tooltip.oddc.modifiability_remaining", StringUtil.floatFormat(getModifiabilityRemaining(itemStack)), totalModifiability).withStyle(ADDED_MODIFIER_COLOR));
+            tooltip.add(Component.translatable("aspect_tooltip.oddc.modifiability_remaining", StringUtil.floatFormat(getModifiabilityRemaining(itemStack)), totalModifiability).withStyle(ADDED_MODIFIER_COLOR));
         }
     }
 
@@ -308,7 +309,7 @@ public class AspectUtil {
         componentList.addAll(context.aspectInstanceList.stream()
                 .filter(aspectInstance -> context.isAdvanced ? aspectInstance.aspectTooltipDisplaySetting != AspectTooltipDisplaySetting.NEVER : aspectInstance.aspectTooltipDisplaySetting == AspectTooltipDisplaySetting.ALWAYS)
                 .map(aspectInstance ->
-                        new TextComponent(context.optionalHeader.isPresent() ? " " : "")
+                        Component.literal(context.optionalHeader.isPresent() ? " " : "")
                                 .append(aspectInstance.obfuscated ? OBFUSCATED_TOOLTIP : aspectInstance.getMutableComponent(context)).withStyle(context.chatFormatting))
                 .collect(Collectors.toList()));
         if(componentList.isEmpty()){
@@ -424,7 +425,7 @@ public class AspectUtil {
 
     // Do frost snow particles
     public static void doFrostAspectParticles(Entity entity, int count){
-        Random random = entity.level.random;
+        RandomSource randomSource = entity.level.random;
         double x = entity.getX();
         double y = entity.getY() + 0.5f * entity.getBbHeight();
         double z = entity.getZ();
@@ -432,8 +433,8 @@ public class AspectUtil {
             for(int xi = -1; xi <= 1; xi++){
                 for(int yi = -1; yi <= 1; yi++){
                     for(int zi = -1; zi <= 1; zi++){
-                        if(!(xi == 0 && yi == 0 && zi == 0) && random.nextBoolean()){
-                            Vec3 velocity  = new Vec3(xi, yi, zi).add(getRandomSnowflakeVector(random)).normalize().scale(0.3d);
+                        if(!(xi == 0 && yi == 0 && zi == 0) && randomSource.nextBoolean()){
+                            Vec3 velocity  = new Vec3(xi, yi, zi).add(getRandomSnowflakeVector(randomSource)).normalize().scale(0.3d);
                             entity.level.addParticle(ParticleTypes.SNOWFLAKE, x, y, z, velocity.x, velocity.y, velocity.z);
                         }
                     }
@@ -442,11 +443,11 @@ public class AspectUtil {
         }
     }
 
-    private static Vec3 getRandomSnowflakeVector(Random random){
-        return new Vec3(getRandomSnowflakeSpeed(random), getRandomSnowflakeSpeed(random), getRandomSnowflakeSpeed(random));
+    private static Vec3 getRandomSnowflakeVector(RandomSource randomSource){
+        return new Vec3(getRandomSnowflakeSpeed(randomSource), getRandomSnowflakeSpeed(randomSource), getRandomSnowflakeSpeed(randomSource));
     }
 
-    private static double getRandomSnowflakeSpeed(Random random){
-        return random.nextDouble() * 0.4d - 0.2d;
+    private static double getRandomSnowflakeSpeed(RandomSource randomSource){
+        return randomSource.nextDouble() * 0.4d - 0.2d;
     }
 }

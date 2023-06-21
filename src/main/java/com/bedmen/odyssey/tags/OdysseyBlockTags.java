@@ -13,7 +13,7 @@ public class OdysseyBlockTags {
     public static final TagKey<Block> PALM_LOGS = create("palm_logs");
     public static final TagKey<Block> GREATWOOD_LOGS = create("greatwood_logs");
 
-    private static TagKey<Block> create(String name) {
-        return ForgeRegistries.BLOCKS.tags().createTagKey(new ResourceLocation(Odyssey.MOD_ID, name));
+    private static TagKey<Block> create(String key) {
+        return ForgeRegistries.BLOCKS.tags().createTagKey(new ResourceLocation(Odyssey.MOD_ID, key));
     }
 }

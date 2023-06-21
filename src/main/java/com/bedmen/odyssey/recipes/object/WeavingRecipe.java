@@ -76,7 +76,7 @@ public class WeavingRecipe implements Recipe<Container> {
         return RecipeSerializerRegistry.WEAVING.get();
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<WeavingRecipe> {
+    public static class Serializer implements RecipeSerializer<WeavingRecipe> {
 
         public WeavingRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             JsonElement jsonelement1 = (JsonElement)(GsonHelper.isArrayNode(jsonObject, "ingredient") ? GsonHelper.getAsJsonArray(jsonObject, "ingredient") : GsonHelper.getAsJsonObject(jsonObject, "ingredient"));

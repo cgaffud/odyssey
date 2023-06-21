@@ -33,7 +33,7 @@ public class ConditionalAmpUtil {
     public static float activeFactor(ItemStack itemStack, LivingEntity livingEntity) {
         if (itemStack.getItem() instanceof ConditionalAmpItem conditionalAmpItem
                 && conditionalAmpItem.getAspect() instanceof EnvironmentConditionalAspect environmentConditionalAspect){
-            return environmentConditionalAspect.attackBoostFactorFunction.getBoostFactor(livingEntity.eyeBlockPosition(), livingEntity.level);
+            return environmentConditionalAspect.attackBoostFactorFunction.getBoostFactor(livingEntity.blockPosition(), livingEntity.level);
         }
 
         return 0.0f;
@@ -44,7 +44,7 @@ public class ConditionalAmpUtil {
     }
 
     public static void setDamageTag(ItemStack itemStack, Entity entity) {
-        float aspectBonus = AspectUtil.getEnvironmentalAspectStrength(itemStack, entity.eyeBlockPosition(), entity.level);
+        float aspectBonus = AspectUtil.getEnvironmentalAspectStrength(itemStack, entity.blockPosition(), entity.level);
         itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, aspectBonus);
     }
 

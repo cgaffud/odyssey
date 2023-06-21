@@ -6,6 +6,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class OdysseyCreeperSwellGoal extends Goal {
     private final OdysseyCreeper creeper;
     private LivingEntity target;

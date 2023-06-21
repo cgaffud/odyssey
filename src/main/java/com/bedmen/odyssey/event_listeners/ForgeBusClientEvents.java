@@ -8,11 +8,7 @@ import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.util.RenderUtil;
-import com.bedmen.odyssey.world.gen.biome.weather.OdysseySkyRenderHandler;
-import com.bedmen.odyssey.world.gen.biome.weather.OdysseyWeatherParticleRenderHandler;
-import com.bedmen.odyssey.world.gen.biome.weather.OdysseyWeatherRenderHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.FogRenderer;
@@ -25,32 +21,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpyglassItem;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeBusClientEvents {
-    @SubscribeEvent
-    public static void onWorldEvent$Load(final WorldEvent.Load event){
-        LevelAccessor levelAccessor = event.getWorld();
-        if(levelAccessor instanceof ClientLevel clientLevel){
-            clientLevel.effects().setWeatherRenderHandler(new OdysseyWeatherRenderHandler());
-            clientLevel.effects().setWeatherParticleRenderHandler(new OdysseyWeatherParticleRenderHandler());
-            clientLevel.effects().setSkyRenderHandler(new OdysseySkyRenderHandler());
-        }
-    }
 
     @SubscribeEvent
-    public static void EntityViewRenderEvent$RenderFogEventListener(final EntityViewRenderEvent.RenderFogEvent event){
+    public static void EntityViewRenderEvent$RenderFogEventListener(final ViewportEvent.RenderFog event){
         if(event.getMode() == FogRenderer.FogMode.FOG_TERRAIN){
             Minecraft minecraft = Minecraft.getInstance();
             LocalPlayer localPlayer = minecraft.player;
             if(localPlayer instanceof OdysseyPlayer odysseyPlayer){
-                float blizzardFogScale = odysseyPlayer.getBlizzardFogScale((float) event.getPartialTicks());
+                float blizzardFogScale = odysseyPlayer.getBlizzardFogScale((float) event.getPartialTick());
                 if(blizzardFogScale < 1f){
                     float nearDistance = Mth.lerp(blizzardFogScale, 0f, event.getNearPlaneDistance());
                     float farDistance = Mth.lerp(blizzardFogScale, 16f, event.getFarPlaneDistance());
@@ -63,11 +48,11 @@ public class ForgeBusClientEvents {
     }
 
     @SubscribeEvent
-    public static void EntityViewRenderEvent$FogColors(final EntityViewRenderEvent.FogColors event){
+    public static void EntityViewRenderEvent$FogColors(final ViewportEvent.ComputeFogColor event){
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer localPlayer = minecraft.player;
         if(localPlayer instanceof OdysseyPlayer odysseyPlayer){
-            float blizzardFogScale = odysseyPlayer.getBlizzardFogScale((float) event.getPartialTicks());
+            float blizzardFogScale = odysseyPlayer.getBlizzardFogScale((float) event.getPartialTick());
             if(blizzardFogScale < 1f){
                 event.setRed(event.getRed() * Mth.lerp(blizzardFogScale, 0.6f, 1.0f));
                 event.setGreen(event.getGreen() * Mth.lerp(blizzardFogScale, 0.6f, 1.0f));
@@ -96,7 +81,7 @@ public class ForgeBusClientEvents {
     @SubscribeEvent
     public static void onRenderPlayerEvent$Pre(final RenderPlayerEvent.Pre event){
         PlayerRenderer playerRenderer = event.getRenderer();
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         if(playerRenderer instanceof OdysseyPlayerRenderer odysseyPlayerRenderer && player instanceof AbstractClientPlayer abstractClientPlayer){
             odysseyPlayerRenderer.setModelProperties(abstractClientPlayer);
         }
@@ -106,10 +91,10 @@ public class ForgeBusClientEvents {
      * Adjusts FOV for sniper bow
      */
     @SubscribeEvent
-    public static void onFOVModifierEvent(final FOVModifierEvent event) {
-        Player player = event.getEntity();
+    public static void onFOVModifierEvent(final ComputeFovModifierEvent event) {
+        Player player = event.getPlayer();
         if(Minecraft.getInstance().options.getCameraType().isFirstPerson() && player instanceof OdysseyPlayer odysseyPlayer && odysseyPlayer.isSniperScoping()){
-            event.setNewfov(SpyglassItem.ZOOM_FOV_MODIFIER);
+            event.setNewFovModifier(SpyglassItem.ZOOM_FOV_MODIFIER);
         }
         else if (player.isUsingItem()) {
             ItemStack itemStack = player.getUseItem();
@@ -130,7 +115,7 @@ public class ForgeBusClientEvents {
                 } else {
                     f1 *= f1;
                 }
-                event.setNewfov(event.getFov() * (1.0F - f1 * maxFOVDecrease));
+                event.setNewFovModifier(event.getFovModifier() * (1.0F - f1 * maxFOVDecrease));
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.aspect.object;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 
 public interface ActivationAspect {
-    TranslatableComponent getKey();
+    MutableComponent getKeyboardKey();
 }

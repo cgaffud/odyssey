@@ -11,6 +11,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
@@ -65,12 +66,12 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
     @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
         spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
-        this.populateDefaultEquipmentSlots(difficultyInstance);
+        this.populateDefaultEquipmentSlots(this.random, difficultyInstance);
         return spawnGroupData;
     }
 
-    protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
-        super.populateDefaultEquipmentSlots(difficultyInstance);
+    protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance difficultyInstance) {
+        super.populateDefaultEquipmentSlots(randomSource, difficultyInstance);
         Item item = switch(random.nextInt(7)){
             default -> ItemRegistry.CROSSBOW.get();
             case 0 -> ItemRegistry.BANDIT_DAGGER.get();

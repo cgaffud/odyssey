@@ -17,6 +17,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -97,11 +98,12 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         }
     }
 
-    protected int getExperienceReward(Player player) {
+    public int getExperienceReward() {
         if (this.isBaby()) {
-            this.xpReward = (int)((float)this.xpReward * 2.5F);
+            this.xpReward = (int)((double)this.xpReward * 2.5D);
         }
-        return super.getExperienceReward(player);
+
+        return super.getExperienceReward();
     }
 
     public void onSyncedDataUpdated(EntityDataAccessor<?> p_34307_) {
@@ -179,8 +181,8 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         }
     }
 
-    protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
-        super.populateDefaultEquipmentSlots(difficultyInstance);
+    protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance difficultyInstance) {
+        super.populateDefaultEquipmentSlots(randomSource, difficultyInstance);
         Item item;
         if(this.isBaby()){
             populateBabyEquipmentSlots();

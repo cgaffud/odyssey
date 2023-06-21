@@ -14,7 +14,7 @@ public class WraithAmalgamRenderer<T extends WraithAmalgam> extends MobRenderer<
 
     public WraithAmalgamRenderer(EntityRendererProvider.Context context) {
         super(context, new WraithAmalgamModel<>(context.bakeLayer(WraithAmalgamModel.LAYER_LOCATION)), 0.8F);
-        this.addLayer(new ItemInHandLayer<>(this));
+        this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
     }
 
     protected void scale(T entity, PoseStack poseStack, float partialTicks) {

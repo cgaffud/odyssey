@@ -18,6 +18,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Random;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class CornerLeavesBlock extends FlammableLeavesBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final VoxelShape SHAPE_NORTH_EAST = Shapes.or(Block.box(8,0,0,16,16,8));

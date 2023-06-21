@@ -1,0 +1,8 @@
+{
+  "type": "forge:add_features",
+  "biomes": "oddc_arctic",
+  "features": [
+    "oddc:silver_ore_extra"
+  ],
+  "step": "underground_ores"
+}

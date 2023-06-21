@@ -6,6 +6,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class FlammableFenceGateBlock extends FenceGateBlock {
 
     public FlammableFenceGateBlock(Properties p_i48398_1_) {

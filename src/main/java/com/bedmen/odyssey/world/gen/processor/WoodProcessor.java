@@ -3,11 +3,12 @@ package com.bedmen.odyssey.world.gen.processor;
 import com.bedmen.odyssey.block.wood.OdysseyWoodType;
 import com.bedmen.odyssey.registry.BiomeRegistry;
 import com.bedmen.odyssey.registry.BlockRegistry;
-import com.bedmen.odyssey.registry.StructureProcessorRegistry;
+import com.bedmen.odyssey.registry.structure.StructureProcessorRegistry;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
@@ -222,27 +223,25 @@ public class WoodProcessor extends StructureProcessor {
     }
 
     private static WoodType getWoodTypeFromBiome(Holder<Biome> biomeHolder){
-        Biome.BiomeCategory biomeCategory = biomeHolder.value().getBiomeCategory();
         Optional<ResourceKey<Biome>> optionalBiomeResourceKey = biomeHolder.unwrapKey();
         if(optionalBiomeResourceKey.isPresent()){
-            ResourceKey<Biome> biomeResourceKey = optionalBiomeResourceKey.get();
-            if(biomeResourceKey.equals(Biomes.BIRCH_FOREST) || biomeResourceKey.equals(Biomes.OLD_GROWTH_BIRCH_FOREST)){
+            if(biomeHolder.is(Biomes.BIRCH_FOREST) || biomeHolder.is(Biomes.OLD_GROWTH_BIRCH_FOREST)){
                 return WoodType.BIRCH;
-            } else if (biomeCategory == Biome.BiomeCategory.TAIGA || biomeCategory == Biome.BiomeCategory.ICY){
+            } else if (biomeHolder.is(BiomeTags.IS_TAIGA) || biomeHolder.is(BiomeTags.SPAWNS_COLD_VARIANT_FROGS)){
                 return WoodType.SPRUCE;
-            } else if(biomeCategory == Biome.BiomeCategory.JUNGLE){
+            } else if(biomeHolder.is(BiomeTags.IS_JUNGLE)){
                 return WoodType.JUNGLE;
-            } else if(biomeCategory == Biome.BiomeCategory.SAVANNA || biomeResourceKey.equals(BiomeRegistry.PRAIRIE_RESOURCE_KEY)){
+            } else if(biomeHolder.is(BiomeTags.IS_SAVANNA) || biomeHolder.is(BiomeRegistry.PRAIRIE_RESOURCE_KEY)){
                 return WoodType.ACACIA;
-            } else if(biomeResourceKey.equals(Biomes.DARK_FOREST)){
+            } else if(biomeHolder.is(Biomes.DARK_FOREST)){
                 return WoodType.DARK_OAK;
-            } else if(biomeResourceKey.equals(Biomes.CRIMSON_FOREST)){
+            } else if(biomeHolder.is(Biomes.CRIMSON_FOREST)){
                 return WoodType.CRIMSON;
-            } else if(biomeResourceKey.equals(Biomes.WARPED_FOREST)){
+            } else if(biomeHolder.is(Biomes.WARPED_FOREST)){
                 return WoodType.WARPED;
-            } else if(biomeResourceKey.equals(BiomeRegistry.TROPICS_RESOURCE_KEY)){
+            } else if(biomeHolder.is(BiomeRegistry.TROPICS_RESOURCE_KEY)){
                 return OdysseyWoodType.PALM;
-            } else if(biomeResourceKey.equals(Biomes.LUSH_CAVES) || biomeResourceKey.equals(Biomes.DRIPSTONE_CAVES)){
+            } else if(biomeHolder.is(Biomes.LUSH_CAVES) || biomeHolder.is(Biomes.DRIPSTONE_CAVES) || biomeHolder.is(Biomes.DEEP_DARK)){
                 return OdysseyWoodType.GREATWOOD;
             }
         }

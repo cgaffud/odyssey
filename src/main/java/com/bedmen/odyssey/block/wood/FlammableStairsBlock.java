@@ -8,6 +8,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Supplier;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class FlammableStairsBlock extends StairBlock {
     public FlammableStairsBlock(Supplier<BlockState> state, Properties properties) {
         super(state, properties);

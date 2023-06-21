@@ -4,7 +4,6 @@ import com.bedmen.odyssey.inventory.StitchingMenu;
 import com.bedmen.odyssey.util.OdysseyStats;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -18,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class StitchingTableBlock extends CraftingTableBlock {
-    private static final Component CONTAINER_TITLE = new TranslatableComponent("container.oddc.stitching");
+    private static final Component CONTAINER_TITLE = Component.translatable("container.oddc.stitching");
 
     public StitchingTableBlock(BlockBehaviour.Properties properties) {
         super(properties);

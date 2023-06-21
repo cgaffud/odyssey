@@ -17,6 +17,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.Lazy;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class GreatSaplingHelperItem extends Item {
     protected final Lazy<Block> saplingBlock;
     protected final boolean isBottle;

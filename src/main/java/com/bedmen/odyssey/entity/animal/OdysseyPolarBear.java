@@ -16,10 +16,8 @@ import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 
 public class OdysseyPolarBear extends PolarBear {
 
@@ -59,15 +57,20 @@ public class OdysseyPolarBear extends PolarBear {
 
     public InteractionResult mobInteract(Player player, InteractionHand interactionHand) {
         ItemStack itemstack = player.getItemInHand(interactionHand);
-        if (itemstack.is(Items.PORKCHOP)) {
+        if (this.isFood(itemstack)) {
             int i = this.getAge();
+
             if (this.isBaby()) {
                 this.usePlayerItem(player, interactionHand, itemstack);
-                this.ageUp((int)((float)(-i / 20) * 0.1F), true);
-                this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
+                this.ageUp(getSpeedUpSecondsWhenFeeding(-i), true);
                 return InteractionResult.sidedSuccess(this.level.isClientSide);
             }
+
+            if (this.level.isClientSide) {
+                return InteractionResult.CONSUME;
+            }
         }
+
         return super.mobInteract(player, interactionHand);
     }
 

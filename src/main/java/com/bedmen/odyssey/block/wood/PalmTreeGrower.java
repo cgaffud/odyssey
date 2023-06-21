@@ -1,14 +1,21 @@
 package com.bedmen.odyssey.block.wood;
 
-import com.bedmen.odyssey.world.gen.TreeGen;
+import com.bedmen.odyssey.Odyssey;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-
-import java.util.Random;
+import net.minecraftforge.common.util.Lazy;
 
 public class PalmTreeGrower extends AbstractTreeGrower {
-    protected Holder<? extends ConfiguredFeature<?, ?>> getConfiguredFeature(Random random, boolean b) {
-        return TreeGen.PALM;
+
+    private static final ResourceKey<ConfiguredFeature<?,?>> resourceKey = ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, new ResourceLocation(Odyssey.MOD_ID, "palm_tree"));
+    private static final Lazy<Holder<ConfiguredFeature<?,?>>> holder = Lazy.of(() -> BuiltinRegistries.CONFIGURED_FEATURE.getHolderOrThrow(resourceKey));
+    protected Holder<? extends ConfiguredFeature<?, ?>> getConfiguredFeature(RandomSource randomSource, boolean b) {
+        return holder.get();
     }
 }

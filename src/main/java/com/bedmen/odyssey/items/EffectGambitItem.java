@@ -21,6 +21,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.function.Supplier;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemModelProperty{
 
     private final Supplier<MobEffect> buff;

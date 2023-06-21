@@ -2,7 +2,8 @@ package com.bedmen.odyssey.aspect.object;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
 
 import java.util.function.Predicate;
@@ -21,8 +22,8 @@ public class Aspect {
         Aspects.ASPECT_REGISTER.put(id, this);
     }
 
-    public TranslatableComponent getComponent(){
-        return new TranslatableComponent("aspect.oddc."+this.id);
+    public MutableComponent getComponent(){
+        return Component.translatable("aspect.oddc."+this.id);
     }
 
     public float getWeight(Item item){

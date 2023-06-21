@@ -22,7 +22,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class EntityTypeRegistry {
 
-    public static DeferredRegister<EntityType<?>> ENTITY_TYPE = DeferredRegister.create(ForgeRegistries.ENTITIES , Odyssey.MOD_ID);
+    public static DeferredRegister<EntityType<?>> ENTITY_TYPE = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES , Odyssey.MOD_ID);
 
     public static void init() {
         ENTITY_TYPE.register(FMLJavaModLoadingContext.get().getModEventBus());

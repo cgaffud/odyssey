@@ -17,6 +17,8 @@ import net.minecraft.world.item.Tier;
 
 import java.util.List;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class AspectArmorItem extends ArmorItem implements InnateAspectItem, OdysseyTierItem {
 
     private final InnateAspectHolder innateAspectHolder;

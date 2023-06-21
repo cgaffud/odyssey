@@ -7,7 +7,6 @@ import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -66,13 +65,13 @@ public class RecyclingFurnaceBlockEntity extends OdysseyFurnaceBlockEntity {
                 recyclingFurnaceBlockEntity.litDuration = recyclingFurnaceBlockEntity.litTime;
                 if (recyclingFurnaceBlockEntity.isLit()) {
                     flag1 = true;
-                    if (fuelStack.hasContainerItem())
-                        recyclingFurnaceBlockEntity.items.set(SLOT_FUEL, fuelStack.getContainerItem());
+                    if (fuelStack.hasCraftingRemainingItem())
+                        recyclingFurnaceBlockEntity.items.set(SLOT_FUEL, fuelStack.getCraftingRemainingItem());
                     else
                     if (!fuelStack.isEmpty()) {
                         fuelStack.shrink(1);
                         if (fuelStack.isEmpty()) {
-                            recyclingFurnaceBlockEntity.items.set(SLOT_FUEL, fuelStack.getContainerItem());
+                            recyclingFurnaceBlockEntity.items.set(SLOT_FUEL, fuelStack.getCraftingRemainingItem());
                         }
                     }
                 }
@@ -218,7 +217,7 @@ public class RecyclingFurnaceBlockEntity extends OdysseyFurnaceBlockEntity {
     }
 
     protected Component getDefaultName() {
-        return new TranslatableComponent("container.oddc.recycling_furnace");
+        return Component.translatable("container.oddc.recycling_furnace");
     }
 
     protected AbstractContainerMenu createMenu(int containerCounter, Inventory inventory) {

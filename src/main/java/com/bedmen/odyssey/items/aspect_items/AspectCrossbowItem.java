@@ -20,13 +20,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -257,20 +257,20 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
         onCrossbowShot(level, livingEntity, crossbow);
     }
 
-    private static List<Float> getShotPitches(Random random, int size) {
+    private static List<Float> getShotPitches(RandomSource randomSource, int size) {
         List<Float> list = new ArrayList<>();
         list.add(1.0f);
-        boolean randomBool = random.nextBoolean();
+        boolean randomBool = randomSource.nextBoolean();
         for(int i = 1; i < size; i++){
             randomBool = !randomBool;
-            list.add(getRandomShotPitch(randomBool, random));
+            list.add(getRandomShotPitch(randomBool, randomSource));
         }
         return list;
     }
 
-    private static float getRandomShotPitch(boolean randomBool, Random random) {
+    private static float getRandomShotPitch(boolean randomBool, RandomSource randomSource) {
         float f = randomBool ? 0.63F : 0.43F;
-        return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
+        return 1.0F / (randomSource.nextFloat() * 0.5F + 1.8F) + f;
     }
 
     private static void onCrossbowShot(Level level, LivingEntity livingEntity, ItemStack crossbow) {
@@ -409,10 +409,10 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
 
     public void appendHoverText(ItemStack crossbow, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(crossbow, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(WeaponUtil.getMaxDamageMultiplier(crossbow))).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(WeaponUtil.getRangedMaxChargeTicks(crossbow))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("item.oddc.bow.damage_multiplier").append(StringUtil.multiplierFormat(WeaponUtil.getMaxDamageMultiplier(crossbow))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("item.oddc.ranged.charge_time").append(StringUtil.timeFormat(WeaponUtil.getRangedMaxChargeTicks(crossbow))).withStyle(ChatFormatting.BLUE));
         if (flagIn.isAdvanced()) {
-            tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(WeaponUtil.getMaxArrowVelocity(crossbow, true))).withStyle(ChatFormatting.BLUE));
+            tooltip.add(Component.translatable("item.oddc.ranged.velocity").append(StringUtil.floatFormat(WeaponUtil.getMaxArrowVelocity(crossbow, true))).withStyle(ChatFormatting.BLUE));
         }
     }
 

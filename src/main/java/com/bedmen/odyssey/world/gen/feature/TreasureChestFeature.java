@@ -2,10 +2,12 @@ package com.bedmen.odyssey.world.gen.feature;
 
 import com.bedmen.odyssey.block.TreasureChestBlock;
 import com.bedmen.odyssey.lock.TreasureChestType;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.world.WorldGenUtil;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
@@ -21,27 +23,21 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
-    private static final int RARITY = 1;
-    public final TreasureChestType treasureChestType;
-    private final int minY;
-    private final int maxY;
 
-    public TreasureChestFeature(Codec<NoneFeatureConfiguration> codec, TreasureChestType treasureChestType, int minY, int maxY) {
+    public TreasureChestFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
-        this.treasureChestType = treasureChestType;
-        this.minY = minY + 8;
-        this.maxY = maxY;
     }
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
-        Random random = context.random();
+        RandomSource randomSource = context.random();
+        Random random = new Random(randomSource.nextInt());
         WorldGenLevel worldgenlevel = context.level();
         ChunkPos chunkpos = new ChunkPos(context.origin());
         List<Integer> list = IntStream.rangeClosed(chunkpos.getMinBlockX(), chunkpos.getMaxBlockX()).boxed().collect(Collectors.toList());
         Collections.shuffle(list, random);
         List<Integer> list1 = IntStream.rangeClosed(chunkpos.getMinBlockZ(), chunkpos.getMaxBlockZ()).boxed().collect(Collectors.toList());
         Collections.shuffle(list1, random);
-        List<Integer> yList = IntStream.rangeClosed(this.minY / 8, this.maxY / 8).boxed().map((i) -> i*8) .collect(Collectors.toList());
+        List<Integer> yList = IntStream.rangeClosed(worldgenlevel.getMinBuildHeight() / 8, GeneralUtil.START_OF_UNDERGROUND / 8).boxed().map((i) -> i*8) .collect(Collectors.toList());
         Collections.shuffle(yList, random);
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
@@ -53,9 +49,10 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
                         blockpos$mutableblockpos.move(0, -1, 0);
                         BlockPos blockPosBelow = blockpos$mutableblockpos.below();
                         if (WorldGenUtil.isEmpty(worldgenlevel, blockpos$mutableblockpos) && WorldGenUtil.isSolid(worldgenlevel, blockPosBelow)) {
-                            BlockState blockState = this.treasureChestType.getBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
+                            TreasureChestType treasureChestType = getTreasureChestType(blockpos$mutableblockpos.getY());
+                            BlockState blockState = treasureChestType.getBlockState().setValue(TreasureChestBlock.LOCKED, true).setValue(TreasureChestBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(randomSource));
                             worldgenlevel.setBlock(blockpos$mutableblockpos, blockState, 2);
-                            RandomizableContainerBlockEntity.setLootTable(worldgenlevel, random, blockpos$mutableblockpos, this.treasureChestType.lootTable);
+                            RandomizableContainerBlockEntity.setLootTable(worldgenlevel, randomSource, blockpos$mutableblockpos, treasureChestType.lootTable);
                             return true;
                         }
                     }
@@ -66,5 +63,10 @@ public class TreasureChestFeature extends Feature<NoneFeatureConfiguration> {
         return false;
     }
 
-
+    private static TreasureChestType getTreasureChestType(int y){
+        if(y < 0){
+            return TreasureChestType.COPPER;
+        }
+        return TreasureChestType.STERLING_SILVER;
+    }
 }

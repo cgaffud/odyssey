@@ -6,7 +6,7 @@ import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.items.aspect_items.OdysseyMeleeItem;
 import com.bedmen.odyssey.magic.MagicUtil;
 import com.bedmen.odyssey.registry.ContainerRegistry;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -179,7 +179,7 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
                 }
             } else if (!this.itemName.equals(inputStack0.getHoverName().getString())) {
                 levelCost++;
-                resultStack.setHoverName(new TextComponent(this.itemName));
+                resultStack.setHoverName(Component.literal(this.itemName));
             }
 
             // Set the level cost
@@ -231,7 +231,7 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
             if (StringUtils.isBlank(name)) {
                 itemstack.resetHoverName();
             } else {
-                itemstack.setHoverName(new TextComponent(this.itemName));
+                itemstack.setHoverName(Component.literal(this.itemName));
             }
         }
 

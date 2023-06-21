@@ -14,8 +14,9 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderBlockOverlayEvent;
-import net.minecraftforge.client.event.ScreenOpenEvent;
+import net.minecraftforge.client.event.RenderBlockScreenEffectEvent;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -23,27 +24,25 @@ import net.minecraftforge.fml.common.Mod;
 public class GuiEvents {
 
     @SubscribeEvent
-    public static void onScreenOpenEvent(final ScreenOpenEvent event){
+    public static void onScreenOpenEvent(final ScreenEvent.Opening event){
         Screen screen = event.getScreen();
         Minecraft minecraft = Minecraft.getInstance();
-        if(minecraft != null){
-            if(screen instanceof SignEditScreen signEditScreen
-                    && signEditScreen.sign instanceof OdysseySignBlockEntity odysseySignBlockEntity){
-                event.setScreen(new OdysseySignEditScreen(odysseySignBlockEntity, Minecraft.getInstance().isTextFilteringEnabled()));
-            }
-            if(screen instanceof InventoryScreen && !(screen instanceof OdysseyInventoryScreen)){
-                event.setScreen(new OdysseyInventoryScreen(minecraft.player));
-            }
-            if(screen instanceof CreativeModeInventoryScreen && !(screen instanceof OdysseyCreativeModeInventoryScreen)){
-                event.setScreen(new OdysseyCreativeModeInventoryScreen(minecraft.player));
-            }
+        if (screen instanceof SignEditScreen signEditScreen
+                && signEditScreen.sign instanceof OdysseySignBlockEntity odysseySignBlockEntity) {
+            event.setNewScreen(new OdysseySignEditScreen(odysseySignBlockEntity, Minecraft.getInstance().isTextFilteringEnabled()));
+        }
+        if(screen instanceof InventoryScreen && !(screen instanceof OdysseyInventoryScreen)){
+            event.setNewScreen(new OdysseyInventoryScreen(minecraft.player));
+        }
+        if(screen instanceof CreativeModeInventoryScreen && !(screen instanceof OdysseyCreativeModeInventoryScreen)){
+            event.setNewScreen(new OdysseyCreativeModeInventoryScreen(minecraft.player));
         }
     }
 
     @SubscribeEvent
-    public static void onRenderBlockOverlayEvent(final RenderBlockOverlayEvent event) {
+    public static void onRenderBlockOverlayEvent(final RenderBlockScreenEffectEvent event) {
         Player player = event.getPlayer();
-        if ((event.getOverlayType() == RenderBlockOverlayEvent.OverlayType.FIRE)) {
+        if ((event.getOverlayType() == RenderBlockScreenEffectEvent.OverlayType.FIRE)) {
             // Check if the player has a strong fire type
             FireType fireType = RenderUtil.getStrongestFireType(player);
             if(fireType.isNotNone()){

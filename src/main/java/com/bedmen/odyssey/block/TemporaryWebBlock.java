@@ -2,6 +2,7 @@ package com.bedmen.odyssey.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -12,6 +13,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 import java.util.Random;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class TemporaryWebBlock extends OdysseyWebBlock implements TemporaryBlock {
 
@@ -26,7 +29,7 @@ public class TemporaryWebBlock extends OdysseyWebBlock implements TemporaryBlock
         this.scheduleNextTick(level, blockPos, this);
     }
 
-    public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, Random random) {
+    public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
         this.slightlyBreak(blockState, serverLevel, blockPos);
         this.scheduleNextTick(serverLevel, blockPos, this);
     }

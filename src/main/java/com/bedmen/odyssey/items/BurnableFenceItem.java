@@ -7,6 +7,8 @@ import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class BurnableFenceItem extends BlockItem {
     public BurnableFenceItem(Block p_i48527_1_, Properties p_i48527_2_) {
         super(p_i48527_1_, p_i48527_2_);

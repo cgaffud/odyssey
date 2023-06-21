@@ -17,6 +17,8 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class WarpTotemItem extends MagicItem {
 
     private final boolean isCracked;

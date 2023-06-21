@@ -139,7 +139,7 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
         return RecipeTypeRegistry.INFUSER_CRAFTING.get();
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<InfuserCraftingRecipe> {
+    public static class Serializer implements RecipeSerializer<InfuserCraftingRecipe> {
 
         public InfuserCraftingRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             Ingredient centerIngredient = JsonUtil.getIngredient(jsonObject, "centerIngredient");

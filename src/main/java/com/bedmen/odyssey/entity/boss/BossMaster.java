@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public abstract class BossMaster extends Boss {
     public static final String SUB_ENTITIES_TAG = "SubEntities";
 

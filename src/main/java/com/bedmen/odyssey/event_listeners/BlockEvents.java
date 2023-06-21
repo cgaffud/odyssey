@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,7 +19,7 @@ public class BlockEvents {
     @SubscribeEvent
     public static void onCropGrowEvent$Pre(final BlockEvent.CropGrowEvent.Pre event){
         BlockPos blockPos = event.getPos();
-        LevelAccessor levelAccessor = event.getWorld();
+        LevelAccessor levelAccessor = event.getLevel();
         BlockState blockState = levelAccessor.getBlockState(blockPos);
         Block block = blockState.getBlock();
         if((block instanceof CropBlock || block instanceof StemBlock) && levelAccessor.getBiome(blockPos).is(BiomeRegistry.PRAIRIE_RESOURCE_KEY)){

@@ -16,7 +16,6 @@ import com.mojang.math.Vector3f;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -173,7 +172,7 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
 
     public void appendHoverText(ItemStack thrownWeaponStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(thrownWeaponStack, level, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("item.oddc.throwable_weapon.damage").append(StringUtil.doubleFormat(this.getEffectiveDamage(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getFinalVelocity(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("item.oddc.throwable_weapon.damage").append(StringUtil.doubleFormat(this.getEffectiveDamage(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getFinalVelocity(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
     }
 }

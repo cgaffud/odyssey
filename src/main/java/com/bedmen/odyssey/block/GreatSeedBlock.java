@@ -20,6 +20,8 @@ import net.minecraftforge.common.util.Lazy;
 
 import java.util.List;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class GreatSeedBlock extends Block implements INeedsToRegisterRenderType {
     protected static final VoxelShape SHAPE = Block.box(6.0D, 10.0D, 6.0D, 10.0D, 14.0D, 10.0D);
     protected final Lazy<Block> log;

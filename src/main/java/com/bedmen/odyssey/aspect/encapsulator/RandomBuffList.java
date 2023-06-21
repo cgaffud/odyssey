@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.aspect.encapsulator;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -14,11 +15,11 @@ public class RandomBuffList extends RandomAspectList {
         super(list);
     }
 
-    protected void generateAndAdd(ItemStack itemStack, Random random, float chance){
+    protected void generateAndAdd(ItemStack itemStack, RandomSource randomSource, float chance){
         float modifiabilityLeft = AspectUtil.getTotalModifiability(itemStack);
         List<AspectInstance> aspectInstanceList = new ArrayList<>();
         while(modifiabilityLeft > 0.0f && !this.filteredList.isEmpty()){
-            WeightedAspectEntry weightedAspectEntry = getRandomWeightedAspectEntry(random);
+            WeightedAspectEntry weightedAspectEntry = getRandomWeightedAspectEntry(randomSource);
             AspectInstance aspectInstance = weightedAspectEntry.aspect().generateInstanceWithModifiability(itemStack.getItem(), 0.5f);
             float modifiability = aspectInstance.getModifiability(itemStack);
             if(modifiability > modifiabilityLeft){
@@ -35,7 +36,7 @@ public class RandomBuffList extends RandomAspectList {
                 }
             }
         }
-        aspectInstanceList = aspectInstanceList.stream().filter(aspectInstance -> random.nextFloat() < chance).collect(Collectors.toList());
+        aspectInstanceList = aspectInstanceList.stream().filter(aspectInstance -> randomSource.nextFloat() < chance).collect(Collectors.toList());
         aspectInstanceList.forEach(aspectInstance -> AspectUtil.addModifier(itemStack, aspectInstance));
     }
 

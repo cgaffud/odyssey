@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
+import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.world.gen.processor.CrackedBlockProcessor;
 import com.bedmen.odyssey.world.gen.processor.MossyBlockProcessor;
 import com.bedmen.odyssey.world.gen.processor.VineProcessor;
@@ -9,9 +9,10 @@ import com.bedmen.odyssey.world.gen.processor.WoodProcessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -20,10 +21,8 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-
-import java.util.Random;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 public class BasicRuinsPiece extends HeightAdjustingPiece {
 
@@ -36,12 +35,12 @@ public class BasicRuinsPiece extends HeightAdjustingPiece {
             new ResourceLocation(Odyssey.MOD_ID,"basic_ruins/stone_5")
     };
 
-    public BasicRuinsPiece(StructureManager structureManager, BlockPos blockPos, Rotation rotation, int id) {
-        super(StructurePieceTypeRegistry.BASIC_RUINS.get(), 0, structureManager, STRUCTURE_LOCATIONS[id], STRUCTURE_LOCATIONS[id].toString(), makeSettings(), blockPos, rotation);
+    public BasicRuinsPiece(StructureTemplateManager structureTemplateManager, BlockPos blockPos, Rotation rotation, int id) {
+        super(StructurePieceTypeRegistry.BASIC_RUINS.get(), 0, structureTemplateManager, STRUCTURE_LOCATIONS[id], STRUCTURE_LOCATIONS[id].toString(), makeSettings(), blockPos, rotation);
     }
 
-    public BasicRuinsPiece(StructureManager structureManager, CompoundTag compoundTag) {
-        super(StructurePieceTypeRegistry.BASIC_RUINS.get(), compoundTag, structureManager, (resourceLocation) -> makeSettings());
+    public BasicRuinsPiece(StructureTemplateManager structureTemplateManager, CompoundTag compoundTag) {
+        super(StructurePieceTypeRegistry.BASIC_RUINS.get(), compoundTag, structureTemplateManager, (resourceLocation) -> makeSettings());
     }
 
     private static StructurePlaceSettings makeSettings() {
@@ -81,7 +80,7 @@ public class BasicRuinsPiece extends HeightAdjustingPiece {
     }
 
     @Override
-    protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
+    protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
 
     }
 }

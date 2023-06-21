@@ -11,7 +11,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Arrays;
@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ItemModifierArgument implements ArgumentType<Aspect> {
     private static final Collection<String> EXAMPLES = Arrays.asList("knockback", "smite_damage");
-    public static final DynamicCommandExceptionType ERROR_UNKNOWN_MODIFIER = new DynamicCommandExceptionType((object) -> new TranslatableComponent("modifier.unknown", object));
+    public static final DynamicCommandExceptionType ERROR_UNKNOWN_MODIFIER = new DynamicCommandExceptionType((object) -> Component.translatable("modifier.unknown", object));
 
     public static ItemModifierArgument modifier() {
         return new ItemModifierArgument();

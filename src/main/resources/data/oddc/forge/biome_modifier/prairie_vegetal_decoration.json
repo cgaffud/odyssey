@@ -1,0 +1,9 @@
+{
+  "type": "forge:add_features",
+  "biomes": "oddc:prairie",
+  "features": [
+    "oddc:prairie_grass_patch",
+    "oddc:tall_grass_patch"
+  ],
+  "step": "vegetal_decoration"
+}

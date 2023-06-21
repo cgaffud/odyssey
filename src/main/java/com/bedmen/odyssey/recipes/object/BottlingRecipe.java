@@ -91,7 +91,7 @@ public class BottlingRecipe implements CraftingRecipe {
         return RecipeSerializerRegistry.BOTTLING.get();
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<BottlingRecipe> {
+    public static class Serializer implements RecipeSerializer<BottlingRecipe> {
         public BottlingRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             String s = GsonHelper.getAsString(jsonObject, "group", "");
             NonNullList<Ingredient> nonnulllist = itemsFromJson(GsonHelper.getAsJsonArray(jsonObject, "ingredients"));
@@ -106,12 +106,12 @@ public class BottlingRecipe implements CraftingRecipe {
             }
         }
 
-        private static NonNullList<Ingredient> itemsFromJson(JsonArray p_44276_) {
+        private static NonNullList<Ingredient> itemsFromJson(JsonArray jsonArray) {
             NonNullList<Ingredient> nonnulllist = NonNullList.create();
 
-            for(int i = 0; i < p_44276_.size(); ++i) {
-                Ingredient ingredient = Ingredient.fromJson(p_44276_.get(i));
-                if (net.minecraftforge.common.ForgeConfig.SERVER.skipEmptyShapelessCheck.get() || !ingredient.isEmpty()) {
+            for(int i = 0; i < jsonArray.size(); ++i) {
+                Ingredient ingredient = Ingredient.fromJson(jsonArray.get(i));
+                if (!ingredient.isEmpty()) {
                     nonnulllist.add(ingredient);
                 }
             }

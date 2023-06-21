@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.recipes.object;
 
+import com.bedmen.odyssey.block.entity.RecyclingFurnaceBlockEntity;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.RecipeSerializerRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
@@ -87,8 +88,8 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
         return nonnulllist;
     }
 
-    public NonNullList<ItemStack> getOutputForJEI() {
-        NonNullList<ItemStack> nonnulllist = NonNullList.create();
+    public ItemStack[][] getOutputForJEI() {
+        ItemStack[][] jeiOutput = new ItemStack[RecyclingFurnaceBlockEntity.NUM_ROWS][RecyclingFurnaceBlockEntity.NUM_COLUMNS];
         int i = 0;
         for(Map.Entry<Metal, Integer> metalCountEntry : this.metalCounts.entrySet()){
             i++;
@@ -98,16 +99,16 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
             count -= blockCount * 81;
             int ingotCount = count / 9;
             count -= ingotCount * 9;
-            nonnulllist.add(count > 0 ? new ItemStack(metal.getNugget(), count) : ItemStack.EMPTY);
-            nonnulllist.add(ingotCount > 0 ? new ItemStack(metal.getIngot(), ingotCount) : ItemStack.EMPTY);
-            nonnulllist.add(blockCount > 0 ? new ItemStack(metal.getBlock(), blockCount) : ItemStack.EMPTY);
+            jeiOutput[i][0] = count > 0 ? new ItemStack(metal.getNugget(), count) : ItemStack.EMPTY;
+            jeiOutput[i][1] = count > 0 ? new ItemStack(metal.getBlock(), count) : ItemStack.EMPTY;
+            jeiOutput[i][2] = count > 0 ? new ItemStack(metal.getBlock(), count) : ItemStack.EMPTY;
         }
         for(; i < 3; i++){
-            nonnulllist.add(ItemStack.EMPTY);
-            nonnulllist.add(ItemStack.EMPTY);
-            nonnulllist.add(ItemStack.EMPTY);
+            jeiOutput[i][0] = ItemStack.EMPTY;
+            jeiOutput[i][1] = ItemStack.EMPTY;
+            jeiOutput[i][2] = ItemStack.EMPTY;
         }
-        return nonnulllist;
+        return jeiOutput;
     }
 
     /**
@@ -138,7 +139,7 @@ public class RecyclingRecipe extends OdysseyFurnaceRecipe {
         return RecipeSerializerRegistry.RECYCLING.get();
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<RecyclingRecipe> {
+    public static class Serializer implements RecipeSerializer<RecyclingRecipe> {
 
         public RecyclingRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             JsonElement jsonelement1 = GsonHelper.isArrayNode(jsonObject, "ingredient") ? GsonHelper.getAsJsonArray(jsonObject, "ingredient") : GsonHelper.getAsJsonObject(jsonObject, "ingredient");

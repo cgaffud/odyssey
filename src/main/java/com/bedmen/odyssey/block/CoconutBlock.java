@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -34,12 +35,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.Random;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class CoconutBlock extends Block implements BonemealableBlock, INeedsToRegisterRenderType {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_2;
     protected static final VoxelShape[] AABB = new VoxelShape[]{Block.box(6.0D, 10.0D, 6.0D, 10.0D, 14.0D, 10.0D), Block.box(4.0D, 6.0D, 4.0D, 12.0D, 14.0D, 12.0D), Block.box(2.0D, 2.0D, 2.0D, 14.0D, 14.0D, 14.0D)};
 
-    public CoconutBlock(Properties p_i48426_1_) {
-        super(p_i48426_1_);
+    public CoconutBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
     }
 
@@ -67,27 +70,27 @@ public class CoconutBlock extends Block implements BonemealableBlock, INeedsToRe
         return blockState.getValue(AGE) < 2;
     }
 
-    public void randomTick(BlockState p_51782_, ServerLevel p_51783_, BlockPos p_51784_, Random p_51785_) {
-        int i = p_51782_.getValue(AGE);
-        if (i < 2 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(p_51783_, p_51784_, p_51782_, p_51783_.random.nextInt(5) == 0)) {
-            p_51783_.setBlock(p_51784_, p_51782_.setValue(AGE, i + 1), 2);
-            net.minecraftforge.common.ForgeHooks.onCropsGrowPost(p_51783_, p_51784_, p_51782_);
+    public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+        int i = blockState.getValue(AGE);
+        if (i < 2 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(serverLevel, blockPos, blockState, serverLevel.random.nextInt(5) == 0)) {
+            serverLevel.setBlock(blockPos, blockState.setValue(AGE, i + 1), 2);
+            net.minecraftforge.common.ForgeHooks.onCropsGrowPost(serverLevel, blockPos, blockState);
         }
     }
 
-    public boolean canSurvive(BlockState p_196260_1_, LevelReader p_196260_2_, BlockPos p_196260_3_) {
-        return p_196260_2_.getBlockState(p_196260_3_.above()).getBlock() == BlockRegistry.PALM_LEAVES.get();
+    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+        return levelReader.getBlockState(blockPos.above()).getBlock() == BlockRegistry.PALM_LEAVES.get();
     }
 
-    public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
-        return AABB[p_220053_1_.getValue(AGE)];
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+        return AABB[blockState.getValue(AGE)];
     }
 
     @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext p_196258_1_) {
+    public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
         BlockState blockstate = this.defaultBlockState();
-        LevelReader iworldreader = p_196258_1_.getLevel();
-        BlockPos blockpos = p_196258_1_.getClickedPos();
+        LevelReader iworldreader = blockPlaceContext.getLevel();
+        BlockPos blockpos = blockPlaceContext.getClickedPos();
 
         if (blockstate.canSurvive(iworldreader, blockpos)) {
             return blockstate;
@@ -96,27 +99,27 @@ public class CoconutBlock extends Block implements BonemealableBlock, INeedsToRe
         return null;
     }
 
-    public BlockState updateShape(BlockState p_196271_1_, Direction p_196271_2_, BlockState p_196271_3_, LevelAccessor p_196271_4_, BlockPos p_196271_5_, BlockPos p_196271_6_) {
-        return p_196271_2_ == Direction.UP && !p_196271_1_.canSurvive(p_196271_4_, p_196271_5_) ? Blocks.AIR.defaultBlockState() : super.updateShape(p_196271_1_, p_196271_2_, p_196271_3_, p_196271_4_, p_196271_5_, p_196271_6_);
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState1, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos1) {
+        return direction == Direction.UP && !blockState.canSurvive(levelAccessor, blockPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(blockState, direction, blockState1, levelAccessor, blockPos, blockPos1);
     }
 
-    public boolean isValidBonemealTarget(BlockGetter p_176473_1_, BlockPos p_176473_2_, BlockState p_176473_3_, boolean p_176473_4_) {
-        return p_176473_3_.getValue(AGE) < 2;
+    public boolean isValidBonemealTarget(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, boolean b) {
+        return blockState.getValue(AGE) < 2;
     }
 
-    public boolean isBonemealSuccess(Level p_180670_1_, Random p_180670_2_, BlockPos p_180670_3_, BlockState p_180670_4_) {
+    public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
         return true;
     }
 
-    public void performBonemeal(ServerLevel p_225535_1_, Random p_225535_2_, BlockPos p_225535_3_, BlockState p_225535_4_) {
-        p_225535_1_.setBlock(p_225535_3_, p_225535_4_.setValue(AGE, Integer.valueOf(p_225535_4_.getValue(AGE) + 1)), 2);
+    public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+        serverLevel.setBlock(blockPos, blockState.setValue(AGE, Integer.valueOf(blockState.getValue(AGE) + 1)), 2);
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_206840_1_) {
         p_206840_1_.add(AGE);
     }
 
-    public boolean isPathfindable(BlockState p_196266_1_, BlockGetter p_196266_2_, BlockPos p_196266_3_, PathComputationType p_196266_4_) {
+    public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType pathComputationType) {
         return false;
     }
 

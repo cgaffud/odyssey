@@ -1,42 +1,43 @@
 package com.bedmen.odyssey.plugins.jei.categories;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.block.entity.InfuserBlockEntity;
-import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.magic.MagicUtil;
+import com.bedmen.odyssey.plugins.jei.OdysseyRecipeTypes;
 import com.bedmen.odyssey.recipes.object.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
-import com.bedmen.odyssey.util.Union;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.vertex.PoseStack;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+
 public class InfuserCraftingCategory implements IRecipeCategory<InfuserCraftingRecipe> {
+
+    protected static final int inputCenter = 0;
+    protected static final int inputNorth = 1;
+    protected static final int inputWest = 2;
+    protected static final int inputSouth = 3;
+    protected static final int inputEast = 4;
 
     private final Component localizedName;
     private final IDrawable background;
@@ -45,13 +46,12 @@ public class InfuserCraftingCategory implements IRecipeCategory<InfuserCraftingR
     private static final int[] xArrowOffsets = {19, 35, 56, 35};
     private static final int[] yArrowOffsets = {35, 19, 35, 56};
 
-    public static final ResourceLocation UID = new ResourceLocation(Odyssey.MOD_ID, "infuser_crafting");
     public static final ResourceLocation TEXTURE = new ResourceLocation(Odyssey.MOD_ID, "textures/gui/container/infuser.png");
 
     public InfuserCraftingCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(TEXTURE, 0, 0, 136, 90);
-        this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(BlockRegistry.INFUSER.get()));
-        this.localizedName = new TranslatableComponent("block.oddc.infuser");
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(BlockRegistry.INFUSER.get()));
+        this.localizedName = Component.translatable("block.oddc.infuser");
         this.cachedArrowsList = List.of(
                 getCachedArrows(guiHelper, 19, 125, 15, 20, IDrawableAnimated.StartDirection.LEFT),
                 getCachedArrows(guiHelper, 35, 109, 20, 15, IDrawableAnimated.StartDirection.TOP),
@@ -88,37 +88,37 @@ public class InfuserCraftingCategory implements IRecipeCategory<InfuserCraftingR
     }
 
     @Override
-    public ResourceLocation getUid() {
-        return UID;
+    public RecipeType<InfuserCraftingRecipe> getRecipeType() {
+        return OdysseyRecipeTypes.INFUSER_CRAFTING;
+    }
+
+    public void setRecipe(IRecipeLayoutBuilder builder, InfuserCraftingRecipe recipe, IFocusGroup focuses) {
+        builder.addSlot(INPUT, 36, 36)
+                .addIngredients(recipe.getIngredients().get(inputCenter));
+        builder.addSlot(INPUT, 36, 0)
+                .addIngredients(recipe.getIngredients().get(inputNorth));
+        builder.addSlot(INPUT, 0, 36)
+                .addIngredients(recipe.getIngredients().get(inputWest));
+        builder.addSlot(INPUT, 72, 36)
+                .addIngredients(recipe.getIngredients().get(inputSouth));
+        builder.addSlot(INPUT, 36, 72)
+                .addIngredients(recipe.getIngredients().get(inputEast));
+
+        builder.addSlot(OUTPUT, 117, 36)
+                .addItemStack(recipe.getResultItem());
     }
 
     @Override
-    public Class<? extends InfuserCraftingRecipe> getRecipeClass() {
-        return InfuserCraftingRecipe.class;
-    }
-
-    @Override
-    public void setRecipe(IRecipeLayout recipeLayout, InfuserCraftingRecipe recipe, IIngredients ingredients) {
-        IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-        guiItemStacks.init(0, true, 36, 36);
-        guiItemStacks.init(1, true, 36, 0);
-        guiItemStacks.init(2, true, 0, 36);
-        guiItemStacks.init(3, true, 72, 36);
-        guiItemStacks.init(4, true, 36, 72);
-        guiItemStacks.init(5, false, 117, 36);
-
-        guiItemStacks.set(ingredients);
-    }
-
-    @Override
-    public void draw(InfuserCraftingRecipe recipe, PoseStack poseStack, double mouseX, double mouseY) {
+    public void draw(InfuserCraftingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack poseStack, double mouseX, double mouseY) {
         int count = recipe.pedestalRequirementList.size();
         for(int i = 0; i < count; i++){
             IDrawableAnimated arrow = this.cachedArrowsList.get(i).getUnchecked(InfuserBlockEntity.TOTAL_INFUSION_TIME);
             arrow.draw(poseStack, xArrowOffsets[i], yArrowOffsets[i]);
         }
+
         drawExperienceCost(recipe, poseStack, 0);
     }
+
 
     protected void drawExperienceCost(InfuserCraftingRecipe recipe, PoseStack poseStack, int y) {
         ExperienceCost experienceCost = recipe.experienceCost;
@@ -148,30 +148,5 @@ public class InfuserCraftingCategory implements IRecipeCategory<InfuserCraftingR
     @Override
     public boolean isHandled(InfuserCraftingRecipe recipe) {
         return !recipe.isSpecial();
-    }
-
-    @Override
-    public void setIngredients(InfuserCraftingRecipe recipe, IIngredients ingredients) {
-        List<Ingredient> ingredientList = new ArrayList<>();
-        ingredientList.add(recipe.centerIngredient);
-        for(Union<Ingredient, AspectInstance> union: recipe.pedestalRequirementList){
-            if(union.valueIsFirstType()){
-                ingredientList.add(union.getFirstTypeValue());
-            } else {
-                List<Item> itemList = new ArrayList<>();
-                AspectInstance aspectInstance = union.getSecondTypeValue();
-                for(Item item: ForgeRegistries.ITEMS.getValues()){
-                    if(item instanceof InnateAspectItem innateAspectItem){
-                        float strength = innateAspectItem.getInnateAspectHolder().allAspectMap.get(aspectInstance.aspect);
-                        if(strength >= aspectInstance.strength){
-                            itemList.add(item);
-                        }
-                    }
-                }
-                ingredientList.add(Ingredient.of(itemList.stream().map(Item::getDefaultInstance)));
-            }
-        }
-        ingredients.setInputIngredients(ingredientList);
-        ingredients.setOutput(VanillaTypes.ITEM_STACK, recipe.getResultItem());
     }
 }

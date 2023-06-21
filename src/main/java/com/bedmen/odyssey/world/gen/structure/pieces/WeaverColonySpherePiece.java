@@ -2,15 +2,16 @@ package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
+import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.world.WorldGenUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.levelgen.structure.ScatteredFeaturePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 
 import java.util.Optional;
-import java.util.Random;
 
 public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
     private final double radius;
@@ -49,7 +49,7 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
         compoundTag.putBoolean(HAS_SPAWNED_WEAVERS_TAG, this.hasSpawnedWeavers);
     }
 
-    public void postProcess(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos origin) {
+    public void postProcess(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos origin) {
         double outerRadius = this.radius * 0.85d;
         double innerRadius = this.radius * 0.5d;
         int intRadius = Mth.ceil(this.radius);
@@ -67,9 +67,9 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
                     BlockPos blockPos = center.offset(x,y,z);
                     if(chunkBoundingBox.isInside(blockPos)){
                         double dist = Math.sqrt(center.distSqr(blockPos));
-                        if(dist > innerRadius && dist < this.radius && random.nextDouble() < 1d / Math.abs(outerRadius == dist ? 1.0d : outerRadius - dist)) {
+                        if(dist > innerRadius && dist < this.radius && randomSource.nextDouble() < 1d / Math.abs(outerRadius == dist ? 1.0d : outerRadius - dist)) {
                             worldGenLevel.setBlock(blockPos, coarseDirt, 2);
-                        } else if(dist > innerRadius && dist < this.radius && random.nextInt(4) == 0) {
+                        } else if(dist > innerRadius && dist < this.radius && randomSource.nextInt(4) == 0) {
                             worldGenLevel.setBlock(blockPos, cobweb, 2);
                         } else if (dist <= outerRadius){
                             worldGenLevel.setBlock(blockPos, air, 2);
@@ -81,21 +81,21 @@ public class WeaverColonySpherePiece extends ScatteredFeaturePiece {
 
         // Make a tunnel from the colony to the surface
         if(chunkBoundingBox.isInside(center)){
-            Optional<BlockPos> endOfTunnelPos = this.makeTunnel(worldGenLevel, center.above(Mth.ceil(outerRadius)), random, chunkBoundingBox);
+            Optional<BlockPos> endOfTunnelPos = this.makeTunnel(worldGenLevel, center.above(Mth.ceil(outerRadius)), randomSource, chunkBoundingBox);
             this.spawnWeavers(worldGenLevel, center.below(2), endOfTunnelPos, chunkBoundingBox);
         }
     }
 
-    private Optional<BlockPos> makeTunnel(WorldGenLevel worldGenLevel, BlockPos startingPos, Random random, BoundingBox chunkBoundingBox){
+    private Optional<BlockPos> makeTunnel(WorldGenLevel worldGenLevel, BlockPos startingPos, RandomSource randomSource, BoundingBox chunkBoundingBox){
         if(!this.hasMadeTunnel){
             BlockPos.MutableBlockPos mutableBlockPos = startingPos.mutable();
             BlockState lastReplaced = Blocks.STONE.defaultBlockState();
             while(mutableBlockPos.getY() <= 63 || lastReplaced.getBlock() != Blocks.AIR){
                 // 50% chance to move over horizontally,
-                if(random.nextBoolean()){
+                if(randomSource.nextBoolean()){
                     BlockPos newBlockPos;
                     do{
-                        newBlockPos = mutableBlockPos.relative(getRandomHorizontalDirection(random));
+                        newBlockPos = mutableBlockPos.relative(getRandomHorizontalDirection(randomSource));
                     } while(!chunkBoundingBox.isInside(newBlockPos));
                     mutableBlockPos = newBlockPos.mutable();
                 }

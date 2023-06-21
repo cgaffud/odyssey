@@ -5,14 +5,13 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 import java.util.Optional;
 
 public class SetBonusAspectHolder implements AspectHolder {
-    private static final MutableComponent SET_BONUS_ABILITY_HEADER = new TranslatableComponent("aspect_tooltip.oddc.set_bonus_abilities");
+    private static final MutableComponent SET_BONUS_ABILITY_HEADER = Component.translatable("aspect_tooltip.oddc.set_bonus_abilities");
     private static final ChatFormatting SET_BONUS_COLOR = ChatFormatting.AQUA;
 
     public final List<AspectInstance> aspectInstanceList;

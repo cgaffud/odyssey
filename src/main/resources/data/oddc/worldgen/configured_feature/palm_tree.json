@@ -1,0 +1,42 @@
+{
+  "config": {
+    "trunk_provider": {
+      "state": {
+        "Properties": {
+          "axis": "y"
+        },
+        "Name": "oddc:palm_log"
+      },
+      "type": "oddc:simple_state_provider"
+    },
+    "trunk_placer": {
+      "base_height": 6,
+      "height_rand_a": 1,
+      "height_rand_b": 0,
+      "type": "oddc:leaning_trunk_placer"
+    },
+    "foliage_provider": {
+      "state": {
+        "Properties": {
+          "persistent": "false",
+          "distance": "7"
+        },
+        "Name": "oddc:palm_leaves"
+      },
+      "type": "oddc:simple_state_provider"
+    },
+    "foliage_placer": {
+      "radius": 5,
+      "offset": 0,
+      "type": "oddc:palm_foliage_placer"
+    },
+    "minimum_size": {
+      "limit": 1,
+      "lower_size": 1,
+      "upper_size": 2,
+      "type": "minecraft:two_layers_feature_size"
+    },
+    "ignore_vines": true
+  },
+  "type": "oddc:corner_leaf_tree"
+}

@@ -6,6 +6,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -37,10 +38,10 @@ public class ModifyWithTierFunction extends LootItemConditionalFunction {
     }
 
     public ItemStack run(ItemStack itemStack, LootContext lootContext) {
-        Random random = lootContext.getRandom();
+        RandomSource randomSource = lootContext.getRandom();
         int tier = this.tier.getInt(lootContext);
-        AspectTierManager.itemStackModifyByTier(itemStack, random, tier, BUFF_CHANCE, false);
-        AspectTierManager.itemStackModifyByTier(itemStack, random, tier, CURSE_CHANCE, true);
+        AspectTierManager.itemStackModifyByTier(itemStack, randomSource, tier, BUFF_CHANCE, false);
+        AspectTierManager.itemStackModifyByTier(itemStack, randomSource, tier, CURSE_CHANCE, true);
         return itemStack;
     }
 

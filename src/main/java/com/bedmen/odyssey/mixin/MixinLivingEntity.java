@@ -166,7 +166,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
                     }
                 }
 
-                if (!this.level.isClientSide && this.isPassenger() && this.getVehicle() != null && !this.getVehicle().canBeRiddenInWater(this)) {
+                if (!this.level.isClientSide && this.isPassenger() && this.getVehicle() != null && !this.getVehicle().canBeRiddenUnderFluidType(this.getEyeInFluidType(), this)) {
                     this.stopRiding();
                 }
             } else if (this.getAirSupply() < this.getMaxAirSupply()) {

@@ -105,7 +105,7 @@ public abstract class CovenWitch extends BossSubEntity<CovenMaster> {
     // Server-side
     public void becomeEnraged() {
         if(!this.isEnraged){
-            if(this.level.canSeeSky(this.eyeBlockPosition())){
+            if(this.level.canSeeSky(this.blockPosition())){
                 LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(this.level);
                 lightningBolt.moveTo(this.position());
                 lightningBolt.setVisualOnly(true);
@@ -200,7 +200,7 @@ public abstract class CovenWitch extends BossSubEntity<CovenMaster> {
     @Override
     public boolean canBeAffected(MobEffectInstance p_33809_) {
         if (p_33809_.getEffect() == EffectRegistry.HEXFLAME.get()) {
-            net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent event = new net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent(this, p_33809_);
+            net.minecraftforge.event.entity.living.MobEffectEvent.Applicable event = new net.minecraftforge.event.entity.living.MobEffectEvent.Applicable(this, p_33809_);
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
             return event.getResult() == net.minecraftforge.eventbus.api.Event.Result.ALLOW;
         }

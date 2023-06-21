@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.world.gen.processor;
 
-import com.bedmen.odyssey.registry.StructureProcessorRegistry;
+import com.bedmen.odyssey.registry.structure.StructureProcessorRegistry;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.Random;
 
 public class CrackedBlockProcessor extends StructureProcessor {
 
@@ -36,13 +36,13 @@ public class CrackedBlockProcessor extends StructureProcessor {
 
     @Nullable
     public StructureTemplate.StructureBlockInfo processBlock(LevelReader levelReader, BlockPos blockPos, BlockPos blockPos1, StructureTemplate.StructureBlockInfo structureBlockInfo, StructureTemplate.StructureBlockInfo structureBlockInfo1, StructurePlaceSettings structurePlaceSettings) {
-        Random random = structurePlaceSettings.getRandom(structureBlockInfo1.pos);
+        RandomSource randomSource = structurePlaceSettings.getRandom(structureBlockInfo1.pos);
         BlockState blockState = structureBlockInfo1.state;
         BlockPos blockpos = structureBlockInfo1.pos;
         BlockState newBlockState = null;
 
         Block block = blockState.getBlock();
-        if(CRACKED_MAP.containsKey(block) && random.nextFloat() < this.crackPercent){
+        if(CRACKED_MAP.containsKey(block) && randomSource.nextFloat() < this.crackPercent){
             newBlockState = CRACKED_MAP.get(block).withPropertiesOf(blockState);
         }
 

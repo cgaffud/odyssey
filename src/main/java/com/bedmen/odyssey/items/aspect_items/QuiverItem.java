@@ -8,7 +8,6 @@ import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.util.StringUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
@@ -23,6 +22,8 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class QuiverItem extends Item implements InnateAspectItem, OdysseyTierItem {
 
@@ -57,6 +58,6 @@ public class QuiverItem extends Item implements InnateAspectItem, OdysseyTierIte
     }
 
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(new TranslatableComponent("item.oddc.quiver.free_ammo_chance").append(StringUtil.percentFormat(this.quiverType.freeAmmoChance)).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("item.oddc.quiver.free_ammo_chance").append(StringUtil.percentFormat(this.quiverType.freeAmmoChance)).withStyle(ChatFormatting.BLUE));
     }
 }

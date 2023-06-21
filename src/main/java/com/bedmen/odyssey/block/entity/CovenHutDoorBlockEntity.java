@@ -7,21 +7,21 @@ import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.world.gen.StructureResourceKeys;
-import com.bedmen.odyssey.world.gen.structure.CovenHutFeature;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
+import com.bedmen.odyssey.world.gen.structure.CovenHutStructure;
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
+
+import java.util.Optional;
 
 public class CovenHutDoorBlockEntity extends BlockEntity {
 
@@ -36,13 +36,16 @@ public class CovenHutDoorBlockEntity extends BlockEntity {
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, CovenHutDoorBlockEntity covenHutDoorBlockEntity) {
         if(covenHutDoorBlockEntity.boundingBox == null && level instanceof ServerLevel serverlevel){
-            StructureFeatureManager structureFeatureManager = serverlevel.structureFeatureManager();
-            ConfiguredStructureFeature<?, ?> configuredstructurefeature = structureFeatureManager.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).get(StructureResourceKeys.COVEN_HUT);
-            if(configuredstructurefeature != null){
-                BlockPos heightAdjustedBlockPos = blockPos.atY(CovenHutFeature.INITIAL_HEIGHT);
-                StructureStart structureStart = structureFeatureManager.getStructureAt(heightAdjustedBlockPos, configuredstructurefeature);
-                if(structureStart.isValid()){
-                    covenHutDoorBlockEntity.boundingBox = AABB.of(structureStart.getBoundingBox()).move(0, blockPos.getY() - CovenHutFeature.INITIAL_HEIGHT -  1, 0).inflate(5.0d);
+            Optional<HolderSet<Structure>> optionalStructureHolderSet = serverlevel.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY).getHolder(StructureResourceKeys.COVEN_HUT).map(HolderSet::direct);
+            if(optionalStructureHolderSet.isPresent()){
+                Pair<BlockPos, Holder<Structure>> blockPosStructureHolderPair = serverlevel.getChunkSource().getGenerator().findNearestMapStructure(serverlevel, optionalStructureHolderSet.get(), blockPos, 100, false);
+                if(blockPosStructureHolderPair != null){
+                    Holder<Structure> structureHolder = blockPosStructureHolderPair.getSecond();
+                    BlockPos heightAdjustedBlockPos = blockPos.atY(CovenHutStructure.INITIAL_HEIGHT);
+                    StructureStart structureStart = serverlevel.structureManager().getStructureAt(heightAdjustedBlockPos, structureHolder.get());
+                    if(structureStart.isValid()){
+                        covenHutDoorBlockEntity.boundingBox = AABB.of(structureStart.getBoundingBox()).move(0, blockPos.getY() - CovenHutStructure.INITIAL_HEIGHT -  1, 0).inflate(5.0d);
+                    }
                 }
             }
         }

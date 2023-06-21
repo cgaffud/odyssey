@@ -19,7 +19,7 @@ public class OdysseyItemTags {
 
     public static final TagKey<Item> CROSSBOWS = create("crossbows");
     
-    private static TagKey<Item> create(String name) {
-        return ForgeRegistries.ITEMS.tags().createTagKey(new ResourceLocation(Odyssey.MOD_ID, name));
+    private static TagKey<Item> create(String key) {
+        return ForgeRegistries.ITEMS.tags().createTagKey(new ResourceLocation(Odyssey.MOD_ID, key));
     }
 }

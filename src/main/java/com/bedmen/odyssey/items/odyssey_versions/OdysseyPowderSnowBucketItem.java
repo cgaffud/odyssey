@@ -20,6 +20,8 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class OdysseyPowderSnowBucketItem extends SolidBucketItem {
     public OdysseyPowderSnowBucketItem(Properties properties) {
         super(Blocks.POWDER_SNOW, SoundEvents.BUCKET_EMPTY_POWDER_SNOW, properties);

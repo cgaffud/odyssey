@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class ContainerRegistry {
 
-    public static DeferredRegister<MenuType<?>> CONTAINER = DeferredRegister.create(ForgeRegistries.CONTAINERS , Odyssey.MOD_ID);
+    public static DeferredRegister<MenuType<?>> CONTAINER = DeferredRegister.create(ForgeRegistries.MENU_TYPES , Odyssey.MOD_ID);
 
     public static void init() {
         CONTAINER.register(FMLJavaModLoadingContext.get().getModEventBus());

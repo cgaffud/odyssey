@@ -6,6 +6,7 @@ import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.Difficulty;
@@ -72,22 +73,22 @@ public class Wraith extends AbstractWraith implements RangedAttackMob {
     }
 
     @javax.annotation.Nullable
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_32146_, DifficultyInstance p_32147_, MobSpawnType p_32148_, @javax.annotation.Nullable SpawnGroupData p_32149_, @javax.annotation.Nullable CompoundTag p_32150_) {
-        p_32149_ = super.finalizeSpawn(p_32146_, p_32147_, p_32148_, p_32149_, p_32150_);
-        this.populateDefaultEquipmentSlots(p_32147_);
-        this.populateDefaultEquipmentEnchantments(p_32147_);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @javax.annotation.Nullable SpawnGroupData spawnGroupData, @javax.annotation.Nullable CompoundTag compoundTag) {
+        spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+        this.populateDefaultEquipmentSlots(this.random, difficultyInstance);
+        this.populateDefaultEquipmentEnchantments(this.random, difficultyInstance);
         this.reassessWeaponGoal();
-        this.setCanPickUpLoot(this.random.nextFloat() < 0.55F * p_32147_.getSpecialMultiplier());
-        return p_32149_;
+        this.setCanPickUpLoot(this.random.nextFloat() < 0.55F * difficultyInstance.getSpecialMultiplier());
+        return spawnGroupData;
     }
 
-    public void readAdditionalSaveData(CompoundTag p_32152_) {
-        super.readAdditionalSaveData(p_32152_);
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
         this.reassessWeaponGoal();
     }
 
-    public void setItemSlot(EquipmentSlot p_32138_, ItemStack p_32139_) {
-        super.setItemSlot(p_32138_, p_32139_);
+    public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
+        super.setItemSlot(equipmentSlot, itemStack);
         if (!this.level.isClientSide) {
             this.reassessWeaponGoal();
         }
@@ -120,8 +121,8 @@ public class Wraith extends AbstractWraith implements RangedAttackMob {
         return p_32144_ == ItemRegistry.BOW.get();
     }
 
-    protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
-        super.populateDefaultEquipmentSlots(difficultyInstance);
+    protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance difficultyInstance) {
+        super.populateDefaultEquipmentSlots(randomSource, difficultyInstance);
         Item item = random.nextBoolean() ? ItemRegistry.VOID_BOW.get() : ItemRegistry.VOID_SWORD.get();
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
     }

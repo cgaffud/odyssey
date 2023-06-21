@@ -4,6 +4,7 @@ import com.bedmen.odyssey.aspect.encapsulator.RandomAspectList;
 import com.bedmen.odyssey.aspect.encapsulator.RandomBuffList;
 import com.bedmen.odyssey.aspect.encapsulator.RandomCurseList;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -14,13 +15,13 @@ public class AspectTierManager {
 
     public static final int HIGHEST_TIER = 2;
 
-    public static ItemStack itemModifyByTier(Item item, Random random, int tier, float chance, boolean curse) {
-        return itemStackModifyByTier(item.getDefaultInstance(), random, tier, chance, curse);
+    public static ItemStack itemModifyByTier(Item item, RandomSource randomSource, int tier, float chance, boolean curse) {
+        return itemStackModifyByTier(item.getDefaultInstance(), randomSource, tier, chance, curse);
     }
 
-    public static ItemStack itemStackModifyByTier(ItemStack itemStack, Random random, int tier, float chance, boolean curse) {
+    public static ItemStack itemStackModifyByTier(ItemStack itemStack, RandomSource randomSource, int tier, float chance, boolean curse) {
         RandomAspectList randomAspectList = curse ? CURSES_BY_TIER.get(tier-1) :  BUFFS_BY_TIER.get(tier-1);
-        randomAspectList.addAspectInstances(itemStack, random, chance);
+        randomAspectList.addAspectInstances(itemStack, randomSource, chance);
         return itemStack;
     }
 

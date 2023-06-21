@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
+import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.world.gen.processor.CobwebProcessor;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
@@ -11,8 +11,8 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 public class BarnSpawnerPiece extends RotatedStructurePiece {
 
@@ -28,13 +28,13 @@ public class BarnSpawnerPiece extends RotatedStructurePiece {
             Pair.of(new ResourceLocation(Odyssey.MOD_ID,"barn/spawner_column_2"), new BlockPos(9, 5, 14))
     };
 
-    public BarnSpawnerPiece(StructureManager structureManager, BlockPos blockPos, Rotation rotation, int id) {
-        super(StructurePieceTypeRegistry.BARN_SPAWNER.get(), 1, structureManager, PIECE_INFOS[id].getFirst(), PIECE_INFOS[id].getFirst().toString(), makeSettings(), blockPos.offset(PIECE_INFOS[id].getSecond().rotate(rotation)), rotation);
+    public BarnSpawnerPiece(StructureTemplateManager structureTemplateManager, BlockPos blockPos, Rotation rotation, int id) {
+        super(StructurePieceTypeRegistry.BARN_SPAWNER.get(), 1, structureTemplateManager, PIECE_INFOS[id].getFirst(), PIECE_INFOS[id].getFirst().toString(), makeSettings(), blockPos.offset(PIECE_INFOS[id].getSecond().rotate(rotation)), rotation);
         this.id = id;
     }
 
-    public BarnSpawnerPiece(StructureManager structureManager, CompoundTag compoundTag) {
-        super(StructurePieceTypeRegistry.BARN.get(), compoundTag, structureManager, (resourceLocation) -> makeSettings());
+    public BarnSpawnerPiece(StructureTemplateManager structureTemplateManager, CompoundTag compoundTag) {
+        super(StructurePieceTypeRegistry.BARN.get(), compoundTag, structureTemplateManager, (resourceLocation) -> makeSettings());
         this.id = compoundTag.getInt(ID_TAG);
     }
 

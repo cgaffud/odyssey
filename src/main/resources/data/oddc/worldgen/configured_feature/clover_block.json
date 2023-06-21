@@ -1,0 +1,8 @@
+{
+  "config": {
+    "to_place": {
+      "Name": "oddc:clover"
+    }
+  },
+  "type": "minecraft:simple_block"
+}

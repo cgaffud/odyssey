@@ -13,6 +13,8 @@ import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class StripableLogBlock extends FlammableLogBlock {
 
     private final RegistryObject<Block> strippedBlock;

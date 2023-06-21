@@ -1,6 +1,5 @@
 package com.bedmen.odyssey;
 
-import com.bedmen.odyssey.block.wood.OdysseyFlowerPotBlock;
 import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.entity.boss.AbandonedIronGolem;
 import com.bedmen.odyssey.entity.boss.coven.CovenMaster;
@@ -17,21 +16,25 @@ import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.recipes.OdysseyRecipeBook;
 import com.bedmen.odyssey.registry.*;
+import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
+import com.bedmen.odyssey.registry.structure.StructureProcessorRegistry;
+import com.bedmen.odyssey.registry.structure.StructureTypeRegistry;
+import com.bedmen.odyssey.registry.tree.FoliagePlacerTypeRegistry;
+import com.bedmen.odyssey.registry.tree.TrunkPlacerTypeRegistry;
 import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.trades.OdysseyTrades;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.world.BiomeUtil;
-import com.bedmen.odyssey.world.gen.FeatureGen;
 import com.bedmen.odyssey.world.gen.OdysseyGeneration;
-import com.bedmen.odyssey.world.gen.OreGen;
-import com.bedmen.odyssey.world.gen.TreeGen;
 import com.bedmen.odyssey.world.gen.processor.WoodProcessor;
-import com.bedmen.odyssey.world.spawn.OdysseyBiomeEntitySpawn;
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.monster.Husk;
 import net.minecraft.world.entity.monster.Stray;
@@ -64,20 +67,20 @@ public class Odyssey
         BiomeRegistry.init();
         BlockEntityTypeRegistry.init();
         ContainerRegistry.init();
-        DataSerializerRegistry.init();
+        EntityDataSerializerRegistry.init();
         EffectRegistry.init();
         EntityTypeRegistry.init();
         FeatureRegistry.init();
         FoliagePlacerTypeRegistry.init();
         LootModifierRegistry.init();
         ParticleTypeRegistry.init();
-//        PotionRegistry.init();
         RecipeSerializerRegistry.init();
         RecipeTypeRegistry.init();
         SoundEventRegistry.init();
-        StructureFeatureRegistry.init();
+        StructureTypeRegistry.init();
         StructurePieceTypeRegistry.init();
         StructureProcessorRegistry.init();
+        TrunkPlacerTypeRegistry.init();
         WorldTypeRegistry.init();
     }
 
@@ -85,27 +88,20 @@ public class Odyssey
         event.enqueueWork(() -> {
             OdysseyNetwork.init();
             ContainerRegistry.initQuivers();
-            FeatureRegistry.initTreasureChests();
-            OdysseyFlowerPotBlock.registerFlowerPots();
             CompostUtil.addCompostingRecipes();
             OdysseyLootItemFunctions.registerFunctions();
             OdysseyTrades.addTrades();
             EntityEvents.initEntityMap();
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
-            PoiType.WEAPONSMITH.matchingStates = ImmutableSet.copyOf(BlockRegistry.GRINDSTONE.get().getStateDefinition().getPossibleStates());
-            OdysseyRecipeBook.init();
+            Registry.register(Registry.POINT_OF_INTEREST_TYPE, PoiTypes.WEAPONSMITH, new PoiType(ImmutableSet.copyOf(BlockRegistry.GRINDSTONE.get().getStateDefinition().getPossibleStates()), 1, 1));
             OdysseyPowderSnowBucketItem.registerDispenseBehavior();
 
             //Generation
             BiomeUtil.init();
-            OreGen.registerOres();
-            FeatureGen.registerFeatures();
-            TreeGen.registerTrees();
-            NoiseGeneratorSettings.register(WorldTypeRegistry.ODYSSEY_RESOURCE_KEY, OdysseyGeneration.odysseyOverworld(false, false));
+            NoiseGeneratorSettings.register(BuiltinRegistries.NOISE_GENERATOR_SETTINGS, WorldTypeRegistry.ODYSSEY_RESOURCE_KEY, OdysseyGeneration.odysseyOverworld(false, false));
             WoodProcessor.init();
 
             //Spawning
-            OdysseyBiomeEntitySpawn.registerSpawners();
             SpawnPlacements.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BabyLeviathan::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.WEAVER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Weaver::spawnPredicate);
             SpawnPlacements.register(EntityTypeRegistry.WRAITH.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Wraith::spawnPredicate);

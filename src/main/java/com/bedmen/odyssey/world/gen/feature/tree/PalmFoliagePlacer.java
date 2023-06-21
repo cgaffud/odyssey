@@ -4,11 +4,12 @@ import com.bedmen.odyssey.block.CoconutBlock;
 import com.bedmen.odyssey.block.HollowCoconutBlock;
 import com.bedmen.odyssey.block.wood.CornerLeavesBlock;
 import com.bedmen.odyssey.registry.BlockRegistry;
-import com.bedmen.odyssey.registry.FoliagePlacerTypeRegistry;
+import com.bedmen.odyssey.registry.tree.FoliagePlacerTypeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,7 +18,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.TreeConfigurati
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 
-import java.util.Random;
 import java.util.function.BiConsumer;
 
 public class PalmFoliagePlacer extends FoliagePlacer {
@@ -30,17 +30,17 @@ public class PalmFoliagePlacer extends FoliagePlacer {
     }
 
     protected FoliagePlacerType<?> type() {
-        return FoliagePlacerTypeRegistry.PALM.get();
+        return FoliagePlacerTypeRegistry.PALM_FOLIAGE_PLACER.get();
     }
 
     @Override
-    protected void createFoliage(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, TreeConfiguration treeConfiguration, int p_161350_, FoliagePlacer.FoliageAttachment foliageAttachment, int foliageHeight, int foliageRadius, int offset) {
+    protected void createFoliage(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, RandomSource randomSource, TreeConfiguration treeConfiguration, int p_161350_, FoliagePlacer.FoliageAttachment foliageAttachment, int foliageHeight, int foliageRadius, int offset) {
         BlockPos blockpos = foliageAttachment.pos();
         for (int h = -1; h < foliageHeight; h++)
-            this.placeLeavesRow(levelSimulatedReader, biConsumer, random, treeConfiguration, blockpos, foliageRadius, h, false);
+            this.placeLeavesRow(levelSimulatedReader, biConsumer, randomSource, treeConfiguration, blockpos, foliageRadius, h, false);
     }
 
-    protected void placeLeavesRow(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, TreeConfiguration treeConfiguration, BlockPos blockPos, int foliageRadius, int height, boolean isDoubleTrunk) {
+    protected void placeLeavesRow(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, RandomSource randomSource, TreeConfiguration treeConfiguration, BlockPos blockPos, int foliageRadius, int height, boolean isDoubleTrunk) {
         int i = isDoubleTrunk ? 1 : 0;
         BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos();
 
@@ -59,7 +59,7 @@ public class PalmFoliagePlacer extends FoliagePlacer {
                     if((absj == 0 && absk == 1) || (absj == 1 && absk == 0)){
                         blockpos$mutable.setWithOffset(blockPos, j, height, k);
                         BlockState blockState = null;
-                        switch(random.nextInt(20)){
+                        switch(randomSource.nextInt(20)){
                             case 0:
                                 blockState = BlockRegistry.COCONUT.get().defaultBlockState().setValue(CoconutBlock.AGE, 0);
                                 break;
@@ -82,16 +82,16 @@ public class PalmFoliagePlacer extends FoliagePlacer {
                     }
                 }
 
-                if (!this.shouldSkipLocationSigned(random, j, height, k, foliageRadius, isDoubleTrunk)) {
+                if (!this.shouldSkipLocationSigned(randomSource, j, height, k, foliageRadius, isDoubleTrunk)) {
                     blockpos$mutable.setWithOffset(blockPos, j, height, k);
-                    tryPlaceLeaf(levelSimulatedReader, biConsumer, random, treeConfiguration, blockpos$mutable);
+                    tryPlaceLeaf(levelSimulatedReader, biConsumer, randomSource, treeConfiguration, blockpos$mutable);
                 }
             }
         }
     }
 
     @Override
-    public int foliageHeight(Random random, int treeHeight, TreeConfiguration config) {
+    public int foliageHeight(RandomSource randomSource, int treeHeight, TreeConfiguration config) {
         return treeHeight-4;
     }
 
@@ -106,7 +106,7 @@ public class PalmFoliagePlacer extends FoliagePlacer {
     }
 
     @Override
-    protected boolean shouldSkipLocation(Random random, int xOff, int yOff, int zOff, int radius, boolean isDoubleTrunk) {
+    protected boolean shouldSkipLocation(RandomSource randomSource, int xOff, int yOff, int zOff, int radius, boolean isDoubleTrunk) {
         int smallRadius = radius/2;
         int horizontalSum = xOff + zOff;
         if ((yOff >= 0) && (yOff+horizontalSum) <= smallRadius)

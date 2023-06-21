@@ -9,6 +9,8 @@ import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class OdysseyMapItem extends MapItem {
     public OdysseyMapItem(Properties properties) {
         super(properties);

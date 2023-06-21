@@ -22,6 +22,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class InfusionPedestalBlock extends BaseEntityBlock {
 
     protected static final VoxelShape BASE_1 = Block.box(1.0d, 0.0d, 1.0d, 15.0d, 2.0d, 15.0d);

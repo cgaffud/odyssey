@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class BlockEntityTypeRegistry {
 
-    public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES , Odyssey.MOD_ID);
+    public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES , Odyssey.MOD_ID);
 
     public static void init() {
         BLOCK_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());

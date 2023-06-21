@@ -12,6 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.client.model.HumanoidModel.ArmPose;
+
 @OnlyIn(Dist.CLIENT)
 public class OdysseyAbstractSkeletonModel<T extends OdysseyAbstractSkeleton> extends HumanoidModel<T> {
     public OdysseyAbstractSkeletonModel(ModelPart modelPart) {

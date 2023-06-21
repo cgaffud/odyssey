@@ -120,7 +120,7 @@ public class StitchingRecipe implements Recipe<Container> {
         return RecipeSerializerRegistry.STITCHING.get();
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<StitchingRecipe> {
+    public static class Serializer implements RecipeSerializer<StitchingRecipe> {
 
         public StitchingRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             Ingredient ingredient1 = JsonUtil.getIngredient(jsonObject, "ingredient1");

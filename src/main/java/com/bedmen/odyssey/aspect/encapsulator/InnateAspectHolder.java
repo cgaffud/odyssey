@@ -6,7 +6,6 @@ import com.bedmen.odyssey.util.OdysseyChatFormatting;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 
 import java.util.ArrayList;
@@ -15,8 +14,8 @@ import java.util.Optional;
 
 public class InnateAspectHolder implements AspectHolder {
 
-    private static final MutableComponent ABILITIES_HEADER = new TranslatableComponent("aspect_tooltip.oddc.abilities");
-    private static final MutableComponent INNATE_MODIFIERS_HEADER = new TranslatableComponent("aspect_tooltip.oddc.innate_modifiers");
+    private static final MutableComponent ABILITIES_HEADER = Component.translatable("aspect_tooltip.oddc.abilities");
+    private static final MutableComponent INNATE_MODIFIERS_HEADER = Component.translatable("aspect_tooltip.oddc.innate_modifiers");
     private static final ChatFormatting ABILITY_COLOR = OdysseyChatFormatting.COPPER;
     private static final ChatFormatting INNATE_MODIFIER_COLOR = OdysseyChatFormatting.LAVENDER;
 

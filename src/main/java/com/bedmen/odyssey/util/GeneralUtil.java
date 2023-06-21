@@ -5,6 +5,8 @@ import net.minecraft.world.level.Level;
 
 public class GeneralUtil {
 
+    public static final int START_OF_UNDERGROUND = 56;
+
     public static boolean isHashTick(Object object, Level level, int tickRate) {
         return object.hashCode() % tickRate == level.getGameTime() % tickRate;
     }

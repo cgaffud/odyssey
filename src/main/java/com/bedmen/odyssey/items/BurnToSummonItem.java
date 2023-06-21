@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class BurnToSummonItem extends Item {
 
     private final List<Block> BURN_SOURCES = Arrays.asList(Blocks.FIRE, Blocks.SOUL_FIRE, Blocks.LAVA);

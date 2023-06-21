@@ -14,7 +14,7 @@ public class WraithStalkerRenderer<T extends WraithStalker> extends MobRenderer<
 
     public WraithStalkerRenderer(EntityRendererProvider.Context context) {
         super(context, new WraithStalkerModel<>(context.bakeLayer(WraithStalkerModel.LAYER_LOCATION)), 0.8F);
-        this.addLayer(new ItemInHandLayer<>(this));
+        this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
     }
 
     protected void scale(T entity, PoseStack poseStack, float partialTicks) {

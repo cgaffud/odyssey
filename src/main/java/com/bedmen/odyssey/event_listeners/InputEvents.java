@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 public class InputEvents {
 
     @SubscribeEvent
-    public static void onClickInputEvent(final InputEvent.ClickInputEvent event){
+    public static void onClickInputEvent(final InputEvent.InteractionKeyMappingTriggered event){
         LocalPlayer localPlayer = Minecraft.getInstance().player;
         InteractionHand hand = event.getHand();
         if(localPlayer != null){

@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.LevelWriter;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.material.Material;
@@ -74,18 +76,18 @@ public class CornerLeafTreeFeature extends Feature<TreeConfiguration> {
         return isAirOrLeaves(p_67273_, p_67274_) || isReplaceablePlant(p_67273_, p_67274_) || isBlockWater(p_67273_, p_67274_);
     }
 
-    private boolean doPlace(WorldGenLevel worldGenLevel, Random random, BlockPos blockPos, BiConsumer<BlockPos, BlockState> biConsumer, BiConsumer<BlockPos, BlockState> biConsumer1, TreeConfiguration treeConfiguration) {
-        int i = treeConfiguration.trunkPlacer.getTreeHeight(random);
-        int j = treeConfiguration.foliagePlacer.foliageHeight(random, i, treeConfiguration);
+    private boolean doPlace(WorldGenLevel worldGenLevel, RandomSource randomSource, BlockPos blockPos, BiConsumer<BlockPos, BlockState> biConsumer, BiConsumer<BlockPos, BlockState> biConsumer1, TreeConfiguration treeConfiguration) {
+        int i = treeConfiguration.trunkPlacer.getTreeHeight(randomSource);
+        int j = treeConfiguration.foliagePlacer.foliageHeight(randomSource, i, treeConfiguration);
         int k = i - j;
-        int l = treeConfiguration.foliagePlacer.foliageRadius(random, k);
+        int l = treeConfiguration.foliagePlacer.foliageRadius(randomSource, k);
         if (blockPos.getY() >= worldGenLevel.getMinBuildHeight() + 1 && blockPos.getY() + i + 1 <= worldGenLevel.getMaxBuildHeight()) {
             OptionalInt optionalint = treeConfiguration.minimumSize.minClippedHeight();
             int i1 = this.getMaxFreeTreeHeight(worldGenLevel, i, blockPos, treeConfiguration);
             if (i1 >= i || optionalint.isPresent() && i1 >= optionalint.getAsInt()) {
-                List<FoliagePlacer.FoliageAttachment> list = treeConfiguration.trunkPlacer.placeTrunk(worldGenLevel, biConsumer, random, i1, blockPos, treeConfiguration);
+                List<FoliagePlacer.FoliageAttachment> list = treeConfiguration.trunkPlacer.placeTrunk(worldGenLevel, biConsumer, randomSource, i1, blockPos, treeConfiguration);
                 list.forEach((p_160539_) -> {
-                    treeConfiguration.foliagePlacer.createFoliage(worldGenLevel, biConsumer1, random, treeConfiguration, i1, p_160539_, j, l);
+                    treeConfiguration.foliagePlacer.createFoliage(worldGenLevel, biConsumer1, randomSource, treeConfiguration, i1, p_160539_, j, l);
                 });
                 return true;
             } else {
@@ -119,14 +121,15 @@ public class CornerLeafTreeFeature extends Feature<TreeConfiguration> {
         setBlockKnownShape(p_67221_, p_67222_, p_67223_);
     }
 
-    public final boolean place(FeaturePlaceContext<TreeConfiguration> p_160530_) {
-        WorldGenLevel worldgenlevel = p_160530_.level();
-        Random random = p_160530_.random();
-        BlockPos blockpos = p_160530_.origin();
-        TreeConfiguration treeconfiguration = p_160530_.config();
+    public final boolean place(FeaturePlaceContext<TreeConfiguration> context) {
+        WorldGenLevel worldgenlevel = context.level();
+        RandomSource randomSource = context.random();
+        BlockPos blockpos = context.origin();
+        TreeConfiguration treeconfiguration = context.config();
         Set<BlockPos> set = Sets.newHashSet();
         Set<BlockPos> set1 = Sets.newHashSet();
         Set<BlockPos> set2 = Sets.newHashSet();
+        Set<BlockPos> set3 = Sets.newHashSet();
         BiConsumer<BlockPos, BlockState> biconsumer = (p_160555_, p_160556_) -> {
             set.add(p_160555_.immutable());
             worldgenlevel.setBlock(p_160555_, p_160556_, 19);
@@ -139,15 +142,16 @@ public class CornerLeafTreeFeature extends Feature<TreeConfiguration> {
             set2.add(p_160543_.immutable());
             worldgenlevel.setBlock(p_160543_, p_160544_, 19);
         };
-        boolean flag = this.doPlace(worldgenlevel, random, blockpos, biconsumer, biconsumer1, treeconfiguration);
+        BiConsumer<BlockPos, BlockState> biconsumer3 = (p_225290_, p_225291_) -> {
+            set3.add(p_225290_.immutable());
+            worldgenlevel.setBlock(p_225290_, p_225291_, 19);
+        };
+        boolean flag = this.doPlace(worldgenlevel, randomSource, blockpos, biconsumer, biconsumer1, treeconfiguration);
         if (flag && (!set.isEmpty() || !set1.isEmpty())) {
             if (!treeconfiguration.decorators.isEmpty()) {
-                List<BlockPos> list = Lists.newArrayList(set);
-                List<BlockPos> list1 = Lists.newArrayList(set1);
-                list.sort(Comparator.comparingInt(Vec3i::getY));
-                list1.sort(Comparator.comparingInt(Vec3i::getY));
-                treeconfiguration.decorators.forEach((p_160528_) -> {
-                    p_160528_.place(worldgenlevel, biconsumer2, random, list, list1);
+                TreeDecorator.Context treedecorator$context = new TreeDecorator.Context(worldgenlevel, biconsumer3, randomSource, set1, set2, set);
+                treeconfiguration.decorators.forEach((p_225282_) -> {
+                    p_225282_.place(treedecorator$context);
                 });
             }
 

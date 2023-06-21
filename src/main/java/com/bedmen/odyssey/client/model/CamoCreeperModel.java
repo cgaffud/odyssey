@@ -22,7 +22,7 @@ public class CamoCreeperModel<T extends CamoCreeper> extends OdysseyCreeperModel
         //Coloring
         ResourceLocation resourceLocation = CamoCreeperRenderer.getTexture(camoCreeper);
         if(resourceLocation == CamoCreeperRenderer.GRAY_CREEPER_LOCATION){
-            int color = camoCreeper.level.getBiome(camoCreeper.eyeBlockPosition()).value().getFoliageColor();
+            int color = camoCreeper.level.getBiome(camoCreeper.blockPosition()).value().getFoliageColor();
             this.red = (float)(color >> 16 & 255) / 255.0F;
             this.green = (float)(color >> 8 & 255) / 255.0F;
             this.blue = (float)(color & 255) / 255.0F;

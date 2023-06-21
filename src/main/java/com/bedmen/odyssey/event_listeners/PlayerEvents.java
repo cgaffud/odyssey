@@ -19,7 +19,6 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
@@ -110,7 +109,7 @@ public class PlayerEvents {
     @SubscribeEvent
     public static void onPlayerEvent$HarvestCheck(final PlayerEvent.HarvestCheck event){
         Block block = event.getTargetBlock().getBlock();
-        Item item = event.getPlayer().getMainHandItem().getItem();
+        Item item = event.getEntity().getMainHandItem().getItem();
         if(block instanceof WebBlock && item instanceof SwordItem || item == Items.SHEARS){
             event.setCanHarvest(true);
         }
@@ -118,7 +117,7 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public static void onAttackEntityEvent(final AttackEntityEvent event){
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         ItemStack mainHandItemStack = player.getMainHandItem();
         Entity target = event.getTarget();
         float attackStrengthScale = player.getAttackStrengthScale(0.5F);
@@ -183,7 +182,7 @@ public class PlayerEvents {
         ItemStack itemStack = event.getItemStack();
         Item item = itemStack.getItem();
         TooltipFlag tooltipFlag = event.getFlags();
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         List<Component> componentList = new ArrayList<>();
         
         // Aspect Tooltips
@@ -205,20 +204,20 @@ public class PlayerEvents {
                 for(Pair<MobEffectInstance, Float> pair: effectList){
                     MobEffectInstance mobEffectInstance = pair.getFirst();
                     float probability = pair.getSecond();
-                    MutableComponent mutablecomponent = new TranslatableComponent(mobEffectInstance.getDescriptionId());
+                    MutableComponent mutablecomponent = Component.translatable(mobEffectInstance.getDescriptionId());
                     MobEffect mobeffect = mobEffectInstance.getEffect();
 
                     if (mobEffectInstance.getAmplifier() > 0) {
-                        mutablecomponent = new TranslatableComponent("potion.withAmplifier", mutablecomponent, new TranslatableComponent("potion.potency." + mobEffectInstance.getAmplifier()));
+                        mutablecomponent = Component.translatable("potion.withAmplifier", mutablecomponent, Component.translatable("potion.potency." + mobEffectInstance.getAmplifier()));
                     }
 
                     if (mobEffectInstance.getDuration() > 20) {
-                        mutablecomponent = new TranslatableComponent("potion.withDuration", mutablecomponent, MobEffectUtil.formatDuration(mobEffectInstance, 1.0f));
+                        mutablecomponent = Component.translatable("potion.withDuration", mutablecomponent, MobEffectUtil.formatDuration(mobEffectInstance, 1.0f));
                     }
 
                     if(probability < 1f){
                         Style style = mutablecomponent.getStyle();
-                        mutablecomponent = mutablecomponent.append(new TranslatableComponent("potion.withChance", StringUtil.percentFormat(probability)).withStyle(style));
+                        mutablecomponent = mutablecomponent.append(Component.translatable("potion.withChance", StringUtil.percentFormat(probability)).withStyle(style));
                     }
 
                     componentList.add(mutablecomponent.withStyle(mobeffect.getCategory().getTooltipFormatting()));
@@ -232,7 +231,7 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public static void onPlayerEventClone(final PlayerEvent.Clone event){
-        Player newPlayer = event.getPlayer();
+        Player newPlayer = event.getEntity();
         Player oldPlayer = event.getOriginal();
         if(newPlayer instanceof OdysseyPlayer newOdysseyPlayer && oldPlayer instanceof OdysseyPlayer oldOdysseyPlayer){
             newOdysseyPlayer.setPermabuffHolder(oldOdysseyPlayer.getPermabuffHolder());
@@ -241,7 +240,7 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public static void onPlayerEventBreakSpeed(final PlayerEvent.BreakSpeed event){
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         ItemStack itemStack = player.getMainHandItem();
         float speed = event.getOriginalSpeed();
         if (player.isEyeInFluid(FluidTags.WATER)

@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import java.util.Locale;
 import java.util.Random;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class GreatSaplingBlock extends TransparentSaplingBlock {
     public static final EnumProperty<Status> STATUS = EnumProperty.create("status", Status.class);
     public static final IntegerProperty AGE_2 = BlockStateProperties.AGE_2;
@@ -26,12 +29,12 @@ public class GreatSaplingBlock extends TransparentSaplingBlock {
         this.registerDefaultState(this.defaultBlockState().setValue(STATUS, Status.GOOD).setValue(AGE_2, 0));
     }
 
-    public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, Random random) {
-        if (blockState.getValue(STATUS).isGood() && random.nextInt(7) == 0 && serverLevel.getMaxLocalRawBrightness(blockPos.above()) >= 9) {
+    public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+        if (blockState.getValue(STATUS).isGood() && randomSource.nextInt(7) == 0 && serverLevel.getMaxLocalRawBrightness(blockPos.above()) >= 9) {
             if(blockState.getValue(AGE_2) + blockState.getValue(STAGE) >= 3) {
                 this.advanceTree(serverLevel, blockPos, blockState, serverLevel.random);
             } else {
-                serverLevel.setBlock(blockPos, blockState.setValue(STATUS, Status.randomBadStatus(random)), 3);
+                serverLevel.setBlock(blockPos, blockState.setValue(STATUS, Status.randomBadStatus(randomSource)), 3);
             }
         }
     }
@@ -45,12 +48,12 @@ public class GreatSaplingBlock extends TransparentSaplingBlock {
         builder.add(STATUS, AGE_2);
     }
 
-    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, Random random) {
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
         Status status = blockState.getValue(STATUS);
         if (!status.isGood()) {
-            double d0 = random.nextDouble();
-            double d1 = random.nextDouble();
-            double d2 = random.nextDouble();
+            double d0 = randomSource.nextDouble();
+            double d1 = randomSource.nextDouble();
+            double d2 = randomSource.nextDouble();
             level.addParticle(status.particle, (double)blockPos.getX() + d0, (double)blockPos.getY() + d1, (double)blockPos.getZ() + d2, 0.0D, 0.0D, 0.0D);
         }
     }
@@ -97,8 +100,8 @@ public class GreatSaplingBlock extends TransparentSaplingBlock {
             return this == GOOD;
         }
 
-        public static Status randomBadStatus(Random random){
-            return values()[random.nextInt(values().length-1)+1];
+        public static Status randomBadStatus(RandomSource randomSource){
+            return values()[randomSource.nextInt(values().length-1)+1];
         }
     }
 }

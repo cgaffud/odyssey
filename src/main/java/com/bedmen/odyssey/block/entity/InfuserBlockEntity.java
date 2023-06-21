@@ -21,16 +21,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -211,7 +213,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
                         }
                     } else {
                         this.getNearbyPlayersWhoMadeChanges().forEach(
-                                serverPlayer -> serverPlayer.sendMessage(new TranslatableComponent("magic.oddc.modifiability", StringUtil.floatFormat(modifiabilityToBeUsed)), ChatType.GAME_INFO, Util.NIL_UUID)
+                                serverPlayer -> serverPlayer.sendSystemMessage(Component.translatable("magic.oddc.modifiability", StringUtil.floatFormat(modifiabilityToBeUsed)))
                         );
                     }
                 }
@@ -502,7 +504,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         private final float delay;
         private Direction direction;
         private int randomSeed;
-        private Random random;
+        private RandomSource randomSource;
         private final Vec3 playerPosition;
         private Vec3 initialPosition;
         private Vec3 halfWayPosition;
@@ -519,10 +521,10 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
 
         public int enchantmentTextIndex;
 
-        private PathParticle(Vec3 playerCenter, BlockPos blockPos, Direction direction, float delay, Random random){
+        private PathParticle(Vec3 playerCenter, BlockPos blockPos, Direction direction, float delay, RandomSource randomSource){
             this.delay = delay;
             this.direction = direction;
-            this.randomSeed = random.nextInt();
+            this.randomSeed = randomSource.nextInt();
             this.playerPosition = playerCenter.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             this.createCalculatedPositions();
             this.positionO = this.initialPosition;
@@ -537,15 +539,15 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             this.playerPosition = playerPosition;
             this.createCalculatedPositions();
             this.setPathParameters();
-            this.enchantmentTextIndex = this.random.nextInt(67);
+            this.enchantmentTextIndex = this.randomSource.nextInt(67);
         }
 
         private Vec3 getRandomOffset(){
-            return new Vec3(this.random.nextDouble(), this.random.nextDouble(), this.random.nextDouble()).subtract(0.5d, 0.5d, 0.5d).scale(0.4d);
+            return new Vec3(this.randomSource.nextDouble(), this.randomSource.nextDouble(), this.randomSource.nextDouble()).subtract(0.5d, 0.5d, 0.5d).scale(0.4d);
         }
 
         private void createCalculatedPositions(){
-            this.random = new Random(this.randomSeed);
+            this.randomSource = new XoroshiroRandomSource(this.randomSeed);
             Vec3 randomOffset = this.getRandomOffset();
             this.initialPosition = this.playerPosition.add(randomOffset);
             this.halfWayPosition = FINAL_POSITION.add(direction.getStepX() * DISTANCE_TO_PEDESTALS, 0, direction.getStepZ() * DISTANCE_TO_PEDESTALS).add(randomOffset.scale(0.5d));

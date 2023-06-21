@@ -22,6 +22,8 @@ import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class BabyLeviathanBucket extends BucketItem {
 
     public BabyLeviathanBucket(Properties properties) {

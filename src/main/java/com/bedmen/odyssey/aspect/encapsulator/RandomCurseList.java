@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.aspect.encapsulator;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -14,9 +15,9 @@ public class RandomCurseList extends RandomAspectList {
         super(list);
     }
 
-    protected void generateAndAdd(ItemStack itemStack, Random random, float chance){
-        for(int i = 0; i < MAX_CURSES && random.nextFloat() < chance && !this.filteredList.isEmpty(); i++){
-            WeightedAspectEntry weightedAspectEntry = this.getRandomWeightedAspectEntry(random);
+    protected void generateAndAdd(ItemStack itemStack, RandomSource randomSource, float chance){
+        for(int i = 0; i < MAX_CURSES && randomSource.nextFloat() < chance && !this.filteredList.isEmpty(); i++){
+            WeightedAspectEntry weightedAspectEntry = this.getRandomWeightedAspectEntry(randomSource);
             this.filteredList.remove(weightedAspectEntry);
             AspectInstance aspectInstance = new AspectInstance(weightedAspectEntry.aspect(), weightedAspectEntry.strength()).withObfuscation();
             AspectUtil.addModifier(itemStack, aspectInstance);

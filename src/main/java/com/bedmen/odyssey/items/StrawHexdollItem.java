@@ -14,6 +14,8 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Supplier;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class StrawHexdollItem extends BurnToSummonItem {
 
     private final int ywiggle = 5;

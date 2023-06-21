@@ -9,6 +9,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class WeaverEggItem extends Item {
     public WeaverEggItem(Properties properties) {
         super(properties);

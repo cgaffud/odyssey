@@ -1,0 +1,8 @@
+{
+  "config": {
+    "to_place": {
+      "Name": "oddc:prairie_grass"
+    }
+  },
+  "type": "oddc:triple_plant_block"
+}

@@ -217,11 +217,11 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
 
     }
 
-    protected int getExperienceReward(Player pPlayer) {
+    public int getExperienceReward() {
         if (this.isBaby()) {
             this.xpReward = (int)((float)this.xpReward * 2.5F);
         }
-        return super.getExperienceReward(pPlayer);
+        return super.getExperienceReward();
     }
 
     public boolean doHurtTarget(Entity pEntity) {

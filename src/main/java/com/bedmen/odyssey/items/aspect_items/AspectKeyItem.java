@@ -7,6 +7,8 @@ import com.bedmen.odyssey.lock.LockType;
 
 import java.util.List;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class AspectKeyItem extends KeyItem implements InnateAspectItem {
 
     private final InnateAspectHolder innateAspectHolder;

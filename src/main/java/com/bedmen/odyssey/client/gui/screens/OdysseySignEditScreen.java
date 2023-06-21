@@ -19,8 +19,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
@@ -37,7 +35,7 @@ public class OdysseySignEditScreen extends Screen {
     private final String[] messages;
 
     public OdysseySignEditScreen(OdysseySignBlockEntity p_169811_, boolean p_169812_) {
-        super(new TranslatableComponent("sign.edit"));
+        super(Component.translatable("sign.edit"));
         this.messages = IntStream.range(0, 4).mapToObj((p_169818_) -> {
             return p_169811_.getMessage(p_169818_, p_169812_);
         }).map(Component::getString).toArray((p_169814_) -> {
@@ -56,7 +54,7 @@ public class OdysseySignEditScreen extends Screen {
             return this.messages[this.line];
         }, (p_169824_) -> {
             this.messages[this.line] = p_169824_;
-            this.sign.setMessage(this.line, new TextComponent(p_169824_));
+            this.sign.setMessage(this.line, Component.literal(p_169824_));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft), (p_169822_) -> {
             return this.minecraft.font.width(p_169822_) <= 90;
         });
@@ -193,8 +191,7 @@ public class OdysseySignEditScreen extends Screen {
                     bufferbuilder.vertex(matrix4f, (float)l2, (float)(l + 9), 0.0F).color(0, 0, 255, 255).endVertex();
                     bufferbuilder.vertex(matrix4f, (float)l2, (float)l, 0.0F).color(0, 0, 255, 255).endVertex();
                     bufferbuilder.vertex(matrix4f, (float)k2, (float)l, 0.0F).color(0, 0, 255, 255).endVertex();
-                    bufferbuilder.end();
-                    BufferUploader.end(bufferbuilder);
+                    BufferUploader.drawWithShader(bufferbuilder.end());
                     RenderSystem.disableColorLogicOp();
                     RenderSystem.enableTexture();
                 }

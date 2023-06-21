@@ -1,11 +1,13 @@
 package com.bedmen.odyssey.world.gen.feature.tree;
 
+import com.bedmen.odyssey.registry.tree.TrunkPlacerTypeRegistry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
@@ -14,7 +16,6 @@ import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.BiConsumer;
 
 public class LeaningTrunkPlacer extends TrunkPlacer {
@@ -27,15 +28,15 @@ public class LeaningTrunkPlacer extends TrunkPlacer {
     }
 
     protected TrunkPlacerType<?> type() {
-        return TrunkPlacerType.FORKING_TRUNK_PLACER;
+        return TrunkPlacerTypeRegistry.LEANING_TRUNK_PLACER.get();
     }
 
     @Override
-    public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, Random random, int maxTreeHeight, BlockPos pos, TreeConfiguration config) {
+    public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, RandomSource randomSource, int maxTreeHeight, BlockPos pos, TreeConfiguration config) {
         List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
 
-        Direction mainDir = Direction.Plane.HORIZONTAL.getRandomDirection(random);
-        Direction offDir = (random.nextInt(2) == 1) ? mainDir.getClockWise(): mainDir.getCounterClockWise();
+        Direction mainDir = Direction.Plane.HORIZONTAL.getRandomDirection(randomSource);
+        Direction offDir = (randomSource.nextInt(2) == 1) ? mainDir.getClockWise(): mainDir.getCounterClockWise();
         BlockPos.MutableBlockPos pos$mutable = new BlockPos.MutableBlockPos();
 
         int x = pos.getX();
@@ -44,14 +45,14 @@ public class LeaningTrunkPlacer extends TrunkPlacer {
 
         int[] h = new int[3];
         h[0] = maxTreeHeight/3;
-        h[1] = random.nextInt(maxTreeHeight/3)+maxTreeHeight/3+h[0];
+        h[1] = randomSource.nextInt(maxTreeHeight/3)+maxTreeHeight/3+h[0];
         h[2] = maxTreeHeight;
         int i = 0;
 
         int l = 0;
 
-        placeLog(levelSimulatedReader, biConsumer, random, pos$mutable.set(x-mainDir.getStepX(),y,z-mainDir.getStepZ()), config);
-        placeLog(levelSimulatedReader, biConsumer, random, pos$mutable.set(x-offDir.getStepX(),y,z-offDir.getStepZ()), config);
+        placeLog(levelSimulatedReader, biConsumer, randomSource, pos$mutable.set(x-mainDir.getStepX(),y,z-mainDir.getStepZ()), config);
+        placeLog(levelSimulatedReader, biConsumer, randomSource, pos$mutable.set(x-offDir.getStepX(),y,z-offDir.getStepZ()), config);
 
         for (int yOff = 0; yOff < maxTreeHeight; yOff++) {
             if (yOff == h[i]) {
@@ -60,7 +61,7 @@ public class LeaningTrunkPlacer extends TrunkPlacer {
                 i++;
             }
 
-            if (placeLog(levelSimulatedReader, biConsumer, random, pos$mutable.set(x,yOff+y,z), config))
+            if (placeLog(levelSimulatedReader, biConsumer, randomSource, pos$mutable.set(x,yOff+y,z), config))
                 l = y+yOff+1;
         }
 

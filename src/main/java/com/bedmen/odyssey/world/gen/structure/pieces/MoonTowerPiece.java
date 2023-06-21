@@ -5,13 +5,14 @@ import com.bedmen.odyssey.aspect.AspectTierManager;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
-import com.bedmen.odyssey.registry.StructurePieceTypeRegistry;
+import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.world.WorldGenUtil;
 import com.bedmen.odyssey.world.gen.processor.CrackedBlockProcessor;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -29,8 +30,8 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,12 +79,12 @@ public class MoonTowerPiece extends HeightAdjustingPiece {
     protected byte[] hasSpawnedMonsters = new byte[ENEMY_INFO.size()];
     private static final String HAS_SPAWNED_MONSTERS_TAG = "HasSpawnedMonsters";
 
-    public MoonTowerPiece(StructureManager structureManager, BlockPos blockPos, Rotation rotation) {
-        super(StructurePieceTypeRegistry.MOON_TOWER.get(), 0, structureManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(), blockPos, rotation);
+    public MoonTowerPiece(StructureTemplateManager structureTemplateManager, BlockPos blockPos, Rotation rotation) {
+        super(StructurePieceTypeRegistry.MOON_TOWER.get(), 0, structureTemplateManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(), blockPos, rotation);
     }
 
-    public MoonTowerPiece(StructureManager structureManager, CompoundTag compoundTag) {
-        super(StructurePieceTypeRegistry.MOON_TOWER.get(), compoundTag, structureManager, (resourceLocation) -> makeSettings());
+    public MoonTowerPiece(StructureTemplateManager structureTemplateManager, CompoundTag compoundTag) {
+        super(StructurePieceTypeRegistry.MOON_TOWER.get(), compoundTag, structureTemplateManager, (resourceLocation) -> makeSettings());
         this.hasSpawnedMonsters = compoundTag.getByteArray(HAS_SPAWNED_MONSTERS_TAG);
     }
 
@@ -115,16 +116,16 @@ public class MoonTowerPiece extends HeightAdjustingPiece {
     }
 
     @Override
-    protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
+    protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
         WorldGenUtil.fillColumnDownOnAllPosts(worldGenLevel, DEEPSLATE_BRICKS, RELATIVE_POSTS, chunkBoundingBox, this.templatePosition, this.placeSettings);
         // Set chest loot tables, 50% of being 2 (on top), 25% of 1 (middle) or 0 (bottom)
-        int lootFloor = Integer.min(2, random.nextInt(4));
+        int lootFloor = Integer.min(2, randomSource.nextInt(4));
         for(int i = 0; i < 3; i++){
             BlockPos chestBlockPos = WorldGenUtil.getWorldPosition(RELATIVE_CHESTS.get(i), this.templatePosition, this.placeSettings);
             BlockEntity blockEntity = worldGenLevel.getBlockEntity(chestBlockPos);
             if(blockEntity instanceof ChestBlockEntity chestBlockEntity){
                 ResourceLocation lootTable = lootFloor == i ? OdysseyLootTables.MOON_TOWER_CHEST : OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST;
-                chestBlockEntity.setLootTable(lootTable, random.nextLong());
+                chestBlockEntity.setLootTable(lootTable, randomSource.nextLong());
             }
         }
         spawnMonsters(worldGenLevel, chunkBoundingBox);
@@ -166,8 +167,8 @@ public class MoonTowerPiece extends HeightAdjustingPiece {
         });
 
         public EntityType<? extends Mob> entityType;
-        public BiConsumer<LivingEntity, Random> equipper;
-        MoonTowerEnemyType(EntityType<? extends Mob> entityType,  BiConsumer<LivingEntity, Random> equipper){
+        public BiConsumer<LivingEntity, RandomSource> equipper;
+        MoonTowerEnemyType(EntityType<? extends Mob> entityType,  BiConsumer<LivingEntity, RandomSource> equipper){
             this.entityType = entityType;
             this.equipper = equipper;
         }

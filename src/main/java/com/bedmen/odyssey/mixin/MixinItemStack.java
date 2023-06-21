@@ -4,6 +4,7 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.DigDurabilityEnchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -20,7 +21,7 @@ public abstract class MixinItemStack extends net.minecraftforge.common.capabilit
         super(baseClass);
     }
 
-    public boolean hurt(int amount, Random random, @Nullable ServerPlayer serverPlayer) {
+    public boolean hurt(int amount, RandomSource randomSource, @Nullable ServerPlayer serverPlayer) {
         ItemStack itemStack = this.getItemStack();
         if (!itemStack.isDamageableItem()) {
             return false;
@@ -29,7 +30,7 @@ public abstract class MixinItemStack extends net.minecraftforge.common.capabilit
                 int unbreakingLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, itemStack);
 
                 for(int k = 0; unbreakingLevel > 0 && k < amount; ++k) {
-                    if (DigDurabilityEnchantment.shouldIgnoreDurabilityDrop(itemStack, unbreakingLevel, random)) {
+                    if (DigDurabilityEnchantment.shouldIgnoreDurabilityDrop(itemStack, unbreakingLevel, randomSource)) {
                         amount--;
                     }
                 }
@@ -38,7 +39,7 @@ public abstract class MixinItemStack extends net.minecraftforge.common.capabilit
                 if(durabilityStrength > 0.0f){
                     float noDamageChance = 1.0f - (1.0f / (1.0f + durabilityStrength));
                     for(int k = 0; k < amount; ++k) {
-                        if(noDamageChance > random.nextFloat()) {
+                        if(noDamageChance > randomSource.nextFloat()) {
                             amount--;
                         }
                     }

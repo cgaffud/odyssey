@@ -143,11 +143,8 @@ public class PassiveWeaver extends Animal {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         if (this.wantsToPickUp(itemStack)) {
             if(itemStack.is(Items.STRING)){
-                if (!player.getAbilities().instabuild) {
-                    itemStack.shrink(1);
-                }
+                this.usePlayerItem(player, interactionHand, itemStack);
                 this.stringTimer += STRING_REPLENISH_TIME;
-                this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
                 return InteractionResult.SUCCESS;
             }
             ItemStack itemStack1;
@@ -158,7 +155,6 @@ public class PassiveWeaver extends Animal {
             }
             SimpleContainer simplecontainer = this.inventory;
             simplecontainer.addItem(itemStack1);
-            this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
             return InteractionResult.SUCCESS;
         } else {
             return super.mobInteract(player, interactionHand);

@@ -4,6 +4,7 @@ import com.bedmen.odyssey.entity.animal.PassiveWeaver;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -12,6 +13,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 import java.util.Random;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class WeaverEggWebBlock extends OdysseyWebBlock {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_2;
@@ -25,7 +28,7 @@ public class WeaverEggWebBlock extends OdysseyWebBlock {
         return true;
     }
 
-    public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, Random random) {
+    public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
         int i = blockState.getValue(AGE);
         if (i < 2 && serverLevel.random.nextInt(5) == 0) {
             serverLevel.setBlock(blockPos, blockState.setValue(AGE, i + 1), 2);

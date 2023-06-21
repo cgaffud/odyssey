@@ -29,14 +29,5 @@ public class FeatureRegistry {
     public static final RegistryObject<Feature<SimpleBlockConfiguration>> TRIPLE_PLANT_BLOCK = FEATURES.register("triple_plant_block", () -> new TriplePlantBlockFeature(SimpleBlockConfiguration.CODEC));
     public static final RegistryObject<Feature<TreeConfiguration>> CORNER_LEAF_TREE = FEATURES.register("corner_leaf_tree", () -> new CornerLeafTreeFeature(TreeConfiguration.CODEC));
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> ABANDONED_IRON_GOLEM = FEATURES.register("abandoned_iron_golem", () -> new AbandonedIronGolemFeature(NoneFeatureConfiguration.CODEC));
-
-    //Treasure Chests
-    public static final RegistryObject<Feature<NoneFeatureConfiguration>> COPPER_TREASURE_CHEST = FEATURES.register("copper_treasure_chest", () -> new TreasureChestFeature(NoneFeatureConfiguration.CODEC, TreasureChestType.COPPER, 0, 56));
-    public static final RegistryObject<Feature<NoneFeatureConfiguration>> STERLING_SILVER_TREASURE_CHEST = FEATURES.register("sterling_silver_treasure_chest", () -> new TreasureChestFeature(NoneFeatureConfiguration.CODEC, TreasureChestType.STERLING_SILVER, -64, 0));
-    public static final Map<TreasureChestType, Feature<NoneFeatureConfiguration>> TREASURE_CHEST_MAP = new HashMap<>();
-
-    public static void initTreasureChests(){
-        TREASURE_CHEST_MAP.put(TreasureChestType.COPPER, COPPER_TREASURE_CHEST.get());
-        TREASURE_CHEST_MAP.put(TreasureChestType.STERLING_SILVER, STERLING_SILVER_TREASURE_CHEST.get());
-    }
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> TREASURE_CHEST = FEATURES.register("treasure_chest", () -> new TreasureChestFeature(NoneFeatureConfiguration.CODEC));
 }

@@ -66,9 +66,9 @@ public class ExperienceCost {
 
     public void displayRequirementMessage(ServerPlayer serverPlayer) {
         if(serverPlayer.experienceLevel < this.levelRequirement){
-            serverPlayer.sendMessage(MagicUtil.getLevelRequirementComponent(this.levelRequirement), ChatType.GAME_INFO, Util.NIL_UUID);
+            serverPlayer.sendSystemMessage(MagicUtil.getLevelRequirementComponent(this.levelRequirement));
         } else {
-            serverPlayer.sendMessage(MagicUtil.getLevelCostComponent(this.levelCost), ChatType.GAME_INFO, Util.NIL_UUID);
+            serverPlayer.sendSystemMessage(MagicUtil.getLevelCostComponent(this.levelCost));
         }
     }
 

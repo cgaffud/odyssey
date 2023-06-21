@@ -11,6 +11,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
+import java.util.stream.Collector.Characteristics;
+
 public class NonNullListCollector<T> implements Collector<T, NonNullList<T>, NonNullList<T>> {
     public BiConsumer<NonNullList<T>, T> accumulator() {
         return NonNullList::add;

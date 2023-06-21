@@ -28,7 +28,7 @@ public class OdysseyPlayerRenderer extends PlayerRenderer {
             }
         }
         this.layers.remove(playerItemInHandLayer);
-        this.addLayer(new OdysseyPlayerItemInHandLayer<>(this));
+        this.addLayer(new OdysseyPlayerItemInHandLayer<>(this, context.getItemInHandRenderer()));
         this.addLayer(new QuiverLayer<>(this, context.getModelSet()));
         this.addLayer(new OdysseyElytraLayer<>(this, context.getModelSet()));
     }

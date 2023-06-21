@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -54,13 +53,13 @@ public class AlloyFurnaceBlockEntity extends OdysseyFurnaceBlockEntity {
                 alloyFurnaceBlockEntity.litDuration = alloyFurnaceBlockEntity.litTime;
                 if (alloyFurnaceBlockEntity.isLit()) {
                     flag1 = true;
-                    if (fuelStack.hasContainerItem())
-                        alloyFurnaceBlockEntity.items.set(SLOT_FUEL, fuelStack.getContainerItem());
+                    if (fuelStack.hasCraftingRemainingItem())
+                        alloyFurnaceBlockEntity.items.set(SLOT_FUEL, fuelStack.getCraftingRemainingItem());
                     else
                     if (!fuelStack.isEmpty()) {
                         fuelStack.shrink(1);
                         if (fuelStack.isEmpty()) {
-                            alloyFurnaceBlockEntity.items.set(SLOT_FUEL, fuelStack.getContainerItem());
+                            alloyFurnaceBlockEntity.items.set(SLOT_FUEL, fuelStack.getCraftingRemainingItem());
                         }
                     }
                 }
@@ -181,7 +180,7 @@ public class AlloyFurnaceBlockEntity extends OdysseyFurnaceBlockEntity {
     }
 
     protected Component getDefaultName() {
-        return new TranslatableComponent("container.oddc.alloy_furnace");
+        return Component.translatable("container.oddc.alloy_furnace");
     }
 
     protected AbstractContainerMenu createMenu(int containerCounter, Inventory inventory) {

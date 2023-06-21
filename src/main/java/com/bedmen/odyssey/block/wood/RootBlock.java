@@ -28,6 +28,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class RootBlock extends TransparentBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty DIRTLOGGED = BooleanProperty.create("dirtlogged");

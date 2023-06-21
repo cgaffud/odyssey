@@ -8,7 +8,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PermabuffHolder implements AspectHolder {
-    private static final MutableComponent PERMABUFF_HEADER = new TranslatableComponent("aspect_tooltip.oddc.permabuffs");
+    private static final MutableComponent PERMABUFF_HEADER = Component.translatable("aspect_tooltip.oddc.permabuffs");
     private static final ChatFormatting PERMABUFF_COLOR = ChatFormatting.YELLOW;
     private static final String ASPECT_INSTANCE_LIST_TAG = "AspectInstanceList";
 

@@ -1,0 +1,27 @@
+{
+  "feature": "oddc:moonrock",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 25
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:trapezoid",
+        "min_inclusive": {
+          "absolute": 96
+        },
+        "max_inclusive": {
+          "absolute": 416
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

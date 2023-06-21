@@ -1,9 +1,11 @@
 package com.bedmen.odyssey.world.gen.processor;
 
-import com.bedmen.odyssey.registry.StructureProcessorRegistry;
-import com.bedmen.odyssey.world.BiomeUtil;
+import com.bedmen.odyssey.registry.structure.StructureProcessorRegistry;
+import com.bedmen.odyssey.tags.OdysseyBiomeTags;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -13,10 +15,11 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.Random;
+import java.util.Optional;
 
 public class MossyBlockProcessor extends StructureProcessor {
 
@@ -41,17 +44,17 @@ public class MossyBlockProcessor extends StructureProcessor {
 
     @Nullable
     public StructureTemplate.StructureBlockInfo processBlock(LevelReader levelReader, BlockPos blockPos, BlockPos blockPos1, StructureTemplate.StructureBlockInfo structureBlockInfo, StructureTemplate.StructureBlockInfo structureBlockInfo1, StructurePlaceSettings structurePlaceSettings) {
-        Random random = structurePlaceSettings.getRandom(structureBlockInfo1.pos);
+        RandomSource randomSource = structurePlaceSettings.getRandom(structureBlockInfo1.pos);
         BlockState blockState = structureBlockInfo1.state;
         BlockPos blockpos = structureBlockInfo1.pos;
         BlockState newBlockState = null;
 
         Biome biome = levelReader.getBiome(blockpos).value();
-
+        Optional<Holder<Biome>> optionalBiomeHolder = ForgeRegistries.BIOMES.getHolder(biome);
         Block block = blockState.getBlock();
-        if(BiomeUtil.hasGoodPlantClimate(biome.getBiomeCategory(), biome.getPrecipitation(), biome.getBaseTemperature())
-                && MOSSY_MAP.containsKey(block)
-                && random.nextFloat() < this.mossyPercent){
+        boolean isGreen = optionalBiomeHolder.isPresent() && optionalBiomeHolder.get().is(OdysseyBiomeTags.IS_GREEN);
+
+        if(isGreen && MOSSY_MAP.containsKey(block) && randomSource.nextFloat() < this.mossyPercent){
             newBlockState = MOSSY_MAP.get(block).withPropertiesOf(blockState);
         }
 

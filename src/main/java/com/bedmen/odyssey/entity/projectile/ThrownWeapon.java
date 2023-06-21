@@ -24,6 +24,8 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
+
 public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
 
     private static final String THROWN_WEAPON_ITEMSTACK_TAG = "ThrownWeaponItemStack";
