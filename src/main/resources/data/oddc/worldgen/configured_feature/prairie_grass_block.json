@@ -1,7 +1,10 @@
 {
   "config": {
     "to_place": {
-      "Name": "oddc:prairie_grass"
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "oddc:prairie_grass"
+      }
     }
   },
   "type": "oddc:triple_plant_block"

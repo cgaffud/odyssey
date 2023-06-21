@@ -62,11 +62,16 @@ public class BiomeUtil {
     }
 
     public static Climate getClimate(Holder<Biome> biomeHolder) {
-        Optional<ResourceKey<Biome>> maybeResourceKey = biomeHolder.unwrapKey();
-        if (maybeResourceKey.isPresent()) {
-            return CLIMATE_MAP.get(maybeResourceKey.get());
+        Optional<ResourceKey<Biome>> optionalResourceKey = biomeHolder.unwrapKey();
+        if (optionalResourceKey.isPresent()) {
+            ResourceKey<Biome> resourceKey = optionalResourceKey.get();
+            if(CLIMATE_MAP.containsKey(resourceKey)){
+                return CLIMATE_MAP.get(optionalResourceKey.get());
+            }
         }
-        return new Climate(biomeHolder.value().getBaseTemperature(), biomeHolder.value().getDownfall());
+        Climate climate = new Climate(biomeHolder.value().getBaseTemperature(), biomeHolder.value().getDownfall());
+        optionalResourceKey.ifPresent(biomeResourceKey -> CLIMATE_MAP.put(biomeResourceKey, climate));
+        return climate;
     }
 
     public static int getFoliageColor(Level level, Entity entity) {

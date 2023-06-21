@@ -2,7 +2,7 @@
   "type": "forge:add_features",
   "biomes": "oddc:tropics",
   "features": [
-    "oddc:tropics_trees"
+    "oddc:tropical_trees"
   ],
   "step": "vegetal_decoration"
 }

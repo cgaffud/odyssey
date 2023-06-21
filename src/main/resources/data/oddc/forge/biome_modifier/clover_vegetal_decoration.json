@@ -1,8 +1,6 @@
 {
   "type": "forge:add_features",
   "biomes": "#oddc:is_green",
-  "features": [
-    "oddc:clover_patch"
-  ],
+  "features": "oddc:clover_patch",
   "step": "vegetal_decoration"
 }

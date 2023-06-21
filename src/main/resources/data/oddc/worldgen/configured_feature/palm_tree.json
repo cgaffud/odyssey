@@ -7,7 +7,7 @@
         },
         "Name": "oddc:palm_log"
       },
-      "type": "oddc:simple_state_provider"
+      "type": "minecraft:simple_state_provider"
     },
     "trunk_placer": {
       "base_height": 6,
@@ -23,12 +23,18 @@
         },
         "Name": "oddc:palm_leaves"
       },
-      "type": "oddc:simple_state_provider"
+      "type": "minecraft:simple_state_provider"
     },
     "foliage_placer": {
       "radius": 5,
       "offset": 0,
       "type": "oddc:palm_foliage_placer"
+    },
+    "dirt_provider": {
+      "state": {
+        "Name": "minecraft:dirt"
+      },
+      "type": "minecraft:simple_state_provider"
     },
     "minimum_size": {
       "limit": 1,
@@ -36,7 +42,9 @@
       "upper_size": 2,
       "type": "minecraft:two_layers_feature_size"
     },
-    "ignore_vines": true
+    "decorators": [],
+    "ignore_vines": true,
+    "force_dirt": false
   },
   "type": "oddc:corner_leaf_tree"
 }

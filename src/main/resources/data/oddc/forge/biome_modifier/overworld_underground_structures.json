@@ -1,8 +1,6 @@
 {
   "type": "forge:add_features",
   "biomes": "#minecraft:is_overworld",
-  "features": [
-    "oddc:treasure_chest"
-  ],
+  "features": "oddc:treasure_chest",
   "step": "underground_structures"
 }

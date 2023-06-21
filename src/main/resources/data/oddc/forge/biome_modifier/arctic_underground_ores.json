@@ -1,6 +1,6 @@
 {
   "type": "forge:add_features",
-  "biomes": "oddc_arctic",
+  "biomes": "oddc:arctic",
   "features": [
     "oddc:silver_ore_extra"
   ],

@@ -1,8 +1,6 @@
 {
   "type": "forge:add_features",
   "biomes": "#minecraft:is_overworld",
-  "features": [
-    "oddc:abandoned_iron_golem"
-  ],
+  "features": "oddc:abandoned_iron_golem",
   "step": "surface_structures"
 }

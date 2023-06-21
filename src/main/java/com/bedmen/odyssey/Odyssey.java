@@ -64,6 +64,7 @@ public class Odyssey
 
         BlockRegistry.init();
         ItemRegistry.init();
+        ArgumentTypeRegistry.init();
         BiomeRegistry.init();
         BlockEntityTypeRegistry.init();
         ContainerRegistry.init();
