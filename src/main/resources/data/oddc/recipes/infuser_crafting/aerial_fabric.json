@@ -5,14 +5,12 @@
   },
   "pedestalRequirementList": [
     {
-      "isIngredient": true,
-      "object": {
+      "ingredient": {
         "item": "oddc:feather_bundle"
       }
     },
     {
-      "isIngredient": true,
-      "object": {
+      "ingredient": {
         "item": "minecraft:phantom_membrane"
       }
     }

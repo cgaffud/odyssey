@@ -18,11 +18,13 @@ import net.minecraft.world.level.Level;
 public class WeavingRecipe implements Recipe<Container> {
     protected final ResourceLocation id;
     protected final Ingredient ingredient;
+    protected final NonNullList<Ingredient> ingredientList = NonNullList.create();
     protected final ItemStack result;
 
     public WeavingRecipe(ResourceLocation idIn, Ingredient ingredientIn, ItemStack resultIn) {
         this.id = idIn;
         this.ingredient = ingredientIn;
+        this.ingredientList.add(this.ingredient);
         this.result = resultIn;
     }
 
@@ -54,9 +56,7 @@ public class WeavingRecipe implements Recipe<Container> {
     }
 
     public NonNullList<Ingredient> getIngredients() {
-        NonNullList<Ingredient> nonnulllist = NonNullList.create();
-        nonnulllist.add(this.ingredient);
-        return nonnulllist;
+        return this.ingredientList;
     }
 
     public ResourceLocation getId() {

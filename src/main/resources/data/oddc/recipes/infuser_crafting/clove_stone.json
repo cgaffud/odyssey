@@ -5,8 +5,7 @@
   },
   "pedestalRequirementList": [
     {
-      "isIngredient": true,
-      "object": {
+      "ingredient": {
         "item": "oddc:clover"
       }
     }
