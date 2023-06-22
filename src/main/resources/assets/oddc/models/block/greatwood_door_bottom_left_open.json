@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/door_bottom",
+  "parent": "minecraft:block/door_bottom_left_open",
   "textures": {
     "top": "oddc:block/greatwood_door_top",
     "bottom": "oddc:block/greatwood_door_bottom"
