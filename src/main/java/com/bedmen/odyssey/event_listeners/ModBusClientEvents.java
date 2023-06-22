@@ -12,6 +12,7 @@ import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.combat.SpearType;
 import com.bedmen.odyssey.effect.FireType;
+import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.inventory.QuiverMenu;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
@@ -34,6 +35,8 @@ import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.HuskRenderer;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -44,10 +47,12 @@ import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.RecipeBookManager;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -328,4 +333,18 @@ public class ModBusClientEvents {
         event.registerRecipeCategoryFinder(RecipeTypeRegistry.STITCHING.get(), recipe -> OdysseyRecipeBook.STITCHING);
         event.registerRecipeCategoryFinder(RecipeTypeRegistry.INFUSER_CRAFTING.get(), recipe -> OdysseyRecipeBook.INFUSER_CRAFTING);
     }
+
+    @SubscribeEvent
+    public static void onSpawnPlacementRegisterEvent(final SpawnPlacementRegisterEvent event) {
+        event.register(EntityTypeRegistry.BABY_LEVIATHAN.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BabyLeviathan::spawnPredicate, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(EntityTypeRegistry.WEAVER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Weaver::spawnPredicate, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(EntityTypeRegistry.WRAITH.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Wraith::spawnPredicate, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(EntityTypeRegistry.WRAITH_STALKER.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WraithStalker::spawnPredicate, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(EntityTypeRegistry.WRAITH_AMALGAM.get(),SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WraithAmalgam::spawnPredicate, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(EntityTypeRegistry.STRAY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OdysseyStray::spawnPredicate, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(EntityTypeRegistry.HUSK.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OdysseyHusk::spawnPredicate, SpawnPlacementRegisterEvent.Operation.AND);
+    }
+
+
+
 }

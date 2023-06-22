@@ -34,8 +34,9 @@ public class OdysseyArrow extends OdysseyAbstractArrow implements IEntityAdditio
         this.setSomePhysics(somePhysics);
     }
 
-    public OdysseyArrow(Level level, double x, double y, double z, boolean somePhysics) {
+    public OdysseyArrow(Level level, double x, double y, double z, ArrowType arrowType, boolean somePhysics) {
         super(EntityTypeRegistry.ARROW.get(), x, y, z, level);
+        this.arrowType = arrowType;
         this.setSomePhysics(somePhysics);
     }
 
