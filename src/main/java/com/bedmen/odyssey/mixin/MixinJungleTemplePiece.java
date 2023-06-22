@@ -30,7 +30,7 @@ public abstract class MixinJungleTemplePiece  extends ScatteredFeaturePiece {
     @Redirect(method = "postProcess", at = @At(value = "INVOKE", target="Lnet/minecraft/world/level/levelgen/structure/structures/JungleTemplePiece;createChest(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;Lnet/minecraft/util/RandomSource;IIILnet/minecraft/resources/ResourceLocation;)Z", ordinal = 1))
     protected boolean createChest(JungleTemplePiece jungleTemplePiece, WorldGenLevel worldGenLevel, BoundingBox boundingBox, RandomSource randomSource, int x, int y, int z, ResourceLocation resourceLocation) {
         BlockPos pos = super.getWorldPos(x,y,z);
-        if (this.boundingBox.isInside(pos) && !worldGenLevel.getBlockState(pos).is(Blocks.CHEST)) {
+        if (boundingBox.isInside(pos) && !worldGenLevel.getBlockState(pos).is(Blocks.CHEST)) {
             BlockState state = reorient(worldGenLevel, pos, (BlockRegistry.STERLING_SILVER_CHEST.get().defaultBlockState().setValue(BlockStateProperties.LOCKED, true)));
 
             worldGenLevel.setBlock(pos, state, 2);
