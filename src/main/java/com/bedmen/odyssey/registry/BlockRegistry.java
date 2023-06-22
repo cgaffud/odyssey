@@ -24,6 +24,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
 public class BlockRegistry {
@@ -89,7 +90,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> PALM_WALL_SIGN = BLOCKS.register("palm_wall_sign", () -> new OdysseyWallSignBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_LIGHT_GRAY).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(PALM_SIGN), OdysseyWoodType.PALM));
     public static final RegistryObject<Block> STRIPPED_PALM_WOOD = BLOCKS.register("stripped_palm_wood", () -> new FlammableLogBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_LIGHT_GRAY).strength(2.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> PALM_WOOD = BLOCKS.register("palm_wood", () -> new StripableLogBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GRAY).strength(2.0F).sound(SoundType.WOOD), STRIPPED_PALM_WOOD));
-    public static final RegistryObject<Block> POTTED_PALM_SAPLING = BLOCKS.register("potted_palm_sapling", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, PALM_SAPLING, BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
+    public static final RegistryObject<Block> POTTED_PALM_SAPLING = BLOCKS.register("potted_palm_sapling", () -> new FlowerPotBlock(PALM_SAPLING.get(), BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
     public static final RegistryObject<Block> COCONUT = BLOCKS.register("coconut", () -> new CoconutBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistryObject<Block> HOLLOW_COCONUT = BLOCKS.register("hollow_coconut", () -> new HollowCoconutBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
 
@@ -113,7 +114,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> GREATWOOD_STAIRS = BLOCKS.register("greatwood_stairs", () -> new FlammableStairsBlock(() -> GREATWOOD_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(GREATWOOD_PLANKS.get())));
     public static final RegistryObject<Block> GREATWOOD_TRAPDOOR = BLOCKS.register("greatwood_trapdoor", () -> new TrapDoorBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn(BlockRegistry::never)));
     public static final RegistryObject<Block> GREATWOOD_WALL_SIGN = BLOCKS.register("greatwood_wall_sign", () -> new OdysseyWallSignBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(GREATWOOD_SIGN), OdysseyWoodType.GREATWOOD));
-    public static final RegistryObject<Block> POTTED_GREATWOOD_SAPLING = BLOCKS.register("potted_greatwood_sapling", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, GREATWOOD_SAPLING, BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
+    public static final RegistryObject<Block> POTTED_GREATWOOD_SAPLING = BLOCKS.register("potted_greatwood_sapling", () -> new FlowerPotBlock(GREATWOOD_SAPLING.get(), BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion()));
     public static final RegistryObject<Block> GREATROOTS = BLOCKS.register("greatroots", () -> new RootBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_GRAY).noOcclusion().requiresCorrectToolForDrops().strength(5.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> GREATWOOD_SEED = BLOCKS.register("greatwood_seed", () -> new GreatSeedBlock(BlockBehaviour.Properties.of(Material.PLANT).randomTicks().requiresCorrectToolForDrops().strength(1.0F, 3.0F).sound(SoundType.WOOD).noOcclusion(), GREATWOOD_LOG::get));
 
