@@ -14,6 +14,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +26,7 @@ import net.minecraftforge.common.PlantType;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class TriplePlantBlock extends TransparentBushBlock {
+public class TriplePlantBlock extends BushBlock {
     public static final EnumProperty<TripleBlockThird> THIRD = OdysseyBlockStateProperties.TRIPLE_BLOCK_THIRD;
 
     public TriplePlantBlock(BlockBehaviour.Properties properties) {

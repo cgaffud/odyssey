@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.block.wood;
 
-import com.bedmen.odyssey.block.TransparentBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -28,9 +27,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class RootBlock extends TransparentBlock implements SimpleWaterloggedBlock {
+public class RootBlock extends Block implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty DIRTLOGGED = BooleanProperty.create("dirtlogged");
 

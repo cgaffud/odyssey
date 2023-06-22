@@ -9,6 +9,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -21,7 +22,7 @@ import java.util.Random;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class GreatSaplingBlock extends TransparentSaplingBlock {
+public class GreatSaplingBlock extends SaplingBlock {
     public static final EnumProperty<Status> STATUS = EnumProperty.create("status", Status.class);
     public static final IntegerProperty AGE_2 = BlockStateProperties.AGE_2;
     public GreatSaplingBlock(AbstractTreeGrower treeGrower, Properties properties) {

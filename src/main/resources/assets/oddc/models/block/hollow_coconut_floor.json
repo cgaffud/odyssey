@@ -1,5 +1,6 @@
 {
   "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
   "parent": "block/block",
   "textures": {
     "particle": "oddc:block/hollow_coconut",

@@ -3,5 +3,6 @@
   "textures": {
     "top": "oddc:block/greatwood_door_top",
     "bottom": "oddc:block/greatwood_door_bottom"
-  }
+  },
+  "render_type": "minecraft:cutout"
 }

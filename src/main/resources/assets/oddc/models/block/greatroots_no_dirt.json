@@ -2,5 +2,6 @@
   "parent": "minecraft:block/cube_all",
   "textures": {
     "all": "oddc:block/greatroots_no_dirt"
-  }
+  },
+  "render_type": "minecraft:cutout"
 }

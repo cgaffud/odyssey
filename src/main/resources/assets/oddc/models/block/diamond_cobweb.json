@@ -2,5 +2,6 @@
   "parent": "minecraft:block/cross",
   "textures": {
     "cross": "oddc:block/diamond_cobweb"
-  }
+  },
+  "render_type": "minecraft:cutout"
 }

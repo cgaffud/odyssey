@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 import java.util.Map;
 
-public class HexFireBlock extends BaseFireBlock implements INeedsToRegisterRenderType {
+public class HexFireBlock extends BaseFireBlock {
     private static final Map<Direction, BooleanProperty> PROPERTY_BY_DIRECTION = PipeBlock.PROPERTY_BY_DIRECTION.entrySet().stream().filter((p_53467_) -> {
         return p_53467_.getKey() != Direction.DOWN;
     }).collect(Util.toMap());
@@ -75,11 +75,6 @@ public class HexFireBlock extends BaseFireBlock implements INeedsToRegisterRende
     @Override
     protected boolean canBurn(BlockState p_49284_) {
         return false;
-    }
-
-    @Override
-    public RenderType getRenderType() {
-        return RenderType.cutout();
     }
 
     public void entityInside(BlockState blockState, Level level, BlockPos pos, Entity entity) {

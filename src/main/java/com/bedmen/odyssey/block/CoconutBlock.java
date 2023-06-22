@@ -37,7 +37,7 @@ import java.util.Random;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class CoconutBlock extends Block implements BonemealableBlock, INeedsToRegisterRenderType {
+public class CoconutBlock extends Block implements BonemealableBlock {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_2;
     protected static final VoxelShape[] AABB = new VoxelShape[]{Block.box(6.0D, 10.0D, 6.0D, 10.0D, 14.0D, 10.0D), Block.box(4.0D, 6.0D, 4.0D, 12.0D, 14.0D, 12.0D), Block.box(2.0D, 2.0D, 2.0D, 14.0D, 14.0D, 14.0D)};
 
@@ -121,9 +121,5 @@ public class CoconutBlock extends Block implements BonemealableBlock, INeedsToRe
 
     public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType pathComputationType) {
         return false;
-    }
-
-    public RenderType getRenderType() {
-        return RenderType.cutout();
     }
 }

@@ -87,14 +87,6 @@ public class ModBusClientEvents {
                 return new OdysseyPlayerRenderer(context, true);
             });
 
-            //Block Render Types
-            // TODO put all block render types in jsons and remove unnecessary classes.
-//            for(Block block : ForgeRegistries.BLOCKS.getValues()) {
-//                if (block instanceof INeedsToRegisterRenderType block1) {
-//                    ItemBlockRenderTypes.setRenderLayer(block, block1.getRenderType());
-//                }
-//            }
-
             //Item Model Properties
             for(Item item : ForgeRegistries.ITEMS.getValues()){
                 if(item instanceof INeedsToRegisterItemModelProperty item1){

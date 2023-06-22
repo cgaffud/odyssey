@@ -2,5 +2,6 @@
   "parent": "minecraft:block/tinted_cross",
   "textures": {
     "cross": "oddc:block/prairie_grass_top"
-  }
+  },
+  "render_type": "minecraft:cutout"
 }

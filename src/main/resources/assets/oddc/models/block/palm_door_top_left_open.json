@@ -3,5 +3,6 @@
   "textures": {
     "top": "oddc:block/palm_door_top",
     "bottom": "oddc:block/palm_door_bottom"
-  }
+  },
+  "render_type": "minecraft:cutout"
 }
