@@ -31,8 +31,10 @@ public class AspectArrowItem extends ArrowItem implements InnateAspectItem, Odys
         this.somePhysics = somePhysics;
         DispenserBlock.registerBehavior(this, new AbstractProjectileDispenseBehavior() {
             protected Projectile getProjectile(Level level, Position position, ItemStack itemStack) {
-                OdysseyArrow arrow = new OdysseyArrow(level, position.x(), position.y(), position.z(), somePhysics);
+                OdysseyArrow arrow = new OdysseyArrow(level, position.x(), position.y(), position.z(), arrowType, somePhysics);
                 arrow.pickup = AbstractArrow.Pickup.ALLOWED;
+                arrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(itemStack));
+
                 return arrow;
             }
         });
@@ -48,7 +50,6 @@ public class AspectArrowItem extends ArrowItem implements InnateAspectItem, Odys
         odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(ammo));
         WeaponUtil.getProjectileWeapon(shooter).ifPresent(itemStack -> odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(itemStack)));
         WeaponUtil.getQuiver(shooter).ifPresent(itemStack -> odysseyArrow.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(itemStack)));
-
         return odysseyArrow;
     }
 
