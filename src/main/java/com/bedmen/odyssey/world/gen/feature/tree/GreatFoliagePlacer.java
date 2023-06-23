@@ -31,9 +31,12 @@ public class GreatFoliagePlacer extends MegaJungleFoliagePlacer {
     @Override
     protected void createFoliage(LevelSimulatedReader levelSimulatedReader, BiConsumer<BlockPos, BlockState> biConsumer, RandomSource randomSource, TreeConfiguration config, int p_161462_, FoliagePlacer.FoliageAttachment foliageAttachment, int foliageHeight, int foliageRadius, int offset) {
         int i = foliageAttachment.doubleTrunk() ? foliageHeight : 1;
+        // new edits
+        i++;
 
         for(int j = offset; j >= offset - i; --j) {
-            int k = foliageRadius + foliageAttachment.radiusOffset() + 1 - j;
+            //foliageRadius + foliageAttachment.radiusOffset() -3 - j
+            int k = foliageRadius + foliageAttachment.radiusOffset() - j  + ((j == offset-i) ? -2 : 1);
             this.placeLeavesRow(levelSimulatedReader, biConsumer, randomSource, config, foliageAttachment.pos(), k, j, foliageAttachment.doubleTrunk());
         }
     }

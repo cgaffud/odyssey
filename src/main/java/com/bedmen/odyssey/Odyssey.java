@@ -20,6 +20,7 @@ import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.registry.structure.StructureProcessorRegistry;
 import com.bedmen.odyssey.registry.structure.StructureTypeRegistry;
 import com.bedmen.odyssey.registry.tree.FoliagePlacerTypeRegistry;
+import com.bedmen.odyssey.registry.tree.TreeDecoratorTypeRegistry;
 import com.bedmen.odyssey.registry.tree.TrunkPlacerTypeRegistry;
 import com.bedmen.odyssey.tier.OdysseyTiers;
 import com.bedmen.odyssey.trades.OdysseyTrades;
@@ -82,6 +83,7 @@ public class Odyssey
         StructureTypeRegistry.init();
         StructurePieceTypeRegistry.init();
         StructureProcessorRegistry.init();
+        TreeDecoratorTypeRegistry.init();
         TrunkPlacerTypeRegistry.init();
         WorldTypeRegistry.init();
     }

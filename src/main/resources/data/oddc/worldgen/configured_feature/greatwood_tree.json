@@ -49,7 +49,12 @@
       "upper_size": 2,
       "type": "minecraft:two_layers_feature_size"
     },
-    "decorators": [],
+    "decorators": [
+      {
+        "type": "oddc:leave_greatwood_vine",
+        "probability": 0.5
+      }
+    ],
     "ignore_vines": true,
     "force_dirt": false
   },
