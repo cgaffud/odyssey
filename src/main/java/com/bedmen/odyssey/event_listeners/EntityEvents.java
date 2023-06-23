@@ -285,22 +285,22 @@ public class EntityEvents {
 
     @SubscribeEvent
     public static void onLivingSpawnEvent$CheckSpawn(final LivingSpawnEvent.CheckSpawn event){
-        Entity entity = event.getEntity();
-        RandomSource randomSource = entity.level.random;
-        EntityType<?> entityType = entity.getType();
+        Mob mob = event.getEntity();
+        RandomSource randomSource = mob.level.random;
+        EntityType<?> entityType = mob.getType();
         MobSpawnType mobSpawnType = event.getSpawnReason();
 
-        if(mobSpawnType == MobSpawnType.SPAWNER){
+        if(mobSpawnType == MobSpawnType.SPAWNER || mobSpawnType == MobSpawnType.CHUNK_GENERATION){
             return;
         }
 
-        if(ENTITY_REPLACEMENT_MAP.containsKey(entityType) && entity instanceof Mob mob){
+        if(ENTITY_REPLACEMENT_MAP.containsKey(entityType)) {
             EntityReplacementFunction entityReplacementFunction = ENTITY_REPLACEMENT_MAP.get(entityType);
             Optional<EntityType<?>> optionalEntityType = entityReplacementFunction.call(mob, randomSource);
-            if(optionalEntityType.isPresent()){
+            if (optionalEntityType.isPresent()) {
                 EntityType<?> entityType1 = optionalEntityType.get();
-                if(entityType1 != entityType){
-                    entityType1.spawn((ServerLevel)entity.level, null, null, new BlockPos(entity.getPosition(1.0f)), mobSpawnType, true, true);
+                if (entityType1 != entityType) {
+                    entityType1.spawn((ServerLevel) mob.level, null, null, new BlockPos(mob.getPosition(1.0f)), mobSpawnType, true, true);
                     event.setResult(Event.Result.DENY);
                 }
             }

@@ -14,7 +14,6 @@ import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyPowderSnowBucketItem;
 import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
-import com.bedmen.odyssey.recipes.OdysseyRecipeBook;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.registry.structure.StructureProcessorRegistry;
@@ -30,7 +29,6 @@ import com.bedmen.odyssey.world.gen.processor.WoodProcessor;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
-import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
@@ -38,11 +36,9 @@ import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.monster.Husk;
 import net.minecraft.world.entity.monster.Stray;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -97,15 +93,12 @@ public class Odyssey
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
             Registry.register(Registry.POINT_OF_INTEREST_TYPE, PoiTypes.WEAPONSMITH, new PoiType(ImmutableSet.copyOf(BlockRegistry.GRINDSTONE.get().getStateDefinition().getPossibleStates()), 1, 1));
             OdysseyPowderSnowBucketItem.registerDispenseBehavior();
+            //        OdysseyPotions.addBrewingRecipes();
 
             //Generation
             BiomeUtil.init();
             NoiseGeneratorSettings.register(BuiltinRegistries.NOISE_GENERATOR_SETTINGS, WorldTypeRegistry.ODYSSEY_RESOURCE_KEY, OdysseyGeneration.odysseyOverworld(false, false));
             WoodProcessor.init();
-//        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.LUPINE.get(),EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LupineEntity::spawnPredicate);
-//        EntitySpawnPlacementRegistry.register(EntityTypeRegistry.ARCTIHORN.get(),EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ArctihornEntity::spawnPredicate);
-
-//        OdysseyPotions.addBrewingRecipes();
         });
     }
 
