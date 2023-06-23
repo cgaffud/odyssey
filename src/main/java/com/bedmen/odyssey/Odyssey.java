@@ -72,6 +72,7 @@ public class Odyssey
         FoliagePlacerTypeRegistry.init();
         LootModifierRegistry.init();
         ParticleTypeRegistry.init();
+        PoiTypeRegistry.init();
         RecipeSerializerRegistry.init();
         RecipeTypeRegistry.init();
         SoundEventRegistry.init();
@@ -91,7 +92,6 @@ public class Odyssey
             OdysseyTrades.addTrades();
             EntityEvents.initEntityMap();
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
-            Registry.register(Registry.POINT_OF_INTEREST_TYPE, PoiTypes.WEAPONSMITH, new PoiType(ImmutableSet.copyOf(BlockRegistry.GRINDSTONE.get().getStateDefinition().getPossibleStates()), 1, 1));
             OdysseyPowderSnowBucketItem.registerDispenseBehavior();
             //        OdysseyPotions.addBrewingRecipes();
 
