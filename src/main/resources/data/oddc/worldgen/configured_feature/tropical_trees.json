@@ -1,7 +1,0 @@
-{
-  "config": {
-    "features": [],
-    "default": "oddc:palm_tree"
-  },
-  "type": "minecraft:random_selector"
-}

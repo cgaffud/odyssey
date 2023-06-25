@@ -1,26 +1,16 @@
 package com.bedmen.odyssey.world.gen;
 
-import com.bedmen.odyssey.registry.BiomeRegistry;
+import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.world.gen.biome.BiomeResourceKeys;
 import com.bedmen.odyssey.world.gen.biome.OdysseyOverworldBiomeBuilder;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
-import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.*;
-import net.minecraft.world.level.levelgen.presets.WorldPreset;
-import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.world.level.levelgen.synth.NormalNoise;
-
-import java.util.Map;
 
 public class OdysseyGeneration {
 
@@ -56,14 +46,6 @@ public class OdysseyGeneration {
         return SurfaceRules.noiseCondition(Noises.SURFACE, noiseThreshold / 8.25D, Double.MAX_VALUE);
     }
 
-    public static NoiseGeneratorSettings odysseyOverworld(boolean amplified, boolean largeBiomes) {
-        return new NoiseGeneratorSettings(NoiseSettings.OVERWORLD_NOISE_SETTINGS, Blocks.STONE.defaultBlockState(), Blocks.WATER.defaultBlockState(), NoiseRouterData.overworld(BuiltinRegistries.DENSITY_FUNCTION, largeBiomes, amplified), odysseyOverworldSurfaceRules(), (new OverworldBiomeBuilder()).spawnTarget(), 63, false, true, true, false);
-    }
-
-    public static SurfaceRules.RuleSource odysseyOverworldSurfaceRules() {
-        return odysseyOverworldLike(true, false, true);
-    }
-
     public static SurfaceRules.RuleSource odysseyOverworldLike(boolean abovePreliminarySurface, boolean bedrockRoof, boolean bedrockFloor) {
         // Conditions
         SurfaceRules.ConditionSource coarseDirtHeightCondition = SurfaceRules.yBlockCheck(VerticalAnchor.absolute(97), 2);
@@ -80,7 +62,7 @@ public class OdysseyGeneration {
         SurfaceRules.ConditionSource lowSurfaceNoiseCondition = SurfaceRules.noiseCondition(Noises.SURFACE, -0.909D, -0.5454D);
         SurfaceRules.ConditionSource mediumSurfaceNoiseCondition = SurfaceRules.noiseCondition(Noises.SURFACE, -0.1818D, 0.1818D);
         SurfaceRules.ConditionSource highSurfaceNoiseCondition = SurfaceRules.noiseCondition(Noises.SURFACE, 0.5454D, 0.909D);
-        SurfaceRules.ConditionSource isBeachLikeCondition = SurfaceRules.isBiome(Biomes.WARM_OCEAN, Biomes.BEACH, Biomes.SNOWY_BEACH, BiomeRegistry.TROPICS_RESOURCE_KEY);
+        SurfaceRules.ConditionSource isBeachLikeCondition = SurfaceRules.isBiome(Biomes.WARM_OCEAN, Biomes.BEACH, Biomes.SNOWY_BEACH, BiomeResourceKeys.TROPICS_RESOURCE_KEY);
         SurfaceRules.ConditionSource isDesertCondition = SurfaceRules.isBiome(Biomes.DESERT);
         SurfaceRules.ConditionSource frozenOceanCondition = SurfaceRules.isBiome(Biomes.FROZEN_OCEAN, Biomes.DEEP_FROZEN_OCEAN);
         SurfaceRules.ConditionSource stonyPeakcalciteNoiseCondition = SurfaceRules.noiseCondition(Noises.CALCITE, -0.0125D, 0.0125D);
@@ -204,8 +186,8 @@ public class OdysseyGeneration {
         SurfaceRules.RuleSource mushroomFieldsRule = SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.MUSHROOM_FIELDS), MYCELIUM);
         SurfaceRules.RuleSource woodedBadlandsCoarseDirtRule = SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.WOODED_BADLANDS), SurfaceRules.ifTrue(coarseDirtHeightCondition, SurfaceRules.sequence(SurfaceRules.ifTrue(lowSurfaceNoiseCondition, COARSE_DIRT), SurfaceRules.ifTrue(mediumSurfaceNoiseCondition, COARSE_DIRT), SurfaceRules.ifTrue(highSurfaceNoiseCondition, COARSE_DIRT), grassIfNotUnderWaterOtherwiseDirtRule)));
         SurfaceRules.RuleSource swampRule = SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.SWAMP), SurfaceRules.ifTrue(above62Condition, SurfaceRules.ifTrue(SurfaceRules.not(above63Condition), SurfaceRules.ifTrue(SurfaceRules.noiseCondition(Noises.SWAMP, 0.0D), WATER))));
-        SurfaceRules.RuleSource arcticLessIceMoreSnowRule = SurfaceRules.ifTrue(SurfaceRules.isBiome(BiomeRegistry.ARCTIC_RESOURCE_KEY), arcticLessIceMoreSnowSequenceRule);
-        SurfaceRules.RuleSource arcticMoreIceLessSnowRule = SurfaceRules.ifTrue(SurfaceRules.isBiome(BiomeRegistry.ARCTIC_RESOURCE_KEY), arcticMoreIceLessSnowSequenceRule);
+        SurfaceRules.RuleSource arcticLessIceMoreSnowRule = SurfaceRules.ifTrue(SurfaceRules.isBiome(BiomeResourceKeys.ARCTIC_RESOURCE_KEY), arcticLessIceMoreSnowSequenceRule);
+        SurfaceRules.RuleSource arcticMoreIceLessSnowRule = SurfaceRules.ifTrue(SurfaceRules.isBiome(BiomeResourceKeys.ARCTIC_RESOURCE_KEY), arcticMoreIceLessSnowSequenceRule);
 
         // Multi-Biome Rules
         SurfaceRules.RuleSource stoneAndSandRules = SurfaceRules.sequence(
@@ -267,38 +249,15 @@ public class OdysseyGeneration {
         return SurfaceRules.sequence(builder.build().toArray(SurfaceRules.RuleSource[]::new));
     }
 
-    private static final Registry<DimensionType> dimensionTypes = BuiltinRegistries.DIMENSION_TYPE;
-    private static final Registry<Biome> biomes = BuiltinRegistries.BIOME;
-    private static final Registry<StructureSet> structureSets = BuiltinRegistries.STRUCTURE_SETS;
-    private static final Registry<NoiseGeneratorSettings> noiseSettings = BuiltinRegistries.NOISE_GENERATOR_SETTINGS;
-    private static final Registry<NormalNoise.NoiseParameters> noises = BuiltinRegistries.NOISE;
-    private static final Holder<DimensionType> netherDimensionType = dimensionTypes.getOrCreateHolderOrThrow(BuiltinDimensionTypes.NETHER);
-    private static final Holder<NoiseGeneratorSettings> netherNoiseSettings = noiseSettings.getOrCreateHolderOrThrow(NoiseGeneratorSettings.NETHER);
-    private static final LevelStem netherStem = new LevelStem(netherDimensionType, new NoiseBasedChunkGenerator(structureSets, noises, MultiNoiseBiomeSource.Preset.NETHER.biomeSource(biomes), netherNoiseSettings));
-    private static final Holder<DimensionType> endDimensionType = dimensionTypes.getOrCreateHolderOrThrow(BuiltinDimensionTypes.END);
-    private static final Holder<NoiseGeneratorSettings> endNoiseSettings = noiseSettings.getOrCreateHolderOrThrow(NoiseGeneratorSettings.END);
-    private static final LevelStem endStem = new LevelStem(endDimensionType, new NoiseBasedChunkGenerator(structureSets, noises, new TheEndBiomeSource(biomes), endNoiseSettings));
+    public static MultiNoiseBiomeSource.Preset ODYSSEY_OVERWORLD;
 
-    public static final MultiNoiseBiomeSource.Preset OVERWORLD = new MultiNoiseBiomeSource.Preset(new ResourceLocation("overworld"), (biomeRegistry) -> {
-        ImmutableList.Builder<Pair<Climate.ParameterPoint, Holder<Biome>>> builder = ImmutableList.builder();
-        (new OdysseyOverworldBiomeBuilder()).addBiomes((keyPair) -> {
-            builder.add(keyPair.mapSecond(biomeRegistry::getOrCreateHolderOrThrow));
+    public static void init(){
+        ODYSSEY_OVERWORLD = new MultiNoiseBiomeSource.Preset(new ResourceLocation(Odyssey.MOD_ID, "overworld"), (biomeRegistry) -> {
+            ImmutableList.Builder<Pair<Climate.ParameterPoint, Holder<Biome>>> builder = ImmutableList.builder();
+            (new OdysseyOverworldBiomeBuilder()).addBiomes((keyPair) -> {
+                builder.add(keyPair.mapSecond(biomeRegistry::getOrCreateHolderOrThrow));
+            });
+            return new Climate.ParameterList<>(builder.build());
         });
-        return new Climate.ParameterList<>(builder.build());
-    });
-
-    private static LevelStem makeOdysseyOverworld(ChunkGenerator chunkGenerator) {
-        return new LevelStem(BuiltinRegistries.DIMENSION_TYPE.getOrCreateHolderOrThrow(BuiltinDimensionTypes.OVERWORLD), chunkGenerator);
-    }
-
-
-    public static LevelStem odysseyOverworldLevelStem() {
-        MultiNoiseBiomeSource multinoisebiomesource = OVERWORLD.biomeSource(BuiltinRegistries.BIOME);
-        Holder<NoiseGeneratorSettings> holder = BuiltinRegistries.NOISE_GENERATOR_SETTINGS.getOrCreateHolderOrThrow(NoiseGeneratorSettings.OVERWORLD);
-        return makeOdysseyOverworld(new NoiseBasedChunkGenerator(BuiltinRegistries.STRUCTURE_SETS, BuiltinRegistries.NOISE, multinoisebiomesource, holder));
-    }
-
-    public static WorldPreset createPresetWithOdysseyOverworld() {
-        return new WorldPreset(Map.of(LevelStem.OVERWORLD, odysseyOverworldLevelStem(), LevelStem.NETHER, netherStem, LevelStem.END, endStem));
     }
 }

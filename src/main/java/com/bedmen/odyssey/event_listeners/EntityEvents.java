@@ -22,7 +22,7 @@ import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
-import com.bedmen.odyssey.registry.BiomeRegistry;
+import com.bedmen.odyssey.world.gen.biome.BiomeResourceKeys;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -382,7 +382,7 @@ public class EntityEvents {
     }
 
     public static boolean inPrairieBiome(Entity entity){
-        return entity.level.getBiome(entity.blockPosition()).is(BiomeRegistry.PRAIRIE_RESOURCE_KEY);
+        return entity.level.getBiome(entity.blockPosition()).is(BiomeResourceKeys.PRAIRIE_RESOURCE_KEY);
     }
 
     public static boolean inDripstoneBiome(Entity entity){

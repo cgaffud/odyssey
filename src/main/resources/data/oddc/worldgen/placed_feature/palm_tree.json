@@ -4,9 +4,12 @@
     {
       "type": "minecraft:block_predicate_filter",
       "predicate": {
-        "type": "would_survive",
+        "type": "minecraft:would_survive",
         "state": {
-          "Name": "oddc:palm_sapling"
+          "Name": "oddc:palm_sapling",
+          "Properties": {
+            "stage": "0"
+          }
         }
       }
     }

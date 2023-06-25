@@ -26,17 +26,13 @@ import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.world.BiomeUtil;
 import com.bedmen.odyssey.world.gen.OdysseyGeneration;
 import com.bedmen.odyssey.world.gen.processor.WoodProcessor;
-import com.google.common.collect.ImmutableSet;
-import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
-import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.animal.PolarBear;
 import net.minecraft.world.entity.monster.Husk;
 import net.minecraft.world.entity.monster.Stray;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -62,7 +58,6 @@ public class Odyssey
         BlockRegistry.init();
         ItemRegistry.init();
         ArgumentTypeRegistry.init();
-        BiomeRegistry.init();
         BlockEntityTypeRegistry.init();
         ContainerRegistry.init();
         EntityDataSerializerRegistry.init();
@@ -80,7 +75,6 @@ public class Odyssey
         StructurePieceTypeRegistry.init();
         StructureProcessorRegistry.init();
         TrunkPlacerTypeRegistry.init();
-        WorldTypeRegistry.init();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -97,7 +91,7 @@ public class Odyssey
 
             //Generation
             BiomeUtil.init();
-            NoiseGeneratorSettings.register(BuiltinRegistries.NOISE_GENERATOR_SETTINGS, WorldTypeRegistry.ODYSSEY_RESOURCE_KEY, OdysseyGeneration.odysseyOverworld(false, false));
+            OdysseyGeneration.init();
             WoodProcessor.init();
         });
     }

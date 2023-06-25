@@ -3,7 +3,7 @@ package com.bedmen.odyssey.client.renderer.entity;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.model.CamoCreeperModel;
 import com.bedmen.odyssey.entity.monster.CamoCreeper;
-import com.bedmen.odyssey.registry.BiomeRegistry;
+import com.bedmen.odyssey.world.gen.biome.BiomeResourceKeys;
 import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -12,8 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
-
-import java.util.Objects;
 
 public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, CamoCreeperModel<CamoCreeper>> {
     public static final ResourceLocation GRAY_CREEPER_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/camo_creeper/gray_creeper.png");
@@ -56,7 +54,7 @@ public class CamoCreeperRenderer extends AbstractCreeperRenderer<CamoCreeper, Ca
             return SNOW_CREEPER_LOCATION;
         }
 
-        if(biomeHolder.is(Biomes.DESERT) || biomeHolder.is(Biomes.BEACH) || biomeHolder.is(BiomeRegistry.TROPICS_RESOURCE_KEY)){
+        if(biomeHolder.is(Biomes.DESERT) || biomeHolder.is(Biomes.BEACH) || biomeHolder.is(BiomeResourceKeys.TROPICS_RESOURCE_KEY)){
             return DESERT_CREEPER_LOCATION;
         }
 

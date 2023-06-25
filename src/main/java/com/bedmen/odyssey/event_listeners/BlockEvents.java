@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.registry.BiomeRegistry;
+import com.bedmen.odyssey.world.gen.biome.BiomeResourceKeys;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -22,7 +22,7 @@ public class BlockEvents {
         LevelAccessor levelAccessor = event.getLevel();
         BlockState blockState = levelAccessor.getBlockState(blockPos);
         Block block = blockState.getBlock();
-        if((block instanceof CropBlock || block instanceof StemBlock) && levelAccessor.getBiome(blockPos).is(BiomeRegistry.PRAIRIE_RESOURCE_KEY)){
+        if((block instanceof CropBlock || block instanceof StemBlock) && levelAccessor.getBiome(blockPos).is(BiomeResourceKeys.PRAIRIE_RESOURCE_KEY)){
             float f = CropBlock.getGrowthSpeed(block, levelAccessor, blockPos);
             if(levelAccessor.getRandom().nextInt((int)(25.0F / f) + 1) == 0){
                 event.setResult(Event.Result.ALLOW);
