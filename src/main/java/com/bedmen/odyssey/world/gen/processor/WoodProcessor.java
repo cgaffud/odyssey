@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.world.gen.processor;
 
 import com.bedmen.odyssey.block.wood.OdysseyWoodType;
-import com.bedmen.odyssey.registry.BiomeRegistry;
+import com.bedmen.odyssey.world.gen.biome.BiomeResourceKeys;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.structure.StructureProcessorRegistry;
 import com.mojang.serialization.Codec;
@@ -246,7 +246,7 @@ public class WoodProcessor extends StructureProcessor {
                 return WoodType.SPRUCE;
             } else if(biomeHolder.is(BiomeTags.IS_JUNGLE)){
                 return WoodType.JUNGLE;
-            } else if(biomeHolder.is(BiomeTags.IS_SAVANNA) || biomeHolder.is(BiomeRegistry.PRAIRIE_RESOURCE_KEY)){
+            } else if(biomeHolder.is(BiomeTags.IS_SAVANNA) || biomeHolder.is(BiomeResourceKeys.PRAIRIE_RESOURCE_KEY)){
                 return WoodType.ACACIA;
             } else if(biomeHolder.is(Biomes.DARK_FOREST)){
                 return WoodType.DARK_OAK;
@@ -256,7 +256,7 @@ public class WoodProcessor extends StructureProcessor {
                 return WoodType.CRIMSON;
             } else if(biomeHolder.is(Biomes.WARPED_FOREST)){
                 return WoodType.WARPED;
-            } else if(biomeHolder.is(BiomeRegistry.TROPICS_RESOURCE_KEY)){
+            } else if(biomeHolder.is(BiomeResourceKeys.TROPICS_RESOURCE_KEY)){
                 return OdysseyWoodType.PALM;
             } else if(biomeHolder.is(Biomes.LUSH_CAVES) || biomeHolder.is(Biomes.DRIPSTONE_CAVES) || biomeHolder.is(Biomes.DEEP_DARK)){
                 return OdysseyWoodType.GREATWOOD;
