@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class InfuserBlock extends InfusionPedestalBlock implements INeedsToRegisterRenderType {
+public class InfuserBlock extends InfusionPedestalBlock {
 
     protected static final VoxelShape BASE_1 = Block.box(0.0d, 0.0d, 0.0d, 16.0d, 2.0d, 16.0d);
     protected static final VoxelShape BASE_2 = Block.box(2.0d, 2.0d, 2.0d, 14.0d, 3.0d, 14.0d);
@@ -61,10 +61,5 @@ public class InfuserBlock extends InfusionPedestalBlock implements INeedsToRegis
     @Nullable
     protected static <T extends BlockEntity> BlockEntityTicker<T> createInfuserTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<? extends InfuserBlockEntity> blockEntityType2) {
         return level.isClientSide ? createTickerHelper(blockEntityType, blockEntityType2, InfuserBlockEntity::clientTick) : createTickerHelper(blockEntityType, blockEntityType2, InfuserBlockEntity::serverTick);
-    }
-
-    @Override
-    public RenderType getRenderType() {
-        return RenderType.cutout();
     }
 }

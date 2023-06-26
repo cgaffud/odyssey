@@ -2,5 +2,6 @@
   "parent": "minecraft:block/cross",
   "textures": {
     "cross": "oddc:block/weaver_egg_cobweb_0"
-  }
+  },
+  "render_type": "minecraft:cutout"
 }

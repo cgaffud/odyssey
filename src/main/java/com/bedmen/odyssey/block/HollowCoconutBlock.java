@@ -36,7 +36,7 @@ import java.util.Random;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class HollowCoconutBlock extends FallingBlock implements EntityBlock, INeedsToRegisterRenderType {
+public class HollowCoconutBlock extends FallingBlock implements EntityBlock {
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
     public static final VoxelShape SHAPE_FLOOR = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
     public static final VoxelShape SHAPE_HANGING = Block.box(2.0D, 2.0D, 2.0D, 14.0D, 14.0D, 14.0D);
@@ -92,10 +92,6 @@ public class HollowCoconutBlock extends FallingBlock implements EntityBlock, INe
 
     public Item asItem() {
         return ItemRegistry.HOLLOW_COCONUT.get();
-    }
-
-    public RenderType getRenderType() {
-        return RenderType.cutout();
     }
 
     @Nullable

@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class AbandonedIronGolemBlock extends Block implements INeedsToRegisterRenderType {
+public class AbandonedIronGolemBlock extends Block {
 
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -129,10 +129,5 @@ public class AbandonedIronGolemBlock extends Block implements INeedsToRegisterRe
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(HALF, FACING);
-    }
-
-    @Override
-    public RenderType getRenderType() {
-        return RenderType.cutout();
     }
 }

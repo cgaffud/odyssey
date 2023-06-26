@@ -1,5 +1,6 @@
 {
   "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
   "textures": {
     "particle": "oddc:block/greatwood_seed",
     "seed": "oddc:block/greatwood_seed"

@@ -22,7 +22,7 @@ import java.util.List;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class GreatSeedBlock extends Block implements INeedsToRegisterRenderType {
+public class GreatSeedBlock extends Block {
     protected static final VoxelShape SHAPE = Block.box(6.0D, 10.0D, 6.0D, 10.0D, 14.0D, 10.0D);
     protected final Lazy<Block> log;
 
@@ -53,9 +53,5 @@ public class GreatSeedBlock extends Block implements INeedsToRegisterRenderType 
             return super.getDrops(blockState, lootContextBuilder);
         }
         return List.of();
-    }
-
-    public RenderType getRenderType() {
-        return RenderType.cutout();
     }
 }

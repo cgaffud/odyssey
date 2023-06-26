@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -16,7 +17,7 @@ import java.util.Random;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class WeaverEggWebBlock extends OdysseyWebBlock {
+public class WeaverEggWebBlock extends WebBlock {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_2;
 
     public WeaverEggWebBlock(Properties properties) {
