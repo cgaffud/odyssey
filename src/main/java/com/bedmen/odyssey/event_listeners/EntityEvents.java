@@ -311,6 +311,9 @@ public class EntityEvents {
         if(inDripstoneBiome(mob)){
             return Optional.of(EntityTypeRegistry.ENCASED_SKELETON.get());
         }
+        if(inLushCavesBiome(mob)) {
+            return Optional.of(EntityTypeRegistry.OVERGROWN_SKELETON.get());
+        }
         return Optional.of(EntityTypeRegistry.SKELETON.get());
     }
 
@@ -346,6 +349,11 @@ public class EntityEvents {
         if(inDripstoneBiome(mob)){
             return Optional.of(EntityTypeRegistry.ENCASED_ZOMBIE.get());
         }
+
+        if(inLushCavesBiome(mob)){
+            return Optional.of(EntityTypeRegistry.OVERGROWN_ZOMBIE.get());
+        }
+
         float y = (float)mob.getY();
         // Guaranteed false for y>=8, linear gradient for -48 <= y <= 8, guaranteed true for y<-48
         if (randomSource.nextFloat() < (-(y-8)/56)) {
@@ -387,6 +395,10 @@ public class EntityEvents {
 
     public static boolean inDripstoneBiome(Entity entity){
         return entity.level.getBiome(entity.blockPosition()).is(Biomes.DRIPSTONE_CAVES);
+    }
+
+    public static boolean inLushCavesBiome(Entity entity){
+        return entity.level.getBiome(entity.blockPosition()).is(Biomes.LUSH_CAVES);
     }
 
     @SubscribeEvent

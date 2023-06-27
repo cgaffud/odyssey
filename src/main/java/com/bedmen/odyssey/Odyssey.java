@@ -114,6 +114,8 @@ public class Odyssey
         event.put(EntityTypeRegistry.FORGOTTEN.get(), Forgotten.createAttributes().build());
         event.put(EntityTypeRegistry.ENCASED_ZOMBIE.get(), EncasedZombie.createAttributes().build());
         event.put(EntityTypeRegistry.ENCASED_SKELETON.get(), EncasedSkeleton.createAttributes().build());
+        event.put(EntityTypeRegistry.OVERGROWN_ZOMBIE.get(), OvergrownZombie.createAttributes().build());
+        event.put(EntityTypeRegistry.OVERGROWN_SKELETON.get(), OvergrownSkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.SKELETON.get(), OdysseySkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.STRAY.get(), Stray.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeleton.createAttributes().build());
