@@ -438,6 +438,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ENCASED_SKELETON_SPAWN_EGG = ITEMS.register("encased_skeleton_spawn_egg", () -> new ForgeSpawnEggItem(EntityTypeRegistry.ENCASED_SKELETON, 0xa5a5a5, 0x927965, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> OVERGROWN_ZOMBIE_SPAWN_EGG = ITEMS.register("overgrown_zombie_spawn_egg", () -> new ForgeSpawnEggItem(EntityTypeRegistry.OVERGROWN_ZOMBIE, 0xbdcd7d, 0x50692c, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
     public static final RegistryObject<Item> OVERGROWN_SKELETON_SPAWN_EGG = ITEMS.register("overgrown_skeleton_spawn_egg", () -> new ForgeSpawnEggItem(EntityTypeRegistry.OVERGROWN_SKELETON, 0xa5a5a5, 0x50692c, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
+    public static final RegistryObject<Item> OVERGROWN_CREEPER_SPAWN_EGG = ITEMS.register("overgrown_creeper_spawn_egg", () -> new ForgeSpawnEggItem(EntityTypeRegistry.OVERGROWN_CREEPER, 0x50692c, 0, (new Item.Properties()).tab(OdysseyCreativeModeTab.SPAWNING)));
 
     // # No Creative Tab
     public static final RegistryObject<Item> UNOBTAINABLE = ITEMS.register("unobtainable", ()-> new Item((new Item.Properties())));

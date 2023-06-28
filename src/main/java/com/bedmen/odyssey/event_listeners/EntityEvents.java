@@ -335,6 +335,9 @@ public class EntityEvents {
         if(inDripstoneBiome(mob)){
             return Optional.of(EntityTypeRegistry.DRIPSTONE_CREEPER.get());
         }
+        if(inLushCavesBiome(mob)) {
+            return Optional.of(EntityTypeRegistry.OVERGROWN_CREEPER.get());
+        }
         else if(isBaby(mob)){
             return Optional.of(EntityTypeRegistry.BABY_CREEPER.get());
         }
