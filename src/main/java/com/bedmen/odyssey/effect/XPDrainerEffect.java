@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.effect;
 
+import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.magic.ExperienceCost;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,17 +20,19 @@ public class XPDrainerEffect extends OdysseyEffect {
     }
 
     public void applyEffectTick(LivingEntity livingEntity, int amplifier) {
+        System.out.println("applyEffectTick");
         if (livingEntity instanceof ServerPlayer serverPlayer) {
+            System.out.println("serverTick");
             if (this.experienceCost.canPay(serverPlayer, amplifier+1))
                 this.experienceCost.pay(serverPlayer, amplifier+1);
             else
-                serverPlayer.hurt(DamageSource.MAGIC, Float.MAX_VALUE);
+                serverPlayer.hurt(OdysseyDamageSource.MANALESS, Float.MAX_VALUE);
         } else {
             super.applyEffectTick(livingEntity, amplifier);
         }
     }
 
     public boolean isDurationEffectTick(int duration, int amplifier) {
-        return OdysseyEffect.commonDurationEffectTick(duration, amplifier);
+        return true;
     }
 }
