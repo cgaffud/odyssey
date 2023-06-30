@@ -188,6 +188,8 @@
   "death.attack.boomerang.item": "%1$s was bonked by %2$s using %3$s",
   "death.attack.heatExhaustion": "%1$s got too sweaty",
   "death.attack.heatExhaustion.player": "%1$s got too sweaty while fighting %2$s",
+  "death.attack.manaless": "%1$s burned through their magic",
+  "death.attack.manaless.player": "%1$s burned through their magic while fighting %2$s",
   "effect.oddc.bleeding": "Bleeding",
   "effect.oddc.cooling": "Cooling",
   "effect.oddc.drowning": "Drowning",
