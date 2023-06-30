@@ -308,7 +308,7 @@ public class OdysseyOverworldEffects extends DimensionSpecialEffects.OverworldEf
                             double d3 = (double)k1 + 0.5D - camX;
                             double d5 = (double)j1 + 0.5D - camZ;
                             float f8 = (float)Math.sqrt(d3 * d3 + d5 * d5) / (float)l;
-                            float f9 = ((1.0F - f8 * f8) * 0.3F + 0.5F) * rainLevel;
+                            float f9 = ((1.0F - f8 * f8) * 0.3F + 0.5F);
                             blockpos$mutableblockpos.set(k1, l2, j1);
                             int k3 = LevelRenderer.getLightColor(level, blockpos$mutableblockpos);
                             int l3 = k3 >> 16 & '\uffff';
