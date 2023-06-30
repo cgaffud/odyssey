@@ -87,8 +87,6 @@ public class WraithModel<T extends Wraith> extends AgeableListModel<T> implement
             this.head.zRot = 0;
         }
 
-
-
         if (entity.isAggressive() && (itemstack.isEmpty() || !(itemstack.getItem() instanceof CrossbowItem))) {
             float f = Mth.sin(this.attackTime * (float)Math.PI);
             float f1 = Mth.sin((1.0F - (1.0F - this.attackTime) * (1.0F - this.attackTime)) * (float)Math.PI);
@@ -101,6 +99,22 @@ public class WraithModel<T extends Wraith> extends AgeableListModel<T> implement
             this.right_arm.xRot -= f * 1.2F - f1 * 0.4F;
             this.left_arm.xRot -= f * 1.2F - f1 * 0.4F;
 //            AnimationUtils.bobArms(this.right_arm, this.left_arm, ageInTicks);
+        }
+
+        if (entity.getMetamorphosisTick() > 0) {
+            this.left_arm.zRot = -Mth.HALF_PI/3;
+            this.right_arm.zRot = Mth.HALF_PI/3;
+
+            if ((GeneralUtil.isHashTick(entity, entity.getLevel(), 32) && (entity.getRandom().nextFloat() < 0.10))) {
+                this.head.setRotation(entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2, this.head.yRot, entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2);
+            } else if (GeneralUtil.isHashTick(entity, entity.getLevel(), 16) && (entity.getRandom().nextFloat() < 0.8)) {
+                this.head.setRotation(entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2,
+                        this.head.yRot,
+                        entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2);
+            } else {
+                this.head.xRot = -ALMOST_HALF_PI;
+                this.head.zRot = 0;
+            }
         }
 
     }
