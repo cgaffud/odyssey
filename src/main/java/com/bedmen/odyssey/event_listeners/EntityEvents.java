@@ -438,7 +438,7 @@ public class EntityEvents {
         ItemStack shield = livingEntity.getUseItem();
         if(shield.getItem() instanceof AspectShieldItem aspectShieldItem){
             // Parry condition
-            boolean isParry = aspectShieldItem.getUseDuration(null) - livingEntity.getUseItemRemainingTicks() <= 6;
+            boolean isParry = aspectShieldItem.maxUseTicks - livingEntity.getUseItemRemainingTicks() <= 6;
 
             DamageSource damageSource = event.getDamageSource();
             float damageBlockMultiplier = 1.0f;
