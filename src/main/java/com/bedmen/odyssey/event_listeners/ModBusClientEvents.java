@@ -126,6 +126,9 @@ public class ModBusClientEvents {
             EntityRenderers.register(EntityTypeRegistry.FORGOTTEN.get(), ForgottenRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.ENCASED_ZOMBIE.get(), EncasedZombieRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.ENCASED_SKELETON.get(), EncasedSkeletonRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.OVERGROWN_ZOMBIE.get(), OvergrownZombieRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.OVERGROWN_SKELETON.get(), OvergrownSkeletonRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.OVERGROWN_CREEPER.get(), OvergrownCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.SKELETON.get(), OdysseySkeletonRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.STRAY.get(), OdysseyStrayRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeletonRenderer::new);

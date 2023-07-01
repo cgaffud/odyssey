@@ -84,7 +84,9 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
                 if (status.contains(ACTIVATOR_UUID_TAG)) {
                     ServerPlayer activator = (ServerPlayer) level.getPlayerByUUID(status.getUUID(ACTIVATOR_UUID_TAG));
                     // This sets your health to 1.0f since if we do damage and you have vulnerability you just die
-                    activator.setHealth(1.0f);
+//                    activator.setHealth(1.0f);
+
+                    // A
                     int amplifier = -1;
                     if (serverPlayer.hasEffect(EffectRegistry.GAMBIT_DRAIN.get()))
                         amplifier = serverPlayer.getEffect(EffectRegistry.GAMBIT_DRAIN.get()).getAmplifier() - 1;
@@ -97,6 +99,8 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
                     activator.addEffect(new MobEffectInstance(this.nerf.get(), 6000));
                 }
             } else {
+                //
+                serverPlayer.removeEffect(this.nerf.get());
                 serverPlayer.addEffect(new MobEffectInstance(this.buff.get(), 999999));
                 int amplifier = 0;
                 if (serverPlayer.hasEffect(EffectRegistry.GAMBIT_DRAIN.get()))

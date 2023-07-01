@@ -3,8 +3,12 @@ package com.bedmen.odyssey.entity.monster;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.mojang.math.Vector3f;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
@@ -33,11 +37,15 @@ import net.minecraft.world.level.ServerLevelAccessor;
 public class Wraith extends AbstractWraith implements RangedAttackMob {
     public final WraithBowAttackGoal bowGoal = new WraithBowAttackGoal(this, 20, 10.0F);
     public final WraithMeleeAttackGoal meleeGoal = new WraithMeleeAttackGoal(this);
+    private final float METAMORPHOSIS_CHANCE = 0.1f;
+    private int metamorphosisTick;
+
 
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(30, 49);
 
     public Wraith(EntityType<? extends Monster> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_, 0.2D, 0.65D, 0.3D, 2.5D, 20);
+        this.metamorphosisTick = 0;
         this.reassessWeaponGoal();
     }
 
@@ -52,6 +60,54 @@ public class Wraith extends AbstractWraith implements RangedAttackMob {
         return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 60.0D).add(Attributes.MOVEMENT_SPEED, 1.2D).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
+    @Override
+    public void setAggressive(boolean aggressive) {
+        if (aggressive && (this.getRandom().nextFloat() < this.METAMORPHOSIS_CHANCE)) {
+            this.forgetCurrentTargetAndRefreshUniversalAnger();
+            this.metamorphosisTick = 60;
+            this.level.broadcastEntityEvent(this, (byte)4);
+            this.goalSelector.removeAllGoals();
+        }
+        super.setAggressive(aggressive);
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        System.out.println(this.getTarget());
+        if (this.metamorphosisTick > 0) {
+            --this.metamorphosisTick;
+            if (!this.level.isClientSide()){
+                RandomSource randomSource = this.getRandom();
+                ServerLevel serverLevel = (ServerLevel) this.level;
+                for(int i = 0; i < 8; ++i) {
+                    (serverLevel).sendParticles(new DustParticleOptions(new Vector3f(0.35f, 0.35f, 0.35f), 1.0F), this.getX() + (randomSource.nextFloat()-0.5f)/2, this.getEyeY() + (randomSource.nextFloat()), this.getZ() + (randomSource.nextFloat()-0.5f)/2, 2, 0.2D, 0.2D, 0.2D, 0.0D);
+                }
+                if (this.metamorphosisTick == 0) {
+                    AbstractWraith wraith;
+                    if (randomSource.nextFloat() < 0.4) {
+                        wraith = EntityTypeRegistry.WRAITH_STALKER.get().create(this.level);
+                    } else {
+                        wraith = EntityTypeRegistry.WRAITH_AMALGAM.get().create(this.level);
+                    }
+                    wraith.setPos(this.getX(), this.getY(), this.getZ());
+                    wraith.finalizeSpawn(serverLevel, this.level.getCurrentDifficultyAt(wraith.blockPosition()), MobSpawnType.TRIGGERED, (SpawnGroupData) null, (CompoundTag) null);
+                    serverLevel.addFreshEntity(wraith);
+                    this.discard();
+                }
+            }
+        }
+    }
+
+    public int getMetamorphosisTick() {
+        return this.metamorphosisTick;
+    }
+
+    public void handleEntityEvent(byte b) {
+        if (b == 4) {
+            this.metamorphosisTick = 60;
+        } else super.handleEntityEvent(b);
+    }
 
     public void reassessWeaponGoal() {
         if (!this.level.isClientSide) {

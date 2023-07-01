@@ -22,6 +22,7 @@ public class OdysseyDamageSource extends DamageSource implements Invulnerability
     }
 
     public static final DamageSource HEAT_EXHAUSTION = (new DamageSource("heatExhaustion")).bypassArmor().setIsFire();
+    public static final DamageSource MANALESS = (new DamageSource("manaless")).bypassArmor().setMagic();
 
     public static DamageSource withInvulnerabilityMultiplier(DamageSource damageSource, float invulnerabilityMultiplier){
         float originalInvulnerabilityMultiplier = getInvulnerabilityMultiplier(damageSource);

@@ -19,7 +19,7 @@ public class Forgotten extends Zombie {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 15.0D).add(Attributes.MOVEMENT_SPEED, (double)0.30F).add(Attributes.ATTACK_DAMAGE, 5.0D).add(Attributes.ARMOR, 4.0D).add(Attributes.SPAWN_REINFORCEMENTS_CHANCE);
+        return Monster.createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 15.0D).add(Attributes.MAX_HEALTH, 30).add(Attributes.ATTACK_DAMAGE, 5.0D).add(Attributes.ARMOR, 4.0D).add(Attributes.SPAWN_REINFORCEMENTS_CHANCE);
     }
 
     protected ItemStack getSkull() {

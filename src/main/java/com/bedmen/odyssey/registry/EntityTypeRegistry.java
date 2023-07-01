@@ -40,6 +40,7 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<DungeonZombie>> MOON_TOWER_ZOMBIE = ENTITY_TYPE.register("moon_tower_zombie", () -> EntityType.Builder.<DungeonZombie>of(DungeonZombie::new, MobCategory.MONSTER).sized(0.6F, 1.95F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "moon_tower_zombie").toString()));
     public static final RegistryObject<EntityType<Forgotten>> FORGOTTEN = ENTITY_TYPE.register("forgotten", () -> EntityType.Builder.of(Forgotten::new, MobCategory.MONSTER).sized(0.6F, 1.95F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "forgotten").toString()));
     public static final RegistryObject<EntityType<EncasedZombie>> ENCASED_ZOMBIE = ENTITY_TYPE.register("encased_zombie", () -> EntityType.Builder.of(EncasedZombie::new, MobCategory.MONSTER).sized(0.6F, 1.95F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "encased_zombie").toString()));
+    public static final RegistryObject<EntityType<OvergrownZombie>> OVERGROWN_ZOMBIE = ENTITY_TYPE.register("overgrown_zombie", () -> EntityType.Builder.of(OvergrownZombie::new, MobCategory.MONSTER).sized(0.6F, 1.95F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "overgrown_zombie").toString()));
 
     // ## Skeletons
     public static final RegistryObject<EntityType<OdysseySkeleton>> SKELETON = ENTITY_TYPE.register("skeleton", () -> EntityType.Builder.of(OdysseySkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "skeleton").toString()));
@@ -47,11 +48,13 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<StrayBrute>> STRAY_BRUTE = ENTITY_TYPE.register("stray_brute", () -> EntityType.Builder.<StrayBrute>of(StrayBrute::new, MobCategory.MONSTER).sized(0.9F, 2.99F).immuneTo(Blocks.POWDER_SNOW).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "stray_brute").toString()));
     public static final RegistryObject<EntityType<DungeonSkeleton>> MOON_TOWER_SKELETON = ENTITY_TYPE.register("moon_tower_skeleton", () -> EntityType.Builder.<DungeonSkeleton>of(DungeonSkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "moon_tower_skeleton").toString()));
     public static final RegistryObject<EntityType<EncasedSkeleton>> ENCASED_SKELETON = ENTITY_TYPE.register("encased_skeleton", () -> EntityType.Builder.of(EncasedSkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "encased_skeleton").toString()));
+    public static final RegistryObject<EntityType<OvergrownSkeleton>> OVERGROWN_SKELETON = ENTITY_TYPE.register("overgrown_skeleton", () -> EntityType.Builder.of(OvergrownSkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "overgrown_skeleton").toString()));
 
     // ## Creepers
     public static final RegistryObject<EntityType<BabyCreeper>> BABY_CREEPER = ENTITY_TYPE.register("baby_creeper", () -> EntityType.Builder.of(BabyCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "baby_creeper").toString()));
     public static final RegistryObject<EntityType<CamoCreeper>> CAMO_CREEPER = ENTITY_TYPE.register("camo_creeper", () -> EntityType.Builder.of(CamoCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "camo_creeper").toString()));
     public static final RegistryObject<EntityType<DripstoneCreeper>> DRIPSTONE_CREEPER = ENTITY_TYPE.register("dripstone_creeper", () -> EntityType.Builder.of(DripstoneCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "dripstone_creeper").toString()));
+    public static final RegistryObject<EntityType<OvergrownCreeper>> OVERGROWN_CREEPER = ENTITY_TYPE.register("overgrown_creeper", () -> EntityType.Builder.of(OvergrownCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "overgrown_creeper").toString()));
 
 
     // ## Arthropods
