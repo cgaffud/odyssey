@@ -437,6 +437,9 @@ public class EntityEvents {
         LivingEntity livingEntity = event.getEntity();
         ItemStack shield = livingEntity.getUseItem();
         if(shield.getItem() instanceof AspectShieldItem aspectShieldItem){
+            // Parry condition
+            boolean isParry = aspectShieldItem.getUseDuration(null) - livingEntity.getUseItemRemainingTicks() <= 6;
+
             DamageSource damageSource = event.getDamageSource();
             float damageBlockMultiplier = 1.0f;
             if(damageSource.isProjectile()){
@@ -454,6 +457,10 @@ public class EntityEvents {
                         .forEach(livingEntity1 -> livingEntity1.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false)));
                 OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> livingEntity), new ColdSnapAnimatePacket(livingEntity));
             }
+            // Parry boost
+            if (isParry)
+                damageBlockMultiplier *= 2;
+
             event.setBlockedDamage(damageBlockMultiplier * aspectShieldItem.getDamageBlock(shield, livingEntity.level.getDifficulty(), damageSource));
         }
     }

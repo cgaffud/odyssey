@@ -33,7 +33,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -97,6 +99,8 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     @Shadow public float yBodyRotO;
     @Shadow public float yHeadRot;
     @Shadow public float yHeadRotO;
+    @Shadow public boolean isUsingItem() {return false;}
+    @Shadow protected ItemStack useItem;
 
     @Shadow protected abstract void dropAllDeathLoot(DamageSource p_21192_);
 
@@ -348,6 +352,16 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
 
     public boolean isFullyFrozen() {
         return this.getTemperature() <= -1.0f;
+    }
+
+    // Ripped out the 5 tick delay on blocking
+    public boolean isBlocking() {
+        if (this.isUsingItem() && !this.useItem.isEmpty()) {
+            Item item = this.useItem.getItem();
+            return !(item.getUseAnimation(this.useItem) != UseAnim.BLOCK && !this.useItem.canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK));
+        } else {
+            return false;
+        }
     }
 
     protected void tryAddFrost() {
