@@ -3,9 +3,11 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.SmackPush;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.RenderUtil;
@@ -33,6 +35,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -54,11 +57,15 @@ import java.util.Optional;
 public abstract class MixinLivingEntity extends Entity implements OdysseyLivingEntity {
     private static final EntityDataAccessor<FireType> DATA_FIRE_TYPE = SynchedEntityData.defineId(LivingEntity.class, OdysseyDataSerializers.FIRE_TYPE);
     private static final EntityDataAccessor<Float> DATA_TEMPERATURE = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_SHIELD_METER = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
     private static final String FLIGHT_VALUE_TAG = "FlightValue";
     private static final String GLIDING_LEVEL_TAG = "GlidingLevel";
     private static final String SLOW_FALL_TAG = "HasSlowFall";
     private static final String FIRE_TYPE_TAG = "FireType";
     private static final String TEMPERATURE_TAG = "Temperature";
+    private static final String SHIELD_METER_TAG = "ShieldMeter";
+
+    private float shieldMeterO = WeaponUtil.SHIELD_METER_MAX;
     private int glidingLevel = 0;
     private boolean hasSlowFall = false;
     private int flightValue = 0;
@@ -104,10 +111,23 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
 
     @Shadow protected abstract void dropAllDeathLoot(DamageSource p_21192_);
 
+    @Shadow protected abstract boolean shouldTriggerItemUseEffects();
+
+    @Shadow public abstract ItemStack getUseItem();
+
+    @Shadow public abstract boolean isAlive();
+
+    @Shadow protected abstract void verifyEquippedItem(ItemStack p_181123_);
+
+    @Shadow public abstract Optional<BlockPos> getLastClimbablePos();
+
+    @Shadow public abstract boolean isAutoSpinAttack();
+
     @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
     public void onDefineSynchedData(CallbackInfo ci) {
         this.entityData.define(DATA_FIRE_TYPE, FireType.NONE);
         this.entityData.define(DATA_TEMPERATURE, 0.0f);
+        this.entityData.define(DATA_SHIELD_METER, WeaponUtil.SHIELD_METER_MAX);
     }
 
     public void baseTick() {
@@ -240,6 +260,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         compoundTag.putInt(GLIDING_LEVEL_TAG, this.glidingLevel);
         compoundTag.putString(FIRE_TYPE_TAG, this.getFireType().name());
         compoundTag.putFloat(TEMPERATURE_TAG, this.getTemperature());
+        compoundTag.putFloat(SHIELD_METER_TAG, this.getShieldMeter());
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
@@ -251,6 +272,9 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             this.setFireType(FireType.valueOf(compoundTag.getString(FIRE_TYPE_TAG)));
         }
         this.setTemperature(compoundTag.getFloat(TEMPERATURE_TAG));
+        if(compoundTag.contains(SHIELD_METER_TAG)){
+            this.setShieldMeter(compoundTag.getFloat(SHIELD_METER_TAG));
+        }
     }
 
     public void setFlightLevels(boolean hasSlowFall, int glidingLevel){
@@ -364,6 +388,26 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         }
     }
 
+    // Remove piercing arrows going through shields, made the block angle dependent on the shield
+    public boolean isDamageSourceBlocked(DamageSource damageSource) {
+        if (!damageSource.isBypassArmor() && this.isBlocking()) {
+            Vec3 damageSourcePosition = damageSource.getSourcePosition();
+            if (damageSourcePosition != null) {
+                Vec3 viewVector = this.getViewVector(1.0F);
+                Vec3 vectorToPosition = damageSourcePosition.vectorTo(this.position());
+                vectorToPosition = new Vec3(vectorToPosition.x, 0.0D, vectorToPosition.z).normalize();;
+                ItemStack shield = this.getUseItem();
+                float blockingWidthAngle = ((AspectShieldItem)shield.getItem()).getBlockingAngleWidth(shield);
+                float angleHalvedRadians = blockingWidthAngle * Mth.PI / 360f;
+                if (vectorToPosition.dot(viewVector) < -Mth.cos(angleHalvedRadians)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     protected void tryAddFrost() {
         if (!this.getBlockStateOn().isAir() && this.isFreezing()) {
             AttributeInstance attributeinstance = this.getLivingEntity().getAttribute(Attributes.MOVEMENT_SPEED);
@@ -394,6 +438,27 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
 
     public void setFireType(FireType fireType){
         this.entityData.set(DATA_FIRE_TYPE, fireType);
+    }
+
+    public float getShieldMeter(){
+        return this.entityData.get(DATA_SHIELD_METER);
+    }
+
+    public float getShieldMeterO(){
+        return this.shieldMeterO;
+    }
+
+    public void setShieldMeter(float shieldMeter){
+        shieldMeter = Mth.clamp(shieldMeter, 0.0f, WeaponUtil.SHIELD_METER_MAX);
+        this.entityData.set(DATA_SHIELD_METER, shieldMeter);
+    }
+
+    public void updateShieldMeterO(){
+        this.shieldMeterO = this.getShieldMeter();
+    }
+
+    public void adjustShieldMeter(float amount){
+        this.setShieldMeter(this.getShieldMeter() + amount);
     }
 
     private LivingEntity getLivingEntity(){

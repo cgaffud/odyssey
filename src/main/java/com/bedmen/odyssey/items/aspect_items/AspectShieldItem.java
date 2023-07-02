@@ -5,6 +5,7 @@ import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.combat.ShieldType;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.util.StringUtil;
@@ -26,17 +27,15 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, InnateAspectItem, OdysseyTierItem {
     public final ShieldType shieldType;
-    public final int maxUseTicks = 105;
-    public int useTicks;
 
     public AspectShieldItem(Properties builder, ShieldType shieldType) {
         super(builder.durability(shieldType.tier.getUses() * 2));
         this.shieldType = shieldType;
-        this.useTicks = this.maxUseTicks;
         DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
     }
 
@@ -58,44 +57,18 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         });
     }
 
-    public float getDamageBlock(ItemStack shield, Difficulty difficulty, DamageSource damageSource){
-        float damageBlock = this.shieldType.damageBlock;
-        float additionalDamageBlock = AspectUtil.getDamageSourcePredicateAspectStrength(shield, damageSource);
-        float totalUnadjustedDamageBlock = damageBlock + additionalDamageBlock;
-        float difficultyAdjustedDamageBlock = getDifficultyAdjustedDamageBlock(totalUnadjustedDamageBlock, difficulty);
-        return difficultyAdjustedDamageBlock;
-    }
-
-    @Override
-    public void inventoryTick(ItemStack itemStack, Level p_41405_, Entity entity, int p_41407_, boolean p_41408_) {
-        if ((entity instanceof LivingEntity livingEntity) && (livingEntity.getUseItem() != itemStack) && (this.useTicks < this.maxUseTicks))
-            this.useTicks++;
-        System.out.println(this.useTicks);
-        super.inventoryTick(itemStack, p_41405_, entity, p_41407_, p_41408_);
-    }
-
-    @Override
-    public int getUseDuration(ItemStack p_43107_) {
-        return this.useTicks;
-    }
-
-    @Override
-    public void onUsingTick(ItemStack stack, LivingEntity livingEntity, int count) {
-        this.useTicks--;
-        if (livingEntity instanceof Player player && this.useTicks < 0) {
-            player.stopUsingItem();
-            player.getCooldowns().addCooldown(stack.getItem(), 40);
-        }
-        super.onUsingTick(stack, livingEntity, count);
-    }
-
-    public static float getDifficultyAdjustedDamageBlock(float damageBlock, Difficulty difficulty) {
-        return damageBlock * (difficulty == Difficulty.HARD ? 1.5f : 1.0f);
+    public float getDamageBlock(ItemStack shield, DamageSource damageSource){
+        return this.shieldType.damageBlock + AspectUtil.getDamageSourcePredicateAspectStrength(shield, damageSource);
     }
 
     public int getRecoveryTime(ItemStack shield){
         float recoverySpeedMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(shield, Aspects.RECOVERY_SPEED);
         return Mth.ceil((float)this.shieldType.recoveryTime / recoverySpeedMultiplier);
+    }
+
+    public float getBlockingAngleWidth(ItemStack shield){
+        float widthMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(shield, Aspects.WIDTH);
+        return this.shieldType.blockingAngleWidth * widthMultiplier;
     }
 
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
@@ -109,11 +82,10 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
     }
 
     public void appendHoverText(ItemStack shield, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        Difficulty difficulty = level == null ? null : level.getDifficulty();
         AspectShieldItem aspectShieldItem = (AspectShieldItem)(shield.getItem());
-        float damageBlock = aspectShieldItem.shieldType.damageBlock;
-        tooltip.add(Component.translatable("item.oddc.shield.damage_block").append(StringUtil.floatFormat(getDifficultyAdjustedDamageBlock(damageBlock, difficulty))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("item.oddc.shield.damage_block").append(StringUtil.floatFormat(aspectShieldItem.shieldType.damageBlock)).withStyle(ChatFormatting.BLUE));
         tooltip.add(Component.translatable("item.oddc.shield.recovery_time").append(StringUtil.timeFormat(this.getRecoveryTime(shield))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("item.oddc.shield.blocking_angle_width").append(StringUtil.angleFormat(this.getBlockingAngleWidth(shield))).withStyle(ChatFormatting.BLUE));
         BannerItem.appendHoverTextFromBannerBlockEntityTag(shield, tooltip);
     }
 }

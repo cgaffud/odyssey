@@ -11,14 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class AspectTooltipContext {
-    public final Optional<Level> optionalLevel;
     public final Optional<ItemStack> optionalItemStack;
     public final List<AspectInstance> aspectInstanceList;
     public final boolean isAdvanced;
     public final Optional<MutableComponent> optionalHeader;
     public final ChatFormatting chatFormatting;
-    public AspectTooltipContext(Optional<Level> optionalLevel, Optional<ItemStack> optionalItemStack){
-        this.optionalLevel = optionalLevel;
+    public AspectTooltipContext(Optional<ItemStack> optionalItemStack){
         this.optionalItemStack = optionalItemStack;
         this.aspectInstanceList = new ArrayList<>();
         this.isAdvanced = false;
@@ -26,13 +24,11 @@ public class AspectTooltipContext {
         this.chatFormatting = null;
     }
 
-    private AspectTooltipContext(Optional<Level> optionalLevel,
-                                 Optional<ItemStack> optionalItemStack,
+    private AspectTooltipContext(Optional<ItemStack> optionalItemStack,
                                  List<AspectInstance> aspectInstanceList,
                                  boolean isAdvanced,
                                  Optional<MutableComponent> optionalHeader,
                                  ChatFormatting chatFormatting){
-        this.optionalLevel = optionalLevel;
         this.optionalItemStack = optionalItemStack;
         this.aspectInstanceList = aspectInstanceList;
         this.isAdvanced = isAdvanced;
@@ -41,7 +37,7 @@ public class AspectTooltipContext {
     }
 
     public AspectTooltipContext withOtherContextVariables(List<AspectInstance> aspectInstanceList, boolean isAdvanced, Optional<MutableComponent> optionalHeader, ChatFormatting chatFormatting){
-        return new AspectTooltipContext(this.optionalLevel, this.optionalItemStack, aspectInstanceList, isAdvanced, optionalHeader, chatFormatting);
+        return new AspectTooltipContext(this.optionalItemStack, aspectInstanceList, isAdvanced, optionalHeader, chatFormatting);
     }
 
 }

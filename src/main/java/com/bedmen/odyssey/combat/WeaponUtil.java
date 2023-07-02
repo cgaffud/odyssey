@@ -7,6 +7,7 @@ import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ReduceInvulnerabilityPacket;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -41,6 +42,8 @@ public class WeaponUtil {
     public static final int DEFAULT_RECOVERY_TIME = 100;
     public static final float BASE_ARROW_VELOCITY = 2.5f;
     public static final float BASE_ARROW_VELOCITY_ENEMIES = 1.6f;
+
+    public static final float SHIELD_METER_MAX = 1.05f;
     public static AmmoStack getAmmo(Player player, ItemStack bow, boolean consume){
         if (!(bow.getItem() instanceof ProjectileWeaponItem)) {
             return new AmmoStack(ItemStack.EMPTY, false);
@@ -340,6 +343,22 @@ public class WeaponUtil {
                                 && (!(livingEntity instanceof ArmorStand) || !((ArmorStand)livingEntity).isMarker())
                                 && attacker.distanceToSqr(livingEntity) < 9.0D)
                 .collect(Collectors.toSet());
+    }
+
+    public static ItemStack getHeldShield(LivingEntity livingEntity){
+        ItemStack itemStack = livingEntity.getMainHandItem();
+        if(itemStack.is(OdysseyItemTags.SHIELDS)){
+            return itemStack;
+        }
+        itemStack = livingEntity.getOffhandItem();
+        if(itemStack.is(OdysseyItemTags.SHIELDS)){
+            return itemStack;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public static boolean isUsingShield(LivingEntity livingEntity){
+        return livingEntity.getUseItem().is(OdysseyItemTags.SHIELDS);
     }
 }
 
