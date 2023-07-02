@@ -7,6 +7,7 @@ import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ReduceInvulnerabilityPacket;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -340,6 +341,14 @@ public class WeaponUtil {
                                 && (!(livingEntity instanceof ArmorStand) || !((ArmorStand)livingEntity).isMarker())
                                 && attacker.distanceToSqr(livingEntity) < 9.0D)
                 .collect(Collectors.toSet());
+    }
+
+    public static boolean isHoldingShield(LivingEntity livingEntity){
+        return livingEntity.getMainHandItem().is(OdysseyItemTags.SHIELDS) || livingEntity.getOffhandItem().is(OdysseyItemTags.SHIELDS);
+    }
+
+    public static boolean isUsingShield(LivingEntity livingEntity){
+        return livingEntity.getUseItem().is(OdysseyItemTags.SHIELDS);
     }
 }
 

@@ -32,6 +32,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -71,6 +73,15 @@ public class EntityEvents {
         LivingEntity livingEntity = event.getEntity();
 
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
+            // Adjust Shield Meter
+            if(livingEntity.level.isClientSide){
+                odysseyLivingEntity.updateShieldMeterO();
+            }
+            if(WeaponUtil.isUsingShield(livingEntity)){
+                odysseyLivingEntity.adjustShieldMeter(-0.01f);
+            } else {
+                odysseyLivingEntity.adjustShieldMeter(+0.01f);
+            }
             // Perform Smack
             if(odysseyLivingEntity.getSmackPush().shouldPush){
                 WeaponUtil.smackTarget(odysseyLivingEntity.getSmackPush());
@@ -437,8 +448,6 @@ public class EntityEvents {
         LivingEntity livingEntity = event.getEntity();
         ItemStack shield = livingEntity.getUseItem();
         if(shield.getItem() instanceof AspectShieldItem aspectShieldItem){
-            // Parry condition
-            boolean isParry = aspectShieldItem.maxUseTicks - livingEntity.getUseItemRemainingTicks() <= 6;
 
             DamageSource damageSource = event.getDamageSource();
             float damageBlockMultiplier = 1.0f;
@@ -458,8 +467,11 @@ public class EntityEvents {
                 OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> livingEntity), new ColdSnapAnimatePacket(livingEntity));
             }
             // Parry boost
-            if (isParry)
-                damageBlockMultiplier *= 2;
+            if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
+                if(odysseyLivingEntity.getShieldMeter() > 1.0f){
+                    damageBlockMultiplier *= 2;
+                }
+            }
 
             event.setBlockedDamage(damageBlockMultiplier * aspectShieldItem.getDamageBlock(shield, livingEntity.level.getDifficulty(), damageSource));
         }

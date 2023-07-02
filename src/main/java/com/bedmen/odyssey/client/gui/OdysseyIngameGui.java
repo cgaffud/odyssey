@@ -167,7 +167,38 @@ public class OdysseyIngameGui extends ForgeGui
         minecraft.getProfiler().pop();
     }
 
-    public void renderFlight(int width, int height, PoseStack mStack)
+    public void renderShieldMeter(int width, int height, PoseStack poseStack, float partialTicks)
+    {
+        RenderSystem.setShaderTexture(0, ODYSSEY_GUI_ICONS_LOCATION);
+        minecraft.getProfiler().push("shield meter");
+        Player player = (Player)this.minecraft.getCameraEntity();
+        RenderSystem.enableBlend();
+        int left = width / 2 - 116;
+        int top = height - rightHeight;
+
+        if (player instanceof OdysseyLivingEntity odysseyLivingEntity)
+        {
+            float shieldMeter = odysseyLivingEntity.getShieldMeter();
+            float shieldMeterO = odysseyLivingEntity.getShieldMeterO();
+            float lerpShieldMeter = Mth.lerp(partialTicks, shieldMeterO, shieldMeter);
+            if(lerpShieldMeter > 1.0f){
+                blit(poseStack, left, top, 14, 36, 14, 16);
+                int goldenShieldHeight = Mth.ceil((lerpShieldMeter - 1.0f) * 20f * 16f);
+                int inverseGoldenShieldHeight = 16 - goldenShieldHeight;
+                blit(poseStack, left, top + inverseGoldenShieldHeight, 28, 36+inverseGoldenShieldHeight, 14, goldenShieldHeight);
+            } else {
+                blit(poseStack, left, top, 0, 36, 14, 16);
+                int shieldHeight = Mth.ceil(lerpShieldMeter * 16f);
+                int inverseShieldHeight = 16 - shieldHeight;
+                blit(poseStack, left, top + inverseShieldHeight, 14, 36+inverseShieldHeight, 14, shieldHeight);
+            }
+        }
+
+        RenderSystem.disableBlend();
+        minecraft.getProfiler().pop();
+    }
+
+    public void renderFlight(int width, int height, PoseStack poseStack)
     {
         RenderSystem.setShaderTexture(0, ODYSSEY_GUI_ICONS_LOCATION);
         minecraft.getProfiler().push("flight");
@@ -187,7 +218,7 @@ public class OdysseyIngameGui extends ForgeGui
                 for (int i = 0; i < full + partial; ++i)
                 {
                     int x = (i < full ? 0 : 9);
-                    blit(mStack, left - i * 8 - 9, top, x, 27, 9, 9);
+                    blit(poseStack, left - i * 8 - 9, top, x, 27, 9, 9);
                 }
                 rightHeight += 10;
             }

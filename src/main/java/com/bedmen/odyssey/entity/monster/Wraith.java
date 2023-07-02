@@ -74,7 +74,6 @@ public class Wraith extends AbstractWraith implements RangedAttackMob {
     @Override
     public void aiStep() {
         super.aiStep();
-        System.out.println(this.getTarget());
         if (this.metamorphosisTick > 0) {
             --this.metamorphosisTick;
             if (!this.level.isClientSide()){

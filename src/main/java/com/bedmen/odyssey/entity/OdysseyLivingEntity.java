@@ -22,6 +22,12 @@ public interface OdysseyLivingEntity {
     void setFireType(FireType fireType);
     float getTemperature();
     void setTemperature(float temperature);
+    float getShieldMeter();
+    float getShieldMeterO();
+    void setShieldMeter(float shieldMeter);
+
+    void updateShieldMeterO();
+    void adjustShieldMeter(float amount);
 
     default boolean isHot(){
         return this.getTemperature() > 0f;

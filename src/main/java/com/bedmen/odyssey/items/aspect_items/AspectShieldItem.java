@@ -5,6 +5,7 @@ import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.combat.ShieldType;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.util.StringUtil;
@@ -30,13 +31,10 @@ import java.util.function.Consumer;
 
 public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, InnateAspectItem, OdysseyTierItem {
     public final ShieldType shieldType;
-    public final int maxUseTicks = 105;
-    public int useTicks;
 
     public AspectShieldItem(Properties builder, ShieldType shieldType) {
         super(builder.durability(shieldType.tier.getUses() * 2));
         this.shieldType = shieldType;
-        this.useTicks = this.maxUseTicks;
         DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
     }
 
@@ -64,29 +62,6 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         float totalUnadjustedDamageBlock = damageBlock + additionalDamageBlock;
         float difficultyAdjustedDamageBlock = getDifficultyAdjustedDamageBlock(totalUnadjustedDamageBlock, difficulty);
         return difficultyAdjustedDamageBlock;
-    }
-
-    @Override
-    public void inventoryTick(ItemStack itemStack, Level p_41405_, Entity entity, int p_41407_, boolean p_41408_) {
-        if ((entity instanceof LivingEntity livingEntity) && (livingEntity.getUseItem() != itemStack) && (this.useTicks < this.maxUseTicks))
-            this.useTicks++;
-        System.out.println(this.useTicks);
-        super.inventoryTick(itemStack, p_41405_, entity, p_41407_, p_41408_);
-    }
-
-    @Override
-    public int getUseDuration(ItemStack p_43107_) {
-        return this.useTicks;
-    }
-
-    @Override
-    public void onUsingTick(ItemStack stack, LivingEntity livingEntity, int count) {
-        this.useTicks--;
-        if (livingEntity instanceof Player player && this.useTicks < 0) {
-            player.stopUsingItem();
-            player.getCooldowns().addCooldown(stack.getItem(), 40);
-        }
-        super.onUsingTick(stack, livingEntity, count);
     }
 
     public static float getDifficultyAdjustedDamageBlock(float damageBlock, Difficulty difficulty) {

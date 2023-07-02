@@ -52,13 +52,19 @@ import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements OdysseyLivingEntity {
+
+    private static final float SHIELD_METER_MAX = 1.05f;
     private static final EntityDataAccessor<FireType> DATA_FIRE_TYPE = SynchedEntityData.defineId(LivingEntity.class, OdysseyDataSerializers.FIRE_TYPE);
     private static final EntityDataAccessor<Float> DATA_TEMPERATURE = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_SHIELD_METER = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
     private static final String FLIGHT_VALUE_TAG = "FlightValue";
     private static final String GLIDING_LEVEL_TAG = "GlidingLevel";
     private static final String SLOW_FALL_TAG = "HasSlowFall";
     private static final String FIRE_TYPE_TAG = "FireType";
     private static final String TEMPERATURE_TAG = "Temperature";
+    private static final String SHIELD_METER_TAG = "ShieldMeter";
+
+    private float shieldMeterO = SHIELD_METER_MAX;
     private int glidingLevel = 0;
     private boolean hasSlowFall = false;
     private int flightValue = 0;
@@ -104,10 +110,13 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
 
     @Shadow protected abstract void dropAllDeathLoot(DamageSource p_21192_);
 
+    @Shadow protected abstract boolean shouldTriggerItemUseEffects();
+
     @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
     public void onDefineSynchedData(CallbackInfo ci) {
         this.entityData.define(DATA_FIRE_TYPE, FireType.NONE);
         this.entityData.define(DATA_TEMPERATURE, 0.0f);
+        this.entityData.define(DATA_SHIELD_METER, SHIELD_METER_MAX);
     }
 
     public void baseTick() {
@@ -240,6 +249,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         compoundTag.putInt(GLIDING_LEVEL_TAG, this.glidingLevel);
         compoundTag.putString(FIRE_TYPE_TAG, this.getFireType().name());
         compoundTag.putFloat(TEMPERATURE_TAG, this.getTemperature());
+        compoundTag.putFloat(SHIELD_METER_TAG, this.getShieldMeter());
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
@@ -251,6 +261,9 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             this.setFireType(FireType.valueOf(compoundTag.getString(FIRE_TYPE_TAG)));
         }
         this.setTemperature(compoundTag.getFloat(TEMPERATURE_TAG));
+        if(compoundTag.contains(SHIELD_METER_TAG)){
+            this.setShieldMeter(compoundTag.getFloat(SHIELD_METER_TAG));
+        }
     }
 
     public void setFlightLevels(boolean hasSlowFall, int glidingLevel){
@@ -394,6 +407,27 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
 
     public void setFireType(FireType fireType){
         this.entityData.set(DATA_FIRE_TYPE, fireType);
+    }
+
+    public float getShieldMeter(){
+        return this.entityData.get(DATA_SHIELD_METER);
+    }
+
+    public float getShieldMeterO(){
+        return this.shieldMeterO;
+    }
+
+    public void setShieldMeter(float shieldMeter){
+        shieldMeter = Mth.clamp(shieldMeter, 0.0f, SHIELD_METER_MAX);
+        this.entityData.set(DATA_SHIELD_METER, shieldMeter);
+    }
+
+    public void updateShieldMeterO(){
+        this.shieldMeterO = this.getShieldMeter();
+    }
+
+    public void adjustShieldMeter(float amount){
+        this.setShieldMeter(this.getShieldMeter() + amount);
     }
 
     private LivingEntity getLivingEntity(){

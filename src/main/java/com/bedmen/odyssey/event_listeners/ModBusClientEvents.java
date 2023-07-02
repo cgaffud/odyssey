@@ -11,6 +11,7 @@ import com.bedmen.odyssey.client.renderer.blockentity.*;
 import com.bedmen.odyssey.client.renderer.entity.*;
 import com.bedmen.odyssey.combat.ShieldType;
 import com.bedmen.odyssey.combat.SpearType;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
@@ -189,6 +190,16 @@ public class ModBusClientEvents {
             if(gui instanceof OdysseyIngameGui odysseyIngameGui){
                 gui.setupOverlayRenderState(true, false);
                 odysseyIngameGui.renderOdysseyHelmet(partialTicks, mStack);
+            }
+        });
+
+        //Shield Meter overlay
+        event.registerAbove(VanillaGuiOverlay.ARMOR_LEVEL.id(), "shield_meter", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            if(gui instanceof OdysseyIngameGui odysseyIngameGui && !odysseyIngameGui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()){
+                if(WeaponUtil.isHoldingShield(odysseyIngameGui.getMinecraft().player)){
+                    gui.setupOverlayRenderState(true, false, OdysseyIngameGui.ODYSSEY_GUI_ICONS_LOCATION);
+                    odysseyIngameGui.renderShieldMeter(screenWidth, screenHeight, mStack, partialTicks);
+                }
             }
         });
 
