@@ -33,6 +33,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -79,16 +80,20 @@ public class EntityEvents {
                 odysseyLivingEntity.updateShieldMeterO();
             }
             boolean isUsingShield = WeaponUtil.isUsingShield(livingEntity);
-            float recoverySpeed = 1.0f + AspectUtil.getFloatAspectStrengthAllSlots(livingEntity, Aspects.RECOVERY_SPEED);;
+            int recoveryTime = 100;
+            ItemStack shield = WeaponUtil.getHeldShield(livingEntity);
+            if(!shield.isEmpty()){
+                recoveryTime = ((AspectShieldItem)shield.getItem()).getRecoveryTime(shield);
+            }
             if(isUsingShield){
                 odysseyLivingEntity.adjustShieldMeter(-0.01f);
             } else {
-                odysseyLivingEntity.adjustShieldMeter(+ 0.01f * recoverySpeed);
+                odysseyLivingEntity.adjustShieldMeter(1f/((float)recoveryTime));
             }
             if(odysseyLivingEntity.getShieldMeter() <= 0f && livingEntity instanceof Player player){
                 player.stopUsingItem();
                 for(Item item : ForgeRegistries.ITEMS.tags().getTag(OdysseyItemTags.SHIELDS).stream().toList()){
-                    player.getCooldowns().addCooldown(item, (int) (100f / recoverySpeed));
+                    player.getCooldowns().addCooldown(item, recoveryTime);
                 }
             }
             // Perform Smack
@@ -460,16 +465,6 @@ public class EntityEvents {
 
             DamageSource damageSource = event.getDamageSource();
             float damageBlockMultiplier = 1.0f;
-            if(damageSource.isProjectile()){
-                Entity damageSourceEntity = damageSource.getDirectEntity();
-                if(damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow){
-                    float piercingAspect = odysseyAbstractArrow.getAspectStrength(Aspects.PIERCING);
-                    float impenetrabilityAspect = AspectUtil.getFloatAspectStrength(shield, Aspects.IMPENETRABILITY);
-                    if(piercingAspect > impenetrabilityAspect){
-                        damageBlockMultiplier = impenetrabilityAspect / piercingAspect;
-                    }
-                }
-            }
             if(AspectUtil.hasBooleanAspect(shield, Aspects.COLD_TO_THE_TOUCH)){
                 WeaponUtil.getSweepLivingEntities(livingEntity, livingEntity, false)
                         .forEach(livingEntity1 -> livingEntity1.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false)));
@@ -482,7 +477,40 @@ public class EntityEvents {
                 }
             }
 
-            event.setBlockedDamage(damageBlockMultiplier * aspectShieldItem.getDamageBlock(shield, livingEntity.level.getDifficulty(), damageSource));
+            float blockedDamage = damageBlockMultiplier * aspectShieldItem.getDamageBlock(shield, damageSource);
+
+            if(livingEntity instanceof Player player){
+                hurtCurrentlyUsedShield(player, blockedDamage);
+                event.setShieldTakesDamage(false);
+            }
+            event.setBlockedDamage(blockedDamage);
+        }
+    }
+
+    protected static void hurtCurrentlyUsedShield(Player player, float blockAmount) {
+        if (player.getUseItem().canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK)) {
+            ItemStack useItem = player.getUseItem();
+            if (!player.level.isClientSide) {
+                player.awardStat(Stats.ITEM_USED.get(useItem.getItem()));
+            }
+
+            int i = 1 + Mth.ceil(blockAmount);
+            InteractionHand interactionhand = player.getUsedItemHand();
+            useItem.hurtAndBreak(i, player, (p_219739_) -> {
+                p_219739_.broadcastBreakEvent(interactionhand);
+                net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, useItem, interactionhand);
+            });
+            if (useItem.isEmpty()) {
+                if (interactionhand == InteractionHand.MAIN_HAND) {
+                    player.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+                } else {
+                    player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                }
+
+                player.stopUsingItem();
+                player.playSound(SoundEvents.SHIELD_BREAK, 0.8F, 0.8F + player.level.random.nextFloat() * 0.4F);
+            }
+
         }
     }
 

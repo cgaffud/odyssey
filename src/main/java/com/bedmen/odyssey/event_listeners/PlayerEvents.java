@@ -186,8 +186,7 @@ public class PlayerEvents {
         List<Component> componentList = new ArrayList<>();
         
         // Aspect Tooltips
-        Optional<Level> optionalLevel = player == null ? Optional.empty() : Optional.of(player.level);
-        AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(optionalLevel, Optional.of(itemStack));
+        AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(Optional.of(itemStack));
         if(item instanceof AspectItem aspectItem){
             List<AspectHolder> aspectHolderList = aspectItem.getAspectHolderList();
             for(AspectHolder aspectHolder: aspectHolderList){

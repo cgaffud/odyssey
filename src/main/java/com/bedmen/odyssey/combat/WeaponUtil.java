@@ -345,8 +345,16 @@ public class WeaponUtil {
                 .collect(Collectors.toSet());
     }
 
-    public static boolean isHoldingShield(LivingEntity livingEntity){
-        return livingEntity.getMainHandItem().is(OdysseyItemTags.SHIELDS) || livingEntity.getOffhandItem().is(OdysseyItemTags.SHIELDS);
+    public static ItemStack getHeldShield(LivingEntity livingEntity){
+        ItemStack itemStack = livingEntity.getMainHandItem();
+        if(itemStack.is(OdysseyItemTags.SHIELDS)){
+            return itemStack;
+        }
+        itemStack = livingEntity.getOffhandItem();
+        if(itemStack.is(OdysseyItemTags.SHIELDS)){
+            return itemStack;
+        }
+        return ItemStack.EMPTY;
     }
 
     public static boolean isUsingShield(LivingEntity livingEntity){

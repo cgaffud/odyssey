@@ -27,6 +27,7 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, InnateAspectItem, OdysseyTierItem {
@@ -56,16 +57,8 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         });
     }
 
-    public float getDamageBlock(ItemStack shield, Difficulty difficulty, DamageSource damageSource){
-        float damageBlock = this.shieldType.damageBlock;
-        float additionalDamageBlock = AspectUtil.getDamageSourcePredicateAspectStrength(shield, damageSource);
-        float totalUnadjustedDamageBlock = damageBlock + additionalDamageBlock;
-        float difficultyAdjustedDamageBlock = getDifficultyAdjustedDamageBlock(totalUnadjustedDamageBlock, difficulty);
-        return difficultyAdjustedDamageBlock;
-    }
-
-    public static float getDifficultyAdjustedDamageBlock(float damageBlock, Difficulty difficulty) {
-        return damageBlock * (difficulty == Difficulty.HARD ? 1.5f : 1.0f);
+    public float getDamageBlock(ItemStack shield, DamageSource damageSource){
+        return this.shieldType.damageBlock + AspectUtil.getDamageSourcePredicateAspectStrength(shield, damageSource);
     }
 
     public int getRecoveryTime(ItemStack shield){
@@ -84,10 +77,8 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
     }
 
     public void appendHoverText(ItemStack shield, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        Difficulty difficulty = level == null ? null : level.getDifficulty();
         AspectShieldItem aspectShieldItem = (AspectShieldItem)(shield.getItem());
-        float damageBlock = aspectShieldItem.shieldType.damageBlock;
-        tooltip.add(Component.translatable("item.oddc.shield.damage_block").append(StringUtil.floatFormat(getDifficultyAdjustedDamageBlock(damageBlock, difficulty))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("item.oddc.shield.damage_block").append(StringUtil.floatFormat(aspectShieldItem.shieldType.damageBlock)).withStyle(ChatFormatting.BLUE));
         tooltip.add(Component.translatable("item.oddc.shield.recovery_time").append(StringUtil.timeFormat(this.getRecoveryTime(shield))).withStyle(ChatFormatting.BLUE));
         BannerItem.appendHoverTextFromBannerBlockEntityTag(shield, tooltip);
     }

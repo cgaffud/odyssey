@@ -63,7 +63,7 @@ public class AspectInstance {
     }
 
     public MutableComponent getMutableComponent(AspectTooltipContext aspectTooltipContext){
-        return this.aspect.aspectTooltipFunction.apply(new AspectTooltipFunctionInput(this, aspectTooltipContext.optionalLevel, aspectTooltipContext.optionalItemStack));
+        return this.aspect.aspectTooltipFunction.apply(new AspectTooltipFunctionInput(this, aspectTooltipContext.optionalItemStack));
     }
 
     public CompoundTag toCompoundTag(){

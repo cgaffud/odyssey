@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public enum ShieldType {
-    WOODEN("wooden", OdysseyTiers.WOOD, 3.0f, 100, item -> item.builtInRegistryHolder().is(ItemTags.PLANKS), List.of(), List.of()),
-    COPPER("copper", OdysseyTiers.COPPER, 4.0f, 100, item -> item == Items.COPPER_INGOT, List.of(), List.of()),
-    RUSTY("rusty", OdysseyTiers.RUSTY_IRON, 5.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.IMPENETRABILITY, 1.0f))),
-    GOLDEN("golden", OdysseyTiers.GOLD, 5.0f, 80, item -> item == Items.GOLD_INGOT, List.of(), List.of(new AspectInstance(Aspects.RECOVERY_SPEED, 1.0f))),
-    REINFORCED("reinforced", OdysseyTiers.IRON, 6.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.EXPLOSION_DAMAGE_BLOCK, 10.0f))),
-    DIAMOND("diamond", OdysseyTiers.DIAMOND, 7.0f, 100, item -> item == Items.DIAMOND, List.of(), List.of(new AspectInstance(Aspects.DURABILITY, 2.0f))),
-    FROST("frost", OdysseyTiers.ARCTIC, 7.0f, 100, item -> item == ItemRegistry.PERMAFROST_SHARD.get(), List.of(), List.of(new AspectInstance(Aspects.COLD_TO_THE_TOUCH)));
+    WOODEN("wooden", OdysseyTiers.WOOD, 4.0f, 100, item -> item.builtInRegistryHolder().is(ItemTags.PLANKS), List.of(), List.of()),
+    COPPER("copper", OdysseyTiers.COPPER, 5.0f, 100, item -> item == Items.COPPER_INGOT, List.of(), List.of()),
+    RUSTY("rusty", OdysseyTiers.RUSTY_IRON, 6.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of()),
+    GOLDEN("golden", OdysseyTiers.GOLD, 6.0f, 80, item -> item == Items.GOLD_INGOT, List.of(), List.of(new AspectInstance(Aspects.RECOVERY_SPEED, 1.0f))),
+    REINFORCED("reinforced", OdysseyTiers.IRON, 7.0f, 100, item -> item == Items.IRON_INGOT, List.of(), List.of(new AspectInstance(Aspects.EXPLOSION_DAMAGE_BLOCK, 10.0f))),
+    DIAMOND("diamond", OdysseyTiers.DIAMOND, 8.0f, 100, item -> item == Items.DIAMOND, List.of(), List.of(new AspectInstance(Aspects.DURABILITY, 2.0f))),
+    FROST("frost", OdysseyTiers.ARCTIC, 8.0f, 100, item -> item == ItemRegistry.PERMAFROST_SHARD.get(), List.of(), List.of(new AspectInstance(Aspects.COLD_TO_THE_TOUCH)));
 
     public final Tier tier;
     public final float damageBlock;

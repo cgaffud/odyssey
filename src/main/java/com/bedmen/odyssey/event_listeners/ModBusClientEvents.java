@@ -196,7 +196,7 @@ public class ModBusClientEvents {
         //Shield Meter overlay
         event.registerAbove(VanillaGuiOverlay.ARMOR_LEVEL.id(), "shield_meter", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
             if(gui instanceof OdysseyIngameGui odysseyIngameGui && !odysseyIngameGui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()){
-                if(WeaponUtil.isHoldingShield(odysseyIngameGui.getMinecraft().player)){
+                if(!WeaponUtil.getHeldShield(odysseyIngameGui.getMinecraft().player).isEmpty()){
                     gui.setupOverlayRenderState(true, false, OdysseyIngameGui.ODYSSEY_GUI_ICONS_LOCATION);
                     odysseyIngameGui.renderShieldMeter(screenWidth, screenHeight, mStack, partialTicks);
                 }
