@@ -266,6 +266,10 @@ public class AspectUtil {
 
     // Aspect total over all EquipmentSlots
 
+    public static float getFloatAspectStrengthAllSlots(LivingEntity livingEntity, FloatAspect floatAspect){
+        return getTotalAspectStrengthAllSlots(livingEntity, new SingleQuery(floatAspect));
+    }
+
     public static int getIntegerAspectStrengthAllSlots(LivingEntity livingEntity, IntegerAspect integerAspect){
         return (int) getTotalAspectStrengthAllSlots(livingEntity, new SingleQuery(integerAspect));
     }

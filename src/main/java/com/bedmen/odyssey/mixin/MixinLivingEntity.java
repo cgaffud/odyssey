@@ -3,6 +3,7 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.SmackPush;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
@@ -52,8 +53,6 @@ import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements OdysseyLivingEntity {
-
-    private static final float SHIELD_METER_MAX = 1.05f;
     private static final EntityDataAccessor<FireType> DATA_FIRE_TYPE = SynchedEntityData.defineId(LivingEntity.class, OdysseyDataSerializers.FIRE_TYPE);
     private static final EntityDataAccessor<Float> DATA_TEMPERATURE = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_SHIELD_METER = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
@@ -64,7 +63,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private static final String TEMPERATURE_TAG = "Temperature";
     private static final String SHIELD_METER_TAG = "ShieldMeter";
 
-    private float shieldMeterO = SHIELD_METER_MAX;
+    private float shieldMeterO = WeaponUtil.SHIELD_METER_MAX;
     private int glidingLevel = 0;
     private boolean hasSlowFall = false;
     private int flightValue = 0;
@@ -116,7 +115,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     public void onDefineSynchedData(CallbackInfo ci) {
         this.entityData.define(DATA_FIRE_TYPE, FireType.NONE);
         this.entityData.define(DATA_TEMPERATURE, 0.0f);
-        this.entityData.define(DATA_SHIELD_METER, SHIELD_METER_MAX);
+        this.entityData.define(DATA_SHIELD_METER, WeaponUtil.SHIELD_METER_MAX);
     }
 
     public void baseTick() {
@@ -418,7 +417,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     }
 
     public void setShieldMeter(float shieldMeter){
-        shieldMeter = Mth.clamp(shieldMeter, 0.0f, SHIELD_METER_MAX);
+        shieldMeter = Mth.clamp(shieldMeter, 0.0f, WeaponUtil.SHIELD_METER_MAX);
         this.entityData.set(DATA_SHIELD_METER, shieldMeter);
     }
 

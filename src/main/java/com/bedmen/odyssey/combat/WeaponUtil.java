@@ -42,6 +42,8 @@ public class WeaponUtil {
     public static final int DEFAULT_RECOVERY_TIME = 100;
     public static final float BASE_ARROW_VELOCITY = 2.5f;
     public static final float BASE_ARROW_VELOCITY_ENEMIES = 1.6f;
+
+    public static final float SHIELD_METER_MAX = 1.05f;
     public static AmmoStack getAmmo(Player player, ItemStack bow, boolean consume){
         if (!(bow.getItem() instanceof ProjectileWeaponItem)) {
             return new AmmoStack(ItemStack.EMPTY, false);

@@ -6,6 +6,7 @@ import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
@@ -64,6 +65,8 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
     @Shadow public abstract void awardStat(ResourceLocation p_36221_);
 
     @Shadow public abstract void awardStat(Stat<?> p_36145_, int p_36146_);
+
+    @Shadow public abstract void increaseScore(int p_36402_);
 
     private int attackStrengthTickerO;
     private boolean isSniperScoping;
@@ -165,19 +168,9 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         if (isGuaranteed) {
             f += 0.75F;
         }
-
-        if (this.random.nextFloat() < f) {
-            ItemStack shield = this.getUseItem();
-            Item shieldItem = shield.getItem();
-            int recoveryTime = shieldItem instanceof AspectShieldItem aspectShieldItem ? aspectShieldItem.getRecoveryTime(shield) : 100;
-            ITagManager<Item> itemITagManager = ForgeRegistries.ITEMS.tags();
-            if(itemITagManager != null){
-                for(Item item : itemITagManager.getTag(OdysseyItemTags.SHIELDS).stream().toList()){
-                    getPlayer().getCooldowns().addCooldown(item, recoveryTime);
-                }
-                this.stopUsingItem();
-                this.level.broadcastEntityEvent(this, (byte)30);
-            }
+        if(this instanceof OdysseyLivingEntity odysseyLivingEntity){
+            odysseyLivingEntity.adjustShieldMeter(-f);
+            this.level.broadcastEntityEvent(this, (byte)30);
         }
     }
 

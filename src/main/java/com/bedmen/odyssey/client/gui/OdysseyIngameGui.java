@@ -1,7 +1,9 @@
 package com.bedmen.odyssey.client.gui;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.mixin.MixinLivingEntity;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -183,7 +185,7 @@ public class OdysseyIngameGui extends ForgeGui
             float lerpShieldMeter = Mth.lerp(partialTicks, shieldMeterO, shieldMeter);
             if(lerpShieldMeter > 1.0f){
                 blit(poseStack, left, top, 14, 36, 14, 16);
-                int goldenShieldHeight = Mth.ceil((lerpShieldMeter - 1.0f) * 20f * 16f);
+                int goldenShieldHeight = Mth.ceil((lerpShieldMeter - 1.0f) * (1.0f / (WeaponUtil.SHIELD_METER_MAX - 1.0f)) * 16f);
                 int inverseGoldenShieldHeight = 16 - goldenShieldHeight;
                 blit(poseStack, left, top + inverseGoldenShieldHeight, 28, 36+inverseGoldenShieldHeight, 14, goldenShieldHeight);
             } else {

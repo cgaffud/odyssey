@@ -22,6 +22,7 @@ import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.world.gen.biome.BiomeResourceKeys;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -32,11 +33,10 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -59,6 +59,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -77,10 +78,18 @@ public class EntityEvents {
             if(livingEntity.level.isClientSide){
                 odysseyLivingEntity.updateShieldMeterO();
             }
-            if(WeaponUtil.isUsingShield(livingEntity)){
+            boolean isUsingShield = WeaponUtil.isUsingShield(livingEntity);
+            float recoverySpeed = 1.0f + AspectUtil.getFloatAspectStrengthAllSlots(livingEntity, Aspects.RECOVERY_SPEED);;
+            if(isUsingShield){
                 odysseyLivingEntity.adjustShieldMeter(-0.01f);
             } else {
-                odysseyLivingEntity.adjustShieldMeter(+0.01f);
+                odysseyLivingEntity.adjustShieldMeter(+ 0.01f * recoverySpeed);
+            }
+            if(odysseyLivingEntity.getShieldMeter() <= 0f && livingEntity instanceof Player player){
+                player.stopUsingItem();
+                for(Item item : ForgeRegistries.ITEMS.tags().getTag(OdysseyItemTags.SHIELDS).stream().toList()){
+                    player.getCooldowns().addCooldown(item, (int) (100f / recoverySpeed));
+                }
             }
             // Perform Smack
             if(odysseyLivingEntity.getSmackPush().shouldPush){
