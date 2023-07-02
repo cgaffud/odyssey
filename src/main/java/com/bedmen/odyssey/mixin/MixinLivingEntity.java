@@ -7,6 +7,7 @@ import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.RenderUtil;
@@ -34,6 +35,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -110,6 +112,16 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     @Shadow protected abstract void dropAllDeathLoot(DamageSource p_21192_);
 
     @Shadow protected abstract boolean shouldTriggerItemUseEffects();
+
+    @Shadow public abstract ItemStack getUseItem();
+
+    @Shadow public abstract boolean isAlive();
+
+    @Shadow protected abstract void verifyEquippedItem(ItemStack p_181123_);
+
+    @Shadow public abstract Optional<BlockPos> getLastClimbablePos();
+
+    @Shadow public abstract boolean isAutoSpinAttack();
 
     @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
     public void onDefineSynchedData(CallbackInfo ci) {
@@ -374,6 +386,26 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         } else {
             return false;
         }
+    }
+
+    // Remove piercing arrows going through shields, made the block angle dependent on the shield
+    public boolean isDamageSourceBlocked(DamageSource damageSource) {
+        if (!damageSource.isBypassArmor() && this.isBlocking()) {
+            Vec3 damageSourcePosition = damageSource.getSourcePosition();
+            if (damageSourcePosition != null) {
+                Vec3 viewVector = this.getViewVector(1.0F);
+                Vec3 vectorToPosition = damageSourcePosition.vectorTo(this.position());
+                vectorToPosition = new Vec3(vectorToPosition.x, 0.0D, vectorToPosition.z).normalize();;
+                ItemStack shield = this.getUseItem();
+                float blockingWidthAngle = ((AspectShieldItem)shield.getItem()).getBlockingAngleWidth(shield);
+                float angleHalvedRadians = blockingWidthAngle * Mth.PI / 360f;
+                if (vectorToPosition.dot(viewVector) < -Mth.cos(angleHalvedRadians)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     protected void tryAddFrost() {

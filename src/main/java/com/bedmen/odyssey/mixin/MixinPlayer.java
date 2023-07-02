@@ -172,22 +172,6 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         }
     }
 
-    public boolean isDamageSourceBlocked(DamageSource damageSource) {
-        if (!damageSource.isBypassArmor() && this.isBlocking()) {
-            Vec3 vec32 = damageSource.getSourcePosition();
-            if (vec32 != null) {
-                Vec3 vec3 = this.getViewVector(1.0F);
-                Vec3 vec31 = vec32.vectorTo(this.position()).normalize();
-                vec31 = new Vec3(vec31.x, 0.0D, vec31.z);
-                if (vec31.dot(vec3) < 0.0D) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     public PermabuffHolder getPermabuffHolder(){
         return this.entityData.get(DATA_PERMABUFF_HOLDER).copy();
     }

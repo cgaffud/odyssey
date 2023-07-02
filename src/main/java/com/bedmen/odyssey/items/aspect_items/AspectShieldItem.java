@@ -66,6 +66,11 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         return Mth.ceil((float)this.shieldType.recoveryTime / recoverySpeedMultiplier);
     }
 
+    public float getBlockingAngleWidth(ItemStack shield){
+        float widthMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(shield, Aspects.WIDTH);
+        return this.shieldType.blockingAngleWidth * widthMultiplier;
+    }
+
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
 
@@ -80,6 +85,7 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         AspectShieldItem aspectShieldItem = (AspectShieldItem)(shield.getItem());
         tooltip.add(Component.translatable("item.oddc.shield.damage_block").append(StringUtil.floatFormat(aspectShieldItem.shieldType.damageBlock)).withStyle(ChatFormatting.BLUE));
         tooltip.add(Component.translatable("item.oddc.shield.recovery_time").append(StringUtil.timeFormat(this.getRecoveryTime(shield))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("item.oddc.shield.blocking_angle_width").append(StringUtil.angleFormat(this.getBlockingAngleWidth(shield))).withStyle(ChatFormatting.BLUE));
         BannerItem.appendHoverTextFromBannerBlockEntityTag(shield, tooltip);
     }
 }
