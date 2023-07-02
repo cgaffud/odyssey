@@ -20,9 +20,7 @@ public class XPDrainerEffect extends OdysseyEffect {
     }
 
     public void applyEffectTick(LivingEntity livingEntity, int amplifier) {
-        System.out.println("applyEffectTick");
         if (livingEntity instanceof ServerPlayer serverPlayer) {
-            System.out.println("serverTick");
             if (this.experienceCost.canPay(serverPlayer, amplifier+1))
                 this.experienceCost.pay(serverPlayer, amplifier+1);
             else

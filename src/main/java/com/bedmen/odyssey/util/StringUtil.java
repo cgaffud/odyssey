@@ -23,6 +23,11 @@ public class StringUtil {
             return df.format(f);
     }
 
+    public static String angleFormat(float f)
+    {
+        return floatFormat(f) + '\u00B0';
+    }
+
     public static String percentFormat(float f)
     {
         f *= 100;

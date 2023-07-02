@@ -55,7 +55,6 @@ public class AspectTierManager {
                 .add(Aspects.SNOWSHOE, 0, 1)
                 .add(Aspects.THORNS, 1.0f, 2)
                 .add(Aspects.EXPLOSION_DAMAGE_BLOCK, 5.0f, 2)
-                .add(Aspects.IMPENETRABILITY, 0.5f, 2)
                 .add(Aspects.RECOVERY_SPEED, 0.5f, 2)
                 .add(Aspects.EFFICIENCY, 0.25f, 2)
                 .build();
@@ -97,7 +96,6 @@ public class AspectTierManager {
                 .add(Aspects.SNOWSHOE, 0, 1)
                 .add(Aspects.THORNS, 1.5f, 2)
                 .add(Aspects.EXPLOSION_DAMAGE_BLOCK, 7.5f, 2)
-                .add(Aspects.IMPENETRABILITY, 1.0f, 2)
                 .add(Aspects.RECOVERY_SPEED, 1.0f, 2)
                 .add(Aspects.EFFICIENCY, 0.5f, 2)
                 .add(Aspects.FORTUNE, 1, 1)

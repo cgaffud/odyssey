@@ -266,6 +266,10 @@ public class AspectUtil {
 
     // Aspect total over all EquipmentSlots
 
+    public static float getFloatAspectStrengthAllSlots(LivingEntity livingEntity, FloatAspect floatAspect){
+        return getTotalAspectStrengthAllSlots(livingEntity, new SingleQuery(floatAspect));
+    }
+
     public static int getIntegerAspectStrengthAllSlots(LivingEntity livingEntity, IntegerAspect integerAspect){
         return (int) getTotalAspectStrengthAllSlots(livingEntity, new SingleQuery(integerAspect));
     }
@@ -321,7 +325,7 @@ public class AspectUtil {
 
     public static List<Component> getPermabuffTooltip(Player player){
         if(player instanceof OdysseyPlayer odysseyPlayer){
-            AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(Optional.of(Minecraft.getInstance().level), Optional.empty());
+            AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(Optional.empty());
             List<Component> componentList = new ArrayList<>();
             odysseyPlayer.getPermabuffHolder().addTooltip(componentList, TooltipFlag.Default.ADVANCED, aspectTooltipContext);
             return componentList;
