@@ -13,6 +13,7 @@ public class OdysseyItemTags {
     public static final TagKey<Item> RAW_GOLDS = create("raw_golds");
     public static final TagKey<Item> RAW_SILVERS = create("raw_silvers");
     public static final TagKey<Item> SHIELDS = create("shields");
+    public static final TagKey<Item> PARRYABLES = create("parryables");
     public static final TagKey<Item> SILVER_ORES = create("silver_ores");
 
     public static final TagKey<Item> BOWS = create("bows");

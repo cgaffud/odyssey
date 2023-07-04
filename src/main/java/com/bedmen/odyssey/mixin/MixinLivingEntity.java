@@ -10,6 +10,7 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EffectRegistry;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.bedmen.odyssey.util.RenderUtil;
 import com.google.common.base.Objects;
 import net.minecraft.core.BlockPos;
@@ -381,8 +382,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     // Ripped out the 5 tick delay on blocking
     public boolean isBlocking() {
         if (this.isUsingItem() && !this.useItem.isEmpty()) {
-            Item item = this.useItem.getItem();
-            return !(item.getUseAnimation(this.useItem) != UseAnim.BLOCK && !this.useItem.canPerformAction(net.minecraftforge.common.ToolActions.SHIELD_BLOCK));
+            return this.useItem.is(OdysseyItemTags.PARRYABLES);
         } else {
             return false;
         }
@@ -397,7 +397,10 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
                 Vec3 vectorToPosition = damageSourcePosition.vectorTo(this.position());
                 vectorToPosition = new Vec3(vectorToPosition.x, 0.0D, vectorToPosition.z).normalize();;
                 ItemStack shield = this.getUseItem();
-                float blockingWidthAngle = ((AspectShieldItem)shield.getItem()).getBlockingAngleWidth(shield);
+                float blockingWidthAngle = 45;
+                if (shield.getItem() instanceof AspectShieldItem aspectShieldItem)
+                    blockingWidthAngle = aspectShieldItem.getBlockingAngleWidth(shield);
+
                 float angleHalvedRadians = blockingWidthAngle * Mth.PI / 360f;
                 if (vectorToPosition.dot(viewVector) < -Mth.cos(angleHalvedRadians)) {
                     return true;

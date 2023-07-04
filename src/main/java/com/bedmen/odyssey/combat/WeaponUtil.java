@@ -161,6 +161,16 @@ public class WeaponUtil {
         return pLiving.getMainHandItem().getItem() instanceof AspectBowItem ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
     }
 
+    public static ItemStack getItemInOtherHand(LivingEntity livingEntity,InteractionHand interactionHand) {
+        if (interactionHand == InteractionHand.MAIN_HAND) {
+            return livingEntity.getItemBySlot(EquipmentSlot.OFFHAND);
+        } else if (interactionHand == InteractionHand.OFF_HAND) {
+            return livingEntity.getItemBySlot(EquipmentSlot.MAINHAND);
+        } else {
+            throw new IllegalArgumentException("Invalid hand " + interactionHand);
+        }
+    }
+
     public static boolean isDualWielding(LivingEntity livingEntity){
         ItemStack mainHandItem = livingEntity.getMainHandItem();
         return isDualWieldItem(mainHandItem) && livingEntity.getOffhandItem().is(mainHandItem.getItem());
@@ -345,20 +355,20 @@ public class WeaponUtil {
                 .collect(Collectors.toSet());
     }
 
-    public static ItemStack getHeldShield(LivingEntity livingEntity){
+    public static ItemStack getHeldParryables(LivingEntity livingEntity){
         ItemStack itemStack = livingEntity.getMainHandItem();
-        if(itemStack.is(OdysseyItemTags.SHIELDS)){
+        if(itemStack.is(OdysseyItemTags.PARRYABLES)){
             return itemStack;
         }
         itemStack = livingEntity.getOffhandItem();
-        if(itemStack.is(OdysseyItemTags.SHIELDS)){
+        if(itemStack.is(OdysseyItemTags.PARRYABLES)){
             return itemStack;
         }
         return ItemStack.EMPTY;
     }
 
-    public static boolean isUsingShield(LivingEntity livingEntity){
-        return livingEntity.getUseItem().is(OdysseyItemTags.SHIELDS);
+    public static boolean isUsingParryable(LivingEntity livingEntity){
+        return livingEntity.getUseItem().is(OdysseyItemTags.PARRYABLES);
     }
 }
 

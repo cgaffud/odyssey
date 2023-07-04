@@ -18,7 +18,9 @@ import com.bedmen.odyssey.food.OdysseyFoodData;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
+import com.bedmen.odyssey.items.aspect_items.AspectMeleeItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
+import com.bedmen.odyssey.items.aspect_items.ParryableWeaponItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
@@ -79,20 +81,20 @@ public class EntityEvents {
             if(livingEntity.level.isClientSide){
                 odysseyLivingEntity.updateShieldMeterO();
             }
-            boolean isUsingShield = WeaponUtil.isUsingShield(livingEntity);
+            boolean isUsingParryable = WeaponUtil.isUsingParryable(livingEntity);
             int recoveryTime = 100;
-            ItemStack shield = WeaponUtil.getHeldShield(livingEntity);
-            if(!shield.isEmpty()){
-                recoveryTime = ((AspectShieldItem)shield.getItem()).getRecoveryTime(shield);
+            ItemStack itemStack = WeaponUtil.getHeldParryables(livingEntity);
+            if(!itemStack.isEmpty()){
+                recoveryTime = ((ParryableWeaponItem)itemStack.getItem()).getRecoveryTime(itemStack);
             }
-            if(isUsingShield){
+            if(isUsingParryable){
                 odysseyLivingEntity.adjustShieldMeter(-0.01f);
             } else {
                 odysseyLivingEntity.adjustShieldMeter(1f/((float)recoveryTime));
             }
             if(odysseyLivingEntity.getShieldMeter() <= 0f && livingEntity instanceof Player player){
                 player.stopUsingItem();
-                for(Item item : ForgeRegistries.ITEMS.tags().getTag(OdysseyItemTags.SHIELDS).stream().toList()){
+                for(Item item : ForgeRegistries.ITEMS.tags().getTag(OdysseyItemTags.PARRYABLES).stream().toList()){
                     player.getCooldowns().addCooldown(item, recoveryTime);
                 }
             }
@@ -485,6 +487,8 @@ public class EntityEvents {
             }
             event.setBlockedDamage(blockedDamage);
         }
+        if (shield.getItem() instanceof AspectMeleeItem aspectMeleeItem)
+            System.out.println("CorrectTriggeringAcheived!");
     }
 
     protected static void hurtCurrentlyUsedShield(Player player, float blockAmount) {
