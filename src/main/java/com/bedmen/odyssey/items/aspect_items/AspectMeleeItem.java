@@ -159,6 +159,11 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
         return this.meleeWeaponClass.damageBlock + AspectUtil.getDamageSourcePredicateAspectStrength(melee, damageSource);
     }
 
+    public float getBlockingAngleWidth(ItemStack shield){
+        float widthMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(shield, Aspects.WIDTH);
+        return this.getMeleeWeaponClass().blockingAngleWidth * widthMultiplier;
+    }
+
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemstack = player.getItemInHand(interactionHand);
         if (this.canParry() && !WeaponUtil.getItemInOtherHand(player, interactionHand).is(OdysseyItemTags.PARRYABLES)) {
@@ -207,7 +212,6 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
                 }
                 return HumanoidModel.ArmPose.EMPTY;
             }
-
         });
     }
 }

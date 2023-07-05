@@ -8,6 +8,7 @@ import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
+import com.bedmen.odyssey.items.aspect_items.ParryableWeaponItem;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
@@ -396,10 +397,8 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
                 Vec3 viewVector = this.getViewVector(1.0F);
                 Vec3 vectorToPosition = damageSourcePosition.vectorTo(this.position());
                 vectorToPosition = new Vec3(vectorToPosition.x, 0.0D, vectorToPosition.z).normalize();;
-                ItemStack shield = this.getUseItem();
-                float blockingWidthAngle = 45;
-                if (shield.getItem() instanceof AspectShieldItem aspectShieldItem)
-                    blockingWidthAngle = aspectShieldItem.getBlockingAngleWidth(shield);
+                ItemStack parryable = this.getUseItem();
+                float blockingWidthAngle = ((ParryableWeaponItem) parryable.getItem()).getBlockingAngleWidth(parryable);
 
                 float angleHalvedRadians = blockingWidthAngle * Mth.PI / 360f;
                 if (vectorToPosition.dot(viewVector) < -Mth.cos(angleHalvedRadians)) {

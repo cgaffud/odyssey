@@ -476,13 +476,9 @@ public class EntityEvents {
             if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
                 if(odysseyLivingEntity.getShieldMeter() > 1.0f){
                     damageBlockMultiplier *= 2;
-                    if (parryableWeaponItem instanceof AspectMeleeItem aspectMeleeItem) {
-                        switch (aspectMeleeItem.getMeleeWeaponClass().meleeWeaponType) {
-                            case LONGSWORD:
-                                int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier()+1 : 0;
-                                livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 50, strengthAmp));
-                                break;
-                        }
+                    if (parryableWeaponItem instanceof AspectMeleeItem) {
+                        int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier()+1 : 0;
+                        livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 50, strengthAmp));
                     }
                 }
             }

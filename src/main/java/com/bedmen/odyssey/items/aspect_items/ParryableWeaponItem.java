@@ -6,7 +6,9 @@ import net.minecraft.world.item.ItemStack;
 
 public interface ParryableWeaponItem {
 
-    int getRecoveryTime(ItemStack shield);
+    int getRecoveryTime(ItemStack itemStack);
 
-    float getDamageBlock(ItemStack melee, DamageSource damageSource);
+    float getDamageBlock(ItemStack itemStack, DamageSource damageSource);
+
+    float getBlockingAngleWidth(ItemStack itemStack);
 }

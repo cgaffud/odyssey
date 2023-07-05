@@ -2,6 +2,26 @@
   "replace": false,
   "values": [
     "#oddc:shields",
-    "oddc:sun_sword"
+    "oddc:wooden_mace",
+    "oddc:stone_mace",
+    "oddc:iron_mace",
+    "oddc:golden_mace",
+    "oddc:clover_stone_mace",
+    "oddc:sterling_silver_mace",
+    "oddc:diamond_mace",
+    "oddc:frost_mace",
+    "oddc:arid_mace",
+    "oddc:netherite_mace",
+    "oddc:copper_battle_axe",
+    "oddc:battle_pickaxe",
+    "oddc:clover_stone_battle_axe",
+    "oddc:obsidian_battle_axe",
+    "oddc:sledgeaxe",
+    "oddc:copper_hammer",
+    "oddc:sledgehammer",
+    "oddc:clover_stone_hammer",
+    "oddc:obsidian_hammer",
+    "oddc:sun_sword",
+    "oddc:moon_sword"
   ]
 }
