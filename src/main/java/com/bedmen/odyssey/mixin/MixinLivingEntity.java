@@ -35,7 +35,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -166,7 +165,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             if (drowningAmount > 0) {
                 boolean cannotBreatheUnderWater = !this.canBreatheUnderwater() && !MobEffectUtil.hasWaterBreathing(livingEntity) && (!flag || !((Player)livingEntity).getAbilities().invulnerable);
                 if (cannotBreatheUnderWater) {
-                    float respirationStrength = 1.0f + AspectUtil.getFloatAspectValueFromArmor(livingEntity, Aspects.RESPIRATION);
+                    float respirationStrength = 1.0f + AspectUtil.getArmorAspectStrength(livingEntity, Aspects.RESPIRATION);
                     float airLossChance = 1.0f / respirationStrength;
                     for(int i = 0; i < drowningAmount; i++){
                         if(airLossChance >= livingEntity.getRandom().nextFloat()){

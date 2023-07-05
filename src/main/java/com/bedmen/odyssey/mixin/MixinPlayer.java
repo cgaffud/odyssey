@@ -19,12 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -141,7 +136,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
     public void updateSniperScoping() {
         boolean isSniperScopingO = this.isSniperScoping;
         ItemStack itemStack = this.getMainHandItem();
-        this.isSniperScoping = AspectUtil.hasBooleanAspect(itemStack, Aspects.SPYGLASS) && this.isShiftKeyDown();
+        this.isSniperScoping = AspectUtil.getItemStackAspectStrength(itemStack, Aspects.SPYGLASS) && this.isShiftKeyDown();
         if(!isSniperScopingO && this.isSniperScoping){
             this.playSound(SoundEvents.SPYGLASS_USE, 1.0F, 1.0F);
         } else if (isSniperScopingO && !this.isSniperScoping){
@@ -156,7 +151,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
     protected void blockUsingShield(LivingEntity livingEntity) {
         super.blockUsingShield(livingEntity);
         ItemStack itemStack = livingEntity.getMainHandItem();
-        if (AspectUtil.hasBooleanAspect(itemStack, Aspects.SHIELD_BASH)) {
+        if (AspectUtil.getItemStackAspectStrength(itemStack, Aspects.SHIELD_BASH)) {
             this.disableShield(true);
         }
     }

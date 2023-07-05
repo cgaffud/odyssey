@@ -55,7 +55,7 @@ public class CovenHutDoorBlockEntity extends BlockEntity {
                     .stream()
                     .filter(entity -> !(entity instanceof Player player)
                             || (GeneralUtil.isSurvival(player)
-                            && AspectUtil.getIntegerAspectStrengthAllSlots(player, Aspects.TELEPORTATION_IMMUNITY) <= 0))
+                            && AspectUtil.getTotalAspectStrength(player, Aspects.TELEPORTATION_IMMUNITY) <= 0))
                     .forEach(livingEntity -> {
                         livingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 80, 0));
                         teleportRandomlyOutsideBoundingBox(livingEntity, covenHutDoorBlockEntity.boundingBox);

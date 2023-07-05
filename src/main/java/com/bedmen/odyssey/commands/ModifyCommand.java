@@ -3,7 +3,6 @@ package com.bedmen.odyssey.commands;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspect;
-import com.bedmen.odyssey.aspect.object.PermabuffAspect;
 import com.bedmen.odyssey.commands.arguments.ItemModifierArgument;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.mojang.brigadier.CommandDispatcher;
@@ -38,45 +37,42 @@ public class ModifyCommand {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(Commands.literal("modify")
                 .requires((commandSourceStack) -> commandSourceStack.hasPermission(2))
-                .then(Commands.argument("targets", EntityArgument.entities())
+                .then(Commands.literal("itemStack")
+                    .then(Commands.argument("targets", EntityArgument.entities())
                         .then(Commands.argument("modifier", ItemModifierArgument.modifier())
-                                .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1, false, false))
+                                .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1, false, false))
                                 .then(Commands.argument("strength", FloatArgumentType.floatArg(0.0f))
-                                        .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), false, false))
+                                        .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), false, false))
                                         .then(Commands.argument("obfuscated", BoolArgumentType.bool())
-                                                .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"), false))
+                                                .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"), false))
                                                 .then(Commands.argument("bypass_checks", BoolArgumentType.bool())
-                                                        .executes((commandContext) -> modify(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"), BoolArgumentType.getBool(commandContext, "bypass_checks")))))))));
+                                                        .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"), BoolArgumentType.getBool(commandContext, "bypass_checks")))))))))
+                .then(Commands.literal("player")
+                        .then(Commands.argument("targets", EntityArgument.entities())
+                                .then(Commands.argument("modifier", ItemModifierArgument.modifier())
+                                        .executes((commandContext) -> modifyPlayer(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1))
+                                        .then(Commands.argument("strength", FloatArgumentType.floatArg(0.0f))
+                                                .executes((commandContext) -> modifyPlayer(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"))))))));
     }
 
-    private static int modify(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect aspect, float strength, boolean obfuscated, boolean bypassChecks) throws CommandSyntaxException {
+    private static int modifyItemStack(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect<?> aspect, float strength, boolean obfuscated, boolean bypassChecks) throws CommandSyntaxException {
         int numSuccess = 0;
         boolean isSingleEntity = entityCollection.size() == 1;
 
         for(Entity entity : entityCollection) {
             if (entity instanceof LivingEntity livingEntity) {
-                if(aspect instanceof PermabuffAspect){
-                    if(entity instanceof OdysseyPlayer odysseyPlayer){
-                        AspectInstance aspectInstance = new AspectInstance(aspect, strength);
-                        odysseyPlayer.setPermabuff(aspectInstance);
+                ItemStack itemstack = livingEntity.getMainHandItem();
+                if (!itemstack.isEmpty()) {
+                    AspectInstance aspectInstance = new AspectInstance(aspect, strength);
+                    if(bypassChecks || AspectUtil.canAddModifier(itemstack, aspectInstance)){
+                        aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
+                        AspectUtil.replaceModifier(itemstack, aspectInstance);
                         ++numSuccess;
                     } else if (isSingleEntity) {
-                        throw ERROR_INCOMPATIBLE.create(entity.getName());
+                        throw ERROR_INCOMPATIBLE.create(itemstack.getItem().getName(itemstack).getString());
                     }
-                } else {
-                    ItemStack itemstack = livingEntity.getMainHandItem();
-                    if (!itemstack.isEmpty()) {
-                        AspectInstance aspectInstance = new AspectInstance(aspect, strength);
-                        if(bypassChecks || AspectUtil.canAddModifier(itemstack, aspectInstance)){
-                            aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
-                            AspectUtil.replaceModifier(itemstack, aspectInstance);
-                            ++numSuccess;
-                        } else if (isSingleEntity) {
-                            throw ERROR_INCOMPATIBLE.create(itemstack.getItem().getName(itemstack).getString());
-                        }
-                    } else if (isSingleEntity) {
-                        throw ERROR_NO_ITEM.create(livingEntity.getName().getString());
-                    }
+                } else if (isSingleEntity) {
+                    throw ERROR_NO_ITEM.create(livingEntity.getName().getString());
                 }
             } else if (isSingleEntity) {
                 throw ERROR_NOT_LIVING_ENTITY.create(entity.getName().getString());
@@ -87,9 +83,36 @@ public class ModifyCommand {
             throw ERROR_NOTHING_HAPPENED.create();
         } else {
             if (isSingleEntity) {
-                commandSourceStack.sendSuccess(Component.translatable("commands.modify.success.single", aspect.getComponent(), entityCollection.iterator().next().getDisplayName()), true);
+                commandSourceStack.sendSuccess(Component.translatable("commands.modify.itemstack.success.single", aspect.getComponent(), entityCollection.iterator().next().getDisplayName()), true);
             } else {
-                commandSourceStack.sendSuccess(Component.translatable("commands.modify.success.multiple", aspect.getComponent(), entityCollection.size()), true);
+                commandSourceStack.sendSuccess(Component.translatable("commands.modify.itemstack.success.multiple", aspect.getComponent(), entityCollection.size()), true);
+            }
+
+            return numSuccess;
+        }
+    }
+
+    private static int modifyPlayer(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect<?> aspect, float strength) throws CommandSyntaxException {
+        int numSuccess = 0;
+        boolean isSingleEntity = entityCollection.size() == 1;
+
+        for(Entity entity : entityCollection) {
+            if (entity instanceof OdysseyPlayer odysseyPlayer) {
+                AspectInstance aspectInstance = new AspectInstance(aspect, strength);
+                odysseyPlayer.setPermabuff(aspectInstance);
+                ++numSuccess;
+            } else if (isSingleEntity) {
+                throw ERROR_NOT_LIVING_ENTITY.create(entity.getName());
+            }
+        }
+
+        if (numSuccess == 0) {
+            throw ERROR_NOTHING_HAPPENED.create();
+        } else {
+            if (isSingleEntity) {
+                commandSourceStack.sendSuccess(Component.translatable("commands.modify.player.success.single", aspect.getComponent(), entityCollection.iterator().next().getDisplayName()), true);
+            } else {
+                commandSourceStack.sendSuccess(Component.translatable("commands.modify.player.success.multiple", aspect.getComponent(), entityCollection.size()), true);
             }
 
             return numSuccess;

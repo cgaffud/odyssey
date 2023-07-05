@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 
 import java.util.function.Predicate;
 
-public class Aspect {
+public abstract class Aspect<T> {
     public final String id;
     protected final float weight;
     public final AspectTooltipFunction aspectTooltipFunction;
@@ -37,4 +37,6 @@ public class Aspect {
         }
         return new AspectInstance(this, modifiability / weight);
     }
+
+    public abstract T castStrength(float strength);
 }

@@ -20,11 +20,11 @@ public class PermabuffHolder implements AspectHolder {
     private static final String ASPECT_INSTANCE_LIST_TAG = "AspectInstanceList";
 
     public final List<AspectInstance> aspectInstanceList;
-    public final PermabuffMap permabuffMap;
+    public final AspectStrengthMap aspectStrengthMap;
 
     public PermabuffHolder(List<AspectInstance> aspectInstanceList) {
         this.aspectInstanceList = aspectInstanceList;
-        this.permabuffMap = new PermabuffMap(aspectInstanceList);
+        this.aspectStrengthMap = new AspectStrengthMap(aspectInstanceList);
     }
 
     public void addTooltip(List<Component> tooltip, TooltipFlag tooltipFlag, AspectTooltipContext aspectTooltipContext){

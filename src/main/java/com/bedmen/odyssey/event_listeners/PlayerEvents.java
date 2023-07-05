@@ -34,7 +34,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.phys.Vec3;
@@ -88,8 +87,8 @@ public class PlayerEvents {
         } else { //End of Tick
             // Gliding
             if(player instanceof OdysseyLivingEntity odysseyLivingEntity){
-                odysseyLivingEntity.setFlightLevels(AspectUtil.hasBooleanAspectOnArmor(player, Aspects.SLOW_FALL), AspectUtil.getIntegerAspectValueFromArmor(player, Aspects.GLIDE));
-                if(player.isShiftKeyDown() && AspectUtil.hasBooleanAspectOnArmor(player, Aspects.SLOW_FALL) && odysseyLivingEntity.getFlightValue() > 0){
+                odysseyLivingEntity.setFlightLevels(AspectUtil.getArmorAspectStrength(player, Aspects.SLOW_FALL), AspectUtil.getArmorAspectStrength(player, Aspects.GLIDE));
+                if(player.isShiftKeyDown() && AspectUtil.getArmorAspectStrength(player, Aspects.SLOW_FALL) && odysseyLivingEntity.getFlightValue() > 0){
                     odysseyLivingEntity.decrementFlight();
                     if(!player.level.isClientSide){
                         player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 2, 0, false, false, true));
@@ -100,7 +99,7 @@ public class PlayerEvents {
             }
 
             // Turtle Mastery
-            if (AspectUtil.hasBooleanAspectOnArmor(player, Aspects.TURTLE_MASTERY) && player.isShiftKeyDown() && !player.level.isClientSide) {
+            if (AspectUtil.getArmorAspectStrength(player, Aspects.TURTLE_MASTERY) && player.isShiftKeyDown() && !player.level.isClientSide) {
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, 0, false, false, true));
             }
         }
@@ -137,12 +136,12 @@ public class PlayerEvents {
                 && !hasExtraKnockbackFromSprinting
                 && player.isOnGround()
                 && (player.walkDist - player.walkDistO) < (double)player.getSpeed();
-        boolean canSweep = isStandingStrike && AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.SWEEP);
-        boolean canThrust = isStandingStrike && AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.THRUST);
-        float sweepDamage = 1.0f + AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
+        boolean canSweep = isStandingStrike && AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.SWEEP);
+        boolean canThrust = isStandingStrike && AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.THRUST);
+        float sweepDamage = 1.0f + AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
         // Knockback
         if(hasExtraKnockbackFromSprinting && target instanceof OdysseyLivingEntity odysseyLivingEntity){
-            odysseyLivingEntity.pushKnockbackAspectQueue(AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
+            odysseyLivingEntity.pushKnockbackAspectQueue(AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
         }
         // Sweep
         if(canSweep){
@@ -172,7 +171,7 @@ public class PlayerEvents {
             }
         }
         // Smack
-        if(isFullyCharged && AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
+        if(isFullyCharged && AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
             odysseyLivingEntity.setSmackPush(new SmackPush(attackStrengthScale, player, target));
         }
     }
@@ -244,10 +243,10 @@ public class PlayerEvents {
         float speed = event.getOriginalSpeed();
         if (player.isEyeInFluid(FluidTags.WATER)
                 && !EnchantmentHelper.hasAquaAffinity(player)
-                && AspectUtil.hasBooleanAspect(itemStack, Aspects.AQUA_AFFINITY)) {
+                && AspectUtil.getItemStackAspectStrength(itemStack, Aspects.AQUA_AFFINITY)) {
             speed *= 5.0F;
         }
-        speed *= 1.0f + AspectUtil.getFloatAspectStrength(itemStack, Aspects.EFFICIENCY);
+        speed *= 1.0f + AspectUtil.getItemStackAspectStrength(itemStack, Aspects.EFFICIENCY);
         event.setNewSpeed(speed);
     }
 }

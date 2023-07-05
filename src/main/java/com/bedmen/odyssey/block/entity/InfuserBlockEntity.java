@@ -16,11 +16,9 @@ import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.bedmen.odyssey.util.StringUtil;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -285,7 +283,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         for(AspectInstance pedestalAspectInstance: pedestalInnateModifierList){
             if(!pedestalAspectInstance.aspect.itemPredicate.test(infuserItemStack.getItem())){
                 validModifierList.remove(pedestalAspectInstance);
-            } else if(AspectUtil.getAspectStrength(infuserItemStack, pedestalAspectInstance.aspect) > 0.0f){
+            } else if(AspectUtil.itemStackHasAspect(infuserItemStack, pedestalAspectInstance.aspect)){
                 validModifierList.remove(pedestalAspectInstance);
             }
         }
