@@ -10,11 +10,12 @@ import java.util.function.Predicate;
 public class IntegerAspect extends Aspect<Integer> {
     public final boolean hasInfusionPenalty;
 
+    // Buff constructor
     protected IntegerAspect(String id, AspectTooltipFunction aspectTooltipFunction) {
-        this(id, 0.0f, aspectTooltipFunction, AspectItemPredicates.NONE, false);
+        this(id, 0.0f, aspectTooltipFunction, AspectItemPredicates.NONE, true, false);
     }
-    protected IntegerAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean hasInfusionPenalty){
-        super(id, weight, aspectTooltipFunction, itemPredicate);
+    protected IntegerAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff, boolean hasInfusionPenalty){
+        super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
         this.hasInfusionPenalty = hasInfusionPenalty;
     }
 

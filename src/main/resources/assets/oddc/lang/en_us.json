@@ -175,6 +175,7 @@
   "block.oddc.transcendental_transmuter": "Transcendental Transmuter",
   "block.oddc.weaver_egg_cobweb": "Weaver Egg Cobweb",
   "commands.modify.failed.incompatible": "%s cannot support that modifier",
+  "commands.modify.failed.buff": "%s is not a buff that can be applied to entities",
   "commands.modify.itemstack.success.multiple": "Applied modifier %s to %s entities' item's",
   "commands.modify.itemstack.success.single": "Applied modifier %s to %s's item",
   "commands.modify.player.success.multiple": "Applied modifier %s to %s entities",

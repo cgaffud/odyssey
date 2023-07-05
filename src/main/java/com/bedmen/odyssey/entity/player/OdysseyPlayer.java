@@ -9,10 +9,6 @@ public interface OdysseyPlayer {
     float getAttackStrengthScaleO();
     void updateSniperScoping();
     boolean isSniperScoping();
-    PermabuffHolder getPermabuffHolder();
-    void setPermabuffHolder(PermabuffHolder permabuffHolder);
-    void setPermabuff(AspectInstance aspectInstance);
-    void addPermabuffs(List<AspectInstance> permabuffList);
     float getPartialExperiencePoint();
     void setPartialExperiencePoint(float partialExperiencePoint);
     float getBlizzardFogScale(float partialTicks);

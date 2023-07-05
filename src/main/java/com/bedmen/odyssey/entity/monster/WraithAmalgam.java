@@ -13,6 +13,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -110,7 +111,7 @@ public class WraithAmalgam extends AbstractWraith implements RangedAttackMob {
         double d2 = target.getZ() - this.getZ();
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         float velocity = WeaponUtil.getMaxArrowVelocity(bow, false);
-        float accuracyMultiplier = 1.0f + AspectUtil.getItemStackAspectStrength(bow, Aspects.ACCURACY);
+        float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(this, this.getUsedItemHand(), Aspects.ACCURACY);
         abstractarrow.shoot(d0, d1 + d3 * (double)(0.32f / velocity), d2, velocity, (float)(14 - this.level.getDifficulty().getId() * 4) * accuracyMultiplier);
         this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.level.addFreshEntity(abstractarrow);

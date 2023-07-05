@@ -90,7 +90,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
                         AspectArrowItem arrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
                         AbstractArrow abstractArrow = arrowItem.createArrow(level, ammo, player);
 
-                        float accuracyMultiplier = 1.0f + AspectUtil.getItemStackAspectStrength(bow, Aspects.ACCURACY);
+                        float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(livingEntity, livingEntity.getUsedItemHand(), Aspects.ACCURACY);
                         if(useTicks >= WeaponUtil.getRangedMaxChargeTicks(bow)){
                             abstractArrow.setCritArrow(true);
                         }

@@ -10,19 +10,20 @@ import java.util.function.Predicate;
 
 public class BooleanAspect extends Aspect<Boolean> {
 
+    // Buff constructor
     protected BooleanAspect(String id){
-        this(id, 1.0f, AspectTooltipFunctions.NAME, AspectItemPredicates.NONE);
+        this(id, 1.0f, AspectTooltipFunctions.NAME, AspectItemPredicates.NONE, true);
     }
-    protected BooleanAspect(String id, Predicate<Item> itemPredicate){
-        this(id, 1.0f, AspectTooltipFunctions.NAME, itemPredicate);
-    }
-
-    protected BooleanAspect(String id, float weight, Predicate<Item> itemPredicate){
-        this(id, weight, AspectTooltipFunctions.NAME, itemPredicate);
+    protected BooleanAspect(String id, Predicate<Item> itemPredicate, boolean isBuff){
+        this(id, 1.0f, AspectTooltipFunctions.NAME, itemPredicate, isBuff);
     }
 
-    protected BooleanAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate){
-        super(id, weight, aspectTooltipFunction, itemPredicate);
+    protected BooleanAspect(String id, float weight, Predicate<Item> itemPredicate, boolean isBuff){
+        this(id, weight, AspectTooltipFunctions.NAME, itemPredicate, isBuff);
+    }
+
+    protected BooleanAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
+        super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
     }
 
     public AspectInstance generateInstanceWithModifiability(Item item, float modifiability){

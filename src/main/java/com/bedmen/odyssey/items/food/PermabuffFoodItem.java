@@ -3,6 +3,7 @@ package com.bedmen.odyssey.items.food;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.food.OdysseyFood;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
@@ -31,8 +32,8 @@ public class PermabuffFoodItem extends Item implements AspectItem {
     }
 
     public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {
-        if(livingEntity instanceof OdysseyPlayer odysseyPlayer){
-            odysseyPlayer.addPermabuffs(this.permabuffHolder.aspectInstanceList);
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
+            odysseyLivingEntity.addPermabuffs(this.permabuffHolder.aspectInstanceList);
         }
         return super.finishUsingItem(itemStack, level, livingEntity);
     }

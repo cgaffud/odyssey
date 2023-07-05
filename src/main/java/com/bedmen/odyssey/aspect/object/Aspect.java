@@ -13,12 +13,14 @@ public abstract class Aspect<T> {
     protected final float weight;
     public final AspectTooltipFunction aspectTooltipFunction;
     public final Predicate<Item> itemPredicate;
+    public final boolean isBuff;
 
-    protected Aspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate){
+    protected Aspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
         this.id = id;
         this.weight = weight;
         this.aspectTooltipFunction = aspectTooltipFunction;
         this.itemPredicate = itemPredicate;
+        this.isBuff = isBuff;
         Aspects.ASPECT_REGISTER.put(id, this);
     }
 

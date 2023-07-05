@@ -52,7 +52,7 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
     }
 
     public float getDamageBlock(ItemStack shield, DamageSource damageSource){
-        return this.shieldType.damageBlock + AspectUtil.getDamageSourcePredicateAspectStrength(shield, damageSource);
+        return this.shieldType.damageBlock + AspectUtil.getShieldDamageBlockAspectStrength(shield, damageSource);
     }
 
     public int getRecoveryTime(ItemStack shield){

@@ -23,6 +23,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -138,7 +139,7 @@ public class PlayerEvents {
                 && (player.walkDist - player.walkDistO) < (double)player.getSpeed();
         boolean canSweep = isStandingStrike && AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.SWEEP);
         boolean canThrust = isStandingStrike && AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.THRUST);
-        float sweepDamage = 1.0f + AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
+        float sweepDamage = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(player, InteractionHand.MAIN_HAND, Aspects.ADDITIONAL_SWEEP_DAMAGE);
         // Knockback
         if(hasExtraKnockbackFromSprinting && target instanceof OdysseyLivingEntity odysseyLivingEntity){
             odysseyLivingEntity.pushKnockbackAspectQueue(AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
@@ -231,22 +232,21 @@ public class PlayerEvents {
     public static void onPlayerEventClone(final PlayerEvent.Clone event){
         Player newPlayer = event.getEntity();
         Player oldPlayer = event.getOriginal();
-        if(newPlayer instanceof OdysseyPlayer newOdysseyPlayer && oldPlayer instanceof OdysseyPlayer oldOdysseyPlayer){
-            newOdysseyPlayer.setPermabuffHolder(oldOdysseyPlayer.getPermabuffHolder());
+        if(newPlayer instanceof OdysseyLivingEntity newOdysseyLivingEntity && oldPlayer instanceof OdysseyLivingEntity oldOdysseyLivingEntity){
+            newOdysseyLivingEntity.setPermabuffHolder(oldOdysseyLivingEntity.getPermabuffHolder());
         }
     }
 
     @SubscribeEvent
     public static void onPlayerEventBreakSpeed(final PlayerEvent.BreakSpeed event){
         Player player = event.getEntity();
-        ItemStack itemStack = player.getMainHandItem();
         float speed = event.getOriginalSpeed();
         if (player.isEyeInFluid(FluidTags.WATER)
                 && !EnchantmentHelper.hasAquaAffinity(player)
-                && AspectUtil.getItemStackAspectStrength(itemStack, Aspects.AQUA_AFFINITY)) {
+                && AspectUtil.getOneHandedTotalAspectStrength(player, InteractionHand.MAIN_HAND, Aspects.AQUA_AFFINITY)) {
             speed *= 5.0F;
         }
-        speed *= 1.0f + AspectUtil.getItemStackAspectStrength(itemStack, Aspects.EFFICIENCY);
+        speed *= 1.0f + AspectUtil.getOneHandedTotalAspectStrength(player, InteractionHand.MAIN_HAND, Aspects.EFFICIENCY);
         event.setNewSpeed(speed);
     }
 }

@@ -9,7 +9,7 @@ import com.bedmen.odyssey.aspect.query.FunctionQuery;
 import com.bedmen.odyssey.aspect.query.SingleQuery;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
-import com.bedmen.odyssey.entity.player.OdysseyPlayer;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
@@ -24,6 +24,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -94,13 +95,14 @@ public class AspectUtil {
         return total;
     }
 
-    private static float queryBonusDamageAspectStrength(ItemStack itemStack, Function<Aspect, Float> strengthFunction){
-        return queryItemStackAspectStrength(itemStack, new FunctionQuery(aspect -> {
+    private static float getBonusDamageAspectStrength(LivingEntity livingEntity, Function<Aspect, Float> strengthFunction){
+        FunctionQuery functionQuery = new FunctionQuery(aspect -> {
             if(aspect instanceof BonusDamageAspect){
-                return strengthFunction.apply(aspect) * BonusDamageAspect.getStrengthAmplifier(itemStack.getItem());
+                return strengthFunction.apply(aspect) * BonusDamageAspect.getStrengthAmplifier(livingEntity.getMainHandItem().getItem());
             }
             return 0.0f;
-        }));
+        });
+        return queryOneHandedTotalAspectStrength(livingEntity, InteractionHand.MAIN_HAND, functionQuery);
     }
 
     private static float queryArmorAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
@@ -116,19 +118,28 @@ public class AspectUtil {
 
     private static float queryPermabuffAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
         float strength = 0f;
-        if(livingEntity instanceof OdysseyPlayer odysseyPlayer){
-            strength = aspectQuery.queryStrengthMap(odysseyPlayer.getPermabuffHolder().aspectStrengthMap);
+        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
+            strength = aspectQuery.queryStrengthMap(odysseyLivingEntity.getPermabuffHolder().aspectStrengthMap);
         }
         return strength;
     }
 
-    private static void fillAttributeMultimap(ItemStack itemStack, EquipmentSlot equipmentSlot, Multimap<Attribute, AttributeModifier> multimap){
-        AspectStrengthMap aspectStrengthMap = getAspectStrengthMap(itemStack);
-        aspectStrengthMap.forEach((key, value) -> {
-            if (key instanceof AttributeAspect attributeAspect) {
-                multimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (equipmentSlot.getName().hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, value, attributeAspect.operation));
-            }
-        });
+    private static float queryArmorAndEntityAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
+        return queryArmorAspectStrength(livingEntity, aspectQuery)
+                + queryPermabuffAspectStrength(livingEntity, aspectQuery);
+    }
+
+    private static float queryOneHandedTotalAspectStrength(LivingEntity livingEntity, InteractionHand interactionHand, AspectQuery aspectQuery){
+        return queryArmorAspectStrength(livingEntity, aspectQuery)
+                + queryItemStackAspectStrength(livingEntity.getItemInHand(interactionHand), aspectQuery)
+                + queryPermabuffAspectStrength(livingEntity, aspectQuery);
+    }
+
+    private static float queryTotalAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
+        return queryArmorAspectStrength(livingEntity, aspectQuery)
+                + queryItemStackAspectStrength(livingEntity.getMainHandItem(), aspectQuery)
+                + queryItemStackAspectStrength(livingEntity.getOffhandItem(), aspectQuery)
+                + queryPermabuffAspectStrength(livingEntity, aspectQuery);
     }
 
     private static boolean isFullArmorSet(Iterable<ItemStack> armorPieces){
@@ -148,13 +159,6 @@ public class AspectUtil {
             }
         }
         return count == 4;
-    }
-
-    private static float queryTotalAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
-        return queryArmorAspectStrength(livingEntity, aspectQuery)
-                + queryItemStackAspectStrength(livingEntity.getMainHandItem(), aspectQuery)
-                + queryItemStackAspectStrength(livingEntity.getOffhandItem(), aspectQuery)
-                + queryPermabuffAspectStrength(livingEntity, aspectQuery);
     }
 
     // -- Public endpoints -----------------------------------------------------
@@ -202,8 +206,8 @@ public class AspectUtil {
 
     // Special totals over multiple aspects on single item
 
-    public static float getTargetConditionalAspectStrength(ItemStack itemStack, LivingEntity target){
-        return queryBonusDamageAspectStrength(itemStack, aspect -> {
+    public static float getTargetConditionalAspectStrength(LivingEntity attacker, LivingEntity target){
+        return getBonusDamageAspectStrength(attacker, aspect -> {
             if(aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect){
                 return targetConditionalMeleeAspect.livingEntityPredicate.test(target) ? 1.0f : 0.0f;
             }
@@ -211,8 +215,8 @@ public class AspectUtil {
         });
     }
 
-    public static float getEnvironmentalAspectStrength(ItemStack itemStack, BlockPos blockPos, Level level){
-        return queryBonusDamageAspectStrength(itemStack, aspect -> {
+    public static float getEnvironmentalAspectStrength(LivingEntity attacker, BlockPos blockPos, Level level){
+        return getBonusDamageAspectStrength(attacker, aspect -> {
             if(aspect instanceof EnvironmentConditionalAspect environmentConditionalAspect){
                 return environmentConditionalAspect.attackBoostFactorFunction.getBoostFactor(blockPos, level);
             }
@@ -220,26 +224,30 @@ public class AspectUtil {
         });
     }
 
-    public static float getDamageSourcePredicateAspectStrength(ItemStack itemStack, DamageSource damageSource){
+    public static float getShieldDamageBlockAspectStrength(ItemStack itemStack, DamageSource damageSource){
         return queryItemStackAspectStrength(itemStack, new FunctionQuery(aspect -> {
-            if(aspect instanceof DamageSourcePredicateAspect damageSourcePredicateAspect){
-                return damageSourcePredicateAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
+            if(aspect instanceof ShieldDamageBlockAspect shieldDamageBlockAspect){
+                return shieldDamageBlockAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
             }
             return 0.0f;
         }));
     }
 
     // Get total value from armor
-
     public static <T> T getArmorAspectStrength(LivingEntity livingEntity, Aspect<T> aspect){
         float strength = queryArmorAspectStrength(livingEntity, new SingleQuery(aspect));
         return aspect.castStrength(strength);
     }
 
-    // Special totals over multiple aspects on armor
+    // Get total value from armor and entity
+    public static <T> T getArmorAndEntityAspectStrength(LivingEntity livingEntity, Aspect<T> aspect){
+        float strength = queryArmorAndEntityAspectStrength(livingEntity, new SingleQuery(aspect));
+        return aspect.castStrength(strength);
+    }
 
+    // Special totals over multiple aspects on armor
     public static float getProtectionAspectStrength(LivingEntity livingEntity, DamageSource damageSource){
-        return queryArmorAspectStrength(livingEntity, new FunctionQuery(aspect -> {
+        return queryArmorAndEntityAspectStrength(livingEntity, new FunctionQuery(aspect -> {
             if(aspect instanceof DamageSourcePredicateAspect damageSourcePredicateAspect){
                 return damageSourcePredicateAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
             }
@@ -247,8 +255,13 @@ public class AspectUtil {
         }));
     }
 
-    // Aspect total over all EquipmentSlots
+    // Aspect total over one hand, armor, and player
+    public static <T> T getOneHandedTotalAspectStrength(LivingEntity livingEntity, InteractionHand interactionHand, Aspect<T> aspect){
+        float strength = queryOneHandedTotalAspectStrength(livingEntity, interactionHand, new SingleQuery(aspect));
+        return aspect.castStrength(strength);
+    }
 
+    // Aspect total over all EquipmentSlots and player
     public static <T> T getTotalAspectStrength(LivingEntity livingEntity, Aspect<T> aspect){
         float strength = queryTotalAspectStrength(livingEntity, new SingleQuery(aspect));
         return aspect.castStrength(strength);
@@ -304,21 +317,21 @@ public class AspectUtil {
     }
 
     public static List<Component> getPermabuffTooltip(Player player){
-        if(player instanceof OdysseyPlayer odysseyPlayer){
+        if(player instanceof OdysseyLivingEntity odysseyLivingEntity){
             AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(Optional.empty());
             List<Component> componentList = new ArrayList<>();
-            odysseyPlayer.getPermabuffHolder().addTooltip(componentList, TooltipFlag.Default.ADVANCED, aspectTooltipContext);
+            odysseyLivingEntity.getPermabuffHolder().addTooltip(componentList, TooltipFlag.Default.ADVANCED, aspectTooltipContext);
             return componentList;
         } else {
             return List.of();
         }
     }
 
-    // Attribute Multimap
-
+    // Attributes
     public static void fillAttributeMultimaps(LivingEntity livingEntity, ItemStack oldItemStack, ItemStack newItemStack, EquipmentSlot equipmentSlot, Multimap<Attribute, AttributeModifier> oldMultimap, Multimap<Attribute, AttributeModifier> newMultimap){
-        fillAttributeMultimap(oldItemStack, equipmentSlot, oldMultimap);
-        fillAttributeMultimap(newItemStack, equipmentSlot, newMultimap);
+        String uuidStart = equipmentSlot.getName();
+        fillAttributeMultimap(getAspectStrengthMap(oldItemStack), uuidStart, oldMultimap);
+        fillAttributeMultimap(getAspectStrengthMap(newItemStack), uuidStart, newMultimap);
         if(equipmentSlot.getType() == EquipmentSlot.Type.ARMOR){
             List<ItemStack> oldArmorPieces = ARMOR_EQUIPMENT_SLOT_LIST.stream().map(equipmentSlot1 -> livingEntity.getLastArmorItem(equipmentSlot1)).collect(Collectors.toList());
             List<ItemStack> newArmorPieces = ARMOR_EQUIPMENT_SLOT_LIST.stream().map(equipmentSlot1 -> livingEntity.getItemBySlot(equipmentSlot1)).collect(Collectors.toList());
@@ -338,6 +351,14 @@ public class AspectUtil {
                 });
             }
         }
+    }
+
+    public static void fillAttributeMultimap(AspectStrengthMap aspectStrengthMap, String uuidStart, Multimap<Attribute, AttributeModifier> multimap){
+        aspectStrengthMap.forEach((key, value) -> {
+            if (key instanceof AttributeAspect attributeAspect) {
+                multimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (uuidStart.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, value, attributeAspect.operation));
+            }
+        });
     }
 
     // Add/Remove added modifiers

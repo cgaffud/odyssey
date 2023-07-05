@@ -2,19 +2,14 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
-import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -35,15 +30,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 @Mixin(Player.class)
 public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer {
-
-    private static final EntityDataAccessor<PermabuffHolder> DATA_PERMABUFF_HOLDER = SynchedEntityData.defineId(Player.class, OdysseyDataSerializers.PERMABUFF_HOLDER);
     private static final int BLIZZARD_FOG_TICKS = 50;
 
     @Shadow
@@ -63,7 +51,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
 
     private int attackStrengthTickerO;
     private boolean isSniperScoping;
-    private static final String PERMABUFF_HOLDER_TAG = Odyssey.MOD_ID + ":PermabuffHolder";
+
     private float partialExperiencePoint;
     private static final String PARTIAL_EXPERIENCE_POINT_TAG = Odyssey.MOD_ID + ":PartialExperiencePoint";
     private float blizzardFogScaleO;
@@ -74,17 +62,10 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
         super(p_20966_, p_20967_);
     }
 
-    @Inject(method = "defineSynchedData", at = @At(value = "RETURN"))
-    public void onDefineSynchedData(CallbackInfo ci){
-        this.entityData.define(DATA_PERMABUFF_HOLDER, new PermabuffHolder(new ArrayList<>()));
-    }
-
     @Inject(method = "addAdditionalSaveData", at = @At(value = "RETURN"))
     public void onAddAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
         compoundTag.putInt("AttackStrengthTickerO", this.attackStrengthTickerO);
         compoundTag.putBoolean("IsSniperScoping", this.isSniperScoping);
-        CompoundTag permabuffHolderTag = this.getPermabuffHolder().toCompoundTag();
-        compoundTag.put(PERMABUFF_HOLDER_TAG, permabuffHolderTag);
         compoundTag.putFloat(PARTIAL_EXPERIENCE_POINT_TAG, this.partialExperiencePoint);
         ListTag blizzardFogScaleListTag = new ListTag();
         blizzardFogScaleListTag.add(FloatTag.valueOf(this.blizzardFogScaleO));
@@ -96,9 +77,6 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
     public void onReadAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci){
         this.attackStrengthTickerO = compoundTag.getInt("AttackStrengthTickerO");
         this.isSniperScoping = compoundTag.getBoolean("IsSniperScoping");
-        if(compoundTag.contains(PERMABUFF_HOLDER_TAG)){
-            this.setPermabuffHolder(PermabuffHolder.fromCompoundTag(compoundTag.getCompound(PERMABUFF_HOLDER_TAG)));
-        }
         this.partialExperiencePoint = compoundTag.getFloat(PARTIAL_EXPERIENCE_POINT_TAG);
         if(compoundTag.contains(BLIZZARD_FOG_SCALE_TAG)){
             ListTag blizzardFogScaleListTag = compoundTag.getList(BLIZZARD_FOG_SCALE_TAG, Tag.TAG_FLOAT);
@@ -165,39 +143,6 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
             odysseyLivingEntity.adjustShieldMeter(-f);
             this.level.broadcastEntityEvent(this, (byte)30);
         }
-    }
-
-    public PermabuffHolder getPermabuffHolder(){
-        return this.entityData.get(DATA_PERMABUFF_HOLDER).copy();
-    }
-
-    public void setPermabuffHolder(PermabuffHolder permabuffHolder){
-        this.entityData.set(DATA_PERMABUFF_HOLDER, permabuffHolder.copy());
-    }
-
-    public void setPermabuff(AspectInstance aspectInstance){
-        List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermabuffHolder().aspectInstanceList);
-        if(aspectInstanceList.stream().anyMatch(oldAspectInstance -> oldAspectInstance.aspect == aspectInstance.aspect)){
-            aspectInstanceList = aspectInstanceList.stream().map(oldAspectInstance -> {
-                if(oldAspectInstance.aspect == aspectInstance.aspect){
-                    if(aspectInstance.strength <= 0.0f){
-                        return null;
-                    }
-                    return aspectInstance;
-                }
-                return oldAspectInstance;
-            }).filter(Objects::nonNull).collect(Collectors.toList());
-        } else {
-            aspectInstanceList.add(aspectInstance);
-        }
-        PermabuffHolder permabuffHolder = new PermabuffHolder(aspectInstanceList);
-        this.setPermabuffHolder(permabuffHolder);
-    }
-
-    public void addPermabuffs(List<AspectInstance> permabuffList){
-        List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermabuffHolder().aspectInstanceList);
-        permabuffList.forEach(aspectInstance -> AspectUtil.addInstance(aspectInstanceList, aspectInstance));
-        this.setPermabuffHolder(new PermabuffHolder(aspectInstanceList));
     }
 
     public float getPartialExperiencePoint(){

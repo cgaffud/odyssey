@@ -44,7 +44,10 @@ public class ConditionalAmpUtil {
     }
 
     public static void setDamageTag(ItemStack itemStack, Entity entity) {
-        float aspectBonus = AspectUtil.getEnvironmentalAspectStrength(itemStack, entity.blockPosition(), entity.level);
+        float aspectBonus = 0.0f;
+        if(entity instanceof LivingEntity livingEntity){
+            aspectBonus = AspectUtil.getEnvironmentalAspectStrength(livingEntity, entity.blockPosition(), entity.level);
+        }
         itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, aspectBonus);
     }
 

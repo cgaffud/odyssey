@@ -4,6 +4,7 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.commands.arguments.ItemModifierArgument;
+import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -33,6 +34,10 @@ public class ModifyCommand {
         return Component.translatable("commands.modify.failed.incompatible", p_137020_);
     });
     private static final SimpleCommandExceptionType ERROR_NOTHING_HAPPENED = new SimpleCommandExceptionType(Component.translatable("commands.enchant.failed"));
+    private static final DynamicCommandExceptionType ERROR_NOT_BUFF = new DynamicCommandExceptionType((object) -> {
+        return Component.translatable("commands.modify.failed.buff", object);
+    });
+
 
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(Commands.literal("modify")
@@ -93,13 +98,17 @@ public class ModifyCommand {
     }
 
     private static int modifyPlayer(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect<?> aspect, float strength) throws CommandSyntaxException {
+        if(!aspect.isBuff){
+            throw ERROR_NOT_BUFF.create(aspect.getComponent());
+        }
+
         int numSuccess = 0;
         boolean isSingleEntity = entityCollection.size() == 1;
 
         for(Entity entity : entityCollection) {
-            if (entity instanceof OdysseyPlayer odysseyPlayer) {
+            if (entity instanceof OdysseyLivingEntity odysseyLivingEntity) {
                 AspectInstance aspectInstance = new AspectInstance(aspect, strength);
-                odysseyPlayer.setPermabuff(aspectInstance);
+                odysseyLivingEntity.setPermabuff(aspectInstance);
                 ++numSuccess;
             } else if (isSingleEntity) {
                 throw ERROR_NOT_LIVING_ENTITY.create(entity.getName());

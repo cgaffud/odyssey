@@ -82,7 +82,8 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack crossbow = player.getItemInHand(interactionHand);
         if (isCharged(crossbow)) {
-            performShooting(level, player, interactionHand, crossbow, getShootingVelocity(crossbow), 1.0F);
+            float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(player, interactionHand, Aspects.ACCURACY);
+            performShooting(level, player, interactionHand, crossbow, getShootingVelocity(crossbow), 1.0f/accuracyMultiplier);
             setCharged(crossbow, false);
             return InteractionResultHolder.consume(crossbow);
         } else if (WeaponUtil.hasAmmo(player,crossbow)) {
@@ -109,7 +110,9 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     }
 
     public static boolean tryLoadProjectiles(LivingEntity livingEntity, ItemStack crossbow) {
-        int numberOfArrows = MultishotAspect.strengthToNumberOfTotalProjectiles(AspectUtil.getItemStackAspectStrength(crossbow, Aspects.MULTISHOT));
+        int numberOfArrows = MultishotAspect.strengthToNumberOfTotalProjectiles(
+                AspectUtil.getOneHandedTotalAspectStrength(livingEntity, livingEntity.getUsedItemHand(), Aspects.MULTISHOT)
+        );
         boolean isPlayer = livingEntity instanceof Player;
         boolean flag = isPlayer && ((Player)livingEntity).getAbilities().instabuild;
         WeaponUtil.AmmoStack ammoStack;
@@ -216,7 +219,9 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
                 }
             }
             if(projectile instanceof AbstractArrow abstractArrow && isMultishotArrow){
-                abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() * MultishotAspect.strengthToDamagePenalty(AspectUtil.getItemStackAspectStrength(crossbow, Aspects.MULTISHOT)));
+                abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() * MultishotAspect.strengthToDamagePenalty(
+                        AspectUtil.getOneHandedTotalAspectStrength(livingEntity, interactionHand, Aspects.MULTISHOT)
+                ));
             }
 
             if (livingEntity instanceof CrossbowAttackMob) {
