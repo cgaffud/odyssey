@@ -20,6 +20,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
@@ -139,7 +140,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
         super.inventoryTick(itemStack, level, entity, compartments, selected);
     }
 
-    // Melee Parry Mechanics
+    /**  Melee Parry Mechanics */
 
     public boolean canParry() {
         return this.meleeWeaponClass.recoveryTime >= 0;
@@ -152,6 +153,10 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     @Override
     public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
         return net.minecraftforge.common.ToolActions.DEFAULT_SHIELD_ACTIONS.contains(toolAction);
+    }
+
+    public float getDamageBlock(ItemStack melee, DamageSource damageSource){
+        return this.meleeWeaponClass.damageBlock + AspectUtil.getDamageSourcePredicateAspectStrength(melee, damageSource);
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {

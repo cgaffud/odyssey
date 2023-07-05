@@ -463,7 +463,7 @@ public class EntityEvents {
     public static void onShieldBlockEvent(final ShieldBlockEvent event){
         LivingEntity livingEntity = event.getEntity();
         ItemStack shield = livingEntity.getUseItem();
-        if(shield.getItem() instanceof AspectShieldItem aspectShieldItem){
+        if(shield.getItem() instanceof ParryableWeaponItem parryableWeaponItem){
 
             DamageSource damageSource = event.getDamageSource();
             float damageBlockMultiplier = 1.0f;
@@ -476,10 +476,18 @@ public class EntityEvents {
             if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
                 if(odysseyLivingEntity.getShieldMeter() > 1.0f){
                     damageBlockMultiplier *= 2;
+                    if (parryableWeaponItem instanceof AspectMeleeItem aspectMeleeItem) {
+                        switch (aspectMeleeItem.getMeleeWeaponClass().meleeWeaponType) {
+                            case LONGSWORD:
+                                int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier()+1 : 0;
+                                livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 50, strengthAmp));
+                                break;
+                        }
+                    }
                 }
             }
 
-            float blockedDamage = damageBlockMultiplier * aspectShieldItem.getDamageBlock(shield, damageSource);
+            float blockedDamage = damageBlockMultiplier * parryableWeaponItem.getDamageBlock(shield, damageSource);
 
             if(livingEntity instanceof Player player){
                 hurtCurrentlyUsedShield(player, blockedDamage);
@@ -487,8 +495,6 @@ public class EntityEvents {
             }
             event.setBlockedDamage(blockedDamage);
         }
-        if (shield.getItem() instanceof AspectMeleeItem aspectMeleeItem)
-            System.out.println("CorrectTriggeringAcheived!");
     }
 
     protected static void hurtCurrentlyUsedShield(Player player, float blockAmount) {
