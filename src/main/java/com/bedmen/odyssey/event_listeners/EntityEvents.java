@@ -13,6 +13,7 @@ import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.food.OdysseyFoodData;
+import com.bedmen.odyssey.items.EffectGambitItem;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
@@ -29,6 +30,7 @@ import com.bedmen.odyssey.util.GeneralUtil;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
@@ -570,6 +572,14 @@ public class EntityEvents {
             }
             for(ItemEntity itemEntity: itemEntityToRemove){
                 itemEntityCollection.remove(itemEntity);
+            }
+        }
+        if(deadEntity instanceof Player){
+            for(ItemEntity itemEntity: event.getDrops()){
+                ItemStack itemStack = itemEntity.getItem();
+                if(itemStack.getItem() instanceof EffectGambitItem){
+                    EffectGambitItem.removeActivatorTag(itemStack);
+                }
             }
         }
     }

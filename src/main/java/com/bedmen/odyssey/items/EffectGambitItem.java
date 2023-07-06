@@ -77,8 +77,6 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
         };
     }
 
-    // Todo: when you die the model doesn't seem to update? we may have to also force the activaiton to stop on the
-    // item when the effect kills you
     public void registerItemModelProperties() {
         ItemProperties.register(this, new ResourceLocation("active"), EffectGambitItem.getEffectGambitPropertyFunction());
     }
@@ -93,7 +91,7 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
             if(compoundTag.contains(ACTIVATOR_UUID_TAG)){
                 serverPlayer.removeEffect(this.buff.get());
                 serverPlayer.addEffect(new MobEffectInstance(this.nerf.get(), NERF_DURATION));
-                compoundTag.remove(ACTIVATOR_UUID_TAG);
+                removeActivatorTag(itemStack);
             } else {
                 serverPlayer.removeEffect(this.nerf.get());
                 serverPlayer.addEffect(new MobEffectInstance(this.buff.get(), Integer.MAX_VALUE));
@@ -101,5 +99,10 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
             }
         }
         return itemStack;
+    }
+
+    public static void removeActivatorTag(ItemStack itemStack){
+        CompoundTag compoundTag = itemStack.getOrCreateTag();
+        compoundTag.remove(ACTIVATOR_UUID_TAG);
     }
 }
