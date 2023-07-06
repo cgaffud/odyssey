@@ -5,7 +5,6 @@ import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.commands.arguments.ItemModifierArgument;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -52,12 +51,12 @@ public class ModifyCommand {
                                                 .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"), false))
                                                 .then(Commands.argument("bypass_checks", BoolArgumentType.bool())
                                                         .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"), BoolArgumentType.getBool(commandContext, "bypass_checks")))))))))
-                .then(Commands.literal("player")
+                .then(Commands.literal("entity")
                         .then(Commands.argument("targets", EntityArgument.entities())
                                 .then(Commands.argument("modifier", ItemModifierArgument.modifier())
-                                        .executes((commandContext) -> modifyPlayer(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1))
+                                        .executes((commandContext) -> modifyEntity(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1))
                                         .then(Commands.argument("strength", FloatArgumentType.floatArg(0.0f))
-                                                .executes((commandContext) -> modifyPlayer(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"))))))));
+                                                .executes((commandContext) -> modifyEntity(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"))))))));
     }
 
     private static int modifyItemStack(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect<?> aspect, float strength, boolean obfuscated, boolean bypassChecks) throws CommandSyntaxException {
@@ -97,7 +96,7 @@ public class ModifyCommand {
         }
     }
 
-    private static int modifyPlayer(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect<?> aspect, float strength) throws CommandSyntaxException {
+    private static int modifyEntity(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect<?> aspect, float strength) throws CommandSyntaxException {
         if(!aspect.isBuff){
             throw ERROR_NOT_BUFF.create(aspect.getComponent());
         }
@@ -108,7 +107,7 @@ public class ModifyCommand {
         for(Entity entity : entityCollection) {
             if (entity instanceof OdysseyLivingEntity odysseyLivingEntity) {
                 AspectInstance aspectInstance = new AspectInstance(aspect, strength);
-                odysseyLivingEntity.setPermabuff(aspectInstance);
+                odysseyLivingEntity.setPermaBuff(aspectInstance);
                 ++numSuccess;
             } else if (isSingleEntity) {
                 throw ERROR_NOT_LIVING_ENTITY.create(entity.getName());

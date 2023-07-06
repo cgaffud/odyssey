@@ -2,14 +2,12 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
-import com.bedmen.odyssey.effect.FireEffect;
-import com.bedmen.odyssey.effect.FireType;
-import com.bedmen.odyssey.effect.TemperatureEffect;
-import com.bedmen.odyssey.effect.TemperatureSource;
+import com.bedmen.odyssey.effect.*;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
@@ -17,7 +15,6 @@ import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.food.OdysseyFoodData;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.WarpTotemItem;
-import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
@@ -75,7 +72,16 @@ public class EntityEvents {
         LivingEntity livingEntity = event.getEntity();
 
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-            // Set total aspect strength map
+            // Set Temp Buffs
+            List<AspectInstance> tempBuffList = new ArrayList<>();
+            for(MobEffectInstance mobEffectInstance: livingEntity.getActiveEffects()){
+                if(mobEffectInstance.getEffect() instanceof AspectEffect aspectEffect){
+                    for(AspectInstance aspectInstance: aspectEffect.aspectInstanceList){
+                        AspectUtil.addInstance(tempBuffList, aspectInstance);
+                    }
+                }
+            }
+            odysseyLivingEntity.setTempBuffs(tempBuffList);
             // Adjust Shield Meter
             if(livingEntity.level.isClientSide){
                 odysseyLivingEntity.updateShieldMeterO();
@@ -545,7 +551,7 @@ public class EntityEvents {
             Tier tier;
             if(damageSource != null){
                 Entity entity = damageSource.getEntity();
-                int mobHarvestLevel = entity instanceof Player player ? AspectUtil.getPermabuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 0;
+                int mobHarvestLevel = entity instanceof Player player ? AspectUtil.getBuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 0;
                 mobHarvestLevel = Integer.min(TIER_ARRAY.length-1, mobHarvestLevel);
                 tier = TIER_ARRAY[mobHarvestLevel];
             } else {

@@ -1,6 +1,9 @@
 package com.bedmen.odyssey.util;
 
+import net.minecraft.util.Mth;
+
 import java.text.DecimalFormat;
+import java.util.function.Function;
 
 public class StringUtil {
     public static final DecimalFormat df = new DecimalFormat("#.##");
@@ -23,6 +26,11 @@ public class StringUtil {
             return df.format(f);
     }
 
+    public static String additiveFloatFormat(float f)
+    {
+        return additiveFormat(f, StringUtil::floatFormat);
+    }
+
     public static String angleFormat(float f)
     {
         return floatFormat(f) + '\u00B0';
@@ -38,11 +46,22 @@ public class StringUtil {
         return i + "%";
     }
 
+    public static String additivePercentFormat(float f)
+    {
+        return additiveFormat(f, StringUtil::percentFormat);
+    }
+
     public static String doubleFormat(double d)
     {
         if(d == (int) d)
             return String.format("%d",(int)d);
         else
             return df.format(d);
+    }
+
+    private static String additiveFormat(float f, Function<Float, String> function)
+    {
+        String prepend = f > 0f ? "+" : (f < 0f ? "-" : "");
+        return prepend + function.apply(Mth.abs(f));
     }
 }

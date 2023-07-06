@@ -7,10 +7,12 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
+import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.util.StringUtil;
@@ -20,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
@@ -80,6 +83,17 @@ public class PlayerEvents {
                     float temperature = Mth.clamp(odysseyLivingEntity.getTemperature(), 0.0f, 1.0f);
                     if(temperature > 0){
                         player.causeFoodExhaustion(temperature * 0.02f);
+                    }
+                }
+
+                // Experience Drain aspect
+                float experienceGainPerTick = AspectUtil.getTotalAspectStrength(player, Aspects.BONUS_EXPERIENCE);
+                if(experienceGainPerTick != 0f && player instanceof ServerPlayer serverPlayer){
+                    ExperienceCost experienceCost = new ExperienceCost(-experienceGainPerTick);
+                    if (experienceCost.canPay(serverPlayer)){
+                        experienceCost.pay(serverPlayer);
+                    } else {
+                        serverPlayer.hurt(OdysseyDamageSource.MANALESS, Float.MAX_VALUE);
                     }
                 }
             } else { //Client Side
@@ -233,7 +247,7 @@ public class PlayerEvents {
         Player newPlayer = event.getEntity();
         Player oldPlayer = event.getOriginal();
         if(newPlayer instanceof OdysseyLivingEntity newOdysseyLivingEntity && oldPlayer instanceof OdysseyLivingEntity oldOdysseyLivingEntity){
-            newOdysseyLivingEntity.setPermabuffHolder(oldOdysseyLivingEntity.getPermabuffHolder());
+            newOdysseyLivingEntity.setPermaBuffHolder(oldOdysseyLivingEntity.getPermaBuffHolder());
         }
     }
 

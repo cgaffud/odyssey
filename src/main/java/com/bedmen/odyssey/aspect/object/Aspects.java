@@ -76,6 +76,7 @@ public class Aspects {
     public static final DamageSourcePredicateAspect ICE_PROTECTION = new DamageSourcePredicateAspect("ice_protection", 2.0f, AspectItemPredicates.ARMOR, true, damageSource -> damageSource == DamageSource.FREEZE);
     public static final DamageSourcePredicateAspect FIRE_PROTECTION = new DamageSourcePredicateAspect("fire_protection", 2.0f, AspectItemPredicates.ARMOR, true, DamageSource::isFire);
     public static final DamageSourcePredicateAspect BLAST_PROTECTION = new DamageSourcePredicateAspect("blast_protection", 2.0f, AspectItemPredicates.ARMOR, true, DamageSource::isExplosion);
+    public static final DamageSourcePredicateAspect PROTECTION = new DamageSourcePredicateAspect("protection", 4.0f, AspectItemPredicates.ARMOR, true, damageSource -> !damageSource.isBypassEnchantments());
     public static final FloatAspect RESPIRATION = new FloatAspect("respiration", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.UPPER_ARMOR, true);
     public static final BooleanAspect SNOWSHOE = new BooleanAspect("snowshoe", AspectItemPredicates.BOOTS, true);
     public static final FloatAspect THORNS = new FloatAspect("thorns", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.ARMOR, true);
@@ -124,7 +125,7 @@ public class Aspects {
     public static final BooleanAspect BLANK = new BooleanAspect("blank", 0.0f, AspectItemPredicates.DAMAGEABLE, false);
     public static final FloatAspect VOLATILITY = new FloatAspect("volatility", 0.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.DAMAGEABLE, false);
 
-    // # Permabuffs
+    // # PermaBuffs
 
     // ## Eaten Markers
     public static final BooleanAspect HAS_EATEN_ROCK_CANDY = new BooleanAspect("has_eaten_rock_candy");
@@ -135,6 +136,7 @@ public class Aspects {
 
     // # Other
     public static final IntegerAspect TELEPORTATION_IMMUNITY = new IntegerAspect("teleportation_immunity", 0.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, true, false);
+    public static final FloatAspect BONUS_EXPERIENCE = new FloatAspect("bonus_experience", 0.0f, AspectTooltipFunctions.PER_SECOND, AspectItemPredicates.NONE, true);
 
     public static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

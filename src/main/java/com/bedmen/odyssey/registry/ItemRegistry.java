@@ -11,7 +11,7 @@ import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
 import com.bedmen.odyssey.food.OdysseyFood;
 import com.bedmen.odyssey.items.*;
 import com.bedmen.odyssey.items.aspect_items.*;
-import com.bedmen.odyssey.items.food.PermabuffFoodItem;
+import com.bedmen.odyssey.items.food.PermaBuffFoodItem;
 import com.bedmen.odyssey.items.food.StackableBowlItem;
 import com.bedmen.odyssey.items.food.TemperatureFoodItem;
 import com.bedmen.odyssey.items.odyssey_versions.*;
@@ -178,7 +178,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NOODLES = ITEMS.register("noodles", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.NOODLES)));
     public static final RegistryObject<Item> CHICKEN_NOODLE_SOUP = ITEMS.register("chicken_noodle_soup", () -> new TemperatureFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.CHICKEN_NOODLE_SOUP), 0.2f, true));
     public static final RegistryObject<Item> FISH_CHOWDER = ITEMS.register("fish_chowder", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.FISH_CHOWDER)));
-    public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermabuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1), new AspectInstance(Aspects.APPETITE, 0.25f), new AspectInstance(Aspects.HAS_EATEN_ROCK_CANDY).withDisplaySetting(AspectTooltipDisplaySetting.NEVER)), player -> !AspectUtil.getPermabuffAspectStrength(player, Aspects.HAS_EATEN_ROCK_CANDY)));
+    public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermaBuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1), new AspectInstance(Aspects.APPETITE, 0.25f), new AspectInstance(Aspects.HAS_EATEN_ROCK_CANDY).withDisplaySetting(AspectTooltipDisplaySetting.NEVER)), player -> !AspectUtil.getBuffAspectStrength(player, Aspects.HAS_EATEN_ROCK_CANDY)));
 
     // # Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.COPPER));
@@ -205,9 +205,9 @@ public class ItemRegistry {
     // # Magic
     public static final RegistryObject<Item> WARP_TOTEM = ITEMS.register("warp_totem", () -> new WarpTotemItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), false));
     public static final RegistryObject<Item> CRACKED_WARP_TOTEM = ITEMS.register("cracked_warp_totem", () -> new WarpTotemItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).durability(5), true));
-    public static final RegistryObject<Item> STRENGTH_GAMBIT = ITEMS.register("strength_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), () -> MobEffects.DAMAGE_BOOST, () -> MobEffects.WEAKNESS));
-    public static final RegistryObject<Item> RESISTANCE_GAMBIT = ITEMS.register("resistance_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), () -> MobEffects.DAMAGE_RESISTANCE, () -> EffectRegistry.VULNERABLE.get()));
-    public static final RegistryObject<Item> SPEED_GAMBIT = ITEMS.register("speed_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), () -> MobEffects.MOVEMENT_SPEED, () -> MobEffects.MOVEMENT_SLOWDOWN));
+    public static final RegistryObject<Item> STRENGTH_GAMBIT = ITEMS.register("strength_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), EffectRegistry.STRENGTH_GAMBIT_BUFF, EffectRegistry.STRENGTH_GAMBIT_NERF));
+    public static final RegistryObject<Item> RESISTANCE_GAMBIT = ITEMS.register("resistance_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), EffectRegistry.RESISTANCE_GAMBIT_BUFF, EffectRegistry.RESISTANCE_GAMBIT_NERF));
+    public static final RegistryObject<Item> SPEED_GAMBIT = ITEMS.register("speed_gambit", () -> new EffectGambitItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC).stacksTo(1), new ExperienceCost(0.1f), EffectRegistry.SPEED_GAMBIT_BUFF, EffectRegistry.SPEED_GAMBIT_NERF));
     public static final RegistryObject<Item> PURIFICATION_TABLET = ITEMS.register("purification_tablet", () -> new PurificationTabletItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MAGIC)));
 
     // # Miscellaneous

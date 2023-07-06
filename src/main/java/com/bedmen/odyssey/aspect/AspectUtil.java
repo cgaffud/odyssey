@@ -116,30 +116,31 @@ public class AspectUtil {
         return total;
     }
 
-    private static float queryPermabuffAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
+    private static float queryBuffs(LivingEntity livingEntity, AspectQuery aspectQuery){
         float strength = 0f;
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-            strength = aspectQuery.queryStrengthMap(odysseyLivingEntity.getPermabuffHolder().aspectStrengthMap);
+            strength = aspectQuery.queryStrengthMap(odysseyLivingEntity.getPermaBuffHolder().aspectStrengthMap);
+            strength += aspectQuery.queryStrengthMap(odysseyLivingEntity.getTempBuffHolder().aspectStrengthMap);
         }
         return strength;
     }
 
     private static float queryArmorAndEntityAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
         return queryArmorAspectStrength(livingEntity, aspectQuery)
-                + queryPermabuffAspectStrength(livingEntity, aspectQuery);
+                + queryBuffs(livingEntity, aspectQuery);
     }
 
     private static float queryOneHandedTotalAspectStrength(LivingEntity livingEntity, InteractionHand interactionHand, AspectQuery aspectQuery){
         return queryArmorAspectStrength(livingEntity, aspectQuery)
                 + queryItemStackAspectStrength(livingEntity.getItemInHand(interactionHand), aspectQuery)
-                + queryPermabuffAspectStrength(livingEntity, aspectQuery);
+                + queryBuffs(livingEntity, aspectQuery);
     }
 
     private static float queryTotalAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
         return queryArmorAspectStrength(livingEntity, aspectQuery)
                 + queryItemStackAspectStrength(livingEntity.getMainHandItem(), aspectQuery)
                 + queryItemStackAspectStrength(livingEntity.getOffhandItem(), aspectQuery)
-                + queryPermabuffAspectStrength(livingEntity, aspectQuery);
+                + queryBuffs(livingEntity, aspectQuery);
     }
 
     private static boolean isFullArmorSet(Iterable<ItemStack> armorPieces){
@@ -199,8 +200,8 @@ public class AspectUtil {
         return itemStackStrength >= aspectInstance.strength;
     }
 
-    public static <T> T getPermabuffAspectStrength(Player player, Aspect<T> aspect){
-        float strength = queryPermabuffAspectStrength(player, new SingleQuery(aspect));
+    public static <T> T getBuffAspectStrength(Player player, Aspect<T> aspect){
+        float strength = queryBuffs(player, new SingleQuery(aspect));
         return aspect.castStrength(strength);
     }
 
@@ -268,7 +269,6 @@ public class AspectUtil {
     }
 
     // Add AspectInstance to a list of AspectInstances
-
     public static void addInstance(List<AspectInstance> aspectInstanceList, AspectInstance aspectInstance){
         AspectInstance match = null;
         for(AspectInstance aspectInstance1: aspectInstanceList){
@@ -316,11 +316,12 @@ public class AspectUtil {
         return componentList;
     }
 
-    public static List<Component> getPermabuffTooltip(Player player){
+    public static List<Component> getBuffTooltip(Player player){
         if(player instanceof OdysseyLivingEntity odysseyLivingEntity){
             AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(Optional.empty());
             List<Component> componentList = new ArrayList<>();
-            odysseyLivingEntity.getPermabuffHolder().addTooltip(componentList, TooltipFlag.Default.ADVANCED, aspectTooltipContext);
+            odysseyLivingEntity.getPermaBuffHolder().addTooltip(componentList, TooltipFlag.Default.ADVANCED, aspectTooltipContext);
+            odysseyLivingEntity.getTempBuffHolder().addTooltip(componentList, TooltipFlag.Default.ADVANCED, aspectTooltipContext);
             return componentList;
         } else {
             return List.of();

@@ -2,9 +2,8 @@ package com.bedmen.odyssey.items.food;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
+import com.bedmen.odyssey.aspect.encapsulator.PermaBuffHolder;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.food.OdysseyFood;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import net.minecraft.world.InteractionHand;
@@ -18,22 +17,20 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 import java.util.function.Predicate;
 
-import net.minecraft.world.item.Item.Properties;
+public class PermaBuffFoodItem extends Item implements AspectItem {
 
-public class PermabuffFoodItem extends Item implements AspectItem {
-
-    private final PermabuffHolder permabuffHolder;
+    private final PermaBuffHolder permabuffHolder;
     private final Predicate<Player> playerPredicate;
 
-    public PermabuffFoodItem(Properties properties, List<AspectInstance> permabuffList, Predicate<Player> playerPredicate) {
+    public PermaBuffFoodItem(Properties properties, List<AspectInstance> permabuffList, Predicate<Player> playerPredicate) {
         super(properties.food(OdysseyFood.PERMABUFF));
-        this.permabuffHolder = new PermabuffHolder(permabuffList);
+        this.permabuffHolder = new PermaBuffHolder(permabuffList);
         this.playerPredicate = playerPredicate;
     }
 
     public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-            odysseyLivingEntity.addPermabuffs(this.permabuffHolder.aspectInstanceList);
+            odysseyLivingEntity.addPermaBuffs(this.permabuffHolder.aspectInstanceList);
         }
         return super.finishUsingItem(itemStack, level, livingEntity);
     }

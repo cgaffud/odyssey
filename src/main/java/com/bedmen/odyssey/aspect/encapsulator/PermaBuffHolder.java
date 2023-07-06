@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PermabuffHolder implements AspectHolder {
+public class PermaBuffHolder implements AspectHolder {
     private static final MutableComponent PERMABUFF_HEADER = Component.translatable("aspect_tooltip.oddc.permabuffs");
     private static final ChatFormatting PERMABUFF_COLOR = ChatFormatting.YELLOW;
     private static final String ASPECT_INSTANCE_LIST_TAG = "AspectInstanceList";
@@ -22,7 +22,7 @@ public class PermabuffHolder implements AspectHolder {
     public final List<AspectInstance> aspectInstanceList;
     public final AspectStrengthMap aspectStrengthMap;
 
-    public PermabuffHolder(List<AspectInstance> aspectInstanceList) {
+    public PermaBuffHolder(List<AspectInstance> aspectInstanceList) {
         this.aspectInstanceList = aspectInstanceList;
         this.aspectStrengthMap = new AspectStrengthMap(aspectInstanceList);
     }
@@ -43,7 +43,7 @@ public class PermabuffHolder implements AspectHolder {
         return compoundTag;
     }
 
-    public static PermabuffHolder fromCompoundTag(CompoundTag compoundTag){
+    public static PermaBuffHolder fromCompoundTag(CompoundTag compoundTag){
         List<AspectInstance> aspectInstanceList = new ArrayList<>();
         if(compoundTag.contains(ASPECT_INSTANCE_LIST_TAG)){
             ListTag listTag = compoundTag.getList(ASPECT_INSTANCE_LIST_TAG, Tag.TAG_COMPOUND);
@@ -56,10 +56,10 @@ public class PermabuffHolder implements AspectHolder {
                 }
             }
         }
-        return new PermabuffHolder(aspectInstanceList);
+        return new PermaBuffHolder(aspectInstanceList);
     }
 
-    public PermabuffHolder copy(){
-        return new PermabuffHolder(this.aspectInstanceList);
+    public PermaBuffHolder copy(){
+        return new PermaBuffHolder(this.aspectInstanceList);
     }
 }
