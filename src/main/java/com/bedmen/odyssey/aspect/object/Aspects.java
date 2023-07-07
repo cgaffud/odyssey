@@ -136,7 +136,10 @@ public class Aspects {
 
     // # Other
     public static final IntegerAspect TELEPORTATION_IMMUNITY = new IntegerAspect("teleportation_immunity", 0.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, true, false);
-    public static final FloatAspect BONUS_EXPERIENCE = new FloatAspect("bonus_experience", 0.0f, AspectTooltipFunctions.PER_SECOND, AspectItemPredicates.NONE, true);
+    public static final FloatAspect EXPERIENCE_PER_SECOND = new FloatAspect("experience_per_second", 0.0f, AspectTooltipFunctions.PER_SECOND, AspectItemPredicates.NONE, true);
+    public static final FloatAspect TEMPERATURE_PER_SECOND = new FloatAspect("temperature_per_second", 0.0f, AspectTooltipFunctions.PER_SECOND, AspectItemPredicates.NONE, true);
+    public static final FloatAspect WARMTH = new FloatAspect("warmth", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, true);
+    public static final FloatAspect COOLING = new FloatAspect("cooling", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, true);
 
     public static float getSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;

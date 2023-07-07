@@ -12,7 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class OdysseyElytraLayer<T extends LivingEntity, M extends EntityModel<T>> extends ElytraLayer<T, M> {
-    private static final ResourceLocation GLIDER_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/elytras/glider.png");
+    private static final ResourceLocation GLIDER_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"textures/entity/elytra/glider.png");
     public OdysseyElytraLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet entityModelSet) {
         super(renderLayerParent, entityModelSet);
     }

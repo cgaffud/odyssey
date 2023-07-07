@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "noodles",
   "ingredients": [
     {
       "item": "minecraft:wheat"
@@ -13,6 +12,6 @@
     }
   ],
   "result": {
-    "item": "oddc:noodles"
+    "item": "oddc:dry_noodles"
   }
 }

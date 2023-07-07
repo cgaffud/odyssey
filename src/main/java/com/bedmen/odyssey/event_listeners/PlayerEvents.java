@@ -86,8 +86,8 @@ public class PlayerEvents {
                     }
                 }
 
-                // Experience Drain aspect
-                float experienceGainPerTick = AspectUtil.getTotalAspectStrength(player, Aspects.BONUS_EXPERIENCE);
+                // Experience aspect
+                float experienceGainPerTick = AspectUtil.getTotalAspectStrength(player, Aspects.EXPERIENCE_PER_SECOND);
                 if(experienceGainPerTick != 0f && player instanceof ServerPlayer serverPlayer){
                     ExperienceCost experienceCost = new ExperienceCost(-experienceGainPerTick);
                     if (experienceCost.canPay(serverPlayer)){

@@ -17,6 +17,7 @@ import com.bedmen.odyssey.items.EffectGambitItem;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
+import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
@@ -32,6 +33,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
@@ -79,7 +81,7 @@ public class EntityEvents {
             for(MobEffectInstance mobEffectInstance: livingEntity.getActiveEffects()){
                 if(mobEffectInstance.getEffect() instanceof AspectEffect aspectEffect){
                     for(AspectInstance aspectInstance: aspectEffect.aspectInstanceList){
-                        AspectUtil.addInstance(tempBuffList, aspectInstance);
+                        AspectUtil.addInstance(tempBuffList, aspectInstance.withMultipliedStrength(mobEffectInstance.getAmplifier()+1));
                     }
                 }
             }
@@ -164,9 +166,18 @@ public class EntityEvents {
             if(!(livingEntity instanceof Mob mob) || mob.getMobType() != MobType.UNDEAD){
                 TemperatureSource.stabilizeTemperatureNaturally(odysseyLivingEntity);
             }
-            for(boolean isHot: new boolean[]{true, false}){
-                float protectionStrength = AspectUtil.getProtectionAspectStrength(livingEntity, TemperatureSource.damageSource(isHot));
-                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, protectionStrength * -TemperatureSource.ONE_PERCENT_PER_SECOND * TemperatureSource.getHotFactor(isHot));
+            // Temperature Aspects
+            float warmthStrength = AspectUtil.getTotalAspectStrength(livingEntity, Aspects.WARMTH);
+            if(warmthStrength > 0f){
+                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, warmthStrength * TemperatureSource.ONE_PERCENT_PER_SECOND);
+            }
+            float coolingStrength = AspectUtil.getTotalAspectStrength(livingEntity, Aspects.COOLING);
+            if(coolingStrength > 0f){
+                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, -coolingStrength * TemperatureSource.ONE_PERCENT_PER_SECOND);
+            }
+            float temperaturePerSecond = AspectUtil.getTotalAspectStrength(livingEntity, Aspects.TEMPERATURE_PER_SECOND);
+            if(temperaturePerSecond != 0f){
+                TemperatureSource.temperaturePercentPerSecondSource(temperaturePerSecond).tick(livingEntity);
             }
 
             // Temperature Damage
@@ -231,7 +242,7 @@ public class EntityEvents {
             // Cold Snap
             if(AspectUtil.getOneHandedTotalAspectStrength(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.COLD_SNAP)){
                 WeaponUtil.getSweepLivingEntities(damageSourceLivingEntity, hurtLivingEntity, true)
-                                .forEach(livingEntity -> livingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false)));
+                                .forEach(livingEntity -> livingEntity.addEffect(new MobEffectInstance(EffectRegistry.STRAY_FREEZING.get(), 40, 4)));
                 OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> hurtLivingEntity), new ColdSnapAnimatePacket(hurtLivingEntity));
             }
 
@@ -475,7 +486,7 @@ public class EntityEvents {
             float damageBlockMultiplier = 1.0f;
             if(AspectUtil.getItemStackAspectStrength(shield, Aspects.COLD_TO_THE_TOUCH)){
                 WeaponUtil.getSweepLivingEntities(livingEntity, livingEntity, false)
-                        .forEach(livingEntity1 -> livingEntity1.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 40, 2, false)));
+                        .forEach(livingEntity1 -> livingEntity1.addEffect(new MobEffectInstance(EffectRegistry.STRAY_FREEZING.get(), 40, 4)));
                 OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> livingEntity), new ColdSnapAnimatePacket(livingEntity));
             }
             // Parry boost

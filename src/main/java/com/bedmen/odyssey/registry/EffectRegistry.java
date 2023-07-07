@@ -38,18 +38,21 @@ public class EffectRegistry {
     public static final RegistryObject<MobEffect> HEXFLAME = EFFECTS.register("hexflame", () -> new FireEffect(MobEffectCategory.HARMFUL, 0x6b2494, false, FireType.HEX));
     // TODO make soulfire blocks apply soulflame
     public static final RegistryObject<MobEffect> SOULFLAME = EFFECTS.register("soulflame", () -> new FireEffect(MobEffectCategory.HARMFUL, 0x4ff1f6, false, FireType.SOUL));
-    public static final RegistryObject<MobEffect> FREEZING = EFFECTS.register("freezing",() -> (new TemperatureEffect(MobEffectCategory.HARMFUL, 0xd0f1f0, false)));
-    public static final RegistryObject<MobEffect> ROASTING = EFFECTS.register("roasting",() -> (new TemperatureEffect(MobEffectCategory.HARMFUL, 0xff9f5a, true)));
-    public static final RegistryObject<MobEffect> COOLING = EFFECTS.register("cooling",() -> (new TemperatureEffect(MobEffectCategory.BENEFICIAL, 0x565fff, false)));
-    public static final RegistryObject<MobEffect> WARMING = EFFECTS.register("warming",() -> (new TemperatureEffect(MobEffectCategory.BENEFICIAL, 0xcf7200, true)));
+    public static final RegistryObject<MobEffect> HUSK_DRYING = EFFECTS.register("husk_drying", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.TEMPERATURE_PER_SECOND, 5f))));
+
+    public static final RegistryObject<MobEffect> STRAY_FREEZING = EFFECTS.register("stray_freezing", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.TEMPERATURE_PER_SECOND, -5f))));
 
     // Buff Sources
-    public static final RegistryObject<MobEffect> STRENGTH_GAMBIT_BUFF = EFFECTS.register("strength_gambit_buff", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.ATTACK_DAMAGE, 2), new AspectInstance(Aspects.BONUS_EXPERIENCE, -0.2f / 20f))));
+    public static final RegistryObject<MobEffect> STRENGTH_GAMBIT_BUFF = EFFECTS.register("strength_gambit_buff", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.ATTACK_DAMAGE, 2), new AspectInstance(Aspects.EXPERIENCE_PER_SECOND, -0.2f / 20f))));
     public static final RegistryObject<MobEffect> STRENGTH_GAMBIT_NERF = EFFECTS.register("strength_gambit_nerf", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.ATTACK_DAMAGE, -2))));
-    public static final RegistryObject<MobEffect> RESISTANCE_GAMBIT_BUFF = EFFECTS.register("resistance_gambit_buff", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.PROTECTION, 2), new AspectInstance(Aspects.BONUS_EXPERIENCE, -0.2f / 20f))));
+    public static final RegistryObject<MobEffect> RESISTANCE_GAMBIT_BUFF = EFFECTS.register("resistance_gambit_buff", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.PROTECTION, 2), new AspectInstance(Aspects.EXPERIENCE_PER_SECOND, -0.2f / 20f))));
     public static final RegistryObject<MobEffect> RESISTANCE_GAMBIT_NERF = EFFECTS.register("resistance_gambit_nerf", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.PROTECTION, -2))));
-    public static final RegistryObject<MobEffect> SPEED_GAMBIT_BUFF = EFFECTS.register("speed_gambit_buff", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, 0.2f), new AspectInstance(Aspects.BONUS_EXPERIENCE, -0.2f / 20f))));
+    public static final RegistryObject<MobEffect> SPEED_GAMBIT_BUFF = EFFECTS.register("speed_gambit_buff", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, 0.2f), new AspectInstance(Aspects.EXPERIENCE_PER_SECOND, -0.2f / 20f))));
     public static final RegistryObject<MobEffect> SPEED_GAMBIT_NERF = EFFECTS.register("speed_gambit_nerf", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, -0.2f))));
+    public static final RegistryObject<MobEffect> CAMPFIRE_WARMTH = EFFECTS.register("campfire_warmth", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.WARMTH, 1f))));
 
+    public static final RegistryObject<MobEffect> WARM_FOOD = EFFECTS.register("warm_food", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.WARMTH, 1f))));
+
+    public static final RegistryObject<MobEffect> COLD_FOOD = EFFECTS.register("cold_food", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.COOLING, 1f))));
 
 }

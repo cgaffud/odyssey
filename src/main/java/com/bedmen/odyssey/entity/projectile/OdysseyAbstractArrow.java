@@ -22,9 +22,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -111,7 +113,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
             AABB boundingBox = this.getBoundingBox().inflate(2.0d);
             if(!this.level.isClientSide){
                 this.level.getEntitiesOfClass(LivingEntity.class, boundingBox, livingEntity -> livingEntity != this.getOwner())
-                        .forEach(livingEntity -> livingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 20, 2, true)));
+                        .forEach(livingEntity -> livingEntity.addEffect(new MobEffectInstance(EffectRegistry.STRAY_FREEZING.get(), 20, 4)));
             } else {
                 AspectUtil.doFrostAspectParticles(this, 1);
             }

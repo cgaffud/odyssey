@@ -27,7 +27,7 @@ public abstract class MixinCampfireBlockEntity extends BlockEntity implements Cl
     private static void onCookTick(Level level, BlockPos blockPos, BlockState blockState, CampfireBlockEntity campfireBlockEntity, CallbackInfo ci) {
         AABB boundingBox = blockState.getShape(level, blockPos).bounds().move(blockPos).inflate(3.0d);
         level.getEntitiesOfClass(LivingEntity.class, boundingBox).forEach(livingEntity -> {
-            MobEffectInstance mobEffectInstance = TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.WARMING.get(), 30, 0, true);
+            MobEffectInstance mobEffectInstance = new MobEffectInstance(EffectRegistry.CAMPFIRE_WARMTH.get(), 30, 0, true, true);
             livingEntity.addEffect(mobEffectInstance);
         });
     }

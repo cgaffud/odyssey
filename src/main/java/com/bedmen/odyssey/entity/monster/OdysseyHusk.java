@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +29,7 @@ public class OdysseyHusk extends Zombie {
         boolean doHurtTargetResult = super.doHurtTarget(target);
         if (doHurtTargetResult && this.getMainHandItem().isEmpty() && target instanceof LivingEntity livingTarget) {
             float effectiveDifficulty = this.level.getCurrentDifficultyAt(this.blockPosition()).getEffectiveDifficulty();
-            livingTarget.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.ROASTING.get(), 140 * (int)effectiveDifficulty, 0, false), this);
+            livingTarget.addEffect(new MobEffectInstance(EffectRegistry.HUSK_DRYING.get(), 140 * (int)effectiveDifficulty), this);
         }
         return doHurtTargetResult;
     }

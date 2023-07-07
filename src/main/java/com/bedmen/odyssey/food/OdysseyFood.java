@@ -2,6 +2,7 @@ package com.bedmen.odyssey.food;
 
 import com.bedmen.odyssey.effect.TemperatureEffect;
 import com.bedmen.odyssey.registry.EffectRegistry;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -13,14 +14,17 @@ import java.util.function.Supplier;
 
 public class OdysseyFood {
     public static final FoodProperties COCONUT_COOKIE = (new FoodProperties.Builder()).nutrition(2).saturationMod(0.3F).build();
-    public static final FoodProperties SNOW_CONE = (new FoodProperties.Builder()).nutrition(1).saturationMod(0.2F).alwaysEat().effect(() -> TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.COOLING.get(), 300, 1, false), 1.0f).build();
+    public static final FoodProperties WARM_BROTH = (new FoodProperties.Builder()).nutrition(1).saturationMod(0.2F).alwaysEat().effect(() -> new MobEffectInstance(EffectRegistry.WARM_FOOD.get(), 300), 1.0f).build();
+    public static final FoodProperties SNOW_CONE = (new FoodProperties.Builder()).nutrition(1).saturationMod(0.2F).alwaysEat().effect(() -> new MobEffectInstance(EffectRegistry.COLD_FOOD.get(), 300), 1.0f).build();
     public static final FoodProperties NOODLES = (new FoodProperties.Builder()).nutrition(1).saturationMod(0.6F).build();
-    public static final FoodProperties CHICKEN_NOODLE_SOUP = (new FoodProperties.Builder()).nutrition(10).saturationMod(0.6F).alwaysEat().effect(() -> TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.WARMING.get(), 300, 1, false), 1.0f).build();
-    public static final FoodProperties BEEF_STEW = (new FoodProperties.Builder()).nutrition(16).saturationMod(0.7F).build();
-    public static final FoodProperties RABBIT_STEW = (new FoodProperties.Builder()).nutrition(16).saturationMod(0.6F).build();
-    public static final FoodProperties MUSHROOM_STEW = (new FoodProperties.Builder()).nutrition(2).saturationMod(0.6F).build();
-    public static final FoodProperties VEGETABLE_STEW = (new FoodProperties.Builder()).nutrition(11).saturationMod(0.6F).build();
+    public static final FoodProperties CHICKEN_NOODLE_SOUP = (new FoodProperties.Builder()).nutrition(10).saturationMod(0.6F).alwaysEat().effect(() -> new MobEffectInstance(EffectRegistry.WARM_FOOD.get(), 400, 1), 1.0f).build();
+    public static final FoodProperties BEEF_STEW = (new FoodProperties.Builder()).nutrition(16).saturationMod(0.7F).alwaysEat().effect(() -> new MobEffectInstance(EffectRegistry.WARM_FOOD.get(), 400, 1), 1.0f).build();
+    public static final FoodProperties RABBIT_STEW = (new FoodProperties.Builder()).nutrition(16).saturationMod(0.6F).alwaysEat().effect(() -> new MobEffectInstance(EffectRegistry.WARM_FOOD.get(), 400, 1), 1.0f).build();
+    public static final FoodProperties MUSHROOM_STEW = (new FoodProperties.Builder()).nutrition(2).saturationMod(0.6F).alwaysEat().effect(() -> new MobEffectInstance(EffectRegistry.WARM_FOOD.get(), 400, 1), 1.0f).build();
+    public static final FoodProperties VEGETABLE_STEW = (new FoodProperties.Builder()).nutrition(11).saturationMod(0.6F).alwaysEat().effect(() -> new MobEffectInstance(EffectRegistry.WARM_FOOD.get(), 400, 1), 1.0f).build();
     public static final FoodProperties FISH_CHOWDER = (new FoodProperties.Builder()).nutrition(14).saturationMod(0.7F).build();
+
+    public static final FoodProperties ICE_CREAM_SUNDAE = (new FoodProperties.Builder()).nutrition(6).saturationMod(0.6F).alwaysEat().effect(() -> new MobEffectInstance(EffectRegistry.COLD_FOOD.get(), 400, 1), 1.0f).build();
     public static final FoodProperties PERMABUFF = (new FoodProperties.Builder()).nutrition(0).saturationMod(0.0F).alwaysEat().build();
 
 

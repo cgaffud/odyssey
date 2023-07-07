@@ -265,6 +265,17 @@ def redistributeRedAndGreenPixel(pixel, redStrength):
 def redistributeRedAndGreenImage(image, redStrength):
      atEveryPixel(image, lambda pos, pixel : redistributeRedAndGreenPixel(pixel, redStrength))
      return image
+
+def stitch(images):
+    width, height = images[0].size
+    newSize = (width, height * len(images))
+    image = Image.new("RGBA", newSize)
+    for x in range(width):
+        for y in range(height):
+            for k in range(len(images)):
+                y2 = y + k * height
+                image.putpixel((x,y2), images[k].getpixel((x,y)))
+    return image
     
 
 # Notes on how to do certain effects:
@@ -272,10 +283,18 @@ def redistributeRedAndGreenImage(image, redStrength):
 # Hex Fire: redistributeRedAndGreenImage(image, 0.75) (on soul fire)
 # Leather to Parka Hide: recolorImage(image, [0.40,0.475,0.55], [0,0,0])
 
-openPath1 = r"C:\Users\Christoph\Documents\mod fun\odyssey-1.19\odyssey\python\image\creeper.png"
-image1 = openImage(openPath1)
-savePath = r"C:\Users\Christoph\Documents\mod fun\odyssey-1.19\odyssey\python\image\overgrown.png"
-recolorImage(image1, [0.4,0.6,0.4], [0,20,10])
-saveImage(image1, savePath)
+#openPath1 = r"C:\Users\18029\Documents\1.19.2\assets\minecraft\textures\entity\elytra.png"
+#image1 = openImage(openPath1)
+#savePath = r"C:\Users\18029\Documents\1.19.2\assets\minecraft\textures\entity\elytra_1.png"
+#grayscaleRecolorImage(image1, [1.2,1.00,0.8], [70,70,70])
+#saveImage(image1, savePath)
+
+images = []
+for i in range(6):
+    openPath = r"C:\Users\18029\Documents\odyssey_zip_folders\sun_sword\sun_sword\%s.png" % (str(i))
+    image = openImage(openPath)
+    images.append(image)
+savePath = r"C:\Users\18029\Documents\odyssey_zip_folders\sun_sword\sun_sword\active.png"
+saveImage(stitch(images), savePath)
 
 print("Done")
