@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.entity.monster;
 
-import com.bedmen.odyssey.effect.TemperatureEffect;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;

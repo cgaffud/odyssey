@@ -1,6 +1,5 @@
 package com.bedmen.odyssey.food;
 
-import com.bedmen.odyssey.effect.TemperatureEffect;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
