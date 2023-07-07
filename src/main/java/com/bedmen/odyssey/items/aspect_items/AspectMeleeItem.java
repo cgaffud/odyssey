@@ -42,12 +42,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.minecraft.world.item.Item.Properties;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAspectItem, OdysseyMeleeItem, ParryableWeaponItem, INeedsToRegisterItemModelProperty {
     /** Modifiers applied when the item is in the mainhand of a user. */
-    protected final Multimap<Attribute, AttributeModifier> attributeModifiers;
+    protected Multimap<Attribute, AttributeModifier> attributeModifiers;
     private final InnateAspectHolder innateAspectHolder;
     protected final MeleeWeaponClass meleeWeaponClass;
 
@@ -132,11 +131,18 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
 
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack)
     {
-        return ConditionalAmpUtil.getAttributeModifiersWithAdjustedAttackDamage(equipmentSlot, itemStack, this.attributeModifiers);
+        return WeaponUtil.getAttributeModifiersWithAdjustedValues(equipmentSlot, itemStack, this.attributeModifiers, this.BASE_ATTACK_SPEED_UUID);
     }
 
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
         ConditionalAmpUtil.setDamageTag(itemStack, entity);
+        if (entity instanceof LivingEntity livingEntity) {
+            boolean isTwoHanded = WeaponUtil.isBeingUsedTwoHanded(itemStack);
+            // Translation: if (item in main hand is weapon) and (our two-handed tag does not reflect the actual condition of being two handed - no item in offhand)
+            if ((livingEntity.getMainHandItem() == itemStack) && ((livingEntity.getOffhandItem().isEmpty()) ^ isTwoHanded)) {
+               WeaponUtil.setBeingUsedTwoHanded(itemStack, !isTwoHanded);
+            }
+        }
         super.inventoryTick(itemStack, level, entity, compartments, selected);
     }
 
