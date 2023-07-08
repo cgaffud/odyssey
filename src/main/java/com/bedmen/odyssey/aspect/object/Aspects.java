@@ -3,6 +3,7 @@ package com.bedmen.odyssey.aspect.object;
 import com.bedmen.odyssey.aspect.AspectItemPredicates;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -10,6 +11,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
 
@@ -29,8 +31,8 @@ public class Aspects {
 
     // # All Weapons
     public static final IntegerAspect LOOTING_LUCK = new IntegerAspect("looting_luck", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.MELEE, false);
-    public static final EnvironmentConditionalAspect SOLAR_STRENGTH = new EnvironmentConditionalAspect("solar_strength", Aspects::getSunBoost);
-    public static final EnvironmentConditionalAspect LUNAR_STRENGTH = new EnvironmentConditionalAspect("lunar_strength", Aspects::getMoonBoost);
+    public static final ConditionalAmpAspect SOLAR_STRENGTH = new ConditionalAmpAspect("solar_strength", Aspects::getSunBoost);
+    public static final ConditionalAmpAspect LUNAR_STRENGTH = new ConditionalAmpAspect("lunar_strength", Aspects::getMoonBoost);
     public static final EnvironmentConditionalAspect SKY_STRENGTH = new EnvironmentConditionalAspect("sky_strength", Aspects::getSkyBoost);
     public static final EnvironmentConditionalAspect BOTANICAL_STRENGTH = new EnvironmentConditionalAspect("botanical_strength", Aspects::getHotHumidBoost);
     public static final EnvironmentConditionalAspect SCORCHED_STRENGTH = new EnvironmentConditionalAspect("scorched_strength", Aspects::getHotDryBoost);
@@ -136,14 +138,18 @@ public class Aspects {
     // # Other
     public static final IntegerAspect TELEPORTATION_IMMUNITY = new IntegerAspect("teleportation_immunity", 0.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, false);
 
-    public static float getSunBoost(BlockPos pos, Level level) {
+    public static float getTrueSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
         return getSkyBoost(pos, level) * (time < 12000L ? 1.0f : 0.0f);
     }
 
-    public static float getMoonBoost(BlockPos pos, Level level) {
+    public static float getMoonBoost(ItemStack itemStack, BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
-        return getSkyBoost(pos, level) * (time < 12000L ? 0.0f : 1.0f);
+        if (getSkyBoost(pos, level) == 1.0f && (time >= 12000L)) {
+            int charge = itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG);
+            if (charge < 5)  itemStack.getOrCreateTag().putInt(ConditionalAmpUtil.STORED_BOOST_TAG, 5);
+            return 1.0f;
+        } return itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG) > 0 ? 1.0f : 0.0f;
     }
 
     private static float getSkyBoost(BlockPos pos, Level level) {
@@ -172,6 +178,15 @@ public class Aspects {
 
     public static float getDryBoost(BlockPos pos, Level level) {
         return 1f - getHumidBoost(pos, level);
+    }
+
+    public static float getSunBoost(ItemStack itemStack, BlockPos pos, Level level) {
+        float doBoost = getTrueSunBoost(pos,level);
+        if (doBoost == 1.0f) {
+            int charge = itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG);
+            if (charge < 5)  itemStack.getOrCreateTag().putInt(ConditionalAmpUtil.STORED_BOOST_TAG, 5);
+            return 1.0f;
+        } return itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG) > 0 ? 1.0f : 0.0f;
     }
 
     /**

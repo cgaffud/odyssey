@@ -144,7 +144,7 @@ public class BiomeUtil {
     }
 
     private static float sunLightMultiplier(Level level, BlockPos blockPos){
-        return Aspects.getSunBoost(blockPos, level) * skyLightMultiplier(level, blockPos);
+        return Aspects.getTrueSunBoost(blockPos, level) * skyLightMultiplier(level, blockPos);
     }
 
     private static float skyLightMultiplier(Level level, BlockPos blockPos){

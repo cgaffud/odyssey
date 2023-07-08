@@ -13,6 +13,7 @@ import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
@@ -211,9 +212,13 @@ public class AspectUtil {
     }
 
     // Special totals over multiple aspects on single item
-
     public static float getTargetConditionalAspectStrength(ItemStack itemStack, LivingEntity target){
         return getBonusDamageAspectStrength(itemStack, aspect -> {
+            if (aspect.equals(Aspects.SOLAR_STRENGTH) || aspect.equals(Aspects.LUNAR_STRENGTH)) {
+                int charge = itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG);
+                if (charge > 0) itemStack.getOrCreateTag().putInt(ConditionalAmpUtil.STORED_BOOST_TAG, charge-1);
+            }
+
             if(aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect){
                 return targetConditionalMeleeAspect.livingEntityPredicate.test(target) ? 1.0f : 0.0f;
             }
@@ -225,6 +230,15 @@ public class AspectUtil {
         return getBonusDamageAspectStrength(itemStack, aspect -> {
             if(aspect instanceof EnvironmentConditionalAspect environmentConditionalAspect){
                 return environmentConditionalAspect.attackBoostFactorFunction.getBoostFactor(blockPos, level);
+            }
+            return 0.0f;
+        });
+    }
+
+    public static float getConditionalAspectStrength(ItemStack itemStack, BlockPos blockPos, Level level){
+        return getBonusDamageAspectStrength(itemStack, aspect -> {
+            if(aspect instanceof ConditionalAmpAspect conditionalAmpAspect){
+                return conditionalAmpAspect.attackBoostFactorFunction.getBoostFactor(itemStack, blockPos, level);
             }
             return 0.0f;
         });

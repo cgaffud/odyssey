@@ -1,10 +1,13 @@
 package com.bedmen.odyssey.client.gui;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.mixin.MixinLivingEntity;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -12,8 +15,10 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -224,6 +229,35 @@ public class OdysseyIngameGui extends ForgeGui
                 }
                 rightHeight += 10;
             }
+        }
+
+        RenderSystem.disableBlend();
+        minecraft.getProfiler().pop();
+    }
+
+    public void renderLightBar(int width, int height, PoseStack poseStack)
+    {
+        rightHeight -= 5;
+        RenderSystem.setShaderTexture(0, ODYSSEY_GUI_ICONS_LOCATION);
+        minecraft.getProfiler().push("light_bar");
+        Player player = (Player)this.minecraft.getCameraEntity();
+        RenderSystem.enableBlend();
+        int left = width / 2 + 91 -51;
+        int top = height - rightHeight;
+
+        ItemStack itemStack = player.getMainHandItem();
+
+        if (AspectUtil.getAspectStrength(itemStack, Aspects.SOLAR_STRENGTH) > 0 || AspectUtil.getAspectStrength(itemStack, Aspects.LUNAR_STRENGTH) > 0) {
+            int barAdjustment = AspectUtil.getAspectStrength(itemStack, Aspects.LUNAR_STRENGTH) > 0 ? 10 : 0;
+            int charge = itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG);
+            System.out.println(charge);
+            blit(poseStack, left, top, 0, 52+barAdjustment,51, 5);
+            if (charge > 0) {
+                blit(poseStack, left, top, 0, 57+barAdjustment, 10 * charge, 5);
+            }
+            rightHeight += 10;
+        } else {
+            rightHeight += 5;
         }
 
         RenderSystem.disableBlend();

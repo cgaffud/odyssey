@@ -3,6 +3,7 @@ package com.bedmen.odyssey.util;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspect;
+import com.bedmen.odyssey.aspect.object.ConditionalAmpAspect;
 import com.bedmen.odyssey.aspect.object.EnvironmentConditionalAspect;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.Level;
 public class ConditionalAmpUtil {
     public static final String DAMAGE_BOOST_TAG = Odyssey.MOD_ID + ":ConditionalAmpBoost";
     public static final String GRADIENT_COLOR_TAG = Odyssey.MOD_ID + ":GradientColor";
+    public static final String STORED_BOOST_TAG = Odyssey.MOD_ID + ":StoredBoost";
 
     public interface ConditionalAmpItem {
         Aspect getAspect();
@@ -25,6 +27,11 @@ public class ConditionalAmpUtil {
             return environmentConditionalAspect.attackBoostFactorFunction.getBoostFactor(livingEntity.blockPosition(), livingEntity.level);
         }
 
+        if (itemStack.getItem() instanceof ConditionalAmpItem conditionalAmpItem
+                && conditionalAmpItem.getAspect() instanceof ConditionalAmpAspect conditionalAmpAspect){
+            return conditionalAmpAspect.attackBoostFactorFunction.getBoostFactor(itemStack, livingEntity.blockPosition(), livingEntity.level);
+        }
+
         return 0.0f;
     }
 
@@ -33,7 +40,8 @@ public class ConditionalAmpUtil {
     }
 
     public static void setDamageTag(ItemStack itemStack, Entity entity) {
-        float aspectBonus = AspectUtil.getEnvironmentalAspectStrength(itemStack, entity.blockPosition(), entity.level);
+        float aspectBonus = AspectUtil.getEnvironmentalAspectStrength(itemStack, entity.blockPosition(), entity.level)
+                + AspectUtil.getConditionalAspectStrength(itemStack, entity.blockPosition(), entity.level);
         itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, aspectBonus);
     }
 
