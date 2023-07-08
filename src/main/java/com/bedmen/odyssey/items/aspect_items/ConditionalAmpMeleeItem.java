@@ -39,6 +39,7 @@ public class ConditionalAmpMeleeItem extends AspectMeleeItem implements Conditio
 
         public void registerItemModelProperties() {
             ItemProperties.register(this, new ResourceLocation("active"), ConditionalAmpUtil.getNumericalItemPropertyFunction(this));
+            super.registerItemModelProperties();
         }
 
         public int getIntervalCount() {

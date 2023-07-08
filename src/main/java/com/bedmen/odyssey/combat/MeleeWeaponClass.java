@@ -18,6 +18,7 @@ public class MeleeWeaponClass {
         BAT(2),
         SWORD(2),
         SABRE(4),
+        LONGSWORD(4),
         HATCHET(2),
         DAGGER(1),
         AXE(3),
@@ -41,14 +42,15 @@ public class MeleeWeaponClass {
 
     // Actual Weapons
     public static final MeleeWeaponClass PADDLE = new MeleeWeaponClass(MeleeWeaponType.PADDLE, 0.7f, 3.0f, true, List.of(new AspectInstance(Aspects.SMACK)));
-    public static final MeleeWeaponClass HAMMER = new MeleeWeaponClass(MeleeWeaponType.HAMMER,0.8f, 3.0f, true, List.of(SHIELD_BASH));
-    public static final MeleeWeaponClass BATTLE_AXE = new MeleeWeaponClass(MeleeWeaponType.BATTLE_AXE,1.0f, 2.5f, true, List.of(SHIELD_BASH));
-    public static final MeleeWeaponClass SPEAR = new MeleeWeaponClass(MeleeWeaponType.SPEAR,1.1f, 2.0f, false, List.of());
-    public static final MeleeWeaponClass TRIDENT = new MeleeWeaponClass(MeleeWeaponType.TRIDENT,1.1f, 2.0f, false, List.of());
-    public static final MeleeWeaponClass MACE = new MeleeWeaponClass(MeleeWeaponType.MACE,1.2f, 2.5f, true, List.of(new AspectInstance(Aspects.SHIELD_BASH)));
+    public static final MeleeWeaponClass HAMMER = new MeleeWeaponClass(MeleeWeaponType.HAMMER,0.7f, 3.0f, true, List.of(SHIELD_BASH), 60, 1.5f, 30, 1.0f);
+    public static final MeleeWeaponClass BATTLE_AXE = new MeleeWeaponClass(MeleeWeaponType.BATTLE_AXE,0.9f, 2.5f, true, List.of(SHIELD_BASH), 60, 1.5f, 45, 1.2f);
+    public static final MeleeWeaponClass SPEAR = new MeleeWeaponClass(MeleeWeaponType.SPEAR,1.0f, 2.0f, false, List.of(), 1.4f);
+    public static final MeleeWeaponClass TRIDENT = new MeleeWeaponClass(MeleeWeaponType.TRIDENT,1.0f, 2.0f, false, List.of(), 1.4f);
+    public static final MeleeWeaponClass MACE = new MeleeWeaponClass(MeleeWeaponType.MACE,1.1f, 2.5f, true, List.of(new AspectInstance(Aspects.SHIELD_BASH)), 60, 1.5f, 30, 1.4f);
     public static final MeleeWeaponClass BAT = new MeleeWeaponClass(MeleeWeaponType.BAT,1.4f, 2.0f, true, List.of(SWEEP));
     public static final MeleeWeaponClass SWORD = new MeleeWeaponClass(MeleeWeaponType.SWORD,1.6f, 2.0f, true, List.of(SWEEP, COBWEB_BREAK));
     public static final MeleeWeaponClass SABRE = new MeleeWeaponClass(MeleeWeaponType.SABRE,1.8f, 2.0f, true, List.of(SWEEP, COBWEB_BREAK));
+    public static final MeleeWeaponClass LONGSWORD = new MeleeWeaponClass(MeleeWeaponType.LONGSWORD,1.3f, 2.0f, true, List.of(SWEEP, COBWEB_BREAK), 60, 2.0f, 60, 1.6f);
     public static final MeleeWeaponClass HATCHET = new MeleeWeaponClass(MeleeWeaponType.HATCHET,1.2f, 2.0f, true, List.of(DUAL_WIELD));
     public static final MeleeWeaponClass DAGGER = new MeleeWeaponClass(MeleeWeaponType.DAGGER,1.6f, 1.5f, true, List.of(DUAL_WIELD, COBWEB_BREAK));
     // Tool Classes
@@ -62,13 +64,29 @@ public class MeleeWeaponClass {
     public final float damageModifierAmp;
     public final boolean canReceiveMeleeModifiers;
     public final List<AspectInstance> aspectInstanceList;
+    public final int recoveryTime;
+    public final float damageBlock;
+    public final float blockingAngleWidth;
+    public final float twoHandedAttackRate;
 
-    public MeleeWeaponClass(MeleeWeaponType meleeWeaponType, float attackRate, float damageModifierAmp, boolean canReceiveMeleeModifiers, List<AspectInstance> aspectInstanceList) {
+    public MeleeWeaponClass(MeleeWeaponType meleeWeaponType, float attackRate, float damageModifierAmp, boolean canReceiveMeleeModifiers, List<AspectInstance> aspectInstanceList, int recoveryTime, float damageBlock, float blockingAngleWidth, float twoHandedAttackRate) {
         this.meleeWeaponType = meleeWeaponType;
         this.attackRate = attackRate;
         this.damageModifierAmp = damageModifierAmp;
         this.canReceiveMeleeModifiers = canReceiveMeleeModifiers;
         this.aspectInstanceList = aspectInstanceList;
+        this.recoveryTime = recoveryTime;
+        this.damageBlock = damageBlock;
+        this.blockingAngleWidth = blockingAngleWidth;
+        this.twoHandedAttackRate = twoHandedAttackRate;
+    }
+
+    public MeleeWeaponClass(MeleeWeaponType meleeWeaponType, float attackRate, float damageModifierAmp, boolean canReceiveMeleeModifiers, List<AspectInstance> aspectInstanceList) {
+        this(meleeWeaponType, attackRate, damageModifierAmp, canReceiveMeleeModifiers, aspectInstanceList, -1, 0.0f, 0.0f, attackRate);
+    }
+
+    public MeleeWeaponClass(MeleeWeaponType meleeWeaponType, float attackRate, float damageModifierAmp, boolean canReceiveMeleeModifiers, List<AspectInstance> aspectInstanceList, float twoHandedAttackRate) {
+        this(meleeWeaponType, attackRate, damageModifierAmp, canReceiveMeleeModifiers, aspectInstanceList, -1, 0.0f, 0.0f, twoHandedAttackRate);
     }
 
     private static MeleeWeaponClass toolMeleeWeaponClass(MeleeWeaponType meleeWeaponType, float attackRate){
@@ -80,6 +98,6 @@ public class MeleeWeaponClass {
     }
 
     public MeleeWeaponClass withAttackSpeedMultiplier(float attackSpeedMultiplier) {
-        return new MeleeWeaponClass(this.meleeWeaponType, attackRate * attackSpeedMultiplier, this.damageModifierAmp, this.canReceiveMeleeModifiers, this.aspectInstanceList);
+        return new MeleeWeaponClass(this.meleeWeaponType, attackRate * attackSpeedMultiplier, this.damageModifierAmp, this.canReceiveMeleeModifiers, this.aspectInstanceList, this.recoveryTime, this.damageBlock, this.blockingAngleWidth, this.twoHandedAttackRate);
     }
 }

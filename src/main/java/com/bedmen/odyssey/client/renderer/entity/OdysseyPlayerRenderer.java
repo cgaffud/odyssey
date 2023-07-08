@@ -91,9 +91,17 @@ public class OdysseyPlayerRenderer extends PlayerRenderer {
                 if (useanim == UseAnim.SPYGLASS) {
                     return HumanoidModel.ArmPose.SPYGLASS;
                 }
+
+                if (useanim == UseAnim.TOOT_HORN) {
+                    return HumanoidModel.ArmPose.TOOT_HORN;
+                }
+
             } else if (!p_117795_.swinging && itemstack.getItem() instanceof CrossbowItem && CrossbowItem.isCharged(itemstack)) {
                 return HumanoidModel.ArmPose.CROSSBOW_HOLD;
             }
+
+            HumanoidModel.ArmPose forgeArmPose = net.minecraftforge.client.extensions.common.IClientItemExtensions.of(itemstack).getArmPose(p_117795_, p_117796_, itemstack);
+            if (forgeArmPose != null) return forgeArmPose;
 
             return HumanoidModel.ArmPose.ITEM;
         }

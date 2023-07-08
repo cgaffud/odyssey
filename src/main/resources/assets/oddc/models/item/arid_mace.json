@@ -1,7 +1,14 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "oddc:item/arid_mace",
-    "layer1": "oddc:item/arid_mace_overlay"
-  }
+    "layer0": "oddc:item/arid_mace"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "blocking": 1
+      },
+      "model": "oddc:item/arid_mace_blocking"
+    }
+  ]
 }

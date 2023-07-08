@@ -28,7 +28,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.CritParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -36,7 +35,6 @@ import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.HuskRenderer;
 import net.minecraft.client.renderer.entity.PolarBearRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -45,12 +43,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.GrassColor;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.RecipeBookManager;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
@@ -196,7 +192,7 @@ public class ModBusClientEvents {
         //Shield Meter overlay
         event.registerAbove(VanillaGuiOverlay.ARMOR_LEVEL.id(), "shield_meter", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
             if(gui instanceof OdysseyIngameGui odysseyIngameGui && !odysseyIngameGui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()){
-                if(!WeaponUtil.getHeldShield(odysseyIngameGui.getMinecraft().player).isEmpty()){
+                if(!WeaponUtil.getHeldParryables(odysseyIngameGui.getMinecraft().player).isEmpty()){
                     gui.setupOverlayRenderState(true, false, OdysseyIngameGui.ODYSSEY_GUI_ICONS_LOCATION);
                     odysseyIngameGui.renderShieldMeter(screenWidth, screenHeight, mStack, partialTicks);
                 }

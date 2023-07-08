@@ -3,6 +3,7 @@ package com.bedmen.odyssey.items.aspect_items;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.combat.MeleeWeaponClass;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.Entity;
@@ -16,8 +17,6 @@ import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class AspectPickaxeItem extends PickaxeItem implements InnateAspectItem, OdysseyMeleeItem {
     private final InnateAspectHolder innateAspectHolder;
@@ -41,7 +40,7 @@ public class AspectPickaxeItem extends PickaxeItem implements InnateAspectItem, 
 
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack)
     {
-        return ConditionalAmpUtil.getAttributeModifiersWithAdjustedAttackDamage(equipmentSlot, itemStack, this.getDefaultAttributeModifiers(equipmentSlot));
+        return WeaponUtil.getAttributeModifiersWithAdjustedValues(equipmentSlot, itemStack, this.getDefaultAttributeModifiers(equipmentSlot), this.BASE_ATTACK_SPEED_UUID);
     }
 
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
