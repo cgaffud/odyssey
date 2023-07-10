@@ -51,6 +51,7 @@ public class Aspects {
     public static final FloatAspect COBWEB_CHANCE = new FloatAspect("cobweb_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE);
     public static final FloatAspect LARCENY_CHANCE = new FloatAspect("larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE);
     public static final BooleanAspect COLD_SNAP = new BooleanAspect("cold_snap", 2.0f, AspectItemPredicates.MELEE);
+    public static final FloatAspect BLUDGEONING = new FloatAspect("bludgeoning", 0.5f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.MELEE);
 
     // # Ranged
 

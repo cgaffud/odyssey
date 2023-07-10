@@ -235,6 +235,11 @@ public class EntityEvents {
                 damageSourceLivingEntity.hurt(DamageSource.thorns(hurtLivingEntity), thornsStrength);
             }
 
+            // Bludgeoning
+            float bludgeoningStrength = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.BLUDGEONING);
+            if ((bludgeoningStrength > 0) && WeaponUtil.isBeingUsedTwoHanded(mainHandItemStack))
+                hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50));
+
             // Dual Wield reduced invulnerability
             if(WeaponUtil.isDualWielding(damageSourceLivingEntity)){
                 invulnerabilityMultiplier *= 0.5f;
