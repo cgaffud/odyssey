@@ -16,9 +16,11 @@ import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Multimap;
+import com.mojang.math.Vector3f;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -472,5 +474,29 @@ public class AspectUtil {
 
     private static double getRandomSnowflakeSpeed(RandomSource randomSource){
         return randomSource.nextDouble() * 0.4d - 0.2d;
+    }
+
+    // Do frost snow particles
+    public static void doAirAspectParticles(Entity entity, int count){
+        RandomSource randomSource = entity.level.random;
+        double x = entity.getX();
+        double y = entity.getY() + 0.5f * entity.getBbHeight();
+        double z = entity.getZ();
+        for(int i = 0; i < count; i++){
+            for(int xi = -1; xi <= 1; xi++){
+                for(int yi = -1; yi <= 1; yi++){
+                    for(int zi = -1; zi <= 1; zi++){
+                        if(!(xi == 0 && yi == 0 && zi == 0) && randomSource.nextBoolean()){
+                            Vec3 velocity  = new Vec3(xi, yi, zi).add(getRandomSnowflakeVector(randomSource)).normalize().scale(0.3d);
+                            entity.level.addParticle(new DustParticleOptions(new Vector3f(0.85f, 0.85f, 0.85f), 1.0F),
+                                    x + (randomSource.nextFloat()-0.5f)*entity.getBbWidth()/2,
+                                    y+ (randomSource.nextFloat()-0.5f)*entity.getBbHeight()/2,
+                                    z+ (randomSource.nextFloat()-0.5f)*entity.getBbWidth()/2,
+                                    velocity.x, velocity.y, velocity.z);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -25,6 +25,8 @@ public class OdysseyNetwork {
         CHANNEL.registerMessage(3, FatalHitAnimatePacket.class, FatalHitAnimatePacket::encode, FatalHitAnimatePacket::decode, FatalHitAnimatePacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(4, ReduceInvulnerabilityPacket.class, ReduceInvulnerabilityPacket::encode, ReduceInvulnerabilityPacket::decode, ReduceInvulnerabilityPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(5, ColdSnapAnimatePacket.class, ColdSnapAnimatePacket::encode, ColdSnapAnimatePacket::decode, ColdSnapAnimatePacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(6, BlowbackAnimatePacket.class, BlowbackAnimatePacket::encode, BlowbackAnimatePacket::decode, BlowbackAnimatePacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+
 //        CHANNEL.registerMessage(3, RenameItemPacket.class, RenameItemPacket::encode, RenameItemPacket::decode, RenameItemPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
 //        CHANNEL.registerMessage(5, SoundPacket.class, SoundPacket::encode, SoundPacket::decode, SoundPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }

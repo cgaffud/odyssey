@@ -22,6 +22,7 @@ import com.bedmen.odyssey.items.aspect_items.AspectMeleeItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.items.aspect_items.ParryableWeaponItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.BlowbackAnimatePacket;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
@@ -54,6 +55,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -477,8 +479,16 @@ public class EntityEvents {
                 if(odysseyLivingEntity.getShieldMeter() > 1.0f){
                     damageBlockMultiplier *= 2;
                     if (parryableWeaponItem instanceof AspectMeleeItem) {
-                        int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier()+1 : 0;
+                        int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier() + 1 : 0;
                         livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 50, strengthAmp));
+                    }
+                    float blowback = AspectUtil.getAspectStrength(shield, Aspects.BLOWBACK);
+                    System.out.print(blowback);
+                    if (blowback > 0 && (damageSource.getEntity() != null) && damageSource.getEntity() instanceof LivingEntity attacker) {
+                        Vec3 awayVector = new Vec3(attacker.getX() - livingEntity.getX(), attacker.getY() - livingEntity.getY(), attacker.getZ()-livingEntity.getZ());
+                        awayVector.normalize().multiply(blowback, blowback, blowback);
+                        attacker.setDeltaMovement(awayVector);
+                        OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> attacker), new BlowbackAnimatePacket(attacker));
                     }
                 }
             }

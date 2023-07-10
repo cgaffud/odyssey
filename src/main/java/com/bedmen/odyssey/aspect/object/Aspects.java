@@ -108,6 +108,9 @@ public class Aspects {
     public static final BooleanAspect SPYGLASS = new BooleanAspect("spyglass", AspectItemPredicates.BOW);
     public static final BooleanAspect REPEAT = new BooleanAspect("repeat", AspectItemPredicates.RANGED_AMMO_WEAPON);
 
+    // ## Shield Abilities
+    public static final FloatAspect BLOWBACK = new FloatAspect("blowback", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.SHIELD);
+
     // ## Armor Abilities
     public static final BooleanAspect PIGLIN_NEUTRAL = new BooleanAspect("piglin_neutral", AspectItemPredicates.ARMOR);
 
