@@ -56,6 +56,10 @@ public class AspectUtil {
     private static final List<EquipmentSlot> ARMOR_EQUIPMENT_SLOT_LIST = Arrays.stream(EquipmentSlot.values()).filter(equipmentSlot -> equipmentSlot.getType() == EquipmentSlot.Type.ARMOR).collect(Collectors.toList());
     private static final MutableComponent OBFUSCATED_TOOLTIP = Component.literal("AAAAAAAAAA").withStyle(ChatFormatting.OBFUSCATED).withStyle(ChatFormatting.DARK_RED);
 
+    // Tags specific to aspect behavior
+    public static final String STORED_BOOST_TAG = Odyssey.MOD_ID + ":AspectStoredBoost";
+    public static final String RELEASE_BOOST_TAG = Odyssey.MOD_ID + ":AspectReleaseBoost";
+
     private static ListTag getAddedModifierListTag(ItemStack itemStack) {
         CompoundTag compoundTag = itemStack.getTag();
         return compoundTag != null ? compoundTag.getList(ADDED_MODIFIERS_TAG, Tag.TAG_COMPOUND) : new ListTag();
@@ -215,9 +219,10 @@ public class AspectUtil {
     public static float getTargetConditionalAspectStrength(ItemStack itemStack, LivingEntity target){
         return getBonusDamageAspectStrength(itemStack, aspect -> {
             if (aspect.equals(Aspects.SOLAR_STRENGTH) || aspect.equals(Aspects.LUNAR_STRENGTH)) {
-                int charge = itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG);
-                if (charge > 0) itemStack.getOrCreateTag().putInt(ConditionalAmpUtil.STORED_BOOST_TAG, charge-1);
+                int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
+                if (charge > 0) itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, charge-1);
             }
+
 
             if(aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect){
                 return targetConditionalMeleeAspect.livingEntityPredicate.test(target) ? 1.0f : 0.0f;

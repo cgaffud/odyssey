@@ -249,7 +249,7 @@ public class OdysseyIngameGui extends ForgeGui
 
         if (AspectUtil.getAspectStrength(itemStack, Aspects.SOLAR_STRENGTH) > 0 || AspectUtil.getAspectStrength(itemStack, Aspects.LUNAR_STRENGTH) > 0) {
             int barAdjustment = AspectUtil.getAspectStrength(itemStack, Aspects.LUNAR_STRENGTH) > 0 ? 10 : 0;
-            int charge = itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG);
+            int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
             System.out.println(charge);
             blit(poseStack, left, top, 0, 52+barAdjustment,51, 5);
             if (charge > 0) {

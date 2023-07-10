@@ -1,9 +1,9 @@
 package com.bedmen.odyssey.aspect.object;
 
 import com.bedmen.odyssey.aspect.AspectItemPredicates;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
-import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -146,10 +146,10 @@ public class Aspects {
     public static float getMoonBoost(ItemStack itemStack, BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
         if (getSkyBoost(pos, level) == 1.0f && (time >= 12000L)) {
-            int charge = itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG);
-            if (charge < 5)  itemStack.getOrCreateTag().putInt(ConditionalAmpUtil.STORED_BOOST_TAG, 5);
+            int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
+            if (charge < 5)  itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, 5);
             return 1.0f;
-        } return itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG) > 0 ? 1.0f : 0.0f;
+        } return itemStack.getOrCreateTag().getBoolean(AspectUtil.STORED_BOOST_TAG) ? 1.0f : 0.0f;
     }
 
     private static float getSkyBoost(BlockPos pos, Level level) {
@@ -183,10 +183,10 @@ public class Aspects {
     public static float getSunBoost(ItemStack itemStack, BlockPos pos, Level level) {
         float doBoost = getTrueSunBoost(pos,level);
         if (doBoost == 1.0f) {
-            int charge = itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG);
-            if (charge < 5)  itemStack.getOrCreateTag().putInt(ConditionalAmpUtil.STORED_BOOST_TAG, 5);
+            int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
+            if (charge < 5)  itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, 5);
             return 1.0f;
-        } return itemStack.getOrCreateTag().getInt(ConditionalAmpUtil.STORED_BOOST_TAG) > 0 ? 1.0f : 0.0f;
+        } return itemStack.getOrCreateTag().getBoolean(AspectUtil.STORED_BOOST_TAG) ? 1.0f : 0.0f;
     }
 
     /**

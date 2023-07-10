@@ -15,7 +15,6 @@ import net.minecraft.world.level.Level;
 public class ConditionalAmpUtil {
     public static final String DAMAGE_BOOST_TAG = Odyssey.MOD_ID + ":ConditionalAmpBoost";
     public static final String GRADIENT_COLOR_TAG = Odyssey.MOD_ID + ":GradientColor";
-    public static final String STORED_BOOST_TAG = Odyssey.MOD_ID + ":StoredBoost";
 
     public interface ConditionalAmpItem {
         Aspect getAspect();
