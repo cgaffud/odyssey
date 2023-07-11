@@ -483,7 +483,7 @@ public class EntityEvents {
             if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
                 if(odysseyLivingEntity.getShieldMeter() > 1.0f){
                     damageBlockMultiplier *= 2;
-                    if (parryableWeaponItem instanceof AspectMeleeItem) {
+                    if (parryableWeaponItem instanceof AspectMeleeItem || (AspectUtil.getAspectStrength(shield, Aspects.ASSISTED_STRIKE)) > 0) {
                         int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier() + 1 : 0;
                         livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 50, strengthAmp));
                     }
