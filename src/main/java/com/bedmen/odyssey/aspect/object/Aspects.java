@@ -5,8 +5,10 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobType;
@@ -35,7 +37,7 @@ public class Aspects {
     public static final ConditionalAmpAspect SOLAR_STRENGTH = new ConditionalAmpAspect("solar_strength", Aspects::getSunBoost);
     public static final ConditionalAmpAspect LUNAR_STRENGTH = new ConditionalAmpAspect("lunar_strength", Aspects::getMoonBoost);
     public static final EnvironmentConditionalAspect SKY_STRENGTH = new EnvironmentConditionalAspect("sky_strength", Aspects::getSkyBoost);
-    public static final EnvironmentConditionalAspect BOTANICAL_STRENGTH = new EnvironmentConditionalAspect("botanical_strength", Aspects::getHotHumidBoost);
+    public static final ConditionalAmpAspect BOTANICAL_STRENGTH = new ConditionalAmpAspect("botanical_strength", Aspects::getHotHumidBoost);
     public static final EnvironmentConditionalAspect SCORCHED_STRENGTH = new EnvironmentConditionalAspect("scorched_strength", Aspects::getHotDryBoost);
     public static final EnvironmentConditionalAspect WINTERY_STRENGTH = new EnvironmentConditionalAspect("wintery_strength", Aspects::getColdBoost);
     public static final EnvironmentConditionalAspect VOID_STRENGTH = new EnvironmentConditionalAspect("void_strength", Aspects::getBoostFromVoid);
@@ -152,17 +154,22 @@ public class Aspects {
         long time = level.getDayTime() % 24000L;
         if (getSkyBoost(pos, level) == 1.0f && (time >= 12000L)) {
             int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
-            if (charge < 5)  itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, 5);
+            if (charge < 50 && level instanceof ServerLevel)  itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, charge+1);
             return 1.0f;
-        } return itemStack.getOrCreateTag().getBoolean(AspectUtil.STORED_BOOST_TAG) ? 1.0f : 0.0f;
+        } return itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG) > 10 ? 1.0f : 0.0f;
     }
 
     private static float getSkyBoost(BlockPos pos, Level level) {
         return (level.canSeeSky(pos) && !level.isThundering() && !level.isRaining() && (level.dimension() == Level.OVERWORLD)) ? 1.0f : 0.0f;
     }
 
-    public static float getHotHumidBoost(BlockPos pos, Level level) {
-        return Mth.sqrt(getHotBoost(pos, level) * getHumidBoost(pos, level));
+    public static float getHotHumidBoost(ItemStack itemStack, BlockPos pos, Level level) {
+        float rawBoost = Mth.sqrt(getHotBoost(pos, level) * getHumidBoost(pos, level));
+        if (GeneralUtil.isHashTick(itemStack, level, 80)) {
+            if (rawBoost < 0.5f) itemStack.hurt(1, level.getRandom(), null);
+            else if ((rawBoost > 0.75f) && itemStack.getDamageValue() != 0) itemStack.setDamageValue(itemStack.getDamageValue()-1);
+        }
+        return rawBoost;
     }
 
     public static float getHotDryBoost(BlockPos pos, Level level) {
@@ -189,9 +196,9 @@ public class Aspects {
         float doBoost = getTrueSunBoost(pos,level);
         if (doBoost == 1.0f) {
             int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
-            if (charge < 5)  itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, 5);
+            if (charge < 50 && level instanceof ServerLevel)  itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, charge+1);
             return 1.0f;
-        } return itemStack.getOrCreateTag().getBoolean(AspectUtil.STORED_BOOST_TAG) ? 1.0f : 0.0f;
+        } return itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG) > 10 ? 1.0f : 0.0f;
     }
 
     /**

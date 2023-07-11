@@ -222,7 +222,7 @@ public class AspectUtil {
         return getBonusDamageAspectStrength(itemStack, aspect -> {
             if (aspect.equals(Aspects.SOLAR_STRENGTH) || aspect.equals(Aspects.LUNAR_STRENGTH)) {
                 int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
-                if (charge > 0) itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, charge-1);
+                if (charge >= 10) itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, charge-10);
             }
 
 
