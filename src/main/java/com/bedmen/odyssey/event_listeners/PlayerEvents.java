@@ -34,7 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.phys.Vec3;
@@ -235,6 +235,10 @@ public class PlayerEvents {
         if(newPlayer instanceof OdysseyPlayer newOdysseyPlayer && oldPlayer instanceof OdysseyPlayer oldOdysseyPlayer){
             newOdysseyPlayer.setPermabuffHolder(oldOdysseyPlayer.getPermabuffHolder());
         }
+        // If this was a player death & keepInventory is off, transfer all soulbound items to new player instance.
+        if (event.isWasDeath() && !newPlayer.getLevel().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
+            oldPlayer.getInventory().items.stream().forEach(itemStack -> newPlayer.getInventory().placeItemBackInInventory(itemStack)
+            );
     }
 
     @SubscribeEvent

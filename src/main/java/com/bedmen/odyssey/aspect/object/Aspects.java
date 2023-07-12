@@ -27,6 +27,7 @@ public class Aspects {
     // # All Damageables
     public static final FloatAspect DURABILITY = new FloatAspect("durability", 1.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.DAMAGEABLE);
     public static final BooleanAspect BURN_PROOF = new BooleanAspect("burn_proof", AspectItemPredicates.DAMAGEABLE);
+    public static final FloatAspect SOULBOUND = new FloatAspect("soulbound", 1.0f, AspectTooltipFunctions.NAME, AspectItemPredicates.DAMAGEABLE);
     // ## Attribute
     public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", 10.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.LOWER_ARMOR, () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
     public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.DAMAGEABLE, () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
