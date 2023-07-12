@@ -41,6 +41,7 @@ public class Aspects {
     public static final EnvironmentConditionalAspect SCORCHED_STRENGTH = new EnvironmentConditionalAspect("scorched_strength", Aspects::getHotDryBoost);
     public static final EnvironmentConditionalAspect WINTERY_STRENGTH = new EnvironmentConditionalAspect("wintery_strength", Aspects::getColdBoost);
     public static final EnvironmentConditionalAspect VOID_STRENGTH = new EnvironmentConditionalAspect("void_strength", Aspects::getBoostFromVoid);
+    public static final ConditionalAmpAspect ABSORBENT_GROWTH = new ConditionalAmpAspect("absorbent_growth", Aspects::getBoostFromDamage);
 
     // # Melee
     public static final TargetConditionalMeleeAspect DAMAGE_ON_ARTHROPOD = new TargetConditionalMeleeAspect("damage_on_arthropod", livingEntity -> livingEntity.getMobType() == MobType.ARTHROPOD);
@@ -224,5 +225,10 @@ public class Aspects {
         }
         // Gonna assume any other custom dimensions are similar to the overworld
         return quadraticDistanceFactorToVoid(y, 64, -64);
+    }
+
+
+    private static float getBoostFromDamage(ItemStack itemStack, BlockPos pos, Level level) {
+        return itemStack.getOrCreateTag().getFloat(AspectUtil.DAMAGE_GROWTH_TAG);
     }
 }

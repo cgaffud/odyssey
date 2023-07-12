@@ -60,7 +60,7 @@ public class AspectUtil {
 
     // Tags specific to aspect behavior
     public static final String STORED_BOOST_TAG = Odyssey.MOD_ID + ":AspectStoredBoost";
-    public static final String RELEASE_BOOST_TAG = Odyssey.MOD_ID + ":AspectReleaseBoost";
+    public static final String DAMAGE_GROWTH_TAG = Odyssey.MOD_ID + ":AspectDamageGrowth";
 
     private static ListTag getAddedModifierListTag(ItemStack itemStack) {
         CompoundTag compoundTag = itemStack.getTag();
