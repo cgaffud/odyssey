@@ -12,7 +12,7 @@ public class AttributeAspect extends FloatAspect {
     private final Lazy<Attribute> attributeLazy;
     public final AttributeModifier.Operation operation;
     protected AttributeAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, Lazy<Attribute> attributeLazy, AttributeModifier.Operation operation) {
-        super(id, weight, aspectTooltipFunction, itemPredicate);
+        super(id, weight, aspectTooltipFunction, itemPredicate, true);
         this.attributeLazy = attributeLazy;
         this.operation = operation;
     }

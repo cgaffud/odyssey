@@ -32,7 +32,7 @@ public class OdysseyCreativeModeInventoryScreen extends CreativeModeInventoryScr
                 && adjustedMouseX < PLAYER_RIGHT_X
                 && adjustedMouseY > PLAYER_TOP_Y
                 && adjustedMouseY < PLAYER_BOT_Y) {
-            this.renderTooltip(poseStack, AspectUtil.getPermabuffTooltip(Minecraft.getInstance().player), Optional.empty(), mouseX, mouseY);
+            this.renderTooltip(poseStack, AspectUtil.getBuffTooltip(Minecraft.getInstance().player), Optional.empty(), mouseX, mouseY);
         } else {
             super.renderTooltip(poseStack, mouseX, mouseY);
         }

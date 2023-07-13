@@ -92,7 +92,9 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
                     player1.broadcastBreakEvent(owner.getUsedItemHand());
                 });
             }
-            int numberOfSideProjectiles = MultishotAspect.strengthToNumberOfSideProjectiles(AspectUtil.getFloatAspectStrength(thrownItemStack, Aspects.MULTISHOT));
+            int numberOfSideProjectiles = MultishotAspect.strengthToNumberOfSideProjectiles(
+                    AspectUtil.getOneHandedTotalAspectStrength(owner, owner.getUsedItemHand(), Aspects.MULTISHOT)
+            );
             int numberOfProjectilesOnOneSide = numberOfSideProjectiles / 2;
             for(int multishotIndex = -numberOfProjectilesOnOneSide; multishotIndex <= numberOfProjectilesOnOneSide; multishotIndex++){
                 float angle = numberOfSideProjectiles == 0 ? 0.0f : multishotIndex * (20.0f / numberOfSideProjectiles);
@@ -112,11 +114,11 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
 
     private OdysseyAbstractArrow shootAndGetThrownWeaponEntity(Level level, LivingEntity owner, ItemStack thrownWeaponStack, boolean isMultishot, Vector3f vector3f) {
         OdysseyAbstractArrow thrownWeaponEntity = getThrownWeaponEntity(level, owner, thrownWeaponStack, isMultishot);
-        double multishotDamagePenalty = isMultishot ? MultishotAspect.strengthToDamagePenalty(AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.MULTISHOT)) : 1.0d;
+        double multishotDamagePenalty = isMultishot ? MultishotAspect.strengthToDamagePenalty(AspectUtil.getOneHandedTotalAspectStrength(owner, owner.getUsedItemHand(), Aspects.MULTISHOT)) : 1.0d;
         thrownWeaponEntity.setBaseDamage(this.getEffectiveDamage(thrownWeaponStack) * multishotDamagePenalty);
         thrownWeaponEntity.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(thrownWeaponStack));
-        float accuracyMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.ACCURACY);
-        thrownWeaponEntity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.getFinalVelocity(thrownWeaponStack), 1.0f / accuracyMultiplier);
+        float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(owner, owner.getUsedItemHand(), Aspects.ACCURACY);
+        thrownWeaponEntity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.getFinalVelocity(owner), 1.0f / accuracyMultiplier);
         if(isMultishot){
             thrownWeaponEntity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         }
@@ -165,14 +167,18 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
         return THROWING_CHARGE_TIME;
     }
 
-    public float getFinalVelocity(ItemStack thrownWeaponStack){
-        return this.throwableType.velocity * (1.0f + AspectUtil.getFloatAspectStrength(thrownWeaponStack, Aspects.VELOCITY));
+    public float getFinalVelocity(LivingEntity livingEntity){
+        return this.throwableType.velocity * (1.0f + AspectUtil.getOneHandedTotalAspectStrength(livingEntity, livingEntity.getUsedItemHand(), Aspects.VELOCITY));
+    }
+
+    public float getItemStackVelocity(ItemStack thrownWeaponStack){
+        return this.throwableType.velocity * (1.0f + AspectUtil.getItemStackAspectStrength(thrownWeaponStack, Aspects.VELOCITY));
     }
 
 
     public void appendHoverText(ItemStack thrownWeaponStack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(thrownWeaponStack, level, tooltip, flagIn);
         tooltip.add(Component.translatable("item.oddc.throwable_weapon.damage").append(StringUtil.doubleFormat(this.getEffectiveDamage(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
-        tooltip.add(Component.translatable("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getFinalVelocity(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("item.oddc.ranged.velocity").append(StringUtil.floatFormat(this.getItemStackVelocity(thrownWeaponStack))).withStyle(ChatFormatting.BLUE));
     }
 }

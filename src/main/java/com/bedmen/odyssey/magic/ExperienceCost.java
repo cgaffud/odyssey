@@ -34,11 +34,7 @@ public class ExperienceCost {
     }
 
     public boolean canPay(Player player){
-        return canPay(player, 1.0f);
-    }
-
-    public boolean canPay(Player player, float costMultiplier){
-        return getTotalExperienceLevel(player) >= (this.levelCost * costMultiplier) && player.experienceLevel >= this.levelRequirement;
+        return getTotalExperienceLevel(player) >= this.levelCost && player.experienceLevel >= this.levelRequirement;
     }
 
     public void pay(ServerPlayer serverPlayer, float costMultiplier){

@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class InfuserCraftingRecipe implements Recipe<Container> {
 
@@ -81,9 +80,8 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
                 }
             } else {
                 AspectInstance aspectInstance = optionalAspectInstance.get();
-                float strength = AspectUtil.getAspectStrength(centerItemStack, aspectInstance.aspect);
                 // If the aspect is already infused on central item, then aspect requirement has been fulfilled
-                if(strength >= aspectInstance.applyInfusionPenalty().strength){
+                if(AspectUtil.itemStackHasEqualOrStrongerInstance(centerItemStack, aspectInstance)){
                     continue;
                 }
                 boolean matchingItemFound = false;

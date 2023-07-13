@@ -1,9 +1,13 @@
 package com.bedmen.odyssey.entity;
 
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.PermaBuffHolder;
+import com.bedmen.odyssey.aspect.encapsulator.TempBuffHolder;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.effect.FireType;
 import net.minecraft.util.Mth;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OdysseyLivingEntity {
@@ -28,6 +32,13 @@ public interface OdysseyLivingEntity {
 
     void updateShieldMeterO();
     void adjustShieldMeter(float amount);
+    PermaBuffHolder getPermaBuffHolder();
+    void setPermaBuffHolder(PermaBuffHolder permaBuffHolder);
+    void setPermaBuff(AspectInstance aspectInstance);
+    void addPermaBuffs(List<AspectInstance> permabuffList);
+
+    TempBuffHolder getTempBuffHolder();
+    void setTempBuffs(List<AspectInstance> aspectInstanceList);
 
     default boolean isHot(){
         return this.getTemperature() > 0f;

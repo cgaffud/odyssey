@@ -2,7 +2,7 @@ package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
-import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
+import com.bedmen.odyssey.aspect.encapsulator.PermaBuffHolder;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
@@ -25,7 +25,7 @@ public class EntityDataSerializerRegistry {
 
     public static final RegistryObject<EntityDataSerializer<IntList>> INT_LIST = ENTITY_DATA_SERIALIZERS.register("int_list", () -> OdysseyDataSerializers.INT_LIST);
     public static final RegistryObject<EntityDataSerializer<AspectStrengthMap>> ASPECT_STRENGTH_MAP = ENTITY_DATA_SERIALIZERS.register("aspect_strength_map", () -> OdysseyDataSerializers.ASPECT_STRENGTH_MAP);
-    public static final RegistryObject<EntityDataSerializer<PermabuffHolder>> PERMABUFF_HOLDER = ENTITY_DATA_SERIALIZERS.register("permabuff_holder", () -> OdysseyDataSerializers.PERMABUFF_HOLDER);
+    public static final RegistryObject<EntityDataSerializer<PermaBuffHolder>> PERMABUFF_HOLDER = ENTITY_DATA_SERIALIZERS.register("permabuff_holder", () -> OdysseyDataSerializers.PERMABUFF_HOLDER);
     public static final RegistryObject<EntityDataSerializer<FireType>> FIRE_TYPE = ENTITY_DATA_SERIALIZERS.register("fire_type", () -> OdysseyDataSerializers.FIRE_TYPE);
     public static final RegistryObject<EntityDataSerializer<Map<CovenType, Integer>>> COVENTYPE_INT_MAP = ENTITY_DATA_SERIALIZERS.register("coventype_int_map", () -> OdysseyDataSerializers.COVENTYPE_INT_MAP);
 }

@@ -45,7 +45,6 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 
 public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegisterItemModelProperty, OdysseyRangedAmmoWeapon, InnateAspectItem {
@@ -83,7 +82,8 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack crossbow = player.getItemInHand(interactionHand);
         if (isCharged(crossbow)) {
-            performShooting(level, player, interactionHand, crossbow, getShootingVelocity(crossbow), 1.0F);
+            float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(player, interactionHand, Aspects.ACCURACY);
+            performShooting(level, player, interactionHand, crossbow, getShootingVelocity(crossbow), 1.0f/accuracyMultiplier);
             setCharged(crossbow, false);
             return InteractionResultHolder.consume(crossbow);
         } else if (WeaponUtil.hasAmmo(player,crossbow)) {
@@ -110,7 +110,9 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     }
 
     public static boolean tryLoadProjectiles(LivingEntity livingEntity, ItemStack crossbow) {
-        int numberOfArrows = MultishotAspect.strengthToNumberOfTotalProjectiles(AspectUtil.getFloatAspectStrength(crossbow, Aspects.MULTISHOT));
+        int numberOfArrows = MultishotAspect.strengthToNumberOfTotalProjectiles(
+                AspectUtil.getOneHandedTotalAspectStrength(livingEntity, livingEntity.getUsedItemHand(), Aspects.MULTISHOT)
+        );
         boolean isPlayer = livingEntity instanceof Player;
         boolean flag = isPlayer && ((Player)livingEntity).getAbilities().instabuild;
         WeaponUtil.AmmoStack ammoStack;
@@ -217,7 +219,9 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
                 }
             }
             if(projectile instanceof AbstractArrow abstractArrow && isMultishotArrow){
-                abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() * MultishotAspect.strengthToDamagePenalty(AspectUtil.getFloatAspectStrength(crossbow, Aspects.MULTISHOT)));
+                abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() * MultishotAspect.strengthToDamagePenalty(
+                        AspectUtil.getOneHandedTotalAspectStrength(livingEntity, interactionHand, Aspects.MULTISHOT)
+                ));
             }
 
             if (livingEntity instanceof CrossbowAttackMob) {
@@ -307,7 +311,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
                 level.playSound((Player)null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), soundevent1, SoundSource.PLAYERS, 0.5F, 1.0F);
             }
         }
-        if(WeaponUtil.getCharge(livingEntity, crossbow) >= 1.0f && AspectUtil.hasBooleanAspect(crossbow, Aspects.REPEAT)){
+        if(WeaponUtil.getCharge(livingEntity, crossbow) >= 1.0f && AspectUtil.getItemStackAspectStrength(crossbow, Aspects.REPEAT)){
             livingEntity.stopUsingItem();
             this.releaseUsing(crossbow, level, livingEntity, count);
         }

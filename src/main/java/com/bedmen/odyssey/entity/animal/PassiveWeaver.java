@@ -4,8 +4,11 @@ import com.bedmen.odyssey.recipes.object.WeavingRecipe;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.RecipeTypeRegistry;
+import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +17,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
@@ -44,15 +48,16 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class PassiveWeaver extends Animal {
-    private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BEETROOT);
+    private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.CARROT, Items.POTATO, Items.BEETROOT);
     private static final Map<Item, Block> WEAVE_MAP = new HashMap<>();
-    private final SimpleContainer inventory = new SimpleContainer(1);
     private static final int MAX_STRING = 3;
     private static final float STRING_CHANCE = 0.05f;
     private static final int STRING_REPLENISH_TIME = 600;
     private static final int MAX_STRING_TIMER = STRING_REPLENISH_TIME * MAX_STRING;
+    private static final String STRING_TIMER_TAG = "StringTimer";
     private int stringTimer;
 
     public PassiveWeaver(EntityType<? extends PassiveWeaver> entityType, Level level) {
@@ -102,6 +107,22 @@ public class PassiveWeaver extends Animal {
         }
     }
 
+    private void spawnEatingParticles(ItemStack itemStack, int count) {
+        for(int i = 0; i < count; ++i) {
+            Vec3 vec3 = new Vec3(((double)this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+            vec3 = vec3.xRot(-this.getXRot() * ((float)Math.PI / 180F));
+            vec3 = vec3.yRot(-this.getYRot() * ((float)Math.PI / 180F));
+            double d0 = ((double)this.random.nextFloat() - 0.5D) * 0.2D;
+            Vec3 vec31 = new Vec3(((double)this.random.nextFloat() - 0.5D) * 0.2D, d0, 0);
+            vec31 = vec31.add(this.getX(), this.getEyeY(), this.getZ());
+            if (this.level instanceof ServerLevel) //Forge: Fix MC-2518 spawnParticle is nooped on server, need to use server specific variant
+                ((ServerLevel)this.level).sendParticles(new ItemParticleOption(ParticleTypes.ITEM, itemStack), vec31.x, vec31.y, vec31.z, 1, vec3.x, vec3.y + 0.05D, vec3.z, 0.0D);
+            else
+                this.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, itemStack), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
+        }
+
+    }
+
     public int getStringTimer(){
         return this.stringTimer;
     }
@@ -111,29 +132,52 @@ public class PassiveWeaver extends Animal {
     }
 
     public boolean wantsToPickUp(ItemStack itemStack) {
+        if(this.isBaby()){
+            return false;
+        }
         Item item = itemStack.getItem();
-        return ((WEAVE_MAP.containsKey(item) && this.inventory.canAddItem(itemStack)) || item == Items.STRING) && !this.isBaby();
+        return ((WEAVE_MAP.containsKey(item) && canAddItemStack(itemStack)) || item == Items.STRING);
+    }
+
+    protected boolean canAddItemStack(ItemStack itemStack){
+        ItemStack currentlyHeldItemStack = this.getMainHandItem();
+        if(currentlyHeldItemStack.isEmpty()){
+            return true;
+        }
+        boolean canAddToStack = currentlyHeldItemStack.getCount() < currentlyHeldItemStack.getMaxStackSize();
+        return ItemStack.isSameItemSameTags(itemStack, currentlyHeldItemStack) && canAddToStack;
+    }
+
+    // Returns what remains of the input stack
+    protected ItemStack addItemStackToMainHand(ItemStack inputStack){
+        ItemStack mainHandItemStack = this.getMainHandItem();
+        if(mainHandItemStack.isEmpty()){
+            this.setItemInHand(InteractionHand.MAIN_HAND, inputStack);
+            return ItemStack.EMPTY;
+        }
+        int inputCount = inputStack.getCount();
+        int currentCount = mainHandItemStack.getCount();
+        int maxCount = mainHandItemStack.getMaxStackSize();
+        if(inputCount + currentCount > maxCount){
+            mainHandItemStack.setCount(maxCount);
+            inputStack.setCount(inputCount - (maxCount - currentCount));
+        }
+        mainHandItemStack.grow(inputCount);
+        return ItemStack.EMPTY;
     }
 
     protected void pickUpItem(ItemEntity itemEntity) {
-        ItemStack itemstack = itemEntity.getItem();
-        if (this.wantsToPickUp(itemstack)) {
+        ItemStack itemStack = itemEntity.getItem();
+        if (this.wantsToPickUp(itemStack)) {
             this.onItemPickup(itemEntity);
-            if(itemstack.is(Items.STRING)){
-                itemstack.shrink(1);
+            if(itemStack.is(Items.STRING)){
+                itemStack.shrink(1);
                 this.stringTimer += STRING_REPLENISH_TIME;
-                if (itemstack.isEmpty()) {
+                if (itemStack.isEmpty()) {
                     itemEntity.discard();
                 }
             } else {
-                SimpleContainer simplecontainer = this.inventory;
-                this.take(itemEntity, itemstack.getCount());
-                ItemStack itemstack1 = simplecontainer.addItem(itemstack);
-                if (itemstack1.isEmpty()) {
-                    itemEntity.discard();
-                } else {
-                    itemstack.setCount(itemstack1.getCount());
-                }
+                itemEntity.setItem(addItemStackToMainHand(itemStack));
             }
         }
 
@@ -145,20 +189,16 @@ public class PassiveWeaver extends Animal {
             if(itemStack.is(Items.STRING)){
                 this.usePlayerItem(player, interactionHand, itemStack);
                 this.stringTimer += STRING_REPLENISH_TIME;
-                return InteractionResult.SUCCESS;
-            }
-            ItemStack itemStack1;
-            if (!player.getAbilities().instabuild) {
-                itemStack1 = itemStack.split(1);
             } else {
-                itemStack1 = itemStack.getItem().getDefaultInstance();
+                player.setItemInHand(interactionHand, addItemStackToMainHand(itemStack));
             }
-            SimpleContainer simplecontainer = this.inventory;
-            simplecontainer.addItem(itemStack1);
-            return InteractionResult.SUCCESS;
+        } else if (itemStack.isEmpty() && !this.getMainHandItem().isEmpty()) {
+            player.setItemInHand(interactionHand, this.getMainHandItem());
+            this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         } else {
             return super.mobInteract(player, interactionHand);
         }
+        return InteractionResult.SUCCESS;
     }
 
     public void makeStuckInBlock(BlockState pState, Vec3 pMotionMultiplier) {
@@ -209,14 +249,21 @@ public class PassiveWeaver extends Animal {
 
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        compoundTag.put("Inventory", this.inventory.createTag());
-        compoundTag.putInt("stringTimer", this.stringTimer);
+        compoundTag.putInt(STRING_TIMER_TAG, this.stringTimer);
     }
 
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        this.inventory.fromTag(compoundTag.getList("Inventory", Tag.TAG_COMPOUND));
-        this.stringTimer = compoundTag.getInt("stringTimer");
+        this.stringTimer = compoundTag.getInt(STRING_TIMER_TAG);
+    }
+
+    protected void dropEquipment() {
+        super.dropEquipment();
+        ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+        if (!itemstack.isEmpty()) {
+            this.spawnAtLocation(itemstack);
+            this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+        }
     }
 
     static class AttackGoal extends MeleeAttackGoal {
@@ -275,7 +322,7 @@ public class PassiveWeaver extends Animal {
 
         public boolean canUse() {
             int stringTimer = this.passiveWeaver.getStringTimer();
-            return (!this.passiveWeaver.inventory.isEmpty() && stringTimer >= PassiveWeaver.STRING_REPLENISH_TIME) || stringTimer >= MAX_STRING_TIMER;
+            return (!this.passiveWeaver.getMainHandItem().isEmpty() && stringTimer >= PassiveWeaver.STRING_REPLENISH_TIME) || stringTimer >= MAX_STRING_TIMER;
         }
 
         public void start() {
@@ -283,15 +330,20 @@ public class PassiveWeaver extends Animal {
         }
 
         public void tick() {
+            ItemStack itemStack = this.passiveWeaver.getMainHandItem();
             if(this.weaveTime < MAX_WEAVE_TIME){
                 this.weaveTime++;
+                if(this.weaveTime % 2 == 0 && !itemStack.isEmpty()){
+                    this.passiveWeaver.spawnEatingParticles(itemStack, 5);
+                    RandomSource randomSource = this.passiveWeaver.random;
+                    this.passiveWeaver.playSound(this.passiveWeaver.getEatingSound(itemStack), 0.25F + 0.25F * (float)randomSource.nextInt(2), (randomSource.nextFloat() - randomSource.nextFloat()) * 0.4F + 2.0F);
+                }
             } else {
                 BlockPos blockPos = this.passiveWeaver.blockPosition();
                 if(this.passiveWeaver.level.getBlockState(blockPos).isAir()){
-                    if(this.passiveWeaver.inventory.isEmpty()){
+                    if(itemStack.isEmpty()){
                         this.passiveWeaver.level.setBlock(blockPos, Blocks.COBWEB.defaultBlockState(), 3);
                     } else {
-                        ItemStack itemStack = this.passiveWeaver.inventory.getItem(0);
                         this.passiveWeaver.level.setBlock(blockPos, WEAVE_MAP.get(itemStack.getItem()).defaultBlockState(), 3);
                         itemStack.shrink(1);
                     }

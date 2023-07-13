@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.effect;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
@@ -60,14 +61,19 @@ public class TemperatureSource {
     }
 
     public void tick(LivingEntity livingEntity){
-        float protectionStrength = AspectUtil.getProtectionAspectStrength(livingEntity, this.damageSource());
-        if(this.protectionForImmunity.isPresent() &&  protectionStrength >= this.protectionForImmunity.get()){
+        float temperatureProtectionStrength;
+        if(this.isHot()){
+            temperatureProtectionStrength = AspectUtil.getTotalAspectStrength(livingEntity, Aspects.COOLING);
+        } else {
+            temperatureProtectionStrength = AspectUtil.getTotalAspectStrength(livingEntity, Aspects.WARMTH);
+        }
+        if(this.protectionForImmunity.isPresent() &&  temperatureProtectionStrength >= this.protectionForImmunity.get()){
             return;
         }
         if(this.isHot() && livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE)){
             return;
         }
-        float protectionFactor = this.protectionForImmunity.map(value -> (value - protectionStrength) / value).orElse(1.0f);
+        float protectionFactor = this.protectionForImmunity.map(value -> (value - temperatureProtectionStrength) / value).orElse(1.0f);
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             float temperature = odysseyLivingEntity.getTemperature();
             float changeInTemperature = this.temperaturePerTick * protectionFactor;
@@ -134,6 +140,10 @@ public class TemperatureSource {
 
     public static TemperatureSource getHarmfulTemperatureEffectSource(boolean isHot, int amplifier){
         return temperaturePercentPerSecondSource(6.25f * (1 << amplifier) * getHotFactor(isHot), Optional.of(4f * (amplifier + 1)));
+    }
+
+    public static TemperatureSource getHarmfulTemperatureAspectSource(float strength){
+        return temperaturePercentPerSecondSource(strength);
     }
 
 }

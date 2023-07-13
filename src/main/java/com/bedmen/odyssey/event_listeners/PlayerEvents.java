@@ -7,10 +7,12 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
+import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.util.StringUtil;
@@ -20,9 +22,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -34,7 +38,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.phys.Vec3;
@@ -82,14 +85,25 @@ public class PlayerEvents {
                         player.causeFoodExhaustion(temperature * 0.02f);
                     }
                 }
+
+                // Experience aspect
+                float experienceGainPerTick = AspectUtil.getTotalAspectStrength(player, Aspects.EXPERIENCE_PER_SECOND);
+                if(experienceGainPerTick != 0f && player instanceof ServerPlayer serverPlayer){
+                    ExperienceCost experienceCost = new ExperienceCost(-experienceGainPerTick);
+                    if (experienceCost.canPay(serverPlayer)){
+                        experienceCost.pay(serverPlayer);
+                    } else {
+                        serverPlayer.hurt(OdysseyDamageSource.MANALESS, Float.MAX_VALUE);
+                    }
+                }
             } else { //Client Side
 
             }
         } else { //End of Tick
             // Gliding
             if(player instanceof OdysseyLivingEntity odysseyLivingEntity){
-                odysseyLivingEntity.setFlightLevels(AspectUtil.hasBooleanAspectOnArmor(player, Aspects.SLOW_FALL), AspectUtil.getIntegerAspectValueFromArmor(player, Aspects.GLIDE));
-                if(player.isShiftKeyDown() && AspectUtil.hasBooleanAspectOnArmor(player, Aspects.SLOW_FALL) && odysseyLivingEntity.getFlightValue() > 0){
+                odysseyLivingEntity.setFlightLevels(AspectUtil.getArmorAspectStrength(player, Aspects.SLOW_FALL), AspectUtil.getArmorAspectStrength(player, Aspects.GLIDE));
+                if(player.isShiftKeyDown() && AspectUtil.getArmorAspectStrength(player, Aspects.SLOW_FALL) && odysseyLivingEntity.getFlightValue() > 0){
                     odysseyLivingEntity.decrementFlight();
                     if(!player.level.isClientSide){
                         player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 2, 0, false, false, true));
@@ -100,7 +114,7 @@ public class PlayerEvents {
             }
 
             // Turtle Mastery
-            if (AspectUtil.hasBooleanAspectOnArmor(player, Aspects.TURTLE_MASTERY) && player.isShiftKeyDown() && !player.level.isClientSide) {
+            if (AspectUtil.getArmorAspectStrength(player, Aspects.TURTLE_MASTERY) && player.isShiftKeyDown() && !player.level.isClientSide) {
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, 0, false, false, true));
             }
         }
@@ -137,12 +151,12 @@ public class PlayerEvents {
                 && !hasExtraKnockbackFromSprinting
                 && player.isOnGround()
                 && (player.walkDist - player.walkDistO) < (double)player.getSpeed();
-        boolean canSweep = isStandingStrike && AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.SWEEP);
-        boolean canThrust = isStandingStrike && AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.THRUST);
-        float sweepDamage = 1.0f + AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.ADDITIONAL_SWEEP_DAMAGE);
+        boolean canSweep = isStandingStrike && AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.SWEEP);
+        boolean canThrust = isStandingStrike && AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.THRUST);
+        float sweepDamage = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(player, InteractionHand.MAIN_HAND, Aspects.ADDITIONAL_SWEEP_DAMAGE);
         // Knockback
         if(hasExtraKnockbackFromSprinting && target instanceof OdysseyLivingEntity odysseyLivingEntity){
-            odysseyLivingEntity.pushKnockbackAspectQueue(AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
+            odysseyLivingEntity.pushKnockbackAspectQueue(AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.KNOCKBACK));
         }
         // Sweep
         if(canSweep){
@@ -172,7 +186,7 @@ public class PlayerEvents {
             }
         }
         // Smack
-        if(isFullyCharged && AspectUtil.hasBooleanAspect(mainHandItemStack, Aspects.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
+        if(isFullyCharged && AspectUtil.getItemStackAspectStrength(mainHandItemStack, Aspects.SMACK) && target instanceof OdysseyLivingEntity odysseyLivingEntity){
             odysseyLivingEntity.setSmackPush(new SmackPush(attackStrengthScale, player, target));
         }
     }
@@ -232,22 +246,21 @@ public class PlayerEvents {
     public static void onPlayerEventClone(final PlayerEvent.Clone event){
         Player newPlayer = event.getEntity();
         Player oldPlayer = event.getOriginal();
-        if(newPlayer instanceof OdysseyPlayer newOdysseyPlayer && oldPlayer instanceof OdysseyPlayer oldOdysseyPlayer){
-            newOdysseyPlayer.setPermabuffHolder(oldOdysseyPlayer.getPermabuffHolder());
+        if(newPlayer instanceof OdysseyLivingEntity newOdysseyLivingEntity && oldPlayer instanceof OdysseyLivingEntity oldOdysseyLivingEntity){
+            newOdysseyLivingEntity.setPermaBuffHolder(oldOdysseyLivingEntity.getPermaBuffHolder());
         }
     }
 
     @SubscribeEvent
     public static void onPlayerEventBreakSpeed(final PlayerEvent.BreakSpeed event){
         Player player = event.getEntity();
-        ItemStack itemStack = player.getMainHandItem();
         float speed = event.getOriginalSpeed();
         if (player.isEyeInFluid(FluidTags.WATER)
                 && !EnchantmentHelper.hasAquaAffinity(player)
-                && AspectUtil.hasBooleanAspect(itemStack, Aspects.AQUA_AFFINITY)) {
+                && AspectUtil.getOneHandedTotalAspectStrength(player, InteractionHand.MAIN_HAND, Aspects.AQUA_AFFINITY)) {
             speed *= 5.0F;
         }
-        speed *= 1.0f + AspectUtil.getFloatAspectStrength(itemStack, Aspects.EFFICIENCY);
+        speed *= 1.0f + AspectUtil.getOneHandedTotalAspectStrength(player, InteractionHand.MAIN_HAND, Aspects.EFFICIENCY);
         event.setNewSpeed(speed);
     }
 }

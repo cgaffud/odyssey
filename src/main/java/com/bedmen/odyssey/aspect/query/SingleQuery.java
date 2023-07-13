@@ -5,9 +5,9 @@ import com.bedmen.odyssey.aspect.object.Aspect;
 
 public class SingleQuery implements AspectQuery {
 
-    private final Aspect aspect;
+    private final Aspect<?> aspect;
 
-    public SingleQuery(Aspect aspect){
+    public SingleQuery(Aspect<?> aspect){
         this.aspect = aspect;
     }
 

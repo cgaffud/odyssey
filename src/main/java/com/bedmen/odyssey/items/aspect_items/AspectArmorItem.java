@@ -17,8 +17,6 @@ import net.minecraft.world.item.Tier;
 
 import java.util.List;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class AspectArmorItem extends ArmorItem implements InnateAspectItem, OdysseyTierItem {
 
     private final InnateAspectHolder innateAspectHolder;
@@ -50,14 +48,14 @@ public class AspectArmorItem extends ArmorItem implements InnateAspectItem, Odys
 
     public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer)
     {
-        return AspectUtil.hasBooleanAspect(stack, Aspects.PIGLIN_NEUTRAL);
+        return AspectUtil.getItemStackAspectStrength(stack, Aspects.PIGLIN_NEUTRAL);
     }
 
     public boolean canElytraFly(ItemStack stack, LivingEntity livingEntity) {
         if(this.slot != EquipmentSlot.CHEST){
             return false;
         }
-        if(!(AspectUtil.getIntegerAspectValueFromArmor(livingEntity, Aspects.GLIDE) > 0 || AspectUtil.getIntegerAspectStrength(stack, Aspects.GLIDE) > 0)){
+        if(!(AspectUtil.getArmorAspectStrength(livingEntity, Aspects.GLIDE) > 0 || AspectUtil.getItemStackAspectStrength(stack, Aspects.GLIDE) > 0)){
             return false;
         }
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){

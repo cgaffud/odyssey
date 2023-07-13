@@ -28,6 +28,7 @@ public class OdysseyTiers {
     public static final OdysseyTier LEATHER = new OdysseyTier(3, () -> Ingredient.of(Items.LEATHER));
     public static final OdysseyTier CHICKEN = new OdysseyTier(3, () -> Ingredient.of(ItemRegistry.FEATHER_BUNDLE.get()));
     public static final OdysseyTier FUR = new OdysseyTier(3, () -> Ingredient.of(ItemRegistry.POLAR_BEAR_FUR.get()));
+    public static final OdysseyTier BRICK = new OdysseyTier(2, () -> Ingredient.of(Items.BRICK));
     public static final OdysseyTier COPPER = new OdysseyTier(2,200, () -> Ingredient.of(Items.COPPER_INGOT));
     public static final OdysseyTier SPIDER_FANG = new OdysseyTier(2,225, () -> Ingredient.of(ItemRegistry.SPIDER_FANG.get()));
     public static final OdysseyTier RUSTY_IRON = new OdysseyTier(2,240, () -> Ingredient.EMPTY);
@@ -70,7 +71,8 @@ public class OdysseyTiers {
         TierSortingRegistry.registerTier(LEATHER, new ResourceLocation(Odyssey.MOD_ID,"leather"), List.of(BONE), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(CHICKEN, new ResourceLocation(Odyssey.MOD_ID,"chicken"), List.of(LEATHER), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(FUR, new ResourceLocation(Odyssey.MOD_ID,"fur"), List.of(CHICKEN), List.of(Tiers.IRON));
-        TierSortingRegistry.registerTier(COPPER, new ResourceLocation(Odyssey.MOD_ID,"copper"), List.of(FUR), List.of(Tiers.IRON));
+        TierSortingRegistry.registerTier(BRICK, new ResourceLocation(Odyssey.MOD_ID,"brick"), List.of(FUR), List.of(Tiers.IRON));
+        TierSortingRegistry.registerTier(COPPER, new ResourceLocation(Odyssey.MOD_ID,"copper"), List.of(BRICK), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(SPIDER_FANG, new ResourceLocation(Odyssey.MOD_ID,"spider_fang"), List.of(COPPER), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(RUSTY_IRON, new ResourceLocation(Odyssey.MOD_ID,"rusty_iron"), List.of(SPIDER_FANG), List.of(Tiers.IRON));
         TierSortingRegistry.registerTier(CHAINMAIL, new ResourceLocation(Odyssey.MOD_ID,"chainmail"), List.of(RUSTY_IRON), List.of(Tiers.IRON));
