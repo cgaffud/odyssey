@@ -133,4 +133,8 @@ public class AspectInstance {
     public AspectInstance withAddedStrength(float bonusStrength){
         return new AspectInstance(this.aspect, this.strength + bonusStrength, this.aspectTooltipDisplaySetting, this.obfuscated);
     }
+
+    public AspectInstance withMultipliedStrength(float multiplier){
+        return new AspectInstance(this.aspect, this.strength * multiplier, this.aspectTooltipDisplaySetting, this.obfuscated);
+    }
 }

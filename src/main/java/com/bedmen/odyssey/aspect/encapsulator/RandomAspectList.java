@@ -11,7 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public abstract class RandomAspectList {
@@ -31,8 +30,7 @@ public abstract class RandomAspectList {
     protected void filter(ItemStack itemStack){
         this.filteredList = this.weightedAspectEntryList.stream()
                 .filter(weightedAspectEntry ->
-                        weightedAspectEntry.aspect().itemPredicate.test(itemStack.getItem())
-                        && AspectUtil.getAspectStrength(itemStack, weightedAspectEntry.aspect) <= 0.0f)
+                        weightedAspectEntry.aspect().itemPredicate.test(itemStack.getItem()))
                 .collect(Collectors.toList());
     }
 

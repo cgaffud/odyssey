@@ -3,13 +3,13 @@
   "group": "chicken_soup",
   "ingredients": [
     {
-      "item": "oddc:noodles"
+      "item": "oddc:dry_noodles"
     },
     {
       "item": "minecraft:cooked_chicken"
     },
     {
-      "item": "minecraft:bowl"
+      "item": "oddc:warm_broth"
     },
     {
       "item": "minecraft:carrot"

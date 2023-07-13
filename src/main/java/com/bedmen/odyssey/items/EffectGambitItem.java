@@ -19,15 +19,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import net.minecraft.world.item.Item.Properties;
 
 public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemModelProperty{
 
+    private static final int NERF_DURATION = 6000; // 5 minutes
+
     private final Supplier<MobEffect> buff;
     private final Supplier<MobEffect> nerf;
-    public static final String IS_DRAINING_TAG = Odyssey.MOD_ID + ":Draining";
+
+    // If the Tag is not present, the item is not actively draining
     public static final String ACTIVATOR_UUID_TAG = Odyssey.MOD_ID + ":ActivatorUUID";
 
     public EffectGambitItem(Properties properties, ExperienceCost experienceCost, Supplier<MobEffect> buff, Supplier<MobEffect> nerf) {
@@ -37,6 +41,19 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
     }
 
     public boolean canBeUsed(ServerPlayer serverPlayer, ItemStack itemStack){
+        CompoundTag compoundTag = itemStack.getOrCreateTag();
+        boolean isActivated = compoundTag.contains(ACTIVATOR_UUID_TAG);
+        // Cannot activate two of the same gambit item
+        if(serverPlayer.hasEffect(this.buff.get()) && !isActivated){
+            return false;
+        }
+        if(isActivated){
+            UUID uuid = compoundTag.getUUID(ACTIVATOR_UUID_TAG);
+            // Only the player who activated the gambit item can deactivate it
+            if(!serverPlayer.getUUID().equals(uuid)){
+                return false;
+            }
+        }
         return super.canBeUsed(serverPlayer, itemStack);
     }
 
@@ -53,18 +70,13 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
     public static ItemPropertyFunction getEffectGambitPropertyFunction() {
         return (itemStack, clientLevel, livingEntity, i) -> {
             if (itemStack.getItem() instanceof EffectGambitItem) {
-                CompoundTag status = itemStack.getOrCreateTag();
-                float active = 0.0f;
-                if (status.contains(IS_DRAINING_TAG))
-                    active = status.getBoolean(IS_DRAINING_TAG) ? 1.0f : 0.0f;
-                return active;
+                CompoundTag compoundTag = itemStack.getOrCreateTag();
+                return compoundTag.contains(ACTIVATOR_UUID_TAG) ? 1.0f : 0.0f;
             }
             return 0.0f;
         };
     }
 
-    // Todo: when you die the model doesn't seem to update? we may have to also force the activaiton to stop on the
-    // item when the effect kills you
     public void registerItemModelProperties() {
         ItemProperties.register(this, new ResourceLocation("active"), EffectGambitItem.getEffectGambitPropertyFunction());
     }
@@ -75,42 +87,22 @@ public class EffectGambitItem extends MagicItem implements INeedsToRegisterItemM
 
     public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {
         if(this.markedAsCanBeUsed(itemStack) && livingEntity instanceof ServerPlayer serverPlayer){
-            CompoundTag status = itemStack.getOrCreateTag();
-            if (!status.contains(IS_DRAINING_TAG))
-                status.putBoolean(IS_DRAINING_TAG, false);
-
-            if (status.getBoolean(IS_DRAINING_TAG)) {
-                status.putBoolean(IS_DRAINING_TAG, false);
-                if (status.contains(ACTIVATOR_UUID_TAG)) {
-                    ServerPlayer activator = (ServerPlayer) level.getPlayerByUUID(status.getUUID(ACTIVATOR_UUID_TAG));
-                    // This sets your health to 1.0f since if we do damage and you have vulnerability you just die
-//                    activator.setHealth(1.0f);
-
-                    // A
-                    int amplifier = -1;
-                    if (serverPlayer.hasEffect(EffectRegistry.GAMBIT_DRAIN.get()))
-                        amplifier = serverPlayer.getEffect(EffectRegistry.GAMBIT_DRAIN.get()).getAmplifier() - 1;
-
-                    activator.removeEffect(EffectRegistry.GAMBIT_DRAIN.get());
-                    if (amplifier != -1)
-                        serverPlayer.addEffect(new MobEffectInstance(EffectRegistry.GAMBIT_DRAIN.get(), 999999, amplifier));
-
-                    activator.removeEffect(this.buff.get());
-                    activator.addEffect(new MobEffectInstance(this.nerf.get(), 6000));
-                }
+            CompoundTag compoundTag = itemStack.getOrCreateTag();
+            if(compoundTag.contains(ACTIVATOR_UUID_TAG)){
+                serverPlayer.removeEffect(this.buff.get());
+                serverPlayer.addEffect(new MobEffectInstance(this.nerf.get(), NERF_DURATION));
+                removeActivatorTag(itemStack);
             } else {
-                //
                 serverPlayer.removeEffect(this.nerf.get());
-                serverPlayer.addEffect(new MobEffectInstance(this.buff.get(), 999999));
-                int amplifier = 0;
-                if (serverPlayer.hasEffect(EffectRegistry.GAMBIT_DRAIN.get()))
-                    amplifier = serverPlayer.getEffect(EffectRegistry.GAMBIT_DRAIN.get()).getAmplifier()+1;
-                serverPlayer.addEffect(new MobEffectInstance(EffectRegistry.GAMBIT_DRAIN.get(), 999999, amplifier));
-
-                status.putBoolean(IS_DRAINING_TAG, true);
-                status.putUUID(ACTIVATOR_UUID_TAG, serverPlayer.getUUID());
+                serverPlayer.addEffect(new MobEffectInstance(this.buff.get(), Integer.MAX_VALUE));
+                compoundTag.putUUID(ACTIVATOR_UUID_TAG, serverPlayer.getUUID());
             }
         }
         return itemStack;
+    }
+
+    public static void removeActivatorTag(ItemStack itemStack){
+        CompoundTag compoundTag = itemStack.getOrCreateTag();
+        compoundTag.remove(ACTIVATOR_UUID_TAG);
     }
 }

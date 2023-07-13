@@ -1,6 +1,9 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.PermaBuffHolder;
+import com.bedmen.odyssey.aspect.encapsulator.TempBuffHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
@@ -12,6 +15,8 @@ import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.util.RenderUtil;
 import com.google.common.base.Objects;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -31,11 +36,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -52,18 +54,25 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements OdysseyLivingEntity {
     private static final EntityDataAccessor<FireType> DATA_FIRE_TYPE = SynchedEntityData.defineId(LivingEntity.class, OdysseyDataSerializers.FIRE_TYPE);
     private static final EntityDataAccessor<Float> DATA_TEMPERATURE = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_SHIELD_METER = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<PermaBuffHolder> DATA_PERMABUFF_HOLDER = SynchedEntityData.defineId(LivingEntity.class, OdysseyDataSerializers.PERMABUFF_HOLDER);
     private static final String FLIGHT_VALUE_TAG = "FlightValue";
     private static final String GLIDING_LEVEL_TAG = "GlidingLevel";
     private static final String SLOW_FALL_TAG = "HasSlowFall";
     private static final String FIRE_TYPE_TAG = "FireType";
     private static final String TEMPERATURE_TAG = "Temperature";
     private static final String SHIELD_METER_TAG = "ShieldMeter";
+
+    private static final String PERMABUFF_STRING = "PermaBuff";
+    private static final String TEMPBUFF_STRING = "TempBuff";
+
+    private static final String PERMABUFF_HOLDER_TAG = "PermaBuffHolder";
 
     private float shieldMeterO = WeaponUtil.SHIELD_METER_MAX;
     private int glidingLevel = 0;
@@ -72,6 +81,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private SmackPush smackPush = new SmackPush();
     private final List<Float> knockbackQueue = new ArrayList<>();
     private Optional<Integer> trueHurtTime = Optional.empty();
+    private TempBuffHolder tempBuffHolder = new TempBuffHolder(List.of());
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -122,12 +132,69 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     @Shadow public abstract Optional<BlockPos> getLastClimbablePos();
 
     @Shadow public abstract boolean isAutoSpinAttack();
+    @Shadow public AttributeMap getAttributes() {return null;}
+
+    @Shadow public abstract void aiStep();
 
     @Inject(method = "defineSynchedData", at = @At(value = "TAIL"))
     public void onDefineSynchedData(CallbackInfo ci) {
         this.entityData.define(DATA_FIRE_TYPE, FireType.NONE);
         this.entityData.define(DATA_TEMPERATURE, 0.0f);
         this.entityData.define(DATA_SHIELD_METER, WeaponUtil.SHIELD_METER_MAX);
+        this.entityData.define(DATA_PERMABUFF_HOLDER, new PermaBuffHolder(new ArrayList<>()));
+    }
+
+    public PermaBuffHolder getPermaBuffHolder(){
+        return this.entityData.get(DATA_PERMABUFF_HOLDER).copy();
+    }
+
+    public void setPermaBuffHolder(PermaBuffHolder newPermaBuffHolder){
+        Multimap<Attribute, AttributeModifier> oldMultimap = HashMultimap.create();
+        Multimap<Attribute, AttributeModifier> newMultimap = HashMultimap.create();
+        AspectUtil.fillAttributeMultimap(this.getPermaBuffHolder().aspectStrengthMap, PERMABUFF_STRING, oldMultimap);
+        AspectUtil.fillAttributeMultimap(newPermaBuffHolder.aspectStrengthMap, PERMABUFF_STRING, newMultimap);
+        this.getAttributes().removeAttributeModifiers(oldMultimap);
+        this.getAttributes().addTransientAttributeModifiers(newMultimap);
+        this.entityData.set(DATA_PERMABUFF_HOLDER, newPermaBuffHolder.copy());
+    }
+
+    public void setPermaBuff(AspectInstance aspectInstance){
+        List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermaBuffHolder().aspectInstanceList);
+        if(aspectInstanceList.stream().anyMatch(oldAspectInstance -> oldAspectInstance.aspect == aspectInstance.aspect)){
+            aspectInstanceList = aspectInstanceList.stream().map(oldAspectInstance -> {
+                if(oldAspectInstance.aspect == aspectInstance.aspect){
+                    if(aspectInstance.strength <= 0.0f){
+                        return null;
+                    }
+                    return aspectInstance;
+                }
+                return oldAspectInstance;
+            }).filter(java.util.Objects::nonNull).collect(Collectors.toList());
+        } else {
+            aspectInstanceList.add(aspectInstance);
+        }
+        PermaBuffHolder permabuffHolder = new PermaBuffHolder(aspectInstanceList);
+        this.setPermaBuffHolder(permabuffHolder);
+    }
+
+    public void addPermaBuffs(List<AspectInstance> permabuffList){
+        List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermaBuffHolder().aspectInstanceList);
+        permabuffList.forEach(aspectInstance -> AspectUtil.addInstance(aspectInstanceList, aspectInstance));
+        this.setPermaBuffHolder(new PermaBuffHolder(aspectInstanceList));
+    }
+
+    public TempBuffHolder getTempBuffHolder(){
+        return this.tempBuffHolder;
+    }
+    public void setTempBuffs(List<AspectInstance> aspectInstanceList) {
+        TempBuffHolder oldTempBuffHolder = this.tempBuffHolder;
+        this.tempBuffHolder = new TempBuffHolder(aspectInstanceList);
+        Multimap<Attribute, AttributeModifier> oldMultimap = HashMultimap.create();
+        Multimap<Attribute, AttributeModifier> newMultimap = HashMultimap.create();
+        AspectUtil.fillAttributeMultimap(oldTempBuffHolder.aspectStrengthMap, TEMPBUFF_STRING, oldMultimap);
+        AspectUtil.fillAttributeMultimap(this.tempBuffHolder.aspectStrengthMap, TEMPBUFF_STRING, newMultimap);
+        this.getAttributes().removeAttributeModifiers(oldMultimap);
+        this.getAttributes().addTransientAttributeModifiers(newMultimap);
     }
 
     public void baseTick() {
@@ -166,7 +233,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             if (drowningAmount > 0) {
                 boolean cannotBreatheUnderWater = !this.canBreatheUnderwater() && !MobEffectUtil.hasWaterBreathing(livingEntity) && (!flag || !((Player)livingEntity).getAbilities().invulnerable);
                 if (cannotBreatheUnderWater) {
-                    float respirationStrength = 1.0f + AspectUtil.getFloatAspectValueFromArmor(livingEntity, Aspects.RESPIRATION);
+                    float respirationStrength = 1.0f + AspectUtil.getArmorAndEntityAspectStrength(livingEntity, Aspects.RESPIRATION);
                     float airLossChance = 1.0f / respirationStrength;
                     for(int i = 0; i < drowningAmount; i++){
                         if(airLossChance >= livingEntity.getRandom().nextFloat()){
@@ -261,6 +328,8 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         compoundTag.putString(FIRE_TYPE_TAG, this.getFireType().name());
         compoundTag.putFloat(TEMPERATURE_TAG, this.getTemperature());
         compoundTag.putFloat(SHIELD_METER_TAG, this.getShieldMeter());
+        CompoundTag permabuffHolderTag = this.getPermaBuffHolder().toCompoundTag();
+        compoundTag.put(PERMABUFF_HOLDER_TAG, permabuffHolderTag);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At(value = "RETURN"))
@@ -274,6 +343,9 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         this.setTemperature(compoundTag.getFloat(TEMPERATURE_TAG));
         if(compoundTag.contains(SHIELD_METER_TAG)){
             this.setShieldMeter(compoundTag.getFloat(SHIELD_METER_TAG));
+        }
+        if(compoundTag.contains(PERMABUFF_HOLDER_TAG)){
+            this.setPermaBuffHolder(PermaBuffHolder.fromCompoundTag(compoundTag.getCompound(PERMABUFF_HOLDER_TAG)));
         }
     }
 
@@ -352,8 +424,8 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             if (amount <= 0.0F) {
                 return 0.0F;
             } else {
-                float protectionArmor = 5.0f * AspectUtil.getProtectionAspectStrength(this.getLivingEntity(), damageSource);
-                if (protectionArmor > 0.0f) {
+                float protectionArmor = 5f * AspectUtil.getProtectionAspectStrength(this.getLivingEntity(), damageSource);
+                if (protectionArmor != 0f) {
                     amount = CombatRules.getDamageAfterAbsorb(amount, protectionArmor, 0.0f);
                 }
 

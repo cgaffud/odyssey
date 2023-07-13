@@ -5,7 +5,6 @@ import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
-import com.bedmen.odyssey.effect.TemperatureEffect;
 import com.bedmen.odyssey.entity.boss.coven.CovenRootEntity;
 import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.monster.Weaver;
@@ -22,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -111,7 +111,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
             AABB boundingBox = this.getBoundingBox().inflate(2.0d);
             if(!this.level.isClientSide){
                 this.level.getEntitiesOfClass(LivingEntity.class, boundingBox, livingEntity -> livingEntity != this.getOwner())
-                        .forEach(livingEntity -> livingEntity.addEffect(TemperatureEffect.getTemperatureEffectInstance(EffectRegistry.FREEZING.get(), 20, 2, true)));
+                        .forEach(livingEntity -> livingEntity.addEffect(new MobEffectInstance(EffectRegistry.STRAY_FREEZING.get(), 20, 4)));
             } else {
                 AspectUtil.doFrostAspectParticles(this, 1);
             }

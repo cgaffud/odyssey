@@ -28,7 +28,7 @@ public enum OdysseyArmorMaterial implements ArmorMaterial {
     TURTLE("oddc:turtle", OdysseyTiers.TURTLE, 25, new int[]{3,6,7,4}, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, List.of(new AspectInstance(Aspects.TURTLE_MASTERY))),
     GOLD("gold", OdysseyTiers.GOLD, 7, new int[]{4,7,8,5}, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, List.of()),
     // Tier 2
-    GLIDER("oddc:glider", OdysseyTiers.GLIDER, 15, new int[]{3,5,5,3}, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, List.of(new AspectInstance(Aspects.GLIDE, 20))),
+    GLIDER("oddc:glider", OdysseyTiers.GLIDER, 15, new int[]{4,7,8,5}, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, List.of(new AspectInstance(Aspects.GLIDE, 20))),
     THORNMAIL("oddc:thornmail", OdysseyTiers.THORNMAIL, 20, new int[]{5,8,9,6}, SoundEvents.ARMOR_EQUIP_CHAIN, 0.0f, List.of(new AspectInstance(Aspects.ATTACK_DAMAGE, 1.0f))),
     PARKA("oddc:parka", OdysseyTiers.PARKA, 20, new int[]{5,8,9,6}, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, List.of()),
     STERLING_SILVER("oddc:sterling_silver", OdysseyTiers.STERLING_SILVER, 20, new int[]{5,9,10,6}, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, List.of()),

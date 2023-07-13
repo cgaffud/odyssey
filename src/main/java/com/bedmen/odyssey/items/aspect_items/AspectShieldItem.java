@@ -5,7 +5,6 @@ import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.combat.ShieldType;
-import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.util.StringUtil;
@@ -15,11 +14,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -27,7 +22,6 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, InnateAspectItem, OdysseyTierItem {
@@ -58,16 +52,16 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
     }
 
     public float getDamageBlock(ItemStack shield, DamageSource damageSource){
-        return this.shieldType.damageBlock + AspectUtil.getDamageSourcePredicateAspectStrength(shield, damageSource);
+        return this.shieldType.damageBlock + AspectUtil.getShieldDamageBlockAspectStrength(shield, damageSource);
     }
 
     public int getRecoveryTime(ItemStack shield){
-        float recoverySpeedMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(shield, Aspects.RECOVERY_SPEED);
+        float recoverySpeedMultiplier = 1.0f + AspectUtil.getItemStackAspectStrength(shield, Aspects.RECOVERY_SPEED);
         return Mth.ceil((float)this.shieldType.recoveryTime / recoverySpeedMultiplier);
     }
 
     public float getBlockingAngleWidth(ItemStack shield){
-        float widthMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(shield, Aspects.WIDTH);
+        float widthMultiplier = 1.0f + AspectUtil.getItemStackAspectStrength(shield, Aspects.WIDTH);
         return this.shieldType.blockingAngleWidth * widthMultiplier;
     }
 
