@@ -25,3 +25,5 @@ updateMappings.md
 /.gradle/
 *.DS_Store
 python/__pycache__/
+/changelog.txt
+/CREDITS.txt
