@@ -38,11 +38,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -249,6 +251,10 @@ public class PlayerEvents {
         if(newPlayer instanceof OdysseyLivingEntity newOdysseyLivingEntity && oldPlayer instanceof OdysseyLivingEntity oldOdysseyLivingEntity){
             newOdysseyLivingEntity.setPermaBuffHolder(oldOdysseyLivingEntity.getPermaBuffHolder());
         }
+        // If this was a player death & keepInventory is off, transfer all soulbound items to new player instance.
+        if (event.isWasDeath() && !newPlayer.getLevel().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
+            oldPlayer.getInventory().items.stream().forEach(itemStack -> newPlayer.getInventory().placeItemBackInInventory(itemStack)
+            );
     }
 
     @SubscribeEvent
@@ -262,5 +268,13 @@ public class PlayerEvents {
         }
         speed *= 1.0f + AspectUtil.getOneHandedTotalAspectStrength(player, InteractionHand.MAIN_HAND, Aspects.EFFICIENCY);
         event.setNewSpeed(speed);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerEventCriticalHit(final CriticalHitEvent event) {
+        ItemStack mainHandItemStack = event.getEntity().getMainHandItem();
+        float precisionStrikeStrength = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.PRECISION_STRIKE);
+        if ((precisionStrikeStrength > 0) && (event.getOldDamageModifier() == 1.5f))
+            event.setDamageModifier(2.0f);
     }
 }

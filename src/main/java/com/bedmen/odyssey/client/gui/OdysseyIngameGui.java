@@ -1,9 +1,10 @@
 package com.bedmen.odyssey.client.gui;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.mixin.MixinLivingEntity;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -224,6 +225,40 @@ public class OdysseyIngameGui extends ForgeGui
                 }
                 rightHeight += 10;
             }
+        }
+
+        RenderSystem.disableBlend();
+        minecraft.getProfiler().pop();
+    }
+
+    public void renderLightBar(int width, int height, PoseStack poseStack) {
+        rightHeight -= 4;
+        RenderSystem.setShaderTexture(0, ODYSSEY_GUI_ICONS_LOCATION);
+        minecraft.getProfiler().push("light_bar");
+        Player player = (Player) this.minecraft.getCameraEntity();
+        RenderSystem.enableBlend();
+        int left = width / 2 + 91 - 51;
+        int top = height - rightHeight;
+
+        ItemStack itemStack = player.getMainHandItem();
+
+        if (AspectUtil.getAspectStrength(itemStack, Aspects.SOLAR_STRENGTH) > 0 || AspectUtil.getAspectStrength(itemStack, Aspects.LUNAR_STRENGTH) > 0) {
+            int barAdjustment = AspectUtil.getAspectStrength(itemStack, Aspects.LUNAR_STRENGTH) > 0 ? 10 : 0;
+            int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
+            System.out.println(charge);
+            // Fill entire bar
+            charge = (charge == 50) ? 51 : charge;
+            blit(poseStack, left, top, 0, 52 + barAdjustment, 51, 5);
+            if (charge > 0) blit(poseStack, left, top, 0, 57 + barAdjustment, charge, 5);
+            rightHeight += 9;
+        } else if (AspectUtil.getFloatAspectStrength(itemStack, Aspects.ABSORBENT_GROWTH) > 0) {
+            float progress = itemStack.getOrCreateTag().getFloat(AspectUtil.DAMAGE_GROWTH_TAG);
+            // These values are temp as we need item texture to determine bar color
+            blit(poseStack, left, top, 0, 62, 51, 5);
+            if (progress > 0) blit(poseStack, left, top, 0, 67, (int) (progress*51), 5);
+            rightHeight += 9;
+        } else {
+            rightHeight += 4;
         }
 
         RenderSystem.disableBlend();

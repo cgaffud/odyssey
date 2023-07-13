@@ -22,6 +22,7 @@ import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectMeleeItem;
 import com.bedmen.odyssey.items.aspect_items.ParryableWeaponItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.BlowbackAnimatePacket;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
 import com.bedmen.odyssey.registry.EffectRegistry;
@@ -47,6 +48,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -54,6 +56,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -252,6 +255,18 @@ public class EntityEvents {
             if(thornsStrength > 0.0f && 0.25f >= hurtLivingEntity.getRandom().nextFloat()){
                 damageSourceLivingEntity.hurt(DamageSource.thorns(hurtLivingEntity), thornsStrength);
             }
+
+            // Absorbent Growth
+            float absorbentGrowthCapacity = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.ABSORBENT_GROWTH);
+            if ((hurtLivingEntity instanceof Enemy) && absorbentGrowthCapacity > 0) {
+                float progress = mainHandItemStack.getOrCreateTag().getFloat(AspectUtil.DAMAGE_GROWTH_TAG) + amount/400;
+                mainHandItemStack.getOrCreateTag().putFloat(AspectUtil.DAMAGE_GROWTH_TAG, progress > absorbentGrowthCapacity ? absorbentGrowthCapacity : progress);
+            }
+
+            // Bludgeoning
+            float bludgeoningStrength = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.BLUDGEONING);
+            if ((bludgeoningStrength > 0) && WeaponUtil.isBeingUsedTwoHanded(mainHandItemStack))
+                hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50));
 
             // Dual Wield reduced invulnerability
             if(WeaponUtil.isDualWielding(damageSourceLivingEntity)){
@@ -492,11 +507,19 @@ public class EntityEvents {
             }
             // Parry boost
             if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-                if(odysseyLivingEntity.getShieldMeter() > 1.0f){
-                    damageBlockMultiplier *= 2;
-                    if (parryableWeaponItem instanceof AspectMeleeItem) {
-                        int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier()+1 : 0;
+                if(odysseyLivingEntity.getShieldMeter() > 1.0f) {
+                    damageBlockMultiplier *= (2 + AspectUtil.getFloatAspectStrength(shield, Aspects.PRECISE_BLOCK)/2);
+                    if (parryableWeaponItem instanceof AspectMeleeItem || (AspectUtil.getAspectStrength(shield, Aspects.ASSISTED_STRIKE)) > 0) {
+                        int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier() + 1 : 0;
                         livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 50, strengthAmp));
+                    }
+                    float blowback = AspectUtil.getAspectStrength(shield, Aspects.BLOWBACK);
+                    System.out.print(blowback);
+                    if (blowback > 0 && (damageSource.getEntity() != null) && damageSource.getEntity() instanceof LivingEntity attacker) {
+                        Vec3 awayVector = new Vec3(attacker.getX() - livingEntity.getX(), attacker.getY() - livingEntity.getY(), attacker.getZ()-livingEntity.getZ());
+                        awayVector.normalize().multiply(blowback, blowback, blowback);
+                        attacker.setDeltaMovement(awayVector);
+                        OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> attacker), new BlowbackAnimatePacket(attacker));
                     }
                 }
             }
