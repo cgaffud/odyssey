@@ -15,7 +15,7 @@ import net.minecraft.world.entity.Entity;
 public class WeaverModel<T extends Entity> extends EntityModel<T> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(Odyssey.MOD_ID, "weaver"), "main");
 	private final ModelPart body;
-	private final ModelPart head;
+	public final ModelPart head;
 	private final ModelPart leg1;
 	private final ModelPart leg2;
 	private final ModelPart leg3;

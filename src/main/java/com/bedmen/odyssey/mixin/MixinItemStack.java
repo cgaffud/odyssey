@@ -12,7 +12,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import org.spongepowered.asm.mixin.Mixin;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 @Mixin(ItemStack.class)
 public abstract class MixinItemStack extends net.minecraftforge.common.capabilities.CapabilityProvider<ItemStack> implements net.minecraftforge.common.extensions.IForgeItemStack {
@@ -35,7 +34,7 @@ public abstract class MixinItemStack extends net.minecraftforge.common.capabilit
                     }
                 }
 
-                float durabilityStrength = AspectUtil.getFloatAspectStrength(itemStack, Aspects.DURABILITY);
+                float durabilityStrength = AspectUtil.getItemStackAspectStrength(itemStack, Aspects.DURABILITY);
                 if(durabilityStrength > 0.0f){
                     float noDamageChance = 1.0f - (1.0f / (1.0f + durabilityStrength));
                     for(int k = 0; k < amount; ++k) {

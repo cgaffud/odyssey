@@ -61,7 +61,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
     }
 
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int count) {
-        if(this.getUseDuration(itemStack) - count > WeaponUtil.getRangedMaxChargeTicks(itemStack) && AspectUtil.hasBooleanAspect(itemStack, Aspects.REPEAT)){
+        if(this.getUseDuration(itemStack) - count > WeaponUtil.getRangedMaxChargeTicks(itemStack) && AspectUtil.getItemStackAspectStrength(itemStack, Aspects.REPEAT)){
             livingEntity.stopUsingItem();
             this.releaseUsing(itemStack, level, livingEntity, count);
         }
@@ -90,7 +90,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
                         AspectArrowItem arrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
                         AbstractArrow abstractArrow = arrowItem.createArrow(level, ammo, player);
 
-                        float accuracyMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(bow, Aspects.ACCURACY);
+                        float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(livingEntity, livingEntity.getUsedItemHand(), Aspects.ACCURACY);
                         if(useTicks >= WeaponUtil.getRangedMaxChargeTicks(bow)){
                             abstractArrow.setCritArrow(true);
                         }

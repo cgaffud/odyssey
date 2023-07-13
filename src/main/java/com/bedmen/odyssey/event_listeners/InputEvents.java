@@ -25,7 +25,7 @@ public class InputEvents {
         InteractionHand hand = event.getHand();
         if(localPlayer != null){
             ItemStack itemStack = localPlayer.getItemInHand(hand);
-            float volatilityStrength = AspectUtil.getFloatAspectStrength(itemStack, Aspects.VOLATILITY);
+            float volatilityStrength = AspectUtil.getItemStackAspectStrength(itemStack, Aspects.VOLATILITY);
             if (volatilityStrength > 0.0f){
                 OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket(volatilityStrength));
             }

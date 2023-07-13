@@ -9,7 +9,7 @@ public class GlideAspect extends IntegerAspect implements ActivationAspect {
     protected static final MutableComponent ACTIVATION_KEY = Component.translatable("key.jump");
 
     protected GlideAspect() {
-        super("glide", 0.0f, AspectTooltipFunctions.GLIDE, AspectItemPredicates.CHEST, true);
+        super("glide", 0.0f, AspectTooltipFunctions.GLIDE, AspectItemPredicates.CHEST, false, true);
     }
 
     public MutableComponent getKeyboardKey() {

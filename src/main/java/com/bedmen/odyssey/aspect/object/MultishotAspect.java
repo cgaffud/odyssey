@@ -6,7 +6,7 @@ import net.minecraft.util.Mth;
 
 public class MultishotAspect extends FloatAspect {
     protected MultishotAspect() {
-        super("multishot", 2.0f, AspectTooltipFunctions.MULTISHOT, AspectItemPredicates.CROSSBOW);
+        super("multishot", 2.0f, AspectTooltipFunctions.MULTISHOT, AspectItemPredicates.CROSSBOW, true);
     }
 
     public static int strengthToNumberOfSideProjectiles(float strength){

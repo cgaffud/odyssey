@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "BCD",
+    " E "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:sweet_berries"
+    },
+    "B": {
+      "item": "minecraft:sugar"
+    },
+    "C": {
+      "item": "minecraft:snowball"
+    },
+    "D": {
+      "item": "minecraft:milk_bucket"
+    },
+    "E": {
+      "item": "minecraft:bowl"
+    }
+  },
+  "result": {
+    "item": "oddc:ice_cream_sundae"
+  }
+}

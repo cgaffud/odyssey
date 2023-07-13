@@ -2,7 +2,7 @@ package com.bedmen.odyssey.network.datasync;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
-import com.bedmen.odyssey.aspect.encapsulator.PermabuffHolder;
+import com.bedmen.odyssey.aspect.encapsulator.PermaBuffHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
@@ -84,17 +84,17 @@ public class OdysseyDataSerializers {
         return getMapSerializer(FriendlyByteBuf::writeEnum, writeValueToBuffer, friendlyByteBuf -> friendlyByteBuf.readEnum(enumClass), readValueFromBuffer, HashMap::new, Map::copyOf);
     }
 
-    public static final EntityDataSerializer<PermabuffHolder> PERMABUFF_HOLDER = new EntityDataSerializer<>() {
-        public void write(FriendlyByteBuf buffer, @NotNull PermabuffHolder permabuffHolder) {
+    public static final EntityDataSerializer<PermaBuffHolder> PERMABUFF_HOLDER = new EntityDataSerializer<>() {
+        public void write(FriendlyByteBuf buffer, @NotNull PermaBuffHolder permabuffHolder) {
             buffer.writeCollection(permabuffHolder.aspectInstanceList, AspectInstance.toNetworkStatic);
         }
 
-        public PermabuffHolder read(FriendlyByteBuf buffer) {
+        public PermaBuffHolder read(FriendlyByteBuf buffer) {
             List<AspectInstance> aspectInstanceList = buffer.readCollection(i -> new ArrayList<>(), AspectInstance::fromNetwork);
-            return new PermabuffHolder(aspectInstanceList);
+            return new PermaBuffHolder(aspectInstanceList);
         }
 
-        public PermabuffHolder copy(@NotNull PermabuffHolder permabuffHolder) {
+        public PermaBuffHolder copy(@NotNull PermaBuffHolder permabuffHolder) {
             return permabuffHolder.copy();
         }
     };

@@ -8,17 +8,19 @@ import net.minecraft.world.item.Item;
 
 import java.util.function.Predicate;
 
-public class Aspect {
+public abstract class Aspect<T> {
     public final String id;
     protected final float weight;
     public final AspectTooltipFunction aspectTooltipFunction;
     public final Predicate<Item> itemPredicate;
+    public final boolean isBuff;
 
-    protected Aspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate){
+    protected Aspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
         this.id = id;
         this.weight = weight;
         this.aspectTooltipFunction = aspectTooltipFunction;
         this.itemPredicate = itemPredicate;
+        this.isBuff = isBuff;
         Aspects.ASPECT_REGISTER.put(id, this);
     }
 
@@ -37,4 +39,6 @@ public class Aspect {
         }
         return new AspectInstance(this, modifiability / weight);
     }
+
+    public abstract T castStrength(float strength);
 }

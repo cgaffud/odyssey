@@ -36,13 +36,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAspectItem, OdysseyMeleeItem, ParryableWeaponItem, INeedsToRegisterItemModelProperty {
     /** Modifiers applied when the item is in the mainhand of a user. */
@@ -102,7 +101,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     }
 
     public boolean isCorrectToolForDrops(BlockState blockState) {
-        return (blockState.getBlock() instanceof WebBlock) && AspectUtil.hasBooleanAspect(this.getDefaultInstance(), Aspects.COBWEB_BREAK);
+        return (blockState.getBlock() instanceof WebBlock) && AspectUtil.getItemStackAspectStrength(this.getDefaultInstance(), Aspects.COBWEB_BREAK);
     }
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
@@ -162,11 +161,11 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     }
 
     public float getDamageBlock(ItemStack melee, DamageSource damageSource){
-        return this.meleeWeaponClass.damageBlock + AspectUtil.getDamageSourcePredicateAspectStrength(melee, damageSource);
+        return this.meleeWeaponClass.damageBlock + AspectUtil.getShieldDamageBlockAspectStrength(melee, damageSource);
     }
 
     public float getBlockingAngleWidth(ItemStack shield){
-        float widthMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(shield, Aspects.WIDTH);
+        float widthMultiplier = 1.0f + AspectUtil.getItemStackAspectStrength(shield, Aspects.WIDTH);
         return this.getMeleeWeaponClass().blockingAngleWidth * widthMultiplier;
     }
 
@@ -183,7 +182,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     }
 
     public int getRecoveryTime(ItemStack shield){
-        float recoverySpeedMultiplier = 1.0f + AspectUtil.getFloatAspectStrength(shield, Aspects.RECOVERY_SPEED);
+        float recoverySpeedMultiplier = 1.0f + AspectUtil.getItemStackAspectStrength(shield, Aspects.RECOVERY_SPEED);
         return Mth.ceil((float)this.meleeWeaponClass.recoveryTime / recoverySpeedMultiplier);
     }
 
