@@ -5,8 +5,10 @@ import com.bedmen.odyssey.combat.MeleeWeaponClass;
 import com.bedmen.odyssey.items.aspect_items.OdysseyMeleeItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
+import net.minecraftforge.event.level.PistonEvent;
 
 import java.util.function.Predicate;
 
@@ -46,6 +48,9 @@ public class AspectItemPredicates {
     public static final Predicate<Item> CHEST = item -> item instanceof ArmorItem armorItem && armorItem.getSlot() == EquipmentSlot.CHEST;
     public static final Predicate<Item> BOOTS = item -> item instanceof ArmorItem armorItem && armorItem.getSlot() == EquipmentSlot.FEET;
     public static final Predicate<Item> SHIELD = item -> item instanceof ShieldItem;
+    public static final Predicate<Item> PARRYABLE_MELEE = item -> (item instanceof OdysseyMeleeItem odysseyMeleeItem) && (odysseyMeleeItem.getMeleeWeaponClass().recoveryTime > 0);
+    public static final Predicate<Item> PARRYABLE = item -> (SHIELD.test(item) || PARRYABLE_MELEE.test(item));
+    public static final Predicate<Item> TWO_HANDED = item -> (item instanceof OdysseyMeleeItem odysseyMeleeItem) && (odysseyMeleeItem.getMeleeWeaponClass().twoHandedAttackRate != odysseyMeleeItem.getMeleeWeaponClass().attackRate);
 
     public static final Predicate<Item> TOOL = item -> item instanceof DiggerItem;
 

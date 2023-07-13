@@ -40,6 +40,7 @@ import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -253,5 +254,13 @@ public class PlayerEvents {
         }
         speed *= 1.0f + AspectUtil.getFloatAspectStrength(itemStack, Aspects.EFFICIENCY);
         event.setNewSpeed(speed);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerEventCriticalHit(final CriticalHitEvent event) {
+        ItemStack mainHandItemStack = event.getEntity().getMainHandItem();
+        float precisionStrikeStrength = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.PRECISION_STRIKE);
+        if ((precisionStrikeStrength > 0) && (event.getOldDamageModifier() == 1.5f))
+            event.setDamageModifier(2.0f);
     }
 }
