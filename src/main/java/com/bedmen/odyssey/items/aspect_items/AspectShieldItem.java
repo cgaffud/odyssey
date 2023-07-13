@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, InnateAspectItem, OdysseyTierItem {
+public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItemModelProperty, InnateAspectItem, OdysseyTierItem, ParryableWeaponItem {
     public final ShieldType shieldType;
 
     public AspectShieldItem(Properties builder, ShieldType shieldType) {

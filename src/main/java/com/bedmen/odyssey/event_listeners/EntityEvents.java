@@ -16,8 +16,11 @@ import com.bedmen.odyssey.food.OdysseyFoodData;
 import com.bedmen.odyssey.items.EffectGambitItem;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.WarpTotemItem;
+import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
+import com.bedmen.odyssey.items.aspect_items.AspectMeleeItem;
 import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.magic.ExperienceCost;
+import com.bedmen.odyssey.items.aspect_items.ParryableWeaponItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
@@ -90,20 +93,20 @@ public class EntityEvents {
             if(livingEntity.level.isClientSide){
                 odysseyLivingEntity.updateShieldMeterO();
             }
-            boolean isUsingShield = WeaponUtil.isUsingShield(livingEntity);
+            boolean isUsingParryable = WeaponUtil.isUsingParryable(livingEntity);
             int recoveryTime = 100;
-            ItemStack shield = WeaponUtil.getHeldShield(livingEntity);
-            if(!shield.isEmpty()){
-                recoveryTime = ((AspectShieldItem)shield.getItem()).getRecoveryTime(shield);
+            ItemStack itemStack = WeaponUtil.getHeldParryables(livingEntity);
+            if(!itemStack.isEmpty()){
+                recoveryTime = ((ParryableWeaponItem)itemStack.getItem()).getRecoveryTime(itemStack);
             }
-            if(isUsingShield){
+            if(isUsingParryable){
                 odysseyLivingEntity.adjustShieldMeter(-0.01f);
             } else {
                 odysseyLivingEntity.adjustShieldMeter(1f/((float)recoveryTime));
             }
             if(odysseyLivingEntity.getShieldMeter() <= 0f && livingEntity instanceof Player player){
                 player.stopUsingItem();
-                for(Item item : ForgeRegistries.ITEMS.tags().getTag(OdysseyItemTags.SHIELDS).stream().toList()){
+                for(Item item : ForgeRegistries.ITEMS.tags().getTag(OdysseyItemTags.PARRYABLES).stream().toList()){
                     player.getCooldowns().addCooldown(item, recoveryTime);
                 }
             }
@@ -480,7 +483,7 @@ public class EntityEvents {
     public static void onShieldBlockEvent(final ShieldBlockEvent event){
         LivingEntity livingEntity = event.getEntity();
         ItemStack shield = livingEntity.getUseItem();
-        if(shield.getItem() instanceof AspectShieldItem aspectShieldItem){
+        if(shield.getItem() instanceof ParryableWeaponItem parryableWeaponItem){
 
             DamageSource damageSource = event.getDamageSource();
             float damageBlockMultiplier = 1.0f;
@@ -493,10 +496,14 @@ public class EntityEvents {
             if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
                 if(odysseyLivingEntity.getShieldMeter() > 1.0f){
                     damageBlockMultiplier *= 2;
+                    if (parryableWeaponItem instanceof AspectMeleeItem) {
+                        int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier()+1 : 0;
+                        livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 50, strengthAmp));
+                    }
                 }
             }
 
-            float blockedDamage = damageBlockMultiplier * aspectShieldItem.getDamageBlock(shield, damageSource);
+            float blockedDamage = damageBlockMultiplier * parryableWeaponItem.getDamageBlock(shield, damageSource);
 
             if(livingEntity instanceof Player player){
                 hurtCurrentlyUsedShield(player, blockedDamage);

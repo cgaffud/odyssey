@@ -131,54 +131,56 @@ public class OdysseyItemInHandRenderer extends ItemInHandRenderer {
                 boolean flag3 = humanoidarm == HumanoidArm.RIGHT;
                 if (abstractClientPlayer.isUsingItem() && abstractClientPlayer.getUseItemRemainingTicks() > 0 && abstractClientPlayer.getUsedItemHand() == interactionHand) {
                     int k = flag3 ? 1 : -1;
-                    switch (itemStack.getUseAnimation()) {
-                        case NONE, BLOCK -> this.applyItemArmTransform(poseStack, humanoidarm, swingProgress);
-                        case EAT, DRINK -> {
-                            this.applyEatTransform(poseStack, partialTick, humanoidarm, itemStack);
-                            this.applyItemArmTransform(poseStack, humanoidarm, swingProgress);
-                        }
-                        case BOW -> {
-                            this.applyItemArmTransform(poseStack, humanoidarm, swingProgress);
-                            poseStack.translate((double) ((float) k * -0.2785682F), (double) 0.18344387F, (double) 0.15731531F);
-                            poseStack.mulPose(Vector3f.XP.rotationDegrees(-13.935F));
-                            poseStack.mulPose(Vector3f.YP.rotationDegrees((float) k * 35.3F));
-                            poseStack.mulPose(Vector3f.ZP.rotationDegrees((float) k * -9.785F));
-                            float f8 = (float) itemStack.getUseDuration() - ((float) this.minecraft.player.getUseItemRemainingTicks() - partialTick + 1.0F);
-                            float f12 = f8 / 20.0F;
-                            f12 = (f12 * f12 + f12 * 2.0F) / 3.0F;
-                            if (f12 > 1.0F) {
-                                f12 = 1.0F;
+                    if (!net.minecraftforge.client.extensions.common.IClientItemExtensions.of(itemStack).applyForgeHandTransform(poseStack, minecraft.player, humanoidarm, itemStack, partialTick, swingProgress, p_109376_)) {
+                        switch (itemStack.getUseAnimation()) {
+                            case NONE, CUSTOM, BLOCK -> this.applyItemArmTransform(poseStack, humanoidarm, swingProgress);
+                            case EAT, DRINK -> {
+                                this.applyEatTransform(poseStack, partialTick, humanoidarm, itemStack);
+                                this.applyItemArmTransform(poseStack, humanoidarm, swingProgress);
                             }
-                            if (f12 > 0.1F) {
-                                float f15 = Mth.sin((f8 - 0.1F) * 1.3F);
-                                float f18 = f12 - 0.1F;
-                                float f20 = f15 * f18;
-                                poseStack.translate((double) (f20 * 0.0F), (double) (f20 * 0.004F), (double) (f20 * 0.0F));
+                            case BOW -> {
+                                this.applyItemArmTransform(poseStack, humanoidarm, swingProgress);
+                                poseStack.translate((double) ((float) k * -0.2785682F), (double) 0.18344387F, (double) 0.15731531F);
+                                poseStack.mulPose(Vector3f.XP.rotationDegrees(-13.935F));
+                                poseStack.mulPose(Vector3f.YP.rotationDegrees((float) k * 35.3F));
+                                poseStack.mulPose(Vector3f.ZP.rotationDegrees((float) k * -9.785F));
+                                float f8 = (float) itemStack.getUseDuration() - ((float) this.minecraft.player.getUseItemRemainingTicks() - partialTick + 1.0F);
+                                float f12 = f8 / 20.0F;
+                                f12 = (f12 * f12 + f12 * 2.0F) / 3.0F;
+                                if (f12 > 1.0F) {
+                                    f12 = 1.0F;
+                                }
+                                if (f12 > 0.1F) {
+                                    float f15 = Mth.sin((f8 - 0.1F) * 1.3F);
+                                    float f18 = f12 - 0.1F;
+                                    float f20 = f15 * f18;
+                                    poseStack.translate((double) (f20 * 0.0F), (double) (f20 * 0.004F), (double) (f20 * 0.0F));
+                                }
+                                poseStack.translate((double) (f12 * 0.0F), (double) (f12 * 0.0F), (double) (f12 * 0.04F));
+                                poseStack.scale(1.0F, 1.0F, 1.0F + f12 * 0.2F);
+                                poseStack.mulPose(Vector3f.YN.rotationDegrees((float) k * 45.0F));
                             }
-                            poseStack.translate((double) (f12 * 0.0F), (double) (f12 * 0.0F), (double) (f12 * 0.04F));
-                            poseStack.scale(1.0F, 1.0F, 1.0F + f12 * 0.2F);
-                            poseStack.mulPose(Vector3f.YN.rotationDegrees((float) k * 45.0F));
-                        }
-                        case SPEAR -> {
-                            this.applyItemArmTransform(poseStack, humanoidarm, swingProgress);
-                            poseStack.translate((double) ((float) k * -0.5F), (double) 0.7F, (double) 0.1F);
-                            poseStack.mulPose(Vector3f.XP.rotationDegrees(-55.0F));
-                            poseStack.mulPose(Vector3f.YP.rotationDegrees((float) k * 35.3F));
-                            poseStack.mulPose(Vector3f.ZP.rotationDegrees((float) k * -9.785F));
-                            float f7 = (float) itemStack.getUseDuration() - ((float) this.minecraft.player.getUseItemRemainingTicks() - partialTick + 1.0F);
-                            float f11 = f7 / 10.0F;
-                            if (f11 > 1.0F) {
-                                f11 = 1.0F;
+                            case SPEAR -> {
+                                this.applyItemArmTransform(poseStack, humanoidarm, swingProgress);
+                                poseStack.translate((double) ((float) k * -0.5F), (double) 0.7F, (double) 0.1F);
+                                poseStack.mulPose(Vector3f.XP.rotationDegrees(-55.0F));
+                                poseStack.mulPose(Vector3f.YP.rotationDegrees((float) k * 35.3F));
+                                poseStack.mulPose(Vector3f.ZP.rotationDegrees((float) k * -9.785F));
+                                float f7 = (float) itemStack.getUseDuration() - ((float) this.minecraft.player.getUseItemRemainingTicks() - partialTick + 1.0F);
+                                float f11 = f7 / 10.0F;
+                                if (f11 > 1.0F) {
+                                    f11 = 1.0F;
+                                }
+                                if (f11 > 0.1F) {
+                                    float f14 = Mth.sin((f7 - 0.1F) * 1.3F);
+                                    float f17 = f11 - 0.1F;
+                                    float f19 = f14 * f17;
+                                    poseStack.translate((double) (f19 * 0.0F), (double) (f19 * 0.004F), (double) (f19 * 0.0F));
+                                }
+                                poseStack.translate(0.0D, 0.0D, (double) (f11 * 0.2F));
+                                poseStack.scale(1.0F, 1.0F, 1.0F + f11 * 0.2F);
+                                poseStack.mulPose(Vector3f.YN.rotationDegrees((float) k * 45.0F));
                             }
-                            if (f11 > 0.1F) {
-                                float f14 = Mth.sin((f7 - 0.1F) * 1.3F);
-                                float f17 = f11 - 0.1F;
-                                float f19 = f14 * f17;
-                                poseStack.translate((double) (f19 * 0.0F), (double) (f19 * 0.004F), (double) (f19 * 0.0F));
-                            }
-                            poseStack.translate(0.0D, 0.0D, (double) (f11 * 0.2F));
-                            poseStack.scale(1.0F, 1.0F, 1.0F + f11 * 0.2F);
-                            poseStack.mulPose(Vector3f.YN.rotationDegrees((float) k * 45.0F));
                         }
                     }
                 } else if (abstractClientPlayer.isAutoSpinAttack()) {

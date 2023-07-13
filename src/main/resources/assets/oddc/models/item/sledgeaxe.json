@@ -2,5 +2,13 @@
   "parent": "minecraft:item/handheld",
   "textures": {
     "layer0": "oddc:item/sledgeaxe"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "blocking": 1
+      },
+      "model": "oddc:item/sledgeaxe_blocking"
+    }
+  ]
 }

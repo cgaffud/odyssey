@@ -9,6 +9,19 @@
         "active": 1
       },
       "model": "oddc:item/moon_sword_active"
+    },
+    {
+      "predicate": {
+        "blocking": 1
+      },
+      "model": "oddc:item/moon_sword_blocking"
+    },
+    {
+      "predicate": {
+        "blocking": 1,
+        "active": 1
+      },
+      "model": "oddc:item/moon_sword_active_blocking"
     }
   ]
 }

@@ -4,23 +4,12 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.EnvironmentConditionalAspect;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ConditionalAmpUtil {
     public static final String DAMAGE_BOOST_TAG = Odyssey.MOD_ID + ":ConditionalAmpBoost";
@@ -102,31 +91,5 @@ public class ConditionalAmpUtil {
         if (itemStack.getItem() instanceof GradientItem gradientItem) {
             itemStack.getOrCreateTag().putFloat(GRADIENT_COLOR_TAG, gradientItem.getColor(entity.level, entity));
         }
-    }
-
-    public static Multimap<Attribute, AttributeModifier> getAttributeModifiersWithAdjustedAttackDamage(EquipmentSlot equipmentSlot, ItemStack itemStack, Multimap<Attribute, AttributeModifier> defaultMultimap){
-        Item item = itemStack.getItem();
-        if (equipmentSlot == EquipmentSlot.MAINHAND) {
-            float conditionalAmpBonus = ConditionalAmpUtil.getDamageTag(itemStack);
-            if(conditionalAmpBonus > 0.0f){
-                Multimap<Attribute, AttributeModifier> stackAttributeModifiers = LinkedHashMultimap.create();
-                for(Map.Entry<Attribute, Collection<AttributeModifier>> entry : item.getDefaultAttributeModifiers(equipmentSlot).asMap().entrySet()){
-                    if (entry.getKey() == Attributes.ATTACK_DAMAGE) {
-                        Collection<AttributeModifier> newDamageModifiers = entry.getValue().stream()
-                                .map(attributeModifier ->
-                                        attributeModifier.getId() == Item.BASE_ATTACK_DAMAGE_UUID ?
-                                                new AttributeModifier(Item.BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", attributeModifier.getAmount() + conditionalAmpBonus, AttributeModifier.Operation.ADDITION) :
-                                                attributeModifier)
-                                .collect(Collectors.toSet());
-                        stackAttributeModifiers.putAll(entry.getKey(), newDamageModifiers);
-                    } else {
-                        stackAttributeModifiers.putAll(entry.getKey(), entry.getValue());
-                    }
-                }
-                return stackAttributeModifiers;
-            }
-            return defaultMultimap;
-        }
-        return item.getDefaultAttributeModifiers(equipmentSlot);
     }
 }

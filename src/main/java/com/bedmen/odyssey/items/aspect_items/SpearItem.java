@@ -3,6 +3,7 @@ package com.bedmen.odyssey.items.aspect_items;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.combat.MeleeWeaponClass;
 import com.bedmen.odyssey.combat.SpearType;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
 import com.bedmen.odyssey.entity.projectile.ThrownSpear;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
@@ -64,9 +65,8 @@ public class SpearItem extends ThrowableWeaponItem implements OdysseyMeleeItem {
         return equipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(equipmentSlot);
     }
 
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack)
-    {
-        return ConditionalAmpUtil.getAttributeModifiersWithAdjustedAttackDamage(equipmentSlot, itemStack, this.defaultModifiers);
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack) {
+        return WeaponUtil.getAttributeModifiersWithAdjustedValues(equipmentSlot, itemStack, this.defaultModifiers, this.BASE_ATTACK_SPEED_UUID);
     }
 
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {

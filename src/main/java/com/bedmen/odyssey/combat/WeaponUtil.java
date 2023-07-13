@@ -1,13 +1,18 @@
 package com.bedmen.odyssey.combat;
 
+import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
+import com.bedmen.odyssey.items.aspect_items.AspectMeleeItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ReduceInvulnerabilityPacket;
 import com.bedmen.odyssey.tags.OdysseyItemTags;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -16,6 +21,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -31,10 +38,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -159,6 +163,16 @@ public class WeaponUtil {
 
     public static InteractionHand getHandHoldingBow(LivingEntity pLiving) {
         return pLiving.getMainHandItem().getItem() instanceof AspectBowItem ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+    }
+
+    public static ItemStack getItemInOtherHand(LivingEntity livingEntity,InteractionHand interactionHand) {
+        if (interactionHand == InteractionHand.MAIN_HAND) {
+            return livingEntity.getItemBySlot(EquipmentSlot.OFFHAND);
+        } else if (interactionHand == InteractionHand.OFF_HAND) {
+            return livingEntity.getItemBySlot(EquipmentSlot.MAINHAND);
+        } else {
+            throw new IllegalArgumentException("Invalid hand " + interactionHand);
+        }
     }
 
     public static boolean isDualWielding(LivingEntity livingEntity){
@@ -345,20 +359,67 @@ public class WeaponUtil {
                 .collect(Collectors.toSet());
     }
 
-    public static ItemStack getHeldShield(LivingEntity livingEntity){
+    public static ItemStack getHeldParryables(LivingEntity livingEntity){
         ItemStack itemStack = livingEntity.getMainHandItem();
-        if(itemStack.is(OdysseyItemTags.SHIELDS)){
+        if(itemStack.is(OdysseyItemTags.PARRYABLES)){
             return itemStack;
         }
         itemStack = livingEntity.getOffhandItem();
-        if(itemStack.is(OdysseyItemTags.SHIELDS)){
+        if(itemStack.is(OdysseyItemTags.PARRYABLES)){
             return itemStack;
         }
         return ItemStack.EMPTY;
     }
 
-    public static boolean isUsingShield(LivingEntity livingEntity){
-        return livingEntity.getUseItem().is(OdysseyItemTags.SHIELDS);
+    public static boolean isUsingParryable(LivingEntity livingEntity){
+        return livingEntity.getUseItem().is(OdysseyItemTags.PARRYABLES);
+    }
+
+    public static final String TWO_HANDED_TAG = Odyssey.MOD_ID + ":TwoHanded";
+
+    public static boolean isBeingUsedTwoHanded(ItemStack itemStack) {
+        return itemStack.getOrCreateTag().getBoolean(TWO_HANDED_TAG);
+    }
+
+    public static void setBeingUsedTwoHanded(ItemStack itemStack, boolean twoHanded) {
+        itemStack.getOrCreateTag().putBoolean(TWO_HANDED_TAG, twoHanded);
+    }
+
+    public static Multimap<Attribute, AttributeModifier> getAttributeModifiersWithAdjustedValues(EquipmentSlot equipmentSlot, ItemStack itemStack, Multimap<Attribute, AttributeModifier> defaultMultimap, UUID baseAttackSpeed){
+        Item item = itemStack.getItem();
+        if (equipmentSlot == EquipmentSlot.MAINHAND) {
+            float conditionalAmpBonus = ConditionalAmpUtil.getDamageTag(itemStack);
+            float attackSpeed = 0;
+            if (item instanceof AspectMeleeItem aspectMeleeItem)
+                attackSpeed = (WeaponUtil.isBeingUsedTwoHanded(itemStack)) ? aspectMeleeItem.getMeleeWeaponClass().twoHandedAttackRate : aspectMeleeItem.getMeleeWeaponClass().attackRate;
+
+            Multimap<Attribute, AttributeModifier> stackAttributeModifiers = LinkedHashMultimap.create();
+            for(Map.Entry<Attribute, Collection<AttributeModifier>> entry : item.getDefaultAttributeModifiers(equipmentSlot).asMap().entrySet()){
+                if (entry.getKey() == Attributes.ATTACK_DAMAGE) {
+                    Collection<AttributeModifier> newDamageModifiers = entry.getValue().stream()
+                            .map(attributeModifier ->
+                                    attributeModifier.getId() == Item.BASE_ATTACK_DAMAGE_UUID ?
+                                            new AttributeModifier(Item.BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", attributeModifier.getAmount() + conditionalAmpBonus, AttributeModifier.Operation.ADDITION) :
+                                            attributeModifier)
+                            .collect(Collectors.toSet());
+                    stackAttributeModifiers.putAll(entry.getKey(), newDamageModifiers);
+                } else if (entry.getKey() == Attributes.ATTACK_SPEED){
+                    // This is weird. Must convert attackSpeed to effectively final
+                    float finalAttackSpeed = attackSpeed;
+                    Collection<AttributeModifier> newDamageModifiers = entry.getValue().stream()
+                            .map(attributeModifier ->
+                                    attributeModifier.getId() == baseAttackSpeed ?
+                                            new AttributeModifier(baseAttackSpeed, "Weapon modifier", finalAttackSpeed - 4.0d, AttributeModifier.Operation.ADDITION) :
+                                            attributeModifier)
+                            .collect(Collectors.toSet());
+                    stackAttributeModifiers.putAll(entry.getKey(), newDamageModifiers);
+                } else {
+                    stackAttributeModifiers.putAll(entry.getKey(), entry.getValue());
+                }
+            }
+            return stackAttributeModifiers;
+        }
+        return item.getDefaultAttributeModifiers(equipmentSlot);
     }
 }
 
