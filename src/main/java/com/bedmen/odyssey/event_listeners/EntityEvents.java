@@ -208,6 +208,7 @@ public class EntityEvents {
         Entity damageSourceEntity = damageSource.getDirectEntity();
 
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
+            ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
             // Smite, Bane of Arthropods, Hydro Damage
             amount += AspectUtil.getTargetConditionalAspectStrength(damageSourceLivingEntity, hurtLivingEntity);
             // Poison Damage
@@ -257,14 +258,14 @@ public class EntityEvents {
             }
 
             // Absorbent Growth
-            float absorbentGrowthCapacity = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.ABSORBENT_GROWTH);
+            float absorbentGrowthCapacity = AspectUtil.getOneHandedTotalAspectStrength(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.ABSORBENT_GROWTH);
             if ((hurtLivingEntity instanceof Enemy) && absorbentGrowthCapacity > 0) {
                 float progress = mainHandItemStack.getOrCreateTag().getFloat(AspectUtil.DAMAGE_GROWTH_TAG) + amount/400;
                 mainHandItemStack.getOrCreateTag().putFloat(AspectUtil.DAMAGE_GROWTH_TAG, progress > absorbentGrowthCapacity ? absorbentGrowthCapacity : progress);
             }
 
             // Bludgeoning
-            float bludgeoningStrength = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.BLUDGEONING);
+            float bludgeoningStrength = AspectUtil.getOneHandedTotalAspectStrength(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.BLUDGEONING);
             if ((bludgeoningStrength > 0) && WeaponUtil.isBeingUsedTwoHanded(mainHandItemStack))
                 hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50));
 
@@ -508,12 +509,12 @@ public class EntityEvents {
             // Parry boost
             if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
                 if(odysseyLivingEntity.getShieldMeter() > 1.0f) {
-                    damageBlockMultiplier *= (2 + AspectUtil.getFloatAspectStrength(shield, Aspects.PRECISE_BLOCK)/2);
-                    if (parryableWeaponItem instanceof AspectMeleeItem || (AspectUtil.getAspectStrength(shield, Aspects.ASSISTED_STRIKE)) > 0) {
+                    damageBlockMultiplier *= (2 + AspectUtil.getItemStackAspectStrength(shield, Aspects.PRECISE_BLOCK)/2);
+                    if (parryableWeaponItem instanceof AspectMeleeItem || (AspectUtil.getItemStackAspectStrength(shield, Aspects.ASSISTED_STRIKE)) > 0) {
                         int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier() + 1 : 0;
                         livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 50, strengthAmp));
                     }
-                    float blowback = AspectUtil.getAspectStrength(shield, Aspects.BLOWBACK);
+                    float blowback = AspectUtil.getItemStackAspectStrength(shield, Aspects.BLOWBACK);
                     System.out.print(blowback);
                     if (blowback > 0 && (damageSource.getEntity() != null) && damageSource.getEntity() instanceof LivingEntity attacker) {
                         Vec3 awayVector = new Vec3(attacker.getX() - livingEntity.getX(), attacker.getY() - livingEntity.getY(), attacker.getZ()-livingEntity.getZ());

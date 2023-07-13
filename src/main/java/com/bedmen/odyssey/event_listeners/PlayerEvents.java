@@ -272,8 +272,7 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public static void onPlayerEventCriticalHit(final CriticalHitEvent event) {
-        ItemStack mainHandItemStack = event.getEntity().getMainHandItem();
-        float precisionStrikeStrength = AspectUtil.getFloatAspectStrength(mainHandItemStack, Aspects.PRECISION_STRIKE);
+        float precisionStrikeStrength = AspectUtil.getOneHandedTotalAspectStrength(event.getEntity(), InteractionHand.MAIN_HAND , Aspects.PRECISION_STRIKE);
         if ((precisionStrikeStrength > 0) && (event.getOldDamageModifier() == 1.5f))
             event.setDamageModifier(2.0f);
     }
