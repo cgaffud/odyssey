@@ -49,6 +49,11 @@ public class EffectRegistry {
     public static final RegistryObject<MobEffect> RESISTANCE_GAMBIT_NERF = EFFECTS.register("resistance_gambit_nerf", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.PROTECTION, -2))));
     public static final RegistryObject<MobEffect> SPEED_GAMBIT_BUFF = EFFECTS.register("speed_gambit_buff", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, 0.2f), new AspectInstance(Aspects.EXPERIENCE_PER_SECOND, -0.2f / 20f))));
     public static final RegistryObject<MobEffect> SPEED_GAMBIT_NERF = EFFECTS.register("speed_gambit_nerf", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, -0.2f))));
+    public static final RegistryObject<MobEffect> PARRY_STRENGTH = EFFECTS.register("parry_strength", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.ATTACK_DAMAGE, 2))));
+    public static final RegistryObject<MobEffect> ASSISTED_STRIKE_STRENGTH = EFFECTS.register("assisted_strike_strength", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.ATTACK_DAMAGE, 1))));
+    public static final RegistryObject<MobEffect> BLUDGEONING_SLOWNESS = EFFECTS.register("bludgeoning_slowness", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, -0.2f))));
+    public static final RegistryObject<MobEffect> VAMPIRIC_SPEED = EFFECTS.register("vampiric_speed", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.MOVEMENT_SPEED, 0.05f))));
+
     public static final RegistryObject<MobEffect> CAMPFIRE_WARMTH = EFFECTS.register("campfire_warmth", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.WARMTH, 1f))));
 
     public static final RegistryObject<MobEffect> WARM_FOOD = EFFECTS.register("warm_food", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.WARMTH, 1f))));
