@@ -61,7 +61,7 @@ public class Aspects {
     public static final BooleanAspect COLD_SNAP = new BooleanAspect("cold_snap", 2.0f, AspectItemPredicates.MELEE, true);
     public static final FloatAspect BLUDGEONING = new FloatAspect("bludgeoning", 0.5f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.TWO_HANDED, true);
     public static final FloatAspect PRECISION_STRIKE = new FloatAspect("precision_strike", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.MELEE, false);
-
+    public static final BooleanAspect VAMPIRIC_SPEED = new BooleanAspect("vampiric_speed", 10.0f, AspectTooltipFunctions.NAME, AspectItemPredicates.MELEE, true);
     // # Ranged
 
     // ## Shooting

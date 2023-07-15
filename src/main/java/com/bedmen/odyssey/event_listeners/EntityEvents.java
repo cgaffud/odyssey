@@ -267,7 +267,15 @@ public class EntityEvents {
             // Bludgeoning
             float bludgeoningStrength = AspectUtil.getOneHandedTotalAspectStrength(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.BLUDGEONING);
             if ((bludgeoningStrength > 0) && WeaponUtil.isBeingUsedTwoHanded(mainHandItemStack))
-                hurtLivingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50));
+                hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLUDGEONING_SLOWNESS.get(), 50));
+
+            // Vamp. Speed
+            if (AspectUtil.getOneHandedTotalAspectStrength(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.VAMPIRIC_SPEED)) {
+                MobEffectInstance vampSpeedInstance = damageSourceLivingEntity.getEffect(EffectRegistry.VAMPIRIC_SPEED.get());
+                // Upper speed limit is set here (30%)
+                int speedAmp = (vampSpeedInstance != null) ? (vampSpeedInstance.getAmplifier() == 5 ? 5 : vampSpeedInstance.getAmplifier()+1) : 0;
+                damageSourceLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.VAMPIRIC_SPEED.get(), 200, speedAmp));
+            }
 
             // Dual Wield reduced invulnerability
             if(WeaponUtil.isDualWielding(damageSourceLivingEntity)){
@@ -510,9 +518,10 @@ public class EntityEvents {
             if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
                 if(odysseyLivingEntity.getShieldMeter() > 1.0f) {
                     damageBlockMultiplier *= (2 + AspectUtil.getItemStackAspectStrength(shield, Aspects.PRECISE_BLOCK)/2);
-                    if (parryableWeaponItem instanceof AspectMeleeItem || (AspectUtil.getItemStackAspectStrength(shield, Aspects.ASSISTED_STRIKE)) > 0) {
-                        int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier() + 1 : 0;
-                        livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 50, strengthAmp));
+                    if (parryableWeaponItem instanceof AspectMeleeItem) {
+                        livingEntity.addEffect(new MobEffectInstance(EffectRegistry.PARRY_STRENGTH.get(), 50, 0));
+                    } else if ((AspectUtil.getItemStackAspectStrength(shield, Aspects.ASSISTED_STRIKE)) > 0) {
+                        livingEntity.addEffect(new MobEffectInstance(EffectRegistry.ASSISTED_STRIKE_STRENGTH.get(), 50, 0));
                     }
                     float blowback = AspectUtil.getItemStackAspectStrength(shield, Aspects.BLOWBACK);
                     System.out.print(blowback);
