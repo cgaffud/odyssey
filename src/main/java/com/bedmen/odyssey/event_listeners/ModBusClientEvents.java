@@ -156,7 +156,9 @@ public class ModBusClientEvents {
             EntityRenderers.register(EntityTypeRegistry.NETHER_WITCH.get(), NetherWitchRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.OVERWORLD_WITCH.get(), OverworldWitchRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.COVEN_ROOT_ENTITY.get(), CovenRootEntityRenderer::new);
-//        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PERMAFROST_MASTER.get(), PermafrostMasterRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PERMAFROST_ICICLE_ENTITY.get(), PermafrostIcicleRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PERMAFROST_CONDUIT.get(), PermafrostConduitRenderer::new);
 
             //Projectile Renderings
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
@@ -252,10 +254,18 @@ public class ModBusClientEvents {
             }
         }
 //        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
-//        event.addSprite(PermafrostRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
-//        event.addSprite(PermafrostRenderer.WIND_RESOURCE_LOCATION);
-//        event.addSprite(PermafrostRenderer.VERTICAL_WIND_RESOURCE_LOCATION);
-//        event.addSprite(PermafrostRenderer.OPEN_EYE_RESOURCE_LOCATION);
+        event.addSprite(PermafrostConduitRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
+        event.addSprite(PermafrostConduitRenderer.WIND_RESOURCE_LOCATION);
+        event.addSprite(PermafrostConduitRenderer.VERTICAL_WIND_RESOURCE_LOCATION);
+        event.addSprite(PermafrostConduitRenderer.OPEN_EYE_RESOURCE_LOCATION);
+
+        /**
+         *
+         event.addSprite(PermafrostConduitRenderer.ACTIVE_SHELL_TEXTURE.texture());
+         event.addSprite(PermafrostConduitRenderer.WIND_TEXTURE.texture());
+         event.addSprite(PermafrostConduitRenderer.VERTICAL_WIND_TEXTURE.texture());
+         event.addSprite(PermafrostConduitRenderer.OPEN_EYE_TEXTURE.texture());
+         */
     }
 
     @SubscribeEvent
@@ -279,6 +289,7 @@ public class ModBusClientEvents {
         event.registerLayerDefinition(BladeSpiderModel.LAYER_LOCATION, BladeSpiderModel::createBodyLayer);
         event.registerLayerDefinition(ForgottenModel.LAYER_LOCATION, ForgottenModel::createBodyLayer);
         event.registerLayerDefinition(DripstoneCreeperModel.LAYER_LOCATION, DripstoneCreeperModel::createBodyLayer);
+        event.registerLayerDefinition(PermafrostConduitModel.LAYER_LOCATION, PermafrostConduitModel::createBodyLayer);
     }
 
     @SubscribeEvent

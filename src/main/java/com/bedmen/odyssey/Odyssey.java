@@ -9,6 +9,8 @@ import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
+import com.bedmen.odyssey.entity.boss.permafrost.PermafrostConduit;
+import com.bedmen.odyssey.entity.boss.permafrost.PermafrostMaster;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyPowderSnowBucketItem;
@@ -145,7 +147,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.ENDER_WITCH.get(), EnderWitch.createAttributes().build());
         event.put(EntityTypeRegistry.NETHER_WITCH.get(), NetherWitch.createAttributes().build());
         event.put(EntityTypeRegistry.OVERWORLD_WITCH.get(), OverworldWitch.createAttributes().build());
-//        event.put(EntityTypeRegistry.COVEN_ROOT_ENTITY.get(), CovenRootEntity.);
-//        event.put(EntityTypeRegistry.PERMAFROST.get(), PermafrostEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.PERMAFROST_MASTER.get(), PermafrostMaster.createAttributes().build());
+        event.put(EntityTypeRegistry.PERMAFROST_CONDUIT.get(), PermafrostConduit.createAttributes().build());
     }
 }
