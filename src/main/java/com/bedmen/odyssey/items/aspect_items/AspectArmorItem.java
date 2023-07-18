@@ -9,8 +9,10 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.OdysseyArmorMaterial;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.OdysseyTierItem;
+import com.bedmen.odyssey.util.GeneralUtil;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
@@ -66,7 +68,9 @@ public class AspectArmorItem extends ArmorItem implements InnateAspectItem, Odys
 
     public boolean elytraFlightTick(ItemStack stack, LivingEntity livingEntity, int flightTicks) {
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity && odysseyLivingEntity.getFlightValue() > 0){
-            odysseyLivingEntity.decrementFlight();
+            if(!(livingEntity instanceof Player player) || GeneralUtil.isSurvival(player)){
+                odysseyLivingEntity.decrementFlight();
+            }
             return true;
         }
         return false;

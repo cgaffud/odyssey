@@ -283,18 +283,11 @@ def stitch(images):
 # Hex Fire: redistributeRedAndGreenImage(image, 0.75) (on soul fire)
 # Leather to Parka Hide: recolorImage(image, [0.40,0.475,0.55], [0,0,0])
 
-#openPath1 = r"C:\Users\18029\Documents\1.19.2\assets\minecraft\textures\entity\elytra.png"
-#image1 = openImage(openPath1)
-#savePath = r"C:\Users\18029\Documents\1.19.2\assets\minecraft\textures\entity\elytra_1.png"
-#grayscaleRecolorImage(image1, [1.2,1.00,0.8], [70,70,70])
-#saveImage(image1, savePath)
-
-images = []
-for i in range(6):
-    openPath = r"C:\Users\18029\Documents\odyssey_zip_folders\sun_sword\sun_sword\%s.png" % (str(i))
-    image = openImage(openPath)
-    images.append(image)
-savePath = r"C:\Users\18029\Documents\odyssey_zip_folders\sun_sword\sun_sword\active.png"
-saveImage(stitch(images), savePath)
+image1 = openImage(r"C:\Users\18029\Documents\1.19.2\assets\minecraft\textures\entity\elytra.png")
+image2 = openImage(r"C:\Users\18029\Downloads\blue.png")
+image3 = openImage(r"C:\Users\18029\Downloads\tan.png")
+savePath = r"C:\Users\18029\Downloads\glider.png"
+useSameRecolor(image2, image3, image1)
+saveImage(image1, savePath)
 
 print("Done")
