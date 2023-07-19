@@ -1,13 +1,13 @@
 package com.bedmen.odyssey.client.renderer.entity;
 
 import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.client.model.PermafrostConduitModel;
 import com.bedmen.odyssey.entity.boss.permafrost.PermafrostConduit;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Camera;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class PermafrostConduitRenderer extends MobRenderer<PermafrostConduit, PermafrostConduitModel<PermafrostConduit>> {
+public class PermafrostConduitRenderer extends MobRenderer<PermafrostConduit, EntityModel<PermafrostConduit>> {
     public static final ResourceLocation ACTIVE_SHELL_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/permafrost/cage");
     public static final ResourceLocation WIND_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/permafrost/wind");
     public static final ResourceLocation VERTICAL_WIND_RESOURCE_LOCATION = new ResourceLocation(Odyssey.MOD_ID, "entity/permafrost/wind_vertical");
@@ -36,7 +36,13 @@ public class PermafrostConduitRenderer extends MobRenderer<PermafrostConduit, Pe
     private final ModelPart cage;
 
     public PermafrostConduitRenderer(EntityRendererProvider.Context context) {
-        super(context, new PermafrostConduitModel<>(context.bakeLayer(PermafrostConduitModel.LAYER_LOCATION)), 1.0F);
+        super(context, new EntityModel<>() {
+            @Override
+            public void setupAnim(PermafrostConduit p_102618_, float p_102619_, float p_102620_, float p_102621_, float p_102622_, float p_102623_) { }
+
+            @Override
+            public void renderToBuffer(PoseStack p_103111_, VertexConsumer p_103112_, int p_103113_, int p_103114_, float p_103115_, float p_103116_, float p_103117_, float p_103118_) { }
+        }, 1.0F);
         this.eye = context.bakeLayer(ModelLayers.CONDUIT_EYE);
         this.wind = context.bakeLayer(ModelLayers.CONDUIT_WIND);
         this.cage = context.bakeLayer(ModelLayers.CONDUIT_CAGE);

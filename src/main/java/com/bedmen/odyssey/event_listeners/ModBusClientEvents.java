@@ -159,6 +159,7 @@ public class ModBusClientEvents {
             EntityRenderers.register(EntityTypeRegistry.PERMAFROST_MASTER.get(), PermafrostMasterRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.PERMAFROST_ICICLE_ENTITY.get(), PermafrostIcicleRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.PERMAFROST_CONDUIT.get(), PermafrostConduitRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PERMAFROST_BIG_ICICLE_ENTITY.get(), PermafrostBigIcicleRenderer::new);
 
             //Projectile Renderings
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
@@ -289,7 +290,7 @@ public class ModBusClientEvents {
         event.registerLayerDefinition(BladeSpiderModel.LAYER_LOCATION, BladeSpiderModel::createBodyLayer);
         event.registerLayerDefinition(ForgottenModel.LAYER_LOCATION, ForgottenModel::createBodyLayer);
         event.registerLayerDefinition(DripstoneCreeperModel.LAYER_LOCATION, DripstoneCreeperModel::createBodyLayer);
-        event.registerLayerDefinition(PermafrostConduitModel.LAYER_LOCATION, PermafrostConduitModel::createBodyLayer);
+        event.registerLayerDefinition(PermafrostBigIcicleModel.LAYER_LOCATION, PermafrostBigIcicleModel::createBodyLayer);
     }
 
     @SubscribeEvent

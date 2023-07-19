@@ -98,7 +98,6 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
 
             //Movement
             if (this.getTarget() != null) {
-                System.out.println("Run Movement Code!");
                 Vec3 location1 = this.getPosition(1);
                 double angle = this.movementPosition * Math.PI / this.MAX_MOVEMENT_POSITIONS * 2.0d;
                 Vec3 location2 = Vec3.ZERO;

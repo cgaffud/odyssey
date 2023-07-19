@@ -9,6 +9,7 @@ import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
+import com.bedmen.odyssey.entity.boss.permafrost.PermafrostBigIcicleEntity;
 import com.bedmen.odyssey.entity.boss.permafrost.PermafrostConduit;
 import com.bedmen.odyssey.entity.boss.permafrost.PermafrostMaster;
 import com.bedmen.odyssey.entity.monster.*;
@@ -149,5 +150,6 @@ public class Odyssey
         event.put(EntityTypeRegistry.OVERWORLD_WITCH.get(), OverworldWitch.createAttributes().build());
         event.put(EntityTypeRegistry.PERMAFROST_MASTER.get(), PermafrostMaster.createAttributes().build());
         event.put(EntityTypeRegistry.PERMAFROST_CONDUIT.get(), PermafrostConduit.createAttributes().build());
+        event.put(EntityTypeRegistry.PERMAFROST_BIG_ICICLE_ENTITY.get(), PermafrostBigIcicleEntity.createAttributes().build());
     }
 }
