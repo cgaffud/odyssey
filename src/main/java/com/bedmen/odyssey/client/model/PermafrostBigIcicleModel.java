@@ -13,9 +13,6 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-
 public class PermafrostBigIcicleModel<T extends PermafrostBigIcicleEntity> extends EntityModel<T> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(Odyssey.MOD_ID, "permafrost_big_icicle"), "main");
 
@@ -38,13 +35,8 @@ public class PermafrostBigIcicleModel<T extends PermafrostBigIcicleEntity> exten
 
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
-		double theta = Mth.TWO_PI / 20.0D * (double) (-ageInTicks % 20.0f);
-		double thetaA = theta - (double) entity.getIcicleId() * Math.PI * 2.0D / (double) PermafrostBigIcicleEntity.TOTAL_NUM;
-//		System.out.printf("Theta: %g, ThetaA: %g\n", theta, thetaA);
-		float thetaB = (float) (thetaA - Mth.HALF_PI);
-		this.spikes.yRot = thetaB;
-		this.spikes.xRot = -Mth.PI;
+		this.spikes.yRot = entity.getYRot();
+		this.spikes.xRot = entity.getXRot();
 	}
 
 	@Override

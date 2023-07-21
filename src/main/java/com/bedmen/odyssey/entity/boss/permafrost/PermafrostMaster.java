@@ -16,9 +16,11 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -26,10 +28,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PermafrostMaster extends BossMaster {
@@ -37,11 +37,11 @@ public class PermafrostMaster extends BossMaster {
     public static final double FOLLOW_RANGE = 75d;
     private static final EntityDataAccessor<Integer> DATA_MAIN_ID = SynchedEntityData.defineId(MineralLeviathanMaster.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<IntList> DATA_ICICLE_ID_LIST = SynchedEntityData.defineId(MineralLeviathanMaster.class, OdysseyDataSerializers.INT_LIST);
-    private static final int ICICLE_AMOUNT = 6;
+    public static final int ICICLE_AMOUNT = 6;
+    public static final float ICICLE_FOLLOW_RADIUS = 4;
 
     private static final String CONDUIT_TAG = "ConduitSubEntity";
     private static final String ICICLES_TAG = "IcicleEntities";
-    private static final String ICICLE_ID_TAG = "IcicleId";
     public int totalPhase;
 
     // Reminder: serverside only
@@ -100,14 +100,17 @@ public class PermafrostMaster extends BossMaster {
         this.entityData.set(DATA_ICICLE_ID_LIST, icicleIds);
     }
 
+    private void setIcicleId(int icicleIndex, int id) {
+        IntList icicleIds = this.getIcicleIds();
+        icicleIds.set(icicleIndex, id);
+        this.entityData.set(DATA_ICICLE_ID_LIST, icicleIds);
+    }
+
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_MAIN_ID, -1);
         this.entityData.define(DATA_ICICLE_ID_LIST, new IntArrayList());
     }
-
-    @Override
-    public void performMasterMovement() {this.getConduit().ifPresent(conduit -> this.moveTo(conduit.position())); }
 
     @Override
     public Collection<Entity> getSubEntities() {
@@ -131,15 +134,15 @@ public class PermafrostMaster extends BossMaster {
             }
         }
         if (this.getIcicles().isEmpty()) {
-            for (int icicleId = 0; icicleId < ICICLE_AMOUNT; icicleId++) {
-                PermafrostBigIcicleEntity permafrostBigIcicleEntity = new PermafrostBigIcicleEntity(this.level, icicleId);
+            for (int icicleIndex = 0; icicleIndex < ICICLE_AMOUNT; icicleIndex++) {
+                PermafrostBigIcicleEntity permafrostBigIcicleEntity = new PermafrostBigIcicleEntity(this.level, icicleIndex);
                 if (permafrostBigIcicleEntity != null) {
                     this.icicles.add(permafrostBigIcicleEntity);
                     this.addIcicleId(permafrostBigIcicleEntity.getId());
                     permafrostBigIcicleEntity.moveTo(this.position());
                     permafrostBigIcicleEntity.setMasterId(this.getId());
                 } else {
-                    Odyssey.LOGGER.error("Mineral Leviathan failed to spawn in spawnInitialBodyParts");
+                    Odyssey.LOGGER.error("Icicles failed to spawn in spawnSubEntities");
                     break;
                 }
             }
@@ -223,4 +226,42 @@ public class PermafrostMaster extends BossMaster {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, MAX_HEALTH).add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
     }
+
+    @Override
+    public void performMasterMovement() {
+        this.getConduit().ifPresent(conduit -> this.moveTo(conduit.position()));
+        for (int icicleIndex = 0; icicleIndex < this.ICICLE_AMOUNT; icicleIndex++) {
+            if (this.icicles.get(icicleIndex).isRemoved()) {
+                this.regenerateIcicle(icicleIndex);
+            }
+        }
+    }
+
+    public List<ServerPlayer> getPlayersSortedByDistance(LivingEntity livingEntity) {
+        Collection<ServerPlayer> serverPlayers = this.bossEvent.getPlayers();
+        List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(this::validTargetPredicate).collect(Collectors.toList());
+        serverPlayerList.sort(Comparator.comparingDouble(player -> livingEntity.position().distanceTo(player.position())));
+        return serverPlayerList;
+    }
+
+    public void shootIcicles() {
+        List<ServerPlayer> serverPlayerList = getPlayersSortedByDistance(this);
+        for (int icicleIndex = 0; icicleIndex < Math.min(ICICLE_AMOUNT, serverPlayerList.size()); icicleIndex++) {
+            this.getIcicles().get(icicleIndex).beginChasing(serverPlayerList.get(icicleIndex));
+        }
+    }
+
+    public void regenerateIcicle(int icicleIndex) {
+        PermafrostBigIcicleEntity permafrostBigIcicleEntity = new PermafrostBigIcicleEntity(this.level, icicleIndex);
+        if (permafrostBigIcicleEntity != null) {
+            this.icicles.set(icicleIndex, permafrostBigIcicleEntity);
+            this.setIcicleId(icicleIndex, permafrostBigIcicleEntity.getId());
+            permafrostBigIcicleEntity.moveTo(this.position());
+            permafrostBigIcicleEntity.setMasterId(this.getId());
+            this.level.addFreshEntity(permafrostBigIcicleEntity);
+        } else {
+            System.out.println("Regeneration error");
+        }
+    }
+
 }

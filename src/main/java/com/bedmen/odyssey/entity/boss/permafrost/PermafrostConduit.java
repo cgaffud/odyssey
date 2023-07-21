@@ -37,8 +37,8 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
     private final int MAX_ICICLE_POSITIONS = 20;
     private int movementPosition = 0;
     private final int MAX_MOVEMENT_POSITIONS = 6;
-    private final int[] attackCooldown = new int[2];
-    private final int[] attackTimer = new int[2];
+    private final int[] attackCooldown = new int[3];
+    private final int[] attackTimer = new int[3];
 
 
     public PermafrostConduit(EntityType<? extends Monster> entityType, Level level) {
@@ -68,6 +68,7 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
             //Decrement Timers
             for (int i = 0; i < this.attackTimer.length; i++) {
                 --this.attackCooldown[i];
+                if (i == 2) break;
                 --this.attackTimer[i];
             }
 
@@ -82,6 +83,10 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
                 this.attackCooldown[1] = (int) (i1 * healthMultiplier);
                 this.attackTimer[1] = 27;
             }
+            if (this.attackCooldown[2] < 0) {
+                int i1 = 100;
+                this.attackCooldown[2] = (int) (i1 * healthMultiplier);
+            }
 
             //Choose Target
             Collection<ServerPlayer> serverPlayers = permafrostMaster.bossEvent.getPlayers();
@@ -91,7 +96,6 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
                 if (serverPlayerList.isEmpty()) {
                     this.setTarget(null);
                 } else {
-                    System.out.println("Target Set!");
                     setTarget(serverPlayerList.get(this.random.nextInt(serverPlayerList.size())));
                 }
             }
@@ -131,6 +135,8 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
                 if (this.attackTimer[1] >= 1 && this.attackTimer[1] <= 23) {
                     this.performSphereAttack(this.attackTimer[1]);
                 }
+                if (this.attackCooldown[2] == 0)
+                    permafrostMaster.shootIcicles();
             }
         }
         super.aiStep();
