@@ -59,6 +59,7 @@ public class PermafrostMaster extends BossMaster {
     public PermafrostConduit conduit;
     public List<PermafrostBigIcicleEntity> icicles  = new ArrayList<>();
     public List<PermafrostSpawnerIcicle> spawners  = new ArrayList<>();
+    private int phaseTwoAnimTicker = 0;
 
     public PermafrostMaster(EntityType<? extends BossMaster> entityType, Level level) {
         super(entityType, level);
@@ -311,17 +312,23 @@ public class PermafrostMaster extends BossMaster {
         this.getConduit().ifPresent(conduit -> this.moveTo(conduit.position()));
         switch (this.getTotalPhase()) {
             case 0:
-                for (int icicleIndex = 0; icicleIndex < this.ICICLE_AMOUNT; icicleIndex++) {
+                for (int icicleIndex = 0; icicleIndex < ICICLE_AMOUNT; icicleIndex++) {
                     if (this.icicles.get(icicleIndex).isRemoved()) {
                         this.regenerateIcicle(icicleIndex);
                     }
                 }
                 break;
             case 1:
-                if (this.getSpawners().isEmpty()) {
-                    float spawnerHealth = (float) ((this.getHealth() - this.getMaxHealth()/3) / (SPAWNER_AMOUNT));
-                    for (int spawnerIndex = 0; spawnerIndex < this.SPAWNER_AMOUNT; spawnerIndex++)
+                this.phaseTwoAnimTicker++;
+                if (this.phaseTwoAnimTicker % 20 == 0) {
+                    if (this.spawners.size() != SPAWNER_AMOUNT) {
+                        float spawnerHealth = ((this.getHealth() - this.getMaxHealth() / 3) / (SPAWNER_AMOUNT));
+                        int spawnerIndex = this.spawners.size();
                         this.createSpawner(spawnerHealth, spawnerIndex);
+                    } else if (this.spawners.get(0).getPhase() == PermafrostSpawnerIcicle.Phase.HOVERING) {
+                        for (PermafrostSpawnerIcicle permafrostSpawnerIcicle : this.spawners)
+                            permafrostSpawnerIcicle.startFlying();
+                    }
                 }
                 break;
 
@@ -388,6 +395,8 @@ public class PermafrostMaster extends BossMaster {
     }
 
     public boolean hurtSpawner(DamageSource damageSource, float amount, PermafrostSpawnerIcicle spawnerIcicle){
+        if (damageSource.isFall())
+            return false;
         float originalHealth = spawnerIcicle.getHealth();
         float bossReducedAmount = amount * this.getDamageReduction();
         damageSource = OdysseyDamageSource.withInvulnerabilityMultiplier(damageSource, 1.0f / Integer.max(1, this.getNearbyPlayerNumber()));
@@ -395,9 +404,11 @@ public class PermafrostMaster extends BossMaster {
         if (originalHealth > 0.0f) {
             float newHealth = Float.max(originalHealth - bossReducedAmount, 0.0f);
             if(!this.level.isClientSide){
-                if (newHealth <= 0.0f)
-                    spawnerIcicle.die(damageSource);
-                spawnerIcicle.hurtDirectly(damageSource, originalHealth - newHealth);
+                if (newHealth == 0.0f)
+                    spawnerIcicle.discard();
+                else {
+                    spawnerIcicle.hurtDirectly(damageSource, originalHealth - newHealth);
+                }
                 this.updateMasterHealth();
             } else {
                 spawnerIcicle.animateHurt();
@@ -410,8 +421,10 @@ public class PermafrostMaster extends BossMaster {
 
     private void updateMasterHealth(){
         if(this.getHealth() > 0.0f) {
+            System.out.println(this.getHealth());
             float totalHealth = this.getSpawners().stream()
-                    .reduce(0.0f, (health, spawnerIcicle) -> health + spawnerIcicle.getHealth(), Float::sum);
+                    .reduce(0.0f, (health, spawnerIcicle) -> health + Math.max(spawnerIcicle.getHealth(), 0), Float::sum);
+            System.out.println(totalHealth + this.getMaxHealth()/3);
             this.setHealth(totalHealth + this.getMaxHealth()/3);
         }
     }

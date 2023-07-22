@@ -256,6 +256,8 @@ public class ModBusClientEvents {
             }
         }
 //        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
+
+        event.addSprite(PermafrostConduitRenderer.SHELL_RESOURCE_LOCATION);
         event.addSprite(PermafrostConduitRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
         event.addSprite(PermafrostConduitRenderer.WIND_RESOURCE_LOCATION);
         event.addSprite(PermafrostConduitRenderer.VERTICAL_WIND_RESOURCE_LOCATION);

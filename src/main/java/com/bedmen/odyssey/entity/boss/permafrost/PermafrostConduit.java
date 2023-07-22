@@ -4,10 +4,15 @@ import com.bedmen.odyssey.entity.boss.BossSubEntity;
 import com.bedmen.odyssey.entity.boss.coven.CovenMaster;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
 import com.mojang.math.Vector3d;
+import com.mojang.math.Vector3f;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,13 +65,14 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
             super.aiStep();
             ++this.activeRotation;
 
-            //Choose Movement Position
-            if (this.level.getGameTime() % 100 == 7) {
-                this.movementPosition = this.random.nextInt(this.MAX_MOVEMENT_POSITIONS);
-            }
-
-            //Decrement Timers
             if (permafrostMaster.getTotalPhase() == 0) {
+
+                //Choose Movement Position
+                if (this.level.getGameTime() % 100 == 7) {
+                    this.movementPosition = this.random.nextInt(this.MAX_MOVEMENT_POSITIONS);
+                }
+
+                //Decrement Timers
                 for (int i = 0; i < this.attackTimer.length; i++) {
                     --this.attackCooldown[i];
                     if (i == 2) break;
@@ -88,59 +94,65 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
                     int i1 = 100;
                     this.attackCooldown[2] = (int) (i1 * healthMultiplier);
                 }
+
+                //Choose Target
+                Collection<ServerPlayer> serverPlayers = permafrostMaster.bossEvent.getPlayers();
+                List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(permafrostMaster::validTargetPredicate).collect(Collectors.toList());
+                // Set Phase based on Target
+                if (this.level.getGameTime() % 18 == 14) {
+                    if (serverPlayerList.isEmpty()) {
+                        this.setTarget(null);
+                    } else {
+                        setTarget(serverPlayerList.get(this.random.nextInt(serverPlayerList.size())));
+                    }
+                }
+
+                //Movement
+                if (this.getTarget() != null) {
+                    Vec3 location1 = this.getPosition(1);
+                    double angle = this.movementPosition * Math.PI / this.MAX_MOVEMENT_POSITIONS * 2.0d;
+                    Vec3 location2 = Vec3.ZERO;
+                    for (ServerPlayer serverPlayer : serverPlayers) {
+                        location2 = location2.add(serverPlayer.getPosition(1));
+                    }
+                    location2 = location2.scale(1.0d / serverPlayers.size());
+                    location2 = location2.add(Math.sin(angle) * 10.0d, 10.0d, Math.cos(angle) * 10.0d);
+                    Vec3 direction = location2.subtract(location1);
+                    double speed = 0.5d;
+                    double sl = direction.length();
+                    if (sl > speed) {
+                        direction = direction.normalize().scale(speed);
+                    } else {
+                        direction.scale(0.0d);
+                    }
+                    this.setDeltaMovement(direction);
+
+
+                    if (this.attackTimer[0] > 0) {
+                        int targetsAttacked = 0;
+                        for (ServerPlayer serverPlayer : serverPlayerList) {
+                            if (targetsAttacked < 10) {
+                                this.performSpiralAttack(serverPlayer);
+                                ++targetsAttacked;
+                            }
+                        }
+                        ++this.iciclePosition;
+                        this.iciclePosition = this.iciclePosition % this.MAX_ICICLE_POSITIONS;
+                    }
+                    if (this.attackTimer[1] >= 1 && this.attackTimer[1] <= 23) {
+                        this.performSphereAttack(this.attackTimer[1]);
+                    }
+                    if (this.attackCooldown[2] == 0)
+                        permafrostMaster.shootIcicles();
+                }
             } else {
                 this.setInvulnerable(true);
-            }
-
-            //Choose Target
-            Collection<ServerPlayer> serverPlayers = permafrostMaster.bossEvent.getPlayers();
-            List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(permafrostMaster::validTargetPredicate).collect(Collectors.toList());
-            // Set Phase based on Target
-            if (this.level.getGameTime() % 18 == 14) {
-                if (serverPlayerList.isEmpty()) {
-                    this.setTarget(null);
-                } else {
-                    setTarget(serverPlayerList.get(this.random.nextInt(serverPlayerList.size())));
-                }
-            }
-
-            //Movement
-            if (this.getTarget() != null) {
-                Vec3 location1 = this.getPosition(1);
-                double angle = this.movementPosition * Math.PI / this.MAX_MOVEMENT_POSITIONS * 2.0d;
-                Vec3 location2 = Vec3.ZERO;
-                for (ServerPlayer serverPlayer : serverPlayers) {
-                    location2 = location2.add(serverPlayer.getPosition(1));
-                }
-                location2 = location2.scale(1.0d / serverPlayers.size());
-                location2 = location2.add(Math.sin(angle) * 10.0d, 10.0d, Math.cos(angle) * 10.0d);
-                Vec3 direction = location2.subtract(location1);
-                double speed = 0.5d;
-                double sl = direction.length();
-                if (sl > speed) {
-                    direction = direction.normalize().scale(speed);
-                } else {
-                    direction.scale(0.0d);
-                }
-                this.setDeltaMovement(direction);
-
-
-                if (this.attackTimer[0] > 0) {
-                    int targetsAttacked = 0;
-                    for (ServerPlayer serverPlayer : serverPlayerList) {
-                        if (targetsAttacked < 10) {
-                            this.performSpiralAttack(serverPlayer);
-                            ++targetsAttacked;
-                        }
+                if (!this.level.isClientSide()) {
+                    RandomSource randomSource = this.getRandom();
+                    for (int i = 0; i < 8; ++i) {
+                        ((ServerLevel) (this.getLevel())).sendParticles(new DustParticleOptions(new Vector3f(0.35f, 0.35f, 0.35f), 1.0F), this.getX() + (randomSource.nextFloat() - 0.5f) / 2, this.getEyeY() + (randomSource.nextFloat()-0.25f), this.getZ() + (randomSource.nextFloat() - 0.5f) / 2, 2, 0.2D, 0.2D, 0.2D, 0.0D);
                     }
-                    ++this.iciclePosition;
-                    this.iciclePosition = this.iciclePosition % this.MAX_ICICLE_POSITIONS;
                 }
-                if (this.attackTimer[1] >= 1 && this.attackTimer[1] <= 23) {
-                    this.performSphereAttack(this.attackTimer[1]);
-                }
-                if (this.attackCooldown[2] == 0)
-                    permafrostMaster.shootIcicles();
             }
         }
         super.aiStep();
@@ -221,6 +233,7 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
             PermafrostMaster permafrostMaster = this.getMaster().get();
             if (permafrostMaster.getTotalPhase() == 0)
                 return permafrostMaster.hurt(damageSource, amount);
+            return true;
         }
         return super.hurt(damageSource, amount);
     }
@@ -279,6 +292,4 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
             this.entity.setDeltaMovement(vec3);
         }
     }
-
-
 }
