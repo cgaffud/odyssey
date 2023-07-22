@@ -66,26 +66,30 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
             }
 
             //Decrement Timers
-            for (int i = 0; i < this.attackTimer.length; i++) {
-                --this.attackCooldown[i];
-                if (i == 2) break;
-                --this.attackTimer[i];
-            }
+            if (permafrostMaster.getTotalPhase() == 0) {
+                for (int i = 0; i < this.attackTimer.length; i++) {
+                    --this.attackCooldown[i];
+                    if (i == 2) break;
+                    --this.attackTimer[i];
+                }
 
-            float healthMultiplier = 0.5f + 0.5f * (this.getHealth() / this.getMaxHealth());
-            if (this.attackCooldown[0] <= 0) {
-                int i1 = this.random.nextInt(60) + 100;
-                this.attackCooldown[0] = (int) (i1 * healthMultiplier);
-                this.attackTimer[0] = 20;
-            }
-            if (this.attackCooldown[1] <= 0) {
-                int i1 = this.random.nextInt(200) + 100;
-                this.attackCooldown[1] = (int) (i1 * healthMultiplier);
-                this.attackTimer[1] = 27;
-            }
-            if (this.attackCooldown[2] < 0) {
-                int i1 = 100;
-                this.attackCooldown[2] = (int) (i1 * healthMultiplier);
+                float healthMultiplier = 0.5f + 0.5f * (this.getHealth() / this.getMaxHealth());
+                if (this.attackCooldown[0] <= 0) {
+                    int i1 = this.random.nextInt(60) + 100;
+                    this.attackCooldown[0] = (int) (i1 * healthMultiplier);
+                    this.attackTimer[0] = 20;
+                }
+                if (this.attackCooldown[1] <= 0) {
+                    int i1 = this.random.nextInt(200) + 100;
+                    this.attackCooldown[1] = (int) (i1 * healthMultiplier);
+                    this.attackTimer[1] = 27;
+                }
+                if (this.attackCooldown[2] < 0) {
+                    int i1 = 100;
+                    this.attackCooldown[2] = (int) (i1 * healthMultiplier);
+                }
+            } else {
+                this.setInvulnerable(true);
             }
 
             //Choose Target
@@ -215,7 +219,8 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
     public boolean hurt(DamageSource damageSource, float amount) {
         if(this.getMaster().isPresent()) {
             PermafrostMaster permafrostMaster = this.getMaster().get();
-            return permafrostMaster.hurt(damageSource, amount);
+            if (permafrostMaster.getTotalPhase() == 0)
+                return permafrostMaster.hurt(damageSource, amount);
         }
         return super.hurt(damageSource, amount);
     }

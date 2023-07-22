@@ -8,10 +8,7 @@ import com.bedmen.odyssey.entity.boss.coven.*;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
-import com.bedmen.odyssey.entity.boss.permafrost.PermafrostBigIcicleEntity;
-import com.bedmen.odyssey.entity.boss.permafrost.PermafrostConduit;
-import com.bedmen.odyssey.entity.boss.permafrost.PermafrostIcicleEntity;
-import com.bedmen.odyssey.entity.boss.permafrost.PermafrostMaster;
+import com.bedmen.odyssey.entity.boss.permafrost.*;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.entity.projectile.*;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
@@ -101,6 +98,7 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<PermafrostConduit>> PERMAFROST_CONDUIT = ENTITY_TYPE.register("permafrost_conduit", () -> EntityType.Builder.<PermafrostConduit>of(PermafrostConduit::new, MobCategory.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(20).build(new ResourceLocation("permafrost").toString()));
     public static final RegistryObject<EntityType<PermafrostIcicleEntity>> PERMAFROST_ICICLE_ENTITY = ENTITY_TYPE.register("permafrost_icicle", () -> EntityType.Builder.<PermafrostIcicleEntity>of(PermafrostIcicleEntity::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_icicle").toString()));
     public static final RegistryObject<EntityType<PermafrostBigIcicleEntity>> PERMAFROST_BIG_ICICLE_ENTITY = ENTITY_TYPE.register("permafrost_big_icicle", () -> EntityType.Builder.<PermafrostBigIcicleEntity>of(PermafrostBigIcicleEntity::new, MobCategory.MISC).sized(2F, 0.8F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_big_icicle").toString()));
+    public static final RegistryObject<EntityType<PermafrostSpawnerIcicle>> PERMAFROST_SPAWNER_ICICLE = ENTITY_TYPE.register("permafrost_spawner_icicle", () -> EntityType.Builder.<PermafrostSpawnerIcicle>of(PermafrostSpawnerIcicle::new, MobCategory.MISC).sized(1F, 2F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_spawner_icicle").toString()));
 
 
     // # Projectiles

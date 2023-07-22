@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.entity.boss.BossSubEntity;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
@@ -35,29 +36,20 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 
-public class PermafrostBigIcicleEntity extends BossSubEntity<PermafrostMaster> {
+public class PermafrostBigIcicleEntity extends AbstractIndexedIcicleEntity{
 
-    private static final EntityDataAccessor<Integer> DATA_ICICLE_INDEX = SynchedEntityData.defineId(PermafrostBigIcicleEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_IS_CHASING = SynchedEntityData.defineId(PermafrostBigIcicleEntity.class, EntityDataSerializers.BOOLEAN);
 
     public PermafrostBigIcicleEntity(EntityType<? extends BossSubEntity<PermafrostMaster>> p_37248_, Level p_37249_) {
         super(p_37248_, p_37249_);
-        this.noPhysics = true;
     }
 
     public PermafrostBigIcicleEntity(Level level, int id) {
-        this(EntityTypeRegistry.PERMAFROST_BIG_ICICLE_ENTITY.get(), level);
-        this.setIcicleIndex(id);
+        super(EntityTypeRegistry.PERMAFROST_BIG_ICICLE_ENTITY.get(), level, id);
     }
 
     public SoundSource getSoundSource() {
         return SoundSource.HOSTILE;
-    }
-
-    public void checkDespawn() {
-        if (this.level.getDifficulty() == Difficulty.PEACEFUL ) {
-            this.discard();
-        }
     }
 
     public void tick() {
@@ -172,8 +164,11 @@ public class PermafrostBigIcicleEntity extends BossSubEntity<PermafrostMaster> {
         this.discardAndDoParticles();
     }
 
-    private void discardAndDoParticles() {
-        OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this), new ColdSnapAnimatePacket(this));
+    public void discardAndDoParticles() {
+        if (this.level.isClientSide())
+            AspectUtil.doFrostAspectParticles(this, 5);
+        else
+            OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this), new ColdSnapAnimatePacket(this));
         this.discard();
     }
 
@@ -193,33 +188,21 @@ public class PermafrostBigIcicleEntity extends BossSubEntity<PermafrostMaster> {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_ICICLE_INDEX, -1);
         this.entityData.define(DATA_IS_CHASING, false);
     }
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.putInt("icicleIndex", this.getIcicleIndex());
         compoundNBT.putBoolean("IsChasing", this.isChasing());
     }
 
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
-        if(compoundNBT.contains("icicleIndex")){
-            this.setIcicleIndex(compoundNBT.getInt("icicleIndex"));
-        }
         if (compoundNBT.contains("IsChasing")) {
             this.setIsChasing(compoundNBT.getBoolean("IsChasing"));
         }
     }
 
-    public void setIcicleIndex(int icicleIndex) {
-        this.entityData.set(DATA_ICICLE_INDEX, icicleIndex);
-    }
-
-    public int getIcicleIndex() {
-        return this.entityData.get(DATA_ICICLE_INDEX);
-    }
 
     public void setIsChasing(boolean isChasing) {this.entityData.set(DATA_IS_CHASING, isChasing); }
 

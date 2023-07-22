@@ -1,10 +1,11 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
+import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.entity.boss.SubEntity;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
+import com.bedmen.odyssey.entity.boss.coven.CovenWitch;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.util.NonNullListCollector;
@@ -18,6 +19,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,18 +37,28 @@ import java.util.stream.Stream;
 public class PermafrostMaster extends BossMaster {
     public static final double MAX_HEALTH = 350.0d;
     public static final double FOLLOW_RANGE = 75d;
-    private static final EntityDataAccessor<Integer> DATA_MAIN_ID = SynchedEntityData.defineId(MineralLeviathanMaster.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<IntList> DATA_ICICLE_ID_LIST = SynchedEntityData.defineId(MineralLeviathanMaster.class, OdysseyDataSerializers.INT_LIST);
+
+    // Tags
+    private static final EntityDataAccessor<Integer> DATA_MAIN_ID = SynchedEntityData.defineId(PermafrostMaster.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<IntList> DATA_ICICLE_ID_LIST = SynchedEntityData.defineId(PermafrostMaster.class, OdysseyDataSerializers.INT_LIST);
+    private static final EntityDataAccessor<IntList> DATA_SPAWNER_ID_LIST = SynchedEntityData.defineId(PermafrostMaster.class, OdysseyDataSerializers.INT_LIST);
+    private static final EntityDataAccessor<Integer> DATA_TOTAL_PHASE = SynchedEntityData.defineId(PermafrostMaster.class, EntityDataSerializers.INT);
+
+    // Important Magic Numbers that govern behavior
     public static final int ICICLE_AMOUNT = 6;
+    public static final int SPAWNER_AMOUNT = 4;
     public static final float ICICLE_FOLLOW_RADIUS = 4;
 
+    // Tags
     private static final String CONDUIT_TAG = "ConduitSubEntity";
-    private static final String ICICLES_TAG = "IcicleEntities";
-    public int totalPhase;
+    private static final String ICICLES_TAG = "BigIcicleEntities";
+    private static final String SPAWNERS_TAG = "SpawnerIcicleEntities";
+    private static final String TOTAL_PHASE_TAG = "PermafrostBossPhase";
 
     // Reminder: serverside only
     public PermafrostConduit conduit;
     public List<PermafrostBigIcicleEntity> icicles  = new ArrayList<>();
+    public List<PermafrostSpawnerIcicle> spawners  = new ArrayList<>();
 
     public PermafrostMaster(EntityType<? extends BossMaster> entityType, Level level) {
         super(entityType, level);
@@ -54,6 +66,10 @@ public class PermafrostMaster extends BossMaster {
 
     @Override
     protected BossEvent.BossBarColor getBossBarColor() {return BossEvent.BossBarColor.BLUE; }
+
+    public void setTotalPhase(int totalPhase) { this.entityData.set(DATA_TOTAL_PHASE, totalPhase); }
+
+    public int getTotalPhase() { return (this.entityData.get(DATA_TOTAL_PHASE)); }
 
     public int getMainId() {return this.entityData.get(DATA_MAIN_ID);}
 
@@ -106,10 +122,38 @@ public class PermafrostMaster extends BossMaster {
         this.entityData.set(DATA_ICICLE_ID_LIST, icicleIds);
     }
 
+    public IntList getSpawnerIds() {
+        return new IntArrayList(this.entityData.get(DATA_SPAWNER_ID_LIST));
+    }
+
+    public List<PermafrostSpawnerIcicle> getSpawners() {
+        if(this.level.isClientSide) {
+            List<PermafrostSpawnerIcicle> spawners = new ArrayList<>();
+            for(Integer spawnerId: this.getSpawnerIds()) {
+                Entity entity = this.level.getEntity(spawnerId);
+                // instanceof also checks if it is null
+                if(entity instanceof PermafrostSpawnerIcicle spawnerIcicle) {
+                    spawners.add(spawnerIcicle);
+                }
+            }
+            return spawners;
+        } else {
+            return this.spawners;
+        }
+    }
+
+    private void addSpawnerId(int id) {
+        IntList spawnerIds = this.getSpawnerIds();
+        spawnerIds.add(id);
+        this.entityData.set(DATA_SPAWNER_ID_LIST, spawnerIds);
+    }
+
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(DATA_TOTAL_PHASE, 0);
         this.entityData.define(DATA_MAIN_ID, -1);
         this.entityData.define(DATA_ICICLE_ID_LIST, new IntArrayList());
+        this.entityData.define(DATA_SPAWNER_ID_LIST, new IntArrayList());
     }
 
     @Override
@@ -117,6 +161,7 @@ public class PermafrostMaster extends BossMaster {
         List<Entity> entities = new ArrayList<>();
         this.getConduit().ifPresent(entities::add);
         entities.addAll(this.getIcicles());
+        entities.addAll(this.getSpawners());
         return entities;
     }
 
@@ -133,7 +178,7 @@ public class PermafrostMaster extends BossMaster {
                 Odyssey.LOGGER.error("PermafrostConduit failed to spawn in spawnSubEntities");
             }
         }
-        if (this.getIcicles().isEmpty()) {
+        if (this.getIcicles().isEmpty() && (this.getTotalPhase() == 0)) {
             for (int icicleIndex = 0; icicleIndex < ICICLE_AMOUNT; icicleIndex++) {
                 PermafrostBigIcicleEntity permafrostBigIcicleEntity = new PermafrostBigIcicleEntity(this.level, icicleIndex);
                 if (permafrostBigIcicleEntity != null) {
@@ -172,23 +217,37 @@ public class PermafrostMaster extends BossMaster {
     @Override
     public CompoundTag saveSubEntities() {
         CompoundTag subEntitiesTag = new CompoundTag();
+        subEntitiesTag.putInt(TOTAL_PHASE_TAG, this.getTotalPhase());
         CompoundTag conduitCompoundTag = new CompoundTag();
         this.conduit.saveAsPassenger(conduitCompoundTag);
         subEntitiesTag.put(CONDUIT_TAG, conduitCompoundTag);
-        ListTag iciclesTag = new ListTag();
-        for(PermafrostBigIcicleEntity bigIcicleEntity : this.icicles) {
-            CompoundTag icicleTag = new CompoundTag();
-            if (bigIcicleEntity.saveAsPassenger(icicleTag)) {
-                iciclesTag.add(icicleTag);
+        if (this.getTotalPhase() == 0) {
+            ListTag iciclesTag = new ListTag();
+            for (PermafrostBigIcicleEntity bigIcicleEntity : this.icicles) {
+                CompoundTag icicleTag = new CompoundTag();
+                if (bigIcicleEntity.saveAsPassenger(icicleTag)) {
+                    iciclesTag.add(icicleTag);
+                }
             }
+            subEntitiesTag.put(ICICLES_TAG, iciclesTag);
+        } else if (this.getTotalPhase() == 1) {
+            ListTag iciclesTag = new ListTag();
+            for (PermafrostSpawnerIcicle spawnerIcicle : this.spawners) {
+                CompoundTag icicleTag = new CompoundTag();
+                if (spawnerIcicle.saveAsPassenger(icicleTag)) {
+                    iciclesTag.add(icicleTag);
+                }
+            }
+            subEntitiesTag.put(SPAWNERS_TAG, iciclesTag);
         }
-        subEntitiesTag.put(ICICLES_TAG, iciclesTag);
         return subEntitiesTag;
     }
 
     @Override
     public void loadSubEntities(CompoundTag subEntitiesTag) {
-        if(subEntitiesTag.contains(CONDUIT_TAG)) {
+        if (subEntitiesTag.contains(TOTAL_PHASE_TAG))
+           this.setTotalPhase(subEntitiesTag.getInt(TOTAL_PHASE_TAG));
+        if (subEntitiesTag.contains(CONDUIT_TAG)) {
             CompoundTag conduitCompoundTag = subEntitiesTag.getCompound(CONDUIT_TAG);
             Entity entity = EntityType.loadEntityRecursive(conduitCompoundTag, this.level, entity1 -> entity1);
             if(entity instanceof PermafrostConduit permafrostConduit) {
@@ -199,7 +258,7 @@ public class PermafrostMaster extends BossMaster {
                 Odyssey.LOGGER.error("PermafrostConduit failed to spawn head in loadSubEntities");
             }
         }
-        if(subEntitiesTag.contains(ICICLES_TAG)) {
+        if (subEntitiesTag.contains(ICICLES_TAG) && (this.getTotalPhase() == 0)) {
             List<Tag> listOfTags = subEntitiesTag.getList(ICICLES_TAG, Tag.TAG_COMPOUND).stream().toList();
             Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
             this.icicles.addAll(entitySteam.map(entity -> {
@@ -211,7 +270,7 @@ public class PermafrostMaster extends BossMaster {
             }).filter(permafrostBigIcicleEntity -> {
                 boolean isNull = permafrostBigIcicleEntity == null;
                 if(isNull) {
-                    Odyssey.LOGGER.error("PermafrostIcicle failed to spawn in loadSubEntities");
+                    Odyssey.LOGGER.error("PermafrostBigIcicle failed to spawn in loadSubEntities");
                 }
                 return !isNull;
             }).collect(new NonNullListCollector<>()));
@@ -220,7 +279,27 @@ public class PermafrostMaster extends BossMaster {
                 this.addIcicleId(permafrostBigIcicleEntity.getId());
             }
         }
+        if (subEntitiesTag.contains(SPAWNERS_TAG) && (this.getTotalPhase() == 1)) {
+            List<Tag> listOfTags = subEntitiesTag.getList(SPAWNERS_TAG, Tag.TAG_COMPOUND).stream().toList();
+            Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
+            this.spawners.addAll(entitySteam.map(entity -> {
+                if(entity instanceof PermafrostSpawnerIcicle spawnerIcicle) {
+                    spawnerIcicle.setMasterId(this.getId());
+                    return spawnerIcicle;
+                }
+                return null;
+            }).filter(spawnerIcicle -> {
+                boolean isNull = spawnerIcicle == null;
+                if(isNull) {
+                    Odyssey.LOGGER.error("PermafrostSpawnerIcicle failed to spawn in loadSubEntities");
+                }
+                return !isNull;
+            }).collect(new NonNullListCollector<>()));
 
+            for(PermafrostSpawnerIcicle permafrostSpawnerIcicle: this.spawners) {
+                this.addSpawnerId(permafrostSpawnerIcicle.getId());
+            }
+        }
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -230,13 +309,43 @@ public class PermafrostMaster extends BossMaster {
     @Override
     public void performMasterMovement() {
         this.getConduit().ifPresent(conduit -> this.moveTo(conduit.position()));
-        for (int icicleIndex = 0; icicleIndex < this.ICICLE_AMOUNT; icicleIndex++) {
-            if (this.icicles.get(icicleIndex).isRemoved()) {
-                this.regenerateIcicle(icicleIndex);
-            }
+        switch (this.getTotalPhase()) {
+            case 0:
+                for (int icicleIndex = 0; icicleIndex < this.ICICLE_AMOUNT; icicleIndex++) {
+                    if (this.icicles.get(icicleIndex).isRemoved()) {
+                        this.regenerateIcicle(icicleIndex);
+                    }
+                }
+                break;
+            case 1:
+                if (this.getSpawners().isEmpty()) {
+                    float spawnerHealth = (float) ((this.getHealth() - this.getMaxHealth()/3) / (SPAWNER_AMOUNT));
+                    for (int spawnerIndex = 0; spawnerIndex < this.SPAWNER_AMOUNT; spawnerIndex++)
+                        this.createSpawner(spawnerHealth, spawnerIndex);
+                }
+                break;
+
+        }
+        Collection<ServerPlayer> serverPlayers = this.bossEvent.getPlayers();
+        List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(this::validTargetPredicate).collect(Collectors.toList());
+        for (ServerPlayer player : serverPlayerList) {
+            TemperatureSource.BLIZZARD.tick(player);
         }
     }
 
+    @Override
+    public boolean hurt(DamageSource damageSource, float amount) {
+        if (this.getTotalPhase() == 0) {
+            if (this.getHealth() < this.getMaxHealth() * 2/3) {
+                this.setTotalPhase(1);
+                for (PermafrostBigIcicleEntity bigIcicleEntity : this.getIcicles())
+                    bigIcicleEntity.discardAndDoParticles();
+            }
+        }
+        return super.hurt(damageSource, amount);
+    }
+
+    /** Phase 0 Items */
     public List<ServerPlayer> getPlayersSortedByDistance(LivingEntity livingEntity) {
         Collection<ServerPlayer> serverPlayers = this.bossEvent.getPlayers();
         List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(this::validTargetPredicate).collect(Collectors.toList());
@@ -263,5 +372,49 @@ public class PermafrostMaster extends BossMaster {
             System.out.println("Regeneration error");
         }
     }
+
+    /** Phase 1 Items */
+    public void createSpawner(float health, int index) {
+        PermafrostSpawnerIcicle spawnerIcicle = new PermafrostSpawnerIcicle(this.level, health, index);
+        if (spawnerIcicle != null) {
+            this.spawners.add(spawnerIcicle);
+            this.addSpawnerId(spawnerIcicle.getId());
+            spawnerIcicle.moveTo(this.position());
+            spawnerIcicle.setMasterId(this.getId());
+            this.level.addFreshEntity(spawnerIcicle);
+        } else {
+            System.out.println("Regeneration error");
+        }
+    }
+
+    public boolean hurtSpawner(DamageSource damageSource, float amount, PermafrostSpawnerIcicle spawnerIcicle){
+        float originalHealth = spawnerIcicle.getHealth();
+        float bossReducedAmount = amount * this.getDamageReduction();
+        damageSource = OdysseyDamageSource.withInvulnerabilityMultiplier(damageSource, 1.0f / Integer.max(1, this.getNearbyPlayerNumber()));
+
+        if (originalHealth > 0.0f) {
+            float newHealth = Float.max(originalHealth - bossReducedAmount, 0.0f);
+            if(!this.level.isClientSide){
+                if (newHealth <= 0.0f)
+                    spawnerIcicle.die(damageSource);
+                spawnerIcicle.hurtDirectly(damageSource, originalHealth - newHealth);
+                this.updateMasterHealth();
+            } else {
+                spawnerIcicle.animateHurt();
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    private void updateMasterHealth(){
+        if(this.getHealth() > 0.0f) {
+            float totalHealth = this.getSpawners().stream()
+                    .reduce(0.0f, (health, spawnerIcicle) -> health + spawnerIcicle.getHealth(), Float::sum);
+            this.setHealth(totalHealth + this.getMaxHealth()/3);
+        }
+    }
+
 
 }

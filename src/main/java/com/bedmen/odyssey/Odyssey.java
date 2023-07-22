@@ -151,5 +151,6 @@ public class Odyssey
         event.put(EntityTypeRegistry.PERMAFROST_MASTER.get(), PermafrostMaster.createAttributes().build());
         event.put(EntityTypeRegistry.PERMAFROST_CONDUIT.get(), PermafrostConduit.createAttributes().build());
         event.put(EntityTypeRegistry.PERMAFROST_BIG_ICICLE_ENTITY.get(), PermafrostBigIcicleEntity.createAttributes().build());
+        event.put(EntityTypeRegistry.PERMAFROST_SPAWNER_ICICLE.get(), PermafrostBigIcicleEntity.createAttributes().build());
     }
 }
