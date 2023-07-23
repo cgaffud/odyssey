@@ -24,6 +24,7 @@ import com.bedmen.odyssey.items.aspect_items.ParryableWeaponItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
+import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -552,6 +553,14 @@ public class EntityEvents {
         ItemStack oldItemStack = event.getFrom();
         ItemStack newItemStack = event.getTo();
         EquipmentSlot equipmentSlot = event.getSlot();
+
+        if(equipmentSlot.getType() == EquipmentSlot.Type.ARMOR){
+            float volatilityStrength = AspectUtil.getItemStackAspectStrength(newItemStack, Aspects.VOLATILITY);
+            if (volatilityStrength > 0.0f && livingEntity.level instanceof ServerLevel serverLevel){
+                AspectUtil.doVolatileExplosion(serverLevel, livingEntity, volatilityStrength);
+            }
+        }
+
         Multimap<Attribute, AttributeModifier> oldMultimap = HashMultimap.create();
         Multimap<Attribute, AttributeModifier> newMultimap = HashMultimap.create();
         AspectUtil.fillAttributeMultimaps(livingEntity, oldItemStack, newItemStack, equipmentSlot, oldMultimap, newMultimap);

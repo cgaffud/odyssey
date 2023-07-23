@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.network.packet;
 
+import com.bedmen.odyssey.aspect.AspectUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,12 +42,10 @@ public class SwungWithVolatilePacket{
     public static void handle(SwungWithVolatilePacket swungWithVolatilePacket, Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
-            ServerPlayer serverPlayerEntity = context.getSender();
-            if (serverPlayerEntity != null) {
-                ServerLevel serverWorld = serverPlayerEntity.getLevel();
-                Explosion.BlockInteraction explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(serverWorld, serverPlayerEntity) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
-                float f = serverPlayerEntity.yHeadRot * (float)Math.PI / 180.0f;
-                serverWorld.explode(null, serverPlayerEntity.getX() - Mth.sin(f)*0.2f, serverPlayerEntity.getEyeY(), serverPlayerEntity.getZ() + Mth.cos(f)*0.2f, swungWithVolatilePacket.volatilityStrength, false, explosion$mode);
+            ServerPlayer serverPlayer = context.getSender();
+            if (serverPlayer != null) {
+                ServerLevel serverLevel = serverPlayer.getLevel();
+                AspectUtil.doVolatileExplosion(serverLevel, serverPlayer, swungWithVolatilePacket.volatilityStrength);
             }
         });
         context.setPacketHandled(true);

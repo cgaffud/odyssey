@@ -13,6 +13,8 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
+import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
 import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
@@ -23,6 +25,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -37,7 +42,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -455,5 +462,15 @@ public class AspectUtil {
 
     private static double getRandomSnowflakeSpeed(RandomSource randomSource){
         return randomSource.nextDouble() * 0.4d - 0.2d;
+    }
+
+    // Volatility
+
+    public static void doVolatileExplosion(ServerLevel serverLevel, LivingEntity livingEntity, float strength){
+        if(livingEntity.isAlive()){
+            Explosion.BlockInteraction explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(serverLevel, livingEntity) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+            float f = livingEntity.yHeadRot * (float)Math.PI / 180.0f;
+            serverLevel.explode(null, livingEntity.getX() - Mth.sin(f)*0.2f, livingEntity.getEyeY(), livingEntity.getZ() + Mth.cos(f)*0.2f, strength, false, explosion$mode);
+        }
     }
 }
