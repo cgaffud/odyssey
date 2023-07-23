@@ -1,5 +1,5 @@
 {
-  "parent": "oddc:item/melee_blocking",
+  "parent": "oddc:item/melee_blocking_reversed",
   "textures": {
     "layer0": "oddc:item/moon_sword/passive"
   }

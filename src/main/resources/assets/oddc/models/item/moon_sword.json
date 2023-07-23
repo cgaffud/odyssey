@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:item/handheld",
+  "parent": "oddc:item/flipped_weapon",
   "textures": {
     "layer0": "oddc:item/moon_sword/passive"
   },

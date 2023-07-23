@@ -1,5 +1,5 @@
 {
-  "parent": "oddc:item/dagger",
+  "parent": "oddc:item/flipped_weapon",
   "textures": {
     "layer0": "oddc:item/hexflame_dagger"
   }
