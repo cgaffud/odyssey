@@ -144,6 +144,7 @@ public class ModBusClientEvents {
             EntityRenderers.register(EntityTypeRegistry.WRAITH_STALKER.get(), WraithStalkerRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WRAITH_AMALGAM.get(), WraithAmalgamRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WRAITH_AMALGAM_PROJECTILE.get(), WraithAmalgamProjectileRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.WRAITHLING.get(), WraithlingRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BANDIT.get(), BanditRenderer::new);
 
             //Boss Renderings
@@ -285,6 +286,7 @@ public class ModBusClientEvents {
         event.registerLayerDefinition(WraithStalkerModel.LAYER_LOCATION, WraithStalkerModel::createBodyLayer);
         event.registerLayerDefinition(WraithAmalgamModel.LAYER_LOCATION, WraithAmalgamModel::createBodyLayer);
         event.registerLayerDefinition(WraithAmalgamProjectileModel.LAYER_LOCATION, WraithAmalgamProjectileModel::createBodyLayer);
+        event.registerLayerDefinition(WraithlingModel.LAYER_LOCATION, WraithlingModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanHeadModel.LAYER_LOCATION, MineralLeviathanHeadModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanBodyModel.LAYER_LOCATION, MineralLeviathanBodyModel::createBodyLayer);
         event.registerLayerDefinition(ArmedCovenWitchModel.LAYER_LOCATION, ArmedCovenWitchModel::createBodyLayer);

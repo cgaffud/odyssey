@@ -9,10 +9,7 @@ import com.bedmen.odyssey.entity.boss.coven.OverworldWitch;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
-import com.bedmen.odyssey.entity.boss.permafrost.PermafrostBigIcicleEntity;
-import com.bedmen.odyssey.entity.boss.permafrost.PermafrostConduit;
-import com.bedmen.odyssey.entity.boss.permafrost.PermafrostMaster;
-import com.bedmen.odyssey.entity.boss.permafrost.PermafrostSpawnerIcicle;
+import com.bedmen.odyssey.entity.boss.permafrost.*;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyPowderSnowBucketItem;
@@ -137,6 +134,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.WRAITH.get(), Wraith.createAttributes().build());
         event.put(EntityTypeRegistry.WRAITH_STALKER.get(), WraithStalker.createAttributes().build());
         event.put(EntityTypeRegistry.WRAITH_AMALGAM.get(), WraithAmalgam.createAttributes().build());
+        event.put(EntityTypeRegistry.WRAITHLING.get(), Wraithling.createAttributes().build());
         event.put(EntityTypeRegistry.BANDIT.get(), Bandit.createAttributes().build());
         event.put(EntityTypeRegistry.BLADE_SPIDER.get(), BladeSpider.createAttributes().build());
 //

@@ -5,7 +5,6 @@ import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.entity.boss.SubEntity;
-import com.bedmen.odyssey.entity.boss.coven.CovenWitch;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.util.NonNullListCollector;
@@ -54,12 +53,13 @@ public class PermafrostMaster extends BossMaster {
     private static final String ICICLES_TAG = "BigIcicleEntities";
     private static final String SPAWNERS_TAG = "SpawnerIcicleEntities";
     private static final String TOTAL_PHASE_TAG = "PermafrostBossPhase";
+    private static final String SPAWNING_TICKER_TAG = "SpawningTicker";
 
     // Reminder: serverside only
     public PermafrostConduit conduit;
     public List<PermafrostBigIcicleEntity> icicles  = new ArrayList<>();
     public List<PermafrostSpawnerIcicle> spawners  = new ArrayList<>();
-    private int phaseTwoAnimTicker = 0;
+    private int phaseTwoSpawningTicker = 0;
 
     public PermafrostMaster(EntityType<? extends BossMaster> entityType, Level level) {
         super(entityType, level);
@@ -232,6 +232,7 @@ public class PermafrostMaster extends BossMaster {
             }
             subEntitiesTag.put(ICICLES_TAG, iciclesTag);
         } else if (this.getTotalPhase() == 1) {
+            subEntitiesTag.putInt(SPAWNING_TICKER_TAG, this.phaseTwoSpawningTicker);
             ListTag iciclesTag = new ListTag();
             for (PermafrostSpawnerIcicle spawnerIcicle : this.spawners) {
                 CompoundTag icicleTag = new CompoundTag();
@@ -280,25 +281,29 @@ public class PermafrostMaster extends BossMaster {
                 this.addIcicleId(permafrostBigIcicleEntity.getId());
             }
         }
-        if (subEntitiesTag.contains(SPAWNERS_TAG) && (this.getTotalPhase() == 1)) {
-            List<Tag> listOfTags = subEntitiesTag.getList(SPAWNERS_TAG, Tag.TAG_COMPOUND).stream().toList();
-            Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
-            this.spawners.addAll(entitySteam.map(entity -> {
-                if(entity instanceof PermafrostSpawnerIcicle spawnerIcicle) {
-                    spawnerIcicle.setMasterId(this.getId());
-                    return spawnerIcicle;
-                }
-                return null;
-            }).filter(spawnerIcicle -> {
-                boolean isNull = spawnerIcicle == null;
-                if(isNull) {
-                    Odyssey.LOGGER.error("PermafrostSpawnerIcicle failed to spawn in loadSubEntities");
-                }
-                return !isNull;
-            }).collect(new NonNullListCollector<>()));
+        if (this.getTotalPhase() == 1) {
+            if (subEntitiesTag.contains(SPAWNING_TICKER_TAG))
+                this.phaseTwoSpawningTicker = subEntitiesTag.getInt(SPAWNING_TICKER_TAG);
+            if (subEntitiesTag.contains(SPAWNERS_TAG)) {
+                List<Tag> listOfTags = subEntitiesTag.getList(SPAWNERS_TAG, Tag.TAG_COMPOUND).stream().toList();
+                Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
+                this.spawners.addAll(entitySteam.map(entity -> {
+                    if (entity instanceof PermafrostSpawnerIcicle spawnerIcicle) {
+                        spawnerIcicle.setMasterId(this.getId());
+                        return spawnerIcicle;
+                    }
+                    return null;
+                }).filter(spawnerIcicle -> {
+                    boolean isNull = spawnerIcicle == null;
+                    if (isNull) {
+                        Odyssey.LOGGER.error("PermafrostSpawnerIcicle failed to spawn in loadSubEntities");
+                    }
+                    return !isNull;
+                }).collect(new NonNullListCollector<>()));
 
-            for(PermafrostSpawnerIcicle permafrostSpawnerIcicle: this.spawners) {
-                this.addSpawnerId(permafrostSpawnerIcicle.getId());
+                for (PermafrostSpawnerIcicle permafrostSpawnerIcicle : this.spawners) {
+                    this.addSpawnerId(permafrostSpawnerIcicle.getId());
+                }
             }
         }
     }
@@ -319,15 +324,19 @@ public class PermafrostMaster extends BossMaster {
                 }
                 break;
             case 1:
-                this.phaseTwoAnimTicker++;
-                if (this.phaseTwoAnimTicker % 20 == 0) {
-                    if (this.spawners.size() != SPAWNER_AMOUNT) {
+                this.phaseTwoSpawningTicker++;
+                if (this.phaseTwoSpawningTicker % 20 == 0) {
+                    if (this.phaseTwoSpawningTicker < (20*(SPAWNER_AMOUNT+1))) {
                         float spawnerHealth = ((this.getHealth() - this.getMaxHealth() / 3) / (SPAWNER_AMOUNT));
                         int spawnerIndex = this.spawners.size();
                         this.createSpawner(spawnerHealth, spawnerIndex);
-                    } else if (this.spawners.get(0).getPhase() == PermafrostSpawnerIcicle.Phase.HOVERING) {
+                    } else if (!this.spawners.isEmpty() && (this.spawners.get(0).getPhase() == PermafrostSpawnerIcicle.Phase.HOVERING)) {
                         for (PermafrostSpawnerIcicle permafrostSpawnerIcicle : this.spawners)
                             permafrostSpawnerIcicle.startFlying();
+                    }
+                    if (this.spawners.isEmpty()) {
+                        System.out.println("Begin next phase!");
+                        this.setTotalPhase(2);
                     }
                 }
                 break;
@@ -355,8 +364,7 @@ public class PermafrostMaster extends BossMaster {
     /** Phase 0 Items */
     public List<ServerPlayer> getPlayersSortedByDistance(LivingEntity livingEntity) {
         Collection<ServerPlayer> serverPlayers = this.bossEvent.getPlayers();
-        List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(this::validTargetPredicate).collect(Collectors.toList());
-        serverPlayerList.sort(Comparator.comparingDouble(player -> livingEntity.position().distanceTo(player.position())));
+        List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(this::validTargetPredicate).sorted(Comparator.comparingDouble(player -> livingEntity.position().distanceTo(player.position()))).collect(Collectors.toList());
         return serverPlayerList;
     }
 
@@ -404,9 +412,9 @@ public class PermafrostMaster extends BossMaster {
         if (originalHealth > 0.0f) {
             float newHealth = Float.max(originalHealth - bossReducedAmount, 0.0f);
             if(!this.level.isClientSide){
-                if (newHealth == 0.0f)
+                if (newHealth == 0.0f) {
                     spawnerIcicle.discard();
-                else {
+                } else {
                     spawnerIcicle.hurtDirectly(damageSource, originalHealth - newHealth);
                 }
                 this.updateMasterHealth();
@@ -421,10 +429,14 @@ public class PermafrostMaster extends BossMaster {
 
     private void updateMasterHealth(){
         if(this.getHealth() > 0.0f) {
-            System.out.println(this.getHealth());
             float totalHealth = this.getSpawners().stream()
-                    .reduce(0.0f, (health, spawnerIcicle) -> health + Math.max(spawnerIcicle.getHealth(), 0), Float::sum);
-            System.out.println(totalHealth + this.getMaxHealth()/3);
+                    .reduce(0.0f, (health, spawnerIcicle) -> {
+                        if (spawnerIcicle.isRemoved())
+                            return health;
+                        else
+                            return health + spawnerIcicle.getHealth();
+                        }
+                            , Float::sum);
             this.setHealth(totalHealth + this.getMaxHealth()/3);
         }
     }
