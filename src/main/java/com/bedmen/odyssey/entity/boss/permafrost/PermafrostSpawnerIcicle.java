@@ -4,14 +4,20 @@ import com.bedmen.odyssey.entity.boss.coven.CovenMaster;
 import com.bedmen.odyssey.entity.boss.coven.CovenWitch;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.SoundEventRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
+import com.mojang.math.Vector3f;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -28,10 +34,10 @@ import java.util.List;
 
 public class PermafrostSpawnerIcicle extends AbstractIndexedIcicleEntity{
 
-    private static final EntityDataAccessor<Integer> DATA_WRAITHLING_NUM = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_WRAITHLING_NUM = SynchedEntityData.defineId(PermafrostSpawnerIcicle.class, EntityDataSerializers.INT);
     private static final String WRAITHLING_NUM_TAG = "WraithlingsTag";
 
-    private static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(CovenWitch.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(PermafrostSpawnerIcicle.class, EntityDataSerializers.INT);
     private static final String PHASE_TAG = "SpawnerPhase";
 
     public enum Phase {
@@ -47,13 +53,15 @@ public class PermafrostSpawnerIcicle extends AbstractIndexedIcicleEntity{
 
     public PermafrostSpawnerIcicle(Level level, float health, int index) {
         super(EntityTypeRegistry.PERMAFROST_SPAWNER_ICICLE.get(), level, index);
-        System.out.println(health);
         this.setHealth(health);
-
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, PermafrostMaster.MAX_HEALTH);
+    }
+
+    protected SoundEvent getDeathSound() {
+        return SoundEventRegistry.WRAITH_DEATH.get();
     }
 
     @Override
@@ -90,13 +98,14 @@ public class PermafrostSpawnerIcicle extends AbstractIndexedIcicleEntity{
                     break;
                 case SPAWNING:
                     if (GeneralUtil.isHashTick(this, this.level, 20) && (this.getRandom().nextFloat() < 0.2f) &&
-                        !this.level.isClientSide() && (this.getWraithlingNum() <= this.spawningAmount())) {
-                        Wraithling wraithling = new Wraithling(EntityTypeRegistry.WRAITHLING.get(), this.level);
-                        float phi = this.getRandom().nextFloat() * Mth.TWO_PI;
-                        wraithling.moveTo(this.position().add(new Vec3(Mth.cos(phi) * 1.5f, 0, Mth.sin(phi) * 1.5f)));
-                        wraithling.setOwner(this);
-                        this.setWraithlingNum(this.getWraithlingNum() + 1);
-                        this.level.addFreshEntity(wraithling);
+                        !this.level.isClientSide() && (this.getWraithlingNum() < this.spawningAmount())) {
+                       this.spawnWraithling();
+                    }
+                    if (!this.level.isClientSide()) {
+                        RandomSource randomSource = this.getRandom();
+                        for (int i = 0; i < 4; ++i) {
+                            ((ServerLevel) (this.getLevel())).sendParticles(new DustParticleOptions(new Vector3f(0.35f, 0.35f, 0.35f), 1.0F), this.getX() + (randomSource.nextFloat() - 0.5f), this.getEyeY() + (randomSource.nextFloat()-0.5f), this.getZ() + (randomSource.nextFloat() - 0.5f) , 2, 0.2D, 0.2D, 0.2D, 0.0D);
+                        }
                     }
             }
         }
@@ -112,7 +121,7 @@ public class PermafrostSpawnerIcicle extends AbstractIndexedIcicleEntity{
         float r2 = PermafrostMaster.ICICLE_FOLLOW_RADIUS;
         float f2x = (float) (Math.cos(thetaA) * Math.sin(Mth.HALF_PI) * r2);
         float f2z = (float) (Math.sin(thetaA) * Math.sin(Mth.HALF_PI) * r2);
-        this.setDeltaMovement(((new Vec3(f2x, 0 ,f2z)).normalize().add(0,0.2,0)).normalize().scale(1.75f));
+        this.setDeltaMovement(((new Vec3(f2x, 0 ,f2z)).normalize().add(0,0.15,0)).normalize().scale(2f));
     }
 
     private int spawningAmount() {
@@ -161,6 +170,15 @@ public class PermafrostSpawnerIcicle extends AbstractIndexedIcicleEntity{
 
     public int getWraithlingNum() {
         return this.entityData.get(DATA_WRAITHLING_NUM);
+    }
+
+    public void spawnWraithling() {
+        Wraithling wraithling = new Wraithling(EntityTypeRegistry.WRAITHLING.get(), this.level);
+        float phi = this.getRandom().nextFloat() * Mth.TWO_PI;
+        wraithling.moveTo(this.position().add(new Vec3(Mth.cos(phi) * 1.5f, 0, Mth.sin(phi) * 1.5f)));
+        wraithling.setOwner(this);
+        this.setWraithlingNum(this.getWraithlingNum() + 1);
+        this.level.addFreshEntity(wraithling);
     }
 
 }

@@ -147,10 +147,11 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
                 }
             } else {
                 this.setInvulnerable(true);
+                this.setDeltaMovement(Vec3.ZERO);
                 if (!this.level.isClientSide()) {
                     RandomSource randomSource = this.getRandom();
-                    for (int i = 0; i < 8; ++i) {
-                        ((ServerLevel) (this.getLevel())).sendParticles(new DustParticleOptions(new Vector3f(0.35f, 0.35f, 0.35f), 1.0F), this.getX() + (randomSource.nextFloat() - 0.5f) / 2, this.getEyeY() + (randomSource.nextFloat()-0.25f), this.getZ() + (randomSource.nextFloat() - 0.5f) / 2, 2, 0.2D, 0.2D, 0.2D, 0.0D);
+                    for (int i = 0; i < 6; ++i) {
+                        ((ServerLevel) (this.getLevel())).sendParticles(new DustParticleOptions(new Vector3f(0.35f, 0.35f, 0.35f), 1.0F), this.getX() + (randomSource.nextFloat() - 0.5f), this.getEyeY() + (randomSource.nextFloat()-1f), this.getZ() + (randomSource.nextFloat() - 0.5f), 2, 0.2D, 0.2D, 0.2D, 0.0D);
                     }
                 }
             }
@@ -261,35 +262,36 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
         }
 
         public void tick() {
-            Vec3 vec3 = this.entity.getDeltaMovement().multiply(0.6D, 0.0D, 0.6D);
-            int x = Mth.floor(this.entity.getX());
-            int y = Mth.floor(this.entity.getY());
-            int z = Mth.floor(this.entity.getZ());
-            boolean goUpFlag = false;
-            boolean floatFlag = false;
-            for(int i = 0; i < 9; i++){
-                BlockPos blockpos = new BlockPos(x, y-i, z);
-                BlockState blockstate = this.entity.level.getBlockState(blockpos);
-                if (!blockstate.isAir()){
-                    goUpFlag = true;
-                    break;
+            if (entity.getMaster().get().getTotalPhase() == 0) {
+                Vec3 vec3 = this.entity.getDeltaMovement().multiply(0.6D, 0.0D, 0.6D);
+                int x = Mth.floor(this.entity.getX());
+                int y = Mth.floor(this.entity.getY());
+                int z = Mth.floor(this.entity.getZ());
+                boolean goUpFlag = false;
+                boolean floatFlag = false;
+                for (int i = 0; i < 9; i++) {
+                    BlockPos blockpos = new BlockPos(x, y - i, z);
+                    BlockState blockstate = this.entity.level.getBlockState(blockpos);
+                    if (!blockstate.isAir()) {
+                        goUpFlag = true;
+                        break;
+                    }
                 }
-            }
-            BlockPos blockpos = new BlockPos(x, y-9, z);
-            BlockState blockstate = this.entity.level.getBlockState(blockpos);
-            if (!blockstate.isAir()){
-                floatFlag = true;
-            }
-            if(goUpFlag){
-                vec3 = vec3.add(0.0d,0.5d,0.0d);
-            }
-            else if(floatFlag){
-                vec3 = vec3.multiply(1.0D, 0.0D, 1.0D);
-            }
-            else{
-                vec3 = vec3.subtract(0.0D, 0.5D, 0.0D);
-            }
-            this.entity.setDeltaMovement(vec3);
+                BlockPos blockpos = new BlockPos(x, y - 9, z);
+                BlockState blockstate = this.entity.level.getBlockState(blockpos);
+                if (!blockstate.isAir()) {
+                    floatFlag = true;
+                }
+                if (goUpFlag) {
+                    vec3 = vec3.add(0.0d, 0.5d, 0.0d);
+                } else if (floatFlag) {
+                    vec3 = vec3.multiply(1.0D, 0.0D, 1.0D);
+                } else {
+                    vec3 = vec3.subtract(0.0D, 0.5D, 0.0D);
+                }
+
+                this.entity.setDeltaMovement(vec3);
+            } else this.entity.setDeltaMovement(Vec3.ZERO);
         }
     }
 }

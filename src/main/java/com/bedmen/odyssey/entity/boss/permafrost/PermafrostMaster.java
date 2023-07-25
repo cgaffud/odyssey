@@ -325,6 +325,7 @@ public class PermafrostMaster extends BossMaster {
                 break;
             case 1:
                 this.phaseTwoSpawningTicker++;
+                this.getConduit().get().setDeltaMovement(Vec3.ZERO);
                 if (this.phaseTwoSpawningTicker % 20 == 0) {
                     if (this.phaseTwoSpawningTicker < (20*(SPAWNER_AMOUNT+1))) {
                         float spawnerHealth = ((this.getHealth() - this.getMaxHealth() / 3) / (SPAWNER_AMOUNT));
@@ -403,7 +404,7 @@ public class PermafrostMaster extends BossMaster {
     }
 
     public boolean hurtSpawner(DamageSource damageSource, float amount, PermafrostSpawnerIcicle spawnerIcicle){
-        if (damageSource.isFall())
+        if (damageSource.isFall() || (spawnerIcicle.getPhase() != PermafrostSpawnerIcicle.Phase.SPAWNING))
             return false;
         float originalHealth = spawnerIcicle.getHealth();
         float bossReducedAmount = amount * this.getDamageReduction();
@@ -414,10 +415,13 @@ public class PermafrostMaster extends BossMaster {
             if(!this.level.isClientSide){
                 if (newHealth == 0.0f) {
                     spawnerIcicle.discard();
+                    playSound(spawnerIcicle.getDeathSound(), this.getSoundVolume(), spawnerIcicle.getVoicePitch());
                 } else {
                     spawnerIcicle.hurtDirectly(damageSource, originalHealth - newHealth);
                 }
                 this.updateMasterHealth();
+                if (this.getRandom().nextFloat() < 0.5)
+                    spawnerIcicle.spawnWraithling();
             } else {
                 spawnerIcicle.animateHurt();
             }

@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 
 abstract public class AbstractIndexedIcicleEntity extends BossSubEntity<PermafrostMaster> {
 
-    private static final EntityDataAccessor<Integer> DATA_ICICLE_INDEX = SynchedEntityData.defineId(PermafrostBigIcicleEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_ICICLE_INDEX = SynchedEntityData.defineId(AbstractIndexedIcicleEntity.class, EntityDataSerializers.INT);
 
     protected AbstractIndexedIcicleEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
