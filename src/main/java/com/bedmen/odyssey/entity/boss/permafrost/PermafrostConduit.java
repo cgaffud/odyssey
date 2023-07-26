@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
+public class PermafrostConduit extends AbstractMainPermafrostEntity {
 
     private float activeRotation = 0;
     private int destroyBlocksTick;
@@ -62,7 +62,6 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
         Optional<PermafrostMaster> master = this.getMaster();
         if(!this.isNoAi() && master.isPresent()) {
             PermafrostMaster permafrostMaster = master.get();
-            super.aiStep();
             ++this.activeRotation;
 
             if (permafrostMaster.getTotalPhase() == 0) {
@@ -149,8 +148,9 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
                 this.setInvulnerable(true);
                 this.setDeltaMovement(Vec3.ZERO);
                 if (!this.level.isClientSide()) {
+                    int totalPhaseNum = permafrostMaster.getTotalPhase();
                     RandomSource randomSource = this.getRandom();
-                    for (int i = 0; i < 6; ++i) {
+                    for (int i = 0; i < 6 * totalPhaseNum; ++i) {
                         ((ServerLevel) (this.getLevel())).sendParticles(new DustParticleOptions(new Vector3f(0.35f, 0.35f, 0.35f), 1.0F), this.getX() + (randomSource.nextFloat() - 0.5f), this.getEyeY() + (randomSource.nextFloat()-1f), this.getZ() + (randomSource.nextFloat() - 0.5f), 2, 0.2D, 0.2D, 0.2D, 0.0D);
                     }
                 }
@@ -182,49 +182,6 @@ public class PermafrostConduit extends BossSubEntity<PermafrostMaster> {
                     }
                 }
             }
-        }
-    }
-
-    private void performSpiralAttack(LivingEntity livingEntity) {
-        double targetX = livingEntity.getX();
-        double targetY = livingEntity.getY() + (double)livingEntity.getEyeHeight() * 0.5D;
-        double targetZ = livingEntity.getZ();
-        double angle = this.iciclePosition * Math.PI / this.MAX_ICICLE_POSITIONS * 2.0d;
-        double r = 2.0d;
-        double d0 = this.getX() + Math.cos(angle) * r;
-        double d1 = this.getY();
-        double d2 = this.getZ() + Math.sin(angle) * r;
-        double d3 = targetX - d0;
-        double d4 = targetY - d1;
-        double d5 = targetZ - d2;
-        PermafrostIcicleEntity permafrostIcicleEntity = new PermafrostIcicleEntity(this.level, this, d3, d4, d5,6.0f);
-        permafrostIcicleEntity.setOwner(this);
-        permafrostIcicleEntity.setPosRaw(d0, d1, d2);
-        this.level.addFreshEntity(permafrostIcicleEntity);
-    }
-
-    private void performSphereAttack(int i){
-        i = 4*(i+22);
-        int maxJ;
-        double angleI = i * Math.PI / 180.0d;
-        double angleJ0 = this.random.nextFloat() * 2 * Math.PI;
-        if(i == 180 || i == 0)
-            maxJ = 1;
-        else{
-            maxJ = (int)(Math.sin(angleI) * 30.0d);
-            maxJ = Math.max(maxJ, 2);
-        }
-        for(int j = 0; j < maxJ; j++){
-            double r = 2.0d;
-            double angleJ = j * Math.PI * 2.0d / (double)maxJ + angleJ0;
-            double d0 = r * Math.sin(angleI) * Math.cos(angleJ);
-            double d1 = r * Math.cos(angleI);
-            double d2 = r * Math.sin(angleI) * Math.sin(angleJ);
-            PermafrostIcicleEntity permafrostIcicleEntity = new PermafrostIcicleEntity(this.level, this, d0, d1, d2, 12.0f);
-            permafrostIcicleEntity.setOwner(this);
-
-            permafrostIcicleEntity.setPosRaw(this.getX() + d0, this.getY() + d1, this.getZ() + d2);
-            this.level.addFreshEntity(permafrostIcicleEntity);
         }
     }
 

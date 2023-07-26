@@ -149,6 +149,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.OVERWORLD_WITCH.get(), OverworldWitch.createAttributes().build());
         event.put(EntityTypeRegistry.PERMAFROST_MASTER.get(), PermafrostMaster.createAttributes().build());
         event.put(EntityTypeRegistry.PERMAFROST_CONDUIT.get(), PermafrostConduit.createAttributes().build());
+        event.put(EntityTypeRegistry.PERMAFROST_WRAITH.get(), PermafrostWraith.createAttributes().build());
         event.put(EntityTypeRegistry.PERMAFROST_BIG_ICICLE_ENTITY.get(), PermafrostBigIcicleEntity.createAttributes().build());
         event.put(EntityTypeRegistry.PERMAFROST_SPAWNER_ICICLE.get(), PermafrostSpawnerIcicle.createAttributes().build());
     }

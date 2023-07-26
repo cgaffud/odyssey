@@ -53,13 +53,15 @@ public class PermafrostMaster extends BossMaster {
     private static final String ICICLES_TAG = "BigIcicleEntities";
     private static final String SPAWNERS_TAG = "SpawnerIcicleEntities";
     private static final String TOTAL_PHASE_TAG = "PermafrostBossPhase";
+    private static final String WRAITH_TAG = "PermafrostWraithEntity";
     private static final String SPAWNING_TICKER_TAG = "SpawningTicker";
 
     // Reminder: serverside only
     public PermafrostConduit conduit;
     public List<PermafrostBigIcicleEntity> icicles  = new ArrayList<>();
     public List<PermafrostSpawnerIcicle> spawners  = new ArrayList<>();
-    private int phaseTwoSpawningTicker = 0;
+    public PermafrostWraith wraith;
+    private int phaseDelayTicker = 0;
 
     public PermafrostMaster(EntityType<? extends BossMaster> entityType, Level level) {
         super(entityType, level);
@@ -87,6 +89,21 @@ public class PermafrostMaster extends BossMaster {
             return Optional.empty();
         } else if (this.conduit != null) {
             return Optional.of(this.conduit);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<PermafrostWraith> getWraith() {
+        if(this.level.isClientSide) {
+            int mainId = this.getMainId();
+            Entity entity = this.level.getEntity(mainId);
+            // instanceof also checks if it is null
+            if(entity instanceof PermafrostWraith permafrostWraith) {
+                return Optional.of(permafrostWraith);
+            }
+            return Optional.empty();
+        } else if (this.wraith != null) {
+            return Optional.of(this.wraith);
         }
         return Optional.empty();
     }
@@ -163,12 +180,13 @@ public class PermafrostMaster extends BossMaster {
         this.getConduit().ifPresent(entities::add);
         entities.addAll(this.getIcicles());
         entities.addAll(this.getSpawners());
+        this.getWraith().ifPresent(entities::add);
         return entities;
     }
 
     @Override
     public void spawnSubEntities() {
-        if (this.getConduit().isEmpty()) {
+        if (this.getConduit().isEmpty() && (this.getTotalPhase() < 3)) {
             PermafrostConduit permafrostConduit = EntityTypeRegistry.PERMAFROST_CONDUIT.get().create(this.level);
             if (permafrostConduit != null) {
                 this.conduit = permafrostConduit;
@@ -219,9 +237,16 @@ public class PermafrostMaster extends BossMaster {
     public CompoundTag saveSubEntities() {
         CompoundTag subEntitiesTag = new CompoundTag();
         subEntitiesTag.putInt(TOTAL_PHASE_TAG, this.getTotalPhase());
-        CompoundTag conduitCompoundTag = new CompoundTag();
-        this.conduit.saveAsPassenger(conduitCompoundTag);
-        subEntitiesTag.put(CONDUIT_TAG, conduitCompoundTag);
+
+        CompoundTag mainCompoundTag = new CompoundTag();
+        if (this.getTotalPhase() < 3) {
+            this.conduit.saveAsPassenger(mainCompoundTag);
+            subEntitiesTag.put(CONDUIT_TAG, mainCompoundTag);
+        } else {
+            this.wraith.saveAsPassenger(mainCompoundTag);
+            subEntitiesTag.put(WRAITH_TAG, mainCompoundTag);
+        }
+
         if (this.getTotalPhase() == 0) {
             ListTag iciclesTag = new ListTag();
             for (PermafrostBigIcicleEntity bigIcicleEntity : this.icicles) {
@@ -232,7 +257,7 @@ public class PermafrostMaster extends BossMaster {
             }
             subEntitiesTag.put(ICICLES_TAG, iciclesTag);
         } else if (this.getTotalPhase() == 1) {
-            subEntitiesTag.putInt(SPAWNING_TICKER_TAG, this.phaseTwoSpawningTicker);
+            subEntitiesTag.putInt(SPAWNING_TICKER_TAG, this.phaseDelayTicker);
             ListTag iciclesTag = new ListTag();
             for (PermafrostSpawnerIcicle spawnerIcicle : this.spawners) {
                 CompoundTag icicleTag = new CompoundTag();
@@ -249,6 +274,8 @@ public class PermafrostMaster extends BossMaster {
     public void loadSubEntities(CompoundTag subEntitiesTag) {
         if (subEntitiesTag.contains(TOTAL_PHASE_TAG))
            this.setTotalPhase(subEntitiesTag.getInt(TOTAL_PHASE_TAG));
+        if (subEntitiesTag.contains(SPAWNING_TICKER_TAG))
+            this.phaseDelayTicker = subEntitiesTag.getInt(SPAWNING_TICKER_TAG);
         if (subEntitiesTag.contains(CONDUIT_TAG)) {
             CompoundTag conduitCompoundTag = subEntitiesTag.getCompound(CONDUIT_TAG);
             Entity entity = EntityType.loadEntityRecursive(conduitCompoundTag, this.level, entity1 -> entity1);
@@ -281,10 +308,7 @@ public class PermafrostMaster extends BossMaster {
                 this.addIcicleId(permafrostBigIcicleEntity.getId());
             }
         }
-        if (this.getTotalPhase() == 1) {
-            if (subEntitiesTag.contains(SPAWNING_TICKER_TAG))
-                this.phaseTwoSpawningTicker = subEntitiesTag.getInt(SPAWNING_TICKER_TAG);
-            if (subEntitiesTag.contains(SPAWNERS_TAG)) {
+        if (subEntitiesTag.contains(SPAWNERS_TAG) && (this.getTotalPhase() == 1)) {
                 List<Tag> listOfTags = subEntitiesTag.getList(SPAWNERS_TAG, Tag.TAG_COMPOUND).stream().toList();
                 Stream<Entity> entitySteam = EntityType.loadEntitiesRecursive(listOfTags, this.level);
                 this.spawners.addAll(entitySteam.map(entity -> {
@@ -305,6 +329,16 @@ public class PermafrostMaster extends BossMaster {
                     this.addSpawnerId(permafrostSpawnerIcicle.getId());
                 }
             }
+        if (subEntitiesTag.contains(WRAITH_TAG)) {
+            CompoundTag wraithCompoundTag = subEntitiesTag.getCompound(WRAITH_TAG);
+            Entity entity = EntityType.loadEntityRecursive(wraithCompoundTag, this.level, entity1 -> entity1);
+            if(entity instanceof PermafrostWraith permafrostWraith) {
+                permafrostWraith.setMasterId(this.getId());
+                this.wraith = permafrostWraith;
+                this.setMainId(permafrostWraith.getId());
+            } else {
+                Odyssey.LOGGER.error("PermafrostWraith failed to spawn head in loadSubEntities");
+            }
         }
     }
 
@@ -314,7 +348,13 @@ public class PermafrostMaster extends BossMaster {
 
     @Override
     public void performMasterMovement() {
-        this.getConduit().ifPresent(conduit -> this.moveTo(conduit.position()));
+        int totalPhase = this.getTotalPhase();
+        if ((totalPhase < 3)) {
+            this.getConduit().ifPresent(conduit -> this.moveTo(conduit.position()));
+        } else {
+            this.getWraith().ifPresent(wraith -> this.moveTo(wraith.position()));
+        }
+
         switch (this.getTotalPhase()) {
             case 0:
                 for (int icicleIndex = 0; icicleIndex < ICICLE_AMOUNT; icicleIndex++) {
@@ -324,10 +364,10 @@ public class PermafrostMaster extends BossMaster {
                 }
                 break;
             case 1:
-                this.phaseTwoSpawningTicker++;
+                this.phaseDelayTicker++;
                 this.getConduit().get().setDeltaMovement(Vec3.ZERO);
-                if (this.phaseTwoSpawningTicker % 20 == 0) {
-                    if (this.phaseTwoSpawningTicker < (20*(SPAWNER_AMOUNT+1))) {
+                if (this.phaseDelayTicker % 20 == 0) {
+                    if (this.phaseDelayTicker < (20*(SPAWNER_AMOUNT+1))) {
                         float spawnerHealth = ((this.getHealth() - this.getMaxHealth() / 3) / (SPAWNER_AMOUNT));
                         int spawnerIndex = this.spawners.size();
                         this.createSpawner(spawnerHealth, spawnerIndex);
@@ -335,13 +375,22 @@ public class PermafrostMaster extends BossMaster {
                         for (PermafrostSpawnerIcicle permafrostSpawnerIcicle : this.spawners)
                             permafrostSpawnerIcicle.startFlying();
                     }
-                    if (this.spawners.isEmpty()) {
+                    if (this.getSpawnerHealth() == 0) {
                         System.out.println("Begin next phase!");
                         this.setTotalPhase(2);
+                        this.phaseDelayTicker = 0;
                     }
                 }
                 break;
-
+            case 2:
+                this.phaseDelayTicker++;
+                this.getConduit().get().setDeltaMovement(Vec3.ZERO);
+                if (this.phaseDelayTicker > 80) {
+                    this.setTotalPhase(3);
+                    this.createWraith();
+                    this.getConduit().get().discard();
+                }
+                break;
         }
         Collection<ServerPlayer> serverPlayers = this.bossEvent.getPlayers();
         List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(this::validTargetPredicate).collect(Collectors.toList());
@@ -430,20 +479,35 @@ public class PermafrostMaster extends BossMaster {
         return false;
     }
 
+    private float getSpawnerHealth() {
+        return this.getSpawners().stream()
+                .reduce(0.0f, (health, spawnerIcicle) -> {
+                            if (spawnerIcicle.isRemoved())
+                                return health;
+                            else
+                                return health + spawnerIcicle.getHealth();
+                        }
+                        , Float::sum);
+    }
 
     private void updateMasterHealth(){
         if(this.getHealth() > 0.0f) {
-            float totalHealth = this.getSpawners().stream()
-                    .reduce(0.0f, (health, spawnerIcicle) -> {
-                        if (spawnerIcicle.isRemoved())
-                            return health;
-                        else
-                            return health + spawnerIcicle.getHealth();
-                        }
-                            , Float::sum);
-            this.setHealth(totalHealth + this.getMaxHealth()/3);
+            this.setHealth(getSpawnerHealth() + this.getMaxHealth()/3);
         }
     }
 
+    /** Phase 2-3 **/
+    public void createWraith() {
+        PermafrostWraith permafrostWraith = EntityTypeRegistry.PERMAFROST_WRAITH.get().create(this.level);
+        if (permafrostWraith != null) {
+            this.wraith = permafrostWraith;
+            this.setMainId(permafrostWraith.getId());
+            permafrostWraith.moveTo(this.position());
+            permafrostWraith.setMasterId(this.getId());
+            this.level.addFreshEntity(permafrostWraith);
+        } else {
+            Odyssey.LOGGER.error("PermafrostConduit failed to spawn in spawnSubEntities");
+        }
+    }
 
 }
