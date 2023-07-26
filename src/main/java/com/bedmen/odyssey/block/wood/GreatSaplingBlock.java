@@ -59,11 +59,16 @@ public class GreatSaplingBlock extends SaplingBlock {
         }
     }
 
-    public void advanceAge(ServerLevel serverLevel, BlockPos blockPos, BlockState blockState){
+    public void advanceAge(ServerLevel serverLevel, BlockPos blockPos, BlockState blockState, boolean isCreative){
         int age = blockState.getValue(AGE_2);
-        BlockState newBlockState = blockState.cycle(AGE_2).setValue(STATUS, Status.GOOD);
+        BlockState newBlockState;
+        if(isCreative){
+            newBlockState = blockState.setValue(AGE_2, 2).setValue(STAGE, 1).setValue(STATUS, Status.GOOD);
+        } else {
+            newBlockState = blockState.cycle(AGE_2).setValue(STATUS, Status.GOOD);
+        }
         serverLevel.setBlock(blockPos, newBlockState, 11);
-        if (age >= 2) {
+        if (age >= 2 || isCreative) {
             this.advanceTree(serverLevel, blockPos, newBlockState, serverLevel.random);
         }
     }

@@ -42,11 +42,14 @@ public class GreatSaplingHelperItem extends Item {
         Level level = context.getLevel();
         BlockPos blockpos = context.getClickedPos();
         BlockState blockstate = level.getBlockState(blockpos);
-        if (blockstate.is(this.saplingBlock.get()) && blockstate.getValue(GreatSaplingBlock.STATUS) == this.getStatus()) {
+        boolean matchesSapling = blockstate.is(this.saplingBlock.get());
+        boolean matchesStatus = blockstate.getValue(GreatSaplingBlock.STATUS) == this.getStatus();
+        boolean isCreative = player != null && player.isCreative();
+        if (matchesSapling && (matchesStatus || isCreative)) {
             level.playSound(player, blockpos, getSound(), SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
             if (!level.isClientSide) {
                 GreatSaplingBlock greatSaplingBlock = (GreatSaplingBlock) blockstate.getBlock();
-                greatSaplingBlock.advanceAge((ServerLevel) level, blockpos, level.getBlockState(blockpos));
+                greatSaplingBlock.advanceAge((ServerLevel) level, blockpos, level.getBlockState(blockpos), isCreative);
             }
             GreatSaplingBlock.greenParticles(level, blockpos);
             if (player != null) {
