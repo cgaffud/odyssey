@@ -30,6 +30,8 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
 
     private static final String THROWN_WEAPON_ITEMSTACK_TAG = "ThrownWeaponItemStack";
     private static final String DONE_DEALING_DAMAGE_TAG = "DoneDealingDamage";
+
+    private static final String SHOULD_RETURN_TAG = "ShouldReturn";
     private static final String THROWABLE_TYPE_TAG = "ThrowableType";
     private static final String IS_MULTISHOT_CLONE_TAG = "IsMultishotClone";
 
@@ -37,6 +39,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
     protected boolean isMultishotClone = false;
     protected ThrowableType throwableType = null;
     protected boolean doneDealingDamage;
+    protected boolean shouldReturn;
 
     public ThrownWeapon(EntityType<? extends ThrownWeapon> type, Level level) {
         super(type, level);
@@ -68,8 +71,16 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
         this.doneDealingDamage = true;
     }
 
+    protected void markAsReturning(){
+        this.shouldReturn = true;
+        this.setSomePhysics(true);
+    }
+
     protected void onFinalPierce() {
         this.markAsDoneDealingDamage();
+        if(this.hasAspect(Aspects.LOYALTY)){
+            this.markAsReturning();
+        }
         this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
     }
 
@@ -111,11 +122,14 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
     }
 
     public void tick(){
-        if (this.isDoneDealingDamage()) {
+        if (!this.doneDealingDamage && this.isDoneDealingDamage()) {
             this.markAsDoneDealingDamage();
         }
+        if (!this.shouldReturn && this.shouldReturnToOwner()) {
+            this.markAsReturning();
+        }
 
-        if (this.hasAspect(Aspects.LOYALTY) && (this.doneDealingDamage || this.isNoPhysics())) {
+        if (this.shouldReturn) {
             if (!this.isAcceptibleReturnOwner()) {
                 this.despawn();
             } else {
@@ -127,10 +141,10 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
     }
 
     protected abstract boolean isDoneDealingDamage();
+    protected abstract boolean shouldReturnToOwner();
 
     protected void doLoyaltyMovement(){
         Entity owner = this.getOwner();
-        this.setNoPhysics(true);
         Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
         double returnSpeed = 0.06f * Mth.sqrt(this.getAspectStrength(Aspects.LOYALTY));
         this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(returnSpeed)));
@@ -138,15 +152,18 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
 
     @Nullable
     protected EntityHitResult findHitEntity(Vec3 startVec, Vec3 endVec) {
-        if(this.doneDealingDamage){
+        if(this.shouldReturn){
             if(!this.level.isClientSide){
                 AABB box = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
                 this.level.getEntities(this, box, this::isNonPlayerOwner)
                         .stream().findFirst()
                         .ifPresent(this::tryToGiveToNonPlayerOwner);
             }
-        } else if(!this.isNoPhysics()) {
-            return super.findHitEntity(startVec, endVec);
+        }
+        if(!this.doneDealingDamage) {
+            EntityHitResult entityHitResult = super.findHitEntity(startVec, endVec);
+            System.out.println(entityHitResult == null ? null : entityHitResult.getEntity());
+            return entityHitResult;
         }
         return null;
     }
@@ -195,6 +212,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
             this.thrownStack = ItemStack.of(compoundTag.getCompound(THROWN_WEAPON_ITEMSTACK_TAG));
         }
         this.doneDealingDamage = compoundTag.getBoolean(DONE_DEALING_DAMAGE_TAG);
+        this.shouldReturn = compoundTag.getBoolean(SHOULD_RETURN_TAG);
         if (compoundTag.contains(THROWABLE_TYPE_TAG)) {
             this.throwableType = ThrowableType.fromName(compoundTag.getString(THROWABLE_TYPE_TAG));
         }
@@ -205,6 +223,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
         super.addAdditionalSaveData(compoundTag);
         compoundTag.put(THROWN_WEAPON_ITEMSTACK_TAG, this.thrownStack.save(new CompoundTag()));
         compoundTag.putBoolean(DONE_DEALING_DAMAGE_TAG, this.doneDealingDamage);
+        compoundTag.putBoolean(SHOULD_RETURN_TAG, this.shouldReturn);
         compoundTag.putString(THROWABLE_TYPE_TAG, this.throwableType.getName());
         compoundTag.putBoolean(IS_MULTISHOT_CLONE_TAG, this.isMultishotClone);
     }

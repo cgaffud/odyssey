@@ -123,6 +123,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     }
 
     protected void onHitEntity(EntityHitResult entityHitResult) {
+        System.out.println("onHitEntity");
         Entity target = entityHitResult.getEntity();
 
         if (this.piercingIgnoreEntityIds == null) {

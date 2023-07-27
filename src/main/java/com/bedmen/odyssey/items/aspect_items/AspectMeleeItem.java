@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAspectItem, OdysseyMeleeItem, ParryableWeaponItem, INeedsToRegisterItemModelProperty {
+public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAspectItem, MeleeWeaponClassItem, ParryableWeaponItem, INeedsToRegisterItemModelProperty {
     /** Modifiers applied when the item is in the mainhand of a user. */
     protected Multimap<Attribute, AttributeModifier> attributeModifiers;
     private final InnateAspectHolder innateAspectHolder;

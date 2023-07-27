@@ -30,9 +30,15 @@ public class Boomerang extends ThrownWeapon {
         super(EntityTypeRegistry.BOOMERANG.get(), level, thrower, thrownStackIn, isMultishotClone);
     }
 
+    // If it has loyalty then it only finishes dealing damage when pierce count is maxed out
     protected boolean isDoneDealingDamage(){
-        return this.inGroundTime > 0 || (this.tickCount > BOOMERANG_TURNAROUND_TIME && this.hasAspect(Aspects.LOYALTY));
+        return !this.hasAspect(Aspects.LOYALTY) && this.inGroundTime > 0;
     }
+
+    protected boolean shouldReturnToOwner(){
+        return this.hasAspect(Aspects.LOYALTY) && (this.inGroundTime > 0 || this.tickCount > BOOMERANG_TURNAROUND_TIME);
+    }
+
 
     public void tick() {
         this.setNoGravity(this.hasAspect(Aspects.LOYALTY));

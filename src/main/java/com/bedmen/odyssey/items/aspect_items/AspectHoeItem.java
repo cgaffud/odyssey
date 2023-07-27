@@ -18,9 +18,7 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.world.item.Item.Properties;
-
-public class AspectHoeItem extends HoeItem implements InnateAspectItem, OdysseyMeleeItem {
+public class AspectHoeItem extends HoeItem implements InnateAspectItem, MeleeWeaponClassItem {
     private final InnateAspectHolder innateAspectHolder;
     protected final MeleeWeaponClass meleeWeaponClass;
 

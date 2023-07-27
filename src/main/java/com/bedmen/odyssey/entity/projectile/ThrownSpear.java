@@ -23,6 +23,10 @@ public class ThrownSpear extends ThrownWeapon {
         return this.inGroundTime > 4;
     }
 
+    protected boolean shouldReturnToOwner() {
+        return this.hasAspect(Aspects.LOYALTY) && this.inGroundTime > 4;
+    }
+
     public SpearType getSpearType(){
         return (SpearType)this.throwableType;
     }

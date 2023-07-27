@@ -3,7 +3,7 @@ package com.bedmen.odyssey.inventory;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
-import com.bedmen.odyssey.items.aspect_items.OdysseyMeleeItem;
+import com.bedmen.odyssey.items.aspect_items.MeleeWeaponClassItem;
 import com.bedmen.odyssey.magic.MagicUtil;
 import com.bedmen.odyssey.registry.ContainerRegistry;
 import net.minecraft.network.chat.Component;
@@ -201,8 +201,8 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
 
     private static int getRepairNumber(ItemStack itemStack){
         Item item = itemStack.getItem();
-        if(item instanceof OdysseyMeleeItem odysseyMeleeItem){
-            return odysseyMeleeItem.getMeleeWeaponClass().meleeWeaponType.repairNumber;
+        if(item instanceof MeleeWeaponClassItem meleeWeaponClassItem){
+            return meleeWeaponClassItem.getMeleeWeaponClass().meleeWeaponType.repairNumber;
         }
         if(item instanceof ArmorItem armorItem){
             return switch (armorItem.getSlot()) {

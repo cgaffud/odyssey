@@ -2,7 +2,7 @@ package com.bedmen.odyssey.aspect;
 
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.MeleeWeaponClass;
-import com.bedmen.odyssey.items.aspect_items.OdysseyMeleeItem;
+import com.bedmen.odyssey.items.aspect_items.MeleeWeaponClassItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -21,11 +21,11 @@ public class AspectItemPredicates {
 
     public static final Predicate<Item> DAMAGEABLE = Item::canBeDepleted;
 
-    public static final Predicate<Item> HAS_SWEEP = item -> item instanceof OdysseyMeleeItem odysseyMeleeItem
-        && odysseyMeleeItem.getMeleeWeaponClass().aspectInstanceList.stream().anyMatch(aspectInstance -> aspectInstance.aspect == Aspects.SWEEP);
+    public static final Predicate<Item> HAS_SWEEP = item -> item instanceof MeleeWeaponClassItem meleeWeaponClassItem
+        && meleeWeaponClassItem.getMeleeWeaponClass().aspectInstanceList.stream().anyMatch(aspectInstance -> aspectInstance.aspect == Aspects.SWEEP);
     public static final Predicate<Item> MELEE = item -> {
-        if(item instanceof OdysseyMeleeItem odysseyMeleeItem){
-            MeleeWeaponClass meleeWeaponClass = odysseyMeleeItem.getMeleeWeaponClass();
+        if(item instanceof MeleeWeaponClassItem meleeWeaponClassItem){
+            MeleeWeaponClass meleeWeaponClass = meleeWeaponClassItem.getMeleeWeaponClass();
             return meleeWeaponClass.canReceiveMeleeModifiers;
         } else {
             return item instanceof SwordItem;

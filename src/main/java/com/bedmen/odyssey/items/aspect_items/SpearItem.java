@@ -27,7 +27,7 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.function.Consumer;
 
-public class SpearItem extends ThrowableWeaponItem implements OdysseyMeleeItem {
+public class SpearItem extends ThrowableWeaponItem implements MeleeWeaponClassItem {
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
     protected final MeleeWeaponClass meleeWeaponClass;
 

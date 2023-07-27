@@ -5,7 +5,7 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
-import com.bedmen.odyssey.items.aspect_items.AspectMeleeItem;
+import com.bedmen.odyssey.items.aspect_items.MeleeWeaponClassItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ReduceInvulnerabilityPacket;
@@ -390,8 +390,8 @@ public class WeaponUtil {
         if (equipmentSlot == EquipmentSlot.MAINHAND) {
             float conditionalAmpBonus = ConditionalAmpUtil.getDamageTag(itemStack);
             float attackSpeed = 0;
-            if (item instanceof AspectMeleeItem aspectMeleeItem)
-                attackSpeed = (WeaponUtil.isBeingUsedTwoHanded(itemStack)) ? aspectMeleeItem.getMeleeWeaponClass().twoHandedAttackRate : aspectMeleeItem.getMeleeWeaponClass().attackRate;
+            if (item instanceof MeleeWeaponClassItem meleeWeaponClassItem)
+                attackSpeed = (WeaponUtil.isBeingUsedTwoHanded(itemStack)) ? meleeWeaponClassItem.getMeleeWeaponClass().twoHandedAttackRate : meleeWeaponClassItem.getMeleeWeaponClass().attackRate;
 
             Multimap<Attribute, AttributeModifier> stackAttributeModifiers = LinkedHashMultimap.create();
             for(Map.Entry<Attribute, Collection<AttributeModifier>> entry : item.getDefaultAttributeModifiers(equipmentSlot).asMap().entrySet()){
