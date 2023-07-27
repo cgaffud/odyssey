@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "minecraft:shield",
     "oddc:wooden_shield",
     "oddc:copper_shield",
     "oddc:rusty_shield",

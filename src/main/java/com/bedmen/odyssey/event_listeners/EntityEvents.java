@@ -22,6 +22,7 @@ import com.bedmen.odyssey.items.WarpTotemItem;
 import com.bedmen.odyssey.items.aspect_items.AspectMeleeItem;
 import com.bedmen.odyssey.items.aspect_items.ParryableWeaponItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.BlowbackAnimatePacket;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
@@ -48,6 +49,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -55,6 +57,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -206,6 +209,7 @@ public class EntityEvents {
         Entity damageSourceEntity = damageSource.getDirectEntity();
 
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
+            ItemStack mainHandItemStack = damageSourceLivingEntity.getMainHandItem();
             // Smite, Bane of Arthropods, Hydro Damage
             amount += AspectUtil.getTargetConditionalAspectStrength(damageSourceLivingEntity, hurtLivingEntity);
             // Poison Damage
@@ -252,6 +256,26 @@ public class EntityEvents {
             float thornsStrength = AspectUtil.getArmorAndEntityAspectStrength(hurtLivingEntity, Aspects.THORNS);
             if(thornsStrength > 0.0f && 0.25f >= hurtLivingEntity.getRandom().nextFloat()){
                 damageSourceLivingEntity.hurt(DamageSource.thorns(hurtLivingEntity), thornsStrength);
+            }
+
+            // Absorbent Growth
+            float absorbentGrowthCapacity = AspectUtil.getOneHandedTotalAspectStrength(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.ABSORBENT_GROWTH);
+            if ((hurtLivingEntity instanceof Enemy) && absorbentGrowthCapacity > 0) {
+                float progress = mainHandItemStack.getOrCreateTag().getFloat(AspectUtil.DAMAGE_GROWTH_TAG) + amount/400;
+                mainHandItemStack.getOrCreateTag().putFloat(AspectUtil.DAMAGE_GROWTH_TAG, progress > absorbentGrowthCapacity ? absorbentGrowthCapacity : progress);
+            }
+
+            // Bludgeoning
+            float bludgeoningStrength = AspectUtil.getOneHandedTotalAspectStrength(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.BLUDGEONING);
+            if ((bludgeoningStrength > 0) && WeaponUtil.isBeingUsedTwoHanded(mainHandItemStack))
+                hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLUDGEONING_SLOWNESS.get(), 50));
+
+            // Vamp. Speed
+            if (AspectUtil.getOneHandedTotalAspectStrength(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.VAMPIRIC_SPEED)) {
+                MobEffectInstance vampSpeedInstance = damageSourceLivingEntity.getEffect(EffectRegistry.VAMPIRIC_SPEED.get());
+                // Upper speed limit is set here (30%)
+                int speedAmp = (vampSpeedInstance != null) ? (vampSpeedInstance.getAmplifier() == 5 ? 5 : vampSpeedInstance.getAmplifier()+1) : 0;
+                damageSourceLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.VAMPIRIC_SPEED.get(), 200, speedAmp));
             }
 
             // Dual Wield reduced invulnerability
@@ -493,11 +517,20 @@ public class EntityEvents {
             }
             // Parry boost
             if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-                if(odysseyLivingEntity.getShieldMeter() > 1.0f){
-                    damageBlockMultiplier *= 2;
+                if(odysseyLivingEntity.getShieldMeter() > 1.0f) {
+                    damageBlockMultiplier *= (2 + AspectUtil.getItemStackAspectStrength(shield, Aspects.PRECISE_BLOCK)/2);
                     if (parryableWeaponItem instanceof AspectMeleeItem) {
-                        int strengthAmp = livingEntity.hasEffect(MobEffects.DAMAGE_BOOST) ? livingEntity.getEffect(MobEffects.DAMAGE_BOOST).getAmplifier()+1 : 0;
-                        livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 50, strengthAmp));
+                        livingEntity.addEffect(new MobEffectInstance(EffectRegistry.PARRY_STRENGTH.get(), 50, 0));
+                    } else if ((AspectUtil.getItemStackAspectStrength(shield, Aspects.ASSISTED_STRIKE)) > 0) {
+                        livingEntity.addEffect(new MobEffectInstance(EffectRegistry.ASSISTED_STRIKE_STRENGTH.get(), 50, 0));
+                    }
+                    float blowback = AspectUtil.getItemStackAspectStrength(shield, Aspects.BLOWBACK);
+                    System.out.print(blowback);
+                    if (blowback > 0 && (damageSource.getEntity() != null) && damageSource.getEntity() instanceof LivingEntity attacker) {
+                        Vec3 awayVector = new Vec3(attacker.getX() - livingEntity.getX(), attacker.getY() - livingEntity.getY(), attacker.getZ()-livingEntity.getZ());
+                        awayVector.normalize().multiply(blowback, blowback, blowback);
+                        attacker.setDeltaMovement(awayVector);
+                        OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> attacker), new BlowbackAnimatePacket(attacker));
                     }
                 }
             }

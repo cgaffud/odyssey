@@ -199,6 +199,14 @@ public class ModBusClientEvents {
             }
         });
 
+        //Light bar for solar weapons (maybe later just the melee bar)
+        event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "light_bar", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+            if(gui instanceof OdysseyIngameGui odysseyIngameGui && !odysseyIngameGui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()){
+                gui.setupOverlayRenderState(true, false, OdysseyIngameGui.ODYSSEY_GUI_ICONS_LOCATION);
+                odysseyIngameGui.renderLightBar(screenWidth, screenHeight, mStack);
+            }
+        });
+
         //Flight icon overlay
         event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "flight", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
             if(gui instanceof OdysseyIngameGui odysseyIngameGui && !odysseyIngameGui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()){

@@ -15,10 +15,13 @@ import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
+import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Multimap;
+import com.mojang.math.Vector3f;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -60,6 +63,10 @@ public class AspectUtil {
     private static final String SET_BONUS_STRING = "SET_BONUS";
     private static final List<EquipmentSlot> ARMOR_EQUIPMENT_SLOT_LIST = Arrays.stream(EquipmentSlot.values()).filter(equipmentSlot -> equipmentSlot.getType() == EquipmentSlot.Type.ARMOR).collect(Collectors.toList());
     private static final MutableComponent OBFUSCATED_TOOLTIP = Component.literal("AAAAAAAAAA").withStyle(ChatFormatting.OBFUSCATED).withStyle(ChatFormatting.DARK_RED);
+
+    // Tags specific to aspect behavior
+    public static final String STORED_BOOST_TAG = Odyssey.MOD_ID + ":AspectStoredBoost";
+    public static final String DAMAGE_GROWTH_TAG = Odyssey.MOD_ID + ":AspectDamageGrowth";
 
     private static ListTag getAddedModifierListTag(ItemStack itemStack) {
         CompoundTag compoundTag = itemStack.getTag();
@@ -213,9 +220,14 @@ public class AspectUtil {
     }
 
     // Special totals over multiple aspects on single item
-
     public static float getTargetConditionalAspectStrength(LivingEntity attacker, LivingEntity target){
         return getBonusDamageAspectStrength(attacker, aspect -> {
+            if (aspect.equals(Aspects.SOLAR_STRENGTH) || aspect.equals(Aspects.LUNAR_STRENGTH)) {
+                CompoundTag tag = attacker.getMainHandItem().getOrCreateTag();
+                int charge = tag.getInt(AspectUtil.STORED_BOOST_TAG);
+                if (charge >= 10) tag.putInt(AspectUtil.STORED_BOOST_TAG, charge-10);
+            }
+
             if(aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect){
                 return targetConditionalMeleeAspect.livingEntityPredicate.test(target) ? 1.0f : 0.0f;
             }
@@ -227,6 +239,15 @@ public class AspectUtil {
         return getBonusDamageAspectStrength(attacker, aspect -> {
             if(aspect instanceof EnvironmentConditionalAspect environmentConditionalAspect){
                 return environmentConditionalAspect.attackBoostFactorFunction.getBoostFactor(blockPos, level);
+            }
+            return 0.0f;
+        });
+    }
+
+    public static float getConditionalAspectStrength(LivingEntity attacker, BlockPos blockPos, Level level){
+        return getBonusDamageAspectStrength(attacker, aspect -> {
+            if(aspect instanceof ConditionalAmpAspect conditionalAmpAspect){
+                return conditionalAmpAspect.attackBoostFactorFunction.getBoostFactor(attacker.getMainHandItem(), blockPos, level);
             }
             return 0.0f;
         });
@@ -464,8 +485,31 @@ public class AspectUtil {
         return randomSource.nextDouble() * 0.4d - 0.2d;
     }
 
-    // Volatility
+    // Do frost snow particles
+    public static void doAirAspectParticles(Entity entity, int count){
+        RandomSource randomSource = entity.level.random;
+        double x = entity.getX();
+        double y = entity.getY() + 0.5f * entity.getBbHeight();
+        double z = entity.getZ();
+        for(int i = 0; i < count; i++){
+            for(int xi = -1; xi <= 1; xi++){
+                for(int yi = -1; yi <= 1; yi++){
+                    for(int zi = -1; zi <= 1; zi++){
+                        if(!(xi == 0 && yi == 0 && zi == 0) && randomSource.nextBoolean()){
+                            Vec3 velocity  = new Vec3(xi, yi, zi).add(getRandomSnowflakeVector(randomSource)).normalize().scale(0.3d);
+                            entity.level.addParticle(new DustParticleOptions(new Vector3f(0.85f, 0.85f, 0.85f), 1.0F),
+                                    x + (randomSource.nextFloat()-0.5f)*entity.getBbWidth()/2,
+                                    y+ (randomSource.nextFloat()-0.5f)*entity.getBbHeight()/2,
+                                    z+ (randomSource.nextFloat()-0.5f)*entity.getBbWidth()/2,
+                                    velocity.x, velocity.y, velocity.z);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    // Volatility
     public static void doVolatileExplosion(ServerLevel serverLevel, LivingEntity livingEntity, float strength){
         if(livingEntity.isAlive()){
             Explosion.BlockInteraction explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(serverLevel, livingEntity) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;

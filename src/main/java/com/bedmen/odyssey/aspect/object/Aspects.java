@@ -1,15 +1,20 @@
 package com.bedmen.odyssey.aspect.object;
 
 import com.bedmen.odyssey.aspect.AspectItemPredicates;
+import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.bedmen.odyssey.world.BiomeUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
 
@@ -22,6 +27,8 @@ public class Aspects {
     // # All Damageables
     public static final FloatAspect DURABILITY = new FloatAspect("durability", 1.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.DAMAGEABLE, false);
     public static final BooleanAspect BURN_PROOF = new BooleanAspect("burn_proof", AspectItemPredicates.DAMAGEABLE, false);
+    public static final FloatAspect SOULBOUND = new FloatAspect("soulbound", 1.0f, AspectTooltipFunctions.NAME, AspectItemPredicates.DAMAGEABLE, false);
+
     // ## Attribute
     public static final AttributeAspect MOVEMENT_SPEED = new AttributeAspect("movement_speed", 10.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.LOWER_ARMOR, () -> Attributes.MOVEMENT_SPEED, AttributeModifier.Operation.MULTIPLY_BASE);
     public static final AttributeAspect ATTACK_DAMAGE = new AttributeAspect("attack_damage", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.DAMAGEABLE, () -> Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION);
@@ -29,18 +36,21 @@ public class Aspects {
 
     // # All Weapons
     public static final IntegerAspect LOOTING_LUCK = new IntegerAspect("looting_luck", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.MELEE, true, true);
-    public static final EnvironmentConditionalAspect SOLAR_STRENGTH = new EnvironmentConditionalAspect("solar_strength", Aspects::getSunBoost);
-    public static final EnvironmentConditionalAspect LUNAR_STRENGTH = new EnvironmentConditionalAspect("lunar_strength", Aspects::getMoonBoost);
+    public static final ConditionalAmpAspect SOLAR_STRENGTH = new ConditionalAmpAspect("solar_strength", Aspects::getSunBoost);
+    public static final ConditionalAmpAspect LUNAR_STRENGTH = new ConditionalAmpAspect("lunar_strength", Aspects::getMoonBoost);
+
     public static final EnvironmentConditionalAspect SKY_STRENGTH = new EnvironmentConditionalAspect("sky_strength", Aspects::getSkyBoost);
-    public static final EnvironmentConditionalAspect BOTANICAL_STRENGTH = new EnvironmentConditionalAspect("botanical_strength", Aspects::getHotHumidBoost);
+    public static final ConditionalAmpAspect BOTANICAL_STRENGTH = new ConditionalAmpAspect("botanical_strength", Aspects::getHotHumidBoost);
     public static final EnvironmentConditionalAspect SCORCHED_STRENGTH = new EnvironmentConditionalAspect("scorched_strength", Aspects::getHotDryBoost);
     public static final EnvironmentConditionalAspect WINTERY_STRENGTH = new EnvironmentConditionalAspect("wintery_strength", Aspects::getColdBoost);
     public static final EnvironmentConditionalAspect VOID_STRENGTH = new EnvironmentConditionalAspect("void_strength", Aspects::getBoostFromVoid);
+    public static final ConditionalAmpAspect ABSORBENT_GROWTH = new ConditionalAmpAspect("absorbent_growth", Aspects::getBoostFromDamage);
 
     // # Melee
     public static final TargetConditionalMeleeAspect DAMAGE_ON_ARTHROPOD = new TargetConditionalMeleeAspect("damage_on_arthropod", livingEntity -> livingEntity.getMobType() == MobType.ARTHROPOD);
     public static final TargetConditionalMeleeAspect SMITE_DAMAGE = new TargetConditionalMeleeAspect("smite_damage", livingEntity -> livingEntity.getMobType() == MobType.UNDEAD);
     public static final TargetConditionalMeleeAspect HYDRO_DAMAGE = new TargetConditionalMeleeAspect("hydro_damage", livingEntity -> livingEntity.getType().is(OdysseyEntityTags.HYDROPHOBIC));
+  
     public static final FloatAspect KNOCKBACK = new FloatAspect("knockback", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.MELEE, true);
     public static final FloatAspect FATAL_HIT = new FloatAspect("fatal_hit", 0.2f, AspectTooltipFunctions.HP_THRESHHOLD, AspectItemPredicates.MELEE, true);
     public static final FloatAspect ADDITIONAL_SWEEP_DAMAGE = new FloatAspect("additional_sweep_damage", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.HAS_SWEEP, true);
@@ -49,7 +59,9 @@ public class Aspects {
     public static final FloatAspect COBWEB_CHANCE = new FloatAspect("cobweb_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE, true);
     public static final FloatAspect LARCENY_CHANCE = new FloatAspect("larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE, true);
     public static final BooleanAspect COLD_SNAP = new BooleanAspect("cold_snap", 2.0f, AspectItemPredicates.MELEE, true);
-
+    public static final FloatAspect BLUDGEONING = new FloatAspect("bludgeoning", 0.5f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.TWO_HANDED, true);
+    public static final FloatAspect PRECISION_STRIKE = new FloatAspect("precision_strike", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.MELEE, false);
+    public static final BooleanAspect VAMPIRIC_SPEED = new BooleanAspect("vampiric_speed", 10.0f, AspectTooltipFunctions.NAME, AspectItemPredicates.MELEE, true);
     // # Ranged
 
     // ## Shooting
@@ -83,10 +95,15 @@ public class Aspects {
 
     // # Shields
     public static final ShieldDamageBlockAspect EXPLOSION_DAMAGE_BLOCK = new ShieldDamageBlockAspect("explosion_damage_block", DamageSource::isExplosion);
-    public static final FloatAspect RECOVERY_SPEED = new FloatAspect("recovery_speed", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.SHIELD, false);
+
+    public static final FloatAspect RECOVERY_SPEED = new FloatAspect("recovery_speed", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.PARRYABLE, false);
 
     public static final FloatAspect WIDTH = new FloatAspect("width", 4.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.SHIELD, false);
     public static final BooleanAspect COLD_TO_THE_TOUCH = new BooleanAspect("cold_to_the_touch", 2.0f, AspectItemPredicates.SHIELD, false);
+    public static final FloatAspect BLOWBACK = new FloatAspect("blowback", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.SHIELD, false);
+    public static final FloatAspect ASSISTED_STRIKE = new FloatAspect("assisted_strike", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.SHIELD, true);
+    public static final FloatAspect PRECISE_BLOCK = new FloatAspect("precise_block", 2.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.SHIELD, false);
+
 
     // # Tools
     public static final FloatAspect EFFICIENCY = new FloatAspect("efficiency", 4.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.TOOL, true);
@@ -141,22 +158,31 @@ public class Aspects {
     public static final FloatAspect WARMTH = new FloatAspect("warmth", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, true);
     public static final FloatAspect COOLING = new FloatAspect("cooling", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, true);
 
-    public static float getSunBoost(BlockPos pos, Level level) {
+    public static float getTrueSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
         return getSkyBoost(pos, level) * (time < 12000L ? 1.0f : 0.0f);
     }
 
-    public static float getMoonBoost(BlockPos pos, Level level) {
+    public static float getMoonBoost(ItemStack itemStack, BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
-        return getSkyBoost(pos, level) * (time < 12000L ? 0.0f : 1.0f);
+        if (getSkyBoost(pos, level) == 1.0f && (time >= 12000L)) {
+            int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
+            if (charge < 50 && level instanceof ServerLevel)  itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, charge+1);
+            return 1.0f;
+        } return itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG) > 10 ? 1.0f : 0.0f;
     }
 
     private static float getSkyBoost(BlockPos pos, Level level) {
         return (level.canSeeSky(pos) && !level.isThundering() && !level.isRaining() && (level.dimension() == Level.OVERWORLD)) ? 1.0f : 0.0f;
     }
 
-    public static float getHotHumidBoost(BlockPos pos, Level level) {
-        return Mth.sqrt(getHotBoost(pos, level) * getHumidBoost(pos, level));
+    public static float getHotHumidBoost(ItemStack itemStack, BlockPos pos, Level level) {
+        float rawBoost = Mth.sqrt(getHotBoost(pos, level) * getHumidBoost(pos, level));
+        if (GeneralUtil.isHashTick(itemStack, level, 80)) {
+            if (rawBoost < 0.5f) itemStack.hurt(1, level.getRandom(), null);
+            else if ((rawBoost > 0.75f) && itemStack.getDamageValue() != 0) itemStack.setDamageValue(itemStack.getDamageValue()-1);
+        }
+        return rawBoost;
     }
 
     public static float getHotDryBoost(BlockPos pos, Level level) {
@@ -177,6 +203,15 @@ public class Aspects {
 
     public static float getDryBoost(BlockPos pos, Level level) {
         return 1f - getHumidBoost(pos, level);
+    }
+
+    public static float getSunBoost(ItemStack itemStack, BlockPos pos, Level level) {
+        float doBoost = getTrueSunBoost(pos,level);
+        if (doBoost == 1.0f) {
+            int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
+            if (charge < 50 && level instanceof ServerLevel)  itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, charge+1);
+            return 1.0f;
+        } return itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG) > 10 ? 1.0f : 0.0f;
     }
 
     /**
@@ -202,5 +237,10 @@ public class Aspects {
         }
         // Gonna assume any other custom dimensions are similar to the overworld
         return quadraticDistanceFactorToVoid(y, 64, -64);
+    }
+
+
+    private static float getBoostFromDamage(ItemStack itemStack, BlockPos pos, Level level) {
+        return itemStack.getOrCreateTag().getFloat(AspectUtil.DAMAGE_GROWTH_TAG);
     }
 }

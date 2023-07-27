@@ -71,6 +71,13 @@ public class SpearItem extends ThrowableWeaponItem implements MeleeWeaponClassIt
 
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
         ConditionalAmpUtil.setDamageTag(itemStack, entity);
+        if (entity instanceof LivingEntity livingEntity) {
+            boolean isTwoHanded = WeaponUtil.isBeingUsedTwoHanded(itemStack);
+            // Translation: if (item in main hand is weapon) and (our two-handed tag does not reflect the actual condition of being two handed - no item in offhand)
+            if ((livingEntity.getMainHandItem() == itemStack) && ((livingEntity.getOffhandItem().isEmpty()) ^ isTwoHanded)) {
+                WeaponUtil.setBeingUsedTwoHanded(itemStack, !isTwoHanded);
+            }
+        }
         super.inventoryTick(itemStack, level, entity, compartments, selected);
     }
 

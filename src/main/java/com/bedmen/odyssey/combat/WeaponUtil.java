@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.items.aspect_items.*;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.MeleeWeaponClassItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
@@ -404,15 +405,17 @@ public class WeaponUtil {
                             .collect(Collectors.toSet());
                     stackAttributeModifiers.putAll(entry.getKey(), newDamageModifiers);
                 } else if (entry.getKey() == Attributes.ATTACK_SPEED){
-                    // This is weird. Must convert attackSpeed to effectively final
-                    float finalAttackSpeed = attackSpeed;
-                    Collection<AttributeModifier> newDamageModifiers = entry.getValue().stream()
-                            .map(attributeModifier ->
-                                    attributeModifier.getId() == baseAttackSpeed ?
-                                            new AttributeModifier(baseAttackSpeed, "Weapon modifier", finalAttackSpeed - 4.0d, AttributeModifier.Operation.ADDITION) :
-                                            attributeModifier)
-                            .collect(Collectors.toSet());
-                    stackAttributeModifiers.putAll(entry.getKey(), newDamageModifiers);
+                    if (item instanceof OdysseyMeleeItem) {
+                        // This is weird. Must convert attackSpeed to effectively final
+                        float finalAttackSpeed = attackSpeed;
+                        Collection<AttributeModifier> newDamageModifiers = entry.getValue().stream()
+                                .map(attributeModifier ->
+                                        attributeModifier.getId() == baseAttackSpeed ?
+                                                new AttributeModifier(baseAttackSpeed, "Weapon modifier", finalAttackSpeed - 4.0d, AttributeModifier.Operation.ADDITION) :
+                                                attributeModifier)
+                                .collect(Collectors.toSet());
+                        stackAttributeModifiers.putAll(entry.getKey(), newDamageModifiers);
+                    } else stackAttributeModifiers.putAll(entry.getKey(), entry.getValue());
                 } else {
                     stackAttributeModifiers.putAll(entry.getKey(), entry.getValue());
                 }

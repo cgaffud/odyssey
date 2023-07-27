@@ -1,6 +1,7 @@
 {
   "parent": "oddc:item/melee_blocking",
   "textures": {
-    "layer0": "oddc:item/arid_mace"
+    "layer0": "oddc:item/arid_mace",
+    "layer1": "oddc:item/arid_mace_overlay"
   }
 }

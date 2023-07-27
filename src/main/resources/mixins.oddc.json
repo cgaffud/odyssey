@@ -14,6 +14,7 @@
     "MixinExplosion",
     "MixinItemEntity",
     "MixinItemStack",
+    "MixinInventory",
     "MixinJungleTemplePiece",
     "MixinLivingEntity",
     "MixinMapDecorationType",
