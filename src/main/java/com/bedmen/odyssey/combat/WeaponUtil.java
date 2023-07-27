@@ -405,7 +405,7 @@ public class WeaponUtil {
                             .collect(Collectors.toSet());
                     stackAttributeModifiers.putAll(entry.getKey(), newDamageModifiers);
                 } else if (entry.getKey() == Attributes.ATTACK_SPEED){
-                    if (item instanceof OdysseyMeleeItem) {
+                    if (item instanceof MeleeWeaponClassItem) {
                         // This is weird. Must convert attackSpeed to effectively final
                         float finalAttackSpeed = attackSpeed;
                         Collection<AttributeModifier> newDamageModifiers = entry.getValue().stream()
