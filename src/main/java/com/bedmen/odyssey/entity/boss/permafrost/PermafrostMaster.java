@@ -359,7 +359,7 @@ public class PermafrostMaster extends BossMaster {
             case 0:
                 for (int icicleIndex = 0; icicleIndex < ICICLE_AMOUNT; icicleIndex++) {
                     if (this.icicles.get(icicleIndex).isRemoved()) {
-                        this.regenerateIcicle(icicleIndex);
+                        this.regenerateBigIcicle(icicleIndex);
                     }
                 }
                 break;
@@ -395,7 +395,7 @@ public class PermafrostMaster extends BossMaster {
         Collection<ServerPlayer> serverPlayers = this.bossEvent.getPlayers();
         List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(this::validTargetPredicate).collect(Collectors.toList());
         for (ServerPlayer player : serverPlayerList) {
-            TemperatureSource.BLIZZARD.tick(player);
+            TemperatureSource.COLD_BIOME.tick(player);
         }
     }
 
@@ -425,7 +425,7 @@ public class PermafrostMaster extends BossMaster {
         }
     }
 
-    public void regenerateIcicle(int icicleIndex) {
+    public void regenerateBigIcicle(int icicleIndex) {
         PermafrostBigIcicleEntity permafrostBigIcicleEntity = new PermafrostBigIcicleEntity(this.level, icicleIndex);
         if (permafrostBigIcicleEntity != null) {
             this.icicles.set(icicleIndex, permafrostBigIcicleEntity);
@@ -507,6 +507,19 @@ public class PermafrostMaster extends BossMaster {
             this.level.addFreshEntity(permafrostWraith);
         } else {
             Odyssey.LOGGER.error("PermafrostConduit failed to spawn in spawnSubEntities");
+        }
+    }
+
+    public void addBigIcicle(int icicleIndex) {
+        PermafrostBigIcicleEntity permafrostBigIcicleEntity = new PermafrostBigIcicleEntity(this.level, icicleIndex);
+        if (permafrostBigIcicleEntity != null) {
+            this.icicles.add(permafrostBigIcicleEntity);
+            this.addIcicleId(permafrostBigIcicleEntity.getId());
+            permafrostBigIcicleEntity.moveTo(this.position());
+            permafrostBigIcicleEntity.setMasterId(this.getId());
+            this.level.addFreshEntity(permafrostBigIcicleEntity);
+        } else {
+            System.out.println("Regeneration error");
         }
     }
 

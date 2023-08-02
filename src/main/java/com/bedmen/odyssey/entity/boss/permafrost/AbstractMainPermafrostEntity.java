@@ -1,10 +1,16 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
 import com.bedmen.odyssey.entity.boss.BossSubEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 abstract public class AbstractMainPermafrostEntity extends BossSubEntity<PermafrostMaster> {
 
@@ -56,6 +62,16 @@ abstract public class AbstractMainPermafrostEntity extends BossSubEntity<Permafr
             permafrostIcicleEntity.setPosRaw(this.getX() + d0, this.getY() + d1, this.getZ() + d2);
             this.level.addFreshEntity(permafrostIcicleEntity);
         }
+    }
+
+    @Nullable
+    protected List<ServerPlayer> getValidTargets() {
+        if (this.getMaster().isPresent()) {
+            PermafrostMaster permafrostMaster = this.getMaster().get();
+            Collection<ServerPlayer> serverPlayers = permafrostMaster.bossEvent.getPlayers();
+            return serverPlayers.stream().filter(permafrostMaster::validTargetPredicate).collect(Collectors.toList());
+        }
+        return null;
     }
 
 }

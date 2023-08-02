@@ -1,11 +1,16 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
+import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.mojang.math.Vector3f;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -18,10 +23,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 public class PermafrostWraith extends AbstractMainPermafrostEntity {
@@ -29,16 +32,31 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
     private static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(PermafrostWraith.class, EntityDataSerializers.INT);
     private static final String PHASE_TAG = "WraithPhase";
 
-    private float pathRecalcTicker = 0;
-    private float meleeAttackTicker = 0;
-    private float spiralAttackTicker = 0;
 
-    private final float MIN_CHASE_VELOCITY = 0.35f;
-    private final float MAX_VELOCITY = 0.8f;
+    private static final EntityDataAccessor<Integer> DATA_RANGE_TYPE = SynchedEntityData.defineId(PermafrostWraith.class, EntityDataSerializers.INT);
+    private static final String RANGE_TAG = "WraithPhase";
+
+    private int pathRecalcTicker = 0;
+    private int totalMeleeTime = 0;
+    private int meleeAttackTicker = 0;
+    private int spiralAttackTicker = 0;
+    private int totalRangedAttackTicker = 0;
+    private int tinyRangedAttackTicker = 0;
+
+
+    private final float MIN_CHASE_VELOCITY = 0.5f;
+    private final float MAX_VELOCITY = 0.9f;
 
     public enum Phase {
         IDLE,
-        MELEE
+        MELEE,
+        RANGED
+    }
+
+    private enum RangeType {
+        CONDUIT,
+        WRAITHLING,
+        SQUARE_FIRE
     }
 
 
@@ -69,8 +87,7 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
             switch (this.getPhase()) {
                 case IDLE:
                     //Choose Target
-                    Collection<ServerPlayer> serverPlayers = permafrostMaster.bossEvent.getPlayers();
-                    List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(permafrostMaster::validTargetPredicate).collect(Collectors.toList());
+                    List<ServerPlayer> serverPlayerList = this.getValidTargets();
                     // Set Phase based on Target
                     if (this.level.getGameTime() % 18 == 14) {
                         if (serverPlayerList.isEmpty()) {
@@ -85,12 +102,14 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
                         this.pathRecalcTicker = 0;
                         this.meleeAttackTicker = 20;
                         this.spiralAttackTicker = 60;
+                        this.totalMeleeTime = 0;
                     }
 
                     break;
                 case MELEE:
                     LivingEntity livingentity = this.getTarget();
-                    if ((livingentity != null) && livingentity.isAlive()) {
+                    if ((livingentity != null) && livingentity.isAlive() && (livingentity instanceof ServerPlayer serverPlayer) && permafrostMaster.validTargetPredicate(serverPlayer)) {
+                        this.totalMeleeTime++;
                         this.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
                         double d0 = this.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
                         this.pathRecalcTicker = Math.max(this.pathRecalcTicker - 1, 0);
@@ -115,14 +134,15 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
                         boolean closeEnoughToMelee = (d0 < (this.getBbWidth() * 2.75f * this.getBbWidth() * .75f + livingentity.getBbWidth()));
 
                         if ((this.meleeAttackTicker <= 0) && closeEnoughToMelee) {
-                            this.meleeAttackTicker = 20;
+                            System.out.println("Melee Range");
+                            this.meleeAttackTicker = 15;
                             this.swing(InteractionHand.MAIN_HAND);
                             this.doHurtTarget(livingentity);
                         }
 
                         if ((this.spiralAttackTicker <= 0) && !closeEnoughToMelee) {
                             if (this.iciclePosition == 20)
-                                this.spiralAttackTicker = 80;
+                                this.spiralAttackTicker = 60;
                             else {
                                 this.performSpiralAttack(livingentity);
                                 ++this.iciclePosition;
@@ -130,10 +150,67 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
                         } else {
                             this.iciclePosition = 0;
                         }
+
+                        if (this.totalMeleeTime >= 100) {
+                            RangeType rangeType = RangeType.values()[this.getRandom().nextInt(2)];
+                            System.out.println(rangeType);
+                            this.setRangeType(rangeType);
+                            this.setPhase(Phase.RANGED);
+                        }
+
                     } else {
                         this.setPhase(Phase.IDLE);
                     }
                     break;
+                case RANGED:
+                    List<ServerPlayer> serverPlayers = this.getValidTargets();
+                    if (serverPlayers != null && !serverPlayers.isEmpty()) {
+                        Vec3 center = serverPlayers.stream().reduce(Vec3.ZERO, (accumV, serverPlayer) -> (accumV.add(serverPlayer.position())), Vec3::add).scale(1 / ((double) permafrostMaster.getNearbyPlayerNumber()));
+                        center = center.add(0, 10, 0);
+                        this.pathRecalcTicker = Math.max(this.pathRecalcTicker - 1, 0);
+                        Vec3 rVector = new Vec3(this.getMoveControl().getWantedX() - this.getX(), this.getMoveControl().getWantedY() - this.getY(), this.getMoveControl().getWantedZ() - this.getZ());
+                        double r = rVector.length();
+                        if ((this.pathRecalcTicker <= 0 && (this.getRandom().nextFloat() < 0.05F)) || (r < this.getBoundingBox().getSize())) {
+                            this.pathRecalcTicker = 4 + this.getRandom().nextInt(7);
+                            this.getMoveControl().setWantedPosition(center.x, center.y, center.z, this.MIN_CHASE_VELOCITY);
+                        }
+
+                        this.totalRangedAttackTicker++;
+                        switch (this.getRangeType()) {
+                            case CONDUIT:
+                                if (this.totalRangedAttackTicker % 80 == 60) {
+                                    this.tinyRangedAttackTicker = 23;
+                                }
+                                if (this.tinyRangedAttackTicker >= 1) {
+                                    this.performSphereAttack(this.tinyRangedAttackTicker);
+                                    this.tinyRangedAttackTicker--;
+                                }
+                                if (this.totalRangedAttackTicker % 160 == 120)
+                                    permafrostMaster.shootIcicles();
+                                if (this.totalRangedAttackTicker % 200 == 0) {
+                                    this.setPhase(Phase.IDLE);
+                                    permafrostMaster.getIcicles().forEach(icicle -> icicle.discardAndDoParticles());
+                                }
+                                break;
+                            case WRAITHLING:
+                                if (this.totalRangedAttackTicker % 60 == 40) {
+                                    int total = Mth.clamp(0, permafrostMaster.getNearbyPlayerNumber() * 2, 10);
+                                    for (int i = 0; i < total; i++) {
+                                        this.spawnWraithling(i, total);
+                                    }
+                                }
+                                RandomSource randomSource = this.getRandom();
+                                for (int i = 0; i < 6; ++i) {
+                                    ((ServerLevel) (this.getLevel())).sendParticles(new DustParticleOptions(new Vector3f(0.35f, 0.35f, 0.35f), 1.0F), this.getX() + (randomSource.nextFloat() - 0.5f), this.getEyeY() + (randomSource.nextFloat()-1f), this.getZ() + (randomSource.nextFloat() - 0.5f), 2, 0.2D, 0.2D, 0.2D, 0.0D);
+                                }
+                                if (this.totalRangedAttackTicker % 120 == 0)
+                                    this.setPhase(Phase.IDLE);
+                                break;
+                        }
+                        break;
+                    } else {
+                        this.setPhase(Phase.IDLE);
+                    }
             }
         }
         super.aiStep();
@@ -152,17 +229,22 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_PHASE, 0);
+        this.entityData.define(DATA_RANGE_TYPE, 0);
     }
 
     public void addAdditionalSaveData(CompoundTag compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
         compoundNBT.putInt(PHASE_TAG, this.getPhase().ordinal());
+        compoundNBT.putInt(RANGE_TAG, this.getRangeType().ordinal());
     }
 
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
         if(compoundNBT.contains(PHASE_TAG)) {
             this.setPhase(Phase.values()[compoundNBT.getInt(PHASE_TAG)]);
+        }
+        if(compoundNBT.contains(RANGE_TAG)) {
+            this.setRangeType(RangeType.values()[compoundNBT.getInt(RANGE_TAG)]);
         }
     }
 
@@ -173,6 +255,33 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
     public Phase getPhase() {
         return Phase.values()[(this.entityData.get(DATA_PHASE))];
     }
+
+    private void setRangeType(RangeType rangeType) {
+        this.totalRangedAttackTicker = 0;
+        if (rangeType == RangeType.CONDUIT) {
+            if (this.getMaster().isPresent()) {
+                PermafrostMaster permafrostMaster = this.getMaster().get();
+                for (int i = 0; i < PermafrostMaster.ICICLE_AMOUNT; i++)
+                    permafrostMaster.addBigIcicle(i);
+            }
+        }
+        this.entityData.set(DATA_RANGE_TYPE, rangeType.ordinal());
+    }
+
+    private RangeType getRangeType() {
+        return RangeType.values()[(this.entityData.get(DATA_RANGE_TYPE))];
+    }
+
+
+    private void spawnWraithling(int i, int total) {
+        Wraithling wraithling = new Wraithling(EntityTypeRegistry.WRAITHLING.get(), this.level);
+        float phi = (((float) i)/((float) total)) * Mth.TWO_PI;
+        wraithling.moveTo(this.position().add(new Vec3(Mth.cos(phi) * PermafrostMaster.ICICLE_FOLLOW_RADIUS, 0, Mth.sin(phi) * PermafrostMaster.ICICLE_FOLLOW_RADIUS)));
+        wraithling.setOwner(this);
+        this.level.addFreshEntity(wraithling);
+    }
+
+
 
     // Lifted from AbstractWraith
     public class WraithMoveControl extends MoveControl {

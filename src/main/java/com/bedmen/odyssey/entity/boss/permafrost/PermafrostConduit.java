@@ -1,13 +1,9 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
-import com.bedmen.odyssey.entity.boss.BossSubEntity;
-import com.bedmen.odyssey.entity.boss.coven.CovenMaster;
-import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
-import com.mojang.math.Vector3d;
+
 import com.mojang.math.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -95,8 +91,7 @@ public class PermafrostConduit extends AbstractMainPermafrostEntity {
                 }
 
                 //Choose Target
-                Collection<ServerPlayer> serverPlayers = permafrostMaster.bossEvent.getPlayers();
-                List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(permafrostMaster::validTargetPredicate).collect(Collectors.toList());
+                List<ServerPlayer> serverPlayerList = getValidTargets();
                 // Set Phase based on Target
                 if (this.level.getGameTime() % 18 == 14) {
                     if (serverPlayerList.isEmpty()) {
@@ -111,10 +106,10 @@ public class PermafrostConduit extends AbstractMainPermafrostEntity {
                     Vec3 location1 = this.getPosition(1);
                     double angle = this.movementPosition * Math.PI / this.MAX_MOVEMENT_POSITIONS * 2.0d;
                     Vec3 location2 = Vec3.ZERO;
-                    for (ServerPlayer serverPlayer : serverPlayers) {
+                    for (ServerPlayer serverPlayer : serverPlayerList) {
                         location2 = location2.add(serverPlayer.getPosition(1));
                     }
-                    location2 = location2.scale(1.0d / serverPlayers.size());
+                    location2 = location2.scale(1.0d / serverPlayerList.size());
                     location2 = location2.add(Math.sin(angle) * 10.0d, 10.0d, Math.cos(angle) * 10.0d);
                     Vec3 direction = location2.subtract(location1);
                     double speed = 0.5d;

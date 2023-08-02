@@ -1,12 +1,8 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
+import com.bedmen.odyssey.entity.boss.BossSubEntity;
 import com.bedmen.odyssey.entity.monster.AbstractWraith;
-import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
-import com.bedmen.odyssey.registry.EntityTypeRegistry;
-import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -53,8 +49,16 @@ public class Wraithling extends AbstractWraith {
     }
 
     @Override
+    public boolean hurt(DamageSource damageSource, float p_21017_) {
+        if (this.getOwner() != null && this.getOwner() instanceof PermafrostWraith &&
+                (damageSource.getEntity() instanceof BossSubEntity || damageSource.getEntity() instanceof PermafrostMaster
+                        || damageSource.getEntity() instanceof PermafrostConduit))
+            return false;
+        return super.hurt(damageSource, p_21017_);
+    }
+
+    @Override
     public void die(DamageSource damageSource) {
-        System.out.println("Trigger");
         if (this.getOwner() != null && this.getOwner() instanceof PermafrostSpawnerIcicle spawnerIcicle) {
             spawnerIcicle.setWraithlingNum(spawnerIcicle.getWraithlingNum()-1);
         }
