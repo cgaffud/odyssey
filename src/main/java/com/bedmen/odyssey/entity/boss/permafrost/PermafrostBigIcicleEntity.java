@@ -4,8 +4,10 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.entity.boss.BossSubEntity;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -14,8 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -118,13 +119,19 @@ public class PermafrostBigIcicleEntity extends AbstractIndexedIcicleEntity{
         return (!entity.isSpectator() && entity.isAlive() && entity.isPickable());
     }
     
-    private void destroyOnImpact() {
+    private void destroyOnImpact(Direction direction) {
+        Direction.Axis axis = direction.getAxis();
+        // Impact radii. More blocks get destroyed that are coplanar to the plane of impact
+        int xImp = axis.equals(Direction.Axis.X) ? 1 : 2;
+        int yImp = axis.equals(Direction.Axis.Y) ? 1 : 2;
+        int zImp = axis.equals(Direction.Axis.Z) ? 1 : 2;
+
         int x = Mth.floor(this.getX());
         int y = Mth.floor(this.getY());
         int z = Mth.floor(this.getZ());
-        for (int x1 = x - 1; x1 <= x + 1; ++x1) {
-            for (int y1 = y - 1; y1 <= y + 1; ++y1) {
-                for (int z1 = z - 1; z1 <= z + 1; ++z1) {
+        for (int x1 = x - xImp; x1 <= x + xImp; ++x1) {
+            for (int y1 = y - yImp; y1 <= y + yImp; ++y1) {
+                for (int z1 = z - zImp; z1 <= z + zImp; ++z1) {
                     BlockPos blockpos = new BlockPos(x1, y1, z1);
                     BlockState blockstate = this.level.getBlockState(blockpos);
                     Block block = blockstate.getBlock();
@@ -153,14 +160,15 @@ public class PermafrostBigIcicleEntity extends AbstractIndexedIcicleEntity{
     protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
         // Let it pass through projectiles
-        if (entity instanceof LivingEntity) {
-            entity.hurt(DamageSource.mobAttack(this), 10.0f);
+        if (entity instanceof LivingEntity livingEntity) {
+            livingEntity.addEffect(new MobEffectInstance(EffectRegistry.PERMAFROST_BIG_FREEZING.get(), 80));
+            this.doHurtTarget(entity);
             this.discardAndDoParticles();
         }
     }
 
     protected void onHitBlock(BlockHitResult blockHitResult) {
-        this.destroyOnImpact();
+        this.destroyOnImpact(blockHitResult.getDirection());
         this.discardAndDoParticles();
     }
 
@@ -183,7 +191,7 @@ public class PermafrostBigIcicleEntity extends AbstractIndexedIcicleEntity{
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 10d).add(Attributes.MOVEMENT_SPEED, 2D).add(Attributes.ATTACK_DAMAGE, 15.0D).add(Attributes.FOLLOW_RANGE, 64.0D);
+        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 10d).add(Attributes.MOVEMENT_SPEED, 2D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
     protected void defineSynchedData() {
@@ -202,7 +210,6 @@ public class PermafrostBigIcicleEntity extends AbstractIndexedIcicleEntity{
             this.setIsChasing(compoundNBT.getBoolean("IsChasing"));
         }
     }
-
 
     public void setIsChasing(boolean isChasing) {this.entityData.set(DATA_IS_CHASING, isChasing); }
 

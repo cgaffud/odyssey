@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.mojang.math.Vector3d;
 import net.minecraft.core.particles.ParticleOptions;
@@ -11,6 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -170,6 +172,7 @@ public class PermafrostIcicleEntity extends AbstractHurtingProjectile {
             Entity entity1 = this.getOwner();
             if (entity1 instanceof LivingEntity) {
                 LivingEntity livingentity = (LivingEntity)entity1;
+                livingentity.addEffect(new MobEffectInstance(EffectRegistry.PERMAFROST_SMALL_FREEZING.get(), 80));
                 entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setScalesWithDifficulty(), this.damage);
             } else {
                 entity.hurt(DamageSource.MAGIC, 0.0F);

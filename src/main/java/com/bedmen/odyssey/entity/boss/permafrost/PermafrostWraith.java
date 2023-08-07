@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
+import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.mojang.math.Vector3f;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -13,6 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -55,8 +57,7 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
 
     private enum RangeType {
         CONDUIT,
-        WRAITHLING,
-        SQUARE_FIRE
+        WRAITHLING
     }
 
 
@@ -135,9 +136,10 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
 
                         if ((this.meleeAttackTicker <= 0) && closeEnoughToMelee) {
                             System.out.println("Melee Range");
-                            this.meleeAttackTicker = 15;
+                            this.meleeAttackTicker = 20;
                             this.swing(InteractionHand.MAIN_HAND);
                             this.doHurtTarget(livingentity);
+                            livingentity.addEffect(new MobEffectInstance(EffectRegistry.PERMAFROST_BIG_FREEZING.get(), 80));
                         }
 
                         if ((this.spiralAttackTicker <= 0) && !closeEnoughToMelee) {

@@ -21,6 +21,7 @@ public class TemperatureSource {
     public static final TemperatureSource POWDERED_SNOW = temperaturePercentPerSecondSource(-14f, Optional.of(0.5f));
     public static final TemperatureSource WATER_OR_RAIN = temperaturePercentPerSecondSource(-1f);
     public static final TemperatureSource SNOW_WEATHER = temperaturePercentPerSecondSource(-2f);
+    public static final TemperatureSource PERMAFROST_PASSIVE = temperaturePercentPerSecondSource(-4f);
     public static final TemperatureSource COLD_BIOME = temperaturePercentPerSecondSource(-6f);
     public static final TemperatureSource BLIZZARD = temperaturePercentPerSecondSource(-8f);
 

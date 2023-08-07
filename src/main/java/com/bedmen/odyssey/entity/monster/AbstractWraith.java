@@ -27,7 +27,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.UUID;
 
 public abstract class AbstractWraith extends Monster implements NeutralMob {
@@ -175,32 +174,36 @@ public abstract class AbstractWraith extends Monster implements NeutralMob {
             if (livingentity != null) {
                 wraith.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
                 double d0 = wraith.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
-                this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
-                Vec3 rVector = new Vec3(wraith.getMoveControl().getWantedX() - wraith.getX(), wraith.getMoveControl().getWantedY()  - AbstractWraith.this.getY(), wraith.getMoveControl().getWantedZ() - AbstractWraith.this.getZ());
-                double r = rVector.length();
-                if ((this.ticksUntilNextPathRecalculation <= 0 && (wraith.getRandom().nextFloat() < 0.05F)) || (r < wraith.getBoundingBox().getSize())) {
-                    this.ticksUntilNextPathRecalculation = 4 + wraith.getRandom().nextInt(7);
+                runAtTargetAndMelee(livingentity, d0);
+            }
+        }
 
-                    if (d0 > 1024.0D) {
-                        this.ticksUntilNextPathRecalculation += 10;
-                    } else if (d0 > 256.0D) {
-                        this.ticksUntilNextPathRecalculation += 5;
-                    }
+        protected void runAtTargetAndMelee(LivingEntity livingEntity, double d0) {
+            this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
+            Vec3 rVector = new Vec3(wraith.getMoveControl().getWantedX() - wraith.getX(), wraith.getMoveControl().getWantedY()  - AbstractWraith.this.getY(), wraith.getMoveControl().getWantedZ() - AbstractWraith.this.getZ());
+            double r = rVector.length();
+            if ((this.ticksUntilNextPathRecalculation <= 0 && (wraith.getRandom().nextFloat() < 0.05F)) || (r < wraith.getBoundingBox().getSize())) {
+                this.ticksUntilNextPathRecalculation = 4 + wraith.getRandom().nextInt(7);
 
-                    Vec3 vec3 = livingentity.position();
-
-                    wraith.getMoveControl().setWantedPosition(vec3.x, vec3.y, vec3.z, wraith.INITIAL_VELOCITY);
-
-                    this.ticksUntilNextPathRecalculation = this.adjustedTickDelay(this.ticksUntilNextPathRecalculation);
+                if (d0 > 1024.0D) {
+                    this.ticksUntilNextPathRecalculation += 10;
+                } else if (d0 > 256.0D) {
+                    this.ticksUntilNextPathRecalculation += 5;
                 }
 
-                this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
+                Vec3 vec3 = livingEntity.position();
 
-                if ((this.ticksUntilNextAttack <= 0) && (d0 < this.getAttackReachSqr(livingentity))) {
-                    this.ticksUntilNextAttack = this.adjustedTickDelay(20);
-                    wraith.swing(InteractionHand.MAIN_HAND);
-                    wraith.doHurtTarget(livingentity);
-                }
+                wraith.getMoveControl().setWantedPosition(vec3.x, vec3.y, vec3.z, wraith.INITIAL_VELOCITY);
+
+                this.ticksUntilNextPathRecalculation = this.adjustedTickDelay(this.ticksUntilNextPathRecalculation);
+            }
+
+            this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
+
+            if ((this.ticksUntilNextAttack <= 0) && (d0 < this.getAttackReachSqr(livingEntity))) {
+                this.ticksUntilNextAttack = this.adjustedTickDelay(20);
+                wraith.swing(InteractionHand.MAIN_HAND);
+                wraith.doHurtTarget(livingEntity);
             }
         }
 

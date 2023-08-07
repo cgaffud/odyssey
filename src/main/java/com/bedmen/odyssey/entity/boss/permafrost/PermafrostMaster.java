@@ -395,7 +395,7 @@ public class PermafrostMaster extends BossMaster {
         Collection<ServerPlayer> serverPlayers = this.bossEvent.getPlayers();
         List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(this::validTargetPredicate).collect(Collectors.toList());
         for (ServerPlayer player : serverPlayerList) {
-            TemperatureSource.COLD_BIOME.tick(player);
+            TemperatureSource.PERMAFROST_PASSIVE.tick(player);
         }
     }
 

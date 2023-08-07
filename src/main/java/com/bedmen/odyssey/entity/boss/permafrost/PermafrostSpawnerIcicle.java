@@ -1,14 +1,9 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
-import com.bedmen.odyssey.entity.boss.coven.CovenMaster;
-import com.bedmen.odyssey.entity.boss.coven.CovenWitch;
-import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.SoundEventRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
 import com.mojang.math.Vector3f;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -19,7 +14,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -27,9 +21,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class PermafrostSpawnerIcicle extends AbstractIndexedIcicleEntity{
@@ -97,7 +88,7 @@ public class PermafrostSpawnerIcicle extends AbstractIndexedIcicleEntity{
                     }
                     break;
                 case SPAWNING:
-                    if (GeneralUtil.isHashTick(this, this.level, 20) && (this.getRandom().nextFloat() < 0.2f) &&
+                    if (GeneralUtil.isHashTick(this, this.level, 20) && (this.getRandom().nextFloat() < 0.4f) &&
                         !this.level.isClientSide() && (this.getWraithlingNum() < this.spawningAmount())) {
                        this.spawnWraithling();
                     }
@@ -127,7 +118,7 @@ public class PermafrostSpawnerIcicle extends AbstractIndexedIcicleEntity{
     private int spawningAmount() {
         if (this.getMaster().isPresent()) {
             PermafrostMaster permafrostMaster = this.getMaster().get();
-            return Mth.clamp(permafrostMaster.getNearbyPlayerNumber(), 0, 4);
+            return Mth.clamp(permafrostMaster.getNearbyPlayerNumber()*2, 0, 8);
         }
         return 0;
     }
