@@ -1,6 +1,7 @@
-package com.bedmen.odyssey.client.model;// Made with Blockbench 4.7.4
+package com.bedmen.odyssey.client.model;// Made with Blockbench 4.8.1
 // Exported for Minecraft version 1.17 or later with Mojang mappings
 // Paste this class into your mod and generate all required imports
+
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.boss.permafrost.PermafrostWraith;
@@ -60,7 +61,7 @@ public class PermafrostWraithModel<T extends PermafrostWraith> extends AgeableLi
 
 		PartDefinition LeftArm = partdefinition.addOrReplaceChild("LeftArm", CubeListBuilder.create().texOffs(24, 18).addBox(-1.0F, 3.75F, -3.0F, 2.0F, 20.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, -7.0F, 0.75F));
 
-		PartDefinition Torso = partdefinition.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 42).addBox(-2.0F, 14.0F, -5.25F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, -2.0F, 3.0F));
+		PartDefinition Torso = partdefinition.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 42).addBox(-4.0F, 0.0F, 0.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 12.0F, -2.25F));
 
 		return LayerDefinition.create(meshdefinition, 128, 128);
 	}

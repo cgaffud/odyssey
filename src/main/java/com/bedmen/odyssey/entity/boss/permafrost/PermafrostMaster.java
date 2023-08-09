@@ -1,11 +1,14 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.boss.BossMaster;
 import com.bedmen.odyssey.entity.boss.SubEntity;
+import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
+import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.util.NonNullListCollector;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -28,6 +31,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -385,17 +389,26 @@ public class PermafrostMaster extends BossMaster {
             case 2:
                 this.phaseDelayTicker++;
                 this.getConduit().get().setDeltaMovement(Vec3.ZERO);
-                if (this.phaseDelayTicker > 80) {
+                if (this.phaseDelayTicker > 120) {
                     this.setTotalPhase(3);
                     this.createWraith();
+                    this.phaseDelayTicker = 0;
                     this.getConduit().get().discard();
                 }
                 break;
+            case 4:
+                this.phaseDelayTicker++;
+                if (this.phaseDelayTicker > 120) {
+                    this.setHealth(0.0f);
+                }
         }
         Collection<ServerPlayer> serverPlayers = this.bossEvent.getPlayers();
         List<ServerPlayer> serverPlayerList = serverPlayers.stream().filter(this::validTargetPredicate).collect(Collectors.toList());
         for (ServerPlayer player : serverPlayerList) {
-            TemperatureSource.PERMAFROST_PASSIVE.tick(player);
+            if (this.getTotalPhase() < 4)
+                TemperatureSource.PERMAFROST_PASSIVE.tick(player);
+            else
+                TemperatureSource.BLIZZARD.tick(player);
         }
     }
 
@@ -463,7 +476,7 @@ public class PermafrostMaster extends BossMaster {
             float newHealth = Float.max(originalHealth - bossReducedAmount, 0.0f);
             if(!this.level.isClientSide){
                 if (newHealth == 0.0f) {
-                    spawnerIcicle.discard();
+                    spawnerIcicle.discardAndDoParticles();
                     playSound(spawnerIcicle.getDeathSound(), this.getSoundVolume(), spawnerIcicle.getVoicePitch());
                 } else {
                     spawnerIcicle.hurtDirectly(damageSource, originalHealth - newHealth);

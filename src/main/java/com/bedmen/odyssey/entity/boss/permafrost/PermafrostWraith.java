@@ -85,134 +85,142 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
         if(!this.isNoAi() && master.isPresent() && !this.level.isClientSide()) {
             PermafrostMaster permafrostMaster = master.get();
 
-            switch (this.getPhase()) {
-                case IDLE:
-                    //Choose Target
-                    List<ServerPlayer> serverPlayerList = this.getValidTargets();
-                    // Set Phase based on Target
-                    if (this.level.getGameTime() % 18 == 14) {
-                        if (serverPlayerList.isEmpty()) {
-                            this.setTarget(null);
-                        } else {
-                            setTarget(serverPlayerList.get(this.random.nextInt(serverPlayerList.size())));
-                        }
-                    }
-
-                    if (this.getTarget() != null) {
-                        this.setPhase(Phase.MELEE);
-                        this.pathRecalcTicker = 0;
-                        this.meleeAttackTicker = 20;
-                        this.spiralAttackTicker = 60;
-                        this.totalMeleeTime = 0;
-                    }
-
-                    break;
-                case MELEE:
-                    LivingEntity livingentity = this.getTarget();
-                    if ((livingentity != null) && livingentity.isAlive() && (livingentity instanceof ServerPlayer serverPlayer) && permafrostMaster.validTargetPredicate(serverPlayer)) {
-                        this.totalMeleeTime++;
-                        this.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
-                        double d0 = this.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
-                        this.pathRecalcTicker = Math.max(this.pathRecalcTicker - 1, 0);
-                        Vec3 rVector = new Vec3(this.getMoveControl().getWantedX() - this.getX(), this.getMoveControl().getWantedY() - this.getY(), this.getMoveControl().getWantedZ() - this.getZ());
-                        double r = rVector.length();
-                        if ((this.pathRecalcTicker <= 0 && (this.getRandom().nextFloat() < 0.05F)) || (r < this.getBoundingBox().getSize())) {
-                            this.pathRecalcTicker = 4 + this.getRandom().nextInt(7);
-
-                            if (d0 > 1024.0D) {
-                                this.pathRecalcTicker += 10;
-                            } else if (d0 > 256.0D) {
-                                this.pathRecalcTicker += 5;
+            if (permafrostMaster.getTotalPhase() == 3) {
+                switch (this.getPhase()) {
+                    case IDLE:
+                        //Choose Target
+                        List<ServerPlayer> serverPlayerList = this.getValidTargets();
+                        // Set Phase based on Target
+                        if (this.level.getGameTime() % 18 == 14) {
+                            if (serverPlayerList.isEmpty()) {
+                                this.setTarget(null);
+                            } else {
+                                setTarget(serverPlayerList.get(this.random.nextInt(serverPlayerList.size())));
                             }
-
-                            Vec3 vec3 = livingentity.position();
-                            this.getMoveControl().setWantedPosition(vec3.x, vec3.y, vec3.z, this.MIN_CHASE_VELOCITY);
                         }
 
-                        this.meleeAttackTicker = Math.max(this.meleeAttackTicker - 1, 0);
-                        this.spiralAttackTicker = Math.max(this.spiralAttackTicker - 1, 0);
-
-                        boolean closeEnoughToMelee = (d0 < (this.getBbWidth() * 2.75f * this.getBbWidth() * .75f + livingentity.getBbWidth()));
-
-                        if ((this.meleeAttackTicker <= 0) && closeEnoughToMelee) {
-                            System.out.println("Melee Range");
+                        if (this.getTarget() != null) {
+                            this.setPhase(Phase.MELEE);
+                            this.pathRecalcTicker = 0;
                             this.meleeAttackTicker = 20;
-                            this.swing(InteractionHand.MAIN_HAND);
-                            this.doHurtTarget(livingentity);
-                            livingentity.addEffect(new MobEffectInstance(EffectRegistry.PERMAFROST_BIG_FREEZING.get(), 80));
+                            this.spiralAttackTicker = 60;
+                            this.totalMeleeTime = 0;
                         }
 
-                        if ((this.spiralAttackTicker <= 0) && !closeEnoughToMelee) {
-                            if (this.iciclePosition == 20)
-                                this.spiralAttackTicker = 60;
-                            else {
-                                this.performSpiralAttack(livingentity);
-                                ++this.iciclePosition;
+                        break;
+                    case MELEE:
+                        LivingEntity livingentity = this.getTarget();
+                        if ((livingentity != null) && livingentity.isAlive() && (livingentity instanceof ServerPlayer serverPlayer) && permafrostMaster.validTargetPredicate(serverPlayer)) {
+                            this.totalMeleeTime++;
+                            this.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
+                            double d0 = this.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
+                            this.pathRecalcTicker = Math.max(this.pathRecalcTicker - 1, 0);
+                            Vec3 rVector = new Vec3(this.getMoveControl().getWantedX() - this.getX(), this.getMoveControl().getWantedY() - this.getY(), this.getMoveControl().getWantedZ() - this.getZ());
+                            double r = rVector.length();
+                            if ((this.pathRecalcTicker <= 0 && (this.getRandom().nextFloat() < 0.05F)) || (r < this.getBoundingBox().getSize())) {
+                                this.pathRecalcTicker = 4 + this.getRandom().nextInt(7);
+
+                                if (d0 > 1024.0D) {
+                                    this.pathRecalcTicker += 10;
+                                } else if (d0 > 256.0D) {
+                                    this.pathRecalcTicker += 5;
+                                }
+
+                                Vec3 vec3 = livingentity.position();
+                                this.getMoveControl().setWantedPosition(vec3.x, vec3.y, vec3.z, this.MIN_CHASE_VELOCITY);
                             }
+
+                            this.meleeAttackTicker = Math.max(this.meleeAttackTicker - 1, 0);
+                            this.spiralAttackTicker = Math.max(this.spiralAttackTicker - 1, 0);
+
+                            boolean closeEnoughToMelee = (d0 < (this.getBbWidth() * 2.75f * this.getBbWidth() * .75f + livingentity.getBbWidth()));
+
+                            if ((this.meleeAttackTicker <= 0) && closeEnoughToMelee) {
+                                System.out.println("Melee Range");
+                                this.meleeAttackTicker = 20;
+                                this.swing(InteractionHand.MAIN_HAND);
+                                this.doHurtTarget(livingentity);
+                                livingentity.addEffect(new MobEffectInstance(EffectRegistry.PERMAFROST_BIG_FREEZING.get(), 80));
+                            }
+
+                            if ((this.spiralAttackTicker <= 0) && !closeEnoughToMelee) {
+                                if (this.iciclePosition == 20)
+                                    this.spiralAttackTicker = 60;
+                                else {
+                                    this.performSpiralAttack(livingentity);
+                                    ++this.iciclePosition;
+                                }
+                            } else {
+                                this.iciclePosition = 0;
+                            }
+
+                            if (this.totalMeleeTime >= 100) {
+                                RangeType rangeType = RangeType.values()[this.getRandom().nextInt(2)];
+                                System.out.println(rangeType);
+                                this.setRangeType(rangeType);
+                                this.setPhase(Phase.RANGED);
+                            }
+
                         } else {
-                            this.iciclePosition = 0;
-                        }
-
-                        if (this.totalMeleeTime >= 100) {
-                            RangeType rangeType = RangeType.values()[this.getRandom().nextInt(2)];
-                            System.out.println(rangeType);
-                            this.setRangeType(rangeType);
-                            this.setPhase(Phase.RANGED);
-                        }
-
-                    } else {
-                        this.setPhase(Phase.IDLE);
-                    }
-                    break;
-                case RANGED:
-                    List<ServerPlayer> serverPlayers = this.getValidTargets();
-                    if (serverPlayers != null && !serverPlayers.isEmpty()) {
-                        Vec3 center = serverPlayers.stream().reduce(Vec3.ZERO, (accumV, serverPlayer) -> (accumV.add(serverPlayer.position())), Vec3::add).scale(1 / ((double) permafrostMaster.getNearbyPlayerNumber()));
-                        center = center.add(0, 10, 0);
-                        this.pathRecalcTicker = Math.max(this.pathRecalcTicker - 1, 0);
-                        Vec3 rVector = new Vec3(this.getMoveControl().getWantedX() - this.getX(), this.getMoveControl().getWantedY() - this.getY(), this.getMoveControl().getWantedZ() - this.getZ());
-                        double r = rVector.length();
-                        if ((this.pathRecalcTicker <= 0 && (this.getRandom().nextFloat() < 0.05F)) || (r < this.getBoundingBox().getSize())) {
-                            this.pathRecalcTicker = 4 + this.getRandom().nextInt(7);
-                            this.getMoveControl().setWantedPosition(center.x, center.y, center.z, this.MIN_CHASE_VELOCITY);
-                        }
-
-                        this.totalRangedAttackTicker++;
-                        switch (this.getRangeType()) {
-                            case CONDUIT:
-                                if (this.totalRangedAttackTicker % 80 == 60) {
-                                    this.tinyRangedAttackTicker = 23;
-                                }
-                                if (this.tinyRangedAttackTicker >= 1) {
-                                    this.performSphereAttack(this.tinyRangedAttackTicker);
-                                    this.tinyRangedAttackTicker--;
-                                }
-                                if (this.totalRangedAttackTicker % 160 == 120)
-                                    permafrostMaster.shootIcicles();
-                                if (this.totalRangedAttackTicker % 200 == 0) {
-                                    this.setPhase(Phase.IDLE);
-                                    permafrostMaster.getIcicles().forEach(icicle -> icicle.discardAndDoParticles());
-                                }
-                                break;
-                            case WRAITHLING:
-                                if (this.totalRangedAttackTicker % 60 == 40) {
-                                    int total = Mth.clamp(0, permafrostMaster.getNearbyPlayerNumber() * 2, 10);
-                                    for (int i = 0; i < total; i++) {
-                                        this.spawnWraithling(i, total);
-                                    }
-                                }
-                                RandomSource randomSource = this.getRandom();
-                                for (int i = 0; i < 6; ++i) {
-                                    ((ServerLevel) (this.getLevel())).sendParticles(new DustParticleOptions(new Vector3f(0.35f, 0.35f, 0.35f), 1.0F), this.getX() + (randomSource.nextFloat() - 0.5f), this.getEyeY() + (randomSource.nextFloat()-1f), this.getZ() + (randomSource.nextFloat() - 0.5f), 2, 0.2D, 0.2D, 0.2D, 0.0D);
-                                }
-                                if (this.totalRangedAttackTicker % 120 == 0)
-                                    this.setPhase(Phase.IDLE);
-                                break;
+                            this.setPhase(Phase.IDLE);
                         }
                         break;
-                    } else {
-                        this.setPhase(Phase.IDLE);
-                    }
+                    case RANGED:
+                        List<ServerPlayer> serverPlayers = this.getValidTargets();
+                        if (serverPlayers != null && !serverPlayers.isEmpty()) {
+                            Vec3 center = serverPlayers.stream().reduce(Vec3.ZERO, (accumV, serverPlayer) -> (accumV.add(serverPlayer.position())), Vec3::add).scale(1 / ((double) permafrostMaster.getNearbyPlayerNumber()));
+                            center = center.add(0, 10, 0);
+                            this.pathRecalcTicker = Math.max(this.pathRecalcTicker - 1, 0);
+                            Vec3 rVector = new Vec3(this.getMoveControl().getWantedX() - this.getX(), this.getMoveControl().getWantedY() - this.getY(), this.getMoveControl().getWantedZ() - this.getZ());
+                            double r = rVector.length();
+                            if ((this.pathRecalcTicker <= 0 && (this.getRandom().nextFloat() < 0.05F)) || (r < this.getBoundingBox().getSize())) {
+                                this.pathRecalcTicker = 4 + this.getRandom().nextInt(7);
+                                this.getMoveControl().setWantedPosition(center.x, center.y, center.z, this.MIN_CHASE_VELOCITY);
+                            }
+
+                            this.totalRangedAttackTicker++;
+                            switch (this.getRangeType()) {
+                                case CONDUIT:
+                                    if (this.totalRangedAttackTicker % 80 == 60) {
+                                        this.tinyRangedAttackTicker = 23;
+                                    }
+                                    if (this.tinyRangedAttackTicker >= 1) {
+                                        this.performSphereAttack(this.tinyRangedAttackTicker);
+                                        this.tinyRangedAttackTicker--;
+                                    }
+                                    if (this.totalRangedAttackTicker % 160 == 120)
+                                        permafrostMaster.shootIcicles();
+                                    if (this.totalRangedAttackTicker % 200 == 0) {
+                                        this.setPhase(Phase.IDLE);
+                                        permafrostMaster.getIcicles().forEach(icicle -> icicle.discardAndDoParticles());
+                                    }
+                                    break;
+                                case WRAITHLING:
+                                    if (this.totalRangedAttackTicker % 60 == 40) {
+                                        int total = Mth.clamp(0, permafrostMaster.getNearbyPlayerNumber() * 2, 10);
+                                        for (int i = 0; i < total; i++) {
+                                            this.spawnWraithling(i, total);
+                                        }
+                                    }
+                                    RandomSource randomSource = this.getRandom();
+                                    for (int i = 0; i < 6; ++i) {
+                                        ((ServerLevel) (this.getLevel())).sendParticles(new DustParticleOptions(new Vector3f(0.35f, 0.35f, 0.35f), 1.0F), this.getX() + (randomSource.nextFloat() - 0.5f), this.getEyeY() + (randomSource.nextFloat() - 1f), this.getZ() + (randomSource.nextFloat() - 0.5f), 2, 0.2D, 0.2D, 0.2D, 0.0D);
+                                    }
+                                    if (this.totalRangedAttackTicker % 120 == 0)
+                                        this.setPhase(Phase.IDLE);
+                                    break;
+                            }
+                            break;
+                        } else {
+                            this.setPhase(Phase.IDLE);
+                        }
+                }
+            } else if (permafrostMaster.getTotalPhase() == 4) {
+                this.setDeltaMovement(0, 0.15, 0);
+                RandomSource randomSource = this.getRandom();
+                for (int i = 0; i < 12; ++i) {
+                    ((ServerLevel) (this.getLevel())).sendParticles(new DustParticleOptions(new Vector3f(0.35f, 0.35f, 0.35f), 1.0F), this.getX() + (randomSource.nextFloat() - 0.5f) * 1.5f, this.getEyeY() + (randomSource.nextFloat() - 1.25f) * 1.5f, this.getZ() + (randomSource.nextFloat() - 0.5f) * 1.5f, 2, 0.2D, 0.2D, 0.2D, 0.0D);
+                }
             }
         }
         super.aiStep();
@@ -222,7 +230,12 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
     public boolean hurt(DamageSource damageSource, float amount) {
         if(this.getMaster().isPresent()) {
             PermafrostMaster permafrostMaster = this.getMaster().get();
-            return permafrostMaster.hurt(damageSource, amount);
+            if (permafrostMaster.getHealth()-amount > 1.0f)
+                return permafrostMaster.hurt(damageSource, amount);
+            else {
+                permafrostMaster.setTotalPhase(4);
+                return false;
+            }
         }
         return super.hurt(damageSource, amount);
     }
@@ -283,6 +296,11 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
         this.level.addFreshEntity(wraithling);
     }
 
+    public boolean shouldTwitch() {
+        if (this.getMaster().isPresent()) {
+            return this.getMaster().get().getTotalPhase() == 4;
+        } return false;
+    }
 
 
     // Lifted from AbstractWraith

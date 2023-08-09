@@ -1,6 +1,9 @@
 package com.bedmen.odyssey.entity.boss.permafrost;
 
+import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.entity.boss.BossSubEntity;
+import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -9,6 +12,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.network.PacketDistributor;
 
 abstract public class AbstractIndexedIcicleEntity extends BossSubEntity<PermafrostMaster> {
 
@@ -47,5 +51,13 @@ abstract public class AbstractIndexedIcicleEntity extends BossSubEntity<Permafro
         if(compoundNBT.contains("icicleIndex")){
             this.setIcicleIndex(compoundNBT.getInt("icicleIndex"));
         }
+    }
+
+    public void discardAndDoParticles() {
+        if (this.level.isClientSide())
+            AspectUtil.doFrostAspectParticles(this, 5);
+        else
+            OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this), new ColdSnapAnimatePacket(this));
+        this.discard();
     }
 }

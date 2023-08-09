@@ -172,15 +172,6 @@ public class PermafrostBigIcicleEntity extends AbstractIndexedIcicleEntity{
         this.discardAndDoParticles();
     }
 
-    public void discardAndDoParticles() {
-        if (this.level.isClientSide())
-            AspectUtil.doFrostAspectParticles(this, 5);
-        else
-            OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this), new ColdSnapAnimatePacket(this));
-        this.discard();
-    }
-
-
     public boolean isOnFire() {
         return false;
     }
