@@ -234,6 +234,7 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
                 return permafrostMaster.hurt(damageSource, amount);
             else {
                 permafrostMaster.setTotalPhase(4);
+                permafrostMaster.setHealth(1);
                 return false;
             }
         }
@@ -296,7 +297,7 @@ public class PermafrostWraith extends AbstractMainPermafrostEntity {
         this.level.addFreshEntity(wraithling);
     }
 
-    public boolean shouldTwitch() {
+    public boolean doDeathAnim() {
         if (this.getMaster().isPresent()) {
             return this.getMaster().get().getTotalPhase() == 4;
         } return false;

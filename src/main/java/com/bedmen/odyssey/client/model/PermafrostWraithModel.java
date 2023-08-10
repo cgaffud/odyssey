@@ -44,16 +44,16 @@ public class PermafrostWraithModel<T extends PermafrostWraith> extends AgeableLi
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0.5F, 6.0F, 0.0F));
+		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0.5F, -3.0F, 0.0F));
 
-		PartDefinition head_r1 = head.addOrReplaceChild("head_r1", CubeListBuilder.create().texOffs(32, 70).addBox(-7.0F, -32.0F, -2.0F, 6.0F, 7.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 14.0F, 4.5F, 0.0436F, 0.0F, 0.2182F));
+		PartDefinition head_r1 = head.addOrReplaceChild("head_r1", CubeListBuilder.create().texOffs(32, 70).addBox(-7.0F, -32.0F, -2.0F, 6.0F, 7.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 23.0F, 4.5F, 0.0436F, 0.0F, 0.2182F));
 
 		PartDefinition head_r2 = head.addOrReplaceChild("head_r2", CubeListBuilder.create().texOffs(0, 73).addBox(-6.0F, -33.0F, -6.0F, 6.0F, 5.0F, 6.0F, new CubeDeformation(0.0F))
-		.texOffs(30, 52).addBox(-3.0F, -31.0F, -8.0F, 5.0F, 6.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 14.0F, 4.5F, 0.0436F, 0.0F, 0.0F));
+		.texOffs(30, 52).addBox(-3.0F, -31.0F, -8.0F, 5.0F, 6.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 23.0F, 4.5F, 0.0436F, 0.0F, 0.0F));
 
-		PartDefinition head_r3 = head.addOrReplaceChild("head_r3", CubeListBuilder.create().texOffs(1, 0).addBox(-8.0F, -33.0F, -5.0F, 6.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(3.5F, 14.0F, -0.5F, 0.0F, 0.0F, 0.0873F));
+		PartDefinition head_r3 = head.addOrReplaceChild("head_r3", CubeListBuilder.create().texOffs(1, 0).addBox(-8.0F, -33.0F, -5.0F, 6.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(3.5F, 23.0F, -0.5F, 0.0F, 0.0F, 0.0873F));
 
-		PartDefinition head_r4 = head.addOrReplaceChild("head_r4", CubeListBuilder.create().texOffs(0, 59).addBox(-3.0F, -31.0F, -1.75F, 5.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 14.0F, -0.5F, -0.0436F, 0.0F, -0.0873F));
+		PartDefinition head_r4 = head.addOrReplaceChild("head_r4", CubeListBuilder.create().texOffs(0, 59).addBox(-3.0F, -31.0F, -1.75F, 5.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 23.0F, -0.5F, -0.0436F, 0.0F, -0.0873F));
 
 		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 18).addBox(-4.0F, 6.0F, -2.25F, 8.0F, 15.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -9.0F, 0.0F));
 
@@ -107,19 +107,21 @@ public class PermafrostWraithModel<T extends PermafrostWraith> extends AgeableLi
 
 		ItemStack itemstack = entity.getMainHandItem();
 
+		float natXRot = (entity.doDeathAnim()) ? -Mth.HALF_PI/2 : 0;
+
 		if (!entity.isAggressive()) {
 			if ((GeneralUtil.isHashTick(entity, entity.getLevel(), 8) && (entity.getRandom().nextFloat() < 0.10))) {
-				this.head.setRotation(entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2 + ALMOST_HALF_PI/4, this.head.yRot, entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2);
+				this.head.setRotation(entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2 + ALMOST_HALF_PI/4 + natXRot, this.head.yRot, entity.getRandom().nextFloat() * Mth.HALF_PI - Mth.HALF_PI/2);
 			} else if (GeneralUtil.isHashTick(entity, entity.getLevel(), 4) && (entity.getRandom().nextFloat() < 0.8)) {
-				this.head.setRotation(entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2 + ALMOST_HALF_PI/4,
+				this.head.setRotation(entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2 + ALMOST_HALF_PI/4 + natXRot,
 						this.head.yRot,
 						entity.getRandom().nextFloat() * ALMOST_HALF_PI - ALMOST_HALF_PI/2);
 			} else {
-				this.head.xRot = 0;
+				this.head.xRot = natXRot;
 				this.head.zRot = 0;
 			}
 		} else {
-			this.head.xRot = 0;
+			this.head.xRot = natXRot;
 			this.head.zRot = 0;
 		}
 

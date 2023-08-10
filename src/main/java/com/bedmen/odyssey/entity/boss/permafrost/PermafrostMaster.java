@@ -10,9 +10,12 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
+import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.NonNullListCollector;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -20,6 +23,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -28,7 +32,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
@@ -398,6 +406,10 @@ public class PermafrostMaster extends BossMaster {
                 break;
             case 4:
                 this.phaseDelayTicker++;
+                if (this.phaseDelayTicker > 20 && (this.phaseDelayTicker % 5  == 0)) {
+                    this.convertSurroundingsToFrozen(((this.phaseDelayTicker - 25) / 5) * 2);
+                    this.convertSurroundingsToFrozen(((this.phaseDelayTicker - 25) / 5) * 2 + 1);
+                }
                 if (this.phaseDelayTicker > 120) {
                     this.setHealth(0.0f);
                 }
@@ -408,19 +420,12 @@ public class PermafrostMaster extends BossMaster {
             if (this.getTotalPhase() < 4)
                 TemperatureSource.PERMAFROST_PASSIVE.tick(player);
             else
-                TemperatureSource.BLIZZARD.tick(player);
+                TemperatureSource.PERMAFROST_DEATH.tick(player);
         }
     }
 
     @Override
     public boolean hurt(DamageSource damageSource, float amount) {
-        if (this.getTotalPhase() == 0) {
-            if (this.getHealth() < this.getMaxHealth() * 2/3) {
-                this.setTotalPhase(1);
-                for (PermafrostBigIcicleEntity bigIcicleEntity : this.getIcicles())
-                    bigIcicleEntity.discardAndDoParticles();
-            }
-        }
         return super.hurt(damageSource, amount);
     }
 
@@ -533,6 +538,75 @@ public class PermafrostMaster extends BossMaster {
             this.level.addFreshEntity(permafrostBigIcicleEntity);
         } else {
             System.out.println("Regeneration error");
+        }
+    }
+
+    /** Phase 4 **/
+
+    // magic number bc wtf does this do again?
+    private final int setblockNum = 2;
+
+    private void convertSurroundingsToFrozen(int radius) {
+        if (!this.level.isClientSide()) {
+            BlockPos blockPos = this.blockPosition();
+            if (radius == 0)
+                this.convertBlockToFrozen(blockPos.mutable());
+            else {
+                float step = Mth.PI / (4 * radius);
+                for (float theta = 0; theta < 2 * Mth.PI; theta += step) {
+                    BlockPos.MutableBlockPos mutableBlockPos = blockPos.offset(radius * Mth.cos(theta), 0, radius * Mth.sin(theta)).mutable();
+                    this.convertBlockToFrozen(mutableBlockPos);
+                }
+            }
+        }
+    }
+
+    private void convertBlockToFrozen(BlockPos.MutableBlockPos mutableBlockPos) {
+        while(this.level.getBlockState(mutableBlockPos.below()).isAir() && mutableBlockPos.getY() > this.level.getMinBuildHeight()) {
+            mutableBlockPos.move(Direction.DOWN);
+        }
+        BlockState belowBlockState = this.level.getBlockState(mutableBlockPos.below());
+        if (belowBlockState.is(Blocks.BLUE_ICE))
+            return;
+
+        if (belowBlockState.getBlock() instanceof BaseFireBlock || belowBlockState.getBlock() instanceof FlowerBlock ||
+                belowBlockState.is(Blocks.DEAD_BUSH) || belowBlockState.getBlock() instanceof CropBlock || belowBlockState.is(Blocks.GRASS)) {
+            this.level.setBlock(mutableBlockPos.below(), Blocks.AIR.defaultBlockState(), setblockNum);
+            mutableBlockPos.move(Direction.DOWN);
+            belowBlockState = this.level.getBlockState(mutableBlockPos.below());
+        } else if (belowBlockState.getBlock() instanceof TallFlowerBlock || belowBlockState.is(Blocks.TALL_GRASS)) {
+            mutableBlockPos.move(Direction.DOWN);
+            this.level.setBlock(mutableBlockPos.below(), Blocks.AIR.defaultBlockState(), setblockNum);
+            mutableBlockPos.move(Direction.DOWN);
+            belowBlockState = this.level.getBlockState(mutableBlockPos.below());
+        }
+
+
+        if (belowBlockState.is(Blocks.WATER))
+            this.level.setBlock(mutableBlockPos.below(), Blocks.ICE.defaultBlockState(), setblockNum);
+        else if (belowBlockState.is(Blocks.LAVA))
+            this.level.setBlock(mutableBlockPos.below(), Blocks.OBSIDIAN.defaultBlockState(), setblockNum);
+        else if (belowBlockState.is(Blocks.SNOW))
+            this.level.setBlock(mutableBlockPos.below(), Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, belowBlockState.getValue(SnowLayerBlock.LAYERS) + 2), setblockNum);
+        else if (belowBlockState.is(Blocks.ICE))
+            this.level.setBlock(mutableBlockPos.below(), Blocks.PACKED_ICE.defaultBlockState(), setblockNum);
+        else if (belowBlockState.is(Blocks.PACKED_ICE))
+            this.level.setBlock(mutableBlockPos.below(), Blocks.BLUE_ICE.defaultBlockState(), setblockNum);
+        else {
+            if (this.getRandom().nextFloat() < 0.025f) {
+                this.level.setBlock(mutableBlockPos, Blocks.BLUE_ICE.defaultBlockState(), setblockNum);
+                if (this.getRandom().nextFloat() < 0.35f) {
+                    this.level.setBlock(mutableBlockPos.above(), Blocks.BLUE_ICE.defaultBlockState(), setblockNum);
+                    mutableBlockPos.move(Direction.UP);
+                }
+                mutableBlockPos.move(Direction.UP);
+                if (this.getRandom().nextBoolean()) {
+                    ItemEntity entity = new ItemEntity(this.level, mutableBlockPos.getX() + 0.5, mutableBlockPos.getY(), mutableBlockPos.getZ() + 0.5, new ItemStack(ItemRegistry.PERMAFROST_SHARD.get()), 0, 0, 0);
+                    this.level.addFreshEntity(entity);
+                }
+            } else {
+                this.level.setBlock(mutableBlockPos, Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, this.getRandom().nextBoolean() ? 1 : 2), setblockNum);
+            }
         }
     }
 

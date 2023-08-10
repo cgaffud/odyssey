@@ -184,9 +184,18 @@ public class PermafrostConduit extends AbstractMainPermafrostEntity {
     public boolean hurt(DamageSource damageSource, float amount) {
         if(this.getMaster().isPresent()) {
             PermafrostMaster permafrostMaster = this.getMaster().get();
-            if (permafrostMaster.getTotalPhase() == 0)
-                return permafrostMaster.hurt(damageSource, amount);
-            return true;
+            if (permafrostMaster.getTotalPhase() == 0) {
+                if (permafrostMaster.getHealth() - amount < permafrostMaster.getMaxHealth() * 2 / 3) {
+                    permafrostMaster.setHealth(permafrostMaster.getMaxHealth() * 2/3);
+                    permafrostMaster.setTotalPhase(1);
+                    for (PermafrostBigIcicleEntity bigIcicleEntity : permafrostMaster.getIcicles())
+                        bigIcicleEntity.discardAndDoParticles();
+                    return true;
+                } else {
+                    return permafrostMaster.hurt(damageSource, amount);
+                }
+            }
+            return false;
         }
         return super.hurt(damageSource, amount);
     }
