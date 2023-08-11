@@ -11,6 +11,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -146,6 +147,13 @@ public class PermafrostSpawnerIcicle extends AbstractIndexedIcicleEntity{
         this.entityData.define(DATA_PHASE, 0);
         this.entityData.define(DATA_WRAITHLING_NUM, 0);
     }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource p_33034_) {
+        return SoundEvents.GLASS_BREAK;
+    }
+
+
 
     public void setPhase(Phase phase) {
         this.entityData.set(DATA_PHASE, phase.ordinal());

@@ -6,6 +6,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -24,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -188,6 +192,7 @@ public class PermafrostConduit extends AbstractMainPermafrostEntity {
                 if (permafrostMaster.getHealth() - amount < permafrostMaster.getMaxHealth() * 2 / 3) {
                     permafrostMaster.setHealth(permafrostMaster.getMaxHealth() * 2/3);
                     permafrostMaster.setTotalPhase(1);
+                    this.level.playSound(null, this, SoundEvents.CONDUIT_DEACTIVATE, SoundSource.HOSTILE, 1, 1);
                     for (PermafrostBigIcicleEntity bigIcicleEntity : permafrostMaster.getIcicles())
                         bigIcicleEntity.discardAndDoParticles();
                     return true;
@@ -207,6 +212,17 @@ public class PermafrostConduit extends AbstractMainPermafrostEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 1.0D);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.CONDUIT_AMBIENT;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource p_33034_) {
+        return SoundEvents.CONDUIT_ATTACK_TARGET;
     }
 
     public static class IdleMovementGoal extends Goal {

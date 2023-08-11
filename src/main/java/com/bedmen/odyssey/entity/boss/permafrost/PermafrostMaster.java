@@ -13,6 +13,7 @@ import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.registry.SoundEventRegistry;
 import com.bedmen.odyssey.util.NonNullListCollector;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -25,6 +26,9 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -208,6 +212,7 @@ public class PermafrostMaster extends BossMaster {
                 this.setMainId(permafrostConduit.getId());
                 permafrostConduit.moveTo(this.position());
                 permafrostConduit.setMasterId(this.getId());
+                this.level.playSound(null, this, SoundEvents.CONDUIT_ACTIVATE, SoundSource.HOSTILE, 1, 1);
             } else {
                 Odyssey.LOGGER.error("PermafrostConduit failed to spawn in spawnSubEntities");
             }
@@ -461,12 +466,14 @@ public class PermafrostMaster extends BossMaster {
 
     /** Phase 1 Items */
     public void createSpawner(float health, int index) {
+
         PermafrostSpawnerIcicle spawnerIcicle = new PermafrostSpawnerIcicle(this.level, health, index);
         if (spawnerIcicle != null) {
             this.spawners.add(spawnerIcicle);
             this.addSpawnerId(spawnerIcicle.getId());
             spawnerIcicle.moveTo(this.position());
             spawnerIcicle.setMasterId(this.getId());
+            this.level.playSound(null, this, SoundEvents.GLASS_BREAK, SoundSource.HOSTILE, 1, 1);
             this.level.addFreshEntity(spawnerIcicle);
         } else {
             System.out.println("Regeneration error");
@@ -525,6 +532,7 @@ public class PermafrostMaster extends BossMaster {
             this.setMainId(permafrostWraith.getId());
             permafrostWraith.moveTo(this.position());
             permafrostWraith.setMasterId(this.getId());
+            this.level.playSound(null, this, SoundEventRegistry.WRAITH_SCREAM.get(), SoundSource.HOSTILE, 0.25f, 0.5f);
             this.level.addFreshEntity(permafrostWraith);
         } else {
             Odyssey.LOGGER.error("PermafrostConduit failed to spawn in spawnSubEntities");
