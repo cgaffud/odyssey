@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity.boss.permafrost;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.block.ClusterBlock;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.boss.BossMaster;
@@ -9,6 +10,7 @@ import com.bedmen.odyssey.entity.boss.SubEntity;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.util.NonNullListCollector;
@@ -40,6 +42,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -568,6 +571,10 @@ public class PermafrostMaster extends BossMaster {
         BlockState belowBlockState = this.level.getBlockState(mutableBlockPos.below());
         if (belowBlockState.is(Blocks.BLUE_ICE))
             return;
+        for (RegistryObject<Block> registeredBlock : BlockRegistry.PERMAFROST_ICICLE_STAGES) {
+            if (belowBlockState.is(registeredBlock.get()))
+                return;
+        }
 
         if (belowBlockState.getBlock() instanceof BaseFireBlock || belowBlockState.getBlock() instanceof FlowerBlock ||
                 belowBlockState.is(Blocks.DEAD_BUSH) || belowBlockState.getBlock() instanceof CropBlock || belowBlockState.is(Blocks.GRASS)) {
@@ -593,17 +600,15 @@ public class PermafrostMaster extends BossMaster {
         else if (belowBlockState.is(Blocks.PACKED_ICE))
             this.level.setBlock(mutableBlockPos.below(), Blocks.BLUE_ICE.defaultBlockState(), setblockNum);
         else {
-            if (this.getRandom().nextFloat() < 0.025f) {
-                this.level.setBlock(mutableBlockPos, Blocks.BLUE_ICE.defaultBlockState(), setblockNum);
+            if (this.getRandom().nextFloat() < 0.0125f) {
                 if (this.getRandom().nextFloat() < 0.35f) {
-                    this.level.setBlock(mutableBlockPos.above(), Blocks.BLUE_ICE.defaultBlockState(), setblockNum);
+                    this.level.setBlock(mutableBlockPos, Blocks.BLUE_ICE.defaultBlockState(), setblockNum);
                     mutableBlockPos.move(Direction.UP);
                 }
+                this.level.setBlock(mutableBlockPos, BlockRegistry.BUDDING_PERMAFROST_ICICLE.get().defaultBlockState(), setblockNum);
                 mutableBlockPos.move(Direction.UP);
-                if (this.getRandom().nextBoolean()) {
-                    ItemEntity entity = new ItemEntity(this.level, mutableBlockPos.getX() + 0.5, mutableBlockPos.getY(), mutableBlockPos.getZ() + 0.5, new ItemStack(ItemRegistry.PERMAFROST_SHARD.get()), 0, 0, 0);
-                    this.level.addFreshEntity(entity);
-                }
+                if (this.getRandom().nextFloat() < (1.0f- 1.0f/((float) this.getNearbyPlayerNumber()+1)))
+                    this.level.setBlock(mutableBlockPos, BlockRegistry.PERMAFROST_ICICLE_STAGES.get(this.getRandom().nextInt(BlockRegistry.PERMAFROST_ICICLE_STAGES.size())).get().defaultBlockState().setValue(ClusterBlock.FACING, Direction.UP), setblockNum);
             } else {
                 this.level.setBlock(mutableBlockPos, Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, this.getRandom().nextBoolean() ? 1 : 2), setblockNum);
             }
