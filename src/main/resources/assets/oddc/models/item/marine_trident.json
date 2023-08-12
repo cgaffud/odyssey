@@ -1,12 +1,21 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "oddc:item/marine_trident"
+    "layer0": "oddc:item/marine_trident",
+    "particle": "oddc:item/marine_trident"
   },
   "overrides": [
     {
-      "predicate": {},
-      "model": "oddc:item/marine_trident_in_hand"
+      "predicate": {
+        "throwing": 0
+      },
+      "model": "oddc:item/spear_in_hand"
+    },
+    {
+      "predicate": {
+        "throwing": 1.0
+      },
+      "model": "oddc:item/spear_throwing"
     }
   ]
 }

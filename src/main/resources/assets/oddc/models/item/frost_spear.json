@@ -1,12 +1,21 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "oddc:item/frost_spear"
+    "layer0": "oddc:item/frost_spear",
+    "particle": "oddc:item/frost_spear"
   },
   "overrides": [
     {
-      "predicate": {},
-      "model": "oddc:item/frost_spear_in_hand"
+      "predicate": {
+        "throwing": 0
+      },
+      "model": "oddc:item/spear_in_hand"
+    },
+    {
+      "predicate": {
+        "throwing": 1
+      },
+      "model": "oddc:item/spear_throwing"
     }
   ]
 }

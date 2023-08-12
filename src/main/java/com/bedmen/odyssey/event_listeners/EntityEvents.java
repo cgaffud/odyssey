@@ -525,7 +525,6 @@ public class EntityEvents {
                         livingEntity.addEffect(new MobEffectInstance(EffectRegistry.ASSISTED_STRIKE_STRENGTH.get(), 50, 0));
                     }
                     float blowback = AspectUtil.getItemStackAspectStrength(shield, Aspects.BLOWBACK);
-                    System.out.print(blowback);
                     if (blowback > 0 && (damageSource.getEntity() != null) && damageSource.getEntity() instanceof LivingEntity attacker) {
                         Vec3 awayVector = new Vec3(attacker.getX() - livingEntity.getX(), attacker.getY() - livingEntity.getY(), attacker.getZ()-livingEntity.getZ());
                         awayVector.normalize().multiply(blowback, blowback, blowback);

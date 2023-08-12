@@ -15,14 +15,12 @@ public class SpearType extends ThrowableType {
     public static final String SPEAR_TYPE_TAG_PREFIX = "SpearType";
     public final ResourceLocation entityTexture;
     public final ModelResourceLocation itemModelResourceLocation;
-    public final ModelResourceLocation entityModelResourceLocation;
     public final boolean isTrident;
 
     SpearType(String id, double damage, float velocity, SoundProfile soundProfile, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
         super(id, damage, velocity, soundProfile, abilityList, innateModifierList);
         this.entityTexture = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/"+id+".png");
         this.itemModelResourceLocation = new ModelResourceLocation(Odyssey.MOD_ID, id, "inventory");
-        this.entityModelResourceLocation = new ModelResourceLocation(Odyssey.MOD_ID, id+"_in_hand", "inventory");
         this.isTrident = id.endsWith("trident");
         NEED_MODEL_REGISTERED_SET.add(this);
     }

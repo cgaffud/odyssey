@@ -2,20 +2,27 @@ package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.tags.OdysseyItemTags;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class RenderUtil {
 
@@ -134,6 +141,34 @@ public class RenderUtil {
 
     private static void xShapeProjectileVertex(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer vertexConsumer, float x, float y, float z, float u, float v, int packedLight) {
         vertexConsumer.vertex(matrix4f, x, y, z).color(255, 255, 255, 255).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix3f, 0, 1, 0).endVertex();
+    }
+
+    public static ItemInHandRenderer.HandRenderSelection evaluateWhichHandsToRender(LocalPlayer localPlayer) {
+        ItemStack itemstack = localPlayer.getMainHandItem();
+        ItemStack itemstack1 = localPlayer.getOffhandItem();
+        boolean flag = itemstack.is(OdysseyItemTags.BOWS) || itemstack1.is(OdysseyItemTags.BOWS);
+        boolean flag1 = itemstack.is(OdysseyItemTags.CROSSBOWS) || itemstack1.is(OdysseyItemTags.CROSSBOWS);
+        if (!flag && !flag1) {
+            return ItemInHandRenderer.HandRenderSelection.RENDER_BOTH_HANDS;
+        } else if (localPlayer.isUsingItem()) {
+            return selectionUsingItemWhileHoldingBowLike(localPlayer);
+        } else {
+            return isChargedCrossbow(itemstack) ? ItemInHandRenderer.HandRenderSelection.RENDER_MAIN_HAND_ONLY : ItemInHandRenderer.HandRenderSelection.RENDER_BOTH_HANDS;
+        }
+    }
+
+    private static ItemInHandRenderer.HandRenderSelection selectionUsingItemWhileHoldingBowLike(LocalPlayer localPlayer) {
+        ItemStack itemstack = localPlayer.getUseItem();
+        InteractionHand interactionhand = localPlayer.getUsedItemHand();
+        if (!itemstack.is(OdysseyItemTags.BOWS) && !itemstack.is(OdysseyItemTags.CROSSBOWS)) {
+            return interactionhand == InteractionHand.MAIN_HAND && isChargedCrossbow(localPlayer.getOffhandItem()) ? ItemInHandRenderer.HandRenderSelection.RENDER_MAIN_HAND_ONLY : ItemInHandRenderer.HandRenderSelection.RENDER_BOTH_HANDS;
+        } else {
+            return ItemInHandRenderer.HandRenderSelection.onlyForHand(interactionhand);
+        }
+    }
+
+    private static boolean isChargedCrossbow(ItemStack itemStack) {
+        return itemStack.is(OdysseyItemTags.CROSSBOWS) && CrossbowItem.isCharged(itemStack);
     }
 
 }

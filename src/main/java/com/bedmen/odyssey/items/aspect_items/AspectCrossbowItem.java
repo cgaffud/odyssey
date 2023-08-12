@@ -11,10 +11,14 @@ import com.bedmen.odyssey.items.INeedsToRegisterItemModelProperty;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -26,10 +30,12 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.player.Player;
@@ -390,6 +396,50 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
         ConditionalAmpUtil.setDamageTag(itemStack, entity);
         super.inventoryTick(itemStack, level, entity, compartments, selected);
+    }
+
+    public boolean applyForgeHandTransform(PoseStack poseStack, LocalPlayer localPlayer, HumanoidArm humanoidArm, ItemStack itemStack, float partialTick, float equipProcess, float swingProcess) {
+        Minecraft minecraft = Minecraft.getInstance();
+        ItemInHandRenderer itemInHandRenderer = minecraft.gameRenderer.itemInHandRenderer;
+        boolean flag1 = CrossbowItem.isCharged(itemStack);
+        boolean flag2 = humanoidArm == HumanoidArm.RIGHT;
+        int i = flag2 ? 1 : -1;
+        if (localPlayer.isUsingItem() && localPlayer.getUseItemRemainingTicks() > 0) {
+            itemInHandRenderer.applyItemArmTransform(poseStack, humanoidArm, equipProcess);
+            poseStack.translate((double)((float)i * -0.4785682F), (double)-0.094387F, (double)0.05731531F);
+            poseStack.mulPose(Vector3f.XP.rotationDegrees(-11.935F));
+            poseStack.mulPose(Vector3f.YP.rotationDegrees((float)i * 65.3F));
+            poseStack.mulPose(Vector3f.ZP.rotationDegrees((float)i * -9.785F));
+            float f9 = (float)itemStack.getUseDuration() - ((float)localPlayer.getUseItemRemainingTicks() - partialTick + 1.0F);
+            float f13 = f9 / (float)CrossbowItem.getChargeDuration(itemStack);
+            if (f13 > 1.0F) {
+                f13 = 1.0F;
+            }
+
+            if (f13 > 0.1F) {
+                float f16 = Mth.sin((f9 - 0.1F) * 1.3F);
+                float f3 = f13 - 0.1F;
+                float f4 = f16 * f3;
+                poseStack.translate((double)(f4 * 0.0F), (double)(f4 * 0.004F), (double)(f4 * 0.0F));
+            }
+
+            poseStack.translate((double)(f13 * 0.0F), (double)(f13 * 0.0F), (double)(f13 * 0.04F));
+            poseStack.scale(1.0F, 1.0F, 1.0F + f13 * 0.2F);
+            poseStack.mulPose(Vector3f.YN.rotationDegrees((float)i * 45.0F));
+        } else {
+            float f = -0.4F * Mth.sin(Mth.sqrt(swingProcess) * (float)Math.PI);
+            float f1 = 0.2F * Mth.sin(Mth.sqrt(swingProcess) * ((float)Math.PI * 2F));
+            float f2 = -0.2F * Mth.sin(swingProcess * (float)Math.PI);
+            poseStack.translate((double)((float)i * f), (double)f1, (double)f2);
+            itemInHandRenderer.applyItemArmTransform(poseStack, humanoidArm, equipProcess);
+
+            itemInHandRenderer.applyItemArmAttackTransform(poseStack, humanoidArm, swingProcess);
+            if (flag1 && swingProcess < 0.001F && localPlayer.getUsedItemHand() == InteractionHand.MAIN_HAND) {
+                poseStack.translate((double)((float)i * -0.641864F), 0.0D, 0.0D);
+                poseStack.mulPose(Vector3f.YP.rotationDegrees((float)i * 10.0F));
+            }
+        }
+        return true;
     }
 
     public void registerItemModelProperties(){

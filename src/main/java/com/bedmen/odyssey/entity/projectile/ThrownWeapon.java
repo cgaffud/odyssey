@@ -161,9 +161,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
             }
         }
         if(!this.doneDealingDamage) {
-            EntityHitResult entityHitResult = super.findHitEntity(startVec, endVec);
-            System.out.println(entityHitResult == null ? null : entityHitResult.getEntity());
-            return entityHitResult;
+            return super.findHitEntity(startVec, endVec);
         }
         return null;
     }

@@ -5,7 +5,6 @@ import com.bedmen.odyssey.block.TriplePlantBlock;
 import com.bedmen.odyssey.client.gui.OdysseyIngameGui;
 import com.bedmen.odyssey.client.gui.screens.*;
 import com.bedmen.odyssey.client.model.*;
-import com.bedmen.odyssey.client.renderer.OdysseyItemInHandRenderer;
 import com.bedmen.odyssey.client.renderer.StrayBruteRenderer;
 import com.bedmen.odyssey.client.renderer.blockentity.*;
 import com.bedmen.odyssey.client.renderer.entity.*;
@@ -159,8 +158,6 @@ public class ModBusClientEvents {
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
 
             //Projectile Renderings
-//        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
-//        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST_ICICLE.get(), PermafrostIcicleRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.ARROW.get(), OdysseyArrowRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BOOMERANG.get(), BoomerangRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.THROWN_SPEAR.get(), ThrownSpearRenderer::new);
@@ -173,9 +170,6 @@ public class ModBusClientEvents {
             // Other import render settings
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.gui = new OdysseyIngameGui(minecraft);
-            OdysseyItemInHandRenderer odysseyItemInHandRenderer = new OdysseyItemInHandRenderer(minecraft, minecraft.getEntityRenderDispatcher(), minecraft.getItemRenderer());
-            minecraft.getEntityRenderDispatcher().itemInHandRenderer = odysseyItemInHandRenderer;
-            minecraft.gameRenderer.itemInHandRenderer = odysseyItemInHandRenderer;
         });
     }
 
@@ -320,9 +314,6 @@ public class ModBusClientEvents {
 
     @SubscribeEvent
     public static void onModelEvent$RegisterAdditional(final ModelEvent.RegisterAdditional event) {
-        for(SpearType spearType: SpearType.NEED_MODEL_REGISTERED_SET){
-            event.register(spearType.entityModelResourceLocation);
-        }
     }
 
     @SubscribeEvent

@@ -2,6 +2,7 @@ package com.bedmen.odyssey.event_listeners;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.client.renderer.entity.OdysseyPlayerRenderer;
+import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.items.WarpTotemItem;
@@ -12,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -25,6 +27,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.checkerframework.checker.units.qual.min;
 
 @Mod.EventBusSubscriber(value = {Dist.CLIENT}, modid = Odyssey.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeBusClientEvents {
@@ -66,12 +69,28 @@ public class ForgeBusClientEvents {
      */
     @SubscribeEvent
     public static void onRenderHandEvent(final RenderHandEvent event){
+        Minecraft minecraft = Minecraft.getInstance();
+        ItemInHandRenderer.HandRenderSelection iteminhandrenderer$handrenderselection = RenderUtil.evaluateWhichHandsToRender(minecraft.player);
+        if(event.getHand() == InteractionHand.MAIN_HAND && !iteminhandrenderer$handrenderselection.renderMainHand){
+            event.setCanceled(true);
+            return;
+        }
+        if(event.getHand() == InteractionHand.OFF_HAND && !iteminhandrenderer$handrenderselection.renderOffHand){
+            event.setCanceled(true);
+            return;
+        }
         ItemStack itemStack = event.getItemStack();
         Item item = itemStack.getItem();
-        InteractionHand hand = event.getHand();
-        boolean isMainHand = hand == InteractionHand.MAIN_HAND;
+        InteractionHand interactionHand = event.getHand();
+        boolean isMainHand = interactionHand == InteractionHand.MAIN_HAND;
         if(item instanceof QuiverItem && !isMainHand){
             event.setCanceled(true);
+        } else {
+            if(minecraft.player != null && WeaponUtil.isDualWielding(minecraft.player)){
+                ItemInHandRenderer itemInHandRenderer = minecraft.gameRenderer.itemInHandRenderer;
+                itemInHandRenderer.renderArmWithItem(minecraft.player, event.getPartialTick(), event.getInterpolatedPitch(), interactionHand, event.getSwingProgress(), event.getItemStack(), 0.0f, event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight());
+                event.setCanceled(true);
+            }
         }
     }
 
