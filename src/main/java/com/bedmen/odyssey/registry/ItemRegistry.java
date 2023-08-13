@@ -87,6 +87,10 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ANVIl = ITEMS.register("anvil", () -> new BlockItem(BlockRegistry.ANVIL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> CHIPPED_ANVIL = ITEMS.register("chipped_anvil", () -> new BlockItem(BlockRegistry.CHIPPED_ANVIL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> DAMAGED_ANVIL = ITEMS.register("damaged_anvil", () -> new BlockItem(BlockRegistry.DAMAGED_ANVIL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> BUDDING_PERMAFROST_ICICLE = ITEMS.register("budding_permafrost_icicle", () -> new BlockItem(BlockRegistry.BUDDING_PERMAFROST_ICICLE.get(), (new Item.Properties().tab(OdysseyCreativeModeTab.BUILDING_BLOCKS))));
+    public static final RegistryObject<Item> SMALL_PERMAFROST_ICICLE = ITEMS.register("small_permafrost_icicle", () -> new BlockItem(BlockRegistry.SMALL_PERMAFROST_ICICLE.get(), (new Item.Properties().tab(OdysseyCreativeModeTab.BUILDING_BLOCKS))));
+    public static final RegistryObject<Item> MEDIUM_PERMAFROST_ICICLE = ITEMS.register("medium_permafrost_icicle", () -> new BlockItem(BlockRegistry.MEDIUM_PERMAFROST_ICICLE.get(), (new Item.Properties().tab(OdysseyCreativeModeTab.BUILDING_BLOCKS))));
+    public static final RegistryObject<Item> BIG_PERMAFROST_ICICLE = ITEMS.register("big_permafrost_icicle", () -> new BlockItem(BlockRegistry.BIG_PERMAFROST_ICICLE.get(), (new Item.Properties().tab(OdysseyCreativeModeTab.BUILDING_BLOCKS))));
 
     // # Wood and Plants
     public static final RegistryObject<Item> PRAIRIE_GRASS = ITEMS.register("prairie_grass", () -> new TripleHighBlockItem(BlockRegistry.PRAIRIE_GRASS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));

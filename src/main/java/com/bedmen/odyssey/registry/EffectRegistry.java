@@ -41,6 +41,8 @@ public class EffectRegistry {
     public static final RegistryObject<MobEffect> HUSK_DRYING = EFFECTS.register("husk_drying", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.TEMPERATURE_PER_SECOND, 5f))));
 
     public static final RegistryObject<MobEffect> STRAY_FREEZING = EFFECTS.register("stray_freezing", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.TEMPERATURE_PER_SECOND, -5f))));
+    public static final RegistryObject<MobEffect> PERMAFROST_SMALL_FREEZING = EFFECTS.register("permafrost_small_freezing", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.TEMPERATURE_PER_SECOND, -4f))));
+    public static final RegistryObject<MobEffect> PERMAFROST_BIG_FREEZING = EFFECTS.register("permafrost_big_freezing", () -> new AspectEffect(MobEffectCategory.HARMFUL, List.of(new AspectInstance(Aspects.TEMPERATURE_PER_SECOND, -8f))));
 
     // Buff Sources
     public static final RegistryObject<MobEffect> STRENGTH_GAMBIT_BUFF = EFFECTS.register("strength_gambit_buff", () -> new AspectEffect(MobEffectCategory.BENEFICIAL, List.of(new AspectInstance(Aspects.ATTACK_DAMAGE, 2), new AspectInstance(Aspects.EXPERIENCE_PER_SECOND, -0.2f / 20f))));

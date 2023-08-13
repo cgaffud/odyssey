@@ -24,7 +24,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.function.Supplier;
+import java.util.List;
 import java.util.function.ToIntFunction;
 
 public class BlockRegistry {
@@ -133,6 +133,13 @@ public class BlockRegistry {
     public static final RegistryObject<Block> HEX_FIRE = BLOCKS.register("hex_fire", () -> new HexFireBlock(BlockBehaviour.Properties.of(Material.FIRE, MaterialColor.COLOR_PURPLE).noCollission().instabreak().lightLevel((p_152605_) -> {
         return 15;
     }).sound(SoundType.WOOL)));
+
+    public static final RegistryObject<Block> BIG_PERMAFROST_ICICLE = BLOCKS.register("big_permafrost_icicle", () -> new ClusterBlock(9, 3, BlockBehaviour.Properties.of(Material.ICE).noOcclusion().randomTicks().sound(SoundType.GLASS).strength(0.2F)));
+    public static final RegistryObject<Block> MEDIUM_PERMAFROST_ICICLE = BLOCKS.register("medium_permafrost_icicle", () -> new ClusterBlock(6, 3, BlockBehaviour.Properties.copy(BIG_PERMAFROST_ICICLE.get()).sound(SoundType.MEDIUM_AMETHYST_BUD)));
+    public static final RegistryObject<Block> SMALL_PERMAFROST_ICICLE = BLOCKS.register("small_permafrost_icicle", () -> new ClusterBlock(3, 4, BlockBehaviour.Properties.copy(BIG_PERMAFROST_ICICLE.get()).sound(SoundType.SMALL_AMETHYST_BUD)));
+
+    public static final List<RegistryObject<Block>> PERMAFROST_ICICLE_STAGES =  List.of(SMALL_PERMAFROST_ICICLE, MEDIUM_PERMAFROST_ICICLE, BIG_PERMAFROST_ICICLE);
+    public static final RegistryObject<Block> BUDDING_PERMAFROST_ICICLE = BLOCKS.register("budding_permafrost_icicle", () -> new BuddingBlock(BlockBehaviour.Properties.of(Material.ICE).randomTicks().strength(2.8F).sound(SoundType.GLASS), 5, true, PERMAFROST_ICICLE_STAGES));
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -8,6 +8,7 @@ import com.bedmen.odyssey.entity.boss.coven.*;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanBody;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanHead;
 import com.bedmen.odyssey.entity.boss.mineralLeviathan.MineralLeviathanMaster;
+import com.bedmen.odyssey.entity.boss.permafrost.*;
 import com.bedmen.odyssey.entity.monster.*;
 import com.bedmen.odyssey.entity.projectile.*;
 import com.bedmen.odyssey.entity.vehicle.OdysseyBoat;
@@ -68,6 +69,7 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<Wraith>> WRAITH = ENTITY_TYPE.register("wraith", () -> EntityType.Builder.of(Wraith::new, MobCategory.MONSTER).sized(0.55F, 1.85F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith").toString()));
     public static final RegistryObject<EntityType<WraithStalker>> WRAITH_STALKER = ENTITY_TYPE.register("wraith_stalker", () -> EntityType.Builder.of(WraithStalker::new, MobCategory.MONSTER).sized(0.6F, 2.9F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith_stalker").toString()));
     public static final RegistryObject<EntityType<WraithAmalgam>> WRAITH_AMALGAM = ENTITY_TYPE.register("wraith_amalgam", () -> EntityType.Builder.of(WraithAmalgam::new, MobCategory.MONSTER).sized(0.8F, 2.3F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraith_amalgam").toString()));
+    public static final RegistryObject<EntityType<Wraithling>> WRAITHLING = ENTITY_TYPE.register("wraithling", () -> EntityType.Builder.of(Wraithling::new, MobCategory.MONSTER).sized(0.55F, 1.85F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "wraithling").toString()));
 
     // ## Illager
     public static final RegistryObject<EntityType<Bandit>> BANDIT = ENTITY_TYPE.register("bandit", () -> EntityType.Builder.of(Bandit::new, MobCategory.MONSTER).sized(0.6F, 1.95F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "bandit").toString()));
@@ -91,7 +93,15 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<OverworldWitch>> OVERWORLD_WITCH = ENTITY_TYPE.register("overworld_witch", () -> EntityType.Builder.<OverworldWitch>of(OverworldWitch::new, MobCategory.MONSTER).sized(0.6F, 1.95F).fireImmune().clientTrackingRange(32).build(new ResourceLocation(Odyssey.MOD_ID, "overworld_witch").toString()));
     public static final RegistryObject<EntityType<CovenRootEntity>> COVEN_ROOT_ENTITY = ENTITY_TYPE.register("coven_root_entity", () -> EntityType.Builder.<CovenRootEntity>of(CovenRootEntity::new, MobCategory.MISC).sized(0.5F, 0.8F).clientTrackingRange(6).updateInterval(2).build(new ResourceLocation(Odyssey.MOD_ID, "coven_root_entity").toString()));
 
+    // ## Permafrost
     //    public static final RegistryObject<EntityType<Permafrost>> PERMAFROST = ENTITY_TYPE.register("permafrost", () -> EntityType.Builder.<Permafrost>of(Permafrost::new, MobCategory.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(20).build(new ResourceLocation("permafrost").toString()));
+    public static final RegistryObject<EntityType<PermafrostMaster>> PERMAFROST_MASTER = ENTITY_TYPE.register("permafrost_master", () -> EntityType.Builder.<PermafrostMaster>of(PermafrostMaster::new, MobCategory.MONSTER).sized(0.0F, 0.0F).fireImmune().clientTrackingRange(32).build(new ResourceLocation(Odyssey.MOD_ID, "permafrost_master").toString()));
+    public static final RegistryObject<EntityType<PermafrostConduit>> PERMAFROST_CONDUIT = ENTITY_TYPE.register("permafrost_conduit", () -> EntityType.Builder.<PermafrostConduit>of(PermafrostConduit::new, MobCategory.MONSTER).sized(2.0F, 2.0F).fireImmune().clientTrackingRange(20).build(new ResourceLocation("permafrost").toString()));
+    public static final RegistryObject<EntityType<PermafrostIcicleEntity>> PERMAFROST_ICICLE_ENTITY = ENTITY_TYPE.register("permafrost_icicle", () -> EntityType.Builder.<PermafrostIcicleEntity>of(PermafrostIcicleEntity::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_icicle").toString()));
+    public static final RegistryObject<EntityType<PermafrostBigIcicleEntity>> PERMAFROST_BIG_ICICLE_ENTITY = ENTITY_TYPE.register("permafrost_big_icicle", () -> EntityType.Builder.<PermafrostBigIcicleEntity>of(PermafrostBigIcicleEntity::new, MobCategory.MISC).sized(2F, 0.8F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_big_icicle").toString()));
+    public static final RegistryObject<EntityType<PermafrostSpawnerIcicle>> PERMAFROST_SPAWNER_ICICLE = ENTITY_TYPE.register("permafrost_spawner_icicle", () -> EntityType.Builder.<PermafrostSpawnerIcicle>of(PermafrostSpawnerIcicle::new, MobCategory.MISC).sized(1F, 2F).clientTrackingRange(4).updateInterval(10).build(new ResourceLocation("permafrost_spawner_icicle").toString()));
+    public static final RegistryObject<EntityType<PermafrostWraith>> PERMAFROST_WRAITH = ENTITY_TYPE.register("permafrost_wraith", () -> EntityType.Builder.of(PermafrostWraith::new, MobCategory.MONSTER).sized(0.6F, 2.9F).clientTrackingRange(12).build(new ResourceLocation(Odyssey.MOD_ID, "permafrost_wraith").toString()));
+
 
     // # Projectiles
     public static final RegistryObject<EntityType<Boomerang>> BOOMERANG = ENTITY_TYPE.register("boomerang", () -> EntityType.Builder.<Boomerang>of(Boomerang::new, MobCategory.MISC).sized(1.0f,0.0625f).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(Odyssey.MOD_ID, "boomerang").toString()));

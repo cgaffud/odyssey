@@ -144,6 +144,7 @@ public class ModBusClientEvents {
             EntityRenderers.register(EntityTypeRegistry.WRAITH_STALKER.get(), WraithStalkerRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WRAITH_AMALGAM.get(), WraithAmalgamRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.WRAITH_AMALGAM_PROJECTILE.get(), WraithAmalgamProjectileRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.WRAITHLING.get(), WraithlingRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.BANDIT.get(), BanditRenderer::new);
 
             //Boss Renderings
@@ -156,7 +157,12 @@ public class ModBusClientEvents {
             EntityRenderers.register(EntityTypeRegistry.NETHER_WITCH.get(), NetherWitchRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.OVERWORLD_WITCH.get(), OverworldWitchRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.COVEN_ROOT_ENTITY.get(), CovenRootEntityRenderer::new);
-//        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.PERMAFROST.get(), PermafrostRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PERMAFROST_MASTER.get(), PermafrostMasterRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PERMAFROST_ICICLE_ENTITY.get(), PermafrostIcicleRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PERMAFROST_CONDUIT.get(), PermafrostConduitRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PERMAFROST_BIG_ICICLE_ENTITY.get(), PermafrostBigIcicleRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PERMAFROST_SPAWNER_ICICLE.get(), PermafrostSpawnerIcicleRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.PERMAFROST_WRAITH.get(), PermafrostWraithRenderer::new);
 
             //Projectile Renderings
 //        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.TRIDENT.get(), OdysseyTridentRenderer::new);
@@ -252,10 +258,20 @@ public class ModBusClientEvents {
             }
         }
 //        event.addSprite(OdysseyPlayerContainer.EMPTY_SLOT_TRINKET);
-//        event.addSprite(PermafrostRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
-//        event.addSprite(PermafrostRenderer.WIND_RESOURCE_LOCATION);
-//        event.addSprite(PermafrostRenderer.VERTICAL_WIND_RESOURCE_LOCATION);
-//        event.addSprite(PermafrostRenderer.OPEN_EYE_RESOURCE_LOCATION);
+
+        event.addSprite(PermafrostConduitRenderer.SHELL_RESOURCE_LOCATION);
+        event.addSprite(PermafrostConduitRenderer.ACTIVE_SHELL_RESOURCE_LOCATION);
+        event.addSprite(PermafrostConduitRenderer.WIND_RESOURCE_LOCATION);
+        event.addSprite(PermafrostConduitRenderer.VERTICAL_WIND_RESOURCE_LOCATION);
+        event.addSprite(PermafrostConduitRenderer.OPEN_EYE_RESOURCE_LOCATION);
+
+        /**
+         *
+         event.addSprite(PermafrostConduitRenderer.ACTIVE_SHELL_TEXTURE.texture());
+         event.addSprite(PermafrostConduitRenderer.WIND_TEXTURE.texture());
+         event.addSprite(PermafrostConduitRenderer.VERTICAL_WIND_TEXTURE.texture());
+         event.addSprite(PermafrostConduitRenderer.OPEN_EYE_TEXTURE.texture());
+         */
     }
 
     @SubscribeEvent
@@ -271,6 +287,7 @@ public class ModBusClientEvents {
         event.registerLayerDefinition(WraithStalkerModel.LAYER_LOCATION, WraithStalkerModel::createBodyLayer);
         event.registerLayerDefinition(WraithAmalgamModel.LAYER_LOCATION, WraithAmalgamModel::createBodyLayer);
         event.registerLayerDefinition(WraithAmalgamProjectileModel.LAYER_LOCATION, WraithAmalgamProjectileModel::createBodyLayer);
+        event.registerLayerDefinition(WraithlingModel.LAYER_LOCATION, WraithlingModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanHeadModel.LAYER_LOCATION, MineralLeviathanHeadModel::createBodyLayer);
         event.registerLayerDefinition(MineralLeviathanBodyModel.LAYER_LOCATION, MineralLeviathanBodyModel::createBodyLayer);
         event.registerLayerDefinition(ArmedCovenWitchModel.LAYER_LOCATION, ArmedCovenWitchModel::createBodyLayer);
@@ -279,6 +296,9 @@ public class ModBusClientEvents {
         event.registerLayerDefinition(BladeSpiderModel.LAYER_LOCATION, BladeSpiderModel::createBodyLayer);
         event.registerLayerDefinition(ForgottenModel.LAYER_LOCATION, ForgottenModel::createBodyLayer);
         event.registerLayerDefinition(DripstoneCreeperModel.LAYER_LOCATION, DripstoneCreeperModel::createBodyLayer);
+        event.registerLayerDefinition(PermafrostBigIcicleModel.LAYER_LOCATION, PermafrostBigIcicleModel::createBodyLayer);
+        event.registerLayerDefinition(PermafrostSpawnerIcicleModel.LAYER_LOCATION, PermafrostSpawnerIcicleModel::createBodyLayer);
+        event.registerLayerDefinition(PermafrostWraithModel.LAYER_LOCATION, PermafrostWraithModel::createBodyLayer);
     }
 
     @SubscribeEvent
