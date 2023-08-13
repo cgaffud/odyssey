@@ -11,7 +11,7 @@ import net.minecraft.util.Mth;
 
 import java.util.function.Supplier;
 
-public class AbstractCreeperRenderer<T extends OdysseyCreeper, M extends OdysseyCreeperModel<T>> extends MobRenderer<T, M> {
+public abstract class AbstractCreeperRenderer<T extends OdysseyCreeper, M extends OdysseyCreeperModel<T>> extends MobRenderer<T, M> {
     protected static final ResourceLocation CREEPER_LOCATION = new ResourceLocation("textures/entity/creeper/creeper.png");
 
     public AbstractCreeperRenderer(EntityRendererProvider.Context context, Supplier<M> modelSupplier) {

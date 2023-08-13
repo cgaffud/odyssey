@@ -5,6 +5,8 @@ import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.encapsulator.PermaBuffHolder;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
+import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyCreativeModeTab;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -27,5 +29,6 @@ public class EntityDataSerializerRegistry {
     public static final RegistryObject<EntityDataSerializer<AspectStrengthMap>> ASPECT_STRENGTH_MAP = ENTITY_DATA_SERIALIZERS.register("aspect_strength_map", () -> OdysseyDataSerializers.ASPECT_STRENGTH_MAP);
     public static final RegistryObject<EntityDataSerializer<PermaBuffHolder>> PERMABUFF_HOLDER = ENTITY_DATA_SERIALIZERS.register("permabuff_holder", () -> OdysseyDataSerializers.PERMABUFF_HOLDER);
     public static final RegistryObject<EntityDataSerializer<FireType>> FIRE_TYPE = ENTITY_DATA_SERIALIZERS.register("fire_type", () -> OdysseyDataSerializers.FIRE_TYPE);
+    public static final RegistryObject<EntityDataSerializer<OdysseyCreeper.CreeperType>> CREEPER_TYPE = ENTITY_DATA_SERIALIZERS.register("creeper_type", () -> OdysseyDataSerializers.CREEPER_TYPE);
     public static final RegistryObject<EntityDataSerializer<Map<CovenType, Integer>>> COVENTYPE_INT_MAP = ENTITY_DATA_SERIALIZERS.register("coventype_int_map", () -> OdysseyDataSerializers.COVENTYPE_INT_MAP);
 }

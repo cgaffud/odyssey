@@ -401,11 +401,6 @@ public class EntityEvents {
     }
 
     private static Optional<EntityType<?>> creeperReplace(Mob mob, RandomSource randomSource){
-        if(randomSource.nextBoolean()){
-            return Optional.of(EntityTypeRegistry.CAMO_CREEPER.get());
-        } else if(inLushCavesBiome(mob)) {
-            return Optional.of(EntityTypeRegistry.OVERGROWN_CREEPER.get());
-        }
         return Optional.of(EntityTypeRegistry.CREEPER.get());
     }
 

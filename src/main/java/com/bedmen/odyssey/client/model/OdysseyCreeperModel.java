@@ -1,8 +1,11 @@
 package com.bedmen.odyssey.client.model;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.client.renderer.entity.OdysseyCreeperRenderer;
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -25,6 +28,10 @@ public class OdysseyCreeperModel<T extends OdysseyCreeper> extends AgeableListMo
     private final ModelPart leftHindLeg;
     private final ModelPart rightFrontLeg;
     private final ModelPart leftFrontLeg;
+
+    private float red;
+    private float green;
+    private float blue;
 
     public OdysseyCreeperModel(ModelPart modelPart) {
         super(RenderType::entityCutoutNoCull, true, 16.0F, 0.0F, 2.0F, 2.0F, 24.0F);
@@ -97,6 +104,19 @@ public class OdysseyCreeperModel<T extends OdysseyCreeper> extends AgeableListMo
         this.leftHindLeg.xRot = Mth.cos(p_102464_ * 0.6662F + (float)Math.PI) * 1.4F * p_102465_;
         this.rightFrontLeg.xRot = Mth.cos(p_102464_ * 0.6662F + (float)Math.PI) * 1.4F * p_102465_;
         this.leftFrontLeg.xRot = Mth.cos(p_102464_ * 0.6662F) * 1.4F * p_102465_;
+
+        //Coloring
+        ResourceLocation resourceLocation = OdysseyCreeperRenderer.getCamoTexture(creeper);
+        if(resourceLocation == OdysseyCreeperRenderer.GRAY_CREEPER_LOCATION){
+            int color = creeper.level.getBiome(creeper.blockPosition()).value().getGrassColor(creeper.getX(), creeper.getZ());
+            this.red = (float)(color >> 16 & 255) / 255.0F;
+            this.green = (float)(color >> 8 & 255) / 255.0F;
+            this.blue = (float)(color & 255) / 255.0F;
+        } else {
+            this.red = 1.0f;
+            this.green = 1.0f;
+            this.blue = 1.0f;
+        }
     }
 
     @Override
@@ -107,5 +127,9 @@ public class OdysseyCreeperModel<T extends OdysseyCreeper> extends AgeableListMo
     @Override
     protected Iterable<ModelPart> headParts() {
         return ImmutableList.of(this.head);
+    }
+
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int p_102036_, int p_102037_, float r, float g, float b, float a) {
+        super.renderToBuffer(poseStack, vertexConsumer, p_102036_, p_102037_, this.red * r, this.green * g, this.blue * b, a);
     }
 }

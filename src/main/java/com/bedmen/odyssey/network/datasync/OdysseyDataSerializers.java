@@ -6,6 +6,7 @@ import com.bedmen.odyssey.aspect.encapsulator.PermaBuffHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
+import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -108,5 +109,6 @@ public class OdysseyDataSerializers {
             AspectStrengthMap::copy
     );
     public static final EntityDataSerializer<FireType>  FIRE_TYPE = getEnumSerializer(FireType.class);
+    public static final EntityDataSerializer<OdysseyCreeper.CreeperType>  CREEPER_TYPE = getEnumSerializer(OdysseyCreeper.CreeperType.class);
     public static final EntityDataSerializer<Map<CovenType, Integer>> COVENTYPE_INT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeVarInt, FriendlyByteBuf::readVarInt);
 }

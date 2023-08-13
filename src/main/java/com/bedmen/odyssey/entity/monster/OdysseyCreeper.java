@@ -1,8 +1,11 @@
 package com.bedmen.odyssey.entity.monster;
 
+import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.entity.ai.OdysseyCreeperSwellGoal;
 import com.bedmen.odyssey.entity.projectile.DripstoneShard;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
+import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
+import com.sun.jna.platform.win32.WinBase;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -37,6 +40,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
@@ -47,20 +51,29 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-public class OdysseyCreeper extends Monster implements PowerableMob {
+public class OdysseyCreeper extends Monster implements PowerableMob, Overgrown {
     private static final UUID SPEED_MODIFIER_BABY_UUID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
     private static final AttributeModifier SPEED_MODIFIER_BABY = new AttributeModifier(SPEED_MODIFIER_BABY_UUID, "Baby speed boost", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
     private static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(OdysseyCreeper.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_DRIPSTONE_SPIKES = SynchedEntityData.defineId(OdysseyCreeper.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<CreeperType> DATA_TYPE = SynchedEntityData.defineId(OdysseyCreeper.class, OdysseyDataSerializers.CREEPER_TYPE);
     protected static final EntityDataAccessor<Integer> DATA_SWELL_DIR = SynchedEntityData.defineId(OdysseyCreeper.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Boolean> DATA_IS_POWERED = SynchedEntityData.defineId(OdysseyCreeper.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Boolean> DATA_IS_IGNITED = SynchedEntityData.defineId(OdysseyCreeper.class, EntityDataSerializers.BOOLEAN);
-    protected static final int MAX_SWELL = 30;
     protected static final int DRIPSTONE_MAX_SWELL = 20;
+    protected static final float CAMO_CHANCE = 0.5f;
+
+    protected static final String FUSE_TAG = "Fuse";
+    protected static final String EXPLOSION_RADIUS_TAG = "ExplosionRadius";
+    protected static final String POWERED_TAG = "powered";
+    protected static final String IGNITED_TAG = "ignited";
+    protected static final String BABY_TAG = "IsBaby";
+    protected static final String DRIPSTONE_SPIKES_TAG = "HasDripstoneSpikes";
+    protected static final String TYPE_TAG = "Type";
     protected int oldSwell;
     protected int swell;
-    protected int maxSwell = MAX_SWELL;
-    protected int explosionRadius = 3;
+    protected int maxSwell = CreeperType.NORMAL.maxSwell;
+    protected int explosionRadius = CreeperType.NORMAL.explosionRadius;
 
     public OdysseyCreeper(EntityType<? extends OdysseyCreeper> entityType, Level level) {
         super(entityType, level);
@@ -108,6 +121,7 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
         this.entityData.define(DATA_IS_IGNITED, false);
         this.entityData.define(DATA_BABY_ID, false);
         this.entityData.define(DATA_DRIPSTONE_SPIKES, false);
+        this.entityData.define(DATA_TYPE, CreeperType.NORMAL);
     }
 
     public int getMaxSwell(){
@@ -138,8 +152,20 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
         if(hasDripstoneSpikes){
             this.maxSwell = DRIPSTONE_MAX_SWELL;
         } else {
-            this.maxSwell = MAX_SWELL;
+            this.maxSwell = this.getCreeperType().maxSwell;
         }
+    }
+
+    public CreeperType getCreeperType() {
+        return this.getEntityData().get(DATA_TYPE);
+    }
+
+    public void setCreeperType(CreeperType creeperType) {
+        this.getEntityData().set(DATA_TYPE, creeperType);
+        if(!this.hasDripstoneSpikes()){
+            this.maxSwell = creeperType.maxSwell;
+        }
+        this.explosionRadius = creeperType.explosionRadius;
     }
 
     public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
@@ -152,14 +178,15 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         if (this.entityData.get(DATA_IS_POWERED)) {
-            compoundTag.putBoolean("powered", true);
+            compoundTag.putBoolean(POWERED_TAG, true);
         }
 
-        compoundTag.putShort("Fuse", (short)this.maxSwell);
-        compoundTag.putByte("ExplosionRadius", (byte)this.explosionRadius);
-        compoundTag.putBoolean("ignited", this.isIgnited());
-        compoundTag.putBoolean("IsBaby", this.isBaby());
-        compoundTag.putBoolean("HasDripstoneSpikes", this.hasDripstoneSpikes());
+        compoundTag.putShort(FUSE_TAG, (short)this.maxSwell);
+        compoundTag.putByte(EXPLOSION_RADIUS_TAG, (byte)this.explosionRadius);
+        compoundTag.putBoolean(IGNITED_TAG, this.isIgnited());
+        compoundTag.putBoolean(BABY_TAG, this.isBaby());
+        compoundTag.putBoolean(DRIPSTONE_SPIKES_TAG, this.hasDripstoneSpikes());
+        compoundTag.putString(TYPE_TAG, this.getCreeperType().name());
     }
 
     /**
@@ -167,20 +194,25 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
      */
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        this.entityData.set(DATA_IS_POWERED, compoundTag.getBoolean("powered"));
-        if (compoundTag.contains("Fuse", 99)) {
-            this.maxSwell = compoundTag.getShort("Fuse");
+        this.entityData.set(DATA_IS_POWERED, compoundTag.getBoolean(POWERED_TAG));
+        if (compoundTag.contains(FUSE_TAG, 99)) {
+            this.maxSwell = compoundTag.getShort(FUSE_TAG);
         }
 
-        if (compoundTag.contains("ExplosionRadius", 99)) {
-            this.explosionRadius = compoundTag.getByte("ExplosionRadius");
+        if (compoundTag.contains(EXPLOSION_RADIUS_TAG, 99)) {
+            this.explosionRadius = compoundTag.getByte(EXPLOSION_RADIUS_TAG);
         }
 
-        if (compoundTag.getBoolean("ignited")) {
+        if (compoundTag.getBoolean(IGNITED_TAG)) {
             this.ignite();
         }
-        this.setBaby(compoundTag.getBoolean("IsBaby"));
-        this.setDripstoneSpikes(compoundTag.getBoolean("HasDripstoneSpikes"));
+        this.setBaby(compoundTag.getBoolean(BABY_TAG));
+        this.setDripstoneSpikes(compoundTag.getBoolean(DRIPSTONE_SPIKES_TAG));
+        if(compoundTag.contains(TYPE_TAG)){
+            this.setCreeperType(CreeperType.valueOf(compoundTag.getString(TYPE_TAG)));
+        } else {
+            this.setCreeperType(CreeperType.NORMAL);
+        }
     }
 
     @Nullable
@@ -192,7 +224,11 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
         if(EntityEvents.inDripstoneBiome(this)){
             this.setDripstoneSpikes(true);
         }
-        System.out.println("I RAN");
+        if(EntityEvents.inLushCavesBiome(this)){
+            this.setCreeperType(CreeperType.OVERGROWN);
+        } else if( this.random.nextFloat() < CAMO_CHANCE){
+            this.setCreeperType(CreeperType.CAMO);
+        }
         return pSpawnData;
     }
 
@@ -205,6 +241,9 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
      */
     public void tick() {
         if (this.isAlive()) {
+            if(this.getCreeperType() == CreeperType.OVERGROWN){
+                this.regenerate(this, 2.0f);
+            }
             this.oldSwell = this.swell;
             if (this.isIgnited()) {
                 this.setSwellDir(1);
@@ -358,5 +397,19 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
 
     public void ignite() {
         this.entityData.set(DATA_IS_IGNITED, true);
+    }
+
+    public enum CreeperType{
+        NORMAL(30, 3),
+        CAMO(30, 3),
+        OVERGROWN(25, 5);
+
+        public final int maxSwell;
+        public final int explosionRadius;
+
+        CreeperType(int maxSwell, int explosionRadius){
+            this.maxSwell = maxSwell;
+            this.explosionRadius = explosionRadius;
+        }
     }
 }

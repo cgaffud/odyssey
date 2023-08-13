@@ -52,8 +52,6 @@ public class EntityTypeRegistry {
 
     // ## Creepers
     public static final RegistryObject<EntityType<OdysseyCreeper>> CREEPER = ENTITY_TYPE.register("creeper", () -> EntityType.Builder.of(OdysseyCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "creeper").toString()));
-    public static final RegistryObject<EntityType<CamoCreeper>> CAMO_CREEPER = ENTITY_TYPE.register("camo_creeper", () -> EntityType.Builder.of(CamoCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "camo_creeper").toString()));
-    public static final RegistryObject<EntityType<OvergrownCreeper>> OVERGROWN_CREEPER = ENTITY_TYPE.register("overgrown_creeper", () -> EntityType.Builder.of(OvergrownCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "overgrown_creeper").toString()));
 
 
     // ## Arthropods
