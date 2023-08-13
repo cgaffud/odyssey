@@ -192,6 +192,7 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
         if(EntityEvents.inDripstoneBiome(this)){
             this.setDripstoneSpikes(true);
         }
+        System.out.println("I RAN");
         return pSpawnData;
     }
 

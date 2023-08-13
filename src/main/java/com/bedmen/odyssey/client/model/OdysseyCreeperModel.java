@@ -12,20 +12,24 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
+import java.sql.Array;
+import java.util.Map;
+
 public class OdysseyCreeperModel<T extends OdysseyCreeper> extends AgeableListModel<T> {
 
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(Odyssey.MOD_ID, "dripstone_creeper"), "main");
     private final ModelPart root;
+    private final ModelPart body;
     private final ModelPart head;
     private final ModelPart rightHindLeg;
     private final ModelPart leftHindLeg;
     private final ModelPart rightFrontLeg;
     private final ModelPart leftFrontLeg;
-    private static final int Y_OFFSET = 6;
 
     public OdysseyCreeperModel(ModelPart modelPart) {
         super(RenderType::entityCutoutNoCull, true, 16.0F, 0.0F, 2.0F, 2.0F, 24.0F);
         this.root = modelPart;
+        this.body = modelPart.getChild("body");
         this.head = modelPart.getChild("head");
         this.leftHindLeg = modelPart.getChild("right_hind_leg");
         this.rightHindLeg = modelPart.getChild("left_hind_leg");
@@ -86,7 +90,7 @@ public class OdysseyCreeperModel<T extends OdysseyCreeper> extends AgeableListMo
         return this.root;
     }
 
-    public void setupAnim(T entity, float p_102464_, float p_102465_, float p_102466_, float p_102467_, float p_102468_) {
+    public void setupAnim(T creeper, float p_102464_, float p_102465_, float p_102466_, float p_102467_, float p_102468_) {
         this.head.yRot = p_102467_ * ((float)Math.PI / 180F);
         this.head.xRot = p_102468_ * ((float)Math.PI / 180F);
         this.rightHindLeg.xRot = Mth.cos(p_102464_ * 0.6662F) * 1.4F * p_102465_;

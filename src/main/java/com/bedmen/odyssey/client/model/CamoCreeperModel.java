@@ -16,13 +16,13 @@ public class CamoCreeperModel<T extends CamoCreeper> extends OdysseyCreeperModel
         super(modelPart);
     }
 
-    public void setupAnim(T camoCreeper, float p_102464_, float p_102465_, float p_102466_, float p_102467_, float p_102468_) {
-        super.setupAnim(camoCreeper, p_102464_, p_102465_, p_102466_, p_102467_, p_102468_);
+    public void setupAnim(T creeper, float p_102464_, float p_102465_, float p_102466_, float p_102467_, float p_102468_) {
+        super.setupAnim(creeper, p_102464_, p_102465_, p_102466_, p_102467_, p_102468_);
 
         //Coloring
-        ResourceLocation resourceLocation = CamoCreeperRenderer.getTexture(camoCreeper);
+        ResourceLocation resourceLocation = CamoCreeperRenderer.getTexture(creeper);
         if(resourceLocation == CamoCreeperRenderer.GRAY_CREEPER_LOCATION){
-            int color = camoCreeper.level.getBiome(camoCreeper.blockPosition()).value().getGrassColor(camoCreeper.getX(), camoCreeper.getZ());
+            int color = creeper.level.getBiome(creeper.blockPosition()).value().getGrassColor(creeper.getX(), creeper.getZ());
             this.red = (float)(color >> 16 & 255) / 255.0F;
             this.green = (float)(color >> 8 & 255) / 255.0F;
             this.blue = (float)(color & 255) / 255.0F;
