@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.entity.monster;
 
 import com.bedmen.odyssey.entity.ai.OdysseyCreeperSwellGoal;
+import com.bedmen.odyssey.entity.projectile.DripstoneShard;
 import com.bedmen.odyssey.event_listeners.EntityEvents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -10,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,34 +26,44 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.animal.Ocelot;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class OdysseyCreeper extends Monster implements PowerableMob {
     private static final UUID SPEED_MODIFIER_BABY_UUID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
     private static final AttributeModifier SPEED_MODIFIER_BABY = new AttributeModifier(SPEED_MODIFIER_BABY_UUID, "Baby speed boost", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
     private static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(OdysseyCreeper.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_DRIPSTONE_SPIKES = SynchedEntityData.defineId(OdysseyCreeper.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Integer> DATA_SWELL_DIR = SynchedEntityData.defineId(OdysseyCreeper.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Boolean> DATA_IS_POWERED = SynchedEntityData.defineId(OdysseyCreeper.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Boolean> DATA_IS_IGNITED = SynchedEntityData.defineId(OdysseyCreeper.class, EntityDataSerializers.BOOLEAN);
+    protected static final int MAX_SWELL = 30;
+    protected static final int DRIPSTONE_MAX_SWELL = 20;
     protected int oldSwell;
     protected int swell;
-    protected int maxSwell = 30;
+    protected int maxSwell = MAX_SWELL;
     protected int explosionRadius = 3;
 
-    public OdysseyCreeper(EntityType<? extends OdysseyCreeper> p_i50213_1_, Level p_i50213_2_) {
-        super(p_i50213_1_, p_i50213_2_);
+    public OdysseyCreeper(EntityType<? extends OdysseyCreeper> entityType, Level level) {
+        super(entityType, level);
     }
 
     protected void registerGoals() {
@@ -70,6 +82,7 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.25D);
     }
+
 
     /**
      * The maximum height from where the entity is alowed to jump (used in pathfinder)
@@ -94,6 +107,7 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
         this.entityData.define(DATA_IS_POWERED, false);
         this.entityData.define(DATA_IS_IGNITED, false);
         this.entityData.define(DATA_BABY_ID, false);
+        this.entityData.define(DATA_DRIPSTONE_SPIKES, false);
     }
 
     public int getMaxSwell(){
@@ -115,6 +129,19 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
         }
     }
 
+    public boolean hasDripstoneSpikes() {
+        return this.getEntityData().get(DATA_DRIPSTONE_SPIKES);
+    }
+
+    public void setDripstoneSpikes(boolean hasDripstoneSpikes) {
+        this.getEntityData().set(DATA_DRIPSTONE_SPIKES, hasDripstoneSpikes);
+        if(hasDripstoneSpikes){
+            this.maxSwell = DRIPSTONE_MAX_SWELL;
+        } else {
+            this.maxSwell = MAX_SWELL;
+        }
+    }
+
     public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
         if (DATA_BABY_ID.equals(pKey)) {
             this.refreshDimensions();
@@ -122,36 +149,38 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
         super.onSyncedDataUpdated(pKey);
     }
 
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
         if (this.entityData.get(DATA_IS_POWERED)) {
-            pCompound.putBoolean("powered", true);
+            compoundTag.putBoolean("powered", true);
         }
 
-        pCompound.putShort("Fuse", (short)this.maxSwell);
-        pCompound.putByte("ExplosionRadius", (byte)this.explosionRadius);
-        pCompound.putBoolean("ignited", this.isIgnited());
-        pCompound.putBoolean("IsBaby", this.isBaby());
+        compoundTag.putShort("Fuse", (short)this.maxSwell);
+        compoundTag.putByte("ExplosionRadius", (byte)this.explosionRadius);
+        compoundTag.putBoolean("ignited", this.isIgnited());
+        compoundTag.putBoolean("IsBaby", this.isBaby());
+        compoundTag.putBoolean("HasDripstoneSpikes", this.hasDripstoneSpikes());
     }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        this.entityData.set(DATA_IS_POWERED, pCompound.getBoolean("powered"));
-        if (pCompound.contains("Fuse", 99)) {
-            this.maxSwell = pCompound.getShort("Fuse");
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.entityData.set(DATA_IS_POWERED, compoundTag.getBoolean("powered"));
+        if (compoundTag.contains("Fuse", 99)) {
+            this.maxSwell = compoundTag.getShort("Fuse");
         }
 
-        if (pCompound.contains("ExplosionRadius", 99)) {
-            this.explosionRadius = pCompound.getByte("ExplosionRadius");
+        if (compoundTag.contains("ExplosionRadius", 99)) {
+            this.explosionRadius = compoundTag.getByte("ExplosionRadius");
         }
 
-        if (pCompound.getBoolean("ignited")) {
+        if (compoundTag.getBoolean("ignited")) {
             this.ignite();
         }
-        this.setBaby(pCompound.getBoolean("IsBaby"));
+        this.setBaby(compoundTag.getBoolean("IsBaby"));
+        this.setDripstoneSpikes(compoundTag.getBoolean("HasDripstoneSpikes"));
     }
 
     @Nullable
@@ -159,6 +188,9 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
         pSpawnData = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
         if(EntityEvents.isBaby(this)){
             this.setBaby(true);
+        }
+        if(EntityEvents.inDripstoneBiome(this)){
+            this.setDripstoneSpikes(true);
         }
         return pSpawnData;
     }
@@ -284,8 +316,20 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
             this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)this.explosionRadius * f * f1, explosion$blockinteraction);
             this.discard();
             this.spawnLingeringCloud();
+            if(this.hasDripstoneSpikes()){
+                int dripstoneShardCount = this.getRandom().nextInt(2)+3;
+                for (int i = 0; i < dripstoneShardCount; i++) {
+                    DripstoneShard dripstoneShard = new DripstoneShard(this.level, this);
+                    float phi = this.getRandom().nextFloat() * Mth.TWO_PI;
+                    float theta = this.getRandom().nextFloat() * Mth.PI;
+                    Vec3 shootingDir = new Vec3(Mth.sin(theta)*Mth.cos(phi), Mth.sin(theta)*Mth.sin(phi), Mth.cos(theta));
+                    dripstoneShard.moveTo(this.getPosition(1).add(0,1,0)
+                            .add(shootingDir.scale(0.5)));
+                    dripstoneShard.shoot(shootingDir.x(), shootingDir.y(), shootingDir.z(), 1.1F, (float)(14 - this.level.getDifficulty().getId() * 4));
+                    this.level.addFreshEntity(dripstoneShard);
+                }
+            }
         }
-
     }
 
     private void spawnLingeringCloud() {

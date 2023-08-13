@@ -51,9 +51,8 @@ public class EntityTypeRegistry {
     public static final RegistryObject<EntityType<OvergrownSkeleton>> OVERGROWN_SKELETON = ENTITY_TYPE.register("overgrown_skeleton", () -> EntityType.Builder.of(OvergrownSkeleton::new, MobCategory.MONSTER).sized(0.6F, 1.99F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "overgrown_skeleton").toString()));
 
     // ## Creepers
-    public static final RegistryObject<EntityType<BabyCreeper>> BABY_CREEPER = ENTITY_TYPE.register("baby_creeper", () -> EntityType.Builder.of(BabyCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "baby_creeper").toString()));
+    public static final RegistryObject<EntityType<OdysseyCreeper>> CREEPER = ENTITY_TYPE.register("creeper", () -> EntityType.Builder.of(OdysseyCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "creeper").toString()));
     public static final RegistryObject<EntityType<CamoCreeper>> CAMO_CREEPER = ENTITY_TYPE.register("camo_creeper", () -> EntityType.Builder.of(CamoCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "camo_creeper").toString()));
-    public static final RegistryObject<EntityType<DripstoneCreeper>> DRIPSTONE_CREEPER = ENTITY_TYPE.register("dripstone_creeper", () -> EntityType.Builder.of(DripstoneCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "dripstone_creeper").toString()));
     public static final RegistryObject<EntityType<OvergrownCreeper>> OVERGROWN_CREEPER = ENTITY_TYPE.register("overgrown_creeper", () -> EntityType.Builder.of(OvergrownCreeper::new, MobCategory.MONSTER).sized(0.6F, 1.7F).clientTrackingRange(8).build(new ResourceLocation(Odyssey.MOD_ID, "overgrown_creeper").toString()));
 
 

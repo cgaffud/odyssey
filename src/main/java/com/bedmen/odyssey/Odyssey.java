@@ -120,9 +120,8 @@ public class Odyssey
         event.put(EntityTypeRegistry.SKELETON.get(), OdysseySkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.STRAY.get(), Stray.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeleton.createAttributes().build());
-        event.put(EntityTypeRegistry.BABY_CREEPER.get(), BabyCreeper.createAttributes().build());
+        event.put(EntityTypeRegistry.CREEPER.get(), OdysseyCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.CAMO_CREEPER.get(), CamoCreeper.createAttributes().build());
-        event.put(EntityTypeRegistry.DRIPSTONE_CREEPER.get(), DripstoneCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.WEAVER.get(), Weaver.createAttributes().build());
         event.put(EntityTypeRegistry.PASSIVE_WEAVER.get(), PassiveWeaver.createAttributes().build());
         event.put(EntityTypeRegistry.BABY_LEVIATHAN.get(), BabyLeviathan.createAttributes().build());

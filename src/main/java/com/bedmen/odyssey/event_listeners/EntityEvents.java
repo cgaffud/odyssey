@@ -12,6 +12,7 @@ import com.bedmen.odyssey.effect.FireEffect;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
@@ -402,17 +403,10 @@ public class EntityEvents {
     private static Optional<EntityType<?>> creeperReplace(Mob mob, RandomSource randomSource){
         if(randomSource.nextBoolean()){
             return Optional.of(EntityTypeRegistry.CAMO_CREEPER.get());
-        }
-        if(inDripstoneBiome(mob)){
-            return Optional.of(EntityTypeRegistry.DRIPSTONE_CREEPER.get());
-        }
-        if(inLushCavesBiome(mob)) {
+        } else if(inLushCavesBiome(mob)) {
             return Optional.of(EntityTypeRegistry.OVERGROWN_CREEPER.get());
         }
-        else if(isBaby(mob)){
-            return Optional.of(EntityTypeRegistry.BABY_CREEPER.get());
-        }
-        return Optional.empty();
+        return Optional.of(EntityTypeRegistry.CREEPER.get());
     }
 
     private static Optional<EntityType<?>> zombieReplace(Mob mob, RandomSource randomSource){
