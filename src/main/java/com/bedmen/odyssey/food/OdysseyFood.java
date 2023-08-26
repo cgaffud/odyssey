@@ -12,6 +12,18 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class OdysseyFood {
+    
+    // Seared Variants
+    public static final FoodProperties SEARED_BEEF = (new FoodProperties.Builder()).nutrition(6).saturationMod(0.6F).meat().build();
+    public static final FoodProperties SEARED_CHICKEN = (new FoodProperties.Builder()).nutrition(5).saturationMod(0.45F).meat().build();
+    public static final FoodProperties SEARED_COD = (new FoodProperties.Builder()).nutrition(4).saturationMod(0.45F).build();
+    public static final FoodProperties SEARED_MUTTON = (new FoodProperties.Builder()).nutrition(5).saturationMod(0.6F).meat().build();
+    public static final FoodProperties SEARED_PORKCHOP = (new FoodProperties.Builder()).nutrition(6).saturationMod(0.6F).meat().build();
+    public static final FoodProperties SEARED_RABBIT = (new FoodProperties.Builder()).nutrition(4).saturationMod(0.45F).meat().build();
+    public static final FoodProperties SEARED_SALMON = (new FoodProperties.Builder()).nutrition(5).saturationMod(0.6F).build();
+    public static final FoodProperties SEARED_POTATO = (new FoodProperties.Builder()).nutrition(4).saturationMod(0.45F).build();
+
+
     public static final FoodProperties COCONUT_COOKIE = (new FoodProperties.Builder()).nutrition(2).saturationMod(0.3F).build();
     public static final FoodProperties WARM_BROTH = (new FoodProperties.Builder()).nutrition(1).saturationMod(0.2F).alwaysEat().effect(() -> new MobEffectInstance(EffectRegistry.WARM_FOOD.get(), 300), 1.0f).build();
     public static final FoodProperties SNOW_CONE = (new FoodProperties.Builder()).nutrition(1).saturationMod(0.2F).alwaysEat().effect(() -> new MobEffectInstance(EffectRegistry.COLD_FOOD.get(), 300), 1.0f).build();

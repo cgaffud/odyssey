@@ -174,6 +174,37 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ZEPHYR_FABRIC = ITEMS.register("zephyr_fabric", ()-> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
 
     // # Food
+
+    // ## Seared Variants
+    public static final RegistryObject<Item> SEARED_PORKCHOP = ITEMS.register("seared_porkchop", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SEARED_PORKCHOP)));
+    public static final RegistryObject<Item> SEARED_BEEF = ITEMS.register("seared_beef", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SEARED_BEEF)));
+    public static final RegistryObject<Item> SEARED_MUTTON = ITEMS.register("seared_mutton", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SEARED_MUTTON)));
+    public static final RegistryObject<Item> SEARED_CHICKEN = ITEMS.register("seared_chicken", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SEARED_CHICKEN)));
+    public static final RegistryObject<Item> SEARED_RABBIT = ITEMS.register("seared_rabbit", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SEARED_RABBIT)));
+    public static final RegistryObject<Item> SEARED_COD = ITEMS.register("seared_cod", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SEARED_COD)));
+    public static final RegistryObject<Item> SEARED_SALMON= ITEMS.register("seared_salmon", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SEARED_SALMON)));
+    public static final RegistryObject<Item> SEARED_POTATO = ITEMS.register("seared_potato", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.SEARED_POTATO)));
+
+    public static final RegistryObject<Item> BUTTER = ITEMS.register("butter", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD)));
+
+    public static final RegistryObject<Item> SEED_OIL_BOTTLE = ITEMS.register("seed_oil_bottle", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD)));
+
+    public static final RegistryObject<Item> SALT = ITEMS.register("salt", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD)));
+
+    public static final RegistryObject<Item> BREAD_DOUGH = ITEMS.register("bread_dough", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD)));
+
+    public static final RegistryObject<Item> COOKIE_DOUGH = ITEMS.register("cookie_dough", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD)));
+
+    public static final RegistryObject<Item> COCONUT_COOKIE_DOUGH = ITEMS.register("coconut_cookie_dough", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD)));
+
+    public static final RegistryObject<Item> CAKE_BATTER = ITEMS.register("cake_batter", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD)));
+
+    public static final RegistryObject<Item> CAKE_SPONGE = ITEMS.register("cake_sponge", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD)));
+
+    public static final RegistryObject<Item> ICING = ITEMS.register("icing", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD)));
+
+    public static final RegistryObject<Item> UNBAKED_PUMPKIN_PIE = ITEMS.register("unbaked_pumpkin_pie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD)));
+
     public static final RegistryObject<Item> COCONUT_COOKIE = ITEMS.register("coconut_cookie", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.COCONUT_COOKIE)));
 
     public static final RegistryObject<Item> DRY_NOODLES = ITEMS.register("dry_noodles", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.NOODLES)));

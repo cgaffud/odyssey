@@ -72,6 +72,7 @@ def colormapPixel(pixel, colormap):
         r,g,b = uncolor(colormap[color1])
     return (r,g,b,a)
 
+# weight of 0 gives same image, weight of 1 gets blacka and white image
 def grayscaleImage(image, weight):
      atEveryPixel(image, lambda pos, pixel: grayscalePixel(pixel, weight))
      return image
@@ -283,11 +284,8 @@ def stitch(images):
 # Hex Fire: redistributeRedAndGreenImage(image, 0.75) (on soul fire)
 # Leather to Parka Hide: recolorImage(image, [0.40,0.475,0.55], [0,0,0])
 
-image1 = openImage(r"C:\Users\18029\Documents\1.19.2\assets\minecraft\textures\entity\elytra.png")
-image2 = openImage(r"C:\Users\18029\Downloads\blue.png")
-image3 = openImage(r"C:\Users\18029\Downloads\tan.png")
-savePath = r"C:\Users\18029\Downloads\glider.png"
-useSameRecolor(image2, image3, image1)
-saveImage(image1, savePath)
+image1 = openImage(r"C:\Users\18029\Documents\1.19.2\assets\minecraft\textures\item\sugar.png")
+grayscaleRecolorImage(image1, [1.0,0.9,0.9], [0,0,0])
+saveImage(image1, r"C:\Users\18029\Documents\odyssey-1.18.2\src\main\resources\assets\oddc\textures\item\salt.png")
 
 print("Done")
