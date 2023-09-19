@@ -50,8 +50,12 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
     protected int maxSwell = 30;
     protected int explosionRadius = 3;
 
+    // This is declared here since SculkCreeper has to rip it out
+    protected final NearestAttackableTargetGoal visionTargetGoal = new NearestAttackableTargetGoal<>(this, Player.class, true);
+
     public OdysseyCreeper(EntityType<? extends OdysseyCreeper> p_i50213_1_, Level p_i50213_2_) {
         super(p_i50213_1_, p_i50213_2_);
+        this.targetSelector.addGoal(1, visionTargetGoal);
     }
 
     protected void registerGoals() {
@@ -63,7 +67,6 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
     }
 
@@ -152,6 +155,7 @@ public class OdysseyCreeper extends Monster implements PowerableMob {
             this.ignite();
         }
         this.setBaby(pCompound.getBoolean("IsBaby"));
+        this.targetSelector.addGoal(1, visionTargetGoal);
     }
 
     @Nullable
