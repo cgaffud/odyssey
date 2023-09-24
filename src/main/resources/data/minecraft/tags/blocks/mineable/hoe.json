@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "#minecraft:leaves",
-    "oddc:leather_bundle"
+    "oddc:leather_bundle",
+    "oddc:grave"
   ]
 }

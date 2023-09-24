@@ -150,6 +150,7 @@ public class Aspects {
     // ## Buffs
     public static final IntegerAspect ADDITIONAL_MOB_HARVEST_LEVEL = new IntegerAspect("additional_mob_harvest_level", AspectTooltipFunctions.NUMBER_ADDITION);
     public static final FloatAspect APPETITE = new FloatAspect("appetite", AspectTooltipFunctions.PERCENTAGE_ADDITION);
+    public static final BooleanAspect GRAVE = new BooleanAspect("grave");
 
     // # Other
     public static final IntegerAspect TELEPORTATION_IMMUNITY = new IntegerAspect("teleportation_immunity", 0.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, true, false);

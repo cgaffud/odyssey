@@ -139,6 +139,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATWOOD_VINES = ITEMS.register("greatwood_vine", () -> new BlockItem(BlockRegistry.GREATWOOD_VINE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> GREATROOT = ITEMS.register("greatroot", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
 
+    public static final RegistryObject<Item> GRAVE = ITEMS.register("grave", () -> new BlockItem(BlockRegistry.GRAVE.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
+
     // # Materials
     public static final RegistryObject<Item> COCONUT_WHITE = ITEMS.register("coconut_white", () -> new ItemNameBlockItem(BlockRegistry.COCONUT.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
     public static final RegistryObject<Item> FEATHER_BUNDLE = ITEMS.register("feather_bundle", () -> new Item((new Item.Properties()).tab(OdysseyCreativeModeTab.MATERIALS)));
@@ -190,6 +192,7 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> ICE_CREAM_SUNDAE = ITEMS.register("ice_cream_sundae", () -> new TemperatureFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.ICE_CREAM_SUNDAE), -0.2f, true));
     public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermaBuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1), new AspectInstance(Aspects.APPETITE, 0.25f), new AspectInstance(Aspects.HAS_EATEN_ROCK_CANDY).withDisplaySetting(AspectTooltipDisplaySetting.NEVER)), player -> !AspectUtil.getBuffAspectStrength(player, Aspects.HAS_EATEN_ROCK_CANDY)));
+    public static final RegistryObject<Item> GRAVEBULB_SPORE = ITEMS.register("gravebulb_spore", () -> new PermaBuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance(Aspects.GRAVE), new AspectInstance(Aspects.APPETITE, 0.25f)), player -> !AspectUtil.getBuffAspectStrength(player, Aspects.GRAVE)));
 
     // # Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.COPPER));

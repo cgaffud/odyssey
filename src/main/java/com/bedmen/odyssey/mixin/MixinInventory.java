@@ -2,13 +2,17 @@ package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.block.entity.GraveBlockEntity;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -27,24 +31,36 @@ public abstract class MixinInventory implements Container, Nameable {
         this.player = p_35983_;
     }
 
-    // This function is called on player death whenever keepInventory is not turned on. We convert it to now check if the item is soulbound
-    // and only drop when this is not the case. Item is then transferred to new player in PlayerEvents#onPlayerEventClone
+    // This function is called on player death whenever keepInventory is not turned on. We convert it to now check if the item is soulbound.
+    // If so, it is returned to player with appropriate damage dealt. Then we check if player produces grave on death. If not, drop item.
+    // Soulbound items get transferred to new player in PlayerEvents#onPlayerEventClone
     public void dropAll() {
-        for(List<ItemStack> list : this.compartments) {
-            for(int i = 0; i < list.size(); ++i) {
-                ItemStack itemstack = list.get(i);
-                if (!itemstack.isEmpty()) {
-                    float soulboundAmount = AspectUtil.getItemStackAspectStrength(itemstack, Aspects.SOULBOUND);
-                    if (soulboundAmount > 0) {
-                        int soulboundPenality = itemstack.getMaxDamage() / ((int) soulboundAmount + 1);
-                        itemstack.hurtAndBreak(soulboundPenality, this.player, (player) -> {});
-                    } else {
-                        this.player.drop(itemstack, true, false);
-                        list.set(i, ItemStack.EMPTY);
-                    }
-                }
-            }
+        BlockEntity blockEntity = null;
+        if (AspectUtil.getBuffAspectStrength(this.player, Aspects.GRAVE)) {
+            this.player.level.setBlock(this.player.blockPosition(), BlockRegistry.GRAVE.get().defaultBlockState(), 2);
+            blockEntity = this.player.level.getBlockEntity(this.player.blockPosition());
         }
 
+        int totalTicker = 0;
+        for(List<ItemStack> list : this.compartments) {
+            for (int i = 0; i < list.size(); i++) {
+                ItemStack itemstack = list.get(i);
+                float soulboundAmount = itemstack.isEmpty() ? 0 : AspectUtil.getItemStackAspectStrength(itemstack, Aspects.SOULBOUND);
+                if (soulboundAmount > 0) {
+                    int soulboundPenality = itemstack.getMaxDamage() / ((int) soulboundAmount + 1);
+                    // This should be a safe cast - fn only runs serverside
+                    itemstack.hurt(soulboundPenality, this.player.getRandom(), (ServerPlayer)this.player);
+                } else {
+                    // Sanity check
+                    if (blockEntity instanceof GraveBlockEntity graveBlockEntity) {
+                        graveBlockEntity.setItem(totalTicker, itemstack);
+                    } else {
+                        this.player.drop(itemstack, true, false);
+                    }
+                    list.set(i, ItemStack.EMPTY);
+                }
+                totalTicker++;
+            }
+        }
     }
 }
