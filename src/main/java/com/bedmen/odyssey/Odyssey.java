@@ -119,6 +119,7 @@ public class Odyssey
         event.put(EntityTypeRegistry.OVERGROWN_SKELETON.get(), OvergrownSkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.OVERGROWN_CREEPER.get(), OvergrownCreeper.createAttributes().build());
         event.put(EntityTypeRegistry.SCULK_CREEPER.get(), SculkCreeper.createAttributes().build());
+        event.put(EntityTypeRegistry.SCULK_SPIDER.get(), SculkSpider.createAttributes().build());
         event.put(EntityTypeRegistry.SKELETON.get(), OdysseySkeleton.createAttributes().build());
         event.put(EntityTypeRegistry.STRAY.get(), Stray.createAttributes().build());
         event.put(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeleton.createAttributes().build());

@@ -4,18 +4,18 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.entity.ai.SculkFollowSoundsGoal;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.warden.AngerManagement;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SculkShriekerBlock;
-import net.minecraft.world.level.block.SculkSpreader;
 import net.minecraft.world.level.gameevent.DynamicGameEventListener;
 import net.minecraft.world.level.gameevent.EntityPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -26,36 +26,31 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.function.BiConsumer;
 
-public class SculkCreeper extends OdysseyCreeper implements VibrationListener.VibrationListenerConfig, SculkMob {
+public class SculkSpider extends Spider implements VibrationListener.VibrationListenerConfig, SculkMob{
 
     // This is required to get vibrations
     private final DynamicGameEventListener<VibrationListener> dynamicGameEventListener;
     // Sorts targets via who triggers the most vibrations
     private AngerManagement angerManagement = new AngerManagement(this::canTargetEntity, Collections.emptyList());
-    // Spreads SculkMob stuff
-    private final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader();
     // Copy of MemoryModuleType.DISTURBANCE_LOCATION from Warden Brain
     public BlockPos sourceLocation = null;
-    // Magic Numbers controlling SculkMob Spread
-    private static final int SCULK_SPREADERS_CHARGE = 10;
-    private static final int SCULK_SPREADERS_PUMP_AMOUNT = 20;
 
-
-    public SculkCreeper(EntityType<? extends OdysseyCreeper> p_i50213_1_, Level p_i50213_2_) {
-        super(p_i50213_1_, p_i50213_2_);
+    public SculkSpider(EntityType<? extends Spider> p_33786_, Level p_33787_) {
+        super(p_33786_, p_33787_);
         this.dynamicGameEventListener = new DynamicGameEventListener<>(new VibrationListener(new EntityPositionSource(this, this.getEyeHeight()), 16, this, null, 0.0F, 0));
-        this.maxSwell = 20;
-        this.explosionRadius = 3;
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(5, new SculkFollowSoundsGoal(this,1.0D));
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return OdysseyCreeper.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.5).add(Attributes.FOLLOW_RANGE, 35);
+        // Spider is readonly, but maybe we can rip out these goals before they start?
+        this.targetSelector.getAvailableGoals().stream().filter((wrappedGoal) -> {
+            return wrappedGoal.getPriority() > 1;
+        }).filter(WrappedGoal::isRunning).forEach(WrappedGoal::stop);
+        this.targetSelector.getAvailableGoals().removeIf((wrappedGoal) -> {
+            return wrappedGoal.getPriority() > 1;
+        });
+        this.goalSelector.addGoal(5, new SculkFollowSoundsGoal(this, 1.0D));
     }
 
     // Stops vibrations from being emitted from mob movement
@@ -78,8 +73,7 @@ public class SculkCreeper extends OdysseyCreeper implements VibrationListener.Vi
 
     @Override
     protected void customServerAiStep() {
-        this.targetSelector.removeGoal(this.visionTargetGoal);
-        System.out.println(this.getTarget());
+//        this.targetSelector.removeGoal(this.visionTargetGoal);
         this.setTargetIfAngry();
     }
 
@@ -91,27 +85,13 @@ public class SculkCreeper extends OdysseyCreeper implements VibrationListener.Vi
         super.tick();
     }
 
-    @Override
-    protected void explodeCreeper() {
-        super.explodeCreeper();
-        // Find nearest non-air block post explosion
-        BlockPos.MutableBlockPos mutableBlockPos = this.blockPosition().mutable();
-        int y = mutableBlockPos.getY();
-        while ((y-mutableBlockPos.getY() <= this.explosionRadius) && this.level.isEmptyBlock(mutableBlockPos))
-            mutableBlockPos.move(Direction.DOWN);
-
-        BlockPos pos = mutableBlockPos.immutable();
-
-        // Load spreaders
-        this.sculkSpreader.addCursors(pos.above(), SCULK_SPREADERS_CHARGE);
-
-        // Spread sculk before entity is fully discarded
-        for (int i = 0 ; i < SCULK_SPREADERS_PUMP_AMOUNT; i++)
-            this.sculkSpreader.updateCursors(this.getLevel(), pos, this.getRandom(), true);
-
-        // Sometimes put a shrieker down
-        if (this.getRandom().nextBoolean() && this.getRandom().nextBoolean() && (!this.level.isClientSide()))
-            (this.level).setBlock(pos.above(), Blocks.SCULK_SHRIEKER.defaultBlockState().setValue(SculkShriekerBlock.CAN_SUMMON, true),2);
+    public boolean doHurtTarget(Entity entity) {
+        boolean flag = super.doHurtTarget(entity);
+        if (flag && entity instanceof LivingEntity) {
+            float f = this.level.getCurrentDifficultyAt(this.blockPosition()).getEffectiveDifficulty();
+            ((LivingEntity)entity).addEffect(new MobEffectInstance(MobEffects.DARKNESS, 70 * (int)f), this);
+        }
+        return flag;
     }
 
     @Override
@@ -121,7 +101,6 @@ public class SculkCreeper extends OdysseyCreeper implements VibrationListener.Vi
             pCompound.put("listener", p_219418_);
         });
         this.addSculkSaveData(pCompound);
-        this.sculkSpreader.save(pCompound);
     }
 
     @Override
@@ -133,17 +112,15 @@ public class SculkCreeper extends OdysseyCreeper implements VibrationListener.Vi
             });
         }
         this.readSculkSaveData(pCompound);
-        this.sculkSpreader.load(pCompound);
     }
 
-    // Only listen to alive possible targets
     @Override
     public boolean shouldListen(ServerLevel p_223872_, GameEventListener p_223873_, BlockPos p_223874_, GameEvent p_223875_, GameEvent.Context p_223876_) {
-        return this.sculkShouldListen(p_223872_, p_223873_, p_223874_, p_223875_, p_223876_);
+        return this.sculkShouldListen(p_223872_,p_223873_,p_223874_,p_223875_,p_223876_);
     }
 
     @Override
-    public void onSignalReceive(ServerLevel p_223865_, GameEventListener p_223866_, BlockPos sourcePos, GameEvent p_223868_, @Nullable Entity source, @Nullable Entity projectile, float p_223871_) {
-        this.sculkOnSignalReceive(p_223865_, p_223866_, sourcePos, p_223868_, source, projectile, p_223871_);
+    public void onSignalReceive(ServerLevel p_223865_, GameEventListener p_223866_, BlockPos p_223867_, GameEvent p_223868_, @Nullable Entity p_223869_, @Nullable Entity p_223870_, float p_223871_) {
+        this.sculkOnSignalReceive(p_223865_,p_223866_,p_223867_,p_223868_,p_223869_,p_223870_,p_223871_);
     }
 }

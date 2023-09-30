@@ -305,6 +305,15 @@ public abstract class OdysseyAbstractSkeleton extends AbstractSkeleton implement
         return null;
     }
 
+    protected boolean isSunSensitive() {
+        return true;
+    }
+
+    @Override
+    protected boolean isSunBurnTick() {
+        return super.isSunBurnTick() && this.isSunSensitive();
+    }
+
     public void performBoomerangAttack(LivingEntity target) {
         if(this.hasBoomerang()){
             InteractionHand hand = this.getBoomerangHand();

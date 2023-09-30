@@ -38,6 +38,10 @@ public class EncasedSkeleton extends OdysseySkeleton implements Encased {
         return this.hurt(this, damageSource, amount);
     }
 
+    protected boolean isSunSensitive() {
+        return !this.hasStoneArmor();
+    }
+
     @Override
     public boolean hurtWithoutStoneArmor(DamageSource damageSource, float amount) {
         return super.hurt(damageSource, amount);
