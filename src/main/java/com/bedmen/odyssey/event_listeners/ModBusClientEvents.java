@@ -127,7 +127,7 @@ public class ModBusClientEvents {
             EntityRenderers.register(EntityTypeRegistry.OVERGROWN_ZOMBIE.get(), OvergrownZombieRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.OVERGROWN_SKELETON.get(), OvergrownSkeletonRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.OVERGROWN_CREEPER.get(), OvergrownCreeperRenderer::new);
-            EntityRenderers.register(EntityTypeRegistry.SCULK_CREEPER.get(), OdysseyCreeperRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.SCULK_CREEPER.get(), SculkCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.SCULK_SPIDER.get(), SpiderRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.SKELETON.get(), OdysseySkeletonRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.STRAY.get(), OdysseyStrayRenderer::new);
@@ -267,14 +267,6 @@ public class ModBusClientEvents {
         event.addSprite(PermafrostConduitRenderer.WIND_RESOURCE_LOCATION);
         event.addSprite(PermafrostConduitRenderer.VERTICAL_WIND_RESOURCE_LOCATION);
         event.addSprite(PermafrostConduitRenderer.OPEN_EYE_RESOURCE_LOCATION);
-
-        /**
-         *
-         event.addSprite(PermafrostConduitRenderer.ACTIVE_SHELL_TEXTURE.texture());
-         event.addSprite(PermafrostConduitRenderer.WIND_TEXTURE.texture());
-         event.addSprite(PermafrostConduitRenderer.VERTICAL_WIND_TEXTURE.texture());
-         event.addSprite(PermafrostConduitRenderer.OPEN_EYE_TEXTURE.texture());
-         */
     }
 
     @SubscribeEvent
@@ -299,6 +291,7 @@ public class ModBusClientEvents {
         event.registerLayerDefinition(BladeSpiderModel.LAYER_LOCATION, BladeSpiderModel::createBodyLayer);
         event.registerLayerDefinition(ForgottenModel.LAYER_LOCATION, ForgottenModel::createBodyLayer);
         event.registerLayerDefinition(DripstoneCreeperModel.LAYER_LOCATION, DripstoneCreeperModel::createBodyLayer);
+        event.registerLayerDefinition(SculkCreeperModel.LAYER_LOCATION, SculkCreeperModel::createBodyLayer);
         event.registerLayerDefinition(PermafrostBigIcicleModel.LAYER_LOCATION, PermafrostBigIcicleModel::createBodyLayer);
         event.registerLayerDefinition(PermafrostSpawnerIcicleModel.LAYER_LOCATION, PermafrostSpawnerIcicleModel::createBodyLayer);
         event.registerLayerDefinition(PermafrostWraithModel.LAYER_LOCATION, PermafrostWraithModel::createBodyLayer);
