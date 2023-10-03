@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.warden.AngerLevel;
 import net.minecraft.world.entity.monster.warden.AngerManagement;
@@ -25,6 +26,8 @@ public interface SculkMob{
     void setAngerManagement(AngerManagement angerManagement);
     BlockPos getSourceBlockPos();
     void setSourceBlockPos(BlockPos blockPos);
+    int listenTicker();
+    void setListenTicker(int listen);
 
     default Mob asMob(){
         return (Mob)this;
@@ -45,6 +48,7 @@ public interface SculkMob{
     }
 
     default void setTargetIfAngry() {
+        setListenTicker(Mth.clamp(0, listenTicker()+1, 20));
         if (this.asMob().tickCount % 20 == 0) {
             this.getAngerManagement().tick((ServerLevel)this.asMob().level , this::canTargetEntity);
             if (this.getAngerLevel().isAngry()) {
@@ -56,14 +60,15 @@ public interface SculkMob{
     @Contract("null->false")
     default boolean canTargetEntity(@javax.annotation.Nullable Entity p_219386_) {
         if (p_219386_ instanceof LivingEntity livingentity) {
-            return this.asMob().level == p_219386_.level && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(p_219386_) && !this.asMob().isAlliedTo(p_219386_) && livingentity.getType() != EntityType.ARMOR_STAND && livingentity.getType() != EntityType.WARDEN && !livingentity.isInvulnerable() && !livingentity.isDeadOrDying() && this.asMob().level.getWorldBorder().isWithinBounds(livingentity.getBoundingBox());
+            return this.asMob().level == p_219386_.level && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(p_219386_) && !this.asMob().isAlliedTo(p_219386_) && livingentity.getType() != EntityType.ARMOR_STAND && livingentity.getType() != EntityType.WARDEN && !(livingentity instanceof SculkMob) && !livingentity.isInvulnerable() && !livingentity.isDeadOrDying() && this.asMob().level.getWorldBorder().isWithinBounds(livingentity.getBoundingBox());
         }
 
         return false;
     }
 
     default boolean sculkShouldListen(ServerLevel p_223872_, GameEventListener p_223873_, BlockPos p_223874_, GameEvent p_223875_, GameEvent.Context p_223876_) {
-        if (!this.asMob().isNoAi() && !this.asMob().isDeadOrDying()) {
+        if (!this.asMob().isNoAi() && !this.asMob().isDeadOrDying() && (listenTicker() >= 20)) {
+            setListenTicker(0);
             Entity entity = p_223876_.sourceEntity();
             if (entity instanceof LivingEntity livingEntity) {
                 if (!this.canTargetEntity(livingEntity)) {

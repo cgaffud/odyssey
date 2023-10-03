@@ -24,6 +24,7 @@ import net.minecraft.world.level.gameevent.vibrations.VibrationListener;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public class SculkCreeper extends OdysseyCreeper implements VibrationListener.VibrationListenerConfig, SculkMob {
@@ -39,7 +40,8 @@ public class SculkCreeper extends OdysseyCreeper implements VibrationListener.Vi
     // Magic Numbers controlling SculkMob Spread
     private static final int SCULK_SPREADERS_CHARGE = 10;
     private static final int SCULK_SPREADERS_PUMP_AMOUNT = 20;
-
+    private static final List<EntityType> ATTACK_ENTITYTYPE_WHITELIST = List.of(EntityType.PLAYER, EntityType.VILLAGER, EntityType.PILLAGER);
+    private int listenTicker;
 
     public SculkCreeper(EntityType<? extends OdysseyCreeper> p_i50213_1_, Level p_i50213_2_) {
         super(p_i50213_1_, p_i50213_2_);
@@ -68,6 +70,9 @@ public class SculkCreeper extends OdysseyCreeper implements VibrationListener.Vi
     public void setAngerManagement(AngerManagement angerManagement) {this.angerManagement = angerManagement;}
     public BlockPos getSourceBlockPos() {return this.sourceLocation;}
     public void setSourceBlockPos(BlockPos blockPos) {this.sourceLocation = blockPos;}
+    public int listenTicker() { return this.listenTicker; }
+    public void setListenTicker(int listen) { this.listenTicker = listen;}
+
 
     public void updateDynamicGameEventListener(BiConsumer<DynamicGameEventListener<?>, ServerLevel> p_219413_) {
         Level level = this.level;
@@ -79,7 +84,6 @@ public class SculkCreeper extends OdysseyCreeper implements VibrationListener.Vi
     @Override
     protected void customServerAiStep() {
         this.targetSelector.removeGoal(this.visionTargetGoal);
-        System.out.println(this.getTarget());
         this.setTargetIfAngry();
     }
 
@@ -90,6 +94,13 @@ public class SculkCreeper extends OdysseyCreeper implements VibrationListener.Vi
         }
         super.tick();
     }
+
+    // Change to only target Builder-like individuals (illager, villager, player)
+    @Override
+    public boolean canTargetEntity(@javax.annotation.Nullable Entity entity) {
+        return SculkMob.super.canTargetEntity(entity) && ((entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) || ATTACK_ENTITYTYPE_WHITELIST.contains(entity.getType()));
+    }
+
 
     @Override
     protected void explodeCreeper() {

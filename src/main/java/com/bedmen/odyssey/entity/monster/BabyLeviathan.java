@@ -45,6 +45,11 @@ public class BabyLeviathan extends Monster {
         this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
     }
 
+    @Override
+    public boolean dampensVibrations() {
+        return true;
+    }
+
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.3D);
     }

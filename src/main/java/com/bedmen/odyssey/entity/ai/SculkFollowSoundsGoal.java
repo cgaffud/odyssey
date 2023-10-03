@@ -46,7 +46,6 @@ public class SculkFollowSoundsGoal extends Goal {
         Vec3 target = new Vec3(this.sculkMob.getSourceBlockPos().getX(), this.sculkMob.getSourceBlockPos().getY(), this.sculkMob.getSourceBlockPos().getZ());
         this.mob.getLookControl().setLookAt(target);
         if (path == null || !path.getTarget().equals(this.sculkMob.getSourceBlockPos())) {
-            System.out.println("Pathfinding Updated");
             path = this.mob.getNavigation().createPath(this.sculkMob.getSourceBlockPos(), 0);
         }
         this.mob.getNavigation().moveTo(path, this.speedModifier);

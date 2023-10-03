@@ -36,6 +36,7 @@ public class SculkSpider extends Spider implements VibrationListener.VibrationLi
     private AngerManagement angerManagement = new AngerManagement(this::canTargetEntity, Collections.emptyList());
     // Copy of MemoryModuleType.DISTURBANCE_LOCATION from Warden Brain
     public BlockPos sourceLocation = null;
+    private int listenTicker = 0;
 
     public SculkSpider(EntityType<? extends Spider> p_33786_, Level p_33787_) {
         super(p_33786_, p_33787_);
@@ -65,6 +66,8 @@ public class SculkSpider extends Spider implements VibrationListener.VibrationLi
     public void setAngerManagement(AngerManagement angerManagement) {this.angerManagement = angerManagement;}
     public BlockPos getSourceBlockPos() {return this.sourceLocation;}
     public void setSourceBlockPos(BlockPos blockPos) {this.sourceLocation = blockPos;}
+    public int listenTicker() { return this.listenTicker; }
+    public void setListenTicker(int listen) { this.listenTicker = listen;}
 
     public void updateDynamicGameEventListener(BiConsumer<DynamicGameEventListener<?>, ServerLevel> p_219413_) {
         Level level = this.level;
