@@ -1,0 +1,18 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "minecraft:deep_dark",
+  "spawners":[
+    {
+      "type": "oddc:sculk_creeper",
+      "weight": 50,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "oddc:sculk_spider",
+      "weight": 50,
+      "minCount": 1,
+      "maxCount": 2
+    }
+  ]
+}

@@ -104,12 +104,12 @@ public interface SculkMob{
     }
 
 
-
     default void addSculkSaveData(CompoundTag pCompound) {
         AngerManagement.codec(this::canTargetEntity).encodeStart(NbtOps.INSTANCE, this.getAngerManagement()).resultOrPartial(Odyssey.LOGGER::error).ifPresent((p_219437_) -> {
             pCompound.put("anger", p_219437_);
         });
-        pCompound.putIntArray("pos", new int[]{this.getSourceBlockPos().getX(), this.getSourceBlockPos().getY(), this.getSourceBlockPos().getZ()});
+        if (this.getSourceBlockPos() != null)
+            pCompound.putIntArray("pos", new int[]{this.getSourceBlockPos().getX(), this.getSourceBlockPos().getY(), this.getSourceBlockPos().getZ()});
     }
 
     default void readSculkSaveData(CompoundTag pCompound) {

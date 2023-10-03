@@ -12,6 +12,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.warden.AngerManagement;
@@ -83,6 +85,10 @@ public class SculkSpider extends Spider implements VibrationListener.VibrationLi
             this.dynamicGameEventListener.getListener().tick(serverlevel);
         }
         super.tick();
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Spider.createAttributes().add(Attributes.MAX_HEALTH, 40.0D).add(Attributes.MOVEMENT_SPEED, 0.35D).add(Attributes.ATTACK_DAMAGE, 4D);
     }
 
     public boolean doHurtTarget(Entity entity) {

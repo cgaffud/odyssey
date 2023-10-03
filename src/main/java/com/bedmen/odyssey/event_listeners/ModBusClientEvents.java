@@ -37,6 +37,7 @@ import net.minecraft.client.renderer.entity.PolarBearRenderer;
 import net.minecraft.client.renderer.entity.SpiderRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -128,7 +129,7 @@ public class ModBusClientEvents {
             EntityRenderers.register(EntityTypeRegistry.OVERGROWN_SKELETON.get(), OvergrownSkeletonRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.OVERGROWN_CREEPER.get(), OvergrownCreeperRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.SCULK_CREEPER.get(), SculkCreeperRenderer::new);
-            EntityRenderers.register(EntityTypeRegistry.SCULK_SPIDER.get(), SpiderRenderer::new);
+            EntityRenderers.register(EntityTypeRegistry.SCULK_SPIDER.get(), SculkSpiderRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.SKELETON.get(), OdysseySkeletonRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.STRAY.get(), OdysseyStrayRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), DungeonSkeletonRenderer::new);
@@ -292,6 +293,7 @@ public class ModBusClientEvents {
         event.registerLayerDefinition(ForgottenModel.LAYER_LOCATION, ForgottenModel::createBodyLayer);
         event.registerLayerDefinition(DripstoneCreeperModel.LAYER_LOCATION, DripstoneCreeperModel::createBodyLayer);
         event.registerLayerDefinition(SculkCreeperModel.LAYER_LOCATION, SculkCreeperModel::createBodyLayer);
+        event.registerLayerDefinition(SculkSpiderModel.LAYER_LOCATION, SculkSpiderModel::createBodyLayer);
         event.registerLayerDefinition(PermafrostBigIcicleModel.LAYER_LOCATION, PermafrostBigIcicleModel::createBodyLayer);
         event.registerLayerDefinition(PermafrostSpawnerIcicleModel.LAYER_LOCATION, PermafrostSpawnerIcicleModel::createBodyLayer);
         event.registerLayerDefinition(PermafrostWraithModel.LAYER_LOCATION, PermafrostWraithModel::createBodyLayer);
