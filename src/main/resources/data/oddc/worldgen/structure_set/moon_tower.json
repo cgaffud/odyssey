@@ -1,8 +1,12 @@
 {
   "structures": [
     {
-      "structure": "oddc:moon_tower",
+      "structure": "oddc:moon_tower_ruins",
       "weight": 1
+    },
+    {
+      "structure": "oddc:moon_tower",
+      "weight": 2
     }
   ],
   "placement": {

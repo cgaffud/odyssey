@@ -22,6 +22,7 @@ public class StructureTypeRegistry {
     public static final RegistryObject<StructureType<?>> WEAVER_COLONY = STRUCTURE_TYPE.register("weaver_colony", () -> typeConvert(WeaverColonyStructure.CODEC));
     public static final RegistryObject<StructureType<?>> BARN = STRUCTURE_TYPE.register("barn", () -> typeConvert(BarnStructure.CODEC));
     public static final RegistryObject<StructureType<?>> MOON_TOWER = STRUCTURE_TYPE.register("moon_tower", () -> typeConvert(MoonTowerStructure.CODEC));
+    public static final RegistryObject<StructureType<?>> MOON_TOWER_RUINS = STRUCTURE_TYPE.register("moon_tower_ruins", () -> typeConvert(MoonTowerRuinsStructure.CODEC));
     public static final RegistryObject<StructureType<?>> COVEN_HUT = STRUCTURE_TYPE.register("coven_hut", () -> typeConvert(CovenHutStructure.CODEC));
 
 
