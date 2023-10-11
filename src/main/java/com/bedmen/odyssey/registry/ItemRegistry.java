@@ -88,6 +88,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CHIPPED_ANVIL = ITEMS.register("chipped_anvil", () -> new BlockItem(BlockRegistry.CHIPPED_ANVIL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
     public static final RegistryObject<Item> DAMAGED_ANVIL = ITEMS.register("damaged_anvil", () -> new BlockItem(BlockRegistry.DAMAGED_ANVIL.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
 
+    public static final RegistryObject<Item> ABSTRACT_CRAFTER = ITEMS.register("abstract_crafter", () -> new BlockItem(BlockRegistry.ABSTRACT_CRAFTER.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.BUILDING_BLOCKS)));
+
     // # Wood and Plants
     public static final RegistryObject<Item> PRAIRIE_GRASS = ITEMS.register("prairie_grass", () -> new TripleHighBlockItem(BlockRegistry.PRAIRIE_GRASS.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
     public static final RegistryObject<Item> CLOVER = ITEMS.register("clover", () -> new BlockItem(BlockRegistry.CLOVER.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.WOOD)));
