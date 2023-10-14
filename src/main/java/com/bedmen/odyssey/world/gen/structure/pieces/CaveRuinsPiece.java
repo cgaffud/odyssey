@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.block.entity.TreasureChestBlockEntity;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
@@ -21,10 +22,11 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
@@ -33,7 +35,9 @@ import java.util.List;
 
 public class CaveRuinsPiece extends HeightAdjustingPiece{
 
-    private int id = 1;
+    private int ruinsId = 1;
+    private static final String RUINS_ID_TAG = "RuinsID";
+
     public static final SimpleWeightedRandomList<Integer> ID_LIST = SimpleWeightedRandomList.<Integer>builder()
             .add(0, 2)
             .add(1, 6)
@@ -66,14 +70,20 @@ public class CaveRuinsPiece extends HeightAdjustingPiece{
             new BlockPos(2, 1, 5)
     );
 
-    public CaveRuinsPiece(StructureTemplateManager structureTemplateManager, BlockPos blockPos, Rotation rotation, int id) {
-        super(StructurePieceTypeRegistry.CAVE_RUINS.get(), 0, structureTemplateManager, STRUCTURE_LOCATIONS[id], STRUCTURE_LOCATIONS[id].toString(), makeSettings(), blockPos, rotation);
+    public CaveRuinsPiece(StructureTemplateManager structureTemplateManager, BlockPos blockPos, Rotation rotation, int ruinsId) {
+        super(StructurePieceTypeRegistry.CAVE_RUINS.get(), 0, structureTemplateManager, STRUCTURE_LOCATIONS[ruinsId], STRUCTURE_LOCATIONS[ruinsId].toString(), makeSettings(), blockPos, rotation);
+        this.ruinsId = ruinsId;
     }
 
     public CaveRuinsPiece(StructureTemplateManager structureTemplateManager, CompoundTag compoundTag) {
         super(StructurePieceTypeRegistry.CAVE_RUINS.get(), compoundTag, structureTemplateManager,  (resourceLocation) -> makeSettings());
+        this.ruinsId = compoundTag.getInt(RUINS_ID_TAG);
     }
 
+    protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag compoundTag) {
+        super.addAdditionalSaveData(context, compoundTag);
+        compoundTag.putInt(RUINS_ID_TAG, this.ruinsId);
+    }
 
     @Override
     protected boolean updateHeightPosition(LevelAccessor levelAccessor) {
@@ -125,11 +135,11 @@ public class CaveRuinsPiece extends HeightAdjustingPiece{
 
     @Override
     protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
-        BlockPos chestBlockPos = WorldGenUtil.getWorldPosition(RELATIVE_CHEST_FROM_ID.get(id), this.templatePosition, this.placeSettings);
+        BlockPos chestBlockPos = WorldGenUtil.getWorldPosition(RELATIVE_CHEST_FROM_ID.get(this.ruinsId), this.templatePosition, this.placeSettings);
         BlockEntity blockEntity = worldGenLevel.getBlockEntity(chestBlockPos);
-        if (blockEntity instanceof ChestBlockEntity chestBlockEntity){
+        if (blockEntity instanceof TreasureChestBlockEntity){
             ResourceLocation lootTable = OdysseyLootTables.COPPER_TREASURE_CHEST;
-            chestBlockEntity.setLootTable(lootTable, randomSource.nextLong());
+            RandomizableContainerBlockEntity.setLootTable(worldGenLevel, randomSource, chestBlockPos, lootTable);
         }
     }
 
