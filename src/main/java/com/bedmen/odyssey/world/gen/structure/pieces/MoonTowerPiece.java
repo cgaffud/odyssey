@@ -32,7 +32,8 @@ import java.util.function.BiConsumer;
 
 public class MoonTowerPiece extends DungeonlessMoonTowerPiece {
 
-    public static final SimpleWeightedRandomList<ResourceLocation> STRUCTURE_LOCATIONS = SimpleWeightedRandomList.<ResourceLocation>builder().add(new ResourceLocation(Odyssey.MOD_ID,"moon_tower"), 3)
+    public static final SimpleWeightedRandomList<ResourceLocation> STRUCTURE_LOCATIONS = SimpleWeightedRandomList.<ResourceLocation>builder()
+            .add(new ResourceLocation(Odyssey.MOD_ID,"moon_tower"), 3)
             .add(new ResourceLocation(Odyssey.MOD_ID,"moon_tower_2"), 1).build();
 
     private static final List<BlockPos> RELATIVE_CHESTS = List.of(

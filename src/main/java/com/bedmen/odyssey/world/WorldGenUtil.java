@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class WorldGenUtil {
 
-    public static boolean isEmpty(WorldGenLevel worldgenlevel, BlockPos blockPos){
+    public static boolean isEmpty(LevelAccessor worldgenlevel, BlockPos blockPos){
         return (worldgenlevel.isEmptyBlock(blockPos) || worldgenlevel.getBlockState(blockPos).getCollisionShape(worldgenlevel, blockPos).isEmpty()) && worldgenlevel.getBlockState(blockPos).getFluidState().isEmpty();
     }
 
@@ -28,7 +29,7 @@ public class WorldGenUtil {
         return (level.isEmptyBlock(blockPos) || level.getBlockState(blockPos).getCollisionShape(level, blockPos).isEmpty()) && level.getBlockState(blockPos).getFluidState().isEmpty();
     }
 
-    public static boolean isSolid(WorldGenLevel worldgenlevel, BlockPos blockPos){
+    public static boolean isSolid(LevelAccessor worldgenlevel, BlockPos blockPos){
         BlockState blockState = worldgenlevel.getBlockState(blockPos);
         return !(worldgenlevel.isEmptyBlock(blockPos) || blockState.getCollisionShape(worldgenlevel, blockPos).isEmpty() || !blockState.getFluidState().isEmpty());
     }
