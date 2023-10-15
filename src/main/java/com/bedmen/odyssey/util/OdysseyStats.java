@@ -15,6 +15,8 @@ public class OdysseyStats {
     public static final ResourceLocation INTERACT_WITH_ODYSSEY_GRINDSTONE = makeCustomStat("interact_with_odyssey_grindstone", StatFormatter.DEFAULT);
     public static final ResourceLocation INTERACT_WITH_ODYSSEY_ANVIL = makeCustomStat("interact_with_odyssey_anvil", StatFormatter.DEFAULT);
 
+    public static final ResourceLocation INTERACT_WITH_ABSTRACT_CRAFTER = makeCustomStat("interact_with_abstract_crafter", StatFormatter.DEFAULT);
+
     public static ResourceLocation makeCustomStat(String s, StatFormatter statFormatter) {
         ResourceLocation resourcelocation = new ResourceLocation(Odyssey.MOD_ID, s);
         Registry.register(Registry.CUSTOM_STAT, s, resourcelocation);

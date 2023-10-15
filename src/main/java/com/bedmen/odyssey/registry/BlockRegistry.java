@@ -134,7 +134,7 @@ public class BlockRegistry {
         return 15;
     }).sound(SoundType.WOOL)));
 
-    public static final RegistryObject<Block> ABSTRACT_CRAFTER = BLOCKS.register("abstract_crafter", () -> new Block(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(4.0F, 6.0F).sound(SoundType.METAL)));
+    public static final RegistryObject<Block> ABSTRACT_CRAFTER = BLOCKS.register("abstract_crafter", () -> new AbstractCrafterBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(4.0F, 6.0F).sound(SoundType.METAL)));
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

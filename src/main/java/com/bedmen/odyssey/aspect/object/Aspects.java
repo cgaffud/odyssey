@@ -158,6 +158,12 @@ public class Aspects {
     public static final FloatAspect WARMTH = new FloatAspect("warmth", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, true);
     public static final FloatAspect COOLING = new FloatAspect("cooling", 1.0f, AspectTooltipFunctions.NUMBER_ADDITION, AspectItemPredicates.NONE, true);
 
+    // # Crafting Aspects
+    public static final CraftingAspect ITEM_SLOT = new CraftingAspect("item_slot", 1.0f);
+    public static final CraftingAspect HEAT_SLOT = new CraftingAspect("heat_slot", 1.0f);
+    public static final CraftingAspect FUEL_BURNER = new CraftingAspect("fuel_burner", 1.0f);
+
+
     public static float getTrueSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
         return getSkyBoost(pos, level) * (time < 12000L ? 1.0f : 0.0f);

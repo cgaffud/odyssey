@@ -8,7 +8,6 @@ import com.bedmen.odyssey.inventory.AlloyFurnaceMenu;
 import com.bedmen.odyssey.inventory.RecyclingFurnaceMenu;
 import com.bedmen.odyssey.inventory.StitchingMenu;
 import com.bedmen.odyssey.plugins.jei.categories.*;
-import com.bedmen.odyssey.recipes.object.*;
 import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.ContainerRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -18,16 +17,9 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
-import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.BlastFurnaceMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
-
-import javax.annotation.Nullable;
 
 @JeiPlugin
 public class OdysseyJEI implements IModPlugin {

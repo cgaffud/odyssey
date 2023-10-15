@@ -25,12 +25,7 @@ public class ContainerRegistry {
     public static final RegistryObject<MenuType<AlloyFurnaceMenu>> ALLOY_FURNACE = CONTAINER.register("alloy_furnace", () -> new MenuType<AlloyFurnaceMenu>(AlloyFurnaceMenu::new));
     public static final RegistryObject<MenuType<OdysseyGrindstoneMenu>> GRINDSTONE = CONTAINER.register("grindstone", () -> new MenuType<OdysseyGrindstoneMenu>(OdysseyGrindstoneMenu::new));
     public static final RegistryObject<MenuType<OdysseyAnvilMenu>> ANVIL = CONTAINER.register("anvil", () -> new MenuType<OdysseyAnvilMenu>(OdysseyAnvilMenu::new));
-//    public static final RegistryObject<MenuType<OdysseyBeaconContainer>> BEACON = CONTAINER.register("beacon", () -> new MenuType<OdysseyBeaconContainer>(OdysseyBeaconContainer::new));
-//    public static final RegistryObject<MenuType<OdysseySmithingTableContainer>> SMITHING_TABLE = CONTAINER.register("smithing_table", () -> new MenuType<OdysseySmithingTableContainer>(OdysseySmithingTableContainer::new));
-//    public static final RegistryObject<MenuType<OdysseyEnchantmentContainer>> ENCHANTMENT = CONTAINER.register("enchantment", () -> new MenuType<OdysseyEnchantmentContainer>(OdysseyEnchantmentContainer::new));
-//    public static final RegistryObject<MenuType<BookshelfContainer>> BOOKSHELF = CONTAINER.register("bookshelf", () -> new MenuType<BookshelfContainer>(BookshelfContainer::new));
-//    public static final RegistryObject<MenuType<RecycleFurnaceContainer>> RECYCLE_FURNACE = CONTAINER.register("recycle_furnace", () -> new MenuType<RecycleFurnaceContainer>(RecycleFurnaceContainer::new));
-//    public static final RegistryObject<MenuType<ResearchTableContainer>> RESEARCH_TABLE = CONTAINER.register("research_table", () -> new MenuType<ResearchTableContainer>(ResearchTableContainer::new));
+    public static final RegistryObject<MenuType<AbstractCrafterMenu>> ABSTRACT_CRAFTER = CONTAINER.register("abstract_crafter", () -> new MenuType<AbstractCrafterMenu>(AbstractCrafterMenu::new));
 
     //Quivers
     public static final RegistryObject<MenuType<QuiverMenu>> ROCKET_BAG_2 = CONTAINER.register("quiver_2", () -> new MenuType<QuiverMenu>(QuiverMenu.QuiverMaker(QuiverType.RABBIT_HIDE_ROCKET_BAG)));

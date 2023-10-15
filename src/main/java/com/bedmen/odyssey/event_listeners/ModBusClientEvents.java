@@ -95,8 +95,6 @@ public class ModBusClientEvents {
             BlockEntityRenderers.register(BlockEntityTypeRegistry.COVEN_HUT_DOOR.get(), CovenHutDoorRenderer::new);
             BlockEntityRenderers.register(BlockEntityTypeRegistry.INFUSION_PEDESTAL.get(), InfusionPedestalRenderer::new);
             BlockEntityRenderers.register(BlockEntityTypeRegistry.INFUSER.get(), InfuserRenderer::new);
-//        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.BEACON.get(), OdysseyBeaconTileEntityRenderer::new);
-//        ClientRegistry.bindTileEntityRenderer(TileEntityTypeRegistry.ENCHANTING_TABLE.get(), OdysseyEnchantmentTableTileEntityRenderer::new);
             BlockEntityRenderers.register(BlockEntityTypeRegistry.TREASURE_CHEST.get(), (context) -> new TreasureChestRenderer<>(TreasureChestType.STERLING_SILVER, context));
 
             //Screens
@@ -105,18 +103,12 @@ public class ModBusClientEvents {
             MenuScreens.register(ContainerRegistry.ALLOY_FURNACE.get(), AlloyFurnaceScreen::new);
             MenuScreens.register(ContainerRegistry.GRINDSTONE.get(), OdysseyGrindstoneScreen::new);
             MenuScreens.register(ContainerRegistry.ANVIL.get(), OdysseyAnvilScreen::new);
-//        ScreenManager.register(ContainerRegistry.BEACON.get(), OdysseyBeaconScreen::new);
-//        ScreenManager.register(ContainerRegistry.SMITHING_TABLE.get(), OdysseySmithingTableScreen::new);
-//        ScreenManager.register(ContainerRegistry.ENCHANTMENT.get(), OdysseyEnchantmentScreen::new);
-//        ScreenManager.register(ContainerRegistry.BOOKSHELF.get(), BookshelfScreen::new);
-//        ScreenManager.register(ContainerRegistry.RESEARCH_TABLE.get(), ResearchTableScreen::new);
+            MenuScreens.register(ContainerRegistry.ABSTRACT_CRAFTER.get(), AbstractCrafterScreen::new);
             for(MenuType<QuiverMenu> containerType : ContainerRegistry.QUIVER_MAP.values()){
                 MenuScreens.register(containerType, QuiverScreen::new);
             }
 
             //Mob Renderings
-//        EntityRenderers.register(EntityTypeRegistry.LUPINE.get(), LupineRenderer::new);
-//        EntityRenderers.registerEntityRenderingHandler(EntityTypeRegistry.ARCTIHORN.get(), ArctihornRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.HUSK.get(), HuskRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.MOON_TOWER_ZOMBIE.get(), DungeonZombieRenderer::new);
             EntityRenderers.register(EntityTypeRegistry.FORGOTTEN.get(), ForgottenRenderer::new);
