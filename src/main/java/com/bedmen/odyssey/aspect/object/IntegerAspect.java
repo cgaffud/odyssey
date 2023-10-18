@@ -1,21 +1,18 @@
 package com.bedmen.odyssey.aspect.object;
 
-import com.bedmen.odyssey.aspect.AspectItemPredicates;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 
 import java.util.function.Predicate;
 
 public class IntegerAspect extends Aspect<Integer> {
     public final boolean hasInfusionPenalty;
-
-    // Buff constructor
-    protected IntegerAspect(String id, AspectTooltipFunction aspectTooltipFunction) {
-        this(id, 0.0f, aspectTooltipFunction, AspectItemPredicates.NONE, true, false);
-    }
-    protected IntegerAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff, boolean hasInfusionPenalty){
-        super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
+    protected IntegerAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean hasInfusionPenalty){
+        super(id, weight, aspectTooltipFunction, itemPredicate);
         this.hasInfusionPenalty = hasInfusionPenalty;
     }
 
@@ -26,7 +23,27 @@ public class IntegerAspect extends Aspect<Integer> {
         return new AspectInstance(this, Integer.max(1, (int)(modifiability / this.weight)));
     }
 
+    public float getWeight(Item item, Integer value) {
+        return this.weight * value;
+    }
+
     public Integer castStrength(float strength){
         return (int)strength;
+    }
+
+    public Tag valueToTag(Integer value) {
+        return IntTag.valueOf(value);
+    }
+
+    public Integer tagToValue(Tag tag) {
+        return ((IntTag)tag).getAsInt();
+    }
+
+    public AspectInstance<Integer> createWeakerInstanceForInfusion(AspectInstance<Integer> aspectInstance) {
+        if(this.hasInfusionPenalty){
+            return new AspectInstance<>(this, Mth.floor(aspectInstance.value * AspectInstance.INFUSION_PENALTY), aspectInstance.aspectTooltipDisplaySetting, aspectInstance.obfuscated);
+        } else {
+            return aspectInstance;
+        }
     }
 }

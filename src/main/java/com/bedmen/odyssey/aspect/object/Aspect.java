@@ -2,6 +2,7 @@ package com.bedmen.odyssey.aspect.object;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
@@ -13,14 +14,12 @@ public abstract class Aspect<T> {
     public final float weight;
     public final AspectTooltipFunction aspectTooltipFunction;
     public final Predicate<Item> itemPredicate;
-    public final boolean isBuff;
 
-    protected Aspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
+    protected Aspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate){
         this.id = id;
         this.weight = weight;
         this.aspectTooltipFunction = aspectTooltipFunction;
         this.itemPredicate = itemPredicate;
-        this.isBuff = isBuff;
         Aspects.ASPECT_REGISTER.put(id, this);
     }
 
@@ -28,12 +27,13 @@ public abstract class Aspect<T> {
         return Component.translatable("aspect.oddc."+this.id);
     }
 
-    public AspectInstance generateInstanceWithModifiability(float modifiability){
-        if(this.weight <= 0.0f){
-            return new AspectInstance(this, 1.0f);
-        }
-        return new AspectInstance(this, modifiability / this.weight);
-    }
+    public abstract AspectInstance<T> generateInstanceWithModifiability(Item item, float modifiability);
 
     public abstract T castStrength(float strength);
+
+    public abstract Tag valueToTag(T value);
+
+    public abstract T tagToValue(Tag tag);
+
+    public abstract AspectInstance<T> createWeakerInstanceForInfusion(AspectInstance<T> aspectInstance);
 }

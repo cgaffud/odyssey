@@ -12,54 +12,44 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.function.BiConsumer;
 
-public class AspectInstance {
+public class AspectInstance<T> {
 
     public static final float INFUSION_PENALTY = 0.5f;
     public static final String ID_TAG = "id";
-    private static final String STRENGTH_TAG = "strength";
+    private static final String VALUE_TAG = "value";
     private static final String DISPLAY_TAG = "display";
     private static final String OBFUSCATED_TAG = "obfuscated";
 
-    public final Aspect aspect;
-    public final float strength;
+    public final Aspect<T> aspect;
+    public final T value;
     public final AspectTooltipDisplaySetting aspectTooltipDisplaySetting;
     public final boolean obfuscated;
 
-    public AspectInstance(FloatAspect floatAspect, float strength){
-        this((Aspect)floatAspect, strength);
+    public AspectInstance(Aspect<T> aspect, T value){
+        this(aspect, value, AspectTooltipDisplaySetting.ALWAYS, false);
     }
 
-    public AspectInstance(IntegerAspect integerAspect, int strength){
-        this(integerAspect, (float)strength);
-    }
-
-    public AspectInstance(BooleanAspect booleanAspect){
-        this(booleanAspect, 1.0f);
-    }
-
-    public AspectInstance(String aspectID, float strength){
-        this(Aspects.ASPECT_REGISTER.get(aspectID), strength);
-    }
-
-    public AspectInstance(Aspect aspect, float strength){
-        this(aspect, strength, AspectTooltipDisplaySetting.ALWAYS, false);
-    }
-
-    public AspectInstance(Aspect aspect, float strength, AspectTooltipDisplaySetting aspectTooltipDisplaySetting, boolean obfuscated){
+    public AspectInstance(Aspect<T> aspect, CompoundTag compoundTag, AspectTooltipDisplaySetting aspectTooltipDisplaySetting, boolean obfuscated){
         this.aspect = aspect;
-        this.strength = strength;
+        this.value = aspect.tagToValue(compoundTag.getCompound(VALUE_TAG));
         this.aspectTooltipDisplaySetting = aspectTooltipDisplaySetting;
         this.obfuscated = obfuscated;
     }
 
-    public AspectInstance withDisplaySetting(AspectTooltipDisplaySetting aspectTooltipDisplaySetting){
-        return new AspectInstance(this.aspect, this.strength, aspectTooltipDisplaySetting, this.obfuscated);
+    public AspectInstance(Aspect<T> aspect, T value, AspectTooltipDisplaySetting aspectTooltipDisplaySetting, boolean obfuscated){
+        this.aspect = aspect;
+        this.value = value;
+        this.aspectTooltipDisplaySetting = aspectTooltipDisplaySetting;
+        this.obfuscated = obfuscated;
     }
 
-    public AspectInstance withObfuscation(){
-        return new AspectInstance(this.aspect, this.strength, aspectTooltipDisplaySetting, true);
+    public AspectInstance<T> withDisplaySetting(AspectTooltipDisplaySetting aspectTooltipDisplaySetting){
+        return new AspectInstance<>(this.aspect, this.value, aspectTooltipDisplaySetting, this.obfuscated);
+    }
+
+    public AspectInstance<T> withObfuscation(){
+        return new AspectInstance<>(this.aspect, this.value, aspectTooltipDisplaySetting, true);
     }
 
     public MutableComponent getMutableComponent(AspectTooltipContext aspectTooltipContext){
@@ -69,21 +59,20 @@ public class AspectInstance {
     public CompoundTag toCompoundTag(){
         CompoundTag compoundTag = new CompoundTag();
         compoundTag.putString(ID_TAG, this.aspect.id);
-        compoundTag.putFloat(STRENGTH_TAG, this.strength);
+        compoundTag.put(VALUE_TAG, this.aspect.valueToTag(this.value));
         compoundTag.putString(DISPLAY_TAG, this.aspectTooltipDisplaySetting.name());
         compoundTag.putBoolean(OBFUSCATED_TAG, this.obfuscated);
         return  compoundTag;
     }
 
     @Nullable
-    public static AspectInstance fromCompoundTag(CompoundTag compoundTag){
+    public static AspectInstance<?> fromCompoundTag(CompoundTag compoundTag){
         String id = compoundTag.getString(ID_TAG);
-        Aspect aspect = Aspects.ASPECT_REGISTER.get(id);
+        Aspect<?> aspect = Aspects.ASPECT_REGISTER.get(id);
         if(aspect == null) {
             Odyssey.LOGGER.error("Unknown aspect: "+id);
             return null;
         } else {
-            float strength = compoundTag.getFloat(STRENGTH_TAG);
             String displaySettingName = compoundTag.getString(DISPLAY_TAG);
             AspectTooltipDisplaySetting aspectTooltipDisplaySetting;
             if(displaySettingName.isEmpty()){
@@ -97,7 +86,7 @@ public class AspectInstance {
                 }
             }
             boolean obfuscated = compoundTag.getBoolean(OBFUSCATED_TAG);
-            return new AspectInstance(aspect, strength, aspectTooltipDisplaySetting, obfuscated);
+            return new AspectInstance<>(aspect, compoundTag, aspectTooltipDisplaySetting, obfuscated);
         }
     }
 
@@ -105,7 +94,7 @@ public class AspectInstance {
         friendlyByteBuf.writeNbt(this.toCompoundTag());
     }
 
-    public static FriendlyByteBuf.Writer<AspectInstance> toNetworkStatic = (friendlyByteBuf, aspectInstance) -> aspectInstance.toNetwork(friendlyByteBuf);
+    public static FriendlyByteBuf.Writer<AspectInstance<?>> toNetworkStatic = (friendlyByteBuf, aspectInstance) -> aspectInstance.toNetwork(friendlyByteBuf);
 
     @Nullable
     public static AspectInstance fromNetwork(FriendlyByteBuf friendlyByteBuf){
@@ -116,7 +105,9 @@ public class AspectInstance {
         return this.aspect.weight * this.strength;
     }
 
-    public AspectInstance applyInfusionPenalty(){
+    public AspectInstance<T> applyInfusionPenalty(){
+        return this.aspect.createWeakerInstanceForInfusion(this);
+
         if(this.aspect instanceof BooleanAspect){
             return this;
         }
