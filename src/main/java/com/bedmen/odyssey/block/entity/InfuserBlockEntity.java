@@ -182,7 +182,7 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
                 List<AspectInstance> infusionModifierList = getValidInfusionModifiers(this.getItemStackOriginal(), pedestalItemStack);
                 if(infusionModifierList.size() > 0){
                     List<AspectInstance> adjustedModifierList = infusionModifierList.stream().map(AspectInstance::applyInfusionPenalty).collect(Collectors.toList());
-                    float modifiabilityToBeUsed = adjustedModifierList.stream().map(aspectInstance -> aspectInstance.getModifiability(this.getItemStackOriginal())).reduce(0.0f, Float::sum);
+                    float modifiabilityToBeUsed = adjustedModifierList.stream().map(AspectInstance::getModifiability).reduce(0.0f, Float::sum);
                     if(AspectUtil.getModifiabilityRemaining(this.getItemStackOriginal()) >= modifiabilityToBeUsed){
                         if(!this.isInfusing(direction)){
                             ExperienceCost experienceCost = new ExperienceCost(modifiabilityToBeUsed * MagicUtil.MODIFIABILITY_TO_LEVEL_COST_FACTOR);

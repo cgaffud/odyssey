@@ -152,10 +152,10 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
                             if(matchingModifier.strength >= input1Modifier.strength){
                                 continue;
                             } else {
-                                additionalModifiability = input1Modifier.getModifiability(resultStack) - matchingModifier.getModifiability(resultStack);
+                                additionalModifiability = input1Modifier.getModifiability() - matchingModifier.getModifiability();
                             }
                         } else {
-                            additionalModifiability = input1Modifier.getModifiability(resultStack);
+                            additionalModifiability = input1Modifier.getModifiability();
                         }
                         if(AspectUtil.getModifiabilityRemaining(resultStack) >= additionalModifiability){
                             AspectUtil.replaceModifier(resultStack, input1Modifier);

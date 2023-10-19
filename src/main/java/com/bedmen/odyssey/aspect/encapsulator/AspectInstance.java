@@ -112,8 +112,8 @@ public class AspectInstance {
         return fromCompoundTag(friendlyByteBuf.readNbt());
     }
 
-    public float getModifiability(ItemStack itemStack){
-        return this.aspect.getWeight(itemStack.getItem()) * this.strength;
+    public float getModifiability(){
+        return this.aspect.weight * this.strength;
     }
 
     public AspectInstance applyInfusionPenalty(){

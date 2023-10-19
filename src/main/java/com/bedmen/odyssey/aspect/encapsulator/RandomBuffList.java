@@ -20,8 +20,8 @@ public class RandomBuffList extends RandomAspectList {
         List<AspectInstance> aspectInstanceList = new ArrayList<>();
         while(modifiabilityLeft > 0.0f && !this.filteredList.isEmpty()){
             WeightedAspectEntry weightedAspectEntry = getRandomWeightedAspectEntry(randomSource);
-            AspectInstance aspectInstance = weightedAspectEntry.aspect().generateInstanceWithModifiability(itemStack.getItem(), 0.5f);
-            float modifiability = aspectInstance.getModifiability(itemStack);
+            AspectInstance aspectInstance = weightedAspectEntry.aspect().generateInstanceWithModifiability(0.5f);
+            float modifiability = aspectInstance.getModifiability();
             if(modifiability > modifiabilityLeft){
                 this.filteredList.remove(weightedAspectEntry);
             } else {

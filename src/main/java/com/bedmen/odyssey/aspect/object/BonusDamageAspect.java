@@ -20,16 +20,12 @@ public abstract class BonusDamageAspect extends FloatAspect {
             return meleeWeaponClassItem.getMeleeWeaponClass().damageModifierAmp;
         }
         if(item instanceof OdysseyRangedAmmoWeapon){
-            return WeaponUtil.getRangedMaxChargeTicks(item.getDefaultInstance()) / 20.0f;
+            // Divide by 20 because 20 ticks per second, and divide by 2.5 as an extra balancing factor for ranged
+            return WeaponUtil.getRangedMaxChargeTicks(item.getDefaultInstance()) / 50.0f;
         }
         if(item instanceof BoomerangItem){
             return 2.0f;
         }
         return 1.0f;
     }
-
-    public float getWeight(Item item){
-        return this.weight * (item instanceof OdysseyRangedAmmoWeapon ? 5.0f : 1.0f);
-    }
-
 }

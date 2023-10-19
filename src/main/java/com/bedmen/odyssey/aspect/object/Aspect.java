@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 
 public abstract class Aspect<T> {
     public final String id;
-    protected final float weight;
+    public final float weight;
     public final AspectTooltipFunction aspectTooltipFunction;
     public final Predicate<Item> itemPredicate;
     public final boolean isBuff;
@@ -28,16 +28,11 @@ public abstract class Aspect<T> {
         return Component.translatable("aspect.oddc."+this.id);
     }
 
-    public float getWeight(Item item){
-        return this.weight;
-    }
-
-    public AspectInstance generateInstanceWithModifiability(Item item, float modifiability){
-        float weight = this.getWeight(item);
-        if(weight <= 0.0f){
+    public AspectInstance generateInstanceWithModifiability(float modifiability){
+        if(this.weight <= 0.0f){
             return new AspectInstance(this, 1.0f);
         }
-        return new AspectInstance(this, modifiability / weight);
+        return new AspectInstance(this, modifiability / this.weight);
     }
 
     public abstract T castStrength(float strength);

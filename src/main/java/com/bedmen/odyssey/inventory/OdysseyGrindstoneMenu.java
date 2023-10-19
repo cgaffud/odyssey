@@ -87,8 +87,7 @@ public class OdysseyGrindstoneMenu extends AbstractContainerMenu {
                 Optional<AspectInstance> optionalAspectInstance = OdysseyGrindstoneMenu.this.getSelectedAddedModifierAspect();
                 int exp = 0;
                 if(optionalAspectInstance.isPresent()){
-                    ItemStack inputStack = OdysseyGrindstoneMenu.this.getInput();
-                    float modifiability = optionalAspectInstance.get().getModifiability(inputStack);
+                    float modifiability = optionalAspectInstance.get().getModifiability();
                     exp = (int)(modifiability * 6.0f);
                 }
                 return exp;

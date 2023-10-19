@@ -394,7 +394,7 @@ public class AspectUtil {
 
     public static float getUsedModifiability(ItemStack itemStack){
         AspectStrengthMap addedModifierMap = getAddedModifierMap(itemStack);
-        FunctionQuery functionQuery = new FunctionQuery(aspect -> aspect.getWeight(itemStack.getItem()));
+        FunctionQuery functionQuery = new FunctionQuery(aspect -> aspect.weight);
         return functionQuery.queryStrengthMap(addedModifierMap);
     }
 
@@ -411,7 +411,7 @@ public class AspectUtil {
 
     public static boolean canAddModifier(ItemStack itemStack, AspectInstance aspectInstance){
         boolean passesItemPredicate = aspectInstance.aspect.itemPredicate.test(itemStack.getItem());
-        boolean passesModifiabilityCheck = aspectInstance.getModifiability(itemStack) <= getModifiabilityRemaining(itemStack);
+        boolean passesModifiabilityCheck = aspectInstance.getModifiability() <= getModifiabilityRemaining(itemStack);
         return passesItemPredicate && passesModifiabilityCheck;
     }
 
