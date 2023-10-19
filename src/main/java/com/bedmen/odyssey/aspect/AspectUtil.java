@@ -235,22 +235,16 @@ public class AspectUtil {
         });
     }
 
-    public static float getEnvironmentalAspectStrength(LivingEntity attacker, BlockPos blockPos, Level level){
-        return getBonusDamageAspectStrength(attacker, aspect -> {
-            if(aspect instanceof EnvironmentConditionalAspect environmentConditionalAspect){
-                return environmentConditionalAspect.attackBoostFactorFunction.getBoostFactor(blockPos, level);
-            }
-            return 0.0f;
-        });
-    }
 
-    public static float getConditionalAspectStrength(LivingEntity attacker, BlockPos blockPos, Level level){
-        return getBonusDamageAspectStrength(attacker, aspect -> {
+    public static float getConditionalAspectStrength(ItemStack itemStack, BlockPos blockPos, Level level){
+        FunctionQuery functionQuery = new FunctionQuery(aspect -> {
             if(aspect instanceof ConditionalAmpAspect conditionalAmpAspect){
-                return conditionalAmpAspect.attackBoostFactorFunction.getBoostFactor(attacker.getMainHandItem(), blockPos, level);
+                return conditionalAmpAspect.attackBoostFactorFunction.getBoostFactor(itemStack, blockPos, level)
+                        * BonusDamageAspect.getStrengthAmplifier(itemStack.getItem());
             }
             return 0.0f;
         });
+        return queryItemStackAspectStrength(itemStack, functionQuery);
     }
 
     public static float getShieldDamageBlockAspectStrength(ItemStack itemStack, DamageSource damageSource){

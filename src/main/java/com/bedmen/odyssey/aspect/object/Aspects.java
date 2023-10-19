@@ -2,7 +2,6 @@ package com.bedmen.odyssey.aspect.object;
 
 import com.bedmen.odyssey.aspect.AspectItemPredicates;
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
 import com.bedmen.odyssey.tags.OdysseyEntityTags;
 import com.bedmen.odyssey.util.GeneralUtil;
@@ -39,11 +38,11 @@ public class Aspects {
     public static final ConditionalAmpAspect SOLAR_STRENGTH = new ConditionalAmpAspect("solar_strength", Aspects::getSunBoost);
     public static final ConditionalAmpAspect LUNAR_STRENGTH = new ConditionalAmpAspect("lunar_strength", Aspects::getMoonBoost);
 
-    public static final EnvironmentConditionalAspect SKY_STRENGTH = new EnvironmentConditionalAspect("sky_strength", Aspects::getSkyBoost);
+    public static final ConditionalAmpAspect SKY_STRENGTH = new ConditionalAmpAspect("sky_strength", Aspects::getSkyBoost);
     public static final ConditionalAmpAspect BOTANICAL_STRENGTH = new ConditionalAmpAspect("botanical_strength", Aspects::getHotHumidBoost);
-    public static final EnvironmentConditionalAspect SCORCHED_STRENGTH = new EnvironmentConditionalAspect("scorched_strength", Aspects::getHotDryBoost);
-    public static final EnvironmentConditionalAspect WINTERY_STRENGTH = new EnvironmentConditionalAspect("wintery_strength", Aspects::getColdBoost);
-    public static final EnvironmentConditionalAspect VOID_STRENGTH = new EnvironmentConditionalAspect("void_strength", Aspects::getBoostFromVoid);
+    public static final ConditionalAmpAspect SCORCHED_STRENGTH = new ConditionalAmpAspect("scorched_strength", Aspects::getHotDryBoost);
+    public static final ConditionalAmpAspect WINTERY_STRENGTH = new ConditionalAmpAspect("wintery_strength", Aspects::getColdBoost);
+    public static final ConditionalAmpAspect VOID_STRENGTH = new ConditionalAmpAspect("void_strength", Aspects::getBoostFromVoid);
     public static final ConditionalAmpAspect ABSORBENT_GROWTH = new ConditionalAmpAspect("absorbent_growth", Aspects::getBoostFromDamage);
 
     // # Melee
@@ -160,24 +159,24 @@ public class Aspects {
 
     public static float getTrueSunBoost(BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
-        return getSkyBoost(pos, level) * (time < 12000L ? 1.0f : 0.0f);
+        return BiomeUtil.getSkyMultiplier(pos, level) * (time < 12000L ? 1.0f : 0.0f);
     }
 
     public static float getMoonBoost(ItemStack itemStack, BlockPos pos, Level level) {
         long time = level.getDayTime() % 24000L;
-        if (getSkyBoost(pos, level) == 1.0f && (time >= 12000L)) {
+        if (BiomeUtil.getSkyMultiplier(pos, level) == 1.0f && (time >= 12000L)) {
             int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
             if (charge < 50 && level instanceof ServerLevel)  itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, charge+1);
             return 1.0f;
         } return itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG) > 10 ? 1.0f : 0.0f;
     }
 
-    private static float getSkyBoost(BlockPos pos, Level level) {
-        return (level.canSeeSky(pos) && !level.isThundering() && !level.isRaining() && (level.dimension() == Level.OVERWORLD)) ? 1.0f : 0.0f;
+    private static float getSkyBoost(ItemStack itemStack, BlockPos pos, Level level) {
+        return BiomeUtil.getSkyMultiplier(pos, level);
     }
 
     public static float getHotHumidBoost(ItemStack itemStack, BlockPos pos, Level level) {
-        float rawBoost = Mth.sqrt(getHotBoost(pos, level) * getHumidBoost(pos, level));
+        float rawBoost = Mth.sqrt(BiomeUtil.getHotMultiplier(pos, level) * BiomeUtil.getHumidMultiplier(pos, level));
         if (GeneralUtil.isHashTick(itemStack, level, 80)) {
             if (rawBoost < 0.5f) itemStack.hurt(1, level.getRandom(), null);
             else if ((rawBoost > 0.75f) && itemStack.getDamageValue() != 0) itemStack.setDamageValue(itemStack.getDamageValue()-1);
@@ -185,28 +184,16 @@ public class Aspects {
         return rawBoost;
     }
 
-    public static float getHotDryBoost(BlockPos pos, Level level) {
-        return Mth.sqrt(getHotBoost(pos, level) * getDryBoost(pos, level));
+    public static float getHotDryBoost(ItemStack itemStack, BlockPos pos, Level level) {
+        return Mth.sqrt(BiomeUtil.getHotMultiplier(pos, level) * BiomeUtil.getDryMultiplier(pos, level));
     }
 
-    public static float getHotBoost(BlockPos pos, Level level) {
-        return Mth.clamp(BiomeUtil.getClimate(level.getBiome(pos)).temperature, 0.0f, 1.0f);
-    }
-
-    public static float getColdBoost(BlockPos pos, Level level) {
-        return 1.0f - getHotBoost(pos, level);
-    }
-
-    public static float getHumidBoost(BlockPos pos, Level level) {
-        return level.isRainingAt(pos) ? 1.0f : Mth.clamp(BiomeUtil.getClimate(level.getBiome(pos)).downfall, 0.0f, 1.0f);
-    }
-
-    public static float getDryBoost(BlockPos pos, Level level) {
-        return 1f - getHumidBoost(pos, level);
+    public static float getColdBoost(ItemStack itemStack, BlockPos pos, Level level) {
+        return BiomeUtil.getColdMultiplier(pos, level);
     }
 
     public static float getSunBoost(ItemStack itemStack, BlockPos pos, Level level) {
-        float doBoost = getTrueSunBoost(pos,level);
+        float doBoost = getTrueSunBoost(pos, level);
         if (doBoost == 1.0f) {
             int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
             if (charge < 50 && level instanceof ServerLevel)  itemStack.getOrCreateTag().putInt(AspectUtil.STORED_BOOST_TAG, charge+1);
@@ -222,7 +209,7 @@ public class Aspects {
         return f * f;
     }
 
-    private static float getBoostFromVoid(BlockPos pos, Level level) {
+    private static float getBoostFromVoid(ItemStack itemStack, BlockPos pos, Level level) {
         int y = pos.getY();
         if (level.dimension() == Level.END) {
             // Usually these boost numbers are only from 0 to 1 but this is an exception
@@ -235,7 +222,7 @@ public class Aspects {
                 return quadraticDistanceFactorToVoid(y, 32, 0);
             }
         }
-        // Gonna assume any other custom dimensions are similar to the overworld
+        // Going to assume any other custom dimensions are similar to the overworld
         return quadraticDistanceFactorToVoid(y, 64, -64);
     }
 

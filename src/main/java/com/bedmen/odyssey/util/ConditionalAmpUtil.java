@@ -4,7 +4,6 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.ConditionalAmpAspect;
-import com.bedmen.odyssey.aspect.object.EnvironmentConditionalAspect;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -22,15 +21,9 @@ public class ConditionalAmpUtil {
 
     public static float activeFactor(ItemStack itemStack, LivingEntity livingEntity) {
         if (itemStack.getItem() instanceof ConditionalAmpItem conditionalAmpItem
-                && conditionalAmpItem.getAspect() instanceof EnvironmentConditionalAspect environmentConditionalAspect){
-            return environmentConditionalAspect.attackBoostFactorFunction.getBoostFactor(livingEntity.blockPosition(), livingEntity.level);
-        }
-
-        if (itemStack.getItem() instanceof ConditionalAmpItem conditionalAmpItem
                 && conditionalAmpItem.getAspect() instanceof ConditionalAmpAspect conditionalAmpAspect){
             return conditionalAmpAspect.attackBoostFactorFunction.getBoostFactor(itemStack, livingEntity.blockPosition(), livingEntity.level);
         }
-
         return 0.0f;
     }
 
@@ -39,11 +32,7 @@ public class ConditionalAmpUtil {
     }
 
     public static void setDamageTag(ItemStack itemStack, Entity entity) {
-        float aspectBonus = 0.0f;
-        if(entity instanceof LivingEntity livingEntity){
-            aspectBonus = AspectUtil.getEnvironmentalAspectStrength(livingEntity, entity.blockPosition(), entity.level)
-              + AspectUtil.getConditionalAspectStrength(livingEntity, entity.blockPosition(), entity.level);
-        }
+        float aspectBonus = AspectUtil.getConditionalAspectStrength(itemStack, entity.blockPosition(), entity.level);
         itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, aspectBonus);
     }
 

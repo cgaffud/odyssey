@@ -12,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -75,15 +76,15 @@ public class BiomeUtil {
     }
 
     public static int getFoliageColor(Level level, Entity entity) {
-        double temperatureFactor = Aspects.getHotBoost(entity.blockPosition(), level);
-        double downfallFactor = Aspects.getHumidBoost(entity.blockPosition(), level);
+        double temperatureFactor = getHotMultiplier(entity.blockPosition(), level);
+        double downfallFactor = getHumidMultiplier(entity.blockPosition(), level);
         return FoliageColor.get(temperatureFactor, downfallFactor);
     }
 
     private static final Map<Double, Integer> ARID_COLOR_MAP = new ConcurrentHashMap<>();
     public static int getAridColor(Level level, Entity entity) {
-        double temperatureFactor = Aspects.getHotBoost(entity.blockPosition(), level);
-        double downfallFactor = Aspects.getHumidBoost(entity.blockPosition(), level);
+        double temperatureFactor = getHotMultiplier(entity.blockPosition(), level);
+        double downfallFactor = getHumidMultiplier(entity.blockPosition(), level);
         double adjustedDownfallFactor = Mth.clamp(downfallFactor, 0, temperatureFactor);
         double key = 2 * temperatureFactor + adjustedDownfallFactor;
         if(ARID_COLOR_MAP.containsKey(key)){
@@ -96,7 +97,7 @@ public class BiomeUtil {
 
     private static final Map<Double, Integer> COLD_COLOR_MAP = new ConcurrentHashMap<>();
     public static int getColdColor(Level level, Entity entity) {
-        double coldFactor = Aspects.getColdBoost(entity.blockPosition(), level);
+        double coldFactor = getColdMultiplier(entity.blockPosition(), level);
         if(COLD_COLOR_MAP.containsKey(coldFactor)){
             return COLD_COLOR_MAP.get(coldFactor);
         }
@@ -143,12 +144,32 @@ public class BiomeUtil {
         return temperatureSourceList;
     }
 
+    public static float getSkyMultiplier(BlockPos pos, Level level) {
+        return (level.canSeeSky(pos) && !level.isThundering() && !level.isRaining() && (level.dimension() == Level.OVERWORLD)) ? 1.0f : 0.0f;
+    }
+
     private static float sunLightMultiplier(Level level, BlockPos blockPos){
         return Aspects.getTrueSunBoost(blockPos, level) * skyLightMultiplier(level, blockPos);
     }
 
     private static float skyLightMultiplier(Level level, BlockPos blockPos){
         return level.getBrightness(LightLayer.SKY, blockPos) / 15f;
+    }
+
+    public static float getHotMultiplier(BlockPos pos, Level level) {
+        return Mth.clamp(BiomeUtil.getClimate(level.getBiome(pos)).temperature, 0.0f, 1.0f);
+    }
+
+    public static float getColdMultiplier(BlockPos pos, Level level) {
+        return 1.0f - getHotMultiplier(pos, level);
+    }
+
+    public static float getHumidMultiplier(BlockPos pos, Level level) {
+        return level.isRainingAt(pos) ? 1.0f : Mth.clamp(BiomeUtil.getClimate(level.getBiome(pos)).downfall, 0.0f, 1.0f);
+    }
+
+    public static float getDryMultiplier(BlockPos pos, Level level) {
+        return 1f - getHumidMultiplier(pos, level);
     }
 
     private static boolean isSnowingAt(Level level, BlockPos blockPos){
