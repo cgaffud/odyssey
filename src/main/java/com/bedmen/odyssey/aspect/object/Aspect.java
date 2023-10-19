@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
 
+import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
 
 public abstract class Aspect<T> {

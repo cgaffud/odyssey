@@ -22,7 +22,7 @@ public class AspectAxeItem extends AxeItem implements InnateAspectItem, MeleeWea
     protected final InnateAspectHolder innateAspectHolder;
     protected final MeleeWeaponClass meleeWeaponClass;
 
-    public AspectAxeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance> innateModifierList) {
+    public AspectAxeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance<?>> innateModifierList) {
         super(tier, damage, meleeWeaponClass.attackRate - 4.0f, properties);
         List<AspectInstance> fullAbilityList = new ArrayList<>(meleeWeaponClass.aspectInstanceList);
         fullAbilityList.addAll(additionalAbilityList);
@@ -30,7 +30,7 @@ public class AspectAxeItem extends AxeItem implements InnateAspectItem, MeleeWea
         this.meleeWeaponClass = meleeWeaponClass;
     }
 
-    public InnateAspectHolder getInnateAspectHolder() {
+    public AspectHolder getInnateAspectHolder() {
         return this.innateAspectHolder;
     }
 

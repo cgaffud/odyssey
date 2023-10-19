@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.entity;
 
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.encapsulator.PermaBuffHolder;
 import com.bedmen.odyssey.aspect.encapsulator.TempBuffHolder;
@@ -37,7 +38,7 @@ public interface OdysseyLivingEntity {
     void setPermaBuff(AspectInstance aspectInstance);
     void addPermaBuffs(List<AspectInstance> permabuffList);
 
-    TempBuffHolder getTempBuffHolder();
+    AspectHolder getTempBuffHolder();
     void setTempBuffs(List<AspectInstance> aspectInstanceList);
 
     default boolean isHot(){

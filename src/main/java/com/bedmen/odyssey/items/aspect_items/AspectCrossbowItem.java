@@ -58,10 +58,10 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     private boolean midLoadSoundPlayed = false;
     private final float damageMultiplier;
     private final int baseMaxChargeTicks;
-    private final InnateAspectHolder innateAspectHolder;
+    private final AspectHolder innateAspectHolder;
     protected final Tier tier;
 
-    public AspectCrossbowItem(Item.Properties propertiesIn, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance> abilityList, List<AspectInstance> innateAspectList) {
+    public AspectCrossbowItem(Item.Properties propertiesIn, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance<?>> abilityList, List<AspectInstance> innateAspectList) {
         super(propertiesIn.durability(tier.getUses()));
         this.damageMultiplier = damageMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
@@ -73,7 +73,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
         return this.tier;
     }
 
-    public InnateAspectHolder getInnateAspectHolder(){
+    public AspectHolder getInnateAspectHolder(){
         return this.innateAspectHolder;
     }
 

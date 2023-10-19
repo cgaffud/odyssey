@@ -21,12 +21,12 @@ public enum QuiverType{
     public final ResourceLocation textureResourceLocation;
     public final InnateAspectHolder innateAspectHolder;
 
-    QuiverType(String id, OdysseyTier odysseyTier, int size, float freeAmmoChance, boolean isRocketBag, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
+    QuiverType(String id, OdysseyTier odysseyTier, int size, float freeAmmoChance, boolean isRocketBag, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList){
         this.tier = odysseyTier;
         this.size = size;
         this.freeAmmoChance = freeAmmoChance;
         this.isRocketBag = isRocketBag;
         this.textureResourceLocation = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/quivers/"+id+".png");
-        this.innateAspectHolder = new InnateAspectHolder(abilityList, innateModifierList);
+        this.innateAspectHolder = new AspectHolder(innateModifierList, AspectHolderType.INNATE_ASPECT);
     }
 }

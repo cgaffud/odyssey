@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.aspect;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
 import com.bedmen.odyssey.aspect.object.*;
 import com.bedmen.odyssey.aspect.query.AspectQuery;
 import com.bedmen.odyssey.aspect.query.FunctionQuery;
@@ -12,10 +13,8 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
+import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
-import com.bedmen.odyssey.network.OdysseyNetwork;
-import com.bedmen.odyssey.network.packet.SwungWithVolatilePacket;
-import com.bedmen.odyssey.util.ConditionalAmpUtil;
 import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Multimap;
 import com.mojang.math.Vector3f;
@@ -29,7 +28,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -47,7 +45,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -57,8 +54,6 @@ import java.util.stream.Collectors;
 
 public class AspectUtil {
 
-    private static final MutableComponent ADDED_MODIFIER_HEADER = Component.translatable("aspect_tooltip.oddc.added_modifiers");
-    private static final ChatFormatting ADDED_MODIFIER_COLOR = ChatFormatting.GRAY;
     private static final String ADDED_MODIFIERS_TAG = Odyssey.MOD_ID + ":AddedModifiers";
     private static final String SET_BONUS_STRING = "SET_BONUS";
     private static final List<EquipmentSlot> ARMOR_EQUIPMENT_SLOT_LIST = Arrays.stream(EquipmentSlot.values()).filter(equipmentSlot -> equipmentSlot.getType() == EquipmentSlot.Type.ARMOR).collect(Collectors.toList());
@@ -68,25 +63,21 @@ public class AspectUtil {
     public static final String STORED_BOOST_TAG = Odyssey.MOD_ID + ":AspectStoredBoost";
     public static final String DAMAGE_GROWTH_TAG = Odyssey.MOD_ID + ":AspectDamageGrowth";
 
-    private static ListTag getAddedModifierListTag(ItemStack itemStack) {
+    private static AspectHolder getAddedModifierHolder(ItemStack itemStack){
         CompoundTag compoundTag = itemStack.getTag();
-        return compoundTag != null ? compoundTag.getList(ADDED_MODIFIERS_TAG, Tag.TAG_COMPOUND) : new ListTag();
-    }
-
-    private static AspectStrengthMap tagToMap(ListTag listTag){
-        AspectStrengthMap map = new AspectStrengthMap();
-        for(Tag tag: listTag){
-            if(tag instanceof CompoundTag aspectTag){
-                AspectInstance aspectInstance = AspectInstance.fromCompoundTag(aspectTag);
-                if(aspectInstance != null){
-                    map.put(aspectInstance.aspect, aspectInstance.strength);
-                }
-            }
+        compoundTag = compoundTag != null ? compoundTag.getCompound(ADDED_MODIFIERS_TAG) : null;
+        if(compoundTag != null){
+            return AspectHolder.fromCompoundTag(compoundTag);
+        } else {
+            return new AspectHolder(new ArrayList<>(), AspectHolderType.ADDED_MODIFIER);
         }
-        return map;
     }
 
-    private static List<AspectInstance> tagToAspectInstanceList(ListTag listTag){
+    private static List<AspectInstance<?>> getAddedModifierList(ItemStack itemStack){
+        return new ArrayList<>(getAddedModifierHolder(itemStack).map.values());
+    }
+
+    private static List<AspectInstance<?>> tagToAspectInstanceList(ListTag listTag){
         return listTag.stream()
                 .filter(tag -> tag instanceof CompoundTag)
                 .map(tag -> AspectInstance.fromCompoundTag((CompoundTag)tag))
@@ -94,25 +85,21 @@ public class AspectUtil {
                 .collect(Collectors.toList());
     }
 
-    private static AspectStrengthMap getAddedModifierMap(ItemStack itemStack){
-        return tagToMap(getAddedModifierListTag(itemStack));
-    }
-
-    private static float queryItemStackAspectStrength(ItemStack itemStack, AspectQuery aspectQuery){
+    private static <T> T queryItemStackAspectStrength(ItemStack itemStack, AspectQuery<T> aspectQuery){
         if(itemStack.isEmpty()){
-            return 0.0f;
+            return aspectQuery.returnValue();
         }
-        float total = aspectQuery.queryStrengthMap(getAddedModifierMap(itemStack));
-        if(itemStack.getItem() instanceof InnateAspectItem innateAspectItem){
-            total += aspectQuery.queryStrengthMap(innateAspectItem.getInnateAspectHolder().allAspectMap);
+        aspectQuery.query(getAddedModifierHolder(itemStack));
+        if(itemStack.getItem() instanceof AspectItem aspectItem){
+            aspectQuery.query(aspectItem.getAspectHolderList());
         }
-        return total;
+        return aspectQuery.returnValue();
     }
 
-    private static float getBonusDamageAspectStrength(LivingEntity livingEntity, Function<Aspect, Float> strengthFunction){
-        FunctionQuery functionQuery = new FunctionQuery(aspect -> {
+    private static float getBonusDamageAspectStrength(LivingEntity livingEntity, Function<Aspect<?>, Float> valueFunction){
+        FunctionQuery<Float> functionQuery = FunctionQuery.floatQuery.apply(aspect -> {
             if(aspect instanceof BonusDamageAspect){
-                return strengthFunction.apply(aspect) * BonusDamageAspect.getStrengthAmplifier(livingEntity.getMainHandItem().getItem());
+                return valueFunction.apply(aspect) * BonusDamageAspect.getStrengthAmplifier(livingEntity.getMainHandItem().getItem());
             }
             return 0.0f;
         });
@@ -125,16 +112,16 @@ public class AspectUtil {
             total += queryItemStackAspectStrength(armorPiece, aspectQuery);
         }
         if(isFullArmorSet(livingEntity.getArmorSlots()) && livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AspectArmorItem aspectArmorItem){
-            total += aspectQuery.queryStrengthMap(aspectArmorItem.getSetBonusAbilityHolder().map);
+            total += aspectQuery.query(aspectArmorItem.getSetBonusAbilityHolder().map);
         }
         return total;
     }
 
-    private static float queryBuffs(LivingEntity livingEntity, AspectQuery aspectQuery){
+    private static <T> T queryBuffs(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
         float strength = 0f;
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-            strength = aspectQuery.queryStrengthMap(odysseyLivingEntity.getPermaBuffHolder().aspectStrengthMap);
-            strength += aspectQuery.queryStrengthMap(odysseyLivingEntity.getTempBuffHolder().aspectStrengthMap);
+            strength = aspectQuery.query(odysseyLivingEntity.getPermaBuffHolder());
+            strength += aspectQuery.query(odysseyLivingEntity.getTempBuffHolder());
         }
         return strength;
     }
@@ -181,11 +168,11 @@ public class AspectUtil {
     // Get AspectStrengthMap
 
     public static List<AspectInstance> getAddedModifiersAsAspectInstanceList(ItemStack itemStack){
-        return tagToAspectInstanceList(getAddedModifierListTag(itemStack));
+        return tagToAspectInstanceList(getAddedModifierTag(itemStack));
     }
 
     public static AspectStrengthMap getAspectStrengthMap(ItemStack itemStack){
-        AspectStrengthMap addedModifierMap = getAddedModifierMap(itemStack);
+        AspectStrengthMap addedModifierMap = getAddedModifierHolder(itemStack);
         if(itemStack.getItem() instanceof InnateAspectItem innateAspectItem){
             return addedModifierMap.combine(innateAspectItem.getInnateAspectHolder().allAspectMap);
         }
@@ -193,7 +180,7 @@ public class AspectUtil {
     }
 
     public static boolean hasAddedModifiers(ItemStack itemStack){
-        AspectStrengthMap addedModifierMap = getAddedModifierMap(itemStack);
+        AspectStrengthMap addedModifierMap = getAddedModifierHolder(itemStack);
         return !addedModifierMap.isEmpty();
     }
 
@@ -387,9 +374,9 @@ public class AspectUtil {
     // Add/Remove added modifiers
 
     public static float getUsedModifiability(ItemStack itemStack){
-        AspectStrengthMap addedModifierMap = getAddedModifierMap(itemStack);
+        AspectStrengthMap addedModifierMap = getAddedModifierHolder(itemStack);
         FunctionQuery functionQuery = new FunctionQuery(aspect -> aspect.weight);
-        return functionQuery.queryStrengthMap(addedModifierMap);
+        return functionQuery.query(addedModifierMap);
     }
 
     public static int getTotalModifiability(ItemStack itemStack){
@@ -410,7 +397,7 @@ public class AspectUtil {
     }
 
     public static void addModifier(ItemStack itemStack, AspectInstance aspectInstance){
-        float strength = AspectUtil.getAddedModifierMap(itemStack).get(aspectInstance.aspect);
+        float strength = AspectUtil.getAddedModifierHolder(itemStack).get(aspectInstance.aspect);
         AspectInstance newAspectInstance = aspectInstance.withAddedStrength(strength);
         replaceModifier(itemStack, newAspectInstance);
     }
@@ -421,14 +408,14 @@ public class AspectUtil {
         removeAddedModifier(itemStack, aspectInstance.aspect);
         // Just removes old modifier if the strength is set to 0
         if(aspectInstance.strength > 0.0f){
-            ListTag aspectListTag = getAddedModifierListTag(itemStack);
+            ListTag aspectListTag = getAddedModifierTag(itemStack);
             aspectListTag.add(aspectInstance.toCompoundTag());
             itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectListTag);
         }
     }
 
     public static void removeAddedModifier(ItemStack itemStack, Aspect aspect){
-        ListTag aspectListTag = getAddedModifierListTag(itemStack);
+        ListTag aspectListTag = getAddedModifierTag(itemStack);
         Tag oldAspectTag = null;
         for(Tag tag: aspectListTag){
             if(tag instanceof CompoundTag compoundTag && compoundTag.getString(AspectInstance.ID_TAG).equals(aspect.id)){

@@ -46,10 +46,10 @@ import java.util.function.Consumer;
 public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAspectItem, MeleeWeaponClassItem, ParryableWeaponItem, INeedsToRegisterItemModelProperty {
     /** Modifiers applied when the item is in the mainhand of a user. */
     protected Multimap<Attribute, AttributeModifier> attributeModifiers;
-    private final InnateAspectHolder innateAspectHolder;
+    private final AspectHolder innateAspectHolder;
     protected final MeleeWeaponClass meleeWeaponClass;
 
-    public AspectMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance> innateModifierList) {
+    public AspectMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance<?>> innateModifierList) {
         super(tier, properties);
         List<AspectInstance> fullAbilityList = new ArrayList<>(meleeWeaponClass.aspectInstanceList);
         fullAbilityList.addAll(additionalAbilityList);
@@ -63,7 +63,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
         this.attributeModifiers = attributeModifiers;
     }
 
-    public InnateAspectHolder getInnateAspectHolder() {
+    public AspectHolder getInnateAspectHolder() {
         return this.innateAspectHolder;
     }
 

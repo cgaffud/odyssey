@@ -2,9 +2,8 @@ package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
-import com.bedmen.odyssey.aspect.encapsulator.SetBonusAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.OdysseyArmorMaterial;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
@@ -21,18 +20,20 @@ import java.util.List;
 
 public class AspectArmorItem extends ArmorItem implements InnateAspectItem, OdysseyTierItem {
 
-    private final InnateAspectHolder innateAspectHolder;
+    private final AspectHolder innateAspectHolder;
+    private final AspectHolder abilityHolder;
 
-    public AspectArmorItem(Properties properties, OdysseyArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList) {
+    public AspectArmorItem(Properties properties, OdysseyArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList) {
         super(armorMaterial, equipmentSlot, properties);
-        this.innateAspectHolder = new InnateAspectHolder(abilityList, innateModifierList);
+        this.innateAspectHolder = new AspectHolder(innateModifierList, AspectHolderType.INNATE_ASPECT);
+        this.abilityHolder = new AspectHolder(abilityList, AspectHolderType.ABILITY);
     }
 
     public OdysseyArmorMaterial getOdysseyArmorMaterial(){
         return (OdysseyArmorMaterial)this.material;
     }
 
-    public SetBonusAspectHolder getSetBonusAbilityHolder() {
+    public AspectHolder getSetBonusAbilityHolder() {
         return this.getOdysseyArmorMaterial().getSetBonusAbilityHolder();
     }
 
@@ -40,7 +41,7 @@ public class AspectArmorItem extends ArmorItem implements InnateAspectItem, Odys
         return this.getOdysseyArmorMaterial().getTier();
     }
 
-    public InnateAspectHolder getInnateAspectHolder() {
+    public AspectHolder getInnateAspectHolder() {
         return this.innateAspectHolder;
     }
 

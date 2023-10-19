@@ -11,14 +11,14 @@ import net.minecraft.world.item.Item.Properties;
 
 public class AspectKeyItem extends KeyItem implements InnateAspectItem {
 
-    private final InnateAspectHolder innateAspectHolder;
+    private final AspectHolder innateAspectHolder;
 
-    public AspectKeyItem(Properties properties, LockType lockType, List<AspectInstance> abilityList) {
+    public AspectKeyItem(Properties properties, LockType lockType, List<AspectInstance<?>> abilityList) {
         super(properties, lockType);
         this.innateAspectHolder = new InnateAspectHolder(abilityList, List.of());
     }
 
-    public InnateAspectHolder getInnateAspectHolder() {
+    public AspectHolder getInnateAspectHolder() {
         return this.innateAspectHolder;
     }
 }

@@ -20,7 +20,7 @@ public class ConditionalAmpMeleeItem extends AspectMeleeItem implements Conditio
 
     public final Aspect aspect;
 
-    public ConditionalAmpMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance> innateModifierList) {
+    public ConditionalAmpMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance<?>> innateModifierList) {
         super(properties, tier, meleeWeaponClass, damage, additionalAbilityList, innateModifierList);
         this.aspect = innateModifierList.get(0).aspect;
     }
@@ -32,7 +32,7 @@ public class ConditionalAmpMeleeItem extends AspectMeleeItem implements Conditio
     public static class NumericalItem extends ConditionalAmpMeleeItem implements INeedsToRegisterItemModelProperty, ConditionalAmpUtil.NumericalItem {
 
         private final int intervalCount;
-        public NumericalItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance> innateModifierList, int numTextures){
+        public NumericalItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance<?>> innateModifierList, int numTextures){
             super(properties, tier, meleeWeaponClass, damage, additionalAbilityList, innateModifierList);
             this.intervalCount = numTextures-1;
         }
@@ -51,7 +51,7 @@ public class ConditionalAmpMeleeItem extends AspectMeleeItem implements Conditio
         private final ConditionalAmpUtil.ColorProvider colorProvider;
         private final int defaultColor;
 
-        public GradientItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance> innateModifierList, ConditionalAmpUtil.ColorProvider colorProvider, int defaultColor) {
+        public GradientItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance<?>> innateModifierList, ConditionalAmpUtil.ColorProvider colorProvider, int defaultColor) {
             super(properties, tier, meleeWeaponClass, damage, additionalAbilityList, innateModifierList);
             this.colorProvider = colorProvider;
             this.defaultColor = defaultColor;

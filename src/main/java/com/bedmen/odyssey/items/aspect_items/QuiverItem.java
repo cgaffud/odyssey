@@ -34,7 +34,7 @@ public class QuiverItem extends Item implements InnateAspectItem, OdysseyTierIte
         this.quiverType = quiverType;
     }
 
-    public InnateAspectHolder getInnateAspectHolder() {
+    public AspectHolder getInnateAspectHolder() {
         return this.quiverType.innateAspectHolder;
     }
 

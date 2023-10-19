@@ -62,7 +62,7 @@ public class AspectInstance<T> {
         compoundTag.put(VALUE_TAG, this.aspect.valueToTag(this.value));
         compoundTag.putString(DISPLAY_TAG, this.aspectTooltipDisplaySetting.name());
         compoundTag.putBoolean(OBFUSCATED_TAG, this.obfuscated);
-        return  compoundTag;
+        return compoundTag;
     }
 
     @Nullable

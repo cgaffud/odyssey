@@ -57,7 +57,7 @@ public class AspectArrowItem extends ArrowItem implements InnateAspectItem, Odys
         tooltip.add(Component.translatable("item.oddc.arrow.damage").append(StringUtil.doubleFormat(this.arrowType.damage)).withStyle(ChatFormatting.BLUE));
     }
 
-    public InnateAspectHolder getInnateAspectHolder() {
+    public AspectHolder getInnateAspectHolder() {
         return this.arrowType.innateAspectHolder;
     }
 

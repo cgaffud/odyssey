@@ -37,7 +37,7 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         return this.shieldType.tier;
     }
 
-    public InnateAspectHolder getInnateAspectHolder() {
+    public AspectHolder getInnateAspectHolder() {
         return this.shieldType.innateAspectHolder;
     }
 

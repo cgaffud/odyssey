@@ -10,7 +10,7 @@ import java.util.List;
 import net.minecraft.world.item.Item.Properties;
 
 public class DyeableAspectArmorItem extends AspectArmorItem implements DyeableLeatherItem {
-    public DyeableAspectArmorItem(Properties properties, OdysseyArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList) {
+    public DyeableAspectArmorItem(Properties properties, OdysseyArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList) {
         super(properties, armorMaterial, equipmentSlot, abilityList, innateModifierList);
     }
 }

@@ -33,14 +33,14 @@ import java.util.List;
 public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelProperty, InnateAspectItem, OdysseyRangedAmmoWeapon {
     public final float damageMultiplier;
     public final int baseMaxChargeTicks;
-    private final InnateAspectHolder innateAspectHolder;
+    private final AspectHolder innateAspectHolder;
     protected final Tier tier;
 
-    public AspectBowItem(Item.Properties properties, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList) {
+    public AspectBowItem(Item.Properties properties, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList) {
         super(properties.durability(tier.getUses()));
         this.damageMultiplier = damageMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
-        this.innateAspectHolder = new InnateAspectHolder(abilityList, innateModifierList);
+        this.innateAspectHolder = new AspectHolder(innateModifierList, AspectHolderType.INNATE_ASPECT);
         this.tier = tier;
     }
 
@@ -56,7 +56,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
         return this.damageMultiplier + ConditionalAmpUtil.getDamageTag(bow);
     }
 
-    public InnateAspectHolder getInnateAspectHolder(){
+    public AspectHolder getInnateAspectHolder(){
         return this.innateAspectHolder;
     }
 

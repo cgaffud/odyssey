@@ -17,7 +17,7 @@ public class SpearType extends ThrowableType {
     public final ModelResourceLocation itemModelResourceLocation;
     public final boolean isTrident;
 
-    SpearType(String id, double damage, float velocity, SoundProfile soundProfile, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
+    SpearType(String id, double damage, float velocity, SoundProfile soundProfile, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList){
         super(id, damage, velocity, soundProfile, abilityList, innateModifierList);
         this.entityTexture = new ResourceLocation(Odyssey.MOD_ID, "textures/entity/projectiles/"+id+".png");
         this.itemModelResourceLocation = new ModelResourceLocation(Odyssey.MOD_ID, id, "inventory");

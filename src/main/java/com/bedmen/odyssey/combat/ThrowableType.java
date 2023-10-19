@@ -16,10 +16,10 @@ public abstract class ThrowableType {
     public final double thrownDamage;
     public final float velocity;
     public final SoundProfile soundProfile;
-    public final List<AspectInstance> abilityList;
-    public final List<AspectInstance> innateModifierList;
+    public final List<AspectInstance<?>> abilityList;
+    public final List<AspectInstance<?>> innateModifierList;
 
-    public ThrowableType(String id, double thrownDamage, float velocity, SoundProfile soundProfile, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
+    public ThrowableType(String id, double thrownDamage, float velocity, SoundProfile soundProfile, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList){
         this.id = id;
         this.thrownDamage = thrownDamage;
         this.velocity = velocity;

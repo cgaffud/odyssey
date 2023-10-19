@@ -10,7 +10,7 @@ public class BoomerangType extends ThrowableType {
     public final int repairNumber;
     public final int burnTime;
 
-    BoomerangType(String id, double damage, float velocity, int repairNumber, SoundProfile soundProfile, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList, int burnTime){
+    BoomerangType(String id, double damage, float velocity, int repairNumber, SoundProfile soundProfile, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList, int burnTime){
         super(id, damage, velocity, soundProfile, abilityList, innateModifierList);
         this.repairNumber = repairNumber;
         this.burnTime = burnTime;

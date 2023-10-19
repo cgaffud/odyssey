@@ -35,7 +35,7 @@ public enum ShieldType {
     public final Material material_nopattern;
     public final InnateAspectHolder innateAspectHolder;
 
-    ShieldType(String id, Tier tier, float damageBlock, int recoveryTime, float blockingAngleWidth, Predicate<Item> repairItemPredicate, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList){
+    ShieldType(String id, Tier tier, float damageBlock, int recoveryTime, float blockingAngleWidth, Predicate<Item> repairItemPredicate, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList){
         this.tier = tier;
         this.damageBlock = damageBlock;
         this.recoveryTime = recoveryTime;
@@ -43,7 +43,7 @@ public enum ShieldType {
         this.repairItemPredicate = repairItemPredicate;
         this.material = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/"+id+"_shield_base"));
         this.material_nopattern = new Material(Sheets.CHEST_SHEET, new ResourceLocation(Odyssey.MOD_ID, "entity/shields/"+id+"_shield_base_nopattern"));
-        this.innateAspectHolder = new InnateAspectHolder(abilityList, innateModifierList);
+        this.innateAspectHolder = new AspectHolder(innateModifierList, AspectHolderType.INNATE_ASPECT);
     }
 
     public Material getRenderMaterial(Boolean pattern) {

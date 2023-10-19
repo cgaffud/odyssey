@@ -42,7 +42,7 @@ import net.minecraft.world.item.Item.Properties;
 public class HollowCoconutItem extends AspectArmorItem {
     private final Block block = BlockRegistry.HOLLOW_COCONUT.get();
 
-    public HollowCoconutItem(Properties properties, OdysseyArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, List<AspectInstance> abilityList, List<AspectInstance> innateModifierList) {
+    public HollowCoconutItem(Properties properties, OdysseyArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList) {
         super(properties, armorMaterial, equipmentSlot, abilityList, innateModifierList);
     }
 

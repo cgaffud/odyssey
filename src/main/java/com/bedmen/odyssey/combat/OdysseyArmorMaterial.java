@@ -1,5 +1,7 @@
 package com.bedmen.odyssey.combat;
 
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.encapsulator.SetBonusAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
@@ -49,9 +51,9 @@ public enum OdysseyArmorMaterial implements ArmorMaterial {
     private final SoundEvent soundEvent;
     private final float knockbackResistance;
     private final Supplier<Ingredient> repairMaterial;
-    private final SetBonusAspectHolder setBonusAspectHolder;
+    private final AspectHolder setBonusAspectHolder;
 
-    OdysseyArmorMaterial(String name, OdysseyTier tier, int maxDamageFactor, int[] damageReductionArray, SoundEvent soundEvent, float knockbackResistance, List<AspectInstance> aspectInstanceList){
+    OdysseyArmorMaterial(String name, OdysseyTier tier, int maxDamageFactor, int[] damageReductionArray, SoundEvent soundEvent, float knockbackResistance, List<AspectInstance<?>> aspectInstanceList){
         this.name = name;
         this.tier = tier;
         this.maxDamageFactor = maxDamageFactor;
@@ -59,7 +61,7 @@ public enum OdysseyArmorMaterial implements ArmorMaterial {
         this.soundEvent = soundEvent;
         this.knockbackResistance = knockbackResistance;
         this.repairMaterial = tier.repairIngredient;
-        this.setBonusAspectHolder = new SetBonusAspectHolder(aspectInstanceList);
+        this.setBonusAspectHolder = new AspectHolder(aspectInstanceList, AspectHolderType.SET_BONUS);
     }
 
     public Tier getTier(){
@@ -106,7 +108,7 @@ public enum OdysseyArmorMaterial implements ArmorMaterial {
         return this.knockbackResistance;
     }
 
-    public SetBonusAspectHolder getSetBonusAbilityHolder(){
+    public AspectHolder getSetBonusAbilityHolder(){
         return this.setBonusAspectHolder;
     }
 

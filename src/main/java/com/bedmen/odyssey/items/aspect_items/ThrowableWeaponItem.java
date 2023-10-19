@@ -43,7 +43,7 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
     public ThrowableWeaponItem(Item.Properties properties, Tier tier, ThrowableType throwableType, List<AspectInstance> additionalAbilityList) {
         super(properties.durability(tier.getUses()));
         this.throwableType = throwableType;
-        List<AspectInstance> abilityList = new ArrayList<>(additionalAbilityList);
+        List<AspectInstance<?>> abilityList = new ArrayList<>(additionalAbilityList);
         abilityList.addAll(throwableType.abilityList);
         this.innateAspectHolder = new InnateAspectHolder(abilityList, throwableType.innateModifierList);
         this.tier = tier;
@@ -53,7 +53,7 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
         return this.tier;
     }
 
-    public InnateAspectHolder getInnateAspectHolder() {
+    public AspectHolder getInnateAspectHolder() {
         return this.innateAspectHolder;
     }
 
