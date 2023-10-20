@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.combat;
 
 import com.bedmen.odyssey.Odyssey;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.tier.OdysseyTier;
 import com.bedmen.odyssey.tier.OdysseyTiers;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +20,7 @@ public enum QuiverType{
     public final float freeAmmoChance;
     public final boolean isRocketBag;
     public final ResourceLocation textureResourceLocation;
-    public final InnateAspectHolder innateAspectHolder;
+    public final AspectHolder innateAspectHolder;
 
     QuiverType(String id, OdysseyTier odysseyTier, int size, float freeAmmoChance, boolean isRocketBag, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList){
         this.tier = odysseyTier;

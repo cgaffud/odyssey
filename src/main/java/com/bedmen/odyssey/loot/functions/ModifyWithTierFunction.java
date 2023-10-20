@@ -21,8 +21,7 @@ import java.util.Set;
 
 public class ModifyWithTierFunction extends LootItemConditionalFunction {
     final NumberProvider tier;
-    private static final float BUFF_CHANCE = 0.5f;
-    private static final float CURSE_CHANCE = 0.33333333f;
+    public static final float CURSE_CHANCE = 1f/3f;
 
     ModifyWithTierFunction(LootItemCondition[] lootItemConditions, NumberProvider numberProvider) {
         super(lootItemConditions);
@@ -40,8 +39,7 @@ public class ModifyWithTierFunction extends LootItemConditionalFunction {
     public ItemStack run(ItemStack itemStack, LootContext lootContext) {
         RandomSource randomSource = lootContext.getRandom();
         int tier = this.tier.getInt(lootContext);
-        AspectTierManager.itemStackModifyByTier(itemStack, randomSource, tier, BUFF_CHANCE, false);
-        AspectTierManager.itemStackModifyByTier(itemStack, randomSource, tier, CURSE_CHANCE, true);
+        AspectTierManager.itemStackModifyByTier(itemStack, randomSource, tier, 0.6f, CURSE_CHANCE);
         return itemStack;
     }
 

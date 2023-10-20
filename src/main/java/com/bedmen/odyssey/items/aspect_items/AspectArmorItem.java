@@ -45,20 +45,24 @@ public class AspectArmorItem extends ArmorItem implements InnateAspectItem, Odys
         return this.innateAspectHolder;
     }
 
+    public AspectHolder getAbilityHolder() {
+        return this.abilityHolder;
+    }
+
     public List<AspectHolder> getAspectHolderList(){
-        return List.of(this.getSetBonusAbilityHolder(), this.getInnateAspectHolder());
+        return List.of(this.getSetBonusAbilityHolder(), this.innateAspectHolder, this.abilityHolder);
     }
 
     public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer)
     {
-        return AspectUtil.getItemStackAspectStrength(stack, Aspects.PIGLIN_NEUTRAL);
+        return AspectUtil.getItemStackAspectValue(stack, Aspects.PIGLIN_NEUTRAL);
     }
 
     public boolean canElytraFly(ItemStack stack, LivingEntity livingEntity) {
         if(this.slot != EquipmentSlot.CHEST){
             return false;
         }
-        if(!(AspectUtil.getArmorAspectStrength(livingEntity, Aspects.GLIDE) > 0 || AspectUtil.getItemStackAspectStrength(stack, Aspects.GLIDE) > 0)){
+        if(!(AspectUtil.getArmorAspectValue(livingEntity, Aspects.GLIDE) > 0 || AspectUtil.getItemStackAspectValue(stack, Aspects.GLIDE) > 0)){
             return false;
         }
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){

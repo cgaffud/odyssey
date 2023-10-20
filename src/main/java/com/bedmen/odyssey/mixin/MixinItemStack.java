@@ -34,7 +34,7 @@ public abstract class MixinItemStack extends net.minecraftforge.common.capabilit
                     }
                 }
 
-                float durabilityStrength = AspectUtil.getItemStackAspectStrength(itemStack, Aspects.DURABILITY);
+                float durabilityStrength = AspectUtil.getItemStackAspectValue(itemStack, Aspects.DURABILITY);
                 if(durabilityStrength > 0.0f){
                     float noDamageChance = 1.0f - (1.0f / (1.0f + durabilityStrength));
                     for(int k = 0; k < amount; ++k) {

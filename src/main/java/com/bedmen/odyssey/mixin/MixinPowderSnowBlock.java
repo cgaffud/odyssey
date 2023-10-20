@@ -21,7 +21,7 @@ public abstract class MixinPowderSnowBlock extends Block implements BucketPickup
 
     @Inject(method = "canEntityWalkOnPowderSnow", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private static void onCanEntityWalkOnPowderSnow(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(entity instanceof LivingEntity livingEntity && AspectUtil.getArmorAndEntityAspectStrength(livingEntity, Aspects.SNOWSHOE));
+        cir.setReturnValue(entity instanceof LivingEntity livingEntity && AspectUtil.getArmorAndBuffsAspectValue(livingEntity, Aspects.SNOWSHOE));
         cir.cancel();
     }
 }

@@ -191,11 +191,11 @@ public class OdysseyGrindstoneMenu extends AbstractContainerMenu {
         return this.inputContainer.getItem(TABLET_SLOT);
     }
 
-    private static List<AspectInstance> getNonObfuscatedModifiers(ItemStack itemStack){
-        return AspectUtil.getAddedModifiersAsAspectInstanceList(itemStack).stream().filter(aspectInstance -> !aspectInstance.obfuscated).collect(Collectors.toList());
+    private static List<AspectInstance<?>> getNonObfuscatedModifiers(ItemStack itemStack){
+        return AspectUtil.getAddedModifierList(itemStack).stream().filter(aspectInstance -> !aspectInstance.obfuscated).collect(Collectors.toList());
     }
 
-    private List<AspectInstance> getRelevantModifiers(){
+    private List<AspectInstance<?>> getRelevantModifiers(){
         ItemStack itemStack = this.getInput();
         if(itemStack.isEmpty()){
             return List.of();
@@ -204,7 +204,7 @@ public class OdysseyGrindstoneMenu extends AbstractContainerMenu {
         if(tablet.isEmpty()){
             return getNonObfuscatedModifiers(itemStack);
         } else {
-            List<AspectInstance> aspectInstanceList = AspectUtil.getAddedModifiersAsAspectInstanceList(itemStack);
+            List<AspectInstance<?>> aspectInstanceList = AspectUtil.getAddedModifierList(itemStack);
             return aspectInstanceList.stream().filter(aspectInstance -> aspectInstance.aspect == PurificationTabletItem.getAspect(tablet) && aspectInstance.obfuscated).collect(Collectors.toList());
         }
     }
@@ -242,7 +242,7 @@ public class OdysseyGrindstoneMenu extends AbstractContainerMenu {
     }
 
     public Optional<AspectInstance> getSelectedAddedModifierAspect(){
-        List<AspectInstance> aspectInstanceList = this.getRelevantModifiers();
+        List<AspectInstance<?>> aspectInstanceList = this.getRelevantModifiers();
         if(aspectInstanceList.isEmpty() || this.getCurrentPage() < 0 || this.getCurrentPage() >= aspectInstanceList.size()){
             return Optional.empty();
         }

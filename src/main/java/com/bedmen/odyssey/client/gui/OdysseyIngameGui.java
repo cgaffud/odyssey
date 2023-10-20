@@ -242,15 +242,15 @@ public class OdysseyIngameGui extends ForgeGui
 
         ItemStack itemStack = player.getMainHandItem();
 
-        if (AspectUtil.getItemStackAspectStrength(itemStack, Aspects.SOLAR_STRENGTH) > 0 || AspectUtil.getItemStackAspectStrength(itemStack, Aspects.LUNAR_STRENGTH) > 0) {
-            int barAdjustment = AspectUtil.getItemStackAspectStrength(itemStack, Aspects.LUNAR_STRENGTH) > 0 ? 10 : 0;
+        if (AspectUtil.getItemStackAspectValue(itemStack, Aspects.SOLAR_STRENGTH) > 0 || AspectUtil.getItemStackAspectValue(itemStack, Aspects.LUNAR_STRENGTH) > 0) {
+            int barAdjustment = AspectUtil.getItemStackAspectValue(itemStack, Aspects.LUNAR_STRENGTH) > 0 ? 10 : 0;
             int charge = itemStack.getOrCreateTag().getInt(AspectUtil.STORED_BOOST_TAG);
             // Fill entire bar
             charge = (charge == 50) ? 51 : charge;
             blit(poseStack, left, top, 0, 52 + barAdjustment, 51, 5);
             if (charge > 0) blit(poseStack, left, top, 0, 57 + barAdjustment, charge, 5);
             rightHeight += 9;
-        } else if (AspectUtil.getItemStackAspectStrength(itemStack, Aspects.ABSORBENT_GROWTH) > 0) {
+        } else if (AspectUtil.getItemStackAspectValue(itemStack, Aspects.ABSORBENT_GROWTH) > 0) {
             float progress = itemStack.getOrCreateTag().getFloat(AspectUtil.DAMAGE_GROWTH_TAG);
             // These values are temp as we need item texture to determine bar color
             blit(poseStack, left, top, 0, 62, 51, 5);

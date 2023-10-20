@@ -4,8 +4,13 @@ import com.bedmen.odyssey.aspect.AspectItemPredicates;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.Item;
 
+import java.util.Comparator;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
 
 public class BooleanAspect extends Aspect<Boolean> {
@@ -27,10 +32,42 @@ public class BooleanAspect extends Aspect<Boolean> {
     }
 
     public AspectInstance generateInstanceWithModifiability(Item item, float modifiability){
-        return new AspectInstance(this);
+        return new AspectInstance<>(this);
     }
 
-    public Boolean castStrength(float strength){
+    public Boolean floatToValue(float strength){
         return strength > 0f;
+    }
+
+    public float valueToFloat(Boolean value) {
+        return value ? 1.0f : 0.0f;
+    }
+
+    public Tag valueToTag(Boolean value) {
+        return ByteTag.valueOf(value);
+    }
+
+    public Boolean tagToValue(Tag tag) {
+        return ((ByteTag)tag).getAsByte() > 0;
+    }
+
+    public AspectInstance<Boolean> createWeakerInstanceForInfusion(AspectInstance<Boolean> aspectInstance) {
+        return aspectInstance;
+    }
+
+    public BinaryOperator<Boolean> getAddition() {
+        return Boolean::logicalAnd;
+    }
+
+    public BiFunction<Boolean, Integer, Boolean> getScaler() {
+        return (b, i) -> b && i != 0;
+    }
+
+    public Boolean getBase() {
+        return false;
+    }
+
+    public Class<Boolean> getValueClass() {
+        return Boolean.class;
     }
 }

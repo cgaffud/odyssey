@@ -1,88 +1,63 @@
 package com.bedmen.odyssey.aspect.encapsulator;
 
-import com.bedmen.odyssey.Odyssey;
-import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspect;
-import com.bedmen.odyssey.aspect.object.BooleanAspect;
-import com.bedmen.odyssey.aspect.object.IntegerAspect;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class RandomAspectList {
+public class RandomAspectList {
 
-    protected final List<WeightedAspectEntry> weightedAspectEntryList;
-    protected List<WeightedAspectEntry> filteredList;
+    protected final List<WeightedAspectEntry<?>> weightedAspectEntryList;
+    protected final int totalWeight;
 
-    protected RandomAspectList(List<WeightedAspectEntry> weightedAspectEntryList){
+    protected RandomAspectList(List<WeightedAspectEntry<?>> weightedAspectEntryList){
         this.weightedAspectEntryList = weightedAspectEntryList;
+        this.totalWeight = this.weightedAspectEntryList.stream().reduce(0, (accumulator, weightedAspectEntry) -> accumulator + weightedAspectEntry.weight, Integer::sum);
     }
 
-    public void addAspectInstances(ItemStack itemStack, RandomSource randomSource, float chance){
-        this.filter(itemStack);
-        this.generateAndAdd(itemStack, randomSource, chance);
-    }
-
-    protected void filter(ItemStack itemStack){
-        this.filteredList = this.weightedAspectEntryList.stream()
+    protected RandomAspectList filter(ItemStack itemStack){
+        return new RandomAspectList(this.weightedAspectEntryList.stream()
                 .filter(weightedAspectEntry ->
                         weightedAspectEntry.aspect().itemPredicate.test(itemStack.getItem()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
-    protected abstract void generateAndAdd(ItemStack itemStack, RandomSource randomSource, float chance);
-
-    protected WeightedAspectEntry getRandomWeightedAspectEntry(RandomSource randomSource){
-        int totalWeight = this.filteredList.stream().reduce(0, (accumulator, weightedAspectEntry) -> accumulator + weightedAspectEntry.weight, Integer::sum);
+    public AspectInstance<?> getRandomAspectInstance(RandomSource randomSource){
         int randomInteger = randomSource.nextInt(totalWeight);
         int counter = 0;
-        for(WeightedAspectEntry weightedAspectEntry : this.filteredList){
+        for(WeightedAspectEntry<?> weightedAspectEntry : this.weightedAspectEntryList){
             counter += weightedAspectEntry.weight;
             if(counter > randomInteger){
-                return weightedAspectEntry;
+                return weightedAspectEntry.toAspectInstance();
             }
         }
         // Should never reach here
         return null;
     }
 
-    public static class Builder<R extends RandomAspectList>{
+    public static class Builder {
 
-        private final List<WeightedAspectEntry> weightedAspectEntryList = new ArrayList<>();
-        private final Class<R> clazz;
+        private final List<WeightedAspectEntry<?>> weightedAspectEntryList = new ArrayList<>();
 
-        protected Builder(Class<R> clazz){
-            this.clazz = clazz;
-        }
+        public Builder(){}
 
-        public Builder<R> add(Aspect aspect, float strength, int weight){
-            if(aspect instanceof IntegerAspect && strength != (float)(int)strength){
-                throw new IllegalArgumentException("Must be an integer strength for IntegerAspects");
-            }
-            if(aspect instanceof BooleanAspect){
-                strength = 1.0f;
-            }
-            weightedAspectEntryList.add(new WeightedAspectEntry(aspect, strength, weight));
+        public <T> Builder add(Aspect<T> aspect, T value, int weight){
+            weightedAspectEntryList.add(new WeightedAspectEntry<>(aspect, value, weight));
             return this;
         }
 
-        public R build(){
-            try{
-                return this.clazz.getDeclaredConstructor(List.class).newInstance(this.weightedAspectEntryList);
-            } catch(InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException noSuchMethodException){
-                Odyssey.LOGGER.error("RandomAspectList.Builder build failed.");
-                for(StackTraceElement stackTraceElement: noSuchMethodException.getStackTrace()){
-                    Odyssey.LOGGER.error(stackTraceElement);
-                }
-                return null;
-            }
+        public RandomAspectList build(){
+            return new RandomAspectList(this.weightedAspectEntryList);
         }
-
     }
 
-    public static record WeightedAspectEntry(Aspect aspect, float strength, int weight){}
+    public record WeightedAspectEntry<T>(Aspect<T> aspect, T value, int weight){
+
+        public AspectInstance<T> toAspectInstance(){
+            return new AspectInstance<>(this.aspect, this.value);
+        }
+    }
 }

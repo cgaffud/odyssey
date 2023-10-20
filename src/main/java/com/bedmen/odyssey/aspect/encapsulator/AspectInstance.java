@@ -9,7 +9,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 
@@ -26,8 +25,16 @@ public class AspectInstance<T> {
     public final AspectTooltipDisplaySetting aspectTooltipDisplaySetting;
     public final boolean obfuscated;
 
+    public AspectInstance(Aspect<T> aspect){
+        this(aspect, aspect.getBase(), AspectTooltipDisplaySetting.ALWAYS, false);
+    }
+
     public AspectInstance(Aspect<T> aspect, T value){
         this(aspect, value, AspectTooltipDisplaySetting.ALWAYS, false);
+    }
+
+    public AspectInstance(Aspect<?> aspect, Object value, Class<T> valueClass){
+        this((Aspect<T>)aspect, valueClass.cast(value), AspectTooltipDisplaySetting.ALWAYS, false);
     }
 
     public AspectInstance(Aspect<T> aspect, CompoundTag compoundTag, AspectTooltipDisplaySetting aspectTooltipDisplaySetting, boolean obfuscated){
@@ -97,35 +104,30 @@ public class AspectInstance<T> {
     public static FriendlyByteBuf.Writer<AspectInstance<?>> toNetworkStatic = (friendlyByteBuf, aspectInstance) -> aspectInstance.toNetwork(friendlyByteBuf);
 
     @Nullable
-    public static AspectInstance fromNetwork(FriendlyByteBuf friendlyByteBuf){
+    public static AspectInstance<?> fromNetwork(FriendlyByteBuf friendlyByteBuf){
         return fromCompoundTag(friendlyByteBuf.readNbt());
     }
 
+    public float getValueAsFloat(){
+        return this.aspect.valueToFloat(this.value);
+    }
+
     public float getModifiability(){
-        return this.aspect.weight * this.strength;
+        return this.aspect.weight * this.getValueAsFloat();
     }
 
     public AspectInstance<T> applyInfusionPenalty(){
         return this.aspect.createWeakerInstanceForInfusion(this);
-
-        if(this.aspect instanceof BooleanAspect){
-            return this;
-        }
-        if(this.aspect instanceof IntegerAspect integerAspect){
-            if(integerAspect.hasInfusionPenalty){
-                return new AspectInstance(this.aspect, Mth.floor(this.strength * INFUSION_PENALTY), this.aspectTooltipDisplaySetting, this.obfuscated);
-            } else {
-                return this;
-            }
-        }
-        return new AspectInstance(this.aspect, this.strength * INFUSION_PENALTY, this.aspectTooltipDisplaySetting, this.obfuscated);
     }
 
-    public AspectInstance withAddedStrength(float bonusStrength){
-        return new AspectInstance(this.aspect, this.strength + bonusStrength, this.aspectTooltipDisplaySetting, this.obfuscated);
+    public AspectInstance<T> withAddedValue(Object value){
+        if(this.value.getClass().isInstance(value)){
+            return new AspectInstance<>(this.aspect, this.aspect.getAddition().apply(this.value, (T)value), this.aspectTooltipDisplaySetting, this.obfuscated);
+        }
+        return this;
     }
 
-    public AspectInstance withMultipliedStrength(float multiplier){
-        return new AspectInstance(this.aspect, this.strength * multiplier, this.aspectTooltipDisplaySetting, this.obfuscated);
+    public AspectInstance<T> withMultipliedStrength(int multiplier){
+        return new AspectInstance<T>(this.aspect, this.aspect.getScaler().apply(this.value, multiplier), this.aspectTooltipDisplaySetting, this.obfuscated);
     }
 }

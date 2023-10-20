@@ -10,6 +10,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.TooltipFlag;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.*;
 
@@ -19,6 +20,10 @@ public class AspectHolder {
 
     public final LinkedHashMap<Aspect<?>, AspectInstance<?>> map = new LinkedHashMap<>();
     public final AspectHolderType aspectHolderType;
+
+    public AspectHolder(List<AspectInstance<?>> aspectInstanceList) {
+        this(aspectInstanceList, AspectHolderType.ADDED_MODIFIER);
+    }
 
     public AspectHolder(List<AspectInstance<?>> aspectInstanceList, AspectHolderType aspectHolderType) {
         for(AspectInstance<?> aspectInstance : aspectInstanceList){
@@ -63,5 +68,15 @@ public class AspectHolder {
 
     public AspectHolder copy(){
         return new AspectHolder(new ArrayList<>(this.map.values()), this.aspectHolderType);
+    }
+
+    public static AspectHolder combine(AspectHolder aspectHolder1, AspectHolder aspectHolder2){
+        List<AspectInstance<?>> aspectInstanceList = new ArrayList<>(aspectHolder1.map.values());
+        aspectInstanceList.addAll(aspectHolder2.map.values().stream().toList());
+        return new AspectHolder(aspectInstanceList, aspectHolder1.aspectHolderType);
+    }
+
+    public boolean hasAspect(Aspect<?> aspect){
+        return this.map.containsKey(aspect);
     }
 }

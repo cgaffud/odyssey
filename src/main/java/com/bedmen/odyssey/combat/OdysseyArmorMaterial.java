@@ -3,7 +3,6 @@ package com.bedmen.odyssey.combat;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.SetBonusAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.tier.OdysseyTier;
 import com.bedmen.odyssey.tier.OdysseyTiers;
@@ -22,23 +21,23 @@ public enum OdysseyArmorMaterial implements ArmorMaterial {
     CACTUS("oddc:cactus", OdysseyTiers.CACTUS, 5, new int[]{2,3,3,2}, SoundEvents.WOOL_BREAK, 0.0f, List.of()),
     LEATHER("leather", OdysseyTiers.LEATHER, 5, new int[]{2,3,4,3}, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, List.of()),
     COCONUT("oddc:coconut", OdysseyTiers.NO_TIER, 0, new int[]{0,0,0,3}, SoundEvents.WOOD_BREAK, 0.0f, List.of()),
-    CHICKEN("oddc:chicken", OdysseyTiers.CHICKEN, 10, new int[]{2,3,4,3}, SoundEvents.CHICKEN_HURT, 0.0f, List.of(new AspectInstance(Aspects.SLOW_FALL))),
+    CHICKEN("oddc:chicken", OdysseyTiers.CHICKEN, 10, new int[]{2,3,4,3}, SoundEvents.CHICKEN_HURT, 0.0f, List.of(new AspectInstance<>(Aspects.SLOW_FALL))),
     FUR("oddc:fur", OdysseyTiers.FUR, 10, new int[]{2,3,4,3}, SoundEvents.WOOL_FALL, 0.0f, List.of()),
     BRICK("oddc:brick", OdysseyTiers.BRICK, 12, new int[]{3,4,5,3}, SoundEvents.NETHER_BRICKS_PLACE, 0.05f, List.of()),
     CHAIN("chainmail", OdysseyTiers.CHAINMAIL, 15, new int[]{3,5,6, 4}, SoundEvents.ARMOR_EQUIP_CHAIN,  0.0F, List.of()),
     IRON("iron", OdysseyTiers.IRON, 15, new int[]{3,6,7,4}, SoundEvents.ARMOR_EQUIP_IRON,  0.0F, List.of()),
-    TURTLE("oddc:turtle", OdysseyTiers.TURTLE, 25, new int[]{3,6,7,4}, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, List.of(new AspectInstance(Aspects.TURTLE_MASTERY))),
+    TURTLE("oddc:turtle", OdysseyTiers.TURTLE, 25, new int[]{3,6,7,4}, SoundEvents.ARMOR_EQUIP_TURTLE,  0.0F, List.of(new AspectInstance<>(Aspects.TURTLE_MASTERY))),
     GOLD("gold", OdysseyTiers.GOLD, 7, new int[]{4,7,8,5}, SoundEvents.ARMOR_EQUIP_GOLD, 0.0F, List.of()),
     // Tier 2
-    GLIDER("oddc:glider", OdysseyTiers.GLIDER, 15, new int[]{4,7,8,5}, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, List.of(new AspectInstance(Aspects.GLIDE, 20))),
-    THORNMAIL("oddc:thornmail", OdysseyTiers.THORNMAIL, 20, new int[]{5,8,9,6}, SoundEvents.ARMOR_EQUIP_CHAIN, 0.0f, List.of(new AspectInstance(Aspects.ATTACK_DAMAGE, 1.0f))),
+    GLIDER("oddc:glider", OdysseyTiers.GLIDER, 15, new int[]{4,7,8,5}, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, List.of(new AspectInstance<>(Aspects.GLIDE, 20))),
+    THORNMAIL("oddc:thornmail", OdysseyTiers.THORNMAIL, 20, new int[]{5,8,9,6}, SoundEvents.ARMOR_EQUIP_CHAIN, 0.0f, List.of(new AspectInstance<>(Aspects.ATTACK_DAMAGE, 1.0f))),
     PARKA("oddc:parka", OdysseyTiers.PARKA, 20, new int[]{5,8,9,6}, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, List.of()),
     STERLING_SILVER("oddc:sterling_silver", OdysseyTiers.STERLING_SILVER, 20, new int[]{5,9,10,6}, SoundEvents.ARMOR_EQUIP_IRON , 0.0f, List.of()),
     REINFORCED("oddc:reinforced", OdysseyTiers.REINFORCED, 25, new int[]{6,10,11,7}, SoundEvents.ARMOR_EQUIP_IRON, 0.1F, List.of()),
     DIAMOND("diamond", OdysseyTiers.DIAMOND, 11, new int[]{7,12,13,8}, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, List.of()),
-    ARCTIC("oddc:arctic", OdysseyTiers.ARCTIC, 21, new int[]{7,12,13,8}, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, List.of(new AspectInstance(Aspects.FROST_WALKER))),
+    ARCTIC("oddc:arctic", OdysseyTiers.ARCTIC, 21, new int[]{7,12,13,8}, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, List.of(new AspectInstance<>(Aspects.FROST_WALKER))),
     // Tier 3
-    ZEPHYR("oddc:zephyr", OdysseyTiers.ZEPHYR, 20, new int[]{5,8,9,6}, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, List.of(new AspectInstance(Aspects.GLIDE, 40))),
+    ZEPHYR("oddc:zephyr", OdysseyTiers.ZEPHYR, 20, new int[]{5,8,9,6}, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.0f, List.of(new AspectInstance<>(Aspects.GLIDE, 40))),
     NETHERITE("netherite", OdysseyTiers.NETHERITE, 22, new int[]{7,13,15,9}, SoundEvents.ARMOR_EQUIP_NETHERITE, 0.1F, List.of());
 //    MARINE("oddc:marine", 25, new int[]{7,13,14,8}, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.0F, () -> Ingredient.of(ItemRegistry.PEARL.get())),
 //    LEVIATHAN("oddc:leviathan", 30, new int[]{8,14,16,10}, SoundEvents.ARMOR_EQUIP_TURTLE , 0.0F, () -> Ingredient.of(ItemRegistry.LEVIATHAN_SCALE.get()); }, new SetBonusEnchSup(EnchantmentRegistry.FIREPROOF, "key.sneak"));

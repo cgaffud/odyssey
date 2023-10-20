@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.OdysseyRangedAmmoWeapon;
 import com.bedmen.odyssey.combat.WeaponUtil;
@@ -34,6 +35,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
     public final float damageMultiplier;
     public final int baseMaxChargeTicks;
     private final AspectHolder innateAspectHolder;
+    private final AspectHolder abilityHolder;
     protected final Tier tier;
 
     public AspectBowItem(Item.Properties properties, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateModifierList) {
@@ -41,6 +43,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
         this.damageMultiplier = damageMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
         this.innateAspectHolder = new AspectHolder(innateModifierList, AspectHolderType.INNATE_ASPECT);
+        this.abilityHolder = new AspectHolder(abilityList, AspectHolderType.ABILITY);
         this.tier = tier;
     }
 
@@ -56,12 +59,16 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
         return this.damageMultiplier + ConditionalAmpUtil.getDamageTag(bow);
     }
 
-    public AspectHolder getInnateAspectHolder(){
+    public AspectHolder getInnateAspectHolder() {
         return this.innateAspectHolder;
     }
 
+    public AspectHolder getAbilityHolder() {
+        return this.abilityHolder;
+    }
+
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int count) {
-        if(this.getUseDuration(itemStack) - count > WeaponUtil.getRangedMaxChargeTicks(itemStack) && AspectUtil.getItemStackAspectStrength(itemStack, Aspects.REPEAT)){
+        if(this.getUseDuration(itemStack) - count > WeaponUtil.getRangedMaxChargeTicks(itemStack) && AspectUtil.getItemStackAspectValue(itemStack, Aspects.REPEAT)){
             livingEntity.stopUsingItem();
             this.releaseUsing(itemStack, level, livingEntity, count);
         }
@@ -90,7 +97,7 @@ public class AspectBowItem extends BowItem implements INeedsToRegisterItemModelP
                         AspectArrowItem arrowItem = (AspectArrowItem)(ammo.getItem() instanceof AspectArrowItem ? ammo.getItem() : Items.ARROW);
                         AbstractArrow abstractArrow = arrowItem.createArrow(level, ammo, player);
 
-                        float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(livingEntity, livingEntity.getUsedItemHand(), Aspects.ACCURACY);
+                        float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedEntityTotalAspectValue(livingEntity, livingEntity.getUsedItemHand(), Aspects.ACCURACY);
                         if(useTicks >= WeaponUtil.getRangedMaxChargeTicks(bow)){
                             abstractArrow.setCritArrow(true);
                         }

@@ -2,6 +2,7 @@ package com.bedmen.odyssey.commands;
 
 import com.bedmen.odyssey.aspect.AspectTierManager;
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.loot.functions.ModifyWithTierFunction;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -38,14 +39,14 @@ public class ModifyWithTierCommand {
                 .requires((commandSourceStack) -> commandSourceStack.hasPermission(2))
                 .then(Commands.argument("targets", EntityArgument.entities())
                         .then(Commands.argument("tier", IntegerArgumentType.integer())
-                                .executes((commandContext) -> modifyWithTier(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), 1.0f, false))
+                                .executes((commandContext) -> modifyWithTier(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), 1.0f, ModifyWithTierFunction.CURSE_CHANCE))
                                 .then(Commands.argument("chance", FloatArgumentType.floatArg(0.0f, 1.0f))
-                                        .executes((commandContext) -> modifyWithTier(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), FloatArgumentType.getFloat(commandContext, "chance"), false))
-                                        .then(Commands.argument("curse", BoolArgumentType.bool())
-                                                .executes((commandContext) -> modifyWithTier(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), FloatArgumentType.getFloat(commandContext, "chance"), BoolArgumentType.getBool(commandContext, "curse"))))))));
+                                        .executes((commandContext) -> modifyWithTier(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), FloatArgumentType.getFloat(commandContext, "chance"), ModifyWithTierFunction.CURSE_CHANCE))
+                                        .then(Commands.argument("cursePercentage", FloatArgumentType.floatArg(0.0f, 1.0f))
+                                                .executes((commandContext) -> modifyWithTier(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), IntegerArgumentType.getInteger(commandContext, "tier"), FloatArgumentType.getFloat(commandContext, "chance"), FloatArgumentType.getFloat(commandContext, "cursePercentage"))))))));
     }
 
-    private static int modifyWithTier(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, int tier, float chance, boolean curse) throws CommandSyntaxException {
+    private static int modifyWithTier(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, int tier, float chance, float cursePercentage) throws CommandSyntaxException {
         if(tier > AspectTierManager.HIGHEST_TIER){
             throw ERROR_TIER.create(tier);
         }
@@ -58,7 +59,7 @@ public class ModifyWithTierCommand {
                 ItemStack itemstack = livingEntity.getMainHandItem();
                 if (!itemstack.isEmpty()) {
                     AspectUtil.resetAddedModifiers(itemstack);
-                    AspectTierManager.itemStackModifyByTier(itemstack, livingEntity.getRandom(), tier, chance, curse);
+                    AspectTierManager.itemStackModifyByTier(itemstack, livingEntity.getRandom(), tier, chance, cursePercentage);
                     ++numSuccess;
                 } else if (isSingleEntity) {
                     throw ERROR_NO_ITEM.create(livingEntity.getName().getString());

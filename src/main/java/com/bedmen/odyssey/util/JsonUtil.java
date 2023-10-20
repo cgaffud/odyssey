@@ -1,6 +1,8 @@
 package com.bedmen.odyssey.util;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.object.Aspect;
+import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.magic.ExperienceCost;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,12 +29,13 @@ public class JsonUtil {
     }
 
     private static final String ASPECT_KEY = "aspect";
-    private static final String STRENGTH_KEY = "strength";
-    public static AspectInstance getAspectInstance(JsonObject jsonObject, String key){
+    private static final String VALUE_KEY = "value";
+    public static AspectInstance<?> getAspectInstance(JsonObject jsonObject, String key){
         JsonObject aspectInstanceObject = jsonObject.getAsJsonObject(key);
         String aspectId = aspectInstanceObject.getAsJsonPrimitive(ASPECT_KEY).getAsString();
-        float strength = aspectInstanceObject.getAsJsonPrimitive(STRENGTH_KEY).getAsFloat();
-        return new AspectInstance(aspectId, strength);
+        Aspect<?> aspect = Aspects.ASPECT_REGISTER.get(aspectId);
+        float floatValue = aspectInstanceObject.getAsJsonPrimitive(VALUE_KEY).getAsFloat();
+        return new AspectInstance<>(aspect, aspect.floatToValue(floatValue), aspect.getValueClass());
     }
 
     private static final String LEVEL_REQUIREMENT_KEY = "levelRequirement";

@@ -32,7 +32,7 @@ public class ConditionalAmpUtil {
     }
 
     public static void setDamageTag(ItemStack itemStack, Entity entity) {
-        float aspectBonus = AspectUtil.getConditionalAspectStrength(itemStack, entity.blockPosition(), entity.level);
+        float aspectBonus = AspectUtil.getConditionalAspectValue(itemStack, entity.blockPosition(), entity.level);
         itemStack.getOrCreateTag().putFloat(DAMAGE_BOOST_TAG, aspectBonus);
     }
 

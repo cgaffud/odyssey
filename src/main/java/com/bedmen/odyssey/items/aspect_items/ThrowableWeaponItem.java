@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.object.MultishotAspect;
 import com.bedmen.odyssey.combat.OdysseyRangedWeapon;
@@ -37,15 +38,17 @@ import java.util.Optional;
 public abstract class ThrowableWeaponItem extends Item implements Vanishable, INeedsToRegisterItemModelProperty, OdysseyRangedWeapon, InnateAspectItem {
     private static final int THROWING_CHARGE_TIME = 10;
     public final ThrowableType throwableType;
-    public final InnateAspectHolder innateAspectHolder;
+    private final AspectHolder innateAspectHolder;
+    private final AspectHolder abilityHolder;
     protected final Tier tier;
 
-    public ThrowableWeaponItem(Item.Properties properties, Tier tier, ThrowableType throwableType, List<AspectInstance> additionalAbilityList) {
+    public ThrowableWeaponItem(Item.Properties properties, Tier tier, ThrowableType throwableType, List<AspectInstance<?>> additionalAbilityList) {
         super(properties.durability(tier.getUses()));
         this.throwableType = throwableType;
         List<AspectInstance<?>> abilityList = new ArrayList<>(additionalAbilityList);
         abilityList.addAll(throwableType.abilityList);
-        this.innateAspectHolder = new InnateAspectHolder(abilityList, throwableType.innateModifierList);
+        this.innateAspectHolder = new AspectHolder(throwableType.innateModifierList, AspectHolderType.INNATE_ASPECT);
+        this.abilityHolder = new AspectHolder(abilityList, AspectHolderType.ABILITY);
         this.tier = tier;
     }
 
@@ -55,6 +58,10 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
 
     public AspectHolder getInnateAspectHolder() {
         return this.innateAspectHolder;
+    }
+
+    public AspectHolder getAbilityHolder() {
+        return this.abilityHolder;
     }
 
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int compartments, boolean selected) {
@@ -93,7 +100,7 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
                 });
             }
             int numberOfSideProjectiles = MultishotAspect.strengthToNumberOfSideProjectiles(
-                    AspectUtil.getOneHandedTotalAspectStrength(owner, owner.getUsedItemHand(), Aspects.MULTISHOT)
+                    AspectUtil.getOneHandedEntityTotalAspectValue(owner, owner.getUsedItemHand(), Aspects.MULTISHOT)
             );
             int numberOfProjectilesOnOneSide = numberOfSideProjectiles / 2;
             for(int multishotIndex = -numberOfProjectilesOnOneSide; multishotIndex <= numberOfProjectilesOnOneSide; multishotIndex++){
@@ -114,10 +121,10 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
 
     private OdysseyAbstractArrow shootAndGetThrownWeaponEntity(Level level, LivingEntity owner, ItemStack thrownWeaponStack, boolean isMultishot, Vector3f vector3f) {
         OdysseyAbstractArrow thrownWeaponEntity = getThrownWeaponEntity(level, owner, thrownWeaponStack, isMultishot);
-        double multishotDamagePenalty = isMultishot ? MultishotAspect.strengthToDamagePenalty(AspectUtil.getOneHandedTotalAspectStrength(owner, owner.getUsedItemHand(), Aspects.MULTISHOT)) : 1.0d;
+        double multishotDamagePenalty = isMultishot ? MultishotAspect.strengthToDamagePenalty(AspectUtil.getOneHandedEntityTotalAspectValue(owner, owner.getUsedItemHand(), Aspects.MULTISHOT)) : 1.0d;
         thrownWeaponEntity.setBaseDamage(this.getEffectiveDamage(thrownWeaponStack) * multishotDamagePenalty);
-        thrownWeaponEntity.addAspectStrengthMap(AspectUtil.getAspectStrengthMap(thrownWeaponStack));
-        float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(owner, owner.getUsedItemHand(), Aspects.ACCURACY);
+        thrownWeaponEntity.addAspectHolder(AspectUtil.getCombinedAspectHolder(thrownWeaponStack));
+        float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedEntityTotalAspectValue(owner, owner.getUsedItemHand(), Aspects.ACCURACY);
         thrownWeaponEntity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.getFinalVelocity(owner), 1.0f / accuracyMultiplier);
         if(isMultishot){
             thrownWeaponEntity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
@@ -168,11 +175,11 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
     }
 
     public float getFinalVelocity(LivingEntity livingEntity){
-        return this.throwableType.velocity * (1.0f + AspectUtil.getOneHandedTotalAspectStrength(livingEntity, livingEntity.getUsedItemHand(), Aspects.VELOCITY));
+        return this.throwableType.velocity * (1.0f + AspectUtil.getOneHandedEntityTotalAspectValue(livingEntity, livingEntity.getUsedItemHand(), Aspects.VELOCITY));
     }
 
     public float getItemStackVelocity(ItemStack thrownWeaponStack){
-        return this.throwableType.velocity * (1.0f + AspectUtil.getItemStackAspectStrength(thrownWeaponStack, Aspects.VELOCITY));
+        return this.throwableType.velocity * (1.0f + AspectUtil.getItemStackAspectValue(thrownWeaponStack, Aspects.VELOCITY));
     }
 
 

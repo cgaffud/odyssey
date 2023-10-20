@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.object.MultishotAspect;
 import com.bedmen.odyssey.combat.OdysseyRangedAmmoWeapon;
@@ -59,13 +60,15 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     private final float damageMultiplier;
     private final int baseMaxChargeTicks;
     private final AspectHolder innateAspectHolder;
+    private final AspectHolder abilityHolder;
     protected final Tier tier;
 
-    public AspectCrossbowItem(Item.Properties propertiesIn, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance<?>> abilityList, List<AspectInstance> innateAspectList) {
+    public AspectCrossbowItem(Item.Properties propertiesIn, Tier tier, float damageMultiplier, int baseMaxChargeTicks, List<AspectInstance<?>> abilityList, List<AspectInstance<?>> innateAspectList) {
         super(propertiesIn.durability(tier.getUses()));
         this.damageMultiplier = damageMultiplier;
         this.baseMaxChargeTicks = baseMaxChargeTicks;
-        this.innateAspectHolder = new InnateAspectHolder(abilityList, innateAspectList);
+        this.innateAspectHolder = new AspectHolder(innateAspectList, AspectHolderType.INNATE_ASPECT);
+        this.abilityHolder = new AspectHolder(abilityList, AspectHolderType.ABILITY);
         this.tier = tier;
     }
 
@@ -73,8 +76,12 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
         return this.tier;
     }
 
-    public AspectHolder getInnateAspectHolder(){
+    public AspectHolder getInnateAspectHolder() {
         return this.innateAspectHolder;
+    }
+
+    public AspectHolder getAbilityHolder() {
+        return this.abilityHolder;
     }
 
     public Predicate<ItemStack> getSupportedHeldProjectiles() {
@@ -88,7 +95,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack crossbow = player.getItemInHand(interactionHand);
         if (isCharged(crossbow)) {
-            float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedTotalAspectStrength(player, interactionHand, Aspects.ACCURACY);
+            float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedEntityTotalAspectValue(player, interactionHand, Aspects.ACCURACY);
             performShooting(level, player, interactionHand, crossbow, getShootingVelocity(crossbow), 1.0f/accuracyMultiplier);
             setCharged(crossbow, false);
             return InteractionResultHolder.consume(crossbow);
@@ -117,7 +124,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
 
     public static boolean tryLoadProjectiles(LivingEntity livingEntity, ItemStack crossbow) {
         int numberOfArrows = MultishotAspect.strengthToNumberOfTotalProjectiles(
-                AspectUtil.getOneHandedTotalAspectStrength(livingEntity, livingEntity.getUsedItemHand(), Aspects.MULTISHOT)
+                AspectUtil.getOneHandedEntityTotalAspectValue(livingEntity, livingEntity.getUsedItemHand(), Aspects.MULTISHOT)
         );
         boolean isPlayer = livingEntity instanceof Player;
         boolean flag = isPlayer && ((Player)livingEntity).getAbilities().instabuild;
@@ -226,7 +233,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
             }
             if(projectile instanceof AbstractArrow abstractArrow && isMultishotArrow){
                 abstractArrow.setBaseDamage(abstractArrow.getBaseDamage() * MultishotAspect.strengthToDamagePenalty(
-                        AspectUtil.getOneHandedTotalAspectStrength(livingEntity, interactionHand, Aspects.MULTISHOT)
+                        AspectUtil.getOneHandedEntityTotalAspectValue(livingEntity, interactionHand, Aspects.MULTISHOT)
                 ));
             }
 
@@ -317,7 +324,7 @@ public class AspectCrossbowItem extends CrossbowItem implements INeedsToRegister
                 level.playSound((Player)null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), soundevent1, SoundSource.PLAYERS, 0.5F, 1.0F);
             }
         }
-        if(WeaponUtil.getCharge(livingEntity, crossbow) >= 1.0f && AspectUtil.getItemStackAspectStrength(crossbow, Aspects.REPEAT)){
+        if(WeaponUtil.getCharge(livingEntity, crossbow) >= 1.0f && AspectUtil.getItemStackAspectValue(crossbow, Aspects.REPEAT)){
             livingEntity.stopUsingItem();
             this.releaseUsing(crossbow, level, livingEntity, count);
         }

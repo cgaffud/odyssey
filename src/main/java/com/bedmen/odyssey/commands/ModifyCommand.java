@@ -67,7 +67,7 @@ public class ModifyCommand {
             if (entity instanceof LivingEntity livingEntity) {
                 ItemStack itemstack = livingEntity.getMainHandItem();
                 if (!itemstack.isEmpty()) {
-                    AspectInstance aspectInstance = new AspectInstance(aspect, strength);
+                    AspectInstance<?> aspectInstance = new AspectInstance<>(aspect, aspect.floatToValue(strength), aspect.getValueClass());
                     if(bypassChecks || AspectUtil.canAddModifier(itemstack, aspectInstance)){
                         aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
                         AspectUtil.replaceModifier(itemstack, aspectInstance);

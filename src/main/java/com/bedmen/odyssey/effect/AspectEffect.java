@@ -7,8 +7,8 @@ import java.util.List;
 
 public class AspectEffect extends OdysseyEffect {
 
-    public final List<AspectInstance> aspectInstanceList;
-    public AspectEffect(MobEffectCategory typeIn, List<AspectInstance> aspectInstanceList) {
+    public final List<AspectInstance<?>> aspectInstanceList;
+    public AspectEffect(MobEffectCategory typeIn, List<AspectInstance<?>> aspectInstanceList) {
         super(typeIn, 0, true);
         this.aspectInstanceList = aspectInstanceList;
     }

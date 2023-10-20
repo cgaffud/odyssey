@@ -2,22 +2,19 @@ package com.bedmen.odyssey.aspect.query;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 
-import java.util.List;
 import java.util.function.BinaryOperator;
 
 public abstract class AspectQuery<T> {
 
-    protected final BinaryOperator<T> add;
+    public final BinaryOperator<T> addition;
     protected final Class<T> clazz;
-    protected T value;
+    public final T base;
 
-    public AspectQuery(BinaryOperator<T> add, T base, Class<T> clazz){
-        this.add = add;
-        this.value = base;
+    public AspectQuery(BinaryOperator<T> addition, T base, Class<T> clazz){
+        this.addition = addition;
+        this.base = base;
         this.clazz = clazz;
     }
 
-    public abstract void query(AspectHolder... aspectHolders);
-    public abstract void query(List<AspectHolder> aspectHolders);
-    public abstract T returnValue();
+    public abstract T query(AspectHolder aspectHolders);
 }

@@ -152,14 +152,14 @@ public class MoonTowerPiece extends HeightAdjustingPiece {
 
     private enum MoonTowerEnemyType{
         ZOMBIE(EntityTypeRegistry.MOON_TOWER_ZOMBIE.get(), (livingEntity, random) -> {
-            livingEntity.setItemSlot(EquipmentSlot.HEAD, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_HELMET.get(), random , 2, 0.5f, false));
-            livingEntity.setItemSlot(EquipmentSlot.LEGS, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random , 2, 0.5f, false));
-            livingEntity.setItemSlot(EquipmentSlot.FEET, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_BOOTS.get(), random , 2, 0.5f, false));
-            livingEntity.setItemInHand(InteractionHand.MAIN_HAND, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_MACE.get(), random, 2, 0.5f, false));
+            livingEntity.setItemSlot(EquipmentSlot.HEAD, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_HELMET.get(), random , 2, 0.5f, 0f));
+            livingEntity.setItemSlot(EquipmentSlot.LEGS, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_LEGGINGS.get(), random , 2, 0.5f, 0f));
+            livingEntity.setItemSlot(EquipmentSlot.FEET, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_BOOTS.get(), random , 2, 0.5f, 0f));
+            livingEntity.setItemInHand(InteractionHand.MAIN_HAND, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_MACE.get(), random, 2, 0.5f, 0f));
         }),
         BEEFY_ZOMBIE(EntityTypeRegistry.MOON_TOWER_ZOMBIE.get(), (livingEntity, random) -> {
             ZOMBIE.equipper.accept(livingEntity, random);
-            livingEntity.setItemSlot(EquipmentSlot.CHEST, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_CHESTPLATE.get(), random , 2, 0.5f, false));
+            livingEntity.setItemSlot(EquipmentSlot.CHEST, AspectTierManager.itemModifyByTier(ItemRegistry.STERLING_SILVER_CHESTPLATE.get(), random , 2, 0.5f, 0f));
         }),
         SKELETON(EntityTypeRegistry.MOON_TOWER_SKELETON.get(), (livingEntity, random) -> {
             ZOMBIE.equipper.accept(livingEntity, random);

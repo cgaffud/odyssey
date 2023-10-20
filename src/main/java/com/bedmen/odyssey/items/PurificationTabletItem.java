@@ -35,9 +35,9 @@ public class PurificationTabletItem extends Item {
     public static Aspect getAspect(ItemStack itemStack){
         CompoundTag compoundTag = itemStack.getOrCreateTag();
         if(compoundTag.contains(PURIFICATION_ASPECT_TAG) && itemStack.is(ItemRegistry.PURIFICATION_TABLET.get())){
-            String aspectName = compoundTag.getString(PURIFICATION_ASPECT_TAG);
-            if(Aspects.ASPECT_REGISTER.containsKey(aspectName)){
-                return Aspects.ASPECT_REGISTER.get(aspectName);
+            String aspectId = compoundTag.getString(PURIFICATION_ASPECT_TAG);
+            if(Aspects.ASPECT_REGISTER.containsKey(aspectId)){
+                return Aspects.ASPECT_REGISTER.get(aspectId);
             }
         }
         throw new IllegalArgumentException("Purification Tablet ItemStack failed to retrieve its purification aspect");
@@ -57,7 +57,7 @@ public class PurificationTabletItem extends Item {
 
     public void fillItemCategory(CreativeModeTab creativeModeTab, NonNullList<ItemStack> itemStackList) {
         if(creativeModeTab == OdysseyCreativeModeTab.MAGIC || creativeModeTab == CreativeModeTab.TAB_SEARCH){
-            for(Aspect aspect: Aspects.ASPECT_REGISTER.values()){
+            for(Aspect<?> aspect: Aspects.ASPECT_REGISTER.values()){
                 itemStackList.add(createForAspect(aspect));
             }
         }

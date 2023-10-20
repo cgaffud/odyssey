@@ -4,7 +4,6 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.items.aspect_items.*;
 import com.bedmen.odyssey.items.aspect_items.AspectBowItem;
 import com.bedmen.odyssey.items.aspect_items.MeleeWeaponClassItem;
 import com.bedmen.odyssey.items.aspect_items.QuiverItem;
@@ -182,7 +181,7 @@ public class WeaponUtil {
     }
 
     public static boolean isDualWieldItem(ItemStack itemStack){
-        return AspectUtil.getItemStackAspectStrength(itemStack, Aspects.DUAL_WIELD);
+        return AspectUtil.getItemStackAspectValue(itemStack, Aspects.DUAL_WIELD);
     }
 
     public static void smackTarget(SmackPush smackPush) {

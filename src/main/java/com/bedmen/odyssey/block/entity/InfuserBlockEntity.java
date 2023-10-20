@@ -179,9 +179,9 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             int count = this.getMinimumCountOfInputItemStacks(Set.of(direction));
             ItemStack pedestalItemStack = this.newPedestalItemStackMap.get(direction);
             if(canInfuse(this.getItemStackOriginal(), pedestalItemStack)){
-                List<AspectInstance> infusionModifierList = getValidInfusionModifiers(this.getItemStackOriginal(), pedestalItemStack);
+                List<AspectInstance<?>> infusionModifierList = getValidInfusionModifiers(this.getItemStackOriginal(), pedestalItemStack);
                 if(infusionModifierList.size() > 0){
-                    List<AspectInstance> adjustedModifierList = infusionModifierList.stream().map(AspectInstance::applyInfusionPenalty).collect(Collectors.toList());
+                    List<AspectInstance<?>> adjustedModifierList = infusionModifierList.stream().map(AspectInstance::applyInfusionPenalty).collect(Collectors.toList());
                     float modifiabilityToBeUsed = adjustedModifierList.stream().map(AspectInstance::getModifiability).reduce(0.0f, Float::sum);
                     if(AspectUtil.getModifiabilityRemaining(this.getItemStackOriginal()) >= modifiabilityToBeUsed){
                         if(!this.isInfusing(direction)){
@@ -228,8 +228,8 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         if(pedestalItem instanceof InnateAspectItem pedestalInnateAspectItem){
             Item infuserItem = infuserItemStack.getItem();
             // Make sure all aspect item predicates pass
-            List<AspectInstance> pedestalInnateModifierList = pedestalInnateAspectItem.getInnateAspectHolder().innateModifierList;
-            if(pedestalInnateModifierList.size() <= 0){
+            Collection<AspectInstance<?>> pedestalInnateModifierCollection = pedestalInnateAspectItem.getInnateAspectHolder().map.values();
+            if(pedestalInnateModifierCollection.size() == 0){
                 return false;
             }
             // If both items are digger tools, the tool type has to match
@@ -276,11 +276,11 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
         return false;
     }
 
-    private static List<AspectInstance> getValidInfusionModifiers(ItemStack infuserItemStack, ItemStack pedestalItemStack){
-        List<AspectInstance> pedestalInnateModifierList = ((InnateAspectItem)pedestalItemStack.getItem()).getInnateAspectHolder().innateModifierList;
+    private static List<AspectInstance<?>> getValidInfusionModifiers(ItemStack infuserItemStack, ItemStack pedestalItemStack){
+        Collection<AspectInstance<?>> pedestalInnateModifierCollection = ((InnateAspectItem)pedestalItemStack.getItem()).getInnateAspectHolder().map.values();
         // Remove any modifiers that are already innate on the infuserItemStack
-        List<AspectInstance> validModifierList = new ArrayList<>(pedestalInnateModifierList);
-        for(AspectInstance pedestalAspectInstance: pedestalInnateModifierList){
+        List<AspectInstance<?>> validModifierList = new ArrayList<>(pedestalInnateModifierCollection);
+        for(AspectInstance<?> pedestalAspectInstance: pedestalInnateModifierCollection){
             if(!pedestalAspectInstance.aspect.itemPredicate.test(infuserItemStack.getItem())){
                 validModifierList.remove(pedestalAspectInstance);
             } else if(AspectUtil.itemStackHasAspect(infuserItemStack, pedestalAspectInstance.aspect)){

@@ -1,9 +1,6 @@
 package com.bedmen.odyssey.network.datasync;
 
-import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.AspectStrengthMap;
-import com.bedmen.odyssey.aspect.encapsulator.PermaBuffHolder;
-import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.boss.coven.CovenType;
 import com.bedmen.odyssey.entity.monster.OdysseyCreeper;
@@ -13,9 +10,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -85,29 +80,19 @@ public class OdysseyDataSerializers {
         return getMapSerializer(FriendlyByteBuf::writeEnum, writeValueToBuffer, friendlyByteBuf -> friendlyByteBuf.readEnum(enumClass), readValueFromBuffer, HashMap::new, Map::copyOf);
     }
 
-    public static final EntityDataSerializer<PermaBuffHolder> PERMABUFF_HOLDER = new EntityDataSerializer<>() {
-        public void write(FriendlyByteBuf buffer, @NotNull PermaBuffHolder permabuffHolder) {
-            buffer.writeCollection(permabuffHolder.aspectInstanceList, AspectInstance.toNetworkStatic);
+    public static final EntityDataSerializer<AspectHolder> ASPECT_HOLDER = new EntityDataSerializer<>() {
+        public void write(FriendlyByteBuf buffer, @NotNull AspectHolder aspectHolder) {
+            buffer.writeNbt(aspectHolder.toCompoundTag());
         }
 
-        public PermaBuffHolder read(FriendlyByteBuf buffer) {
-            List<AspectInstance> aspectInstanceList = buffer.readCollection(i -> new ArrayList<>(), AspectInstance::fromNetwork);
-            return new PermaBuffHolder(aspectInstanceList);
+        public AspectHolder read(FriendlyByteBuf buffer) {
+            return AspectHolder.fromCompoundTag(buffer.readNbt());
         }
 
-        public PermaBuffHolder copy(@NotNull PermaBuffHolder permabuffHolder) {
-            return permabuffHolder.copy();
+        public AspectHolder copy(@NotNull AspectHolder aspectHolder) {
+            return aspectHolder.copy();
         }
     };
-
-    public static final EntityDataSerializer<AspectStrengthMap> ASPECT_STRENGTH_MAP = getMapSerializer(
-            (buffer, aspect) -> buffer.writeUtf(aspect.id),
-            FriendlyByteBuf::writeFloat,
-            (buffer) -> Aspects.ASPECT_REGISTER.get(buffer.readUtf()),
-            FriendlyByteBuf::readFloat,
-            AspectStrengthMap::new,
-            AspectStrengthMap::copy
-    );
     public static final EntityDataSerializer<FireType>  FIRE_TYPE = getEnumSerializer(FireType.class);
     public static final EntityDataSerializer<OdysseyCreeper.CreeperType>  CREEPER_TYPE = getEnumSerializer(OdysseyCreeper.CreeperType.class);
     public static final EntityDataSerializer<Map<CovenType, Integer>> COVENTYPE_INT_MAP = getEnumMapSerializer(CovenType.class, FriendlyByteBuf::writeVarInt, FriendlyByteBuf::readVarInt);

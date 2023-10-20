@@ -1,16 +1,15 @@
 package com.bedmen.odyssey.mixin;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.PermaBuffHolder;
-import com.bedmen.odyssey.aspect.encapsulator.TempBuffHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
-import com.bedmen.odyssey.items.aspect_items.AspectShieldItem;
 import com.bedmen.odyssey.items.aspect_items.ParryableWeaponItem;
 import com.bedmen.odyssey.network.datasync.OdysseyDataSerializers;
 import com.bedmen.odyssey.registry.EffectRegistry;
@@ -40,9 +39,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -63,7 +60,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private static final EntityDataAccessor<FireType> DATA_FIRE_TYPE = SynchedEntityData.defineId(LivingEntity.class, OdysseyDataSerializers.FIRE_TYPE);
     private static final EntityDataAccessor<Float> DATA_TEMPERATURE = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_SHIELD_METER = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<PermaBuffHolder> DATA_PERMABUFF_HOLDER = SynchedEntityData.defineId(LivingEntity.class, OdysseyDataSerializers.PERMABUFF_HOLDER);
+    private static final EntityDataAccessor<AspectHolder> DATA_PERMABUFF_HOLDER = SynchedEntityData.defineId(LivingEntity.class, OdysseyDataSerializers.ASPECT_HOLDER);
     private static final String FLIGHT_VALUE_TAG = "FlightValue";
     private static final String GLIDING_LEVEL_TAG = "GlidingLevel";
     private static final String SLOW_FALL_TAG = "HasSlowFall";
@@ -83,7 +80,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
     private SmackPush smackPush = new SmackPush();
     private final List<Float> knockbackQueue = new ArrayList<>();
     private Optional<Integer> trueHurtTime = Optional.empty();
-    private TempBuffHolder tempBuffHolder = new TempBuffHolder(List.of());
+    private AspectHolder tempBuffHolder = new AspectHolder(List.of(), AspectHolderType.TEMPBUFF);
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -143,29 +140,29 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         this.entityData.define(DATA_FIRE_TYPE, FireType.NONE);
         this.entityData.define(DATA_TEMPERATURE, 0.0f);
         this.entityData.define(DATA_SHIELD_METER, WeaponUtil.SHIELD_METER_MAX);
-        this.entityData.define(DATA_PERMABUFF_HOLDER, new PermaBuffHolder(new ArrayList<>()));
+        this.entityData.define(DATA_PERMABUFF_HOLDER, new AspectHolder(new ArrayList<>(), AspectHolderType.PERMABUFF));
     }
 
-    public PermaBuffHolder getPermaBuffHolder(){
+    public AspectHolder getPermaBuffHolder(){
         return this.entityData.get(DATA_PERMABUFF_HOLDER).copy();
     }
 
-    public void setPermaBuffHolder(PermaBuffHolder newPermaBuffHolder){
+    public void setPermaBuffHolder(AspectHolder newPermaBuffHolder){
         Multimap<Attribute, AttributeModifier> oldMultimap = HashMultimap.create();
         Multimap<Attribute, AttributeModifier> newMultimap = HashMultimap.create();
-        AspectUtil.fillAttributeMultimap(this.getPermaBuffHolder().aspectStrengthMap, PERMABUFF_STRING, oldMultimap);
-        AspectUtil.fillAttributeMultimap(newPermaBuffHolder.aspectStrengthMap, PERMABUFF_STRING, newMultimap);
+        AspectUtil.fillAttributeMultimap(this.getPermaBuffHolder(), PERMABUFF_STRING, oldMultimap);
+        AspectUtil.fillAttributeMultimap(newPermaBuffHolder, PERMABUFF_STRING, newMultimap);
         this.getAttributes().removeAttributeModifiers(oldMultimap);
         this.getAttributes().addTransientAttributeModifiers(newMultimap);
         this.entityData.set(DATA_PERMABUFF_HOLDER, newPermaBuffHolder.copy());
     }
 
-    public void setPermaBuff(AspectInstance aspectInstance){
-        List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermaBuffHolder().aspectInstanceList);
+    public void setPermaBuff(AspectInstance<?> aspectInstance){
+        List<AspectInstance<?>> aspectInstanceList = new ArrayList<>(this.getPermaBuffHolder().map.values());
         if(aspectInstanceList.stream().anyMatch(oldAspectInstance -> oldAspectInstance.aspect == aspectInstance.aspect)){
             aspectInstanceList = aspectInstanceList.stream().map(oldAspectInstance -> {
                 if(oldAspectInstance.aspect == aspectInstance.aspect){
-                    if(aspectInstance.strength <= 0.0f){
+                    if(aspectInstance.value.equals(aspectInstance.aspect.getBase())){
                         return null;
                     }
                     return aspectInstance;
@@ -175,26 +172,26 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
         } else {
             aspectInstanceList.add(aspectInstance);
         }
-        PermaBuffHolder permabuffHolder = new PermaBuffHolder(aspectInstanceList);
+        AspectHolder permabuffHolder = new AspectHolder(aspectInstanceList, AspectHolderType.PERMABUFF);
         this.setPermaBuffHolder(permabuffHolder);
     }
 
-    public void addPermaBuffs(List<AspectInstance> permabuffList){
-        List<AspectInstance> aspectInstanceList = new ArrayList<>(this.getPermaBuffHolder().aspectInstanceList);
+    public void addPermaBuffs(List<AspectInstance<?>> permabuffList){
+        List<AspectInstance<?>> aspectInstanceList = new ArrayList<>(this.getPermaBuffHolder().map.values());
         permabuffList.forEach(aspectInstance -> AspectUtil.addInstance(aspectInstanceList, aspectInstance));
-        this.setPermaBuffHolder(new PermaBuffHolder(aspectInstanceList));
+        this.setPermaBuffHolder(new AspectHolder(aspectInstanceList, AspectHolderType.PERMABUFF));
     }
 
-    public TempBuffHolder getTempBuffHolder(){
+    public AspectHolder getTempBuffHolder(){
         return this.tempBuffHolder;
     }
-    public void setTempBuffs(List<AspectInstance> aspectInstanceList) {
-        TempBuffHolder oldTempBuffHolder = this.tempBuffHolder;
-        this.tempBuffHolder = new TempBuffHolder(aspectInstanceList);
+    public void setTempBuffs(List<AspectInstance<?>> aspectInstanceList) {
+        AspectHolder oldTempBuffHolder = this.tempBuffHolder;
+        this.tempBuffHolder = new AspectHolder(aspectInstanceList, AspectHolderType.TEMPBUFF);
         Multimap<Attribute, AttributeModifier> oldMultimap = HashMultimap.create();
         Multimap<Attribute, AttributeModifier> newMultimap = HashMultimap.create();
-        AspectUtil.fillAttributeMultimap(oldTempBuffHolder.aspectStrengthMap, TEMPBUFF_STRING, oldMultimap);
-        AspectUtil.fillAttributeMultimap(this.tempBuffHolder.aspectStrengthMap, TEMPBUFF_STRING, newMultimap);
+        AspectUtil.fillAttributeMultimap(oldTempBuffHolder, TEMPBUFF_STRING, oldMultimap);
+        AspectUtil.fillAttributeMultimap(this.tempBuffHolder, TEMPBUFF_STRING, newMultimap);
         this.getAttributes().removeAttributeModifiers(oldMultimap);
         this.getAttributes().addTransientAttributeModifiers(newMultimap);
     }
@@ -235,7 +232,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             if (drowningAmount > 0) {
                 boolean cannotBreatheUnderWater = !this.canBreatheUnderwater() && !MobEffectUtil.hasWaterBreathing(livingEntity) && (!flag || !((Player)livingEntity).getAbilities().invulnerable);
                 if (cannotBreatheUnderWater) {
-                    float respirationStrength = 1.0f + AspectUtil.getArmorAndEntityAspectStrength(livingEntity, Aspects.RESPIRATION);
+                    float respirationStrength = 1.0f + AspectUtil.getArmorAndBuffsAspectValue(livingEntity, Aspects.RESPIRATION);
                     float airLossChance = 1.0f / respirationStrength;
                     for(int i = 0; i < drowningAmount; i++){
                         if(airLossChance >= livingEntity.getRandom().nextFloat()){
@@ -347,7 +344,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             this.setShieldMeter(compoundTag.getFloat(SHIELD_METER_TAG));
         }
         if(compoundTag.contains(PERMABUFF_HOLDER_TAG)){
-            this.setPermaBuffHolder(PermaBuffHolder.fromCompoundTag(compoundTag.getCompound(PERMABUFF_HOLDER_TAG)));
+            this.setPermaBuffHolder(AspectHolder.fromCompoundTag(compoundTag.getCompound(PERMABUFF_HOLDER_TAG)));
         }
     }
 
@@ -426,7 +423,7 @@ public abstract class MixinLivingEntity extends Entity implements OdysseyLivingE
             if (amount <= 0.0F) {
                 return 0.0F;
             } else {
-                float protectionArmor = 5f * AspectUtil.getProtectionAspectStrength(this.getLivingEntity(), damageSource);
+                float protectionArmor = 5f * AspectUtil.getProtectionAspectValue(this.getLivingEntity(), damageSource);
                 if (protectionArmor != 0f) {
                     amount = CombatRules.getDamageAfterAbsorb(amount, protectionArmor, 0.0f);
                 }

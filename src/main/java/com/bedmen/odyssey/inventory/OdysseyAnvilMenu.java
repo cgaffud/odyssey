@@ -140,16 +140,16 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
                     }
 
                     // Modifier combining
-                    List<AspectInstance> resultModifierList = AspectUtil.getAddedModifiersAsAspectInstanceList(resultStack);
-                    List<AspectInstance> input1ModifierList = AspectUtil.getAddedModifiersAsAspectInstanceList(inputStack1);
+                    List<AspectInstance<?>> resultModifierList = AspectUtil.getAddedModifierList(resultStack);
+                    List<AspectInstance<?>> input1ModifierList = AspectUtil.getAddedModifierList(inputStack1);
                     while(!input1ModifierList.isEmpty() && AspectUtil.getModifiabilityRemaining(resultStack) > 0){
-                        AspectInstance input1Modifier = input1ModifierList.get(0);
+                        AspectInstance<?> input1Modifier = input1ModifierList.get(0);
                         input1ModifierList.remove(0);
-                        Optional<AspectInstance> optionalMatchingModifier = resultModifierList.stream().filter(resultModifier -> resultModifier.aspect == input1Modifier.aspect).findFirst();
+                        Optional<AspectInstance<?>> optionalMatchingModifier = resultModifierList.stream().filter(resultModifier -> resultModifier.aspect == input1Modifier.aspect).findFirst();
                         float additionalModifiability;
                         if(optionalMatchingModifier.isPresent()){
-                            AspectInstance matchingModifier = optionalMatchingModifier.get();
-                            if(matchingModifier.strength >= input1Modifier.strength){
+                            AspectInstance<?> matchingModifier = optionalMatchingModifier.get();
+                            if(matchingModifier.getValueAsFloat() >= input1Modifier.getValueAsFloat()){
                                 continue;
                             } else {
                                 additionalModifiability = input1Modifier.getModifiability() - matchingModifier.getModifiability();

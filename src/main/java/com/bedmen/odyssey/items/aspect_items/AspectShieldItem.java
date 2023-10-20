@@ -1,7 +1,7 @@
 package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
-import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.client.renderer.blockentity.OdysseyBlockEntityWithoutLevelRenderer;
 import com.bedmen.odyssey.combat.ShieldType;
@@ -41,6 +41,10 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
         return this.shieldType.innateAspectHolder;
     }
 
+    public AspectHolder getAbilityHolder() {
+        return new AspectHolder(List.of());
+    }
+
     public boolean isValidRepairItem(ItemStack itemStack, ItemStack repairStack) {
         return this.shieldType.repairItemPredicate.test(repairStack.getItem());
     }
@@ -52,16 +56,16 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
     }
 
     public float getDamageBlock(ItemStack shield, DamageSource damageSource){
-        return this.shieldType.damageBlock + AspectUtil.getShieldDamageBlockAspectStrength(shield, damageSource);
+        return this.shieldType.damageBlock + AspectUtil.getShieldDamageBlockAspectValue(shield, damageSource);
     }
 
     public int getRecoveryTime(ItemStack shield){
-        float recoverySpeedMultiplier = 1.0f + AspectUtil.getItemStackAspectStrength(shield, Aspects.RECOVERY_SPEED);
+        float recoverySpeedMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.RECOVERY_SPEED);
         return Mth.ceil((float)this.shieldType.recoveryTime / recoverySpeedMultiplier);
     }
 
     public float getBlockingAngleWidth(ItemStack shield){
-        float widthMultiplier = 1.0f + AspectUtil.getItemStackAspectStrength(shield, Aspects.WIDTH);
+        float widthMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.WIDTH);
         return this.shieldType.blockingAngleWidth * widthMultiplier;
     }
 

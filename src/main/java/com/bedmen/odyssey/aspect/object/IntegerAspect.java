@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.aspect.object;
 
+import com.bedmen.odyssey.aspect.AspectItemPredicates;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import net.minecraft.nbt.IntTag;
@@ -7,28 +8,36 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 
+import java.util.Comparator;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
 
 public class IntegerAspect extends Aspect<Integer> {
     public final boolean hasInfusionPenalty;
-    protected IntegerAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean hasInfusionPenalty){
-        super(id, weight, aspectTooltipFunction, itemPredicate);
+
+    // Buff constructor
+    protected IntegerAspect(String id, AspectTooltipFunction<Integer> aspectTooltipFunction) {
+        this(id, 0.0f, aspectTooltipFunction, AspectItemPredicates.NONE, true, false);
+    }
+    protected IntegerAspect(String id, float weight, AspectTooltipFunction<Integer> aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff, boolean hasInfusionPenalty){
+        super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
         this.hasInfusionPenalty = hasInfusionPenalty;
     }
 
-    public AspectInstance generateInstanceWithModifiability(float modifiability){
+    public AspectInstance<Integer> generateInstanceWithModifiability(Item item, float modifiability) {
         if(this.weight <= 0.0f){
-            return new AspectInstance(this, 1);
+            return new AspectInstance<>(this, 1);
         }
-        return new AspectInstance(this, Integer.max(1, (int)(modifiability / this.weight)));
+        return new AspectInstance<>(this, Integer.max(1, (int)(modifiability / this.weight)));
     }
 
-    public float getWeight(Item item, Integer value) {
-        return this.weight * value;
-    }
-
-    public Integer castStrength(float strength){
+    public Integer floatToValue(float strength){
         return (int)strength;
+    }
+
+    public float valueToFloat(Integer value) {
+        return value;
     }
 
     public Tag valueToTag(Integer value) {
@@ -45,5 +54,21 @@ public class IntegerAspect extends Aspect<Integer> {
         } else {
             return aspectInstance;
         }
+    }
+
+    public BinaryOperator<Integer> getAddition() {
+        return Integer::sum;
+    }
+
+    public BiFunction<Integer, Integer, Integer> getScaler() {
+        return (i1,i2) -> i1*i2;
+    }
+
+    public Integer getBase() {
+        return 0;
+    }
+
+    public Class<Integer> getValueClass() {
+        return Integer.class;
     }
 }

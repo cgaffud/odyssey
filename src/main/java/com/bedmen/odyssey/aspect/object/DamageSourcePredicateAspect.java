@@ -11,10 +11,10 @@ public class DamageSourcePredicateAspect extends FloatAspect {
     public final Predicate<DamageSource> damageSourcePredicate;
     // Protections
     protected DamageSourcePredicateAspect(String id, float weight, Predicate<Item> itemPredicate, boolean isBuff, Predicate<DamageSource> damageSourcePredicate) {
-        this(id, weight, AspectTooltipFunctions.NUMBER_ADDITION, itemPredicate, isBuff, damageSourcePredicate);
+        this(id, weight, AspectTooltipFunctions.FLOAT_ADDITION, itemPredicate, isBuff, damageSourcePredicate);
     }
 
-    protected DamageSourcePredicateAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff, Predicate<DamageSource> damageSourcePredicate) {
+    protected DamageSourcePredicateAspect(String id, float weight, AspectTooltipFunction<Float> aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff, Predicate<DamageSource> damageSourcePredicate) {
         super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
         this.damageSourcePredicate = damageSourcePredicate;
     }

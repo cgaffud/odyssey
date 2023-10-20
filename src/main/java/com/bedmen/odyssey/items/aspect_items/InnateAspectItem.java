@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface InnateAspectItem extends AspectItem {
     default List<AspectHolder> getAspectHolderList(){
-        return List.of(this.getInnateAspectHolder());
+        return List.of(this.getInnateAspectHolder(), this.getAbilityHolder());
     }
     AspectHolder getInnateAspectHolder();
+
+    AspectHolder getAbilityHolder();
 }

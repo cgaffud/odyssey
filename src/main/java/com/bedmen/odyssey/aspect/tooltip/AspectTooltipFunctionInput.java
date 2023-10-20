@@ -6,5 +6,5 @@ import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 
-public record AspectTooltipFunctionInput(AspectInstance aspectInstance,
+public record AspectTooltipFunctionInput<T>(AspectInstance<T> aspectInstance,
                                          Optional<ItemStack> optionalItemStack) {}

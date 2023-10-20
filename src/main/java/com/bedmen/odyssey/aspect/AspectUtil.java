@@ -14,7 +14,6 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
 import com.bedmen.odyssey.items.aspect_items.AspectItem;
-import com.bedmen.odyssey.items.aspect_items.InnateAspectItem;
 import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Multimap;
 import com.mojang.math.Vector3f;
@@ -63,85 +62,82 @@ public class AspectUtil {
     public static final String STORED_BOOST_TAG = Odyssey.MOD_ID + ":AspectStoredBoost";
     public static final String DAMAGE_GROWTH_TAG = Odyssey.MOD_ID + ":AspectDamageGrowth";
 
-    private static AspectHolder getAddedModifierHolder(ItemStack itemStack){
-        CompoundTag compoundTag = itemStack.getTag();
-        compoundTag = compoundTag != null ? compoundTag.getCompound(ADDED_MODIFIERS_TAG) : null;
-        if(compoundTag != null){
-            return AspectHolder.fromCompoundTag(compoundTag);
-        } else {
-            return new AspectHolder(new ArrayList<>(), AspectHolderType.ADDED_MODIFIER);
+    public static AspectHolder getAddedModifierHolder(ItemStack itemStack){
+        CompoundTag compoundTag = itemStack.getOrCreateTag();
+        if(!compoundTag.contains(ADDED_MODIFIERS_TAG)){
+            compoundTag.put(ADDED_MODIFIERS_TAG, new AspectHolder(new ArrayList<>()).toCompoundTag());
         }
+        compoundTag = compoundTag.getCompound(ADDED_MODIFIERS_TAG);
+        return AspectHolder.fromCompoundTag(compoundTag);
     }
 
-    private static List<AspectInstance<?>> getAddedModifierList(ItemStack itemStack){
+    public static List<AspectInstance<?>> getAddedModifierList(ItemStack itemStack){
         return new ArrayList<>(getAddedModifierHolder(itemStack).map.values());
     }
 
-    private static List<AspectInstance<?>> tagToAspectInstanceList(ListTag listTag){
-        return listTag.stream()
-                .filter(tag -> tag instanceof CompoundTag)
-                .map(tag -> AspectInstance.fromCompoundTag((CompoundTag)tag))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
-
-    private static <T> T queryItemStackAspectStrength(ItemStack itemStack, AspectQuery<T> aspectQuery){
+    private static <T> T queryItemStack(ItemStack itemStack, AspectQuery<T> aspectQuery){
         if(itemStack.isEmpty()){
-            return aspectQuery.returnValue();
+            return aspectQuery.base;
         }
-        aspectQuery.query(getAddedModifierHolder(itemStack));
+        T value = aspectQuery.query(getAddedModifierHolder(itemStack));
         if(itemStack.getItem() instanceof AspectItem aspectItem){
-            aspectQuery.query(aspectItem.getAspectHolderList());
+            for(AspectHolder aspectHolder : aspectItem.getAspectHolderList()){
+                value = aspectQuery.addition.apply(value, aspectQuery.query(aspectHolder));
+            }
         }
-        return aspectQuery.returnValue();
+        return value;
     }
 
-    private static float getBonusDamageAspectStrength(LivingEntity livingEntity, Function<Aspect<?>, Float> valueFunction){
+    private static float queryBonusDamageAspect(Optional<LivingEntity> optionalLivingEntity, ItemStack itemStack, Function<Aspect<?>, Float> valueFunction){
         FunctionQuery<Float> functionQuery = FunctionQuery.floatQuery.apply(aspect -> {
             if(aspect instanceof BonusDamageAspect){
-                return valueFunction.apply(aspect) * BonusDamageAspect.getStrengthAmplifier(livingEntity.getMainHandItem().getItem());
+                return valueFunction.apply(aspect) * BonusDamageAspect.getStrengthAmplifier(itemStack.getItem());
             }
             return 0.0f;
         });
-        return queryOneHandedTotalAspectStrength(livingEntity, InteractionHand.MAIN_HAND, functionQuery);
+        if(optionalLivingEntity.isPresent()){
+            return queryOneHandedEntityTotal(optionalLivingEntity.get(), InteractionHand.MAIN_HAND, functionQuery);
+        } else {
+            return queryItemStack(itemStack, functionQuery);
+        }
     }
 
-    private static float queryArmorAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
-        float total = 0.0f;
+    private static <T> T queryArmor(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
+        T value = aspectQuery.base;
         for(ItemStack armorPiece: livingEntity.getArmorSlots()){
-            total += queryItemStackAspectStrength(armorPiece, aspectQuery);
+            value = aspectQuery.addition.apply(value, queryItemStack(armorPiece, aspectQuery));
         }
         if(isFullArmorSet(livingEntity.getArmorSlots()) && livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AspectArmorItem aspectArmorItem){
-            total += aspectQuery.query(aspectArmorItem.getSetBonusAbilityHolder().map);
+            value = aspectQuery.addition.apply(value, aspectQuery.query(aspectArmorItem.getSetBonusAbilityHolder()));
         }
-        return total;
+        return value;
     }
 
     private static <T> T queryBuffs(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
-        float strength = 0f;
+        T value = aspectQuery.base;
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-            strength = aspectQuery.query(odysseyLivingEntity.getPermaBuffHolder());
-            strength += aspectQuery.query(odysseyLivingEntity.getTempBuffHolder());
+            value = aspectQuery.addition.apply(value, aspectQuery.query(odysseyLivingEntity.getPermaBuffHolder()));
+            value = aspectQuery.addition.apply(value, aspectQuery.query(odysseyLivingEntity.getTempBuffHolder()));
         }
-        return strength;
+        return value;
     }
 
-    private static float queryArmorAndEntityAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
-        return queryArmorAspectStrength(livingEntity, aspectQuery)
-                + queryBuffs(livingEntity, aspectQuery);
+    private static <T> T queryArmorAndBuffs(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
+        return aspectQuery.addition.apply(queryArmor(livingEntity, aspectQuery), queryBuffs(livingEntity, aspectQuery));
     }
 
-    private static float queryOneHandedTotalAspectStrength(LivingEntity livingEntity, InteractionHand interactionHand, AspectQuery aspectQuery){
-        return queryArmorAspectStrength(livingEntity, aspectQuery)
-                + queryItemStackAspectStrength(livingEntity.getItemInHand(interactionHand), aspectQuery)
-                + queryBuffs(livingEntity, aspectQuery);
+    private static <T> T queryOneHandedEntityTotal(LivingEntity livingEntity, InteractionHand interactionHand, AspectQuery<T> aspectQuery){
+        return aspectQuery.addition.apply(queryArmorAndBuffs(livingEntity, aspectQuery), queryItemStack(livingEntity.getItemInHand(interactionHand), aspectQuery));
     }
 
-    private static float queryTotalAspectStrength(LivingEntity livingEntity, AspectQuery aspectQuery){
-        return queryArmorAspectStrength(livingEntity, aspectQuery)
-                + queryItemStackAspectStrength(livingEntity.getMainHandItem(), aspectQuery)
-                + queryItemStackAspectStrength(livingEntity.getOffhandItem(), aspectQuery)
-                + queryBuffs(livingEntity, aspectQuery);
+    private static <T> T queryEntityTotal(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
+        return aspectQuery.addition.apply(
+                aspectQuery.addition.apply(
+                        queryItemStack(livingEntity.getItemInHand(InteractionHand.MAIN_HAND), aspectQuery),
+                        queryItemStack(livingEntity.getItemInHand(InteractionHand.OFF_HAND), aspectQuery)
+                ),
+                queryArmorAndBuffs(livingEntity, aspectQuery)
+        );
     }
 
     private static boolean isFullArmorSet(Iterable<ItemStack> armorPieces){
@@ -165,50 +161,45 @@ public class AspectUtil {
 
     // -- Public endpoints -----------------------------------------------------
 
-    // Get AspectStrengthMap
+    // Get added modifiers, abilities, and innate modifiers all in one aspect holder
 
-    public static List<AspectInstance> getAddedModifiersAsAspectInstanceList(ItemStack itemStack){
-        return tagToAspectInstanceList(getAddedModifierTag(itemStack));
-    }
-
-    public static AspectStrengthMap getAspectStrengthMap(ItemStack itemStack){
-        AspectStrengthMap addedModifierMap = getAddedModifierHolder(itemStack);
-        if(itemStack.getItem() instanceof InnateAspectItem innateAspectItem){
-            return addedModifierMap.combine(innateAspectItem.getInnateAspectHolder().allAspectMap);
+    public static AspectHolder getCombinedAspectHolder(ItemStack itemStack){
+        AspectHolder aspectHolder = getAddedModifierHolder(itemStack);
+        if(itemStack.getItem() instanceof AspectItem aspectItem){
+            for(AspectHolder aspectHolder1 : aspectItem.getAspectHolderList()) {
+                aspectHolder = AspectHolder.combine(aspectHolder, aspectHolder1);
+            }
         }
-        return addedModifierMap;
+        return aspectHolder;
     }
 
     public static boolean hasAddedModifiers(ItemStack itemStack){
-        AspectStrengthMap addedModifierMap = getAddedModifierHolder(itemStack);
-        return !addedModifierMap.isEmpty();
+        AspectHolder aspectHolder = getAddedModifierHolder(itemStack);
+        return !aspectHolder.map.isEmpty();
     }
 
-    // Get aspect strength from single itemStack
+    // Get aspect value from single itemStack
 
-    public static <T> T getItemStackAspectStrength(ItemStack itemStack, Aspect<T> aspect){
-        float strength = queryItemStackAspectStrength(itemStack, new SingleQuery(aspect));
-        return aspect.castStrength(strength);
+    public static <T> T getItemStackAspectValue(ItemStack itemStack, Aspect<T> aspect){
+        return queryItemStack(itemStack, new SingleQuery<>(aspect));
     }
 
     public static boolean itemStackHasAspect(ItemStack itemStack, Aspect<?> aspect){
-        float strength = queryItemStackAspectStrength(itemStack, new SingleQuery(aspect));
-        return strength > 0f;
+        return getCombinedAspectHolder(itemStack).hasAspect(aspect);
     }
 
-    public static boolean itemStackHasEqualOrStrongerInstance(ItemStack itemStack, AspectInstance aspectInstance){
-        float itemStackStrength = queryItemStackAspectStrength(itemStack, new SingleQuery(aspectInstance.aspect));
-        return itemStackStrength >= aspectInstance.strength;
+    public static <T> boolean itemStackHasEqualOrStrongerInstance(ItemStack itemStack, AspectInstance<T> aspectInstance){
+        T value = queryItemStack(itemStack, new SingleQuery<>(aspectInstance.aspect));
+        return aspectInstance.aspect.valueToFloat(value) >= aspectInstance.getValueAsFloat();
     }
 
-    public static <T> T getBuffAspectStrength(Player player, Aspect<T> aspect){
-        float strength = queryBuffs(player, new SingleQuery(aspect));
-        return aspect.castStrength(strength);
+    public static <T> T getBuffAspectValue(Player player, Aspect<T> aspect){
+        return queryBuffs(player, new SingleQuery<>(aspect));
     }
 
     // Special totals over multiple aspects on single item
     public static float getTargetConditionalAspectStrength(LivingEntity attacker, LivingEntity target){
-        return getBonusDamageAspectStrength(attacker, aspect -> {
+        return queryBonusDamageAspect(Optional.of(attacker), attacker.getMainHandItem(), aspect -> {
             if (aspect.equals(Aspects.SOLAR_STRENGTH) || aspect.equals(Aspects.LUNAR_STRENGTH)) {
                 CompoundTag tag = attacker.getMainHandItem().getOrCreateTag();
                 int charge = tag.getInt(AspectUtil.STORED_BOOST_TAG);
@@ -223,19 +214,18 @@ public class AspectUtil {
     }
 
 
-    public static float getConditionalAspectStrength(ItemStack itemStack, BlockPos blockPos, Level level){
-        FunctionQuery functionQuery = new FunctionQuery(aspect -> {
+    public static float getConditionalAspectValue(ItemStack itemStack, BlockPos blockPos, Level level){
+        return queryBonusDamageAspect(Optional.empty(), itemStack, aspect -> {
             if(aspect instanceof ConditionalAmpAspect conditionalAmpAspect){
                 return conditionalAmpAspect.attackBoostFactorFunction.getBoostFactor(itemStack, blockPos, level)
                         * BonusDamageAspect.getStrengthAmplifier(itemStack.getItem());
             }
             return 0.0f;
         });
-        return queryItemStackAspectStrength(itemStack, functionQuery);
     }
 
-    public static float getShieldDamageBlockAspectStrength(ItemStack itemStack, DamageSource damageSource){
-        return queryItemStackAspectStrength(itemStack, new FunctionQuery(aspect -> {
+    public static float getShieldDamageBlockAspectValue(ItemStack itemStack, DamageSource damageSource){
+        return queryItemStack(itemStack, FunctionQuery.floatQuery.apply(aspect -> {
             if(aspect instanceof ShieldDamageBlockAspect shieldDamageBlockAspect){
                 return shieldDamageBlockAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
             }
@@ -244,20 +234,18 @@ public class AspectUtil {
     }
 
     // Get total value from armor
-    public static <T> T getArmorAspectStrength(LivingEntity livingEntity, Aspect<T> aspect){
-        float strength = queryArmorAspectStrength(livingEntity, new SingleQuery(aspect));
-        return aspect.castStrength(strength);
+    public static <T> T getArmorAspectValue(LivingEntity livingEntity, Aspect<T> aspect){
+        return queryArmor(livingEntity, new SingleQuery<>(aspect));
     }
 
     // Get total value from armor and entity
-    public static <T> T getArmorAndEntityAspectStrength(LivingEntity livingEntity, Aspect<T> aspect){
-        float strength = queryArmorAndEntityAspectStrength(livingEntity, new SingleQuery(aspect));
-        return aspect.castStrength(strength);
+    public static <T> T getArmorAndBuffsAspectValue(LivingEntity livingEntity, Aspect<T> aspect){
+        return queryArmorAndBuffs(livingEntity, new SingleQuery<>(aspect));
     }
 
     // Special totals over multiple aspects on armor
-    public static float getProtectionAspectStrength(LivingEntity livingEntity, DamageSource damageSource){
-        return queryArmorAndEntityAspectStrength(livingEntity, new FunctionQuery(aspect -> {
+    public static float getProtectionAspectValue(LivingEntity livingEntity, DamageSource damageSource){
+        return queryArmorAndBuffs(livingEntity, FunctionQuery.floatQuery.apply(aspect -> {
             if(aspect instanceof DamageSourcePredicateAspect damageSourcePredicateAspect){
                 return damageSourcePredicateAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
             }
@@ -266,21 +254,19 @@ public class AspectUtil {
     }
 
     // Aspect total over one hand, armor, and player
-    public static <T> T getOneHandedTotalAspectStrength(LivingEntity livingEntity, InteractionHand interactionHand, Aspect<T> aspect){
-        float strength = queryOneHandedTotalAspectStrength(livingEntity, interactionHand, new SingleQuery(aspect));
-        return aspect.castStrength(strength);
+    public static <T> T getOneHandedEntityTotalAspectValue(LivingEntity livingEntity, InteractionHand interactionHand, Aspect<T> aspect){
+        return queryOneHandedEntityTotal(livingEntity, interactionHand, new SingleQuery<>(aspect));
     }
 
     // Aspect total over all EquipmentSlots and player
-    public static <T> T getTotalAspectStrength(LivingEntity livingEntity, Aspect<T> aspect){
-        float strength = queryTotalAspectStrength(livingEntity, new SingleQuery(aspect));
-        return aspect.castStrength(strength);
+    public static <T> T getTotalAspectValue(LivingEntity livingEntity, Aspect<T> aspect){
+        return queryEntityTotal(livingEntity, new SingleQuery<>(aspect));
     }
 
     // Add AspectInstance to a list of AspectInstances
-    public static void addInstance(List<AspectInstance> aspectInstanceList, AspectInstance aspectInstance){
-        AspectInstance match = null;
-        for(AspectInstance aspectInstance1: aspectInstanceList){
+    public static void addInstance(List<AspectInstance<?>> aspectInstanceList, AspectInstance<?> aspectInstance){
+        AspectInstance<?> match = null;
+        for(AspectInstance<?> aspectInstance1: aspectInstanceList){
             if(aspectInstance1.aspect == aspectInstance.aspect){
                 match = aspectInstance1;
                 break;
@@ -291,33 +277,30 @@ public class AspectUtil {
         } else {
             int index = aspectInstanceList.indexOf(match);
             aspectInstanceList.remove(match);
-            AspectInstance newAspectInstance = match.withAddedStrength(aspectInstance.strength);
+            AspectInstance<?> newAspectInstance = match.withAddedValue(match.aspect.getValueClass().cast(aspectInstance.value));
             aspectInstanceList.add(index, newAspectInstance);
         }
+
     }
 
     // Tooltips
 
     public static void addAddedModifierTooltip(ItemStack itemStack, List<Component> tooltip, TooltipFlag tooltipFlag, AspectTooltipContext aspectTooltipContext){
-        List<AspectInstance> addedModifiers = getAddedModifiersAsAspectInstanceList(itemStack);
-        Optional<MutableComponent> optionalHeader = tooltipFlag.isAdvanced() ? Optional.of(ADDED_MODIFIER_HEADER) : Optional.empty();
-        // The isAdvanced flag for getTooltip is for filtering aspectInstances based on their display properties
-        // Here we want there to be a header or not based on the isAdvanced flag
-        tooltip.addAll(getTooltip(aspectTooltipContext.withOtherContextVariables(addedModifiers, tooltipFlag.isAdvanced(), optionalHeader, ADDED_MODIFIER_COLOR)));
+        AspectHolder addedModifierHolder = AspectUtil.getAddedModifierHolder(itemStack);
+        addedModifierHolder.addTooltip(tooltip, tooltipFlag, aspectTooltipContext);
         int totalModifiability =  getTotalModifiability(itemStack);
         if(tooltipFlag.isAdvanced() && totalModifiability > 0){
-            tooltip.add(Component.translatable("aspect_tooltip.oddc.modifiability_remaining", StringUtil.floatFormat(getModifiabilityRemaining(itemStack)), totalModifiability).withStyle(ADDED_MODIFIER_COLOR));
+            tooltip.add(Component.translatable("aspect_tooltip.oddc.modifiability_remaining", StringUtil.floatFormat(getModifiabilityRemaining(itemStack)), totalModifiability).withStyle(AspectHolderType.ADDED_MODIFIER.color));
         }
     }
 
     public static List<Component> getTooltip(AspectTooltipContext context){
-        List<Component> componentList = new ArrayList<>();
-        componentList.addAll(context.aspectInstanceList.stream()
+        List<Component> componentList = new ArrayList<>(context.aspectInstanceMap.values().stream()
                 .filter(aspectInstance -> context.isAdvanced ? aspectInstance.aspectTooltipDisplaySetting != AspectTooltipDisplaySetting.NEVER : aspectInstance.aspectTooltipDisplaySetting == AspectTooltipDisplaySetting.ALWAYS)
                 .map(aspectInstance ->
                         Component.literal(context.optionalHeader.isPresent() ? " " : "")
                                 .append(aspectInstance.obfuscated ? OBFUSCATED_TOOLTIP : aspectInstance.getMutableComponent(context)).withStyle(context.chatFormatting))
-                .collect(Collectors.toList()));
+                .toList());
         if(componentList.isEmpty()){
             return componentList;
         }
@@ -340,33 +323,33 @@ public class AspectUtil {
     // Attributes
     public static void fillAttributeMultimaps(LivingEntity livingEntity, ItemStack oldItemStack, ItemStack newItemStack, EquipmentSlot equipmentSlot, Multimap<Attribute, AttributeModifier> oldMultimap, Multimap<Attribute, AttributeModifier> newMultimap){
         String uuidStart = equipmentSlot.getName();
-        fillAttributeMultimap(getAspectStrengthMap(oldItemStack), uuidStart, oldMultimap);
-        fillAttributeMultimap(getAspectStrengthMap(newItemStack), uuidStart, newMultimap);
+        fillAttributeMultimap(getCombinedAspectHolder(oldItemStack), uuidStart, oldMultimap);
+        fillAttributeMultimap(getCombinedAspectHolder(newItemStack), uuidStart, newMultimap);
         if(equipmentSlot.getType() == EquipmentSlot.Type.ARMOR){
             List<ItemStack> oldArmorPieces = ARMOR_EQUIPMENT_SLOT_LIST.stream().map(equipmentSlot1 -> livingEntity.getLastArmorItem(equipmentSlot1)).collect(Collectors.toList());
             List<ItemStack> newArmorPieces = ARMOR_EQUIPMENT_SLOT_LIST.stream().map(equipmentSlot1 -> livingEntity.getItemBySlot(equipmentSlot1)).collect(Collectors.toList());
             if(isFullArmorSet(oldArmorPieces) && oldArmorPieces.get(0).getItem() instanceof AspectArmorItem aspectArmorItem){
-                aspectArmorItem.getSetBonusAbilityHolder().map.forEach((key, value) -> {
-                    if (key instanceof AttributeAspect attributeAspect) {
-                        oldMultimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (SET_BONUS_STRING.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, value, attributeAspect.operation));
+                aspectArmorItem.getSetBonusAbilityHolder().map.forEach((aspect, aspectInstance) -> {
+                    if (aspect instanceof AttributeAspect attributeAspect) {
+                        oldMultimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (SET_BONUS_STRING.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, aspectInstance.getValueAsFloat(), attributeAspect.operation));
                     }
                 });
             }
             livingEntity.setItemSlot(equipmentSlot, newItemStack);
             if(isFullArmorSet(newArmorPieces) && newArmorPieces.get(0).getItem() instanceof AspectArmorItem aspectArmorItem){
-                aspectArmorItem.getSetBonusAbilityHolder().map.forEach((key, value) -> {
-                    if (key instanceof AttributeAspect attributeAspect) {
-                        newMultimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (SET_BONUS_STRING.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, value, attributeAspect.operation));
+                aspectArmorItem.getSetBonusAbilityHolder().map.forEach((aspect, aspectInstance) -> {
+                    if (aspect instanceof AttributeAspect attributeAspect) {
+                        newMultimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (SET_BONUS_STRING.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, aspectInstance.getValueAsFloat(), attributeAspect.operation));
                     }
                 });
             }
         }
     }
 
-    public static void fillAttributeMultimap(AspectStrengthMap aspectStrengthMap, String uuidStart, Multimap<Attribute, AttributeModifier> multimap){
-        aspectStrengthMap.forEach((key, value) -> {
-            if (key instanceof AttributeAspect attributeAspect) {
-                multimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (uuidStart.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, value, attributeAspect.operation));
+    public static void fillAttributeMultimap(AspectHolder aspectHolder, String uuidStart, Multimap<Attribute, AttributeModifier> multimap){
+        aspectHolder.map.forEach((aspect, aspectInstance) -> {
+            if (aspect instanceof AttributeAspect attributeAspect) {
+                multimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (uuidStart.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, aspectInstance.getValueAsFloat(), attributeAspect.operation));
             }
         });
     }
@@ -374,9 +357,9 @@ public class AspectUtil {
     // Add/Remove added modifiers
 
     public static float getUsedModifiability(ItemStack itemStack){
-        AspectStrengthMap addedModifierMap = getAddedModifierHolder(itemStack);
-        FunctionQuery functionQuery = new FunctionQuery(aspect -> aspect.weight);
-        return functionQuery.query(addedModifierMap);
+        AspectHolder aspectHolder = getAddedModifierHolder(itemStack);
+        FunctionQuery<Float> functionQuery = FunctionQuery.floatQuery.apply(aspect -> aspect.weight);
+        return functionQuery.query(aspectHolder);
     }
 
     public static int getTotalModifiability(ItemStack itemStack){
@@ -390,42 +373,35 @@ public class AspectUtil {
         return getTotalModifiability(itemStack) - getUsedModifiability(itemStack);
     }
 
-    public static boolean canAddModifier(ItemStack itemStack, AspectInstance aspectInstance){
+    public static boolean canAddModifier(ItemStack itemStack, AspectInstance<?> aspectInstance){
         boolean passesItemPredicate = aspectInstance.aspect.itemPredicate.test(itemStack.getItem());
         boolean passesModifiabilityCheck = aspectInstance.getModifiability() <= getModifiabilityRemaining(itemStack);
         return passesItemPredicate && passesModifiabilityCheck;
     }
 
-    public static void addModifier(ItemStack itemStack, AspectInstance aspectInstance){
-        float strength = AspectUtil.getAddedModifierHolder(itemStack).get(aspectInstance.aspect);
-        AspectInstance newAspectInstance = aspectInstance.withAddedStrength(strength);
+    public static void addModifier(ItemStack itemStack, AspectInstance<?> aspectInstance){
+        AspectInstance<?> existingAspectInstance = AspectUtil.getAddedModifierHolder(itemStack).map.get(aspectInstance.aspect);
+        AspectInstance<?> newAspectInstance = aspectInstance.withAddedValue(existingAspectInstance.value);
         replaceModifier(itemStack, newAspectInstance);
     }
 
     // Replaces added modifier with same aspect as aspectInstance with aspectInstance,
     // or removes the modifier altogether if aspectInstance.strength is 0
-    public static void replaceModifier(ItemStack itemStack, AspectInstance aspectInstance){
+    public static void replaceModifier(ItemStack itemStack, AspectInstance<?> aspectInstance){
         removeAddedModifier(itemStack, aspectInstance.aspect);
-        // Just removes old modifier if the strength is set to 0
-        if(aspectInstance.strength > 0.0f){
-            ListTag aspectListTag = getAddedModifierTag(itemStack);
-            aspectListTag.add(aspectInstance.toCompoundTag());
-            itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectListTag);
+        // Just removes old modifier if the value is 0
+        if(!aspectInstance.aspect.getBase().equals(aspectInstance.value)){
+            AspectHolder aspectHolder = getAddedModifierHolder(itemStack);
+            aspectHolder.map.put(aspectInstance.aspect, aspectInstance);
+            itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectHolder.toCompoundTag());
         }
     }
 
-    public static void removeAddedModifier(ItemStack itemStack, Aspect aspect){
-        ListTag aspectListTag = getAddedModifierTag(itemStack);
-        Tag oldAspectTag = null;
-        for(Tag tag: aspectListTag){
-            if(tag instanceof CompoundTag compoundTag && compoundTag.getString(AspectInstance.ID_TAG).equals(aspect.id)){
-                oldAspectTag = compoundTag;
-                break;
-            }
-        }
-        if(oldAspectTag != null){
-            aspectListTag.remove(oldAspectTag);
-            itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectListTag);
+    public static void removeAddedModifier(ItemStack itemStack, Aspect<?> aspect){
+        AspectHolder aspectHolder = getAddedModifierHolder(itemStack);
+        if(aspectHolder.hasAspect(aspect)){
+            aspectHolder.map.remove(aspect);
+            itemStack.getOrCreateTag().put(ADDED_MODIFIERS_TAG, aspectHolder.toCompoundTag());
         }
     }
 

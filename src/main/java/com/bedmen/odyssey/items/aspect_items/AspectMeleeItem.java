@@ -1,8 +1,9 @@
 package com.bedmen.odyssey.items.aspect_items;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.MeleeWeaponClass;
 import com.bedmen.odyssey.combat.WeaponUtil;
@@ -47,13 +48,15 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     /** Modifiers applied when the item is in the mainhand of a user. */
     protected Multimap<Attribute, AttributeModifier> attributeModifiers;
     private final AspectHolder innateAspectHolder;
+    private final AspectHolder abilityHolder;
     protected final MeleeWeaponClass meleeWeaponClass;
 
-    public AspectMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance<?>> innateModifierList) {
+    public AspectMeleeItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance<?>> additionalAbilityList, List<AspectInstance<?>> innateModifierList) {
         super(tier, properties);
-        List<AspectInstance> fullAbilityList = new ArrayList<>(meleeWeaponClass.aspectInstanceList);
+        List<AspectInstance<?>> fullAbilityList = new ArrayList<>(meleeWeaponClass.aspectInstanceList);
         fullAbilityList.addAll(additionalAbilityList);
-        this.innateAspectHolder = new InnateAspectHolder(fullAbilityList, innateModifierList);
+        this.innateAspectHolder = new AspectHolder(innateModifierList, AspectHolderType.INNATE_ASPECT);
+        this.abilityHolder = new AspectHolder(fullAbilityList, AspectHolderType.ABILITY);
         this.meleeWeaponClass = meleeWeaponClass;
         float attackDamage = damage + tier.getAttackDamageBonus();
 
@@ -65,6 +68,10 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
 
     public AspectHolder getInnateAspectHolder() {
         return this.innateAspectHolder;
+    }
+
+    public AspectHolder getAbilityHolder() {
+        return this.abilityHolder;
     }
 
     public MeleeWeaponClass getMeleeWeaponClass(){
@@ -101,7 +108,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     }
 
     public boolean isCorrectToolForDrops(BlockState blockState) {
-        return (blockState.getBlock() instanceof WebBlock) && AspectUtil.getItemStackAspectStrength(this.getDefaultInstance(), Aspects.COBWEB_BREAK);
+        return (blockState.getBlock() instanceof WebBlock) && AspectUtil.getItemStackAspectValue(this.getDefaultInstance(), Aspects.COBWEB_BREAK);
     }
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
@@ -161,11 +168,11 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     }
 
     public float getDamageBlock(ItemStack melee, DamageSource damageSource){
-        return this.meleeWeaponClass.damageBlock + AspectUtil.getShieldDamageBlockAspectStrength(melee, damageSource);
+        return this.meleeWeaponClass.damageBlock + AspectUtil.getShieldDamageBlockAspectValue(melee, damageSource);
     }
 
     public float getBlockingAngleWidth(ItemStack shield){
-        float widthMultiplier = 1.0f + AspectUtil.getItemStackAspectStrength(shield, Aspects.WIDTH);
+        float widthMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.WIDTH);
         return this.getMeleeWeaponClass().blockingAngleWidth * widthMultiplier;
     }
 
@@ -182,7 +189,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     }
 
     public int getRecoveryTime(ItemStack shield){
-        float recoverySpeedMultiplier = 1.0f + AspectUtil.getItemStackAspectStrength(shield, Aspects.RECOVERY_SPEED);
+        float recoverySpeedMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.RECOVERY_SPEED);
         return Mth.ceil((float)this.meleeWeaponClass.recoveryTime / recoverySpeedMultiplier);
     }
 

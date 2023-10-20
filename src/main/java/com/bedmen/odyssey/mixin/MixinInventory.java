@@ -34,9 +34,9 @@ public abstract class MixinInventory implements Container, Nameable {
             for(int i = 0; i < list.size(); ++i) {
                 ItemStack itemstack = list.get(i);
                 if (!itemstack.isEmpty()) {
-                    float soulboundAmount = AspectUtil.getItemStackAspectStrength(itemstack, Aspects.SOULBOUND);
+                    int soulboundAmount = AspectUtil.getItemStackAspectValue(itemstack, Aspects.SOULBOUND);
                     if (soulboundAmount > 0) {
-                        int soulboundPenality = itemstack.getMaxDamage() / ((int) soulboundAmount + 1);
+                        int soulboundPenality = itemstack.getMaxDamage() / (soulboundAmount + 1);
                         itemstack.hurtAndBreak(soulboundPenality, this.player, (player) -> {});
                     } else {
                         this.player.drop(itemstack, true, false);

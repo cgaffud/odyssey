@@ -10,7 +10,7 @@
       },
       "aspectInstance": {
         "aspect": "solar_strength",
-        "strength": 0.5
+        "value": 0.5
       }
     },
     {
@@ -19,7 +19,7 @@
       },
       "aspectInstance": {
         "aspect": "lunar_strength",
-        "strength": 1.0
+        "value": 1.0
       }
     }
   ],

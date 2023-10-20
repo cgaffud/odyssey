@@ -88,7 +88,7 @@ public class InfuserCraftingRecipe implements Recipe<Container> {
                 for(Map.Entry<Direction, ItemStack> entry: pedestalItemStackMap.entrySet()){
                     ItemStack itemStack = entry.getValue();
                     if(!matchedItemStacks.contains(itemStack) && itemStack.getItem() instanceof InnateAspectItem innateAspectItem
-                            && innateAspectItem.getInnateAspectHolder().allAspectMap.get(aspectInstance.aspect) >= aspectInstance.strength){
+                            && (innateAspectItem.getInnateAspectHolder().map.get(aspectInstance.aspect).getValueAsFloat() >= aspectInstance.getValueAsFloat())){
                         matchingItemFound = true;
                         matchedItemStacks.add(itemStack);
                         directionSet.add(entry.getKey());

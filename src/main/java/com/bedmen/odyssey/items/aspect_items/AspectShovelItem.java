@@ -1,7 +1,8 @@
 package com.bedmen.odyssey.items.aspect_items;
 
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
-import com.bedmen.odyssey.aspect.encapsulator.InnateAspectHolder;
 import com.bedmen.odyssey.combat.MeleeWeaponClass;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.util.ConditionalAmpUtil;
@@ -20,18 +21,24 @@ import java.util.List;
 
 public class AspectShovelItem extends ShovelItem implements InnateAspectItem, MeleeWeaponClassItem {
     private final AspectHolder innateAspectHolder;
+    private final AspectHolder abilityHolder;
     protected final MeleeWeaponClass meleeWeaponClass;
 
-    public AspectShovelItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance> additionalAbilityList, List<AspectInstance<?>> innateModifierList) {
+    public AspectShovelItem(Properties properties, Tier tier, MeleeWeaponClass meleeWeaponClass, float damage, List<AspectInstance<?>> additionalAbilityList, List<AspectInstance<?>> innateModifierList) {
         super(tier, damage, meleeWeaponClass.attackRate - 4.0f, properties);
-        List<AspectInstance> fullAbilityList = new ArrayList<>(meleeWeaponClass.aspectInstanceList);
+        List<AspectInstance<?>> fullAbilityList = new ArrayList<>(meleeWeaponClass.aspectInstanceList);
         fullAbilityList.addAll(additionalAbilityList);
-        this.innateAspectHolder = new InnateAspectHolder(fullAbilityList, innateModifierList);
+        this.innateAspectHolder = new AspectHolder(innateModifierList, AspectHolderType.INNATE_ASPECT);
+        this.abilityHolder = new AspectHolder(fullAbilityList, AspectHolderType.ABILITY);
         this.meleeWeaponClass = meleeWeaponClass;
     }
 
     public AspectHolder getInnateAspectHolder() {
         return this.innateAspectHolder;
+    }
+
+    public AspectHolder getAbilityHolder() {
+        return this.abilityHolder;
     }
 
     public MeleeWeaponClass getMeleeWeaponClass(){

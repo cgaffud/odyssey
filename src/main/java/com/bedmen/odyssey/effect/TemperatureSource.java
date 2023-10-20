@@ -63,9 +63,9 @@ public class TemperatureSource {
     public void tick(LivingEntity livingEntity){
         float temperatureProtectionStrength;
         if(this.isHot()){
-            temperatureProtectionStrength = AspectUtil.getTotalAspectStrength(livingEntity, Aspects.COOLING);
+            temperatureProtectionStrength = AspectUtil.getTotalAspectValue(livingEntity, Aspects.COOLING);
         } else {
-            temperatureProtectionStrength = AspectUtil.getTotalAspectStrength(livingEntity, Aspects.WARMTH);
+            temperatureProtectionStrength = AspectUtil.getTotalAspectValue(livingEntity, Aspects.WARMTH);
         }
         if(this.protectionForImmunity.isPresent() &&  temperatureProtectionStrength >= this.protectionForImmunity.get()){
             return;

@@ -20,6 +20,6 @@ public abstract class MixinItemEntity extends Entity {
     }
 
     public boolean fireImmune() {
-        return this.getItem().getItem().isFireResistant() || super.fireImmune() || AspectUtil.getItemStackAspectStrength(this.getItem(), Aspects.BURN_PROOF);
+        return this.getItem().getItem().isFireResistant() || super.fireImmune() || AspectUtil.getItemStackAspectValue(this.getItem(), Aspects.BURN_PROOF);
     }
 }

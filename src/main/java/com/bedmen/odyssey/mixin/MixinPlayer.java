@@ -114,7 +114,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
     public void updateSniperScoping() {
         boolean isSniperScopingO = this.isSniperScoping;
         ItemStack itemStack = this.getMainHandItem();
-        this.isSniperScoping = AspectUtil.getItemStackAspectStrength(itemStack, Aspects.SPYGLASS) && this.isShiftKeyDown();
+        this.isSniperScoping = AspectUtil.getItemStackAspectValue(itemStack, Aspects.SPYGLASS) && this.isShiftKeyDown();
         if(!isSniperScopingO && this.isSniperScoping){
             this.playSound(SoundEvents.SPYGLASS_USE, 1.0F, 1.0F);
         } else if (isSniperScopingO && !this.isSniperScoping){
@@ -129,7 +129,7 @@ public abstract class MixinPlayer extends LivingEntity implements OdysseyPlayer 
     protected void blockUsingShield(LivingEntity livingEntity) {
         super.blockUsingShield(livingEntity);
         ItemStack itemStack = livingEntity.getMainHandItem();
-        if (AspectUtil.getItemStackAspectStrength(itemStack, Aspects.SHIELD_BASH)) {
+        if (AspectUtil.getItemStackAspectValue(itemStack, Aspects.SHIELD_BASH)) {
             this.disableShield(true);
         }
     }
