@@ -1,0 +1,15 @@
+{
+  "name": "oddc:bandit_hideout/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "oddc:bandit_hideout/bandit_hideout_main",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
