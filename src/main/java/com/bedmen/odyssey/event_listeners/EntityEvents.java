@@ -3,6 +3,7 @@ package com.bedmen.odyssey.event_listeners;
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectOwner;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
@@ -597,7 +598,7 @@ public class EntityEvents {
             Tier tier;
             if(damageSource != null){
                 Entity entity = damageSource.getEntity();
-                int mobHarvestLevel = entity instanceof Player player ? AspectUtil.getBuffAspectValue(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 0;
+                int mobHarvestLevel = entity instanceof AspectOwner aspectOwner ? AspectUtil.getOwnedAspectValue(aspectOwner, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 0;
                 mobHarvestLevel = Integer.min(TIER_ARRAY.length-1, mobHarvestLevel);
                 tier = TIER_ARRAY[mobHarvestLevel];
             } else {

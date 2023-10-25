@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.food;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectOwner;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -14,7 +15,8 @@ public class OdysseyFoodData extends FoodData {
    }
 
    public void eat(int nutrition, float saturationMultiplier) {
-      float hungerAspectMultiplier = 1.0f / (1.0f + AspectUtil.getBuffAspectValue(this.player, Aspects.APPETITE));
+      float appetite = AspectUtil.getOwnedAspectValue((AspectOwner)this.player, Aspects.APPETITE);
+      float hungerAspectMultiplier = 1.0f / (1.0f + appetite);
       int additionalFoodLevel = Integer.max(1, (int)(hungerAspectMultiplier * nutrition));
       this.setFoodLevel(Math.min(this.getFoodLevel() + additionalFoodLevel, 20));
       float additionalSaturation = nutrition * saturationMultiplier * 2.0f * hungerAspectMultiplier;

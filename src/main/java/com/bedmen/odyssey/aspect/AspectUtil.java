@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectOwner;
 import com.bedmen.odyssey.aspect.object.*;
 import com.bedmen.odyssey.aspect.query.AspectQuery;
 import com.bedmen.odyssey.aspect.query.FunctionQuery;
@@ -13,7 +14,6 @@ import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.items.OdysseyTierItem;
 import com.bedmen.odyssey.items.aspect_items.AspectArmorItem;
-import com.bedmen.odyssey.items.aspect_items.AspectItem;
 import com.bedmen.odyssey.util.StringUtil;
 import com.google.common.collect.Multimap;
 import com.mojang.math.Vector3f;
@@ -23,7 +23,6 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
@@ -80,10 +79,8 @@ public class AspectUtil {
             return aspectQuery.base;
         }
         T value = aspectQuery.query(getAddedModifierHolder(itemStack));
-        if(itemStack.getItem() instanceof AspectItem aspectItem){
-            for(AspectHolder aspectHolder : aspectItem.getAspectHolderList()){
-                value = aspectQuery.addition.apply(value, aspectQuery.query(aspectHolder));
-            }
+        if(itemStack.getItem() instanceof AspectOwner aspectOwner){
+            aspectQuery.addition.apply(value, queryOwnedAspects(aspectOwner, aspectQuery));
         }
         return value;
     }
@@ -113,17 +110,20 @@ public class AspectUtil {
         return value;
     }
 
-    private static <T> T queryBuffs(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
+    private static <T> T queryOwnedAspects(AspectOwner aspectOwner, AspectQuery<T> aspectQuery){
         T value = aspectQuery.base;
-        if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
-            value = aspectQuery.addition.apply(value, aspectQuery.query(odysseyLivingEntity.getPermaBuffHolder()));
-            value = aspectQuery.addition.apply(value, aspectQuery.query(odysseyLivingEntity.getTempBuffHolder()));
+        for(AspectHolder aspectHolder : aspectOwner.getAspectHolderList()){
+            value = aspectQuery.addition.apply(value, aspectQuery.query(aspectHolder));
         }
         return value;
     }
 
     private static <T> T queryArmorAndBuffs(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
-        return aspectQuery.addition.apply(queryArmor(livingEntity, aspectQuery), queryBuffs(livingEntity, aspectQuery));
+        T value = queryArmor(livingEntity, aspectQuery);
+        if(livingEntity instanceof AspectOwner aspectOwner){
+            value = aspectQuery.addition.apply(value, queryOwnedAspects(aspectOwner, aspectQuery));
+        }
+        return value;
     }
 
     private static <T> T queryOneHandedEntityTotal(LivingEntity livingEntity, InteractionHand interactionHand, AspectQuery<T> aspectQuery){
@@ -165,8 +165,8 @@ public class AspectUtil {
 
     public static AspectHolder getCombinedAspectHolder(ItemStack itemStack){
         AspectHolder aspectHolder = getAddedModifierHolder(itemStack);
-        if(itemStack.getItem() instanceof AspectItem aspectItem){
-            for(AspectHolder aspectHolder1 : aspectItem.getAspectHolderList()) {
+        if(itemStack.getItem() instanceof AspectOwner aspectOwner){
+            for(AspectHolder aspectHolder1 : aspectOwner.getAspectHolderList()) {
                 aspectHolder = AspectHolder.combine(aspectHolder, aspectHolder1);
             }
         }
@@ -193,8 +193,8 @@ public class AspectUtil {
         return aspectInstance.aspect.valueToFloat(value) >= aspectInstance.getValueAsFloat();
     }
 
-    public static <T> T getBuffAspectValue(Player player, Aspect<T> aspect){
-        return queryBuffs(player, new SingleQuery<>(aspect));
+    public static <T> T getOwnedAspectValue(AspectOwner aspectOwner, Aspect<T> aspect){
+        return queryOwnedAspects(aspectOwner, new SingleQuery<>(aspect));
     }
 
     // Special totals over multiple aspects on single item

@@ -3,6 +3,7 @@ package com.bedmen.odyssey.entity.projectile;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
+import com.bedmen.odyssey.aspect.encapsulator.AspectOwner;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
@@ -35,8 +36,9 @@ import net.minecraftforge.network.NetworkHooks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public abstract class OdysseyAbstractArrow extends AbstractArrow {
+public abstract class OdysseyAbstractArrow extends AbstractArrow implements AspectOwner {
     private static final EntityDataAccessor<AspectHolder> DATA_ASPECT_HOLDER = SynchedEntityData.defineId(OdysseyAbstractArrow.class, OdysseyDataSerializers.ASPECT_HOLDER);
     public static final String ASPECT_STRENGTH_MAP_TAG = "AspectStrengthMap";
     public static final String PIERCING_DAMAGE_PENALTY_TAG = "PiercingDamagePenalty";
@@ -68,6 +70,10 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
         this.setPierceLevel((byte)ceil);
     }
 
+    public List<AspectHolder> getAspectHolderList(){
+        return List.of(this.getAspectHolder());
+    }
+
     public AspectHolder getAspectHolder(){
         return this.entityData.get(DATA_ASPECT_HOLDER).copy();
     }
@@ -84,7 +90,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow {
     }
 
     public <T> T getAspectStrength(Aspect<T> aspect){
-        return (T) this.getAspectHolder().map.get(aspect).value;
+        return AspectUtil.getOwnedAspectValue(this, aspect);
     }
 
     public boolean hasAspect(Aspect<?> aspect){

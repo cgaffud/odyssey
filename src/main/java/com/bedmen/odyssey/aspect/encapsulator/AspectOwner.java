@@ -1,9 +1,9 @@
-package com.bedmen.odyssey.items.aspect_items;
+package com.bedmen.odyssey.aspect.encapsulator;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 
 import java.util.List;
 
-public interface AspectItem {
+public interface AspectOwner {
     List<AspectHolder> getAspectHolderList();
 }

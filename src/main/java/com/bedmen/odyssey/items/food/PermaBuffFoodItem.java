@@ -5,7 +5,7 @@ import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.food.OdysseyFood;
-import com.bedmen.odyssey.items.aspect_items.AspectItem;
+import com.bedmen.odyssey.aspect.encapsulator.AspectOwner;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class PermaBuffFoodItem extends Item implements AspectItem {
+public class PermaBuffFoodItem extends Item implements AspectOwner {
 
     private final AspectHolder permabuffHolder;
     private final Predicate<Player> playerPredicate;

@@ -1,10 +1,11 @@
 package com.bedmen.odyssey.items.aspect_items;
 
+import com.bedmen.odyssey.aspect.encapsulator.AspectOwner;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 
 import java.util.List;
 
-public interface InnateAspectItem extends AspectItem {
+public interface InnateAspectItem extends AspectOwner {
     default List<AspectHolder> getAspectHolderList(){
         return List.of(this.getInnateAspectHolder(), this.getAbilityHolder());
     }

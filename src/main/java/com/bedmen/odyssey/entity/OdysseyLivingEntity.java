@@ -2,6 +2,7 @@ package com.bedmen.odyssey.entity;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectOwner;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.effect.FireType;
 import net.minecraft.util.Mth;
@@ -9,7 +10,7 @@ import net.minecraft.util.Mth;
 import java.util.List;
 import java.util.Optional;
 
-public interface OdysseyLivingEntity {
+public interface OdysseyLivingEntity extends AspectOwner {
     void setFlightLevels(boolean hasSlowFalling, int glidingLevel);
     void incrementFlight();
     void decrementFlight();
@@ -54,4 +55,9 @@ public interface OdysseyLivingEntity {
     default float getPercentOverheated(){
         return Mth.clamp(this.getTemperature(), 0f, 1f);
     }
+
+    default List<AspectHolder> getAspectHolderList(){
+        return List.of(this.getPermaBuffHolder(), this.getTempBuffHolder());
+    }
+
 }

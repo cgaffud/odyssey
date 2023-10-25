@@ -2,7 +2,9 @@ package com.bedmen.odyssey.registry;
 
 import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
+import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.encapsulator.AspectOwner;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.combat.*;
@@ -218,7 +220,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FISH_CHOWDER = ITEMS.register("fish_chowder", () -> new StackableBowlItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.FISH_CHOWDER)));
 
     public static final RegistryObject<Item> ICE_CREAM_SUNDAE = ITEMS.register("ice_cream_sundae", () -> new TemperatureFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD).food(OdysseyFood.ICE_CREAM_SUNDAE), -0.2f, true));
-    public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermaBuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance<>(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1), new AspectInstance<>(Aspects.APPETITE, 0.25f), new AspectInstance<>(Aspects.HAS_EATEN_ROCK_CANDY).withDisplaySetting(AspectTooltipDisplaySetting.NEVER)), player -> !AspectUtil.getBuffAspectValue(player, Aspects.HAS_EATEN_ROCK_CANDY)));
+    public static final RegistryObject<Item> ROCK_CANDY = ITEMS.register("rock_candy", () -> new PermaBuffFoodItem((new Item.Properties()).tab(OdysseyCreativeModeTab.FOOD), List.of(new AspectInstance<>(Aspects.ADDITIONAL_MOB_HARVEST_LEVEL, 1), new AspectInstance<>(Aspects.APPETITE, 0.25f), new AspectInstance<>(Aspects.HAS_EATEN_ROCK_CANDY).withDisplaySetting(AspectTooltipDisplaySetting.NEVER)), player -> !AspectUtil.getOwnedAspectValue((AspectOwner)player, Aspects.HAS_EATEN_ROCK_CANDY)));
 
     // # Tools
     public static final RegistryObject<Item> COPPER_KEY = ITEMS.register("copper_key", () -> new KeyItem((new Item.Properties()).tab(OdysseyCreativeModeTab.TOOLS), TreasureChestType.COPPER));

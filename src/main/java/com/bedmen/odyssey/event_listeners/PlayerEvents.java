@@ -11,7 +11,7 @@ import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
-import com.bedmen.odyssey.items.aspect_items.AspectItem;
+import com.bedmen.odyssey.aspect.encapsulator.AspectOwner;
 import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.registry.ParticleTypeRegistry;
 import com.bedmen.odyssey.util.GeneralUtil;
@@ -203,8 +203,8 @@ public class PlayerEvents {
         
         // Aspect Tooltips
         AspectTooltipContext aspectTooltipContext = new AspectTooltipContext(Optional.of(itemStack));
-        if(item instanceof AspectItem aspectItem){
-            List<AspectHolder> aspectHolderList = aspectItem.getAspectHolderList();
+        if(item instanceof AspectOwner aspectOwner){
+            List<AspectHolder> aspectHolderList = aspectOwner.getAspectHolderList();
             for(AspectHolder aspectHolder: aspectHolderList){
                 aspectHolder.addTooltip(componentList, tooltipFlag, aspectTooltipContext);
             }
