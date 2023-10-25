@@ -32,8 +32,6 @@ public abstract class Aspect<T> {
         return Component.translatable("aspect.oddc."+this.id);
     }
 
-    public abstract AspectInstance<T> generateInstanceWithModifiability(Item item, float modifiability);
-
     public abstract T floatToValue(float f);
 
     public abstract float valueToFloat(T value);

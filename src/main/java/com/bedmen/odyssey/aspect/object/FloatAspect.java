@@ -22,11 +22,6 @@ public class FloatAspect extends Aspect<Float> {
         super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
     }
 
-    @Override
-    public AspectInstance<Float> generateInstanceWithModifiability(Item item, float modifiability) {
-        return null;
-    }
-
     public Float floatToValue(float f){
         return f;
     }

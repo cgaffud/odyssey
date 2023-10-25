@@ -31,10 +31,6 @@ public class BooleanAspect extends Aspect<Boolean> {
         super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
     }
 
-    public AspectInstance generateInstanceWithModifiability(Item item, float modifiability){
-        return new AspectInstance<>(this);
-    }
-
     public Boolean floatToValue(float strength){
         return strength > 0f;
     }

@@ -25,13 +25,6 @@ public class IntegerAspect extends Aspect<Integer> {
         this.hasInfusionPenalty = hasInfusionPenalty;
     }
 
-    public AspectInstance<Integer> generateInstanceWithModifiability(Item item, float modifiability) {
-        if(this.weight <= 0.0f){
-            return new AspectInstance<>(this, 1);
-        }
-        return new AspectInstance<>(this, Integer.max(1, (int)(modifiability / this.weight)));
-    }
-
     public Integer floatToValue(float strength){
         return (int)strength;
     }
