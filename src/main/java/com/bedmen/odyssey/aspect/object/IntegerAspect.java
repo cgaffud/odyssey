@@ -3,12 +3,12 @@ package com.bedmen.odyssey.aspect.object;
 import com.bedmen.odyssey.aspect.AspectItemPredicates;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
+import com.google.gson.JsonElement;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 
-import java.util.Comparator;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
@@ -23,10 +23,6 @@ public class IntegerAspect extends Aspect<Integer> {
     protected IntegerAspect(String id, float weight, AspectTooltipFunction<Integer> aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff, boolean hasInfusionPenalty){
         super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
         this.hasInfusionPenalty = hasInfusionPenalty;
-    }
-
-    public Integer floatToValue(float strength){
-        return (int)strength;
     }
 
     public float valueToFloat(Integer value) {
@@ -63,5 +59,13 @@ public class IntegerAspect extends Aspect<Integer> {
 
     public Class<Integer> getValueClass() {
         return Integer.class;
+    }
+
+    public Integer jsonElementToValue(JsonElement jsonElement) {
+        return jsonElement.getAsInt();
+    }
+
+    public Integer stringToValue(String s) {
+        return Integer.parseInt(s);
     }
 }

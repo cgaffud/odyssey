@@ -34,8 +34,8 @@ public class JsonUtil {
         JsonObject aspectInstanceObject = jsonObject.getAsJsonObject(key);
         String aspectId = aspectInstanceObject.getAsJsonPrimitive(ASPECT_KEY).getAsString();
         Aspect<?> aspect = Aspects.ASPECT_REGISTER.get(aspectId);
-        float floatValue = aspectInstanceObject.getAsJsonPrimitive(VALUE_KEY).getAsFloat();
-        return new AspectInstance<>(aspect, aspect.floatToValue(floatValue), aspect.getValueClass());
+        JsonElement value = aspectInstanceObject.get(VALUE_KEY);
+        return new AspectInstance<>(aspect, value);
     }
 
     private static final String LEVEL_REQUIREMENT_KEY = "levelRequirement";

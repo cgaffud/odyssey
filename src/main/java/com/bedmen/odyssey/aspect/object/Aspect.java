@@ -2,11 +2,13 @@ package com.bedmen.odyssey.aspect.object;
 
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
+import com.google.gson.JsonElement;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
 
+import javax.json.JsonObject;
 import java.util.Comparator;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
@@ -32,8 +34,6 @@ public abstract class Aspect<T> {
         return Component.translatable("aspect.oddc."+this.id);
     }
 
-    public abstract T floatToValue(float f);
-
     public abstract float valueToFloat(T value);
 
     public abstract Tag valueToTag(T value);
@@ -49,4 +49,8 @@ public abstract class Aspect<T> {
     public abstract T getBase();
 
     public abstract Class<T> getValueClass();
+
+    public abstract T jsonElementToValue(JsonElement jsonElement);
+
+    public abstract T stringToValue(String s);
 }

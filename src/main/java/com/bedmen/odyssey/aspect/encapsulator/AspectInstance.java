@@ -5,12 +5,14 @@ import com.bedmen.odyssey.aspect.object.*;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipContext;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipDisplaySetting;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctionInput;
+import com.google.gson.JsonElement;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class AspectInstance<T> {
 
@@ -33,13 +35,17 @@ public class AspectInstance<T> {
         this(aspect, value, AspectTooltipDisplaySetting.ALWAYS, false);
     }
 
-    public AspectInstance(Aspect<?> aspect, Object value, Class<T> valueClass){
-        this((Aspect<T>)aspect, valueClass.cast(value), AspectTooltipDisplaySetting.ALWAYS, false);
+    public AspectInstance(Aspect<T> aspect, JsonElement value){
+        this(aspect, aspect.jsonElementToValue(value), AspectTooltipDisplaySetting.ALWAYS, false);
+    }
+
+    public static <T> AspectInstance<T> fromCommand(Aspect<T> aspect, Optional<String> optionalValue){
+        return optionalValue.map(s -> new AspectInstance<>(aspect, aspect.stringToValue(s))).orElseGet(() -> new AspectInstance<>(aspect));
     }
 
     public AspectInstance(Aspect<T> aspect, CompoundTag compoundTag, AspectTooltipDisplaySetting aspectTooltipDisplaySetting, boolean obfuscated){
         this.aspect = aspect;
-        this.value = aspect.tagToValue(compoundTag.getCompound(VALUE_TAG));
+        this.value = aspect.tagToValue(compoundTag.get(VALUE_TAG));
         this.aspectTooltipDisplaySetting = aspectTooltipDisplaySetting;
         this.obfuscated = obfuscated;
     }

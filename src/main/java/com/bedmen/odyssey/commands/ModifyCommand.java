@@ -8,6 +8,7 @@ import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class ModifyCommand {
 
@@ -44,22 +46,22 @@ public class ModifyCommand {
                 .then(Commands.literal("itemStack")
                     .then(Commands.argument("targets", EntityArgument.entities())
                         .then(Commands.argument("modifier", ItemModifierArgument.modifier())
-                                .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1, false, false))
-                                .then(Commands.argument("strength", FloatArgumentType.floatArg(0.0f))
-                                        .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), false, false))
+                                .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), Optional.empty(), false, false))
+                                .then(Commands.argument("value", StringArgumentType.word())
+                                        .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), Optional.of(StringArgumentType.getString(commandContext, "value")), false, false))
                                         .then(Commands.argument("obfuscated", BoolArgumentType.bool())
-                                                .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"), false))
+                                                .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), Optional.of(StringArgumentType.getString(commandContext, "value")), BoolArgumentType.getBool(commandContext, "obfuscated"), false))
                                                 .then(Commands.argument("bypass_checks", BoolArgumentType.bool())
-                                                        .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"), BoolArgumentType.getBool(commandContext, "obfuscated"), BoolArgumentType.getBool(commandContext, "bypass_checks")))))))))
+                                                        .executes((commandContext) -> modifyItemStack(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), Optional.of(StringArgumentType.getString(commandContext, "value")), BoolArgumentType.getBool(commandContext, "obfuscated"), BoolArgumentType.getBool(commandContext, "bypass_checks")))))))))
                 .then(Commands.literal("entity")
                         .then(Commands.argument("targets", EntityArgument.entities())
                                 .then(Commands.argument("modifier", ItemModifierArgument.modifier())
-                                        .executes((commandContext) -> modifyEntity(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), 1))
-                                        .then(Commands.argument("strength", FloatArgumentType.floatArg(0.0f))
-                                                .executes((commandContext) -> modifyEntity(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), FloatArgumentType.getFloat(commandContext, "strength"))))))));
+                                        .executes((commandContext) -> modifyEntity(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), Optional.empty()))
+                                        .then(Commands.argument("value", FloatArgumentType.floatArg(0.0f))
+                                                .executes((commandContext) -> modifyEntity(commandContext.getSource(), EntityArgument.getEntities(commandContext, "targets"), ItemModifierArgument.getModifier(commandContext, "modifier"), Optional.of(StringArgumentType.getString(commandContext, "value")))))))));
     }
 
-    private static int modifyItemStack(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect<?> aspect, float strength, boolean obfuscated, boolean bypassChecks) throws CommandSyntaxException {
+    private static int modifyItemStack(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect<?> aspect, Optional<String> optionalValue, boolean obfuscated, boolean bypassChecks) throws CommandSyntaxException {
         int numSuccess = 0;
         boolean isSingleEntity = entityCollection.size() == 1;
 
@@ -67,7 +69,7 @@ public class ModifyCommand {
             if (entity instanceof LivingEntity livingEntity) {
                 ItemStack itemstack = livingEntity.getMainHandItem();
                 if (!itemstack.isEmpty()) {
-                    AspectInstance<?> aspectInstance = new AspectInstance<>(aspect, aspect.floatToValue(strength), aspect.getValueClass());
+                    AspectInstance<?> aspectInstance = AspectInstance.fromCommand(aspect, optionalValue);
                     if(bypassChecks || AspectUtil.canAddModifier(itemstack, aspectInstance)){
                         aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
                         AspectUtil.replaceModifier(itemstack, aspectInstance);
@@ -96,7 +98,7 @@ public class ModifyCommand {
         }
     }
 
-    private static int modifyEntity(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect<?> aspect, float strength) throws CommandSyntaxException {
+    private static int modifyEntity(CommandSourceStack commandSourceStack, Collection<? extends Entity> entityCollection, Aspect<?> aspect, Optional<String> optionalValue) throws CommandSyntaxException {
         if(!aspect.isBuff){
             throw ERROR_NOT_BUFF.create(aspect.getComponent());
         }
@@ -106,7 +108,7 @@ public class ModifyCommand {
 
         for(Entity entity : entityCollection) {
             if (entity instanceof OdysseyLivingEntity odysseyLivingEntity) {
-                AspectInstance aspectInstance = new AspectInstance(aspect, strength);
+                AspectInstance<?> aspectInstance = AspectInstance.fromCommand(aspect, optionalValue);
                 odysseyLivingEntity.setPermaBuff(aspectInstance);
                 ++numSuccess;
             } else if (isSingleEntity) {

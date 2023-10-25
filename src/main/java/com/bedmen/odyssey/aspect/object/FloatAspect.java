@@ -3,6 +3,7 @@ package com.bedmen.odyssey.aspect.object;
 import com.bedmen.odyssey.aspect.AspectItemPredicates;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
+import com.google.gson.JsonElement;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.Item;
@@ -20,10 +21,6 @@ public class FloatAspect extends Aspect<Float> {
     }
     protected FloatAspect(String id, float weight, AspectTooltipFunction<Float> aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
         super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
-    }
-
-    public Float floatToValue(float f){
-        return f;
     }
 
     public float valueToFloat(Float value) {
@@ -56,5 +53,13 @@ public class FloatAspect extends Aspect<Float> {
 
     public Class<Float> getValueClass() {
         return Float.class;
+    }
+
+    public Float jsonElementToValue(JsonElement jsonElement) {
+        return jsonElement.getAsFloat();
+    }
+
+    public Float stringToValue(String s) {
+        return Float.parseFloat(s);
     }
 }

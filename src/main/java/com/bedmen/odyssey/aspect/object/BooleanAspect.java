@@ -4,6 +4,7 @@ import com.bedmen.odyssey.aspect.AspectItemPredicates;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunction;
 import com.bedmen.odyssey.aspect.tooltip.AspectTooltipFunctions;
+import com.google.gson.JsonElement;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.Item;
@@ -29,10 +30,6 @@ public class BooleanAspect extends Aspect<Boolean> {
 
     protected BooleanAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
         super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
-    }
-
-    public Boolean floatToValue(float strength){
-        return strength > 0f;
     }
 
     public float valueToFloat(Boolean value) {
@@ -65,5 +62,13 @@ public class BooleanAspect extends Aspect<Boolean> {
 
     public Class<Boolean> getValueClass() {
         return Boolean.class;
+    }
+
+    public Boolean jsonElementToValue(JsonElement jsonElement) {
+        return jsonElement.getAsBoolean();
+    }
+
+    public Boolean stringToValue(String s) {
+        return Boolean.parseBoolean(s);
     }
 }
