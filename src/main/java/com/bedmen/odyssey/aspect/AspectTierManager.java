@@ -69,7 +69,7 @@ public class AspectTierManager {
                 .add(Aspects.RESPIRATION, 1.0f, 2)
                 .add(Aspects.SWIM_SPEED, 0.25f, 2)
                 .add(Aspects.MOVEMENT_SPEED, 0.05f, 2)
-                .add(Aspects.SNOWSHOE, true, 1)
+                .add(Aspects.SNOWSHOE, null, 1)
                 .add(Aspects.THORNS, 1.0f, 2)
                 .add(Aspects.EXPLOSION_DAMAGE_BLOCK, 5.0f, 2)
                 .add(Aspects.RECOVERY_SPEED, 0.5f, 2)
@@ -110,7 +110,7 @@ public class AspectTierManager {
                 .add(Aspects.RESPIRATION, 1.0f, 2)
                 .add(Aspects.SWIM_SPEED, 0.25f, 2)
                 .add(Aspects.MOVEMENT_SPEED, 0.1f, 2)
-                .add(Aspects.SNOWSHOE, true, 1)
+                .add(Aspects.SNOWSHOE, null, 1)
                 .add(Aspects.THORNS, 1.5f, 2)
                 .add(Aspects.EXPLOSION_DAMAGE_BLOCK, 7.5f, 2)
                 .add(Aspects.RECOVERY_SPEED, 1.0f, 2)
@@ -122,9 +122,9 @@ public class AspectTierManager {
                 .add(Aspects.BLOOD_LOSS, 1, 1)
                 .add(Aspects.WEIGHT, 1, 1)
                 .add(Aspects.OXYGEN_DEPRIVATION, 1, 1)
-                .add(Aspects.BLANK, true,  1)
-                .add(Aspects.BINDING, true, 1)
-                .add(Aspects.VANISHING, true, 1)
+                .add(Aspects.BLANK, null,  1)
+                .add(Aspects.BINDING, null, 1)
+                .add(Aspects.VANISHING, null, 1)
                 .add(Aspects.VOLATILITY, 3.0f, 1)
                 .build();
 
@@ -132,9 +132,9 @@ public class AspectTierManager {
                 .add(Aspects.BLOOD_LOSS, 1, 1)
                 .add(Aspects.WEIGHT, 1, 1)
                 .add(Aspects.OXYGEN_DEPRIVATION, 1, 1)
-                .add(Aspects.BLANK, true,  1)
-                .add(Aspects.BINDING, true, 1)
-                .add(Aspects.VANISHING, true, 1)
+                .add(Aspects.BLANK, null,  1)
+                .add(Aspects.BINDING, null, 1)
+                .add(Aspects.VANISHING, null, 1)
                 .add(Aspects.VOLATILITY, 3.0f, 1)
                 .build();
 

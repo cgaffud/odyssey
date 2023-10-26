@@ -181,7 +181,7 @@ public class WeaponUtil {
     }
 
     public static boolean isDualWieldItem(ItemStack itemStack){
-        return AspectUtil.getItemStackAspectValue(itemStack, Aspects.DUAL_WIELD);
+        return AspectUtil.itemStackHasAspect(itemStack, Aspects.DUAL_WIELD);
     }
 
     public static void smackTarget(SmackPush smackPush) {

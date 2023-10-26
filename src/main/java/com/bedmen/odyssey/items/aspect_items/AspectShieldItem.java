@@ -60,12 +60,12 @@ public class AspectShieldItem extends ShieldItem implements INeedsToRegisterItem
     }
 
     public int getRecoveryTime(ItemStack shield){
-        float recoverySpeedMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.RECOVERY_SPEED);
+        float recoverySpeedMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.RECOVERY_SPEED).orElse(0f);
         return Mth.ceil((float)this.shieldType.recoveryTime / recoverySpeedMultiplier);
     }
 
     public float getBlockingAngleWidth(ItemStack shield){
-        float widthMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.WIDTH);
+        float widthMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.WIDTH).orElse(0f);
         return this.shieldType.blockingAngleWidth * widthMultiplier;
     }
 

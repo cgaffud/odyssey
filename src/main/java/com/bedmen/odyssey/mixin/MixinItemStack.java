@@ -34,11 +34,11 @@ public abstract class MixinItemStack extends net.minecraftforge.common.capabilit
                     }
                 }
 
-                float durabilityStrength = AspectUtil.getItemStackAspectValue(itemStack, Aspects.DURABILITY);
-                if(durabilityStrength > 0.0f){
-                    float noDamageChance = 1.0f - (1.0f / (1.0f + durabilityStrength));
+                float durabilityMultiplier = 1f + AspectUtil.getItemStackAspectValue(itemStack, Aspects.DURABILITY).orElse(0f);
+                if(durabilityMultiplier > 1f){
+                    float damageChance = 1f / durabilityMultiplier;
                     for(int k = 0; k < amount; ++k) {
-                        if(noDamageChance > randomSource.nextFloat()) {
+                        if(damageChance > randomSource.nextFloat()) {
                             amount--;
                         }
                     }

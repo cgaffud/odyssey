@@ -55,14 +55,14 @@ public class AspectArmorItem extends ArmorItem implements InnateAspectItem, Odys
 
     public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer)
     {
-        return AspectUtil.getItemStackAspectValue(stack, Aspects.PIGLIN_NEUTRAL);
+        return AspectUtil.itemStackHasAspect(stack, Aspects.PIGLIN_NEUTRAL);
     }
 
     public boolean canElytraFly(ItemStack stack, LivingEntity livingEntity) {
         if(this.slot != EquipmentSlot.CHEST){
             return false;
         }
-        if(!(AspectUtil.getArmorAspectValue(livingEntity, Aspects.GLIDE) > 0 || AspectUtil.getItemStackAspectValue(stack, Aspects.GLIDE) > 0)){
+        if(!AspectUtil.livingEntityHasAspect(livingEntity, Aspects.GLIDE)){
             return false;
         }
         if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){

@@ -25,10 +25,7 @@ public class InputEvents {
         InteractionHand hand = event.getHand();
         if(localPlayer != null){
             ItemStack itemStack = localPlayer.getItemInHand(hand);
-            float volatilityStrength = AspectUtil.getItemStackAspectValue(itemStack, Aspects.VOLATILITY);
-            if (volatilityStrength > 0.0f){
-                OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket(volatilityStrength));
-            }
+            AspectUtil.getItemStackAspectValue(itemStack, Aspects.VOLATILITY).ifPresent(value -> OdysseyNetwork.CHANNEL.sendToServer(new SwungWithVolatilePacket(value)));
             if(event.isAttack()){
                 if(itemStack.getItem() instanceof ProjectileLaunchItem && localPlayer.getAttackStrengthScale(0.5F) > 0.9f){
                     localPlayer.resetAttackStrengthTicker();

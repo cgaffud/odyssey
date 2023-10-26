@@ -80,7 +80,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
             case 3,4 -> Items.GOLDEN_SWORD;
         };
         this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
-        if(AspectUtil.getItemStackAspectValue(item.getDefaultInstance(), Aspects.DUAL_WIELD)){
+        if(AspectUtil.itemStackHasAspect(item.getDefaultInstance(), Aspects.DUAL_WIELD)){
             this.setItemSlot(EquipmentSlot.OFFHAND, item.getDefaultInstance());
         }
         this.reassessWeaponGoal();

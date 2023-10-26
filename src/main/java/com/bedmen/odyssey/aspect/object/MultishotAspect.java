@@ -9,15 +9,15 @@ public class MultishotAspect extends FloatAspect {
         super("multishot", 2.0f, AspectTooltipFunctions.MULTISHOT, AspectItemPredicates.CROSSBOW, true);
     }
 
-    public static int strengthToNumberOfSideProjectiles(float strength){
+    public static int valueToNumberOfSideProjectiles(float strength){
         return 2 * Mth.ceil(strength / 2.0f);
     }
 
-    public static int strengthToNumberOfTotalProjectiles(float strength){
-        return strengthToNumberOfSideProjectiles(strength) + 1;
+    public static int valueToNumberOfTotalProjectiles(float strength){
+        return valueToNumberOfSideProjectiles(strength) + 1;
     }
 
-    public static float strengthToDamagePenalty(float strength){
-        return strength / ((float) strengthToNumberOfSideProjectiles(strength));
+    public static float valueToDamagePenalty(float strength){
+        return strength / ((float) valueToNumberOfSideProjectiles(strength));
     }
 }

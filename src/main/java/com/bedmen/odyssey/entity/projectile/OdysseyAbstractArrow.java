@@ -2,7 +2,6 @@ package com.bedmen.odyssey.entity.projectile;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectHolder;
-import com.bedmen.odyssey.aspect.encapsulator.AspectHolderType;
 import com.bedmen.odyssey.aspect.encapsulator.AspectOwner;
 import com.bedmen.odyssey.aspect.object.Aspect;
 import com.bedmen.odyssey.aspect.object.Aspects;
@@ -37,6 +36,7 @@ import net.minecraftforge.network.NetworkHooks;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class OdysseyAbstractArrow extends AbstractArrow implements AspectOwner {
     private static final EntityDataAccessor<AspectHolder> DATA_ASPECT_HOLDER = SynchedEntityData.defineId(OdysseyAbstractArrow.class, OdysseyDataSerializers.ASPECT_HOLDER);
@@ -64,9 +64,9 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow implements Aspe
     }
 
     public void updatePiercingValues(){
-        float strength = this.getAspectStrength(Aspects.PIERCING);
-        int ceil = Mth.ceil(strength);
-        this.piercingDamagePenalty = 1.0f - ((float)ceil) + strength;
+        float piercingValue = this.getAspectValue(Aspects.PIERCING).orElse(0f);
+        int ceil = Mth.ceil(piercingValue);
+        this.piercingDamagePenalty = 1.0f - ((float)ceil) + piercingValue;
         this.setPierceLevel((byte)ceil);
     }
 
@@ -89,7 +89,7 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow implements Aspe
         this.setAspectHolder(AspectHolder.combine(this.getAspectHolder(), aspectHolder));
     }
 
-    public <T> T getAspectStrength(Aspect<T> aspect){
+    public <T> Optional<T> getAspectValue(Aspect<T> aspect){
         return AspectUtil.getOwnedAspectValue(this, aspect);
     }
 
@@ -191,22 +191,22 @@ public abstract class OdysseyAbstractArrow extends AbstractArrow implements Aspe
                 }
 
                 // Poison Damage
-                int poisonStrength = (int)this.getAspectStrength(Aspects.PROJECTILE_POISON_DAMAGE);
-                if(!target.level.isClientSide && poisonStrength > 0) {
-                    AspectUtil.applyPoisonDamage(livingEntity, poisonStrength);
+                if(!target.level.isClientSide) {
+                    this.getAspectValue(Aspects.PROJECTILE_POISON_DAMAGE).ifPresent(value -> AspectUtil.applyPoisonDamage(livingEntity, value));
                 }
                 // Cobweb Chance
-                float cobwebChance = this.getAspectStrength(Aspects.PROJECTILE_COBWEB_CHANCE);
                 if(!(this instanceof OdysseyArrow) || this.isCritArrow()){
-                    Weaver.tryPlaceCobwebOnTarget(cobwebChance, livingEntity);
+                    this.getAspectValue(Aspects.PROJECTILE_COBWEB_CHANCE).ifPresent(value -> Weaver.tryPlaceCobwebOnTarget(value, livingEntity));
                 }
                 // Hexed Earth
-                if (livingEntity.getRandom().nextDouble() < this.getAspectStrength(Aspects.PROJECTILE_HEXED_EARTH)) {
-                    CovenRootEntity.createRootBlock(livingEntity.blockPosition(), livingEntity.level, 12);
-                    OverworldWitch.summonDripstoneAboveEntity(livingEntity.getPosition(1.0f), livingEntity.level, 1.5f,7, 5);
-                }
+                this.getAspectValue(Aspects.PROJECTILE_HEXED_EARTH).ifPresent(value -> {
+                    if (livingEntity.getRandom().nextDouble() < value) {
+                        CovenRootEntity.createRootBlock(livingEntity.blockPosition(), livingEntity.level, 12);
+                        OverworldWitch.summonDripstoneAboveEntity(livingEntity.getPosition(1.0f), livingEntity.level, 1.5f,7, 5);
+                    }
+                });
                 // Ranged Larceny
-                WeaponUtil.tryLarceny(this.getAspectStrength(Aspects.PROJECTILE_LARCENY_CHANCE), this.getOwner(), livingEntity);
+                this.getAspectValue(Aspects.PROJECTILE_LARCENY_CHANCE).ifPresent(value -> WeaponUtil.tryLarceny(value, this.getOwner(), livingEntity));
             }
 
             this.onHurt(target, true);

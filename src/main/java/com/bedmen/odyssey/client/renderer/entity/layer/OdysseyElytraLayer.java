@@ -18,7 +18,7 @@ public class OdysseyElytraLayer<T extends LivingEntity, M extends EntityModel<T>
     }
 
     public boolean shouldRender(ItemStack stack, T livingEntity) {
-        return AspectUtil.getArmorAspectValue(livingEntity, Aspects.GLIDE) > 0;
+        return AspectUtil.livingEntityHasAspect(livingEntity, Aspects.GLIDE);
     }
 
     public ResourceLocation getElytraTexture(ItemStack itemStack, T entity) {

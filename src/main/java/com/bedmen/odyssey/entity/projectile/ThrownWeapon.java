@@ -24,8 +24,6 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
-
 public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEntityAdditionalSpawnData {
 
     private static final String THROWN_WEAPON_ITEMSTACK_TAG = "ThrownWeaponItemStack";
@@ -146,7 +144,7 @@ public abstract class ThrownWeapon extends OdysseyAbstractArrow implements IEnti
     protected void doLoyaltyMovement(){
         Entity owner = this.getOwner();
         Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
-        double returnSpeed = 0.06f * Mth.sqrt(this.getAspectStrength(Aspects.LOYALTY));
+        double returnSpeed = 0.06f * Mth.sqrt(this.getAspectValue(Aspects.LOYALTY).orElse(1f));
         this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(returnSpeed)));
     }
 

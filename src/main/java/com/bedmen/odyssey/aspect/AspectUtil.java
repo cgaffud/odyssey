@@ -74,13 +74,13 @@ public class AspectUtil {
         return new ArrayList<>(getAddedModifierHolder(itemStack).map.values());
     }
 
-    private static <T> T queryItemStack(ItemStack itemStack, AspectQuery<T> aspectQuery){
+    private static <T> Optional<T> queryItemStack(ItemStack itemStack, AspectQuery<T> aspectQuery){
         if(itemStack.isEmpty()){
-            return aspectQuery.base;
+            return Optional.empty();
         }
-        T value = aspectQuery.query(getAddedModifierHolder(itemStack));
+        Optional<T> value = aspectQuery.query(getAddedModifierHolder(itemStack));
         if(itemStack.getItem() instanceof AspectOwner aspectOwner){
-            aspectQuery.addition.apply(value, queryOwnedAspects(aspectOwner, aspectQuery));
+            value = aspectQuery.add(value, queryOwnedAspects(aspectOwner, aspectQuery));
         }
         return value;
     }
@@ -92,47 +92,44 @@ public class AspectUtil {
             }
             return 0.0f;
         });
-        if(optionalLivingEntity.isPresent()){
-            return queryOneHandedEntityTotal(optionalLivingEntity.get(), InteractionHand.MAIN_HAND, functionQuery);
-        } else {
-            return queryItemStack(itemStack, functionQuery);
-        }
+        return (optionalLivingEntity.map(livingEntity -> queryOneHandedEntityTotal(livingEntity, InteractionHand.MAIN_HAND, functionQuery))
+                .orElseGet(() -> queryItemStack(itemStack, functionQuery))).orElse(0f);
     }
 
-    private static <T> T queryArmor(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
-        T value = aspectQuery.base;
+    private static <T> Optional<T> queryArmor(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
+        Optional<T> value = Optional.empty();
         for(ItemStack armorPiece: livingEntity.getArmorSlots()){
-            value = aspectQuery.addition.apply(value, queryItemStack(armorPiece, aspectQuery));
+            value = aspectQuery.add(value, queryItemStack(armorPiece, aspectQuery));
         }
         if(isFullArmorSet(livingEntity.getArmorSlots()) && livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof AspectArmorItem aspectArmorItem){
-            value = aspectQuery.addition.apply(value, aspectQuery.query(aspectArmorItem.getSetBonusAbilityHolder()));
+            value = aspectQuery.add(value, aspectQuery.query(aspectArmorItem.getSetBonusAbilityHolder()));
         }
         return value;
     }
 
-    private static <T> T queryOwnedAspects(AspectOwner aspectOwner, AspectQuery<T> aspectQuery){
-        T value = aspectQuery.base;
+    private static <T> Optional<T> queryOwnedAspects(AspectOwner aspectOwner, AspectQuery<T> aspectQuery){
+        Optional<T> value = Optional.empty();
         for(AspectHolder aspectHolder : aspectOwner.getAspectHolderList()){
-            value = aspectQuery.addition.apply(value, aspectQuery.query(aspectHolder));
+            value = aspectQuery.add(value, aspectQuery.query(aspectHolder));
         }
         return value;
     }
 
-    private static <T> T queryArmorAndBuffs(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
-        T value = queryArmor(livingEntity, aspectQuery);
+    private static <T> Optional<T> queryArmorAndBuffs(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
+        Optional<T> value = queryArmor(livingEntity, aspectQuery);
         if(livingEntity instanceof AspectOwner aspectOwner){
-            value = aspectQuery.addition.apply(value, queryOwnedAspects(aspectOwner, aspectQuery));
+            value = aspectQuery.add(value, queryOwnedAspects(aspectOwner, aspectQuery));
         }
         return value;
     }
 
-    private static <T> T queryOneHandedEntityTotal(LivingEntity livingEntity, InteractionHand interactionHand, AspectQuery<T> aspectQuery){
-        return aspectQuery.addition.apply(queryArmorAndBuffs(livingEntity, aspectQuery), queryItemStack(livingEntity.getItemInHand(interactionHand), aspectQuery));
+    private static <T> Optional<T> queryOneHandedEntityTotal(LivingEntity livingEntity, InteractionHand interactionHand, AspectQuery<T> aspectQuery){
+        return aspectQuery.add(queryArmorAndBuffs(livingEntity, aspectQuery), queryItemStack(livingEntity.getItemInHand(interactionHand), aspectQuery));
     }
 
-    private static <T> T queryEntityTotal(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
-        return aspectQuery.addition.apply(
-                aspectQuery.addition.apply(
+    private static <T> Optional<T> queryEntityTotal(LivingEntity livingEntity, AspectQuery<T> aspectQuery){
+        return aspectQuery.add(
+                aspectQuery.add(
                         queryItemStack(livingEntity.getItemInHand(InteractionHand.MAIN_HAND), aspectQuery),
                         queryItemStack(livingEntity.getItemInHand(InteractionHand.OFF_HAND), aspectQuery)
                 ),
@@ -180,15 +177,15 @@ public class AspectUtil {
 
     // Get aspect value from single itemStack
 
-    public static <T> T getItemStackAspectValue(ItemStack itemStack, Aspect<T> aspect){
+    public static <T> Optional<T> getItemStackAspectValue(ItemStack itemStack, Aspect<T> aspect){
         return queryItemStack(itemStack, new SingleQuery<>(aspect));
     }
 
     public static boolean itemStackHasAspect(ItemStack itemStack, Aspect<?> aspect){
-        return getCombinedAspectHolder(itemStack).hasAspect(aspect);
+        return getItemStackAspectValue(itemStack, aspect).isPresent();
     }
 
-    public static <T> T getOwnedAspectValue(AspectOwner aspectOwner, Aspect<T> aspect){
+    public static <T> Optional<T> getOwnedAspectValue(AspectOwner aspectOwner, Aspect<T> aspect){
         return queryOwnedAspects(aspectOwner, new SingleQuery<>(aspect));
     }
 
@@ -225,17 +222,25 @@ public class AspectUtil {
                 return shieldDamageBlockAspect.damageSourcePredicate.test(damageSource) ? (Float)aspectInstance.value : 0.0f;
             }
             return 0.0f;
-        }));
+        })).orElse(0f);
     }
 
     // Get total value from armor
-    public static <T> T getArmorAspectValue(LivingEntity livingEntity, Aspect<T> aspect){
+    public static <T> Optional<T> getArmorAspectValue(LivingEntity livingEntity, Aspect<T> aspect){
         return queryArmor(livingEntity, new SingleQuery<>(aspect));
     }
 
+    public static <T> boolean armorHasAspect(LivingEntity livingEntity, Aspect<T> aspect){
+        return getArmorAspectValue(livingEntity, aspect).isPresent();
+    }
+
     // Get total value from armor and entity
-    public static <T> T getArmorAndBuffsAspectValue(LivingEntity livingEntity, Aspect<T> aspect){
+    public static <T> Optional<T> getArmorAndBuffsAspectValue(LivingEntity livingEntity, Aspect<T> aspect){
         return queryArmorAndBuffs(livingEntity, new SingleQuery<>(aspect));
+    }
+
+    public static <T> boolean armorAndBuffsHasAspect(LivingEntity livingEntity, Aspect<T> aspect){
+        return getArmorAndBuffsAspectValue(livingEntity, aspect).isPresent();
     }
 
     // Special totals over multiple aspects on armor
@@ -245,17 +250,25 @@ public class AspectUtil {
                 return damageSourcePredicateAspect.damageSourcePredicate.test(damageSource) ? (Float)aspectInstance.value : 0.0f;
             }
             return 0.0f;
-        }));
+        })).orElse(0f);
     }
 
     // Aspect total over one hand, armor, and player
-    public static <T> T getOneHandedEntityTotalAspectValue(LivingEntity livingEntity, InteractionHand interactionHand, Aspect<T> aspect){
+    public static <T> Optional<T> getOneHandedEntityTotalAspectValue(LivingEntity livingEntity, InteractionHand interactionHand, Aspect<T> aspect){
         return queryOneHandedEntityTotal(livingEntity, interactionHand, new SingleQuery<>(aspect));
     }
 
+    public static <T> boolean oneHandedEntityHasAspect(LivingEntity livingEntity, InteractionHand interactionHand, Aspect<T> aspect){
+        return getOneHandedEntityTotalAspectValue(livingEntity, interactionHand, aspect).isPresent();
+    }
+
     // Aspect total over all EquipmentSlots and player
-    public static <T> T getTotalAspectValue(LivingEntity livingEntity, Aspect<T> aspect){
+    public static <T> Optional<T> getTotalAspectValue(LivingEntity livingEntity, Aspect<T> aspect){
         return queryEntityTotal(livingEntity, new SingleQuery<>(aspect));
+    }
+
+    public static <T> boolean livingEntityHasAspect(LivingEntity livingEntity, Aspect<T> aspect){
+        return getTotalAspectValue(livingEntity, aspect).isPresent();
     }
 
     // Add AspectInstance to a list of AspectInstances
@@ -354,7 +367,7 @@ public class AspectUtil {
     public static float getUsedModifiability(ItemStack itemStack){
         AspectHolder aspectHolder = getAddedModifierHolder(itemStack);
         FunctionQuery<Float> functionQuery = FunctionQuery.floatQuery.apply(AspectInstance::getModifiability);
-        return functionQuery.query(aspectHolder);
+        return functionQuery.query(aspectHolder).orElse(0f);
     }
 
     public static int getTotalModifiability(ItemStack itemStack){

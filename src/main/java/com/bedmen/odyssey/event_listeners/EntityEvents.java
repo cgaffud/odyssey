@@ -129,24 +129,17 @@ public class EntityEvents {
         }
 
         if (!livingEntity.level.isClientSide && livingEntity.isAlive()) {
-            int bloodLossStrength = AspectUtil.getTotalAspectValue(livingEntity, Aspects.BLOOD_LOSS);
-            int weightStrength = AspectUtil.getTotalAspectValue(livingEntity, Aspects.WEIGHT);
-            int oxygenDeprivationStrength = AspectUtil.getTotalAspectValue(livingEntity, Aspects.OXYGEN_DEPRIVATION);
-
-            if (bloodLossStrength > 0)
-                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLEEDING.get(), 2,
-                        bloodLossStrength-1,false, false, false));
-            if (weightStrength > 0)
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, weightStrength-1
-                ,false, false, false));
-            if (oxygenDeprivationStrength > 0)
-                livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 2, oxygenDeprivationStrength-1
-                        ,false,false,false));
+            AspectUtil.getTotalAspectValue(livingEntity, Aspects.BLOOD_LOSS).ifPresent(value ->
+                    livingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLEEDING.get(), 2, value-1,false, false, false)));
+            AspectUtil.getTotalAspectValue(livingEntity, Aspects.WEIGHT).ifPresent(value ->
+                    livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, value-1,false, false, false)));
+            AspectUtil.getTotalAspectValue(livingEntity, Aspects.OXYGEN_DEPRIVATION).ifPresent(value ->
+                    livingEntity.addEffect(new MobEffectInstance(EffectRegistry.DROWNING.get(), 2, value-1,false,false,false)));
         }
 
         // Frost Walker
         BlockPos blockPos = livingEntity.blockPosition();
-        if(AspectUtil.getArmorAndBuffsAspectValue(livingEntity, Aspects.FROST_WALKER) && !blockPos.equals(livingEntity.lastPos)){
+        if(AspectUtil.armorAndBuffsHasAspect(livingEntity, Aspects.FROST_WALKER) && !blockPos.equals(livingEntity.lastPos)){
             FrostWalkerEnchantment.onEntityMoved(livingEntity, livingEntity.level, blockPos, 1);
         }
 
@@ -172,18 +165,9 @@ public class EntityEvents {
                 TemperatureSource.stabilizeTemperatureNaturally(odysseyLivingEntity);
             }
             // Temperature Aspects
-            float warmthStrength = AspectUtil.getTotalAspectValue(livingEntity, Aspects.WARMTH);
-            if(warmthStrength > 0f){
-                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, warmthStrength * TemperatureSource.ONE_PERCENT_PER_SECOND);
-            }
-            float coolingStrength = AspectUtil.getTotalAspectValue(livingEntity, Aspects.COOLING);
-            if(coolingStrength > 0f){
-                TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, -coolingStrength * TemperatureSource.ONE_PERCENT_PER_SECOND);
-            }
-            float temperaturePerSecond = AspectUtil.getTotalAspectValue(livingEntity, Aspects.TEMPERATURE_PER_SECOND);
-            if(temperaturePerSecond != 0f){
-                TemperatureSource.temperaturePercentPerSecondSource(temperaturePerSecond).tick(livingEntity);
-            }
+            AspectUtil.getTotalAspectValue(livingEntity, Aspects.WARMTH).ifPresent(value -> TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, value * TemperatureSource.ONE_PERCENT_PER_SECOND));
+            AspectUtil.getTotalAspectValue(livingEntity, Aspects.COOLING).ifPresent(value -> TemperatureSource.addHelpfulTemperature(odysseyLivingEntity, -value * TemperatureSource.ONE_PERCENT_PER_SECOND));
+            AspectUtil.getTotalAspectValue(livingEntity, Aspects.TEMPERATURE_PER_SECOND).ifPresent(value -> TemperatureSource.temperaturePercentPerSecondSource(value).tick(livingEntity));
 
             // Temperature Damage
             if(livingEntity.tickCount % 10 == 0){
@@ -213,65 +197,64 @@ public class EntityEvents {
             // Smite, Bane of Arthropods, Hydro Damage
             amount += AspectUtil.getTargetConditionalAspectStrength(damageSourceLivingEntity, hurtLivingEntity);
             // Poison Damage
-            int poisonStrength = AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.POISON_DAMAGE);
-            if(poisonStrength > 0){
-                AspectUtil.applyPoisonDamage(hurtLivingEntity, poisonStrength);
-            }
+            AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.POISON_DAMAGE).ifPresent(value -> AspectUtil.applyPoisonDamage(hurtLivingEntity, value));
 
-            int hexflameStrength = AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.HEXFLAME_DAMAGE);
-            if(hexflameStrength > 0) {
+            AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.HEXFLAME_DAMAGE).ifPresent(value -> {
                 if (hurtLivingEntity.hasEffect(EffectRegistry.HEXFLAME.get())) {
                     MobEffectInstance mobEffectInstance = hurtLivingEntity.getEffect(EffectRegistry.HEXFLAME.get());
-                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (int)(40 * hexflameStrength);
-                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), hexflameDuration > (80 * hexflameStrength) ? (80 * hexflameStrength) : hexflameDuration, 0));
+                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (40 * value);
+                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), Math.min(hexflameDuration, (80 * value)), 0));
                 }
                 else
-                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(40 * hexflameStrength), 0));
-            }
-            // Cobweb Chance
-            float cobwebChance = AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.COBWEB_CHANCE);
+                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(40 * value), 0));
+            });
+
             if(!(damageSourceLivingEntity instanceof OdysseyPlayer odysseyPlayer)
                     || odysseyPlayer.getAttackStrengthScaleO() > 0.9f) {
-                Weaver.tryPlaceCobwebOnTarget(cobwebChance, hurtLivingEntity);
+                // Cobweb Chance
+                AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.COBWEB_CHANCE).ifPresent(value -> Weaver.tryPlaceCobwebOnTarget(value, hurtLivingEntity));
+                // Melee Larceny
+                AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.LARCENY_CHANCE).ifPresent(value -> WeaponUtil.tryLarceny(value, damageSourceLivingEntity, hurtLivingEntity));
             }
-            // Melee Larceny
-            float larcenyChance = AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.LARCENY_CHANCE);
-            WeaponUtil.tryLarceny(larcenyChance, damageSourceLivingEntity, hurtLivingEntity);
+
 
             // Melee Knockback
             if(hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
                 odysseyLivingEntity.pushKnockbackAspectQueue(
-                        AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.KNOCKBACK)
+                        AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.KNOCKBACK).orElse(0f)
                 );
             }
 
             // Cold Snap
-            if(AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.COLD_SNAP)){
+            if(AspectUtil.oneHandedEntityHasAspect(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.COLD_SNAP)){
                 WeaponUtil.getSweepLivingEntities(damageSourceLivingEntity, hurtLivingEntity, true)
                                 .forEach(livingEntity -> livingEntity.addEffect(new MobEffectInstance(EffectRegistry.STRAY_FREEZING.get(), 40, 4)));
                 OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> hurtLivingEntity), new ColdSnapAnimatePacket(hurtLivingEntity));
             }
 
             // Thorns
-            float thornsStrength = AspectUtil.getArmorAndBuffsAspectValue(hurtLivingEntity, Aspects.THORNS);
-            if(thornsStrength > 0.0f && 0.25f >= hurtLivingEntity.getRandom().nextFloat()){
-                damageSourceLivingEntity.hurt(DamageSource.thorns(hurtLivingEntity), thornsStrength);
-            }
+            AspectUtil.getArmorAndBuffsAspectValue(hurtLivingEntity, Aspects.THORNS).ifPresent(value -> {
+                if(0.25f >= hurtLivingEntity.getRandom().nextFloat()){
+                    damageSourceLivingEntity.hurt(DamageSource.thorns(hurtLivingEntity), value);
+                }
+            });
 
             // Absorbent Growth
-            float absorbentGrowthCapacity = AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.ABSORBENT_GROWTH);
-            if ((hurtLivingEntity instanceof Enemy) && absorbentGrowthCapacity > 0) {
-                float progress = mainHandItemStack.getOrCreateTag().getFloat(AspectUtil.DAMAGE_GROWTH_TAG) + amount/400;
-                mainHandItemStack.getOrCreateTag().putFloat(AspectUtil.DAMAGE_GROWTH_TAG, progress > absorbentGrowthCapacity ? absorbentGrowthCapacity : progress);
+            final float finalAmount = amount;
+            if ((hurtLivingEntity instanceof Enemy)) {
+                AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.ABSORBENT_GROWTH).ifPresent(value -> {
+                    float progress = mainHandItemStack.getOrCreateTag().getFloat(AspectUtil.DAMAGE_GROWTH_TAG) + finalAmount/400;
+                    mainHandItemStack.getOrCreateTag().putFloat(AspectUtil.DAMAGE_GROWTH_TAG, progress > value ? value : progress);
+                });
             }
 
             // Bludgeoning
-            float bludgeoningStrength = AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.BLUDGEONING);
-            if ((bludgeoningStrength > 0) && WeaponUtil.isBeingUsedTwoHanded(mainHandItemStack))
-                hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLUDGEONING_SLOWNESS.get(), 50));
+            if(WeaponUtil.isBeingUsedTwoHanded(mainHandItemStack)){
+                AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.BLUDGEONING).ifPresent(value -> hurtLivingEntity.addEffect(new MobEffectInstance(EffectRegistry.BLUDGEONING_SLOWNESS.get(), (int)(50f * value))));
+            }
 
             // Vamp. Speed
-            if (AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.VAMPIRIC_SPEED)) {
+            if (AspectUtil.oneHandedEntityHasAspect(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.VAMPIRIC_SPEED)) {
                 MobEffectInstance vampSpeedInstance = damageSourceLivingEntity.getEffect(EffectRegistry.VAMPIRIC_SPEED.get());
                 // Upper speed limit is set here (30%)
                 int speedAmp = (vampSpeedInstance != null) ? (vampSpeedInstance.getAmplifier() == 5 ? 5 : vampSpeedInstance.getAmplifier()+1) : 0;
@@ -284,7 +267,7 @@ public class EntityEvents {
             }
         } else if (damageSourceEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow && hurtLivingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
             // Ranged Knockback
-            odysseyLivingEntity.pushKnockbackAspectQueue(odysseyAbstractArrow.getAspectStrength(Aspects.PROJECTILE_KNOCKBACK));
+            odysseyLivingEntity.pushKnockbackAspectQueue(odysseyAbstractArrow.getAspectValue(Aspects.PROJECTILE_KNOCKBACK).orElse(0f));
         }
 
         if (hurtLivingEntity.hasEffect(EffectRegistry.VULNERABLE.get()))
@@ -322,16 +305,17 @@ public class EntityEvents {
         DamageSource damageSource = event.getSource();
         Entity damageSourceEntity = damageSource.getEntity();
         if (damageSourceEntity instanceof LivingEntity damageSourceLivingEntity) {
-            float fatalDamage = AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.FATAL_HIT);
-            float currentHealth = hurtLivingEntity.getHealth();
-            float newHealth = currentHealth - amount;
-            if(newHealth > 0.0f && newHealth < fatalDamage){
-                float deathChance = (fatalDamage - newHealth) / fatalDamage;
-                if(deathChance > hurtLivingEntity.getRandom().nextFloat()) {
-                    event.setAmount(currentHealth);
-                    OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> hurtLivingEntity), new FatalHitAnimatePacket(hurtLivingEntity));
+            AspectUtil.getOneHandedEntityTotalAspectValue(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.FATAL_HIT).ifPresent(value -> {
+                float currentHealth = hurtLivingEntity.getHealth();
+                float newHealth = currentHealth - amount;
+                if(newHealth > 0.0f && newHealth < value){
+                    float deathChance = (value - newHealth) / value;
+                    if(deathChance > hurtLivingEntity.getRandom().nextFloat()) {
+                        event.setAmount(currentHealth);
+                        OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> hurtLivingEntity), new FatalHitAnimatePacket(hurtLivingEntity));
+                    }
                 }
-            }
+            });
         }
     }
 
@@ -479,13 +463,10 @@ public class EntityEvents {
         DamageSource damageSource = event.getDamageSource();
         if(damageSource != null){
             Entity directEntity = damageSource.getDirectEntity();
-            if(directEntity instanceof OdysseyAbstractArrow){
-                event.setLootingLevel((int) ((OdysseyAbstractArrow) directEntity).getAspectStrength(Aspects.PROJECTILE_LOOTING_LUCK));
+            if(directEntity instanceof OdysseyAbstractArrow odysseyAbstractArrow){
+                odysseyAbstractArrow.getAspectValue(Aspects.PROJECTILE_LOOTING_LUCK).ifPresent(event::setLootingLevel);
             } else if (directEntity instanceof LivingEntity livingEntity) {
-                int looting = AspectUtil.getOneHandedEntityTotalAspectValue(livingEntity, InteractionHand.MAIN_HAND, Aspects.LOOTING_LUCK);
-                if(looting > 0){
-                    event.setLootingLevel(looting);
-                }
+                AspectUtil.getOneHandedEntityTotalAspectValue(livingEntity, InteractionHand.MAIN_HAND, Aspects.LOOTING_LUCK).ifPresent(event::setLootingLevel);
             }
         }
     }
@@ -498,7 +479,8 @@ public class EntityEvents {
 
             DamageSource damageSource = event.getDamageSource();
             float damageBlockMultiplier = 1.0f;
-            if(AspectUtil.getItemStackAspectValue(shield, Aspects.COLD_TO_THE_TOUCH)){
+            // Cold to the touch
+            if(AspectUtil.itemStackHasAspect(shield, Aspects.COLD_TO_THE_TOUCH)){
                 WeaponUtil.getSweepLivingEntities(livingEntity, livingEntity, false)
                         .forEach(livingEntity1 -> livingEntity1.addEffect(new MobEffectInstance(EffectRegistry.STRAY_FREEZING.get(), 40, 4)));
                 OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> livingEntity), new ColdSnapAnimatePacket(livingEntity));
@@ -506,19 +488,22 @@ public class EntityEvents {
             // Parry boost
             if(livingEntity instanceof OdysseyLivingEntity odysseyLivingEntity){
                 if(odysseyLivingEntity.getShieldMeter() > 1.0f) {
-                    damageBlockMultiplier *= (2 + AspectUtil.getItemStackAspectValue(shield, Aspects.PRECISE_BLOCK)/2);
+                    damageBlockMultiplier *= (2 + AspectUtil.getItemStackAspectValue(shield, Aspects.PRECISE_BLOCK).orElse(0f)/2);
                     if (parryableWeaponItem instanceof AspectMeleeItem) {
                         livingEntity.addEffect(new MobEffectInstance(EffectRegistry.PARRY_STRENGTH.get(), 50, 0));
-                    } else if ((AspectUtil.getItemStackAspectValue(shield, Aspects.ASSISTED_STRIKE)) > 0) {
-                        livingEntity.addEffect(new MobEffectInstance(EffectRegistry.ASSISTED_STRIKE_STRENGTH.get(), 50, 0));
+                    } else {
+                        AspectUtil.getItemStackAspectValue(shield, Aspects.ASSISTED_STRIKE).ifPresent(value -> {
+                            livingEntity.addEffect(new MobEffectInstance(EffectRegistry.ASSISTED_STRIKE_STRENGTH.get(), 50, value - 1));
+                        });
                     }
-                    float blowback = AspectUtil.getItemStackAspectValue(shield, Aspects.BLOWBACK);
-                    if (blowback > 0 && (damageSource.getEntity() != null) && damageSource.getEntity() instanceof LivingEntity attacker) {
-                        Vec3 awayVector = new Vec3(attacker.getX() - livingEntity.getX(), attacker.getY() - livingEntity.getY(), attacker.getZ()-livingEntity.getZ());
-                        awayVector.normalize().multiply(blowback, blowback, blowback);
-                        attacker.setDeltaMovement(awayVector);
-                        OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> attacker), new BlowbackAnimatePacket(attacker));
-                    }
+                    AspectUtil.getItemStackAspectValue(shield, Aspects.BLOWBACK).ifPresent(value -> {
+                        if ((damageSource.getEntity() != null) && damageSource.getEntity() instanceof LivingEntity attacker) {
+                            Vec3 awayVector = new Vec3(attacker.getX() - livingEntity.getX(), attacker.getY() - livingEntity.getY(), attacker.getZ()-livingEntity.getZ());
+                            awayVector.normalize().scale(value);
+                            attacker.setDeltaMovement(awayVector);
+                            OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> attacker), new BlowbackAnimatePacket(attacker));
+                        }
+                    });
                 }
             }
 
@@ -575,9 +560,8 @@ public class EntityEvents {
         EquipmentSlot equipmentSlot = event.getSlot();
 
         if(equipmentSlot.getType() == EquipmentSlot.Type.ARMOR){
-            float volatilityStrength = AspectUtil.getItemStackAspectValue(newItemStack, Aspects.VOLATILITY);
-            if (volatilityStrength > 0.0f && livingEntity.level instanceof ServerLevel serverLevel){
-                AspectUtil.doVolatileExplosion(serverLevel, livingEntity, volatilityStrength);
+            if (livingEntity.level instanceof ServerLevel serverLevel){
+                AspectUtil.getItemStackAspectValue(newItemStack, Aspects.VOLATILITY).ifPresent(value -> AspectUtil.doVolatileExplosion(serverLevel, livingEntity, value));
             }
         }
 
@@ -598,7 +582,10 @@ public class EntityEvents {
             Tier tier;
             if(damageSource != null){
                 Entity entity = damageSource.getEntity();
-                int mobHarvestLevel = entity instanceof AspectOwner aspectOwner ? AspectUtil.getOwnedAspectValue(aspectOwner, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 0;
+                int mobHarvestLevel = 0;
+                if(entity instanceof AspectOwner aspectOwner){
+                    mobHarvestLevel = AspectUtil.getOwnedAspectValue(aspectOwner, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL).orElse(0);
+                }
                 mobHarvestLevel = Integer.min(TIER_ARRAY.length-1, mobHarvestLevel);
                 tier = TIER_ARRAY[mobHarvestLevel];
             } else {

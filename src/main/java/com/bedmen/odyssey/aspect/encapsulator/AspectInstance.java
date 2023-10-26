@@ -71,7 +71,9 @@ public class AspectInstance<T> {
     public CompoundTag toCompoundTag(){
         CompoundTag compoundTag = new CompoundTag();
         compoundTag.putString(ID_TAG, this.aspect.id);
-        compoundTag.put(VALUE_TAG, this.aspect.valueToTag(this.value));
+        if(!(this.aspect instanceof UnitAspect)){
+            compoundTag.put(VALUE_TAG, this.aspect.valueToTag(this.value));
+        }
         compoundTag.putString(DISPLAY_TAG, this.aspectTooltipDisplaySetting.name());
         compoundTag.putBoolean(OBFUSCATED_TAG, this.obfuscated);
         return compoundTag;

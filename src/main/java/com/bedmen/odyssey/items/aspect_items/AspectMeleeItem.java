@@ -108,7 +108,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     }
 
     public boolean isCorrectToolForDrops(BlockState blockState) {
-        return (blockState.getBlock() instanceof WebBlock) && AspectUtil.getItemStackAspectValue(this.getDefaultInstance(), Aspects.COBWEB_BREAK);
+        return (blockState.getBlock() instanceof WebBlock) && AspectUtil.itemStackHasAspect(this.getDefaultInstance(), Aspects.COBWEB_BREAK);
     }
 
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
@@ -172,7 +172,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     }
 
     public float getBlockingAngleWidth(ItemStack shield){
-        float widthMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.WIDTH);
+        float widthMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.WIDTH).orElse(0f);
         return this.getMeleeWeaponClass().blockingAngleWidth * widthMultiplier;
     }
 
@@ -189,7 +189,7 @@ public class AspectMeleeItem extends TieredItem implements Vanishable, InnateAsp
     }
 
     public int getRecoveryTime(ItemStack shield){
-        float recoverySpeedMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.RECOVERY_SPEED);
+        float recoverySpeedMultiplier = 1.0f + AspectUtil.getItemStackAspectValue(shield, Aspects.RECOVERY_SPEED).orElse(0f);
         return Mth.ceil((float)this.meleeWeaponClass.recoveryTime / recoverySpeedMultiplier);
     }
 

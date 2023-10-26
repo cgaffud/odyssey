@@ -99,8 +99,8 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
                     player1.broadcastBreakEvent(owner.getUsedItemHand());
                 });
             }
-            int numberOfSideProjectiles = MultishotAspect.strengthToNumberOfSideProjectiles(
-                    AspectUtil.getOneHandedEntityTotalAspectValue(owner, owner.getUsedItemHand(), Aspects.MULTISHOT)
+            int numberOfSideProjectiles = MultishotAspect.valueToNumberOfSideProjectiles(
+                    AspectUtil.getOneHandedEntityTotalAspectValue(owner, owner.getUsedItemHand(), Aspects.MULTISHOT).orElse(0f)
             );
             int numberOfProjectilesOnOneSide = numberOfSideProjectiles / 2;
             for(int multishotIndex = -numberOfProjectilesOnOneSide; multishotIndex <= numberOfProjectilesOnOneSide; multishotIndex++){
@@ -121,10 +121,10 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
 
     private OdysseyAbstractArrow shootAndGetThrownWeaponEntity(Level level, LivingEntity owner, ItemStack thrownWeaponStack, boolean isMultishot, Vector3f vector3f) {
         OdysseyAbstractArrow thrownWeaponEntity = getThrownWeaponEntity(level, owner, thrownWeaponStack, isMultishot);
-        double multishotDamagePenalty = isMultishot ? MultishotAspect.strengthToDamagePenalty(AspectUtil.getOneHandedEntityTotalAspectValue(owner, owner.getUsedItemHand(), Aspects.MULTISHOT)) : 1.0d;
+        double multishotDamagePenalty = isMultishot ? MultishotAspect.valueToDamagePenalty(AspectUtil.getOneHandedEntityTotalAspectValue(owner, owner.getUsedItemHand(), Aspects.MULTISHOT).orElse(0f)) : 1.0d;
         thrownWeaponEntity.setBaseDamage(this.getEffectiveDamage(thrownWeaponStack) * multishotDamagePenalty);
         thrownWeaponEntity.addAspectHolder(AspectUtil.getCombinedAspectHolder(thrownWeaponStack));
-        float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedEntityTotalAspectValue(owner, owner.getUsedItemHand(), Aspects.ACCURACY);
+        float accuracyMultiplier = 1.0f + AspectUtil.getOneHandedEntityTotalAspectValue(owner, owner.getUsedItemHand(), Aspects.ACCURACY).orElse(0f);
         thrownWeaponEntity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), this.getFinalVelocity(owner), 1.0f / accuracyMultiplier);
         if(isMultishot){
             thrownWeaponEntity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
@@ -175,11 +175,11 @@ public abstract class ThrowableWeaponItem extends Item implements Vanishable, IN
     }
 
     public float getFinalVelocity(LivingEntity livingEntity){
-        return this.throwableType.velocity * (1.0f + AspectUtil.getOneHandedEntityTotalAspectValue(livingEntity, livingEntity.getUsedItemHand(), Aspects.VELOCITY));
+        return this.throwableType.velocity * (1.0f + AspectUtil.getOneHandedEntityTotalAspectValue(livingEntity, livingEntity.getUsedItemHand(), Aspects.VELOCITY).orElse(0f));
     }
 
     public float getItemStackVelocity(ItemStack thrownWeaponStack){
-        return this.throwableType.velocity * (1.0f + AspectUtil.getItemStackAspectValue(thrownWeaponStack, Aspects.VELOCITY));
+        return this.throwableType.velocity * (1.0f + AspectUtil.getItemStackAspectValue(thrownWeaponStack, Aspects.VELOCITY).orElse(0f));
     }
 
 

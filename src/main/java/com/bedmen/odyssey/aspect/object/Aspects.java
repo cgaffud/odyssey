@@ -25,7 +25,7 @@ public class Aspects {
 
     // # All Damageables
     public static final FloatAspect DURABILITY = new FloatAspect("durability", 1.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.DAMAGEABLE, false);
-    public static final BooleanAspect BURN_PROOF = new BooleanAspect("burn_proof", AspectItemPredicates.DAMAGEABLE, false);
+    public static final UnitAspect BURN_PROOF = new UnitAspect("burn_proof", AspectItemPredicates.DAMAGEABLE, false);
     public static final IntegerAspect SOULBOUND = new IntegerAspect("soulbound", 1.0f, AspectTooltipFunctions.ROMAN_NUMERAL, AspectItemPredicates.DAMAGEABLE, false, true);
 
     // ## Attribute
@@ -57,10 +57,10 @@ public class Aspects {
     public static final IntegerAspect HEXFLAME_DAMAGE = new IntegerAspect("hexflame_damage", 1.0f, AspectTooltipFunctions.INTEGER_ADDITION, AspectItemPredicates.MELEE, true, true);
     public static final FloatAspect COBWEB_CHANCE = new FloatAspect("cobweb_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE, true);
     public static final FloatAspect LARCENY_CHANCE = new FloatAspect("larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.MELEE, true);
-    public static final BooleanAspect COLD_SNAP = new BooleanAspect("cold_snap", 2.0f, AspectItemPredicates.MELEE, true);
+    public static final UnitAspect COLD_SNAP = new UnitAspect("cold_snap", 2.0f, AspectItemPredicates.MELEE, true);
     public static final FloatAspect BLUDGEONING = new FloatAspect("bludgeoning", 0.5f, AspectTooltipFunctions.FLOAT_ADDITION, AspectItemPredicates.TWO_HANDED, true);
     public static final FloatAspect PRECISION_STRIKE = new FloatAspect("precision_strike", 2.0f, AspectTooltipFunctions.FLOAT_ADDITION, AspectItemPredicates.MELEE, false);
-    public static final BooleanAspect VAMPIRIC_SPEED = new BooleanAspect("vampiric_speed", 10.0f, AspectTooltipFunctions.NAME, AspectItemPredicates.MELEE, true);
+    public static final UnitAspect VAMPIRIC_SPEED = new UnitAspect("vampiric_speed", 10.0f, AspectTooltipFunctions.NAME, AspectItemPredicates.MELEE, true);
     // # Ranged
 
     // ## Shooting
@@ -79,8 +79,8 @@ public class Aspects {
     public static final FloatAspect PROJECTILE_COBWEB_CHANCE = new FloatAspect("projectile_cobweb_chance", 10.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE, false);
     public static final FloatAspect PROJECTILE_LARCENY_CHANCE = new FloatAspect("projectile_larceny_chance", 20.0f, AspectTooltipFunctions.PERCENTAGE_DELCARATION, AspectItemPredicates.PROJECTILE, false);
     public static final FloatAspect PROJECTILE_KNOCKBACK = new FloatAspect("projectile_knockback", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.PROJECTILE, false);
-    public static final BooleanAspect HYDRODYNAMIC = new BooleanAspect("hydrodynamic", AspectItemPredicates.PROJECTILE, false);
-    public static final BooleanAspect SNOW_STORM = new BooleanAspect("snow_storm", 2.0f, AspectItemPredicates.PROJECTILE, false);
+    public static final UnitAspect HYDRODYNAMIC = new UnitAspect("hydrodynamic", AspectItemPredicates.PROJECTILE, false);
+    public static final UnitAspect SNOW_STORM = new UnitAspect("snow_storm", 2.0f, AspectItemPredicates.PROJECTILE, false);
 
     // # Armor
     public static final DamageSourcePredicateAspect FEATHER_FALLING = new DamageSourcePredicateAspect("feather_falling", 1.0f, AspectItemPredicates.LOWER_ARMOR, true, damageSource -> damageSource == DamageSource.FALL || damageSource == DamageSource.FLY_INTO_WALL);
@@ -89,7 +89,7 @@ public class Aspects {
     public static final DamageSourcePredicateAspect BLAST_PROTECTION = new DamageSourcePredicateAspect("blast_protection", 2.0f, AspectItemPredicates.ARMOR, true, DamageSource::isExplosion);
     public static final DamageSourcePredicateAspect PROTECTION = new DamageSourcePredicateAspect("protection", 4.0f, AspectItemPredicates.ARMOR, true, damageSource -> !damageSource.isBypassEnchantments());
     public static final FloatAspect RESPIRATION = new FloatAspect("respiration", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.UPPER_ARMOR, true);
-    public static final BooleanAspect SNOWSHOE = new BooleanAspect("snowshoe", AspectItemPredicates.BOOTS, true);
+    public static final UnitAspect SNOWSHOE = new UnitAspect("snowshoe", AspectItemPredicates.BOOTS, true);
     public static final FloatAspect THORNS = new FloatAspect("thorns", 2.0f, AspectTooltipFunctions.FLOAT_ADDITION, AspectItemPredicates.ARMOR, true);
 
     // # Shields
@@ -98,53 +98,53 @@ public class Aspects {
     public static final FloatAspect RECOVERY_SPEED = new FloatAspect("recovery_speed", 2.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.PARRYABLE, false);
 
     public static final FloatAspect WIDTH = new FloatAspect("width", 4.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.SHIELD, false);
-    public static final BooleanAspect COLD_TO_THE_TOUCH = new BooleanAspect("cold_to_the_touch", 2.0f, AspectItemPredicates.SHIELD, false);
+    public static final UnitAspect COLD_TO_THE_TOUCH = new UnitAspect("cold_to_the_touch", 2.0f, AspectItemPredicates.SHIELD, false);
     public static final FloatAspect BLOWBACK = new FloatAspect("blowback", 2.0f, AspectTooltipFunctions.FLOAT_ADDITION, AspectItemPredicates.SHIELD, false);
-    public static final FloatAspect ASSISTED_STRIKE = new FloatAspect("assisted_strike", 2.0f, AspectTooltipFunctions.FLOAT_ADDITION, AspectItemPredicates.SHIELD, true);
+    public static final IntegerAspect ASSISTED_STRIKE = new IntegerAspect("assisted_strike", 2.0f, AspectTooltipFunctions.INTEGER_ADDITION, AspectItemPredicates.SHIELD, true, true);
     public static final FloatAspect PRECISE_BLOCK = new FloatAspect("precise_block", 2.0f, AspectTooltipFunctions.FLOAT_ADDITION, AspectItemPredicates.SHIELD, false);
 
 
     // # Tools
     public static final FloatAspect EFFICIENCY = new FloatAspect("efficiency", 4.0f, AspectTooltipFunctions.PERCENTAGE_ADDITION, AspectItemPredicates.TOOL, true);
     public static final IntegerAspect FORTUNE = new IntegerAspect("fortune", 1.0f, AspectTooltipFunctions.INTEGER_ADDITION, AspectItemPredicates.TOOL, false, false);
-    public static final BooleanAspect AQUA_AFFINITY = new BooleanAspect("aqua_affinity", AspectItemPredicates.TOOL, true);
+    public static final UnitAspect AQUA_AFFINITY = new UnitAspect("aqua_affinity", AspectItemPredicates.TOOL, true);
 
     // # Abilities
 
     // ## Melee Abilities
-    public static final BooleanAspect SHIELD_BASH = new BooleanAspect("shield_bash", AspectItemPredicates.MELEE, false);
-    public static final BooleanAspect SWEEP = new BooleanAspect("sweep", AspectItemPredicates.MELEE, false);
-    public static final BooleanAspect DUAL_WIELD = new BooleanAspect("dual_wield", AspectItemPredicates.MELEE, false);
-    public static final BooleanAspect COBWEB_BREAK = new BooleanAspect("cobweb_break", AspectItemPredicates.MELEE, false);
-    public static final BooleanAspect SMACK = new BooleanAspect("smack", AspectItemPredicates.MELEE, false);
-    public static final BooleanAspect THRUST = new BooleanAspect("thrust", AspectItemPredicates.MELEE, false);
+    public static final UnitAspect SHIELD_BASH = new UnitAspect("shield_bash", AspectItemPredicates.MELEE, false);
+    public static final UnitAspect SWEEP = new UnitAspect("sweep", AspectItemPredicates.MELEE, false);
+    public static final UnitAspect DUAL_WIELD = new UnitAspect("dual_wield", AspectItemPredicates.MELEE, false);
+    public static final UnitAspect COBWEB_BREAK = new UnitAspect("cobweb_break", AspectItemPredicates.MELEE, false);
+    public static final UnitAspect SMACK = new UnitAspect("smack", AspectItemPredicates.MELEE, false);
+    public static final UnitAspect THRUST = new UnitAspect("thrust", AspectItemPredicates.MELEE, false);
 
     // ## Bow Abilities
-    public static final BooleanAspect SPYGLASS = new BooleanAspect("spyglass", AspectItemPredicates.BOW, false);
-    public static final BooleanAspect REPEAT = new BooleanAspect("repeat", AspectItemPredicates.RANGED_AMMO_WEAPON, false);
+    public static final UnitAspect SPYGLASS = new UnitAspect("spyglass", AspectItemPredicates.BOW, false);
+    public static final UnitAspect REPEAT = new UnitAspect("repeat", AspectItemPredicates.RANGED_AMMO_WEAPON, false);
 
     // ## Armor Abilities
-    public static final BooleanAspect PIGLIN_NEUTRAL = new BooleanAspect("piglin_neutral", AspectItemPredicates.ARMOR, false);
+    public static final UnitAspect PIGLIN_NEUTRAL = new UnitAspect("piglin_neutral", AspectItemPredicates.ARMOR, false);
 
     // ## Set Bonus Abilities
-    public static final BooleanAspect SLOW_FALL = new BooleanActivationAspect("slow_fall", "key.sneak");
+    public static final UnitAspect SLOW_FALL = new UnitActivationAspect("slow_fall", "key.sneak");
     public static final GlideAspect GLIDE = new GlideAspect();
-    public static final BooleanAspect FROST_WALKER = new BooleanAspect("frost_walker", AspectItemPredicates.BOOTS, true);
-    public static final BooleanAspect TURTLE_MASTERY = new BooleanActivationAspect("turtle_mastery", "key.sneak");
+    public static final UnitAspect FROST_WALKER = new UnitAspect("frost_walker", AspectItemPredicates.BOOTS, true);
+    public static final UnitAspect TURTLE_MASTERY = new UnitActivationAspect("turtle_mastery", "key.sneak");
 
     // # Curses
-    public static final BooleanAspect BINDING = new BooleanAspect("binding", 1.0f, AspectItemPredicates.ARMOR, false);
-    public static final BooleanAspect VANISHING = new BooleanAspect("vanishing", 1.0f, AspectItemPredicates.DAMAGEABLE, false);
+    public static final UnitAspect BINDING = new UnitAspect("binding", 1.0f, AspectItemPredicates.ARMOR, false);
+    public static final UnitAspect VANISHING = new UnitAspect("vanishing", 1.0f, AspectItemPredicates.DAMAGEABLE, false);
     public static final IntegerAspect BLOOD_LOSS = new IntegerAspect("blood_loss", 1.0f, AspectTooltipFunctions.INTEGER_ADDITION, AspectItemPredicates.DAMAGEABLE, true, false);
     public static final IntegerAspect WEIGHT = new IntegerAspect("weight", 1.0f, AspectTooltipFunctions.INTEGER_ADDITION, AspectItemPredicates.DAMAGEABLE, true, false);
     public static final IntegerAspect OXYGEN_DEPRIVATION = new IntegerAspect("oxygen_deprivation", 1.0f, AspectTooltipFunctions.INTEGER_ADDITION, AspectItemPredicates.DAMAGEABLE, true, false);
-    public static final BooleanAspect BLANK = new BooleanAspect("blank", 1.0f, AspectItemPredicates.DAMAGEABLE, false);
+    public static final UnitAspect BLANK = new UnitAspect("blank", 1.0f, AspectItemPredicates.DAMAGEABLE, false);
     public static final FloatAspect VOLATILITY = new FloatAspect("volatility", 1.0f, AspectTooltipFunctions.FLOAT_ADDITION, AspectItemPredicates.DAMAGEABLE, false);
 
     // # PermaBuffs
 
     // ## Eaten Markers
-    public static final BooleanAspect HAS_EATEN_ROCK_CANDY = new BooleanAspect("has_eaten_rock_candy");
+    public static final UnitAspect HAS_EATEN_ROCK_CANDY = new UnitAspect("has_eaten_rock_candy");
 
     // ## Buffs
     public static final IntegerAspect ADDITIONAL_MOB_HARVEST_LEVEL = new IntegerAspect("additional_mob_harvest_level", AspectTooltipFunctions.INTEGER_ADDITION);
