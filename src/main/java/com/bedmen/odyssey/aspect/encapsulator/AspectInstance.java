@@ -9,7 +9,6 @@ import com.google.gson.JsonElement;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.util.Mth;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -107,23 +106,17 @@ public class AspectInstance<T> {
         friendlyByteBuf.writeNbt(this.toCompoundTag());
     }
 
-    public static FriendlyByteBuf.Writer<AspectInstance<?>> toNetworkStatic = (friendlyByteBuf, aspectInstance) -> aspectInstance.toNetwork(friendlyByteBuf);
-
     @Nullable
     public static AspectInstance<?> fromNetwork(FriendlyByteBuf friendlyByteBuf){
         return fromCompoundTag(friendlyByteBuf.readNbt());
     }
 
-    public float getValueAsFloat(){
-        return this.aspect.valueToFloat(this.value);
-    }
-
     public float getModifiability(){
-        return this.aspect.weight * this.getValueAsFloat();
+        return this.aspect.weightFunction.apply(this.value);
     }
 
     public AspectInstance<T> applyInfusionPenalty(){
-        return this.aspect.createWeakerInstanceForInfusion(this);
+        return this.aspect.createInstanceForInfusion(this);
     }
 
     public AspectInstance<T> withAddedValue(Object value){
@@ -135,5 +128,11 @@ public class AspectInstance<T> {
 
     public AspectInstance<T> withMultipliedStrength(int multiplier){
         return new AspectInstance<T>(this.aspect, this.aspect.getScaler().apply(this.value, multiplier), this.aspectTooltipDisplaySetting, this.obfuscated);
+    }
+
+    // Only call this if you know aspectInstance has the same aspect as this, and that Aspect is a ComparableAspect
+    public int compareWith(AspectInstance<?> aspectInstance){
+        ComparableAspect<T> comparableAspect = (ComparableAspect<T>)this.aspect;
+        return comparableAspect.getComparator().compare(this.value, this.aspect.getValueClass().cast(aspectInstance.value));
     }
 }

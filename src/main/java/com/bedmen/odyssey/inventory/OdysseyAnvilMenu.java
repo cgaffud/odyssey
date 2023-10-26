@@ -2,6 +2,7 @@ package com.bedmen.odyssey.inventory;
 
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
+import com.bedmen.odyssey.aspect.object.ComparableAspect;
 import com.bedmen.odyssey.items.aspect_items.BoomerangItem;
 import com.bedmen.odyssey.items.aspect_items.MeleeWeaponClassItem;
 import com.bedmen.odyssey.magic.MagicUtil;
@@ -149,7 +150,8 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
                         float additionalModifiability;
                         if(optionalMatchingModifier.isPresent()){
                             AspectInstance<?> matchingModifier = optionalMatchingModifier.get();
-                            if(matchingModifier.getValueAsFloat() >= input1Modifier.getValueAsFloat()){
+                            if(!(input1Modifier.aspect instanceof ComparableAspect<?>)
+                                || input1Modifier.compareWith(matchingModifier) <= 0){
                                 continue;
                             } else {
                                 additionalModifiability = input1Modifier.getModifiability() - matchingModifier.getModifiability();
@@ -158,7 +160,7 @@ public class OdysseyAnvilMenu extends ItemCombinerMenu {
                             additionalModifiability = input1Modifier.getModifiability();
                         }
                         if(AspectUtil.getModifiabilityRemaining(resultStack) >= additionalModifiability){
-                            AspectUtil.replaceModifier(resultStack, input1Modifier);
+                            AspectUtil.replaceOrAddModifier(resultStack, input1Modifier);
                         }
                     }
                     float input0Modifiability = AspectUtil.getUsedModifiability(inputStack0);

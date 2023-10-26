@@ -12,28 +12,25 @@ import net.minecraft.world.item.Item;
 import java.util.Comparator;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class BooleanAspect extends Aspect<Boolean> {
+public class BooleanAspect extends ComparableAspect<Boolean> {
 
     // Buff constructor
     protected BooleanAspect(String id){
-        this(id, 1.0f, AspectTooltipFunctions.NAME, AspectItemPredicates.NONE, true);
+        this(id, 1f, AspectTooltipFunctions.NAME, AspectItemPredicates.NONE, true);
     }
     protected BooleanAspect(String id, Predicate<Item> itemPredicate, boolean isBuff){
-        this(id, 1.0f, AspectTooltipFunctions.NAME, itemPredicate, isBuff);
+        this(id, 1f, AspectTooltipFunctions.NAME, itemPredicate, isBuff);
     }
 
     protected BooleanAspect(String id, float weight, Predicate<Item> itemPredicate, boolean isBuff){
         this(id, weight, AspectTooltipFunctions.NAME, itemPredicate, isBuff);
     }
 
-    protected BooleanAspect(String id, float weight, AspectTooltipFunction aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
-        super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
-    }
-
-    public float valueToFloat(Boolean value) {
-        return value ? 1.0f : 0.0f;
+    protected BooleanAspect(String id, float weight, AspectTooltipFunction<Boolean> aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
+        super(id, getWeightFunction(weight), aspectTooltipFunction, itemPredicate, isBuff);
     }
 
     public Tag valueToTag(Boolean value) {
@@ -44,7 +41,7 @@ public class BooleanAspect extends Aspect<Boolean> {
         return ((ByteTag)tag).getAsByte() > 0;
     }
 
-    public AspectInstance<Boolean> createWeakerInstanceForInfusion(AspectInstance<Boolean> aspectInstance) {
+    public AspectInstance<Boolean> createInstanceForInfusion(AspectInstance<Boolean> aspectInstance) {
         return aspectInstance;
     }
 
@@ -70,5 +67,13 @@ public class BooleanAspect extends Aspect<Boolean> {
 
     public Boolean stringToValue(String s) {
         return Boolean.parseBoolean(s);
+    }
+
+    public static Function<Boolean, Float> getWeightFunction(float weight){
+        return value -> value ? weight : 0.0f;
+    }
+
+    public Comparator<Boolean> getComparator(){
+        return Boolean::compare;
     }
 }

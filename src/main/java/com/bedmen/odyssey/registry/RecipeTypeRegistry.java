@@ -40,13 +40,4 @@ public class RecipeTypeRegistry {
         }
     });
 
-    public static final RegistryObject<RecipeType<InfuserCraftingRecipe>> INFUSER_CRAFTING = RECIPE_TYPES.register("infuser_crafting", () -> new RecipeType<>() {
-        public String toString() {
-            return "infuser_crafting";
-        }
-    });
-
-//    RecipeType<OdysseySmithingRecipe> ODYSSEY_SMITHING = register("odyssey_smithing");
-//    RecipeType<ResearchRecipe> RESEARCH = register("research");
-
 }

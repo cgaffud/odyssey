@@ -46,8 +46,7 @@ public class OdysseyJEI implements IModPlugin {
                 new AlloyingCategory(guiHelper),
                 new StitchingCategory(guiHelper),
                 new WeavingCategory(guiHelper),
-                new RecyclingCategory(guiHelper),
-                new InfuserCraftingCategory(guiHelper)
+                new RecyclingCategory(guiHelper)
         );
     }
 
@@ -59,7 +58,6 @@ public class OdysseyJEI implements IModPlugin {
         registration.addRecipes(OdysseyRecipeTypes.RECYCLING, odysseyRecipes.getRecipes(RecipeTypeRegistry.RECYCLING.get()));
         registration.addRecipes(OdysseyRecipeTypes.STITCHING, odysseyRecipes.getRecipes(RecipeTypeRegistry.STITCHING.get()));
         registration.addRecipes(OdysseyRecipeTypes.WEAVING, odysseyRecipes.getRecipes(RecipeTypeRegistry.WEAVING.get()));
-        registration.addRecipes(OdysseyRecipeTypes.INFUSER_CRAFTING, odysseyRecipes.getRecipes(RecipeTypeRegistry.INFUSER_CRAFTING.get()));
     }
 
     // Adds click areas in menus that go to JEI
@@ -86,6 +84,5 @@ public class OdysseyJEI implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(BlockRegistry.RECYCLING_FURNACE.get()), OdysseyRecipeTypes.RECYCLING, RecipeTypes.FUELING);
         registration.addRecipeCatalyst(new ItemStack(BlockRegistry.STITCHING_TABLE.get()), OdysseyRecipeTypes.STITCHING);
         registration.addRecipeCatalyst(new ItemStack(ItemRegistry.WEAVER_EGG.get()), OdysseyRecipeTypes.WEAVING);
-        registration.addRecipeCatalyst(new ItemStack(BlockRegistry.INFUSER.get()), OdysseyRecipeTypes.INFUSER_CRAFTING);
     }
 }

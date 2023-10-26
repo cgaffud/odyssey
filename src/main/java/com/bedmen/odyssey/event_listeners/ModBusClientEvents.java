@@ -329,7 +329,6 @@ public class ModBusClientEvents {
         event.registerRecipeCategoryFinder(RecipeTypeRegistry.RECYCLING.get(), recipe -> OdysseyRecipeBook.RECYCLING);
         event.registerRecipeCategoryFinder(RecipeTypeRegistry.WEAVING.get(), recipe -> OdysseyRecipeBook.WEAVING);
         event.registerRecipeCategoryFinder(RecipeTypeRegistry.STITCHING.get(), recipe -> OdysseyRecipeBook.STITCHING);
-        event.registerRecipeCategoryFinder(RecipeTypeRegistry.INFUSER_CRAFTING.get(), recipe -> OdysseyRecipeBook.INFUSER_CRAFTING);
     }
 
     @SubscribeEvent

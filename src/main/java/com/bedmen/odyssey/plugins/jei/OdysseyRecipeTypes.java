@@ -17,7 +17,4 @@ public class OdysseyRecipeTypes {
 
     public static final RecipeType<StitchingRecipe> STITCHING =
             RecipeType.create(Odyssey.MOD_ID, "stitching", StitchingRecipe.class);
-
-    public static final RecipeType<InfuserCraftingRecipe> INFUSER_CRAFTING =
-            RecipeType.create(Odyssey.MOD_ID, "infuser_crafting", InfuserCraftingRecipe.class);
 }

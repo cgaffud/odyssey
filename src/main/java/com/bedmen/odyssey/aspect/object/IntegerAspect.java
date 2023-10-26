@@ -9,24 +9,22 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 
+import java.util.Comparator;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class IntegerAspect extends Aspect<Integer> {
+public class IntegerAspect extends ComparableAspect<Integer> {
     public final boolean hasInfusionPenalty;
 
     // Buff constructor
     protected IntegerAspect(String id, AspectTooltipFunction<Integer> aspectTooltipFunction) {
-        this(id, 0.0f, aspectTooltipFunction, AspectItemPredicates.NONE, true, false);
+        this(id, 0f, aspectTooltipFunction, AspectItemPredicates.NONE, true, false);
     }
     protected IntegerAspect(String id, float weight, AspectTooltipFunction<Integer> aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff, boolean hasInfusionPenalty){
-        super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
+        super(id, getWeightFunction(weight), aspectTooltipFunction, itemPredicate, isBuff);
         this.hasInfusionPenalty = hasInfusionPenalty;
-    }
-
-    public float valueToFloat(Integer value) {
-        return value;
     }
 
     public Tag valueToTag(Integer value) {
@@ -37,7 +35,7 @@ public class IntegerAspect extends Aspect<Integer> {
         return ((IntTag)tag).getAsInt();
     }
 
-    public AspectInstance<Integer> createWeakerInstanceForInfusion(AspectInstance<Integer> aspectInstance) {
+    public AspectInstance<Integer> createInstanceForInfusion(AspectInstance<Integer> aspectInstance) {
         if(this.hasInfusionPenalty){
             return new AspectInstance<>(this, Mth.floor(aspectInstance.value * AspectInstance.INFUSION_PENALTY), aspectInstance.aspectTooltipDisplaySetting, aspectInstance.obfuscated);
         } else {
@@ -67,5 +65,13 @@ public class IntegerAspect extends Aspect<Integer> {
 
     public Integer stringToValue(String s) {
         return Integer.parseInt(s);
+    }
+
+    public static Function<Integer, Float> getWeightFunction(float weight){
+        return value -> value * weight;
+    }
+
+    public Comparator<Integer> getComparator(){
+        return Integer::compare;
     }
 }

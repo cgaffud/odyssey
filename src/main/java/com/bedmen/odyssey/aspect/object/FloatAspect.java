@@ -11,20 +11,17 @@ import net.minecraft.world.item.Item;
 import java.util.Comparator;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class FloatAspect extends Aspect<Float> {
+public class FloatAspect extends ComparableAspect<Float> {
 
     // Buff constructor
     protected FloatAspect(String id, AspectTooltipFunction<Float> aspectTooltipFunction) {
-        this(id, 0.0f, aspectTooltipFunction, AspectItemPredicates.NONE, true);
+        this(id, 0f, aspectTooltipFunction, AspectItemPredicates.NONE, true);
     }
     protected FloatAspect(String id, float weight, AspectTooltipFunction<Float> aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
-        super(id, weight, aspectTooltipFunction, itemPredicate, isBuff);
-    }
-
-    public float valueToFloat(Float value) {
-        return value;
+        super(id, getWeightFunction(weight), aspectTooltipFunction, itemPredicate, isBuff);
     }
 
     public Tag valueToTag(Float value) {
@@ -35,8 +32,8 @@ public class FloatAspect extends Aspect<Float> {
         return ((FloatTag)tag).getAsFloat();
     }
 
-    public AspectInstance<Float> createWeakerInstanceForInfusion(AspectInstance<Float> aspectInstance) {
-        return new AspectInstance<>(aspectInstance.aspect, aspectInstance.aspect.valueToFloat(aspectInstance.value) * AspectInstance.INFUSION_PENALTY, aspectInstance.aspectTooltipDisplaySetting, aspectInstance.obfuscated);
+    public AspectInstance<Float> createInstanceForInfusion(AspectInstance<Float> aspectInstance) {
+        return new AspectInstance<>(aspectInstance.aspect, aspectInstance.value * AspectInstance.INFUSION_PENALTY, aspectInstance.aspectTooltipDisplaySetting, aspectInstance.obfuscated);
     }
 
     public BinaryOperator<Float> getAddition() {
@@ -61,5 +58,13 @@ public class FloatAspect extends Aspect<Float> {
 
     public Float stringToValue(String s) {
         return Float.parseFloat(s);
+    }
+
+    public static Function<Float, Float> getWeightFunction(float weight){
+        return value -> value * weight;
+    }
+
+    public Comparator<Float> getComparator(){
+        return Float::compare;
     }
 }

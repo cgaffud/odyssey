@@ -8,22 +8,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
 
-import javax.json.JsonObject;
-import java.util.Comparator;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public abstract class Aspect<T> {
     public final String id;
-    public final float weight;
+    public final Function<T, Float> weightFunction;
     public final AspectTooltipFunction<T> aspectTooltipFunction;
     public final Predicate<Item> itemPredicate;
     public final boolean isBuff;
 
-    protected Aspect(String id, float weight, AspectTooltipFunction<T> aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
+    protected Aspect(String id, Function<T, Float> weightFunction, AspectTooltipFunction<T> aspectTooltipFunction, Predicate<Item> itemPredicate, boolean isBuff){
         this.id = id;
-        this.weight = weight;
+        this.weightFunction = weightFunction;
         this.aspectTooltipFunction = aspectTooltipFunction;
         this.itemPredicate = itemPredicate;
         this.isBuff = isBuff;
@@ -34,13 +33,11 @@ public abstract class Aspect<T> {
         return Component.translatable("aspect.oddc."+this.id);
     }
 
-    public abstract float valueToFloat(T value);
-
     public abstract Tag valueToTag(T value);
 
     public abstract T tagToValue(Tag tag);
 
-    public abstract AspectInstance<T> createWeakerInstanceForInfusion(AspectInstance<T> aspectInstance);
+    public abstract AspectInstance<T> createInstanceForInfusion(AspectInstance<T> aspectInstance);
 
     public abstract BinaryOperator<T> getAddition();
 

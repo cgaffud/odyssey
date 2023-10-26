@@ -85,10 +85,10 @@ public class AspectUtil {
         return value;
     }
 
-    private static float queryBonusDamageAspect(Optional<LivingEntity> optionalLivingEntity, ItemStack itemStack, Function<Aspect<?>, Float> valueFunction){
-        FunctionQuery<Float> functionQuery = FunctionQuery.floatQuery.apply(aspect -> {
-            if(aspect instanceof BonusDamageAspect){
-                return valueFunction.apply(aspect) * BonusDamageAspect.getStrengthAmplifier(itemStack.getItem());
+    private static float queryBonusDamageAspect(Optional<LivingEntity> optionalLivingEntity, ItemStack itemStack, Function<AspectInstance<?>, Float> valueFunction){
+        FunctionQuery<Float> functionQuery = FunctionQuery.floatQuery.apply(aspectInstance -> {
+            if(aspectInstance.aspect instanceof BonusDamageAspect){
+                return valueFunction.apply(aspectInstance) * BonusDamageAspect.getStrengthAmplifier(itemStack.getItem());
             }
             return 0.0f;
         });
@@ -188,26 +188,21 @@ public class AspectUtil {
         return getCombinedAspectHolder(itemStack).hasAspect(aspect);
     }
 
-    public static <T> boolean itemStackHasEqualOrStrongerInstance(ItemStack itemStack, AspectInstance<T> aspectInstance){
-        T value = queryItemStack(itemStack, new SingleQuery<>(aspectInstance.aspect));
-        return aspectInstance.aspect.valueToFloat(value) >= aspectInstance.getValueAsFloat();
-    }
-
     public static <T> T getOwnedAspectValue(AspectOwner aspectOwner, Aspect<T> aspect){
         return queryOwnedAspects(aspectOwner, new SingleQuery<>(aspect));
     }
 
     // Special totals over multiple aspects on single item
     public static float getTargetConditionalAspectStrength(LivingEntity attacker, LivingEntity target){
-        return queryBonusDamageAspect(Optional.of(attacker), attacker.getMainHandItem(), aspect -> {
-            if (aspect.equals(Aspects.SOLAR_STRENGTH) || aspect.equals(Aspects.LUNAR_STRENGTH)) {
+        return queryBonusDamageAspect(Optional.of(attacker), attacker.getMainHandItem(), aspectInstance -> {
+            if (aspectInstance.aspect.equals(Aspects.SOLAR_STRENGTH) || aspectInstance.aspect.equals(Aspects.LUNAR_STRENGTH)) {
                 CompoundTag tag = attacker.getMainHandItem().getOrCreateTag();
                 int charge = tag.getInt(AspectUtil.STORED_BOOST_TAG);
                 if (charge >= 10) tag.putInt(AspectUtil.STORED_BOOST_TAG, charge-10);
             }
 
-            if(aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect){
-                return targetConditionalMeleeAspect.livingEntityPredicate.test(target) ? 1.0f : 0.0f;
+            if(aspectInstance.aspect instanceof TargetConditionalMeleeAspect targetConditionalMeleeAspect){
+                return targetConditionalMeleeAspect.livingEntityPredicate.test(target) ? (Float)aspectInstance.value : 0.0f;
             }
             return 0.0f;
         });
@@ -215,8 +210,8 @@ public class AspectUtil {
 
 
     public static float getConditionalAspectValue(ItemStack itemStack, BlockPos blockPos, Level level){
-        return queryBonusDamageAspect(Optional.empty(), itemStack, aspect -> {
-            if(aspect instanceof ConditionalAmpAspect conditionalAmpAspect){
+        return queryBonusDamageAspect(Optional.empty(), itemStack, aspectInstance -> {
+            if(aspectInstance.aspect instanceof ConditionalAmpAspect conditionalAmpAspect){
                 return conditionalAmpAspect.attackBoostFactorFunction.getBoostFactor(itemStack, blockPos, level)
                         * BonusDamageAspect.getStrengthAmplifier(itemStack.getItem());
             }
@@ -225,9 +220,9 @@ public class AspectUtil {
     }
 
     public static float getShieldDamageBlockAspectValue(ItemStack itemStack, DamageSource damageSource){
-        return queryItemStack(itemStack, FunctionQuery.floatQuery.apply(aspect -> {
-            if(aspect instanceof ShieldDamageBlockAspect shieldDamageBlockAspect){
-                return shieldDamageBlockAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
+        return queryItemStack(itemStack, FunctionQuery.floatQuery.apply(aspectInstance -> {
+            if(aspectInstance.aspect instanceof ShieldDamageBlockAspect shieldDamageBlockAspect){
+                return shieldDamageBlockAspect.damageSourcePredicate.test(damageSource) ? (Float)aspectInstance.value : 0.0f;
             }
             return 0.0f;
         }));
@@ -245,9 +240,9 @@ public class AspectUtil {
 
     // Special totals over multiple aspects on armor
     public static float getProtectionAspectValue(LivingEntity livingEntity, DamageSource damageSource){
-        return queryArmorAndBuffs(livingEntity, FunctionQuery.floatQuery.apply(aspect -> {
-            if(aspect instanceof DamageSourcePredicateAspect damageSourcePredicateAspect){
-                return damageSourcePredicateAspect.damageSourcePredicate.test(damageSource) ? 1.0f : 0.0f;
+        return queryArmorAndBuffs(livingEntity, FunctionQuery.floatQuery.apply(aspectInstance -> {
+            if(aspectInstance.aspect instanceof DamageSourcePredicateAspect damageSourcePredicateAspect){
+                return damageSourcePredicateAspect.damageSourcePredicate.test(damageSource) ? (Float)aspectInstance.value : 0.0f;
             }
             return 0.0f;
         }));
@@ -326,12 +321,12 @@ public class AspectUtil {
         fillAttributeMultimap(getCombinedAspectHolder(oldItemStack), uuidStart, oldMultimap);
         fillAttributeMultimap(getCombinedAspectHolder(newItemStack), uuidStart, newMultimap);
         if(equipmentSlot.getType() == EquipmentSlot.Type.ARMOR){
-            List<ItemStack> oldArmorPieces = ARMOR_EQUIPMENT_SLOT_LIST.stream().map(equipmentSlot1 -> livingEntity.getLastArmorItem(equipmentSlot1)).collect(Collectors.toList());
-            List<ItemStack> newArmorPieces = ARMOR_EQUIPMENT_SLOT_LIST.stream().map(equipmentSlot1 -> livingEntity.getItemBySlot(equipmentSlot1)).collect(Collectors.toList());
+            List<ItemStack> oldArmorPieces = ARMOR_EQUIPMENT_SLOT_LIST.stream().map(livingEntity::getLastArmorItem).collect(Collectors.toList());
+            List<ItemStack> newArmorPieces = ARMOR_EQUIPMENT_SLOT_LIST.stream().map(livingEntity::getItemBySlot).collect(Collectors.toList());
             if(isFullArmorSet(oldArmorPieces) && oldArmorPieces.get(0).getItem() instanceof AspectArmorItem aspectArmorItem){
                 aspectArmorItem.getSetBonusAbilityHolder().map.forEach((aspect, aspectInstance) -> {
                     if (aspect instanceof AttributeAspect attributeAspect) {
-                        oldMultimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (SET_BONUS_STRING.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, aspectInstance.getValueAsFloat(), attributeAspect.operation));
+                        oldMultimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (SET_BONUS_STRING.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, (Float)aspectInstance.value, attributeAspect.operation));
                     }
                 });
             }
@@ -339,7 +334,7 @@ public class AspectUtil {
             if(isFullArmorSet(newArmorPieces) && newArmorPieces.get(0).getItem() instanceof AspectArmorItem aspectArmorItem){
                 aspectArmorItem.getSetBonusAbilityHolder().map.forEach((aspect, aspectInstance) -> {
                     if (aspect instanceof AttributeAspect attributeAspect) {
-                        newMultimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (SET_BONUS_STRING.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, aspectInstance.getValueAsFloat(), attributeAspect.operation));
+                        newMultimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (SET_BONUS_STRING.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, (Float)aspectInstance.value, attributeAspect.operation));
                     }
                 });
             }
@@ -349,7 +344,7 @@ public class AspectUtil {
     public static void fillAttributeMultimap(AspectHolder aspectHolder, String uuidStart, Multimap<Attribute, AttributeModifier> multimap){
         aspectHolder.map.forEach((aspect, aspectInstance) -> {
             if (aspect instanceof AttributeAspect attributeAspect) {
-                multimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (uuidStart.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, aspectInstance.getValueAsFloat(), attributeAspect.operation));
+                multimap.put(attributeAspect.getAttribute(), new AttributeModifier(new UUID (uuidStart.hashCode(), attributeAspect.getAttribute().getDescriptionId().hashCode()), attributeAspect.id, (Float)aspectInstance.value, attributeAspect.operation));
             }
         });
     }
@@ -358,7 +353,7 @@ public class AspectUtil {
 
     public static float getUsedModifiability(ItemStack itemStack){
         AspectHolder aspectHolder = getAddedModifierHolder(itemStack);
-        FunctionQuery<Float> functionQuery = FunctionQuery.floatQuery.apply(aspect -> aspect.weight);
+        FunctionQuery<Float> functionQuery = FunctionQuery.floatQuery.apply(AspectInstance::getModifiability);
         return functionQuery.query(aspectHolder);
     }
 
@@ -374,20 +369,23 @@ public class AspectUtil {
     }
 
     public static boolean canAddModifier(ItemStack itemStack, AspectInstance<?> aspectInstance){
-        boolean passesItemPredicate = aspectInstance.aspect.itemPredicate.test(itemStack.getItem());
-        boolean passesModifiabilityCheck = aspectInstance.getModifiability() <= getModifiabilityRemaining(itemStack);
-        return passesItemPredicate && passesModifiabilityCheck;
+        if(!aspectInstance.aspect.itemPredicate.test(itemStack.getItem())){
+            return false;
+        }
+        ItemStack itemStackCopy = itemStack.copy();
+        AspectUtil.replaceOrAddModifier(itemStackCopy, aspectInstance);
+        return AspectUtil.getModifiabilityRemaining(itemStackCopy) >= 0f;
     }
 
     public static void addModifier(ItemStack itemStack, AspectInstance<?> aspectInstance){
         AspectInstance<?> existingAspectInstance = AspectUtil.getAddedModifierHolder(itemStack).map.get(aspectInstance.aspect);
         AspectInstance<?> newAspectInstance = aspectInstance.withAddedValue(existingAspectInstance.value);
-        replaceModifier(itemStack, newAspectInstance);
+        replaceOrAddModifier(itemStack, newAspectInstance);
     }
 
     // Replaces added modifier with same aspect as aspectInstance with aspectInstance,
     // or removes the modifier altogether if aspectInstance.strength is 0
-    public static void replaceModifier(ItemStack itemStack, AspectInstance<?> aspectInstance){
+    public static void replaceOrAddModifier(ItemStack itemStack, AspectInstance<?> aspectInstance){
         removeAddedModifier(itemStack, aspectInstance.aspect);
         // Just removes old modifier if the value is 0
         if(!aspectInstance.aspect.getBase().equals(aspectInstance.value)){

@@ -72,7 +72,7 @@ public class ModifyCommand {
                     AspectInstance<?> aspectInstance = AspectInstance.fromCommand(aspect, optionalValue);
                     if(bypassChecks || AspectUtil.canAddModifier(itemstack, aspectInstance)){
                         aspectInstance = obfuscated ? aspectInstance.withObfuscation() : aspectInstance;
-                        AspectUtil.replaceModifier(itemstack, aspectInstance);
+                        AspectUtil.replaceOrAddModifier(itemstack, aspectInstance);
                         ++numSuccess;
                     } else if (isSingleEntity) {
                         throw ERROR_INCOMPATIBLE.create(itemstack.getItem().getName(itemstack).getString());

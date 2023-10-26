@@ -11,11 +11,8 @@ import com.bedmen.odyssey.items.aspect_items.SpearItem;
 import com.bedmen.odyssey.items.aspect_items.ThrowableWeaponItem;
 import com.bedmen.odyssey.magic.ExperienceCost;
 import com.bedmen.odyssey.magic.MagicUtil;
-import com.bedmen.odyssey.recipes.object.InfuserCraftingRecipe;
 import com.bedmen.odyssey.registry.BlockEntityTypeRegistry;
-import com.bedmen.odyssey.registry.RecipeTypeRegistry;
 import com.bedmen.odyssey.util.StringUtil;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
@@ -81,46 +78,9 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, InfuserBlockEntity infuserBlockEntity) {
         infuserBlockEntity.updateNewPedestalItemStacks();
-
-        Optional<Pair<InfuserCraftingRecipe, Set<Direction>>> optionalPair = level.getRecipeManager().getAllRecipesFor(RecipeTypeRegistry.INFUSER_CRAFTING.get())
-                .stream()
-                .map(infuserCraftingRecipe -> Pair.of(infuserCraftingRecipe, infuserCraftingRecipe.matches(infuserBlockEntity.getItemStackOriginal(), infuserBlockEntity.newPedestalItemStackMap)))
-                .filter(pair -> pair.getSecond().isPresent())
-                .map(pair -> Pair.of(pair.getFirst(), pair.getSecond().get()))
-                .findFirst();
-
-        optionalPair.ifPresentOrElse(pair -> infuserBlockEntity.tryInfuserCrafting(pair.getFirst(), pair.getSecond()), infuserBlockEntity::tryInfusion);
+        infuserBlockEntity.tryInfusion();
         infuserBlockEntity.updateOldPedestalItemStacks();
         infuserBlockEntity.updatePathParticles();
-    }
-
-    private void tryInfuserCrafting(InfuserCraftingRecipe infuserCraftingRecipe, Set<Direction> pedestalsToUseSet){
-        int count = this.getMinimumCountOfInputItemStacks(pedestalsToUseSet);
-        if(!this.isInfuserCrafting()){
-            ExperienceCost experienceCost = infuserCraftingRecipe.experienceCost.multiplyCost(count);
-            Optional<ServerPlayer> payer = this.tryToPayExperienceCost(experienceCost);
-            payer.ifPresent(serverPlayer -> {
-                this.infuserCraftingTicks++;
-                this.stopAllInfusing();
-                this.pedestalsInUseSet = pedestalsToUseSet;
-                this.forEveryPedestalInUse((direction, infusionPedestalBlockEntity) -> {
-                    infusionPedestalBlockEntity.useDirection = Optional.of(direction);
-                    infusionPedestalBlockEntity.setUsageValues(this.infuserCraftingTicks, count);
-                });
-                this.pedestalsInUseSet.forEach(direction -> createPathParticles(serverPlayer, direction));
-            });
-        } else if(this.infuserCraftingTicks < TOTAL_INFUSION_TIME){
-            this.infuserCraftingTicks++;
-            this.forEveryPedestalInUse((direction, infusionPedestalBlockEntity) -> infusionPedestalBlockEntity.setUsageValues(this.infuserCraftingTicks, count));
-        } else {
-            this.reduceItemStackCountOnInUsePedestals(count);
-            this.setItemStack(infuserCraftingRecipe.getResultItemWithOldItemStackData(this.getItemStackOriginal()));
-            this.setItemStackCount(count);
-            if(this.level != null){
-                this.level.playSound(null, this.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, this.level.random.nextFloat() * 0.1F + 0.9F);
-            }
-            this.stopInfuserCrafting();
-        }
     }
 
     private void createPathParticles(ServerPlayer serverPlayer, Direction direction){
@@ -147,14 +107,6 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
 
     private Optional<Player> getPlayerFromInfusionPedestal(Direction direction){
         return this.getInfusionPedestalBlockEntity(direction).flatMap(InfusionPedestalBlockEntity::getPlayer);
-    }
-
-    private void reduceItemStackCountOnInUsePedestals(int reductionCount){
-        this.forEveryPedestalInUse((direction, infusionPedestalBlockEntity) -> infusionPedestalBlockEntity.shrinkItemStack(reductionCount));
-        this.shrinkItemStack(reductionCount);
-        if(!this.getItemStackOriginal().isEmpty() && this.level != null){
-            Containers.dropItemStack(this.level, this.getBlockPos().getX(), this.getBlockPos().getY()+1.0d, this.getBlockPos().getZ(), this.getItemStackCopy());
-        }
     }
     
     private int getMinimumCountOfInputItemStacks(Set<Direction> pedestalsToUseSet){
@@ -393,10 +345,6 @@ public class InfuserBlockEntity extends AbstractInfusionPedestalBlockEntity {
             infusionPedestalBlockEntity.setUsageValues(0, 0);
             infusionPedestalBlockEntity.useDirection = Optional.empty();
         });
-    }
-
-    private void stopAllInfusing(){
-        Arrays.stream(HORIZONTALS).forEach(this::stopInfusing);
     }
 
     protected void saveAdditional(CompoundTag compoundTag) {
