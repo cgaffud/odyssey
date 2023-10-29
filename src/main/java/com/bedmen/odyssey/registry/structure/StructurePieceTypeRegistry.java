@@ -27,4 +27,8 @@ public class StructurePieceTypeRegistry {
     // Barn
     public static final RegistryObject<StructurePieceType> BARN = STRUCTURE_PIECE_TYPES.register("barn", () -> (StructurePieceType.StructureTemplateType)(BarnPiece::new));
     public static final RegistryObject<StructurePieceType> BARN_SPAWNER = STRUCTURE_PIECE_TYPES.register("barn_spawner", () -> (StructurePieceType.StructureTemplateType)(BarnSpawnerPiece::new));
+
+    // Jigsaw
+    public static final RegistryObject<StructurePieceType> VANILLA_JIGSAW = STRUCTURE_PIECE_TYPES.register("vanilla_jigsaw", () -> (VanillaPoolElementStructurePiece::new));
+    public static final RegistryObject<StructurePieceType> BANDIT_HIDEOUT_JIGSAW = STRUCTURE_PIECE_TYPES.register("bandit_hideout_jigsaw", () -> (BanditHideoutPiece::new));
 }
