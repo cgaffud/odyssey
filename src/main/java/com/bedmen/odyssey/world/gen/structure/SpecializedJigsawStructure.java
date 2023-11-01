@@ -25,7 +25,7 @@ import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
  */
 public final class SpecializedJigsawStructure extends Structure {
     public static final int MAX_TOTAL_STRUCTURE_RANGE = 128;
-    public static final int MAX_SIZE = 7;
+    public static final int MAX_SIZE = 9;
     public static final int MAX_SPECIAL_PIECES = 1;
     public static final Codec<SpecializedJigsawStructure> CODEC = RecordCodecBuilder.<SpecializedJigsawStructure>mapCodec((p_227640_) -> {
         return p_227640_.group(settingsCodec(p_227640_), StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter((p_227656_) -> {

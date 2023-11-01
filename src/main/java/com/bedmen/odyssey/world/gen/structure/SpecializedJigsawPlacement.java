@@ -49,10 +49,11 @@ public class SpecializedJigsawPlacement {
 
     // This is where we redirect from a generic PoolElementStructurePiece to a specialized child class.
     // Unless we're seriously reworking jigsaws, all new spec. pieces just need to get added here
-    public static AbstractPoolElementStructurePiece addPiece(int pieceId, StructureTemplateManager structureTemplateManager, StructurePoolElement structurePoolElement, BlockPos blockPos, int groundLevelData, Rotation rotation, BoundingBox box, int depth, int maxDepth) {
+    public static AbstractPoolElementStructurePiece addPiece(int pieceId, StructureTemplateManager structureTemplateManager, StructurePoolElement structurePoolElement, BlockPos blockPos, int groundLevelData, Rotation rotation, BoundingBox box, int depth, int maxDepth, RandomSource randomSource, Deque<SpecializedJigsawPlacement.PieceState> deque) {
         switch (pieceId) {
             case 1:
-                return new BanditHideoutPiece(structureTemplateManager, structurePoolElement, blockPos, groundLevelData, rotation, box, depth == maxDepth);
+                boolean generatePath = (depth == maxDepth) && (randomSource.nextFloat() < 0.03f || (deque != null && deque.size() == 0));
+                return new BanditHideoutPiece(structureTemplateManager, structurePoolElement, blockPos, groundLevelData, rotation, box, generatePath);
             default:
             case 0:
                 break;
@@ -89,7 +90,7 @@ public class SpecializedJigsawPlacement {
 
             Vec3i vec3i = blockpos.subtract(p_227243_);
             BlockPos blockpos1 = p_227243_.subtract(vec3i);
-            AbstractPoolElementStructurePiece poolelementstructurepiece = addPiece(pieceId, structuretemplatemanager, structurepoolelement, blockpos1, structurepoolelement.getGroundLevelDelta(), rotation, structurepoolelement.getBoundingBox(structuretemplatemanager, blockpos1, rotation), 0, p_227242_);
+            AbstractPoolElementStructurePiece poolelementstructurepiece = addPiece(pieceId, structuretemplatemanager, structurepoolelement, blockpos1, structurepoolelement.getGroundLevelDelta(), rotation, structurepoolelement.getBoundingBox(structuretemplatemanager, blockpos1, rotation), 0, p_227242_, worldgenrandom, null);
             BoundingBox boundingbox = poolelementstructurepiece.getBoundingBox();
             int i = (boundingbox.maxX() + boundingbox.minX()) / 2;
             int j = (boundingbox.maxZ() + boundingbox.minZ()) / 2;
@@ -286,7 +287,7 @@ public class SpecializedJigsawPlacement {
                                                 k2 = structurepoolelement1.getGroundLevelDelta();
                                             }
 
-                                            AbstractPoolElementStructurePiece poolelementstructurepiece = addPiece(this.pieceId, this.structureTemplateManager, structurepoolelement1, blockpos5, k2, rotation1, boundingbox3, depth, maxDepth);
+                                            AbstractPoolElementStructurePiece poolelementstructurepiece = addPiece(this.pieceId, this.structureTemplateManager, structurepoolelement1, blockpos5, k2, rotation1, boundingbox3, depth, maxDepth, this.random, this.placing);
                                             int l2;
                                             if (flag) {
                                                 l2 = i + j;

@@ -12,6 +12,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
@@ -70,6 +71,10 @@ public class WorldGenUtil {
 
     public static BlockPos getWorldPosition(BlockPos blockPos, BlockPos templateBlockPos, StructurePlaceSettings structurePlaceSettings){
         return templateBlockPos.offset(blockPos.rotate(structurePlaceSettings.getRotation()));
+    }
+
+    public static BlockPos getWorldPosition(BlockPos blockPos, BlockPos templateBlockPos, Rotation rotation){
+        return templateBlockPos.offset(blockPos.rotate(rotation));
     }
 
     public static void addEntityToStructure(Entity entity, BlockPos blockPos, ServerLevelAccessor serverLevelAccessor){
