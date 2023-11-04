@@ -1,5 +1,6 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
+import com.bedmen.odyssey.block.wood.GreatwoodTreeGrower;
 import com.bedmen.odyssey.entity.monster.Bandit;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -8,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.MobSpawnType;
@@ -15,10 +17,10 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -106,7 +108,7 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
                 levelAccessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 2);
             }
         }
-        if (metadataString.startsWith("tunnel") && this.lastInGeneration) {
+        if (this.lastInGeneration && metadataString.startsWith("tunnel")) {
             Optional<BlockPos> endOfTunnelPos = this.makeTunnel(levelAccessor, blockPos);
         }
     }
