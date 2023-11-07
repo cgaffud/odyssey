@@ -86,11 +86,13 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
 
     @Override
     public void handleDataMarker(ServerLevelAccessor levelAccessor, String metadataString, BlockPos blockPos, Rotation rotation, RandomSource randomSource, BoundingBox box) {
-        if (metadataString.startsWith("bandit")) {
-            Bandit bandit = new Bandit(EntityTypeRegistry.BANDIT.get(), levelAccessor.getLevel());
-            bandit.moveTo(blockPos, 0, 0);
-            bandit.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, null, null);
-            levelAccessor.addFreshEntityWithPassengers(bandit);
+        if (metadataString.startsWith("bandit") || metadataString.startsWith("?bandit")) {
+            if (!(metadataString.startsWith("?bandit") && randomSource.nextBoolean())) {
+                Bandit bandit = new Bandit(EntityTypeRegistry.BANDIT.get(), levelAccessor.getLevel());
+                bandit.moveTo(blockPos, 0, 0);
+                bandit.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, null, null);
+                levelAccessor.addFreshEntityWithPassengers(bandit);
+            }
             levelAccessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 2);
         }
         if (metadataString.startsWith("chest")) {
