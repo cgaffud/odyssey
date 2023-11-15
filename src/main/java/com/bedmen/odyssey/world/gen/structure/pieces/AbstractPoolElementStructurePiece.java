@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
 import com.bedmen.odyssey.world.WorldGenUtil;
+import com.bedmen.odyssey.world.gen.structure.SpecialSinglePoolElement;
 import com.google.common.collect.Lists;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
@@ -110,6 +111,10 @@ public abstract class AbstractPoolElementStructurePiece extends StructurePiece {
         } else if (structurePoolElement instanceof SinglePoolElement singlePoolElement) {
             for (StructureTemplate.StructureBlockInfo structureBlockInfo : singlePoolElement.getDataMarkers(this.structureTemplateManager, this.position, this.rotation, false)) {
                 // Convert from pos relative to structure to global position
+                this.handleDataMarker(worldGenLevel, structureBlockInfo.nbt.getString("metadata"), WorldGenUtil.getWorldPosition(structureBlockInfo.pos, this.position, this.rotation), this.rotation, worldGenLevel.getRandom(), box);
+            }
+        } else if (structurePoolElement instanceof SpecialSinglePoolElement singlePoolElement) {
+            for (StructureTemplate.StructureBlockInfo structureBlockInfo : singlePoolElement.getDataMarkers(this.structureTemplateManager, this.position, this.rotation, false)) {
                 this.handleDataMarker(worldGenLevel, structureBlockInfo.nbt.getString("metadata"), WorldGenUtil.getWorldPosition(structureBlockInfo.pos, this.position, this.rotation), this.rotation, worldGenLevel.getRandom(), box);
             }
         }

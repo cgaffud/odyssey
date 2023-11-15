@@ -8,7 +8,7 @@
         "location": "oddc:bandit_hideout/chambers/bandit_planning_1",
         "processors": "minecraft:empty",
         "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
+        "element_type": "oddc:special_single_pool_element"
       }
     },
     {
@@ -17,7 +17,7 @@
         "location": "oddc:bandit_hideout/chambers/bandit_planning_2",
         "processors": "minecraft:empty",
         "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
+        "element_type": "oddc:special_single_pool_element"
       }
     }
   ]

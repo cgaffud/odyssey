@@ -8,7 +8,7 @@
         "location": "oddc:bandit_hideout/connectors/bandit_corridor_bar1",
         "processors": "minecraft:empty",
         "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
+        "element_type": "oddc:special_single_pool_element"
       }
     },
     {
@@ -17,7 +17,7 @@
         "location": "oddc:bandit_hideout/connectors/bandit_corridor_l",
         "processors": "minecraft:empty",
         "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
+        "element_type": "oddc:special_single_pool_element"
       }
     },
 
@@ -27,7 +27,7 @@
         "location": "oddc:bandit_hideout/connectors/bandit_corridor_l2",
         "processors": "minecraft:empty",
         "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
+        "element_type": "oddc:special_single_pool_element"
       }
     },
     {
@@ -36,7 +36,7 @@
         "location": "oddc:bandit_hideout/connectors/bandit_corridor_l3",
         "processors": "minecraft:empty",
         "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
+        "element_type": "oddc:special_single_pool_element"
       }
     },
     {
@@ -45,7 +45,7 @@
         "location": "oddc:bandit_hideout/connectors/bandit_corridor_t1",
         "processors": "minecraft:empty",
         "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
+        "element_type": "oddc:special_single_pool_element"
       }
     },
 
@@ -55,7 +55,7 @@
         "location": "oddc:bandit_hideout/connectors/bandit_corridor_t2",
         "processors": "minecraft:empty",
         "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
+        "element_type": "oddc:special_single_pool_element"
       }
     },
     {
@@ -64,7 +64,7 @@
         "location": "oddc:bandit_hideout/connectors/bandit_corridor_t3",
         "processors": "minecraft:empty",
         "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
+        "element_type": "oddc:special_single_pool_element"
       }
     }
   ]

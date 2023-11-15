@@ -8,7 +8,7 @@
         "location": "oddc:bandit_hideout/bandit_hideout_main",
         "processors": "minecraft:empty",
         "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
+        "element_type": "oddc:special_single_pool_element"
       }
     }
   ]
