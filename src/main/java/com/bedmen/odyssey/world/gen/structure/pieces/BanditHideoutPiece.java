@@ -29,8 +29,6 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSeriali
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
-import java.util.Optional;
-
 public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
 
     private boolean lastInGeneration;
@@ -58,10 +56,11 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
         compoundTag.putBoolean(HAS_MADE_TUNNEL_TAG, this.hasMadeTunnel);
     }
 
-    private Optional<BlockPos> makeTunnel(ServerLevelAccessor levelAccessor, BlockPos startingPos){
+    private void makeTunnel(ServerLevelAccessor levelAccessor, BlockPos startingPos) {
         if(!this.hasMadeTunnel){
             BlockPos.MutableBlockPos mutableBlockPos = startingPos.mutable();
             int staircaseCounter = 0;
+            // Build spiral
             while (mutableBlockPos.getY() < levelAccessor.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, mutableBlockPos).getY()){
                 staircaseCounter++;
                 levelAccessor.setBlock(mutableBlockPos, Blocks.AIR.defaultBlockState(), 2);
@@ -77,15 +76,51 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
                 }
                 mutableBlockPos.move(Direction.UP);
             }
+            BlockState trapdoorBlockState = Blocks.DARK_OAK_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.FACING, Direction.NORTH);
+
+            // Manually generate top layer
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
+                // Trapdoors
+                levelAccessor.setBlock(mutableBlockPos.relative(direction).below(), trapdoorBlockState, 2);
+                levelAccessor.setBlock(mutableBlockPos.relative(direction).relative(direction.getClockWise()).below(),  trapdoorBlockState, 2);
+
+                // Sand covering
+                levelAccessor.setBlock(mutableBlockPos.relative(direction), Blocks.RED_SAND.defaultBlockState(), 2);
+                levelAccessor.setBlock(mutableBlockPos.relative(direction).relative(direction.getClockWise()), Blocks.RED_SAND.defaultBlockState(), 2);
+                levelAccessor.setBlock(mutableBlockPos.relative(direction, 2), Blocks.RED_SAND.defaultBlockState(), 2);
+                levelAccessor.setBlock(mutableBlockPos.relative(direction, 2).relative(direction.getClockWise()), Blocks.RED_SAND.defaultBlockState(), 2);
+                levelAccessor.setBlock(mutableBlockPos.relative(direction, 2).relative(direction.getCounterClockWise()), Blocks.RED_SAND.defaultBlockState(), 2);
+
+                // Random sand surrounding
+                if (levelAccessor.getRandom().nextBoolean() || levelAccessor.getRandom().nextBoolean())
+                    levelAccessor.setBlock(mutableBlockPos.relative(direction).above(), Blocks.RED_SAND.defaultBlockState(), 2);
+                if (levelAccessor.getRandom().nextBoolean()) {
+                    levelAccessor.setBlock(mutableBlockPos.relative(direction).relative(direction.getClockWise()).above(), Blocks.RED_SAND.defaultBlockState(), 2);
+                    // Generate a bandit
+                    Bandit bandit = new Bandit(EntityTypeRegistry.BANDIT.get(), levelAccessor.getLevel());
+                    // We choose between on-axis and diagonal position
+                    BlockPos banditPos = levelAccessor.getRandom().nextBoolean() ? mutableBlockPos.relative(direction).above().above() : mutableBlockPos.relative(direction).relative(direction.getClockWise()).above().above();
+                    bandit.moveTo(banditPos, 0, 0);
+                    bandit.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(banditPos), MobSpawnType.STRUCTURE, null, null);
+                    levelAccessor.addFreshEntityWithPassengers(bandit);
+                }
+            }
+            // Center pillar
+            levelAccessor.setBlock(mutableBlockPos.below(), trapdoorBlockState, 2);
+            levelAccessor.setBlock(mutableBlockPos, Blocks.TERRACOTTA.defaultBlockState(), 2);
+            levelAccessor.setBlock(mutableBlockPos.above(), Blocks.ORANGE_TERRACOTTA.defaultBlockState(), 2);
+            levelAccessor.setBlock(mutableBlockPos.above().above(), Blocks.TERRACOTTA.defaultBlockState(), 2);
+
             this.hasMadeTunnel = true;
-            return Optional.of(mutableBlockPos);
+            System.out.println(mutableBlockPos);
         }
-        return Optional.empty();
     }
 
 
     @Override
     public void handleDataMarker(ServerLevelAccessor levelAccessor, String metadataString, BlockPos blockPos, Rotation rotation, RandomSource randomSource, BoundingBox box) {
+        // By default data markers get aired out
+        levelAccessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 2);
         if (metadataString.startsWith("bandit") || metadataString.startsWith("?bandit")) {
             if (!(metadataString.startsWith("?bandit") && randomSource.nextBoolean())) {
                 Bandit bandit = new Bandit(EntityTypeRegistry.BANDIT.get(), levelAccessor.getLevel());
@@ -93,7 +128,6 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
                 bandit.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, null, null);
                 levelAccessor.addFreshEntityWithPassengers(bandit);
             }
-            levelAccessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 2);
         }
         if (metadataString.startsWith("chest")) {
             BlockPos chestPos = blockPos.below();
@@ -101,17 +135,14 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
             if (blockEntity instanceof ChestBlockEntity chestBlockEntity){
                 chestBlockEntity.setLootTable(OdysseyLootTables.STERLING_SILVER_TREASURE_CHEST, randomSource.nextLong());
             }
-
+            // Specific identifiers override the air placement
             if (metadataString.startsWith("chest_raw_gold")) {
                 levelAccessor.setBlock(blockPos, Blocks.RAW_GOLD_BLOCK.defaultBlockState(), 2);
             } else if (metadataString.startsWith("chest_barrel")) {
                 levelAccessor.setBlock(blockPos, Blocks.BARREL.defaultBlockState(), 2);
-            } else {
-                levelAccessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 2);
             }
         }
-        if (this.lastInGeneration && metadataString.startsWith("tunnel")) {
-            Optional<BlockPos> endOfTunnelPos = this.makeTunnel(levelAccessor, blockPos);
-        }
+        if (metadataString.startsWith("tunnel") && this.lastInGeneration)
+                this.makeTunnel(levelAccessor, blockPos);
     }
 }
