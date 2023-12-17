@@ -101,7 +101,7 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
                     // We choose between on-axis and diagonal position
                     BlockPos banditPos = levelAccessor.getRandom().nextBoolean() ? mutableBlockPos.relative(direction).above().above() : mutableBlockPos.relative(direction).relative(direction.getClockWise()).above().above();
                     bandit.moveTo(banditPos, 0, 0);
-                    bandit.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(banditPos), MobSpawnType.STRUCTURE, null, null);
+                    bandit.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(banditPos), MobSpawnType.STRUCTURE, null, null, true);
                     levelAccessor.addFreshEntityWithPassengers(bandit);
                 }
             }
@@ -125,7 +125,7 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
             if (!(metadataString.startsWith("?bandit") && randomSource.nextBoolean())) {
                 Bandit bandit = new Bandit(EntityTypeRegistry.BANDIT.get(), levelAccessor.getLevel());
                 bandit.moveTo(blockPos, 0, 0);
-                bandit.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, null, null);
+                bandit.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, null, null, true);
                 levelAccessor.addFreshEntityWithPassengers(bandit);
             }
         }

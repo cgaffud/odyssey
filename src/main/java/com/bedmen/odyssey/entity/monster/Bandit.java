@@ -4,16 +4,22 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
+import com.bedmen.odyssey.items.odyssey_versions.OdysseyMapItem;
 import com.bedmen.odyssey.registry.ItemRegistry;
+import com.bedmen.odyssey.tags.OdysseyStructureTags;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -29,10 +35,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 
@@ -42,6 +45,12 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
     private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(Bandit.class, EntityDataSerializers.BOOLEAN);
     public final RangedCrossbowAttackGoal<Bandit> crossBowGoal = new RangedCrossbowAttackGoal<>(this, 1.0D, 8.0F);
     public final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.0D, false);
+
+    // Logic for spawning maps to Bandit Hideout
+    private boolean isHideoutSpawn = false;
+    private final String HIDEOUT_SPAWN_TAG = "IsHideoutSpawnTag";
+    private final float MAP_SPAWN_CHANCE = 1f;
+
     public Bandit(EntityType<? extends Bandit> entityType, Level level) {
         super(entityType, level);
         this.reassessWeaponGoal();
@@ -64,7 +73,8 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
     }
     @Nullable
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, boolean isHideoutSpawn) {
+        this.isHideoutSpawn = isHideoutSpawn;
         spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
         this.populateDefaultEquipmentSlots(this.random, difficultyInstance);
         return spawnGroupData;
@@ -159,8 +169,33 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
         }
     }
 
+    @Override
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putBoolean(this.HIDEOUT_SPAWN_TAG, this.isHideoutSpawn);
+    }
+
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.reassessWeaponGoal();
+        this.isHideoutSpawn = compoundTag.getBoolean(this.HIDEOUT_SPAWN_TAG);
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
+        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
+        Entity entity = pSource.getEntity();
+        if (!this.isHideoutSpawn && (this.getRandom().nextFloat() < this.MAP_SPAWN_CHANCE) && (entity instanceof Player) && (!this.level.isClientSide())) {
+            ServerLevel serverLevel = (ServerLevel) this.level;
+            BlockPos blockpos = serverLevel.findNearestMapStructure(OdysseyStructureTags.ON_BANDIT_HIDEOUT_MAPS, entity.blockPosition(), 100, true);
+            if (blockpos != null) {
+                ItemStack itemstack = OdysseyMapItem.create(serverLevel, blockpos.getX(), blockpos.getZ(), (byte)1, true, true);
+                MapItem.renderBiomePreviewMap(serverLevel, itemstack);
+                itemstack.setHoverName(Component.translatable("filled_map.bandit_hideout"));
+                this.spawnAtLocation(itemstack);
+             } else {
+                return;
+            }
+        }
     }
 }
