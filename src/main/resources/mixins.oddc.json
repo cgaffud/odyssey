@@ -21,7 +21,8 @@
     "MixinPlayer",
     "MixinPowderSnowBlock",
     "MixinPrecipitation",
-    "MixinScreenEffectRenderer"
+    "MixinScreenEffectRenderer",
+    "MixinServerLevel"
   ],
   "injectors": {
     "defaultRequire": 1
