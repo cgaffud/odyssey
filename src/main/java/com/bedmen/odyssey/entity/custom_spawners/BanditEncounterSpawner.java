@@ -117,7 +117,7 @@ public class BanditEncounterSpawner implements CustomSpawner {
 
                 patrollingmonster.setPos((double)p_224534_.getX(), (double)p_224534_.getY(), (double)p_224534_.getZ());
                 if(net.minecraftforge.common.ForgeHooks.canEntitySpawn(patrollingmonster, p_224533_, p_224534_.getX(), p_224534_.getY(), p_224534_.getZ(), null, MobSpawnType.PATROL) == -1) return false;
-                patrollingmonster.finalizeSpawn(p_224533_, p_224533_.getCurrentDifficultyAt(p_224534_), MobSpawnType.PATROL, (SpawnGroupData)null, (CompoundTag)null, false);
+                patrollingmonster.finalizeSpawn(p_224533_, p_224533_.getCurrentDifficultyAt(p_224534_), MobSpawnType.PATROL, (SpawnGroupData)null, (CompoundTag)null);
                 // lol am lazy. otherwise the bandit leader has the pillager like banner and thats a lil silly.
                 if (isLeader)
                     patrollingmonster.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);

@@ -5,9 +5,12 @@ import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyMapItem;
+import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.BlowbackAnimatePacket;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyStructureTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -38,18 +41,22 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
-public class Bandit extends AbstractIllager implements CrossbowAttackMob {
+public class Bandit extends AbstractIllager implements CrossbowAttackMob, DodgesProjectileMob {
     private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(Bandit.class, EntityDataSerializers.BOOLEAN);
     public final RangedCrossbowAttackGoal<Bandit> crossBowGoal = new RangedCrossbowAttackGoal<>(this, 1.0D, 8.0F);
     public final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.0D, false);
 
     // Logic for spawning maps to Bandit Hideout
-    private boolean isHideoutSpawn = false;
-    private final String HIDEOUT_SPAWN_TAG = "IsHideoutSpawnTag";
-    private final float MAP_SPAWN_CHANCE = 1f;
+    private final float MAP_SPAWN_CHANCE = 0.5f;
+    private final float DODGE_DISTANCE_LIMIT = 2.5f;
+    private final float DODGE_CHANCE = 0.75f;
 
     public Bandit(EntityType<? extends Bandit> entityType, Level level) {
         super(entityType, level);
@@ -73,8 +80,12 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
     }
     @Nullable
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, boolean isHideoutSpawn) {
-        this.isHideoutSpawn = isHideoutSpawn;
+    public SpawnGroupData finalizeHideoutSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
+        this.setPersistenceRequired();
+        return finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+    }
+
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
         spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
         this.populateDefaultEquipmentSlots(this.random, difficultyInstance);
         return spawnGroupData;
@@ -110,6 +121,37 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
         }
     }
 
+    private boolean canFitMe(BlockPos blockPos) {
+        return (level.getBlockState(blockPos).isAir() && level.getBlockState(blockPos.above()).isAir());
+    }
+
+    private boolean tryDodgeInDirection(Direction direction) {
+        BlockPos blockDodgePos = this.blockPosition().relative(direction);
+        if (canFitMe(blockDodgePos)
+                && (!level.getBlockState(blockDodgePos.below()).isAir() || !level.getBlockState(blockDodgePos.below().below()).isAir())) {
+            Vec3 targetPos = (new Vec3(blockDodgePos.getX() + 0.5f, blockDodgePos.getY(), blockDodgePos.getZ() + 0.5f));
+            this.setPos(targetPos);
+            this.setDeltaMovement(0,0,0);
+            OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this), new BlowbackAnimatePacket(this));
+            return true;
+        }
+        return false;
+    }
+
+    public boolean tryDoDodge(Projectile projectile, EntityHitResult hitResult) {
+        if (projectile != null && !this.level.isClientSide() &&
+                (projectile.getOwner() != null && projectile.getOwner().distanceToSqr(hitResult.getEntity()) > DODGE_DISTANCE_LIMIT * DODGE_DISTANCE_LIMIT)
+                && this.getRandom().nextFloat() < DODGE_CHANCE) {
+            Vec3 dodgeDir = projectile.getDeltaMovement();
+            Direction discreteDodgeDir = (dodgeDir.z > dodgeDir.x) ? Direction.WEST : Direction.NORTH;
+            if (this.getRandom().nextBoolean()) discreteDodgeDir = discreteDodgeDir.getOpposite();
+            if (tryDodgeInDirection(discreteDodgeDir) || tryDodgeInDirection(discreteDodgeDir)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
         super.setItemSlot(equipmentSlot, itemStack);
         if (!this.level.isClientSide) {
@@ -118,7 +160,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.35F).add(Attributes.FOLLOW_RANGE, 12.0D).add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.ARMOR, 4.0d).add(Attributes.ATTACK_DAMAGE, 4.0D);
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.35F).add(Attributes.FOLLOW_RANGE, 32.0D).add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.ARMOR, 4.0d).add(Attributes.ATTACK_DAMAGE, 4.0D);
     }
 
     @Override
@@ -169,23 +211,16 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob {
         }
     }
 
-    @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
-        super.addAdditionalSaveData(compoundTag);
-        compoundTag.putBoolean(this.HIDEOUT_SPAWN_TAG, this.isHideoutSpawn);
-    }
-
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.reassessWeaponGoal();
-        this.isHideoutSpawn = compoundTag.getBoolean(this.HIDEOUT_SPAWN_TAG);
     }
 
     @Override
     protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
         Entity entity = pSource.getEntity();
-        if (!this.isHideoutSpawn && (this.getRandom().nextFloat() < this.MAP_SPAWN_CHANCE) && (entity instanceof Player) && (!this.level.isClientSide())) {
+        if (!this.isPersistenceRequired() && (this.getRandom().nextFloat() < this.MAP_SPAWN_CHANCE) && (entity instanceof Player) && (!this.level.isClientSide())) {
             ServerLevel serverLevel = (ServerLevel) this.level;
             BlockPos blockpos = serverLevel.findNearestMapStructure(OdysseyStructureTags.ON_BANDIT_HIDEOUT_MAPS, entity.blockPosition(), 100, true);
             if (blockpos != null) {
