@@ -7,54 +7,35 @@ import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
 import com.bedmen.odyssey.world.WorldGenUtil;
-import com.bedmen.odyssey.world.gen.processor.CrackedBlockProcessor;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
-import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.BiConsumer;
 
-public class MoonTowerPiece extends HeightAdjustingPiece {
-    private static final ResourceLocation STRUCTURE_LOCATION = new ResourceLocation(Odyssey.MOD_ID,"moon_tower");
-    private static final BlockState[] DEEPSLATE_BRICKS = {Blocks.DEEPSLATE_BRICKS.defaultBlockState(), Blocks.CRACKED_DEEPSLATE_BRICKS.defaultBlockState()};
-    private static final List<Pair<Integer, Integer>> RELATIVE_POSTS = new ArrayList<>();
-    static {
-        for(int x = 1; x <= 7; x++){
-            for(int z = 1; z <= 7; z++){
-                boolean xEdge = x == 1 || x == 7;
-                boolean zEdge = z == 1 || z == 7;
-                // exclude corners
-                if(xEdge && zEdge) {
-                    continue;
-                }
-                RELATIVE_POSTS.add(Pair.of(x,z));
-            }
-        }
-    }
+public class MoonTowerPiece extends DungeonlessMoonTowerPiece {
+
+    public static final SimpleWeightedRandomList<ResourceLocation> STRUCTURE_LOCATIONS = SimpleWeightedRandomList.<ResourceLocation>builder()
+            .add(new ResourceLocation(Odyssey.MOD_ID,"moon_tower"), 3)
+            .add(new ResourceLocation(Odyssey.MOD_ID,"moon_tower_2"), 1).build();
+
     private static final List<BlockPos> RELATIVE_CHESTS = List.of(
             new BlockPos(4, 7, 4),
             new BlockPos(6, 11, 6),
@@ -74,17 +55,16 @@ public class MoonTowerPiece extends HeightAdjustingPiece {
             Pair.of(new BlockPos(6, 18, 6), MoonTowerEnemyType.SKELETON)
 
     );
-    private static final BlockPos RELATIVE_ENTRANCE = new BlockPos(4,0,0);
 
     protected byte[] hasSpawnedMonsters = new byte[ENEMY_INFO.size()];
     private static final String HAS_SPAWNED_MONSTERS_TAG = "HasSpawnedMonsters";
 
-    public MoonTowerPiece(StructureTemplateManager structureTemplateManager, BlockPos blockPos, Rotation rotation) {
-        super(StructurePieceTypeRegistry.MOON_TOWER.get(), 0, structureTemplateManager, STRUCTURE_LOCATION, STRUCTURE_LOCATION.toString(), makeSettings(), blockPos, rotation);
+    public MoonTowerPiece(StructureTemplateManager structureTemplateManager, ResourceLocation structureLocation, BlockPos blockPos, Rotation rotation) {
+        super(StructurePieceTypeRegistry.MOON_TOWER.get(), 0, structureTemplateManager, structureLocation, structureLocation.toString(), makeSettings(), blockPos, rotation);
     }
 
     public MoonTowerPiece(StructureTemplateManager structureTemplateManager, CompoundTag compoundTag) {
-        super(StructurePieceTypeRegistry.MOON_TOWER.get(), compoundTag, structureTemplateManager, (resourceLocation) -> makeSettings());
+        super(StructurePieceTypeRegistry.MOON_TOWER.get(), compoundTag, structureTemplateManager);
         this.hasSpawnedMonsters = compoundTag.getByteArray(HAS_SPAWNED_MONSTERS_TAG);
     }
 
@@ -93,31 +73,9 @@ public class MoonTowerPiece extends HeightAdjustingPiece {
         compoundTag.putByteArray(HAS_SPAWNED_MONSTERS_TAG, this.hasSpawnedMonsters);
     }
 
-    private static StructurePlaceSettings makeSettings() {
-        return (new StructurePlaceSettings()).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK).addProcessor(new CrackedBlockProcessor(0.5f));
-    }
-
-    protected boolean updateHeightPosition(LevelAccessor levelAccessor) {
-        if (this.hasCalculatedHeightPosition) {
-            return true;
-        } else {
-            BlockPos entranceBlockPos = WorldGenUtil.getWorldPosition(RELATIVE_ENTRANCE, this.templatePosition, this.placeSettings);
-            int height = levelAccessor.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, entranceBlockPos).getY();
-            if (height == levelAccessor.getMinBuildHeight()) {
-                return false;
-            } else {
-                // -1 is added here to put the inside of the first floor at ground level
-                int heightChange = height - this.boundingBox.minY() - 1;
-                this.move(0, heightChange, 0);
-                this.hasCalculatedHeightPosition = true;
-                return true;
-            }
-        }
-    }
-
     @Override
     protected void postProcessAfterHeightUpdate(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox chunkBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
-        WorldGenUtil.fillColumnDownOnAllPosts(worldGenLevel, DEEPSLATE_BRICKS, RELATIVE_POSTS, chunkBoundingBox, this.templatePosition, this.placeSettings);
+        super.postProcessAfterHeightUpdate(worldGenLevel, structureManager, chunkGenerator, randomSource, chunkBoundingBox, chunkPos, blockPos);
         // Set chest loot tables, 50% of being 2 (on top), 25% of 1 (middle) or 0 (bottom)
         int lootFloor = Integer.min(2, randomSource.nextInt(4));
         for(int i = 0; i < 3; i++){

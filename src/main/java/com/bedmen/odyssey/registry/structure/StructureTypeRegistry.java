@@ -19,11 +19,13 @@ public class StructureTypeRegistry {
     }
 
     public static final RegistryObject<StructureType<?>> BASIC_RUINS = STRUCTURE_TYPE.register("basic_ruins", () -> typeConvert(BasicRuinsStructure.CODEC));
+    public static final RegistryObject<StructureType<?>> CAVE_RUINS = STRUCTURE_TYPE.register("cave_ruins", () -> typeConvert(CaveRuinsStructure.CODEC));
     public static final RegistryObject<StructureType<?>> WEAVER_COLONY = STRUCTURE_TYPE.register("weaver_colony", () -> typeConvert(WeaverColonyStructure.CODEC));
     public static final RegistryObject<StructureType<?>> BARN = STRUCTURE_TYPE.register("barn", () -> typeConvert(BarnStructure.CODEC));
     public static final RegistryObject<StructureType<?>> MOON_TOWER = STRUCTURE_TYPE.register("moon_tower", () -> typeConvert(MoonTowerStructure.CODEC));
+    public static final RegistryObject<StructureType<?>> MOON_TOWER_RUINS = STRUCTURE_TYPE.register("moon_tower_ruins", () -> typeConvert(MoonTowerRuinsStructure.CODEC));
     public static final RegistryObject<StructureType<?>> COVEN_HUT = STRUCTURE_TYPE.register("coven_hut", () -> typeConvert(CovenHutStructure.CODEC));
-
+    public static final RegistryObject<StructureType<?>> SPECIALIZED_JIGSAW = STRUCTURE_TYPE.register("specialized_jigsaw", () -> typeConvert(SpecializedJigsawStructure.CODEC));
 
     // Helper method to register since compiler will complain about typing otherwise
     private static <S extends Structure> StructureType<S> typeConvert(Codec<S> codec) {

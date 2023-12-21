@@ -22,12 +22,22 @@ import net.minecraft.world.item.Item.Properties;
 public class GreatSaplingHelperItem extends Item {
     protected final Lazy<Block> saplingBlock;
     protected final boolean isBottle;
+    protected final boolean instaGrow;
 
     public GreatSaplingHelperItem(Properties properties, Lazy<Block> saplingBlock, boolean isBottle) {
         super(properties);
         this.saplingBlock = saplingBlock;
         this.isBottle = isBottle;
+        this.instaGrow = false;
     }
+
+    public GreatSaplingHelperItem(Properties properties, Lazy<Block> saplingBlock, boolean isBottle, boolean instaGrow) {
+        super(properties);
+        this.saplingBlock = saplingBlock;
+        this.isBottle = isBottle;
+        this.instaGrow = instaGrow;
+    }
+
 
     private GreatSaplingBlock.Status getStatus(){
         return this.isBottle ? GreatSaplingBlock.Status.THIRSTY : GreatSaplingBlock.Status.HUNGRY;
@@ -42,11 +52,15 @@ public class GreatSaplingHelperItem extends Item {
         Level level = context.getLevel();
         BlockPos blockpos = context.getClickedPos();
         BlockState blockstate = level.getBlockState(blockpos);
-        if (blockstate.is(this.saplingBlock.get()) && blockstate.getValue(GreatSaplingBlock.STATUS) == this.getStatus()) {
+        if (blockstate.is(this.saplingBlock.get()) && (blockstate.getValue(GreatSaplingBlock.STATUS) == this.getStatus() || this.instaGrow)) {
             level.playSound(player, blockpos, getSound(), SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
             if (!level.isClientSide) {
                 GreatSaplingBlock greatSaplingBlock = (GreatSaplingBlock) blockstate.getBlock();
-                greatSaplingBlock.advanceAge((ServerLevel) level, blockpos, level.getBlockState(blockpos));
+                if (this.instaGrow) {
+                    greatSaplingBlock.advanceTree((ServerLevel) level, blockpos, level.getBlockState(blockpos), level.getRandom());
+                } else {
+                    greatSaplingBlock.advanceAge((ServerLevel) level, blockpos, level.getBlockState(blockpos));
+                }
             }
             GreatSaplingBlock.greenParticles(level, blockpos);
             if (player != null) {

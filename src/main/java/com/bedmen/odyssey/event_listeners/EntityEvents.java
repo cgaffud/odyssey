@@ -12,6 +12,7 @@ import com.bedmen.odyssey.effect.FireEffect;
 import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
+import com.bedmen.odyssey.entity.monster.DodgesProjectileMob;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
@@ -56,10 +57,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -638,6 +642,16 @@ public class EntityEvents {
         Entity entity = event.getEntity();
         if(entity instanceof Player player){
             player.foodData = OdysseyFoodData.fromFoodData(player, player.foodData);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onProjectileImpactEvent(final ProjectileImpactEvent event) {
+        if (event.getRayTraceResult().getType() == HitResult.Type.ENTITY) {
+            EntityHitResult entityHitResult = (EntityHitResult) event.getRayTraceResult();
+            if (entityHitResult.getEntity() instanceof DodgesProjectileMob dodgesProjectileMob) {
+                event.setCanceled(dodgesProjectileMob.tryDoDodge(event.getProjectile(), entityHitResult));
+            }
         }
     }
 }

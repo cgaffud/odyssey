@@ -1,0 +1,33 @@
+{
+  "name": "oddc:bandit_hideout/special_chamber_pool",
+  "fallback": "oddc:bandit_hideout/endpoint_pool",
+  "elements": [
+    {
+      "weight": 3,
+      "element": {
+        "location": "oddc:bandit_hideout/chambers/bandit_barracks_1",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    },
+    {
+      "weight": 2 ,
+      "element": {
+        "location": "oddc:bandit_hideout/chambers/bandit_farm_1",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "oddc:bandit_hideout/chambers/bandit_loot_1",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    }
+  ]
+}

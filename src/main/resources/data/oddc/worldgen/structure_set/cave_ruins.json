@@ -1,0 +1,17 @@
+{
+  "structures": [
+    {
+      "structure": "oddc:cave_ruins",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 625184862,
+
+    "spacing": 12,
+
+    "separation": 4,
+
+    "type": "minecraft:random_spread"
+  }
+}
