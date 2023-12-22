@@ -22,6 +22,7 @@
     "oddc:transcendental_obsidian",
     "oddc:infusion_pedestal",
     "oddc:infuser",
-    "oddc:grindstone"
+    "oddc:grindstone",
+    "oddc:get_jumped_by_bandits_block"
   ]
 }

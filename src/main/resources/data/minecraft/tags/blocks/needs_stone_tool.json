@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "oddc:copper_chest"
+    "oddc:copper_chest",
+    "oddc:get_jumped_by_bandits_block"
   ]
 }

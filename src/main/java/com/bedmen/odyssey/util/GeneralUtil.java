@@ -1,7 +1,12 @@
 package com.bedmen.odyssey.util;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.EntityGetter;
 import net.minecraft.world.level.Level;
+
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class GeneralUtil {
 
@@ -17,6 +22,24 @@ public class GeneralUtil {
 
     public static boolean isSurvival(Player player){
         return !player.isCreative() && !player.isSpectator();
+    }
+
+    public static int getNearbyPlayerNum(EntityGetter eg, double sourceX, double sourceY, double sourceZ, double maxSearchDistance, @Nullable Predicate<Entity> predicate) {
+        int count = 0;
+
+        for(Player player1 : eg.players()) {
+            if (predicate == null || predicate.test(player1)) {
+                double d1 = player1.distanceToSqr(sourceX, sourceY, sourceZ);
+                if (maxSearchDistance < 0.0D || d1 < maxSearchDistance * maxSearchDistance)
+                    count++;
+            }
+        }
+
+        return count;
+    }
+
+    public static int getNearbyPlayerNum(EntityGetter eg, double sourceX, double sourceY, double sourceZ, double maxSearchDistance) {
+        return getNearbyPlayerNum(eg, sourceX, sourceY, sourceZ, maxSearchDistance, null);
     }
 
 //    public static double toTargetWithMaxChange(double current, double target, double maxChange) {
