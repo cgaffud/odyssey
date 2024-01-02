@@ -6,6 +6,7 @@ import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.items.aspect_items.AspectCrossbowItem;
 import com.bedmen.odyssey.items.odyssey_versions.OdysseyMapItem;
 import com.bedmen.odyssey.network.OdysseyNetwork;
+import com.bedmen.odyssey.network.packet.BanditAirParticlesPacket;
 import com.bedmen.odyssey.network.packet.BlowbackAnimatePacket;
 import com.bedmen.odyssey.registry.ItemRegistry;
 import com.bedmen.odyssey.tags.OdysseyStructureTags;
@@ -79,6 +80,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob, Dodges
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
     }
+
     @Nullable
     public SpawnGroupData finalizeHideoutSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
         this.setPersistenceRequired();
@@ -132,7 +134,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob, Dodges
             Vec3 targetPos = (new Vec3(blockDodgePos.getX() + 0.5f, blockDodgePos.getY(), blockDodgePos.getZ() + 0.5f));
             this.setPos(targetPos);
             this.setDeltaMovement(0,0,0);
-            OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this), new BlowbackAnimatePacket(this));
+            OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this), new BanditAirParticlesPacket(this));
             return true;
         }
         return false;

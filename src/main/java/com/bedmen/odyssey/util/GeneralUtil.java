@@ -1,6 +1,7 @@
 package com.bedmen.odyssey.util;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.EntityGetter;
 import net.minecraft.world.level.Level;
@@ -24,6 +25,7 @@ public class GeneralUtil {
         return !player.isCreative() && !player.isSpectator();
     }
 
+    // Some useful extensions to EntityGetter defaults
     public static int getNearbyPlayerNum(EntityGetter eg, double sourceX, double sourceY, double sourceZ, double maxSearchDistance, @Nullable Predicate<Entity> predicate) {
         int count = 0;
 
@@ -41,6 +43,20 @@ public class GeneralUtil {
     public static int getNearbyPlayerNum(EntityGetter eg, double sourceX, double sourceY, double sourceZ, double maxSearchDistance) {
         return getNearbyPlayerNum(eg, sourceX, sourceY, sourceZ, maxSearchDistance, null);
     }
+
+    // More generalized version of eg.hasNearbyAlivePlayer
+    public static boolean hasNearbyPlayer(EntityGetter eg, double p_45915_, double p_45916_, double p_45917_, double p_45918_, @Nullable Predicate<Entity> predicate) {
+        for (Player player : eg.players()) {
+            if (predicate == null || predicate.test(player)) {
+                double d0 = player.distanceToSqr(p_45915_, p_45916_, p_45917_);
+                if (p_45918_ < 0.0D || d0 < p_45918_ * p_45918_) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
 //    public static double toTargetWithMaxChange(double current, double target, double maxChange) {
 //        int direction = current > target ? -1 : 1;

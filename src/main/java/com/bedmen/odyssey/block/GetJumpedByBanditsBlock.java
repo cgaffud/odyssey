@@ -28,8 +28,8 @@ public class GetJumpedByBanditsBlock extends BaseEntityBlock {
     }
 
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_154683_, BlockState p_154684_, BlockEntityType<T> p_154685_) {
-        return createTickerHelper(p_154685_, BlockEntityTypeRegistry.GET_JUMPED_BY_BANDITS_BLOCK.get(), p_154683_.isClientSide ? GetJumpedByBanditsBlockEntity::clientTick : GetJumpedByBanditsBlockEntity::serverTick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState p_154684_, BlockEntityType<T> p_154685_) {
+        return  createTickerHelper(p_154685_, BlockEntityTypeRegistry.GET_JUMPED_BY_BANDITS_BLOCK.get(), level.isClientSide ? GetJumpedByBanditsBlockEntity::clientTick : GetJumpedByBanditsBlockEntity::serverTick);
     }
 
     public void spawnAfterBreak(BlockState p_222477_, ServerLevel p_222478_, BlockPos p_222479_, ItemStack p_222480_, boolean p_222481_) {
