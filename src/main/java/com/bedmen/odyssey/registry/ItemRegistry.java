@@ -227,6 +227,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREATWOOD_INSTANT_FERTILIZER = ITEMS.register("greatwood_instant_fertilizer", () -> new GreatSaplingHelperItem((new Item.Properties()).tab(OdysseyCreativeModeTab.MISC), BlockRegistry.GREATWOOD_SAPLING::get, false, true));
 
     public static final RegistryObject<Item> MUSIC_DISC_MESA = ITEMS.register("music_disc_mesa", () -> new RecordItem(0, SoundEventRegistry.MUSIC_DISC_MESA::get, (new Item.Properties()).stacksTo(1).tab(OdysseyCreativeModeTab.MISC).rarity(Rarity.RARE), 175*20));
+    public static final RegistryObject<Item> BANDIT_HIDEOUT_SPAWNER = ITEMS.register("bandit_hideout_spawner", () -> new BlockItem(BlockRegistry.BANDIT_HIDEOUT_SPAWNER.get(), (new Item.Properties()).tab(OdysseyCreativeModeTab.MISC)));
 
 
     // # Melee Weapons

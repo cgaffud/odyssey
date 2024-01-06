@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "oddc:copper_chest"
+    "oddc:copper_chest",
+    "oddc:bandit_hideout_spawner"
   ]
 }
