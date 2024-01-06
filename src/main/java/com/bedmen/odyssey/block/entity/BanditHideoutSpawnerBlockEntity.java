@@ -14,19 +14,16 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Predicate;
 
-public class GetJumpedByBanditsBlockEntity extends BlockEntity {
-    public GetJumpedByBanditsBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
-        super(BlockEntityTypeRegistry.GET_JUMPED_BY_BANDITS_BLOCK.get(), p_155229_, p_155230_);
+public class BanditHideoutSpawnerBlockEntity extends BlockEntity {
+    public BanditHideoutSpawnerBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
+        super(BlockEntityTypeRegistry.BANDIT_HIDEOUT_SPAWNER.get(), p_155229_, p_155230_);
         this.shouldSpawnBandits = true;
     }
 
@@ -42,10 +39,10 @@ public class GetJumpedByBanditsBlockEntity extends BlockEntity {
         return GeneralUtil.hasNearbyPlayer(p_151344_, (double)p_151345_.getX() + 0.5D, (double)p_151345_.getY() + 0.5D, (double)p_151345_.getZ() + 0.5D, REQUIRED_PLAYER_RANGE, isAliveAndNotInvincible);
     }
 
-    public static void clientTick(Level p_155755_, BlockPos p_155756_, BlockState p_155757_, GetJumpedByBanditsBlockEntity GetJumpedByBanditsBlockEntity) {
+    public static void clientTick(Level p_155755_, BlockPos p_155756_, BlockState p_155757_, BanditHideoutSpawnerBlockEntity BanditHideoutSpawnerBlockEntity) {
     }
 
-    public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, GetJumpedByBanditsBlockEntity gjbbe) {
+    public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, BanditHideoutSpawnerBlockEntity gjbbe) {
         if (gjbbe.shouldSpawnBandits && isNearPlayer(level, blockPos) && level.getDifficulty() != Difficulty.PEACEFUL) {
             ServerLevel serverLevel = (ServerLevel) level;
             int nearbyPlayerNum = GeneralUtil.getNearbyPlayerNum(level, blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D, CONTRIBUTING_PLAYER_RANGE);

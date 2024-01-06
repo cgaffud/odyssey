@@ -141,7 +141,7 @@ public class BlockRegistry {
     public static final List<RegistryObject<Block>> PERMAFROST_ICICLE_STAGES =  List.of(SMALL_PERMAFROST_ICICLE, MEDIUM_PERMAFROST_ICICLE, BIG_PERMAFROST_ICICLE);
     public static final RegistryObject<Block> BUDDING_PERMAFROST_ICICLE = BLOCKS.register("budding_permafrost_icicle", () -> new BuddingBlock(BlockBehaviour.Properties.of(Material.ICE).randomTicks().strength(2.8F).sound(SoundType.GLASS), 5, true, PERMAFROST_ICICLE_STAGES));
 
-    public static final RegistryObject<Block> GET_JUMPED_BY_BANDITS_BLOCK = BLOCKS.register("get_jumped_by_bandits_block", () -> new GetJumpedByBanditsBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(4.0F, 3600000.0F).sound(SoundType.POLISHED_DEEPSLATE).noOcclusion()));
+    public static final RegistryObject<Block> BANDIT_HIDEOUT_SPAWNER = BLOCKS.register("bandit_hideout_spawner", () -> new BanditHideoutSpawnerBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).requiresCorrectToolForDrops().strength(4.0F, 3600000.0F).sound(SoundType.POLISHED_DEEPSLATE).noOcclusion()));
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

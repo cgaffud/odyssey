@@ -23,6 +23,6 @@
     "oddc:infusion_pedestal",
     "oddc:infuser",
     "oddc:grindstone",
-    "oddc:get_jumped_by_bandits_block"
+    "oddc:bandit_hideout_spawner"
   ]
 }
