@@ -6,13 +6,22 @@ import com.bedmen.odyssey.client.gui.screens.OdysseyCreativeModeInventoryScreen;
 import com.bedmen.odyssey.client.gui.screens.OdysseyInventoryScreen;
 import com.bedmen.odyssey.client.gui.screens.OdysseySignEditScreen;
 import com.bedmen.odyssey.effect.FireType;
+import com.bedmen.odyssey.trades.MenuWithMerchantData;
+import com.bedmen.odyssey.trades.OdysseyMerchantInfo;
 import com.bedmen.odyssey.util.RenderUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.gui.screens.inventory.SignEditScreen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderBlockScreenEffectEvent;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -51,6 +60,35 @@ public class GuiEvents {
                 // Send a new one with the right info
                 RenderUtil.renderFireTypeBlockOverlay(event.getPoseStack(), fireType);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onScreenInitPostEvent(final ScreenEvent.Init.Post event) {
+        if (event.getScreen() instanceof MerchantScreen screen) {
+            int i = (screen.width - 176) / 2;
+            int j = (screen.height - 166) / 2;
+            Button questionButton = new Button(i + 67, j + 39, 11, 11, CommonComponents.EMPTY, (button) -> {
+                ItemStack itemstack1 = screen.getMenu().slots.get(0).getItem();
+//                System.out.println(itemstack1.getItem().getName(itemstack1));
+                ItemStack itemstack2 = screen.getMenu().slots.get(1).getItem();
+//                System.out.println(itemstack2.getItem().getName(itemstack2));
+                Player localplayer = screen.getMinecraft().player;
+                if ((itemstack1 == null || itemstack1.isEmpty())
+                        && (itemstack2 == null || itemstack2.isEmpty())) {
+                    OdysseyMerchantInfo.respondToEmptyRequest(localplayer, "Villager");
+                }
+
+                if (screen.getMenu() instanceof MenuWithMerchantData menu) {
+                    if (itemstack1 != null && !itemstack1.isEmpty()) {
+                        OdysseyMerchantInfo.respondToVillagerRequest(localplayer, itemstack1.getItem(), menu.villagerProfession());
+                    }
+                }
+
+                screen.onClose();
+            });
+//            questionButton.visible = false;
+            event.addListener(questionButton);
         }
     }
 
