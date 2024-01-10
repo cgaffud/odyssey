@@ -40,6 +40,7 @@ public interface MixinMerchant {
                 int packedLevel = p_45304_;
                 if (this instanceof Villager villager) {
                     packedLevel += OdysseyMerchantInfo.packProfession(villager.getVillagerData().getProfession());
+                    packedLevel += OdysseyMerchantInfo.packType(villager.getVillagerData().getType());
                 }
                 p_45302_.sendMerchantOffers(optionalint.getAsInt(), merchantoffers, packedLevel, this.getVillagerXp(), this.showProgressBar(), this.canRestock());
             }

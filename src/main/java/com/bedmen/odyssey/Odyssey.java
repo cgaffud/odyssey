@@ -24,6 +24,7 @@ import com.bedmen.odyssey.registry.tree.FoliagePlacerTypeRegistry;
 import com.bedmen.odyssey.registry.tree.TreeDecoratorTypeRegistry;
 import com.bedmen.odyssey.registry.tree.TrunkPlacerTypeRegistry;
 import com.bedmen.odyssey.tier.OdysseyTiers;
+import com.bedmen.odyssey.trades.OdysseyMerchantInfo;
 import com.bedmen.odyssey.trades.OdysseyTrades;
 import com.bedmen.odyssey.util.CompostUtil;
 import com.bedmen.odyssey.world.BiomeUtil;
@@ -93,7 +94,7 @@ public class Odyssey
             ((RangedAttribute) Attributes.ARMOR).maxValue = 80.0d;
             OdysseyPowderSnowBucketItem.registerDispenseBehavior();
             //        OdysseyPotions.addBrewingRecipes();
-
+            OdysseyMerchantInfo.init();
             //Generation
             BiomeUtil.init();
             OdysseyGeneration.init();

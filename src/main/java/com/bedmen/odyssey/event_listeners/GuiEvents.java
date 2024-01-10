@@ -81,7 +81,8 @@ public class GuiEvents {
 
                 if (screen.getMenu() instanceof MenuWithMerchantData menu) {
                     if (itemstack1 != null && !itemstack1.isEmpty()) {
-                        OdysseyMerchantInfo.respondToVillagerRequest(localplayer, itemstack1.getItem(), menu.villagerProfession());
+                        OdysseyMerchantInfo.respondToVillagerRequest(localplayer, itemstack1.getItem(),
+                                menu.villagerProfession(), menu.villagerType());
                     }
                 }
 

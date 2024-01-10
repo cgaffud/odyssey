@@ -1,10 +1,11 @@
 package com.bedmen.odyssey.trades;
 
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
 
 public interface MenuWithMerchantData {
 
     void setMerchantData(int merchantData);
-    int merchantType();
+    VillagerType villagerType();
     VillagerProfession villagerProfession();
 }

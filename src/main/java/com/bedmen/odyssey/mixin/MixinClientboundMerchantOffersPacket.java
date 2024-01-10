@@ -19,8 +19,8 @@ public class MixinClientboundMerchantOffersPacket implements PacketWithPackedDat
     private int villagerLevel;
 
     public int getVillagerLevel() {
-        return this.villagerLevel % OdysseyMerchantInfo.MIN_PACKING_OFFSET;
+        return this.villagerLevel % OdysseyMerchantInfo.PACKING_OFFSET_1;
     }
 
-    public int getPackedData() {return this.villagerLevel / OdysseyMerchantInfo.MIN_PACKING_OFFSET; }
+    public int getPackedData() {return this.villagerLevel; }
 }

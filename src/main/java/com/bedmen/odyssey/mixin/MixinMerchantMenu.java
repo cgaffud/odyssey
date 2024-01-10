@@ -3,6 +3,7 @@ package com.bedmen.odyssey.mixin;
 import com.bedmen.odyssey.trades.MenuWithMerchantData;
 import com.bedmen.odyssey.trades.OdysseyMerchantInfo;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.inventory.MerchantMenu;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -13,17 +14,16 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(MerchantMenu.class)
 public class MixinMerchantMenu implements MenuWithMerchantData {
 
-    private int merchantType = 0;
     private VillagerProfession profession = VillagerProfession.NONE;
+    private VillagerType type = VillagerType.PLAINS;
 
     public void setMerchantData(int merchantData) {
-        this.merchantType = 0;
+        this.type = OdysseyMerchantInfo.unpackType(merchantData);
         this.profession = OdysseyMerchantInfo.unpackProfession(merchantData);
     }
 
-    public int merchantType() { return this.merchantType; }
+    public VillagerType villagerType() { return this.type; }
 
-    @Override
-    public VillagerProfession villagerProfession() {return profession;}
+    public VillagerProfession villagerProfession() { return this.profession; }
 
 }
