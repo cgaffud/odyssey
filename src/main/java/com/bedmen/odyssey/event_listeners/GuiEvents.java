@@ -70,25 +70,26 @@ public class GuiEvents {
             int j = (screen.height - 166) / 2;
             Button questionButton = new Button(i + 67, j + 39, 11, 11, CommonComponents.EMPTY, (button) -> {
                 ItemStack itemstack1 = screen.getMenu().slots.get(0).getItem();
-//                System.out.println(itemstack1.getItem().getName(itemstack1));
                 ItemStack itemstack2 = screen.getMenu().slots.get(1).getItem();
-//                System.out.println(itemstack2.getItem().getName(itemstack2));
                 Player localplayer = screen.getMinecraft().player;
-                if ((itemstack1 == null || itemstack1.isEmpty())
-                        && (itemstack2 == null || itemstack2.isEmpty())) {
-                    OdysseyMerchantInfo.respondToEmptyRequest(localplayer, "Villager");
-                }
 
                 if (screen.getMenu() instanceof MenuWithMerchantData menu) {
-                    if (itemstack1 != null && !itemstack1.isEmpty()) {
+                    if (itemstack1.isEmpty() && itemstack2.isEmpty()) {
+                        OdysseyMerchantInfo.respondToEmptyRequest(localplayer, OdysseyMerchantInfo.getVillagerDisplayName(menu.villagerProfession()));
+                    }
+                    if (!itemstack1.isEmpty() && !itemstack2.isEmpty()) {
+                        OdysseyMerchantInfo.respondOverloaded(localplayer, OdysseyMerchantInfo.getVillagerDisplayName(menu.villagerProfession()));
+                    } else if (!itemstack1.isEmpty()) {
                         OdysseyMerchantInfo.respondToVillagerRequest(localplayer, itemstack1.getItem(),
+                                menu.villagerProfession(), menu.villagerType());
+                    } else if (!itemstack2.isEmpty()) {
+                        OdysseyMerchantInfo.respondToVillagerRequest(localplayer, itemstack2.getItem(),
                                 menu.villagerProfession(), menu.villagerType());
                     }
                 }
 
                 screen.onClose();
             });
-//            questionButton.visible = false;
             event.addListener(questionButton);
         }
     }
