@@ -1,0 +1,727 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "conditions": [],
+      "functions": [
+        {
+          "function": "oddc:modify_with_tier",
+          "tier": 1
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 0,
+        "max": 2
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:iron_shovel"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:iron_pickaxe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:iron_axe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:iron_hoe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:golden_shovel"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:golden_pickaxe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:golden_axe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:golden_hoe"
+        }
+      ]
+    },
+    {
+      "conditions": [],
+      "functions": [
+        {
+          "function": "oddc:modify_with_tier",
+          "tier": 1
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1,
+        "max": 4
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 21,
+          "quality": 0,
+          "name": "minecraft:chainmail_boots"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 21,
+          "quality": 0,
+          "name": "minecraft:chainmail_leggings"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 21,
+          "quality": 0,
+          "name": "minecraft:chainmail_chestplate"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 21,
+          "quality": 0,
+          "name": "minecraft:chainmail_helmet"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 21,
+          "quality": 0,
+          "name": "minecraft:golden_boots"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 21,
+          "quality": 0,
+          "name": "minecraft:golden_leggings"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 21,
+          "quality": 0,
+          "name": "minecraft:golden_chestplate"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 21,
+          "quality": 0,
+          "name": "minecraft:golden_helmet"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 56,
+          "quality": 0,
+          "name": "oddc:wooden_shield"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 56,
+          "quality": 0,
+          "name": "oddc:copper_shield"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:rusty_shield"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 28,
+          "quality": 0,
+          "name": "oddc:golden_shield"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 24,
+                "max": 48
+              },
+              "add": false
+            }
+          ],
+          "weight": 24,
+          "quality": 0,
+          "name": "minecraft:arrow"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 24,
+                "max": 48
+              },
+              "add": false
+            }
+          ],
+          "weight": 24,
+          "quality": 0,
+          "name": "oddc:spider_fang_arrow"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 24,
+          "quality": 0,
+          "name": "minecraft:bow"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 24,
+          "quality": 0,
+          "name": "minecraft:crossbow"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 24,
+          "quality": 0,
+          "name": "oddc:bone_long_bow"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 24,
+          "quality": 0,
+          "name": "oddc:bone_slug_bow"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 24,
+          "quality": 0,
+          "name": "oddc:bone_repeater"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 67,
+          "quality": 0,
+          "name": "oddc:wooden_boomerang"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 33,
+          "quality": 0,
+          "name": "oddc:bone_boomerang"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 33,
+          "quality": 0,
+          "name": "oddc:flint_disc"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 33,
+          "quality": 0,
+          "name": "oddc:copper_disc"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "minecraft:iron_sword"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "oddc:iron_mace"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "minecraft:golden_sword"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "oddc:golden_mace"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "oddc:spider_fang_dagger"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 11,
+          "quality": 0,
+          "name": "oddc:battle_pickaxe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 11,
+          "quality": 0,
+          "name": "oddc:slime_bat"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 11,
+          "quality": 0,
+          "name": "oddc:mini_hammer"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 11,
+          "quality": 0,
+          "name": "oddc:swift_sabre"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 11,
+          "quality": 0,
+          "name": "oddc:sledgehammer"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 11,
+          "quality": 0,
+          "name": "oddc:weaver_fang_dagger"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 11,
+          "quality": 0,
+          "name": "oddc:rusty_paddle"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "oddc:flint_sabre"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "oddc:flint_hatchet"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "oddc:flint_spear"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "oddc:copper_hammer"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "oddc:copper_battle_axe"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [],
+          "weight": 23,
+          "quality": 0,
+          "name": "oddc:copper_bat"
+        }
+      ]
+    },
+    {
+      "conditions": [],
+      "functions": [],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 4,
+        "max": 6
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 4
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:raw_iron"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:raw_gold"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "oddc:raw_silver"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              },
+              "add": false
+            }
+          ],
+          "weight": 4,
+          "quality": 0,
+          "name": "minecraft:emerald"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 4,
+                "max": 8
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:flint"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 4,
+                "max": 8
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:bone"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 4,
+                "max": 8
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:lapis_lazuli"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 4,
+                "max": 8
+              },
+              "add": false
+            }
+          ],
+          "weight": 2,
+          "quality": 0,
+          "name": "minecraft:redstone"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 8,
+                "max": 16
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:feather"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 8,
+                "max": 16
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:leather"
+        }
+      ]
+    },
+    {
+      "conditions": [],
+      "functions": [],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 0,
+        "max": 2
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 1
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:bread"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:carrot"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:potato"
+        },
+        {
+          "type": "minecraft:item",
+          "condtions": [],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              },
+              "add": false
+            }
+          ],
+          "weight": 1,
+          "quality": 0,
+          "name": "minecraft:beetroot_seeds"
+        }
+      ]
+    }
+  ]
+}

@@ -1,10 +1,15 @@
 {
   "structures": [
     {
-      "structure": "oddc:basic_ruins",
+      "structure": "oddc:lone_war_watch_tower",
       "weight": 1
+    },
+    {
+      "structure": "oddc:basic_ruins",
+      "weight": 7
     }
   ],
+
   "placement": {
     "salt": 1958017587,
 
