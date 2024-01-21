@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.world.level.ChunkPos;
@@ -87,50 +88,7 @@ public class CaveRuinsPiece extends HeightAdjustingPiece{
 
     @Override
     protected boolean updateHeightPosition(LevelAccessor levelAccessor) {
-        if (this.hasCalculatedHeightPosition) {
-            return true;
-        } else {
-            int height = levelAccessor.getMaxBuildHeight();
-            boolean heightHasBeenSet = false;
-            BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
-
-            for(int z = this.boundingBox.minZ(); z <= this.boundingBox.maxZ(); ++z) {
-                for(int x = this.boundingBox.minX(); x <= this.boundingBox.maxX(); ++x) {
-                    mutableBlockPos.set(x, 0, z);
-                    height = Math.min(height, levelAccessor.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, mutableBlockPos).getY());
-                    height = Math.min(height,  GeneralUtil.START_OF_UNDERGROUND);
-                }
-            }
-
-
-//            int bbY = this.boundingBox.minY();
-            if (height > 0) {
-                height = levelAccessor.getRandom().nextIntBetweenInclusive(0, height);
-                for (int z = this.boundingBox.minZ(); z <= this.boundingBox.maxZ(); ++z) {
-                    for (int x = this.boundingBox.minX(); x <= this.boundingBox.maxX(); ++x) {
-                        mutableBlockPos.set(x, height- 1, z);
-                        heightHasBeenSet = true;
-                        while (WorldGenUtil.isEmpty(levelAccessor, mutableBlockPos) || levelAccessor.isWaterAt(mutableBlockPos)) {
-                            if (mutableBlockPos.getY() <= 0) {
-                                heightHasBeenSet = false;
-                                break;
-                            }
-                            height -= 1;
-                            mutableBlockPos.move(Direction.DOWN);
-                        }
-                    }
-                }
-            }
-
-            if (!heightHasBeenSet) {
-                return false;
-            } else {
-                int heightChange = height - this.boundingBox.minY();
-                this.move(0, heightChange, 0);
-                this.hasCalculatedHeightPosition = true;
-                return true;
-            }
-        }
+       return tryPlaceHeightInUndergroundAirPocket(levelAccessor);
     }
 
     @Override

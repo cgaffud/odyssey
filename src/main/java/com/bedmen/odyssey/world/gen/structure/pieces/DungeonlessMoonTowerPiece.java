@@ -70,20 +70,16 @@ public class DungeonlessMoonTowerPiece extends HeightAdjustingPiece {
     }
 
     protected boolean updateHeightPosition(LevelAccessor levelAccessor) {
-        if (this.hasCalculatedHeightPosition) {
-            return true;
+        BlockPos entranceBlockPos = WorldGenUtil.getWorldPosition(RELATIVE_ENTRANCE, this.templatePosition, this.placeSettings);
+        int height = levelAccessor.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, entranceBlockPos).getY();
+        if (height == levelAccessor.getMinBuildHeight()) {
+            return false;
         } else {
-            BlockPos entranceBlockPos = WorldGenUtil.getWorldPosition(RELATIVE_ENTRANCE, this.templatePosition, this.placeSettings);
-            int height = levelAccessor.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, entranceBlockPos).getY();
-            if (height == levelAccessor.getMinBuildHeight()) {
-                return false;
-            } else {
-                // -1 is added here to put the inside of the first floor at ground level
-                int heightChange = height - this.boundingBox.minY() - 1;
-                this.move(0, heightChange, 0);
-                this.hasCalculatedHeightPosition = true;
-                return true;
-            }
+            // -1 is added here to put the inside of the first floor at ground level
+            int heightChange = height - this.boundingBox.minY() - 1;
+            this.move(0, heightChange, 0);
+            this.hasCalculatedHeightPosition = true;
+            return true;
         }
     }
 

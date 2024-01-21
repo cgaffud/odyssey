@@ -63,29 +63,6 @@ public class CovenHutPiece extends HeightAdjustingPiece {
     }
 
     protected boolean updateHeightPosition(LevelAccessor levelAccessor) {
-        if (this.hasCalculatedHeightPosition) {
-            return true;
-        } else {
-            int height = levelAccessor.getMinBuildHeight();
-            boolean heightHasBeenSet = false;
-            BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
-
-            for(int z = this.boundingBox.minZ(); z <= this.boundingBox.maxZ(); ++z) {
-                for(int x = this.boundingBox.minX(); x <= this.boundingBox.maxX(); ++x) {
-                    mutableBlockPos.set(x, 0, z);
-                    height = Math.max(height, levelAccessor.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, mutableBlockPos).getY());
-                    heightHasBeenSet = true;
-                }
-            }
-
-            if (!heightHasBeenSet) {
-                return false;
-            } else {
-                int heightChange = height - this.boundingBox.minY();
-                this.move(0, heightChange, 0);
-                this.hasCalculatedHeightPosition = true;
-                return true;
-            }
-        }
+        return reduceHeightFromBBOXHeightmap(levelAccessor, Heightmap.Types.WORLD_SURFACE_WG, levelAccessor.getMinBuildHeight(), (a,b) -> Math.max(a,b));
     }
 }

@@ -59,30 +59,7 @@ public class LoneWarWatchTowerPiece extends HeightAdjustingPiece {
     /** This is identical to BasicRunisPiece::updateHeightPosition. Consider unifying/unification */
     @Override
     protected boolean updateHeightPosition(LevelAccessor levelAccessor) {
-        if (this.hasCalculatedHeightPosition) {
-            return true;
-        } else {
-            int height = levelAccessor.getMaxBuildHeight();
-            boolean heightHasBeenSet = false;
-            BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
-
-            for(int z = this.boundingBox.minZ(); z <= this.boundingBox.maxZ(); ++z) {
-                for(int x = this.boundingBox.minX(); x <= this.boundingBox.maxX(); ++x) {
-                    mutableBlockPos.set(x, 0, z);
-                    height = Math.min(height, levelAccessor.getHeightmapPos(Heightmap.Types.OCEAN_FLOOR_WG, mutableBlockPos).getY());
-                    heightHasBeenSet = true;
-                }
-            }
-
-            if (!heightHasBeenSet) {
-                return false;
-            } else {
-                int heightChange = height - this.boundingBox.minY();
-                this.move(0, heightChange, 0);
-                this.hasCalculatedHeightPosition = true;
-                return true;
-            }
-        }
+        return reduceHeightFromBBOXHeightmap(levelAccessor, Heightmap.Types.OCEAN_FLOOR_WG, levelAccessor.getMaxBuildHeight(), (a,b) -> Math.min(a,b));
     }
 
     @Override

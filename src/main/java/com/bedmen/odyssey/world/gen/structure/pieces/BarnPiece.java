@@ -85,22 +85,18 @@ public class BarnPiece extends HeightAdjustingPiece {
     }
 
     protected boolean updateHeightPosition(LevelAccessor levelAccessor) {
-        if (this.hasCalculatedHeightPosition) {
-            return true;
+        BlockPos entranceBlockPos = WorldGenUtil.getWorldPosition(RELATIVE_ENTRANCE, this.templatePosition, this.placeSettings);
+        int height = levelAccessor.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, entranceBlockPos).getY();
+        if (height == levelAccessor.getMinBuildHeight()) {
+            return false;
         } else {
-            BlockPos entranceBlockPos = WorldGenUtil.getWorldPosition(RELATIVE_ENTRANCE, this.templatePosition, this.placeSettings);
-            int height = levelAccessor.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, entranceBlockPos).getY();
-            if (height == levelAccessor.getMinBuildHeight()) {
-                return false;
-            } else {
-                int heightChange = height - this.boundingBox.minY();
-                this.move(0, heightChange, 0);
-                for(BarnSpawnerPiece barnSpawnerPiece: this.childPieces){
-                    barnSpawnerPiece.move(0, heightChange, 0);
-                }
-                this.hasCalculatedHeightPosition = true;
-                return true;
+            int heightChange = height - this.boundingBox.minY();
+            this.move(0, heightChange, 0);
+            for(BarnSpawnerPiece barnSpawnerPiece: this.childPieces){
+                barnSpawnerPiece.move(0, heightChange, 0);
             }
+            this.hasCalculatedHeightPosition = true;
+            return true;
         }
     }
 
