@@ -11,6 +11,9 @@ public class OdysseyLootTables {
     public static final ResourceLocation HIDDEN_JUNGLE_TEMPLE_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/hidden_jungle_temple"));
     public static final ResourceLocation MOON_TOWER_CHEST = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/moon_tower"));
 
+    // Stone Layer
+    public static final ResourceLocation CAVE_BLACKSMITH = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/cave/blacksmith"));
+
     // War
     public static final ResourceLocation LONE_WAR_WATCH_TOWER = BuiltInLootTables.register(new ResourceLocation(Odyssey.MOD_ID, "chests/war/lone_watch_tower"));
 

@@ -2,13 +2,17 @@
   "structures": [
     {
       "structure": "oddc:cave_ruins",
+      "weight": 9
+    },
+    {
+      "structure": "oddc:cave_blacksmith",
       "weight": 1
     }
   ],
   "placement": {
     "salt": 625184862,
 
-    "spacing": 12,
+    "spacing": 8,
 
     "separation": 4,
 
