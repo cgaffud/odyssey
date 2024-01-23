@@ -1,0 +1,15 @@
+{
+  "name": "oddc:bandit_hideout/lower_to_upper_pool",
+  "fallback": "oddc:bandit_hideout/endpoint_pool",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "oddc:bandit_hideout/chambers/bandit_lower_to_upper",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    }
+  ]
+}

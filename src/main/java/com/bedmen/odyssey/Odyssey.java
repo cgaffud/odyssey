@@ -17,6 +17,7 @@ import com.bedmen.odyssey.loot.OdysseyLootItemFunctions;
 import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.registry.*;
 import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
+import com.bedmen.odyssey.registry.structure.StructurePoolElementTypeRegistry;
 import com.bedmen.odyssey.registry.structure.StructureProcessorRegistry;
 import com.bedmen.odyssey.registry.structure.StructureTypeRegistry;
 import com.bedmen.odyssey.registry.tree.FoliagePlacerTypeRegistry;
@@ -75,6 +76,7 @@ public class Odyssey
         SoundEventRegistry.init();
         StructureTypeRegistry.init();
         StructurePieceTypeRegistry.init();
+        StructurePoolElementTypeRegistry.init();
         StructureProcessorRegistry.init();
         TreeDecoratorTypeRegistry.init();
         TrunkPlacerTypeRegistry.init();

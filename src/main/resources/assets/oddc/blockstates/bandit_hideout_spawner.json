@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "oddc:block/bandit_hideout_spawner"
+    }
+  }
+}

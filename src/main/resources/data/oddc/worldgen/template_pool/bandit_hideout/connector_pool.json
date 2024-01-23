@@ -1,0 +1,71 @@
+{
+  "name": "oddc:bandit_hideout/connector_pool",
+  "fallback": "oddc:bandit_hideout/endpoint_pool",
+  "elements": [
+    {
+      "weight": 5,
+      "element": {
+        "location": "oddc:bandit_hideout/connectors/bandit_corridor_bar1",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "oddc:bandit_hideout/connectors/bandit_corridor_l",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    },
+
+    {
+      "weight": 2,
+      "element": {
+        "location": "oddc:bandit_hideout/connectors/bandit_corridor_l2",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "oddc:bandit_hideout/connectors/bandit_corridor_l3",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "oddc:bandit_hideout/connectors/bandit_corridor_t1",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    },
+
+    {
+      "weight": 1,
+      "element": {
+        "location": "oddc:bandit_hideout/connectors/bandit_corridor_t2",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "oddc:bandit_hideout/connectors/bandit_corridor_t3",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "oddc:bandit_hideout/farm_chamber_pool",
+  "fallback": "oddc:bandit_hideout/special_chamber_pool",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "oddc:bandit_hideout/chambers/bandit_farm_1",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    }
+  ]
+}
