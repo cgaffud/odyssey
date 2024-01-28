@@ -3,6 +3,7 @@
   "values": [
     "#minecraft:leaves",
     "oddc:leather_bundle",
-    "oddc:grave"
+    "oddc:grave",
+    "oddc:sculk_bulb"
   ]
 }

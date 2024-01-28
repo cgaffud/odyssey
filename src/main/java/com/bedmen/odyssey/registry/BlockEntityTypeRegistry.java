@@ -24,6 +24,7 @@ public class BlockEntityTypeRegistry {
     public static final RegistryObject<BlockEntityType<CovenHutDoorBlockEntity>> COVEN_HUT_DOOR = BLOCK_ENTITY_TYPES.register("coven_hut_door", () -> BlockEntityType.Builder.of(CovenHutDoorBlockEntity::new, BlockRegistry.COVEN_DOOR.get()).build(null));
     public static final RegistryObject<BlockEntityType<InfusionPedestalBlockEntity>> INFUSION_PEDESTAL = BLOCK_ENTITY_TYPES.register("infusion_pedestal", () -> BlockEntityType.Builder.of(InfusionPedestalBlockEntity::new, BlockRegistry.INFUSION_PEDESTAL.get()).build(null));
     public static final RegistryObject<BlockEntityType<InfuserBlockEntity>> INFUSER = BLOCK_ENTITY_TYPES.register("infuser", () -> BlockEntityType.Builder.of(InfuserBlockEntity::new, BlockRegistry.INFUSER.get()).build(null));
+    public static final RegistryObject<BlockEntityType<SculkBulbBlockEntity>> SCULK_BULB = BLOCK_ENTITY_TYPES.register("sculk_bulb", () -> BlockEntityType.Builder.of(SculkBulbBlockEntity::new, BlockRegistry.SCULK_BULB.get()).build(null));
     public static final RegistryObject<BlockEntityType<GraveBlockEntity>> GRAVE = BLOCK_ENTITY_TYPES.register("grave", () -> BlockEntityType.Builder.of(GraveBlockEntity::new, BlockRegistry.GRAVE.get()).build(null));
     public static final RegistryObject<BlockEntityType<BanditHideoutSpawnerBlockEntity>> BANDIT_HIDEOUT_SPAWNER = BLOCK_ENTITY_TYPES.register("bandit_hideout_spawner", () -> BlockEntityType.Builder.of(BanditHideoutSpawnerBlockEntity::new, BlockRegistry.BANDIT_HIDEOUT_SPAWNER.get()).build(null));
 }

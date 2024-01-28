@@ -1,0 +1,14 @@
+{
+  "feature": "oddc:sculk_bulb",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:matching_blocks",
+        "blocks": [
+          "minecraft:air"
+        ]
+      }
+    }
+  ]
+}

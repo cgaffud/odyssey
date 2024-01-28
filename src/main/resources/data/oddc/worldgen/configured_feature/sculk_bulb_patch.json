@@ -1,0 +1,9 @@
+{
+  "config": {
+    "tries": 6,
+    "xz_spread": 15,
+    "y_spread": 3,
+    "feature": "oddc:sculk_bulb_patch"
+  },
+  "type": "minecraft:random_patch"
+}

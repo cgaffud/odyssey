@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=true": {
+      "model": "oddc:block/sculk_bulb"
+    },
+    "lit=false": {
+      "model": "oddc:block/sculk_bulb_off"
+    }
+  }
+}

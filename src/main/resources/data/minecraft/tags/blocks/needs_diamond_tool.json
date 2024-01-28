@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "oddc:transcendental_obsidian"
+    "oddc:transcendental_obsidian",
+    "oddc:sculk_bulb"
   ]
 }
