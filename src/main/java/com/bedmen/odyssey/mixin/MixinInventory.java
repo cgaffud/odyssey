@@ -4,6 +4,7 @@ import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.object.Aspects;
 import com.bedmen.odyssey.block.entity.GraveBlockEntity;
 import com.bedmen.odyssey.registry.BlockRegistry;
+import com.bedmen.odyssey.util.GeneralUtil;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,7 +37,7 @@ public abstract class MixinInventory implements Container, Nameable {
     // Soulbound items get transferred to new player in PlayerEvents#onPlayerEventClone
     public void dropAll() {
         BlockEntity blockEntity = null;
-        if (AspectUtil.getBuffAspectStrength(this.player, Aspects.GRAVE)) {
+        if (AspectUtil.getBuffAspectStrength(this.player, Aspects.GRAVE) && !GeneralUtil.isActuallyEmpty(this.compartments)) {
             this.player.level.setBlock(this.player.blockPosition(), BlockRegistry.GRAVE.get().defaultBlockState(), 2);
             blockEntity = this.player.level.getBlockEntity(this.player.blockPosition());
         }

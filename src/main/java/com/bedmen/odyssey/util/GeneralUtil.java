@@ -1,12 +1,16 @@
 package com.bedmen.odyssey.util;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.EntityGetter;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class GeneralUtil {
@@ -55,6 +59,12 @@ public class GeneralUtil {
             }
         }
         return false;
+    }
+
+    public static boolean isActuallyEmpty(List<NonNullList<ItemStack>> itemSlots) {
+        return itemSlots.stream().allMatch(itemStacks -> itemStacks.stream().allMatch(
+                itemStack -> itemStack.isEmpty() || itemStack.getItem().equals(Items.AIR)
+        ));
     }
 
 

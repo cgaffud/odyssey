@@ -4,6 +4,7 @@ import com.bedmen.odyssey.Odyssey;
 import com.bedmen.odyssey.aspect.AspectUtil;
 import com.bedmen.odyssey.aspect.encapsulator.AspectInstance;
 import com.bedmen.odyssey.aspect.object.Aspects;
+import com.bedmen.odyssey.block.entity.GraveBlockEntity;
 import com.bedmen.odyssey.combat.SmackPush;
 import com.bedmen.odyssey.combat.WeaponUtil;
 import com.bedmen.odyssey.combat.damagesource.OdysseyDamageSource;
@@ -13,6 +14,7 @@ import com.bedmen.odyssey.effect.FireType;
 import com.bedmen.odyssey.effect.TemperatureSource;
 import com.bedmen.odyssey.entity.OdysseyLivingEntity;
 import com.bedmen.odyssey.entity.monster.DodgesProjectileMob;
+import com.bedmen.odyssey.entity.monster.SculkMob;
 import com.bedmen.odyssey.entity.monster.Weaver;
 import com.bedmen.odyssey.entity.player.OdysseyPlayer;
 import com.bedmen.odyssey.entity.projectile.OdysseyAbstractArrow;
@@ -26,6 +28,7 @@ import com.bedmen.odyssey.network.OdysseyNetwork;
 import com.bedmen.odyssey.network.packet.BlowbackAnimatePacket;
 import com.bedmen.odyssey.network.packet.ColdSnapAnimatePacket;
 import com.bedmen.odyssey.network.packet.FatalHitAnimatePacket;
+import com.bedmen.odyssey.registry.BlockRegistry;
 import com.bedmen.odyssey.registry.EffectRegistry;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
 import com.bedmen.odyssey.registry.ItemRegistry;
@@ -57,6 +60,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -225,11 +229,11 @@ public class EntityEvents {
             if(hexflameStrength > 0) {
                 if (hurtLivingEntity.hasEffect(EffectRegistry.HEXFLAME.get())) {
                     MobEffectInstance mobEffectInstance = hurtLivingEntity.getEffect(EffectRegistry.HEXFLAME.get());
-                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (int)(40 * hexflameStrength);
-                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), hexflameDuration > (80 * hexflameStrength) ? (80 * hexflameStrength) : hexflameDuration, 0));
+                    int hexflameDuration = mobEffectInstance.getDuration() / 2 +  10 + (40 * hexflameStrength);
+                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), Math.min(hexflameDuration, (80 * hexflameStrength)), 0));
                 }
                 else
-                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (int)(40 * hexflameStrength), 0));
+                    hurtLivingEntity.addEffect(FireEffect.getFireEffectInstance(EffectRegistry.HEXFLAME.get(), 10 + (40 * hexflameStrength), 0));
             }
             // Cobweb Chance
             float cobwebChance = AspectUtil.getOneHandedTotalAspectStrength(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.COBWEB_CHANCE);
@@ -265,7 +269,7 @@ public class EntityEvents {
             float absorbentGrowthCapacity = AspectUtil.getOneHandedTotalAspectStrength(damageSourceLivingEntity, InteractionHand.MAIN_HAND, Aspects.ABSORBENT_GROWTH);
             if ((hurtLivingEntity instanceof Enemy) && absorbentGrowthCapacity > 0) {
                 float progress = mainHandItemStack.getOrCreateTag().getFloat(AspectUtil.DAMAGE_GROWTH_TAG) + amount/400;
-                mainHandItemStack.getOrCreateTag().putFloat(AspectUtil.DAMAGE_GROWTH_TAG, progress > absorbentGrowthCapacity ? absorbentGrowthCapacity : progress);
+                mainHandItemStack.getOrCreateTag().putFloat(AspectUtil.DAMAGE_GROWTH_TAG, Math.min(progress, absorbentGrowthCapacity));
             }
 
             // Bludgeoning
@@ -604,6 +608,13 @@ public class EntityEvents {
         if(deadEntity instanceof Mob) {
             DamageSource damageSource = event.getSource();
             Tier tier;
+            BlockEntity grave = null;
+            boolean isGraveMob = deadEntity instanceof SculkMob;
+            if (isGraveMob) {
+                deadEntity.level.setBlock(deadEntity.blockPosition(), BlockRegistry.GRAVE.get().defaultBlockState(), 2);
+                grave = deadEntity.level.getBlockEntity(deadEntity.blockPosition());
+            }
+
             if(damageSource != null){
                 Entity entity = damageSource.getEntity();
                 int mobHarvestLevel = entity instanceof Player player ? AspectUtil.getBuffAspectStrength(player, Aspects.ADDITIONAL_MOB_HARVEST_LEVEL) : 0;
@@ -615,12 +626,19 @@ public class EntityEvents {
             List<Tier> lowerTiers = TierSortingRegistry.getTiersLowerThan(tier);
             Collection<ItemEntity> itemEntityCollection = event.getDrops();
             Set<ItemEntity> itemEntityToRemove = new HashSet<>();
+            int graveSlotIndex = 0;
             for(ItemEntity itemEntity: itemEntityCollection){
                 if(itemEntity.getItem().getItem() instanceof OdysseyTierItem odysseyTierItem){
                     Tier itemTier = odysseyTierItem.getTier();
                     if(!lowerTiers.contains(itemTier) && tier != itemTier){
                         itemEntityToRemove.add(itemEntity);
                     }
+                }
+
+                if (isGraveMob && grave instanceof GraveBlockEntity graveBlockEntity) {
+                    graveBlockEntity.setItem(graveSlotIndex, itemEntity.getItem());
+                    graveSlotIndex++;
+                    itemEntityToRemove.add(itemEntity);
                 }
             }
             for(ItemEntity itemEntity: itemEntityToRemove){

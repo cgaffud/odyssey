@@ -52,8 +52,6 @@ public class SculkBulbFeature extends Feature<NoneFeatureConfiguration> {
                     for(int i = 0; i < 8; i++){
                         blockpos$mutableblockpos.move(0, -1, 0);
                         if (validPlacement(worldgenlevel, blockpos$mutableblockpos)) {
-                            System.out.println("BULB FEATURE:");
-                            System.out.println(blockpos$mutableblockpos);
                             worldgenlevel.setBlock(blockpos$mutableblockpos, BlockRegistry.SCULK_BULB.get().defaultBlockState(), 2);
                             return true;
                         }
