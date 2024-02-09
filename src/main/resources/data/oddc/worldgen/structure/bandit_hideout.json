@@ -3,7 +3,7 @@
   "biomes": "#oddc:has_structure/bandit_hideout",
   "step": "underground_structures",
   "start_pool" : "oddc:bandit_hideout/start_pool",
-  "size" : 9,
+  "size" : 10,
   "terrain_adaptation": "buried",
   "start_height": {
     "absolute": -25

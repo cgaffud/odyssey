@@ -82,9 +82,25 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob, Dodges
     }
 
     @Nullable
-    public SpawnGroupData finalizeHideoutSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
+    public SpawnGroupData finalizeHideoutSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag, int equipmentType) {
         this.setPersistenceRequired();
-        return finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+        spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+        super.populateDefaultEquipmentSlots(this.random, difficultyInstance);
+        int start = (equipmentType == 1) ? 4 : 0;
+        int stop = (equipmentType == 0) ? 4: 7;
+        Item item = switch(random.nextInt(start, stop)){
+            case 0 -> ItemRegistry.BANDIT_DAGGER.get();
+            case 1 -> ItemRegistry.GOLDEN_MACE.get();
+            case 2,3 -> Items.GOLDEN_SWORD;
+            case 4 -> ItemRegistry.BANDIT_CROSSBOW.get();
+            default -> ItemRegistry.CROSSBOW.get();
+        };
+        this.setItemSlot(EquipmentSlot.MAINHAND, item.getDefaultInstance());
+        if(AspectUtil.getItemStackAspectStrength(item.getDefaultInstance(), Aspects.DUAL_WIELD)){
+            this.setItemSlot(EquipmentSlot.OFFHAND, item.getDefaultInstance());
+        }
+        this.reassessWeaponGoal();
+        return spawnGroupData;
     }
 
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
@@ -147,9 +163,7 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob, Dodges
             Vec3 dodgeDir = projectile.getDeltaMovement();
             Direction discreteDodgeDir = (dodgeDir.z > dodgeDir.x) ? Direction.WEST : Direction.NORTH;
             if (this.getRandom().nextBoolean()) discreteDodgeDir = discreteDodgeDir.getOpposite();
-            if (tryDodgeInDirection(discreteDodgeDir) || tryDodgeInDirection(discreteDodgeDir)) {
-                return true;
-            }
+            return tryDodgeInDirection(discreteDodgeDir) || tryDodgeInDirection(discreteDodgeDir);
         }
         return false;
     }
@@ -230,8 +244,6 @@ public class Bandit extends AbstractIllager implements CrossbowAttackMob, Dodges
                 MapItem.renderBiomePreviewMap(serverLevel, itemstack);
                 itemstack.setHoverName(Component.translatable("filled_map.bandit_hideout"));
                 this.spawnAtLocation(itemstack);
-             } else {
-                return;
             }
         }
     }

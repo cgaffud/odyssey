@@ -61,13 +61,11 @@ public class BanditHideoutSpawnerBlockEntity extends BlockEntity {
                     z = (double)blockPos.getZ() + (randomSource.nextDouble() - 0.5) * 2 * trialSpawnRange;
                     if (level.noCollision(EntityTypeRegistry.BANDIT.get().getAABB(x,y,z))) {
                         Bandit bandit = new Bandit(EntityTypeRegistry.BANDIT.get(), level);
-                        if (bandit == null)
-                            continue;
                         bandit.moveTo(x,y,z,360*randomSource.nextFloat(), 0);
                         // Unsure if this is needed - keeping here in case
                         //if (bandit.checkSpawnObstruction(level))
                         //    continue;
-                        bandit.finalizeHideoutSpawn(serverLevel, level.getCurrentDifficultyAt(new BlockPos(x,y,z)), MobSpawnType.SPAWNER, null, null);
+                        bandit.finalizeHideoutSpawn(serverLevel, level.getCurrentDifficultyAt(new BlockPos(x,y,z)), MobSpawnType.SPAWNER, null, null, 2);
                         serverLevel.addFreshEntityWithPassengers(bandit);
                         OdysseyNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> bandit), new BanditAirParticlesPacket(bandit));
                         break;

@@ -1,6 +1,6 @@
 package com.bedmen.odyssey.world.gen.structure.pieces;
 
-import com.bedmen.odyssey.block.wood.GreatwoodTreeGrower;
+
 import com.bedmen.odyssey.entity.monster.Bandit;
 import com.bedmen.odyssey.loot.OdysseyLootTables;
 import com.bedmen.odyssey.registry.EntityTypeRegistry;
@@ -8,21 +8,16 @@ import com.bedmen.odyssey.registry.structure.StructurePieceTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
@@ -101,7 +96,7 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
                     // We choose between on-axis and diagonal position
                     BlockPos banditPos = levelAccessor.getRandom().nextBoolean() ? mutableBlockPos.relative(direction).above().above() : mutableBlockPos.relative(direction).relative(direction.getClockWise()).above().above();
                     bandit.moveTo(banditPos, 0, 0);
-                    bandit.finalizeHideoutSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(banditPos), MobSpawnType.STRUCTURE, null, null);
+                    bandit.finalizeHideoutSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(banditPos), MobSpawnType.STRUCTURE, null, null, 2);
                     levelAccessor.addFreshEntityWithPassengers(bandit);
                 }
             }
@@ -120,14 +115,19 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
     @Override
     public void handleDataMarker(ServerLevelAccessor levelAccessor, String metadataString, BlockPos blockPos, Rotation rotation, RandomSource randomSource, BoundingBox box) {
         // By default data markers get aired out
+
         levelAccessor.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 2);
-        if (metadataString.startsWith("bandit") || metadataString.startsWith("?bandit")) {
-            if (!(metadataString.startsWith("?bandit") && randomSource.nextBoolean())) {
-                Bandit bandit = new Bandit(EntityTypeRegistry.BANDIT.get(), levelAccessor.getLevel());
-                bandit.moveTo(blockPos, 0, 0);
-                bandit.finalizeHideoutSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, null, null);
-                levelAccessor.addFreshEntityWithPassengers(bandit);
+        if (metadataString.startsWith("bandit") || (metadataString.startsWith("?bandit")) && randomSource.nextBoolean()) {
+            int weaponType = 2;
+            if (metadataString.length() > 7) {
+                String weaponTypeString = metadataString.substring(7);
+                if (weaponTypeString.startsWith("melee")) weaponType = 0;
+                if (weaponTypeString.startsWith("ranged")) weaponType = 1;
             }
+            Bandit bandit = new Bandit(EntityTypeRegistry.BANDIT.get(), levelAccessor.getLevel());
+            bandit.moveTo(blockPos, 0, 0);
+            bandit.finalizeHideoutSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, null, null, weaponType);
+            levelAccessor.addFreshEntityWithPassengers(bandit);
         }
         if (metadataString.startsWith("chest")) {
             BlockPos chestPos = blockPos.below();
@@ -144,5 +144,17 @@ public class BanditHideoutPiece extends AbstractPoolElementStructurePiece {
         }
         if (metadataString.startsWith("tunnel") && this.lastInGeneration)
                 this.makeTunnel(levelAccessor, blockPos);
+        if (metadataString.startsWith("allay")) {
+            Allay allay = new Allay(EntityType.ALLAY, levelAccessor.getLevel());
+            allay.moveTo(blockPos, 0, 0);
+            allay.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, null, null);
+            levelAccessor.addFreshEntityWithPassengers(allay);
+        }
+        if (metadataString.startsWith("villager")) {
+            Villager villager = new Villager(EntityType.VILLAGER, levelAccessor.getLevel());
+            villager.moveTo(blockPos, 0, 0);
+            villager.finalizeSpawn(levelAccessor, levelAccessor.getCurrentDifficultyAt(blockPos), MobSpawnType.STRUCTURE, null, null);
+            levelAccessor.addFreshEntityWithPassengers(villager);
+        }
     }
 }
