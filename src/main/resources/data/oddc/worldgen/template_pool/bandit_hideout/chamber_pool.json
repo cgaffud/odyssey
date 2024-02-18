@@ -136,6 +136,33 @@
         "projection": "rigid",
         "element_type": "oddc:special_single_pool_element"
       }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "oddc:bandit_hideout/chambers/bandit_hideout_chamber10",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    },
+    {
+      "weight": 3,
+      "element": {
+        "location": "oddc:bandit_hideout/chambers/bandit_hideout_chamber11",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "oddc:bandit_hideout/chambers/bandit_hideout_chamber12",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "oddc:special_single_pool_element"
+      }
     }
   ]
 }
