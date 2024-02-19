@@ -44,9 +44,7 @@ public class AbandonedIronGolemFeature extends Feature<NoneFeatureConfiguration>
         Direction direction = Direction.Plane.HORIZONTAL.getRandomDirection(randomSource);
         BlockPos.MutableBlockPos mutable = origin.mutable();
         if(mayPlaceOn(worldGenLevel, mutable)){
-            this.setBlock(worldGenLevel, mutable, BlockRegistry.ABANDONED_IRON_GOLEM.get().defaultBlockState().setValue(AbandonedIronGolemBlock.FACING, direction).setValue(AbandonedIronGolemBlock.HALF, DoubleBlockHalf.LOWER));
-            mutable = mutable.move(Direction.UP);
-            this.setBlock(worldGenLevel, mutable, BlockRegistry.ABANDONED_IRON_GOLEM.get().defaultBlockState().setValue(AbandonedIronGolemBlock.FACING, direction).setValue(AbandonedIronGolemBlock.HALF, DoubleBlockHalf.UPPER));
+            this.setBlock(worldGenLevel, mutable, BlockRegistry.ABANDONED_IRON_GOLEM.get().defaultBlockState().setValue(AbandonedIronGolemBlock.FACING, direction));
             return true;
         }
         return false;

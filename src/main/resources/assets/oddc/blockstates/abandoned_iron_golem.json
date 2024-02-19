@@ -1,33 +1,18 @@
 {
   "variants": {
-    "facing=north,half=upper": {
-      "model": "oddc:block/abandoned_iron_golem_upper"
+    "facing=north": {
+      "model": "oddc:block/abandoned_iron_golem"
     },
-    "facing=north,half=lower": {
-      "model": "oddc:block/abandoned_iron_golem_lower"
-    },
-    "facing=east,half=upper": {
-      "model": "oddc:block/abandoned_iron_golem_upper",
+    "facing=east": {
+      "model": "oddc:block/abandoned_iron_golem",
       "y": 90
     },
-    "facing=east,half=lower": {
-      "model": "oddc:block/abandoned_iron_golem_lower",
-      "y": 90
-    },
-    "facing=south,half=upper": {
-      "model": "oddc:block/abandoned_iron_golem_upper",
+    "facing=south": {
+      "model": "oddc:block/abandoned_iron_golem",
       "y": 180
     },
-    "facing=south,half=lower": {
-      "model": "oddc:block/abandoned_iron_golem_lower",
-      "y": 180
-    },
-    "facing=west,half=upper": {
-      "model": "oddc:block/abandoned_iron_golem_upper",
-      "y": 270
-    },
-    "facing=west,half=lower": {
-      "model": "oddc:block/abandoned_iron_golem_lower",
+    "facing=west": {
+      "model": "oddc:block/abandoned_iron_golem",
       "y": 270
     }
   }
